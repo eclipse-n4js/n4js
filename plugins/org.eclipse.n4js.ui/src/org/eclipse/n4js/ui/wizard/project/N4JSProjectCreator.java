@@ -224,7 +224,7 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 		// Gather default project dependencies
 		if (N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(pi.getProjectType())) {
 			List<String> projectDependencies = pi.getProjectDependencies();
-			projectDependencies.add(N4JSGlobals.N4JS_RUNTIME_NAME);
+			projectDependencies.add(N4JSGlobals.N4JS_RUNTIME);
 		}
 		if (ProjectType.TEST.equals(pi.getProjectType())) {
 			List<String> projectDependencies = pi.getProjectDependencies();

@@ -11,7 +11,7 @@
 package org.eclipse.n4js.tests.projectModel;
 
 import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION;
-import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_NAME;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -83,7 +83,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"  \"name\": \"" + host.myProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"dependencies\": {\n" +
-					"    \"" + N4JS_RUNTIME_NAME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\",\n" +
+					"    \"" + N4JS_RUNTIME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\",\n" +
 					"    \"" + host.libProjectName + "\": \"0.0.1-SNAPSHOT\"\n" +
 					"  },\n" +
 					"  \"n4js\": {\n" +
@@ -105,7 +105,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"  \"name\": \"" + host.libProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"dependencies\": {\n" +
-					"    \"" + N4JS_RUNTIME_NAME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\"\n" +
+					"    \"" + N4JS_RUNTIME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\"\n" +
 					"  },\n" +
 					"  \"n4js\": {\n" +
 					"    \"projectType\": \"library\",\n" +
@@ -122,7 +122,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 			ProjectTestsUtils.createDummyN4JSRuntime(workspaceRoot.toPath());
 			workspace.registerProject(myProjectURI);
 			workspace.registerProject(libProjectURI);
-			workspace.registerProject(toProjectURI(workspaceRoot, N4JSGlobals.N4JS_RUNTIME_NAME));
+			workspace.registerProject(toProjectURI(workspaceRoot, N4JSGlobals.N4JS_RUNTIME));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

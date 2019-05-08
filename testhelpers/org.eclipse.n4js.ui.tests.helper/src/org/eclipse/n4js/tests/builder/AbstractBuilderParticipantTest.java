@@ -135,7 +135,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 				b -> {
 					b.withType(type);
 					if (N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(type)) {
-						b.withDependency(N4JSGlobals.N4JS_RUNTIME_NAME);
+						b.withDependency(N4JSGlobals.N4JS_RUNTIME);
 					}
 				});
 		configureProjectWithXtext(project);

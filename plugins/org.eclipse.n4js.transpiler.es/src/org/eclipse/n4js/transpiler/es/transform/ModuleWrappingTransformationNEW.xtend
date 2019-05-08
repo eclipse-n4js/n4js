@@ -81,7 +81,7 @@ class ModuleWrappingTransformationNEW extends Transformation {
 		
 		// add implicit import of "n4js-node"
 		// TODO GH-1281 this should be solved in a different way (maybe via a property in the n4js-section of the package.json)
-		addEmptyImport(N4JSGlobals.N4JS_RUNTIME_NAME);
+		addEmptyImport(N4JSGlobals.N4JS_RUNTIME);
 	}
 
 	def private void transformImportDecl(ImportDeclaration importDeclIM) {

@@ -127,7 +127,7 @@ public final class N4JSGlobals {
 	 * It is expected that this npm package lives in the N4JS Git repository at path {@value #N4JS_LIBS_SOURCES_PATH},
 	 * cf. {@link #N4JS_LIBS_SOURCES_PATH}.
 	 */
-	public static final String N4JS_RUNTIME_NAME = "n4js-runtime";
+	public static final String N4JS_RUNTIME = "n4js-runtime";
 
 	public static final String N4JS_RUNTIME_DUMMY_VERSION = "0.0.1-dummy";
 

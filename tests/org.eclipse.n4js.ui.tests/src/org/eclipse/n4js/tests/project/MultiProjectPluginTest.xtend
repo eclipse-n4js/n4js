@@ -286,7 +286,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 			builder.withSourceContainer(SourceContainerType.EXTERNAL, "ext");
 		]);
 		createAndRegisterDummyN4JSRuntime(project);
-		addProjectToDependencies(project, N4JSGlobals.N4JS_RUNTIME_NAME, "*");
+		addProjectToDependencies(project, N4JSGlobals.N4JS_RUNTIME, "*");
 		configureProjectWithXtext(project);
 		waitForAutoBuild;
 		val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON);

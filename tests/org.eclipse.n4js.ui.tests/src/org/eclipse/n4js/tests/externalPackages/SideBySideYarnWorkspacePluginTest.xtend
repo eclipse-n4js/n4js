@@ -120,7 +120,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT, [pkgName|
 			return Arrays.contains(packagesToImport, pkgName);
 		], #[
-			N4JSGlobals.N4JS_RUNTIME_NAME
+			N4JSGlobals.N4JS_RUNTIME
 		]);
 		testedWorkspace.fullBuild
 

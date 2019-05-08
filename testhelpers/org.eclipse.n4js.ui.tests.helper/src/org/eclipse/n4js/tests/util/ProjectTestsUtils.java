@@ -406,17 +406,17 @@ public class ProjectTestsUtils {
 		IFolder nodeModulesFolder = project.getFolder(N4JSGlobals.NODE_MODULES);
 		createDummyN4JSRuntime(nodeModulesFolder.getLocation().toFile().toPath());
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor());
-		return nodeModulesFolder.getFolder(N4JSGlobals.N4JS_RUNTIME_NAME);
+		return nodeModulesFolder.getFolder(N4JSGlobals.N4JS_RUNTIME);
 	}
 
 	public static Path createDummyN4JSRuntime(Path location) {
-		Path projectPath = location.resolve(N4JSGlobals.N4JS_RUNTIME_NAME);
+		Path projectPath = location.resolve(N4JSGlobals.N4JS_RUNTIME);
 		Path packageJsonFile = projectPath.resolve(N4JSGlobals.PACKAGE_JSON);
 		try {
 			Files.createDirectories(projectPath);
 			Files.write(packageJsonFile, Lists.newArrayList(
 					"{",
-					"    \"name\": \"" + N4JSGlobals.N4JS_RUNTIME_NAME + "\",",
+					"    \"name\": \"" + N4JSGlobals.N4JS_RUNTIME + "\",",
 					"    \"version\": \"" + N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION + "\"",
 					"}"));
 		} catch (IOException e) {

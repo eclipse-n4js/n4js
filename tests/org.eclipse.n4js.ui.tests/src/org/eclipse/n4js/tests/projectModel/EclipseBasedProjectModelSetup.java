@@ -11,7 +11,7 @@
 package org.eclipse.n4js.tests.projectModel;
 
 import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION;
-import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_NAME;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
@@ -59,7 +59,7 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"  \"name\": \"" + host.myProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"dependencies\": {\n" +
-					"    \"" + N4JS_RUNTIME_NAME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\",\n" +
+					"    \"" + N4JS_RUNTIME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\",\n" +
 					"    \"" + host.libProjectName + "\": \"0.0.1-SNAPSHOT\"\n" +
 					"  },\n" +
 					"  \"n4js\": {\n" +
@@ -80,7 +80,7 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"  \"name\": \"" + host.libProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"dependencies\": {\n" +
-					"    \"" + N4JS_RUNTIME_NAME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\"\n" +
+					"    \"" + N4JS_RUNTIME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\"\n" +
 					"  },\n" +
 					"  \"n4js\": {\n" +
 					"    \"projectType\": \"library\",\n" +
