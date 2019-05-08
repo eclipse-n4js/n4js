@@ -9,7 +9,7 @@ import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.es.EcmaScriptTranspiler;
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation;
-import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
+import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformationNEW;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -55,7 +55,7 @@ public class N4IDLTranspiler extends EcmaScriptTranspiler {
 
 		// replace some N4JS transformations with N4IDL-specific transformations
 		transformations.replaceAll(t -> {
-			if (t instanceof ModuleWrappingTransformation) {
+			if (t instanceof ModuleWrappingTransformationNEW) {
 				return moduleWrappingTransformationProvider.get();
 			}
 

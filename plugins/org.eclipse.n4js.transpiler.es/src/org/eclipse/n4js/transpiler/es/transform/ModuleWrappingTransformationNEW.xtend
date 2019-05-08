@@ -14,9 +14,7 @@ import com.google.common.base.Joiner
 import com.google.inject.Inject
 import java.util.Arrays
 import java.util.Objects
-import org.eclipse.n4js.ModuleSpecifierAdjustment
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModifiableElement
@@ -92,12 +90,6 @@ class ModuleWrappingTransformationNEW extends Transformation {
 	}
 
 	def private String computeActualModuleSpecifier(TModule module) {
-		val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
-		if (moduleSpecifierAdjustment !== null && moduleSpecifierAdjustment.usePlainModuleSpecifier) {
-			return module.moduleSpecifier;
-		}
-		// note: ModuleSpecifierAdjustment#prefix is obsolete and entirely ignored in this transformation!
-
 		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module);
 
 		var targetProject = n4jsCore.findProject(module.eResource.URI).orNull;
@@ -151,18 +143,6 @@ class ModuleWrappingTransformationNEW extends Transformation {
 			}
 		}
 		return targetProjectName + outputPath + targetModuleSpecifier;
-	}
-
-	/** returns adjustments to be used based on the module loader specified for the provided module. May be null. */
-	def private ModuleSpecifierAdjustment getModuleSpecifierAdjustment(TModule module) {
-		val resourceURI = module?.eResource?.URI;
-		if (resourceURI === null) return null;
-		val project = n4jsCore.findProject(resourceURI);
-		if (!project.present) return null;
-		val loader = project.get.getModuleLoader();
-		if (loader === null) return null;
-		val adjustment = N4JSLanguageConstants.MODULE_LOADER_PREFIXES.get(loader);
-		return adjustment;
 	}
 
 	/**

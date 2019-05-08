@@ -15,11 +15,11 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSONGlobals
 import org.eclipse.n4js.json.JSONParseHelper
+import org.eclipse.n4js.packagejson.PackageJsonHelper
 import org.eclipse.n4js.projectDescription.ModuleFilterType
 import org.eclipse.n4js.projectDescription.ProjectDescription
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectDescription.SourceContainerType
-import org.eclipse.n4js.packagejson.PackageJsonHelper
 import org.eclipse.n4js.semver.Semver.TagVersionRequirement
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
@@ -28,8 +28,8 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.junit.Assert.*
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.*
+import static org.junit.Assert.*
 
 /**
  * Testing the conversion from {@link JSONDocument} to {@link ProjectDescription}.
@@ -125,22 +125,14 @@ class PackageJsonHelperTest {
 								"sourceContainer": "src",
 								"module": "def*"
 							}
-						],
-						"noModuleWrap": [
-							{
-								"sourceContainer": "src",
-								"module": "ghi*"
-							},
-							"jkl*"
 						]
 					}
 				}
 			}
 		'''.parseAndConvert
 
-		assertEquals(2, pd.moduleFilters.size);
+		assertEquals(1, pd.moduleFilters.size);
 		val mf0 = pd.moduleFilters.get(0);
-		val mf1 = pd.moduleFilters.get(1);
 
 		assertEquals(ModuleFilterType.NO_VALIDATE, mf0.moduleFilterType);
 		assertEquals(2, mf0.moduleSpecifiers.size);
@@ -148,13 +140,6 @@ class PackageJsonHelperTest {
 		assertEquals("abc*", mf0.moduleSpecifiers.get(0).moduleSpecifierWithWildcard);
 		assertEquals("src", mf0.moduleSpecifiers.get(1).sourcePath);
 		assertEquals("def*", mf0.moduleSpecifiers.get(1).moduleSpecifierWithWildcard);
-
-		assertEquals(ModuleFilterType.NO_MODULE_WRAP, mf1.moduleFilterType);
-		assertEquals(2, mf1.moduleSpecifiers.size);
-		assertEquals("src", mf1.moduleSpecifiers.get(0).sourcePath);
-		assertEquals("ghi*", mf1.moduleSpecifiers.get(0).moduleSpecifierWithWildcard);
-		assertEquals(null, mf1.moduleSpecifiers.get(1).sourcePath);
-		assertEquals("jkl*", mf1.moduleSpecifiers.get(1).moduleSpecifierWithWildcard);
 	}
 
 	@Test
@@ -292,11 +277,6 @@ class PackageJsonHelperTest {
 		assertEquals(OUTPUT.defaultValue, pd.outputPath);
 		assertEquals(#[], pd.moduleFilters);
 		assertEquals(#[], pd.testedProjects);
-		if (hasDefaultProjectType) {
-			assertEquals(DEFAULT_MODULE_LOADER_FOR_PLAINJS_AND_VALIDATION, pd.moduleLoader);
-		} else {
-			assertEquals(DEFAULT_MODULE_LOADER, pd.moduleLoader);
-		}
 		assertCorrectDefaultSourceContainers(pd);
 	}
 	def private assertCorrectDefaultSourceContainers(ProjectDescription pd) {

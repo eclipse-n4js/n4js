@@ -21,7 +21,6 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PRO
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.INIT_MODULES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MODULE_FILTERS;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.MODULE_LOADER;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_MODULE;
@@ -447,23 +446,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		return type != ProjectType.DEFINITION &&
 				type != ProjectType.VALIDATION &&
 				type != ProjectType.PLAINJS;
-	}
-
-	/** Check the projectType value structure. */
-	@CheckProperty(property = MODULE_LOADER)
-	public void checkModuleLoaderStructure(JSONValue moduleLoaderValue) {
-		if (!checkIsType(moduleLoaderValue, JSONPackage.Literals.JSON_STRING_LITERAL)) {
-			return;
-		}
-		if (!checkIsNonEmptyString((JSONStringLiteral) moduleLoaderValue, MODULE_LOADER)) {
-			return;
-		}
-		// check whether the given value represents a valid project type
-		final String moduleLoaderString = ((JSONStringLiteral) moduleLoaderValue).getValue();
-		if (PackageJsonUtils.parseModuleLoader(moduleLoaderString) == null) {
-			addIssue(IssueCodes.getMessageForPKGJ_INVALID_MODULE_LOADER(moduleLoaderString),
-					moduleLoaderValue, IssueCodes.PKGJ_INVALID_MODULE_LOADER);
-		}
 	}
 
 	/**

@@ -71,12 +71,6 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	String vendorID
 	/**
-	 * The module loader supported by this module as defined in the containing project's package.json.
-	 * Value will be an EMF enum literal, i.e. something like <code>org.eclipse.n4js.projectDescription.ModuleLoader.COMMONJS.getLiteral()</code>.
-	 * See <code>PackageJsonUtils#parseModuleLoader()</code> for how to convert from String to values of enum ModuleLoader.
-	 */
-	String moduleLoader
-	/**
 	 * Flag indicating a module defined in an <code>.n4jsd</code> file.
 	 */
 	boolean n4jsdModule

@@ -30,7 +30,6 @@ import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.xtext.EcoreUtil2
@@ -765,24 +764,6 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		assertEquals( "Expected imported class-name","C1", (rhs.callee as IdentifierRef_IM).rewiredTarget.name )
 
 
-	}
-
-	@Test
-	def _11_external_JS_module_wrap_function() throws Throwable  {
-		val script = '''
-			var x = 5;
-		'''
-
-		// Expectation
-		val moduleWrapped = '''
-			System.registerDynamic([], true, function(require, exports, module) {
-				var x = 5;
-			});
-		'''.cjsPatched(false);
-
-		val wrapResult = ModuleWrappingTransformation.wrapPlainJSCode(script);
-
-		"Wrapped plain JS-content is not as expected.".assertSameExceptWhiteSpace(moduleWrapped, wrapResult.toString);
 	}
 
 	@Test

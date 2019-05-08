@@ -92,11 +92,6 @@ public interface IN4JSCore {
 	boolean isNoValidate(URI nestedLocation);
 
 	/**
-	 * returns true if for the given URI module wrapping is disabled
-	 */
-	boolean isNoModuleWrapping(URI nestedLocation);
-
-	/**
 	 * returns the project relative path to the folder where the generated files should be placed
 	 */
 	String getOutputPath(URI nestedLocation);
@@ -105,11 +100,6 @@ public interface IN4JSCore {
 	 * returns for the given URI the no-validate module filter
 	 */
 	ModuleFilter getModuleValidationFilter(URI uri);
-
-	/**
-	 * returns for the given URI the no-module-wrapping module filter
-	 */
-	ModuleFilter getNoModuleWrappingFilter(URI nestedLocation);
 
 	/**
 	 * Creates and returns a new resource set that is properly set up for loading resources in the default workspace

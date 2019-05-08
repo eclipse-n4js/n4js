@@ -22,7 +22,6 @@ import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
-import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 
@@ -80,8 +79,6 @@ public enum PackageJsonProperties {
 	PROVIDED_RUNTIME_LIBRARIES("providedRuntimeLibraries", "", JSONArray.class, N4JS),
 	/** Key of package.json property "requiredRuntimeLibraries". */
 	REQUIRED_RUNTIME_LIBRARIES("requiredRuntimeLibraries", "", JSONArray.class, N4JS),
-	/** Key of package.json property "moduleLoader". */
-	MODULE_LOADER("moduleLoader", "", ModuleLoader.N4JS.name(), N4JS),
 	/** Key of package.json property "initModules". */
 	INIT_MODULES("initModules", "", JSONArray.class, N4JS),
 	/** Key of package.json property "execModule". */
@@ -108,14 +105,6 @@ public enum PackageJsonProperties {
 
 	/** Key of package.json property "source" inside "sources". */
 	SOURCE("source", "List of source folders", JSONArray.class, N4JS, SOURCES);
-
-	/**
-	 * Default for property "moduleLoader" for *other* project types than {@link ProjectType#VALIDATION VALIDATION} and
-	 * {@link ProjectType#PLAINJS PLAINJS}.
-	 */
-	public static final ModuleLoader DEFAULT_MODULE_LOADER = ModuleLoader.N4JS;
-	/** Default for property "moduleLoader" for project type {@link ProjectType#VALIDATION VALIDATION}. */
-	public static final ModuleLoader DEFAULT_MODULE_LOADER_FOR_PLAINJS_AND_VALIDATION = ModuleLoader.COMMONJS;
 
 	/** section of the property within the package.json */
 	final public PackageJsonProperties[] parents;

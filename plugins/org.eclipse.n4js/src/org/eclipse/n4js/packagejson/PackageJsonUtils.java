@@ -37,7 +37,6 @@ import org.eclipse.n4js.projectDescription.BootstrapModule;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
-import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionPackage;
 import org.eclipse.n4js.projectDescription.ProjectReference;
@@ -262,8 +261,6 @@ public class PackageJsonUtils {
 	public static ModuleFilterType parseModuleFilterType(String value) {
 		if (value.equals("noValidate")) {
 			return ModuleFilterType.NO_VALIDATE;
-		} else if (value.equals("noModuleWrap")) {
-			return ModuleFilterType.NO_MODULE_WRAP;
 		} else {
 			return null;
 		}
@@ -275,8 +272,6 @@ public class PackageJsonUtils {
 	public static String getModuleFilterTypeStringRepresentation(ModuleFilterType type) {
 		if (type == ModuleFilterType.NO_VALIDATE) {
 			return "noValidate";
-		} else if (type == ModuleFilterType.NO_MODULE_WRAP) {
-			return "noModuleWrap";
 		} else {
 			return "<invalid module filter type>";
 		}
@@ -294,16 +289,6 @@ public class PackageJsonUtils {
 			return ProjectType.RUNTIME_LIBRARY;
 		return parseEnumLiteral(ProjectDescriptionPackage.eINSTANCE.getProjectType(), ProjectType.class,
 				projectTypeStr);
-	}
-
-	/**
-	 * Parses a {@link ModuleLoader} from the given string representation.
-	 *
-	 * Returns {@code null} if {@code value} is not a valid string representation of a {@link ModuleLoader}.
-	 */
-	public static ModuleLoader parseModuleLoader(String moduleLoaderStr) {
-		return parseEnumLiteral(ProjectDescriptionPackage.eINSTANCE.getModuleLoader(), ModuleLoader.class,
-				moduleLoaderStr);
 	}
 
 	/**

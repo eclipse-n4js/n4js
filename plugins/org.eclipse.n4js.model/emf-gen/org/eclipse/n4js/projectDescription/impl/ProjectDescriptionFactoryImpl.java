@@ -91,8 +91,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 				return createSourceContainerTypeFromString(eDataType, initialValue);
 			case ProjectDescriptionPackage.MODULE_FILTER_TYPE:
 				return createModuleFilterTypeFromString(eDataType, initialValue);
-			case ProjectDescriptionPackage.MODULE_LOADER:
-				return createModuleLoaderFromString(eDataType, initialValue);
 			case ProjectDescriptionPackage.DEPENDENCY_TYPE:
 				return createDependencyTypeFromString(eDataType, initialValue);
 			default:
@@ -114,8 +112,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 				return convertSourceContainerTypeToString(eDataType, instanceValue);
 			case ProjectDescriptionPackage.MODULE_FILTER_TYPE:
 				return convertModuleFilterTypeToString(eDataType, instanceValue);
-			case ProjectDescriptionPackage.MODULE_LOADER:
-				return convertModuleLoaderToString(eDataType, instanceValue);
 			case ProjectDescriptionPackage.DEPENDENCY_TYPE:
 				return convertDependencyTypeToString(eDataType, instanceValue);
 			default:
@@ -257,26 +253,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * @generated
 	 */
 	public String convertModuleFilterTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ModuleLoader createModuleLoaderFromString(EDataType eDataType, String initialValue) {
-		ModuleLoader result = ModuleLoader.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertModuleLoaderToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 
