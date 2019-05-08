@@ -422,6 +422,8 @@ public class ProjectTestsUtils {
 		} catch (IOException e) {
 			throw new RuntimeException("failed to create dummy n4js-runtime for testing purposes", e);
 		}
+		packageJsonFile.toFile().deleteOnExit();
+		projectPath.toFile().deleteOnExit();
 		return projectPath;
 	}
 
