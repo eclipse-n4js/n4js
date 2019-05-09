@@ -24,9 +24,11 @@ import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.scoping.utils.ImportSpecifierUtil
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.ResourceNameComputer
+import org.eclipse.xtext.naming.IQualifiedNameProvider
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -42,7 +44,10 @@ class ModuleWrappingTransformation extends Transformation {
 	private IN4JSCore n4jsCore;
 
 	@Inject
-	private ResourceNameComputer resourceNameComputer
+	private ResourceNameComputer resourceNameComputer;
+
+	@Inject
+	private IQualifiedNameProvider qualifiedNameProvider;
 
 	private String[] localModuleSpecifierSegments = null; // will be set in #analyze()
 
@@ -66,7 +71,7 @@ class ModuleWrappingTransformation extends Transformation {
 
 		// strip modifiers off all exported elements
 		// (e.g. remove "public" from something like "export public let a = 'hello';")
-		collectNodes(state.im, ExportDeclaration, false).map[exportedElement].filter(ModifiableElement).forEach[
+		collectNodes(state.im, ExportDeclaration, false).map[exportedElement].filter(ModifiableElement).forEach [
 			it.declaredModifiers.clear
 		];
 
@@ -86,10 +91,10 @@ class ModuleWrappingTransformation extends Transformation {
 		importDeclIM.moduleSpecifierAsText = actualModuleSpecifierNormalized;
 	}
 
-	def private String computeActualModuleSpecifier(TModule module) {
-		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(module);
+	def private String computeActualModuleSpecifier(TModule targetModule) {
+		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(targetModule);
 
-		var targetProject = n4jsCore.findProject(module.eResource.URI).orNull;
+		var targetProject = n4jsCore.findProject(targetModule.eResource.URI).orNull;
 		if (targetProject !== null && targetProject.projectType === ProjectType.DEFINITION) {
 			val definedPackageName = targetProject.definesPackageName;
 			if (definedPackageName !== null) {
@@ -100,13 +105,13 @@ class ModuleWrappingTransformation extends Transformation {
 			if (targetProject.projectType === ProjectType.RUNTIME_LIBRARY) {
 				// pointing to a module in a runtime library
 				// --> always use plain module specifier
-				return module.moduleSpecifier;
+				return targetModule.moduleSpecifier;
 			} else if (targetProject.location == state.project.location) {
 				// pointing to a target module in same project
 				return createRelativeModuleSpecifier(targetProject, targetModuleSpecifier);
 			} else {
 				// pointing to a target module in another project
-				return createAbsoluteModuleSpecifier(targetProject, targetModuleSpecifier);
+				return createAbsoluteModuleSpecifier(targetProject, targetModule, targetModuleSpecifier);
 			}
 		}
 
@@ -126,7 +131,19 @@ class ModuleWrappingTransformation extends Transformation {
 		return result;
 	}
 
-	def private String createAbsoluteModuleSpecifier(IN4JSProject targetProject, String targetModuleSpecifier) {
+	def private String createAbsoluteModuleSpecifier(IN4JSProject targetProject, TModule targetModule,
+		String targetModuleSpecifier) {
+
+		// 1) check if a project import (a.k.a. "bare import") to the target project's main module can be used
+		if (targetProject.mainModule !== null) {
+			val targetProjectMainModuleFQN = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
+			val targetModuleFQN = qualifiedNameProvider.getFullyQualifiedName(targetModule);
+			if (targetProjectMainModuleFQN !== null && targetProjectMainModuleFQN == targetModuleFQN) {
+				// use a project import 
+				return targetProject.projectName;
+			}
+		}
+		// 2) construct a complete module specifier (a.k.a. "deep import")
 		val targetProjectName = targetProject.projectName;
 		if (targetProjectName.isNullOrEmpty) {
 			return targetModuleSpecifier;
@@ -165,7 +182,8 @@ class ModuleWrappingTransformation extends Transformation {
 					throw new UnsupportedOperationException("unsupported: default-exported variable binding");
 				}
 				if (exportedElement.varDeclsOrBindings.size > 1) {
-					throw new UnsupportedOperationException("unsupported: several default-exported variable declarations in a single export declaration");
+					throw new UnsupportedOperationException(
+						"unsupported: several default-exported variable declarations in a single export declaration");
 				}
 				val varDecl = exportedElement.varDeclsOrBindings.head as VariableDeclaration;
 				val varDeclSTE = findSymbolTableEntryForElement(varDecl, true);
