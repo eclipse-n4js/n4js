@@ -21,7 +21,7 @@
  */
 
 
-/* XPECT outputRegex with SystemJS ---
+/* XPECT outputRegex ---
 <==
 stdout:
 stderr:

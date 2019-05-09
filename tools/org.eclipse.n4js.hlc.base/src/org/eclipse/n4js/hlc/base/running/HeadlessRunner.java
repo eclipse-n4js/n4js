@@ -53,8 +53,6 @@ public class HeadlessRunner {
 	 *            the runner to be used
 	 * @param implementationId
 	 *            to be used for API-IMPL projects
-	 * @param systemLoader
-	 *            to be used when loading the modules
 	 * @param locationToRun
 	 *            location of the code to be executed
 	 * @param additionalPaths
@@ -62,9 +60,8 @@ public class HeadlessRunner {
 	 * @throws ExitCodeException
 	 *             in cases of errors
 	 */
-	public void startRunner(String runner, String implementationId, String systemLoader, URI locationToRun,
-			Collection<String> additionalPaths)
-			throws ExitCodeException {
+	public void startRunner(String runner, String implementationId, URI locationToRun,
+			Collection<String> additionalPaths) throws ExitCodeException {
 
 		IRunnerDescriptor runnerDescriptor = checkRunner(runner);
 		logger.info("Using runner :" + runnerDescriptor.getId());
@@ -72,7 +69,7 @@ public class HeadlessRunner {
 		RunConfiguration runConfiguration = null;
 		try {
 			runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
-					systemLoader, locationToRun);
+					locationToRun);
 
 			runConfiguration.addAdditionalPath(additionalPaths);
 

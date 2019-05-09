@@ -104,29 +104,6 @@ public class RunnerFrontEnd {
 	 * @return the run configuration.
 	 */
 	public RunConfiguration createConfiguration(String runnerId, String implementationId, URI moduleToRun) {
-		return createConfiguration(runnerId, implementationId, null, moduleToRun);
-	}
-
-	/**
-	 * Create a new run configuration from scratch for running the given moduleToRun.
-	 *
-	 * @param runnerId
-	 *            identifier of the runner to use.
-	 * @param implementationId
-	 *            implementation ID to use or <code>null</code>. See {@link RunConfiguration#getImplementationId() here}
-	 *            for details.
-	 * @param systemLoader
-	 *            the application specific unique ID of the javascript system loader. For more details about the
-	 *            available options, check {@link SystemLoaderInfo}. If {@code null}, then the default System.js loader
-	 *            will be used.
-	 * @param moduleToRun
-	 *            the module to execute. When running in Eclipse, this will be a platform resource URI, in the headless
-	 *            case it will be a file URI.
-	 * @return the run configuration.
-	 */
-	public RunConfiguration createConfiguration(String runnerId, String implementationId, String systemLoader,
-			URI moduleToRun) {
-
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
 
@@ -136,9 +113,6 @@ public class RunnerFrontEnd {
 		config.setRuntimeEnvironment(runnerDesc.getEnvironment());
 		config.setImplementationId(implementationId);
 		config.setUserSelection(moduleToRun);
-		if (null != SystemLoaderInfo.fromString(systemLoader)) {
-			config.setSystemLoader(systemLoader);
-		}
 
 		computeDerivedValues(config);
 
@@ -148,10 +122,10 @@ public class RunnerFrontEnd {
 	/**
 	 * Allows for adding additional path if needed.
 	 */
-	public RunConfiguration createConfiguration(String runnerId, String implementationId, String systemLoader,
-			URI moduleToRun, String additionalPath) {
+	public RunConfiguration createConfiguration(String runnerId, String implementationId, URI moduleToRun,
+			String additionalPath) {
 
-		RunConfiguration runConfig = createConfiguration(runnerId, implementationId, systemLoader, moduleToRun);
+		RunConfiguration runConfig = createConfiguration(runnerId, implementationId, moduleToRun);
 		runConfig.addAdditionalPath(additionalPath);
 		return runConfig;
 	}
@@ -177,8 +151,8 @@ public class RunnerFrontEnd {
 	 * Create runner-config customized for this Xpect test. cf. org.eclipse.n4js.xpect.XpectN4JSES5TranspilerHelper
 	 */
 	public RunConfiguration createXpectOutputTestConfiguration(String runnerId,
-			String userSelectionNodePathResolvableTargetFileName, SystemLoaderInfo systemLoader,
-			Path additionalProjectPath, String additionalProjectName) {
+			String userSelectionNodePathResolvableTargetFileName, Path additionalProjectPath,
+			String additionalProjectName) {
 
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
@@ -188,7 +162,6 @@ public class RunnerFrontEnd {
 		config.setRuntimeEnvironment(runnerDesc.getEnvironment());
 		config.setImplementationId(null);
 		config.setRunnerId(runnerId);
-		config.setSystemLoader(systemLoader.getId());
 
 		config.setUseCustomBootstrap(true);
 
@@ -436,15 +409,6 @@ public class RunnerFrontEnd {
 	 */
 	public Process run(String runnerId, String implementationId, URI moduleToRun) throws ExecutionException {
 		return run(createConfiguration(runnerId, implementationId, moduleToRun));
-	}
-
-	/**
-	 * Convenience method. Creates a run configuration with {@link #createConfiguration(String, String, String, URI)}
-	 * and immediately passes it to {@link #run(RunConfiguration)} in order to launch the moduleToRun.
-	 */
-	public Process run(String runnerId, String implementationId, String systemLoader, URI moduleToRun)
-			throws ExecutionException {
-		return run(createConfiguration(runnerId, implementationId, systemLoader, moduleToRun));
 	}
 
 	/**

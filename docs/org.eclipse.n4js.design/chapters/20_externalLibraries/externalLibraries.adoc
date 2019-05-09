@@ -149,7 +149,7 @@ If the target platform install location is configured, and the target platform f
 
 [source,bash]
 ----
-java -jar n4jsc.jar -projectlocations /path/to/the/workspace/root -t allprojects --systemLoader cjs -tp /absolute/path/to/the/file -tl /path/to/the/target/platform/install/location -rw nodejs -r moduleToRun
+java -jar n4jsc.jar -projectlocations /path/to/the/workspace/root -t allprojects -tp /absolute/path/to/the/file -tl /path/to/the/target/platform/install/location -rw nodejs -r moduleToRun
 ----
 
 === Custom npm settings

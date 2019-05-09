@@ -16,14 +16,12 @@ import java.util.regex.Pattern;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
 import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5GeneratorHelper;
 import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
 import org.eclipse.xpect.expectation.IStringExpectation;
 import org.eclipse.xpect.expectation.StringExpectation;
 import org.eclipse.xpect.expectation.impl.AbstractExpectation;
-import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
 import org.eclipse.xpect.xtext.lib.setup.ThisResource;
@@ -45,9 +43,8 @@ public class OutputXpectMethod {
 
 	/** {@link TestConfig Test configurations} used for output tests which do not specify a module loader. */
 	private final static TestConfig[] DEFAULT_CONFIGS = {
-			new TestConfig(SystemLoaderInfo.COMMON_JS, GeneratorOption.MAX_TRANSPILE_OPTIONS),
-			new TestConfig(SystemLoaderInfo.SYSTEM_JS, GeneratorOption.MAX_TRANSPILE_OPTIONS),
-			new TestConfig(SystemLoaderInfo.SYSTEM_JS, GeneratorOption.DEFAULT_OPTIONS)
+			new TestConfig(GeneratorOption.MAX_TRANSPILE_OPTIONS),
+			new TestConfig(GeneratorOption.DEFAULT_OPTIONS)
 	};
 
 	@Inject
@@ -70,40 +67,34 @@ public class OutputXpectMethod {
 	 * @param fileSetupContext
 	 *            the Xpect file setup context (later required when creating a resource from a Xpect resource set
 	 *            configuration entry)
-	 * @param systemLoader
-	 *            optional SystemLoader to use (e.g. SYSTEM_JS or COMMON_JS) if not given, this test will be run with
-	 *            all known loaders.
 	 */
 	@Xpect
-	@ParameterParser(syntax = "( 'with' arg4=ID )?")
 	public void output(@StringExpectation(whitespaceSensitive = true) IStringExpectation expectation, // arg0
 			@ThisResource XtextResource resource, // arg1
 			org.eclipse.xpect.setup.ISetupInitializer<Object> init, // arg2
-			FileSetupContext fileSetupContext, // arg3
-			String systemLoader // arg4
+			FileSetupContext fileSetupContext // arg3
 	) throws IOException {
 
 		TestExecutor func = (config) -> {
 
 			String executionResult = xpectN4JSES5TranpilerHelper.doCompileAndExecute(resource, init, fileSetupContext,
-					true, null, config.options, config.loader);
+					true, null, config.options);
 			try {
 				expectation.assertEquals(executionResult);
 			} catch (Throwable th) {
-				// in case of mismatch, we have an error and thus prepend information about the current loader
-				// (SYSTEM_JS, COMMON_JS, ...) to help during debugging:
+				// in case of mismatch, we have an error and thus prepend information about the current generator
+				// options to help during debugging:
 				expectation.assertEquals("======================================================================\n"
 						+ "Kind information from OutputXpectMethod:\n"
-						+ "following output was produced using "
-						+ "generator options \"" + Joiner.on(", ").join(config.options)
-						+ "\" and module loader \"" + config.loader + "\"\n"
+						+ "following output was produced using generator options \""
+						+ Joiner.on(", ").join(config.options) + "\"\n"
 						+ "======================================================================\n"
 						+ executionResult);
 			}
 
 		};
 
-		runWithAppropriateLoader(systemLoader, func);
+		runWithDefaultConfigs(func);
 	}
 
 	/**
@@ -113,24 +104,18 @@ public class OutputXpectMethod {
 	 *
 	 * @param expectation
 	 *            regex expression that will be used as compiled output matcher
-	 * @param systemLoader
-	 *            optional SystemLoader to use (e.g. SYSTEM_JS or COMMON_JS) if not given, this test will be run with
-	 *            all known loaders.
-	 *
 	 */
 	@Xpect
-	@ParameterParser(syntax = "( 'with' arg4=ID )?")
 	public void outputRegex(@StringExpectation(whitespaceSensitive = true) IStringExpectation expectation, // arg0
 			@ThisResource XtextResource resource, // arg1
 			org.eclipse.xpect.setup.ISetupInitializer<Object> init, // arg2
-			FileSetupContext fileSetupContext, // arg3
-			String systemLoader // arg4
+			FileSetupContext fileSetupContext // arg3
 	) throws IOException {
 
 		TestExecutor func = (config) -> {
 
 			String executionResult = xpectN4JSES5TranpilerHelper.doCompileAndExecute(resource, init, fileSetupContext,
-					true, null, config.options, config.loader);
+					true, null, config.options);
 			AbstractExpectation abstractEexpectation = (AbstractExpectation) expectation;
 
 			String escapedActual = abstractEexpectation.getTargetSyntaxLiteral().escape(executionResult);
@@ -146,7 +131,7 @@ public class OutputXpectMethod {
 
 		};
 
-		runWithAppropriateLoader(systemLoader, func);
+		runWithDefaultConfigs(func);
 	}
 
 	/**
@@ -239,25 +224,6 @@ public class OutputXpectMethod {
 		return buffer.toString();
 	}
 
-	// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-	// Helper to execute with different loader.
-
-	/**
-	 * If {@code systemLoader} is given, then runs with this particular load (and default generator options), if
-	 * {@code null} or not a known system load ID, the test will be run with all test configurations defined in
-	 * {@link #DEFAULT_CONFIGS}, sequentially.
-	 */
-	private void runWithAppropriateLoader(String systemLoader /* nullable */, TestExecutor func)
-			throws IOException {
-		SystemLoaderInfo systemLoaderInfo = SystemLoaderInfo.fromString(systemLoader);
-		if (systemLoaderInfo != null) {
-			// tests that explicitly specify a module loader are only run with default generator options
-			func.accept(new TestConfig(systemLoaderInfo, GeneratorOption.DEFAULT_OPTIONS));
-		} else {
-			runWithDefaultConfigs(func);
-		}
-	}
-
 	/** Runs the passed in code with all test configurations defined in {@link #DEFAULT_CONFIGS}. */
 	private static void runWithDefaultConfigs(TestExecutor func) throws IOException {
 		// Support for multiple system-loader, we do need to run the test multiple times, unfortunately.
@@ -267,16 +233,13 @@ public class OutputXpectMethod {
 	}
 
 	/**
-	 * A test configuration comprises {@link GeneratorOption}s to use during compilation and a {@link SystemLoaderInfo
-	 * module loader} to use when running the code.
+	 * A test configuration comprises {@link GeneratorOption}s to use during compilation.
 	 */
 	private static final class TestConfig {
 		GeneratorOption[] options;
-		SystemLoaderInfo loader;
 
-		public TestConfig(SystemLoaderInfo loader, GeneratorOption... options) {
+		public TestConfig(GeneratorOption... options) {
 			this.options = options;
-			this.loader = loader;
 		}
 	}
 

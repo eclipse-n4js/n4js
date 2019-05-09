@@ -63,7 +63,6 @@ import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.Measurement;
@@ -180,11 +179,6 @@ public class N4jscBase implements IApplication {
 
 	@Option(name = "--runWith", aliases = "-rw", metaVar = "runnerId", usage = "ID of runner to use, last segment is sufficient, e.g. nodejs.")
 	String runner = "nodejs";
-
-	@Option(name = "--systemLoader", aliases = "-sl", required = false, usage = "when specified the given javascript system loader will be used "
-			+ "for running the module. If not specified, the by default the System.js loader will be used. The following system "
-			+ "loaders are available: sjs and cjs where sjs stands for System.js and cjs stands for Common JS.")
-	String systemLoader;
 
 	@Option(name = "--nodejsLocation", required = false, usage = "when configured then the Node.js binary located under the given absolute path "
 			+ "will be used for executing modules. When specified then the absolute path of the folder that contains the Node.js binary should be "
@@ -515,11 +509,6 @@ public class N4jscBase implements IApplication {
 				System.out.println(msg);
 				printExtendedUsage(parser, System.out);
 				throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS);
-			}
-
-			final SystemLoaderInfo systemLoaderType = SystemLoaderInfo.fromString(systemLoader);
-			if (null == systemLoaderType) {
-				systemLoader = SystemLoaderInfo.SYSTEM_JS.getId();
 			}
 
 			if (null != nodeJsBinaryRoot) {
@@ -926,7 +915,7 @@ public class N4jscBase implements IApplication {
 				for (Path nmFolder : modulesFolders) {
 					additionalPaths.add(nmFolder.toString());
 				}
-				headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun(), additionalPaths);
+				headlessRunner.startRunner(runner, implementationId, checkFileToRun(), additionalPaths);
 			}
 		}
 	}

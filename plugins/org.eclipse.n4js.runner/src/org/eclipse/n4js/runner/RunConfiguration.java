@@ -86,9 +86,6 @@ public class RunConfiguration {
 
 	public final static String RUN_OPTIONS = "RUN_OPTIONS";
 
-	/** Key used for attribute specifying special loader option. */
-	public final static String SYSTEM_LOADER = "SYSTEM_LOADER";
-
 	/** Key used for the custom execution engine options attribute. */
 	public final static String ENGINE_OPTIONS = "ENGINE_OPTIONS";
 
@@ -148,8 +145,6 @@ public class RunConfiguration {
 	private boolean useCustomBootstrap;
 
 	private String execModule;
-
-	private String systemLoader;
 
 	private final LinkedHashSet<String> additionalPaths = new LinkedHashSet<>();
 
@@ -364,18 +359,6 @@ public class RunConfiguration {
 	}
 
 	/**
-	 * System loading mechanism. Possible values <code>SYSTEM_JS</code>==default, COMMON_JS or any other mechanism
-	 */
-	public String getSystemLoader() {
-		return systemLoader;
-	}
-
-	/** @see #getSystemLoader() */
-	public void setSystemLoader(String systemLoader) {
-		this.systemLoader = systemLoader;
-	}
-
-	/**
 	 * For each API project in the direct and indirect project dependencies of the module to run, this will contain a
 	 * mapping from the <code>projectName</code> of the API project to the <code>projectName</code> of the
 	 * implementation project to use in the run. Never returns <code>null</code> but may return an empty map.
@@ -514,9 +497,6 @@ public class RunConfiguration {
 		result.put(ENGINE_OPTIONS, getEngineOptions());
 		result.put(RUN_OPTIONS, getRunOptions());
 		result.put(ENV_VARS, this.getEnvironmentVariables());
-		// .entrySet().stream().map(entry -> entry.getKey() + "=" +
-		// entry.getValue()).collect(Collectors.joining("\n")));
-		result.put(SYSTEM_LOADER, getSystemLoader());
 		return result;
 	}
 
@@ -539,8 +519,6 @@ public class RunConfiguration {
 		this.runOptions = nullToEmpty(getString(map, RUN_OPTIONS, true));
 
 		this.setEnvironmentVariables(getMap(map, ENV_VARS, true));
-
-		this.systemLoader = nullToEmpty(getString(map, SYSTEM_LOADER, true));
 	}
 
 	/**

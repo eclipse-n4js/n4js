@@ -44,7 +44,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
-import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.nodejs.NodeRunner;
 import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
@@ -115,14 +114,12 @@ public class XpectN4JSES5TranspilerHelper {
 	 *            stdout: ..."
 	 * @param resourceTweaker
 	 *            - resource-modifier like QuickFix application, can be null
-	 * @param systemLoader
-	 *            the system loader to use (SYSTEM_JS[default], COMMON_JS,...)
 	 * @return output streams concatenated
 	 */
 	public String doCompileAndExecute(final XtextResource resource,
 			org.eclipse.xpect.setup.ISetupInitializer<Object> init,
 			FileSetupContext fileSetupContext, boolean decorateStdStreams, ResourceTweaker resourceTweaker,
-			GeneratorOption[] options, SystemLoaderInfo systemLoader) throws IOException {
+			GeneratorOption[] options) throws IOException {
 
 		// Apply some modification to the resource here.
 		if (resourceTweaker != null) {
@@ -182,7 +179,6 @@ public class XpectN4JSES5TranspilerHelper {
 			String artificialProjectName = script.getModule().getProjectName();
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
-					systemLoader,
 					packagesPath.resolve(artificialProjectName),
 					artificialProjectName);
 
@@ -190,7 +186,6 @@ public class XpectN4JSES5TranspilerHelper {
 			final String todo = "FIXME";
 			// runConfig = runnerFrontEnd.createConfiguration(NodeRunner.ID,
 			// (implementationId == ChooseImplementationHelper.CANCEL) ? null : implementationId,
-			// systemLoader.getId(),
 			// resource.getURI().trimFileExtension(), artificialRoot.getAbsolutePath().toString());
 		} else {
 			// In the non-GUI case, we need to calculate dependencies etc. manually
@@ -233,7 +228,6 @@ public class XpectN4JSES5TranspilerHelper {
 
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
-					systemLoader,
 					artificialRoot.resolve(artificialProjectName),
 					artificialProjectName);
 		}

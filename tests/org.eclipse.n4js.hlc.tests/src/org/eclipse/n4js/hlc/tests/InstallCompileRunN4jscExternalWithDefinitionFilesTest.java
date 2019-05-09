@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.StringJoiner;
@@ -59,7 +57,6 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 		final String fileToRun = packages + "/" + PROJECT_NAME_N4JS + "/src/Main.n4js";
 
 		final String[] args = {
-				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
@@ -83,7 +80,6 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 		final String fileToRun = packages + "/" + PROJECT_NAME_N4JSX + "/src/MainX.n4jsx";
 
 		final String[] args = {
-				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
