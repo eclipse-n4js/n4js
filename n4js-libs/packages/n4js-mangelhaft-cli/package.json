@@ -37,7 +37,6 @@
     "@n4jsd/debug": "<=3.1.*"
   },
   "n4js": {
-    "useES6Imports": true,
     "projectType": "library",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",

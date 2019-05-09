@@ -11,7 +11,6 @@
   },
   "devDependencies": {},
   "n4js": {
-    "useES6Imports": true,
     "projectType": "test",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",

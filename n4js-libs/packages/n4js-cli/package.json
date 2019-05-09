@@ -43,7 +43,6 @@
     "n4js-runtime-node": "^0.1.0"
   },
   "n4js": {
-    "useES6Imports": true,
     "projectType": "validation",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",
@@ -58,7 +57,6 @@
       "n4js-runtime-fetch",
       "n4js-runtime-es2015",
       "n4js-runtime-node"
-    ],
-    "moduleLoader": "commonjs"
+    ]
   }
 }

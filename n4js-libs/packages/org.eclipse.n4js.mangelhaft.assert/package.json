@@ -20,7 +20,6 @@
     "node": ">= 5.0.0"
   },
   "n4js": {
-    "useES6Imports": true,
     "projectType": "library",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",
