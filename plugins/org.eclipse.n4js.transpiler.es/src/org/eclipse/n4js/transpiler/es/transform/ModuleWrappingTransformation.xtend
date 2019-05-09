@@ -97,7 +97,11 @@ class ModuleWrappingTransformation extends Transformation {
 			}
 		}
 		if (targetProject !== null) {
-			if (targetProject.location == state.project.location) {
+			if (targetProject.projectType === ProjectType.RUNTIME_LIBRARY) {
+				// pointing to a module in a runtime library
+				// --> always use plain module specifier
+				return module.moduleSpecifier;
+			} else if (targetProject.location == state.project.location) {
 				// pointing to a target module in same project
 				return createRelativeModuleSpecifier(targetProject, targetModuleSpecifier);
 			} else {
