@@ -83,16 +83,14 @@ public class RunConfiguration {
 	/** Key used for attribute specifying the .js file to execute. */
 	public final static String FILE_TO_RUN = "FILE_TO_RUN";
 
-	public final static String RUN_OPTIONS = "RUN_OPTIONS";
-
-	/** Key used for the custom execution engine options attribute. */
+	/** Key used for attribute specifying the custom execution {@link #getEngineOptions() engine options}. */
 	public final static String ENGINE_OPTIONS = "ENGINE_OPTIONS";
+
+	/** Key used for attribute specifying the custom {@link #getRunOptions() run options}. */
+	public final static String RUN_OPTIONS = "RUN_OPTIONS";
 
 	/** Key used for custom environment variables. */
 	public final static String ENV_VARS = "ENV_VARS";
-
-	/** Key for the custom path attribute. */
-	public final static String CUSTOM_ENGINE_PATH = "CUSTOM_ENGINE_PATH";
 
 	/** Within the execution data passed to the exec module, this key is used to hold the user selection. */
 	public final static String EXEC_DATA_KEY__USER_SELECTION = "userSelection";
@@ -103,8 +101,6 @@ public class RunConfiguration {
 	private String name;
 
 	private String runnerId;
-
-	private String customEnginePath;
 
 	private String engineOptions;
 
@@ -163,53 +159,9 @@ public class RunConfiguration {
 	}
 
 	/**
-	 * Returns with the custom execution engine path that should be appended to the path that is calculated from the
-	 * dependencies defined in the N4JS manifest. Clients should be aware that the given path will be used as is. So for
-	 * instance in case of NodeJs the path should be given as:
-	 *
-	 * <pre>
-	 * some/custom/node/path:yet/another/custom/node/path
-	 * </pre>
-	 *
-	 * then the {@code NODE_PATH} will be assembled in such a way:
-	 *
-	 * <pre>
-	 * NODE_PATH=automatically/calculated/path:another/path/from/the/dependencies:some/custom/node/path:yet/another/custom/node/path
-	 * </pre>
-	 *
-	 * @return the custom node path. Never {@code null}.
-	 */
-	public String getCustomEnginePath() {
-		return nullToEmpty(customEnginePath);
-	}
-
-	/**
-	 * Counterpart of {@link #getCustomEnginePath()}.
-	 *
-	 * @param customEnginePath
-	 *            the custom execution engine path. Can be {@code null}, such cases, it will be ignored.
-	 */
-	public void setCustomEnginePath(final String customEnginePath) {
-		this.customEnginePath = nullToEmpty(customEnginePath);
-	}
-
-	/**
-	 * Returns with the custom options for the execution engine. The options given as a string will be used as is. It is
-	 * the clients responsibility to use the proper formatting. For instance if the options should be given as a key
-	 * value pairs, the it should be stored as
-	 *
-	 * <pre>
-	 * someKey=someValue anotherKey=anotherValue
-	 * </pre>
-	 *
-	 * but if the options are for instance NodeJs options, it should be provided as
-	 *
-	 * <pre>
-	 * --harmony --verbose --etc
-	 * </pre>
-	 *
-	 * furthermore all options should be separated with a {@link CharMatcher#BREAKING_WHITESPACE breaking whitespace}
-	 * character.
+	 * Custom options passed to the execution engine (e.g. node.js), not the executed N4JS code (compare to
+	 * {@link #getRunOptions() run options}). The format of this string depends on the engine being used, but in any
+	 * case options should be separated with a {@link CharMatcher#BREAKING_WHITESPACE breaking whitespace} character.
 	 *
 	 * @return the execution engine options as a string.
 	 */
@@ -302,21 +254,32 @@ public class RunConfiguration {
 
 	/**
 	 * The Javascript file to execute, either as an absolute path or a path relative to the
-	 * {@link #getWorkingDirectory() working directory}.
+	 * {@link #getWorkingDirectory() working directory}. Usually derived from the {@link #getUserSelection() user
+	 * selection} (i.e. file to run will be the file selected by the user), but in some cases the file to run will be
+	 * special, e.g. testers will set this to the main .js file in "n4js-mangelhaft-cli".
 	 */
 	public Path getFileToRun() {
 		return fileToRun;
 	}
 
-	/** */
+	/** @see #getFileToRun() */
 	public void setFileToRun(Path fileToRun) {
 		this.fileToRun = fileToRun;
 	}
 
+	/**
+	 * Custom options passed to the executed N4JS code, not the execution engine (e.g. node.js; compare to
+	 * {@link #getEngineOptions() engine options}). The format of this string depends on the code being executed, but in
+	 * any case options should be separated with a {@link CharMatcher#BREAKING_WHITESPACE breaking whitespace}
+	 * character.
+	 *
+	 * @return the run options as a string.
+	 */
 	public String getRunOptions() {
 		return nullToEmpty(runOptions);
 	}
 
+	/** @see #getRunOptions() */
 	public void setRunOptions(final String runOptions) {
 		this.runOptions = nullToEmpty(runOptions);
 	}
@@ -434,7 +397,6 @@ public class RunConfiguration {
 		result.put(RUNTIME_ENVIRONMENT, this.runtimeEnvironment.getProjectName());
 		result.put(IMPLEMENTATION_ID, this.implementationId);
 		result.put(USER_SELECTION, this.userSelection.toString());
-		result.put(CUSTOM_ENGINE_PATH, getCustomEnginePath());
 		result.put(ENGINE_OPTIONS, getEngineOptions());
 		result.put(RUN_OPTIONS, getRunOptions());
 		result.put(ENV_VARS, this.getEnvironmentVariables());
@@ -455,7 +417,6 @@ public class RunConfiguration {
 				.fromProjectName(getString(map, RUNTIME_ENVIRONMENT, false));
 		this.implementationId = getString(map, IMPLEMENTATION_ID, true);
 		this.userSelection = getURI(map, USER_SELECTION, false);
-		this.customEnginePath = nullToEmpty(getString(map, CUSTOM_ENGINE_PATH, true));
 		this.engineOptions = nullToEmpty(getString(map, ENGINE_OPTIONS, true));
 		this.runOptions = nullToEmpty(getString(map, RUN_OPTIONS, true));
 

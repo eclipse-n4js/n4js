@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Group
 import org.eclipse.swt.widgets.Text
 
 import static com.google.common.base.Strings.nullToEmpty
-import static org.eclipse.n4js.runner.RunConfiguration.CUSTOM_ENGINE_PATH
 import static org.eclipse.n4js.runner.RunConfiguration.ENGINE_OPTIONS
 import static org.eclipse.n4js.runner.RunConfiguration.ENV_VARS
+import static org.eclipse.n4js.runner.RunConfiguration.RUN_OPTIONS
 import static org.eclipse.swt.SWT.*
 
 /**
@@ -35,15 +35,15 @@ import static org.eclipse.swt.SWT.*
 class NodejsLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 
 	/** Text field for storing any arbitrary options for execution engine. */
-	var Text optionsText;
+	private var Text engineOptionsText;
+
+	/** Text field for storing any arbitrary options for the executed N4JS code. */
+	private var Text runOptionsText;
 
 	/**
 	 * Text field storing env. variables (VAR=...)
 	 */
-	var Text environmentVariablesText;
-
-	/** Text field for storing any arbitrary custom path settings. For instance for node it store NODE_PATH values. */
-	var Text customPathText;
+	private var Text environmentVariablesText;
 
 	/**
 	 * Converts a map to text, each entry is put on a line, key and value are separated by "=".
@@ -82,9 +82,9 @@ class NodejsLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 			layout = GridLayoutFactory.swtDefaults.create;
 			layoutData = GridDataFactory.swtDefaults.grab(true, true).align(FILL, FILL).create;
 		];
-		customPathText = childControl.createGroupWithMultiText('NODE_PATH');
-		optionsText = childControl.createGroupWithMultiText('Node.js options');
-		environmentVariablesText = childControl.createGroupWithMultiText('Environment Variables (VAR=...)');
+		engineOptionsText = childControl.createGroupWithMultiText('Command line options passed to node.js:');
+		runOptionsText = childControl.createGroupWithMultiText('Command line options passed to executed N4JS code:');
+		environmentVariablesText = childControl.createGroupWithMultiText('Environment Variables (VAR=...):');
 		control = childControl;
 	}
 
@@ -94,23 +94,24 @@ class NodejsLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 
 	override initializeFrom(ILaunchConfiguration configuration) {
 		try {
-			optionsText.text = configuration.getAttribute(ENGINE_OPTIONS, '');
+			engineOptionsText.text = configuration.getAttribute(ENGINE_OPTIONS, '');
+			runOptionsText.text = configuration.getAttribute(RUN_OPTIONS, '');
 			environmentVariablesText.text = mapToString(configuration.getAttribute(ENV_VARS, Collections.emptyMap()));
-			customPathText.text = configuration.getAttribute(CUSTOM_ENGINE_PATH, '');
 		} catch (CoreException e) {
 			errorMessage = e.message;
 		}
 	}
 
 	override performApply(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(ENGINE_OPTIONS, nullToEmpty(optionsText.text));
+		configuration.setAttribute(ENGINE_OPTIONS, nullToEmpty(engineOptionsText.text));
+		configuration.setAttribute(RUN_OPTIONS, nullToEmpty(runOptionsText.text));
 		configuration.setAttribute(ENV_VARS, stringToMap(environmentVariablesText.text));
-		configuration.setAttribute(CUSTOM_ENGINE_PATH, nullToEmpty(customPathText.text));
 	}
 
 	override setDefaults(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(CUSTOM_ENGINE_PATH, '');
 		configuration.setAttribute(ENGINE_OPTIONS, '');
+		configuration.setAttribute(RUN_OPTIONS, '');
+		configuration.setAttribute(ENV_VARS, '');
 	}
 
 	private def createMultiText(Composite parent) {

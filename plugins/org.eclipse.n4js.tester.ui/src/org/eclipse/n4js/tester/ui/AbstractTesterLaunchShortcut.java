@@ -122,8 +122,7 @@ public abstract class AbstractTesterLaunchShortcut implements ILaunchShortcut {
 						testConfig.setEnvironmentVariables(
 								pconfig.getAttribute(RunConfiguration.ENV_VARS, Collections.emptyMap()));
 						testConfig.setEngineOptions(pconfig.getAttribute(RunConfiguration.ENGINE_OPTIONS, ""));
-						testConfig.setCustomEnginePath(pconfig.getAttribute(RunConfiguration.CUSTOM_ENGINE_PATH, ""));
-
+						testConfig.setRunOptions(pconfig.getAttribute(RunConfiguration.RUN_OPTIONS, ""));
 					}
 				} catch (CoreException e) {
 					// TODO Auto-generated catch block
