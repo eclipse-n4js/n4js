@@ -33,12 +33,10 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 import static extension com.google.common.base.Strings.repeat
 
 /**
- * New version of module wrapping using ECMAScript 2015 imports/exports in the output code and no longer using System.js.
- * Currently this mode is experimental and only active if package.json property 'useES6Imports' is set to 'true'.
- * User story GH-1281 will make this the default, remove the old 'ModuleWrappingTransformation' and remove suffix 'NEW'
- * from the name of this class.
+ * This transformation will prepare the output code for module loading. Since dropping support for commonjs and SystemJS
+ * and instead using ECMAScript 2015 imports/exports in the output code, this transformation is no longer doing much.
  */
-class ModuleWrappingTransformationNEW extends Transformation {
+class ModuleWrappingTransformation extends Transformation {
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -74,11 +72,10 @@ class ModuleWrappingTransformationNEW extends Transformation {
 
 		// the following is only required because earlier transformations are producing
 		// invalid "export default var|let|const ..."
-		// TODO GH-1256 instead of the next line, change the earlier transformations to not produce the invalid constructs
+		// TODO instead of the next line, change the earlier transformations to not produce these invalid constructs
 		collectNodes(state.im, ExportDeclaration, false).forEach[splitDefaultExportFromVarDecl];
-		
-		// add implicit import of "n4js-node"
-		// TODO GH-1281 this should be solved in a different way (maybe via a property in the n4js-section of the package.json)
+
+		// add implicit import of "n4js-runtime"
 		addEmptyImport(N4JSGlobals.N4JS_RUNTIME);
 	}
 
