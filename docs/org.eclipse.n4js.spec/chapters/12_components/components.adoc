@@ -353,19 +353,6 @@ providedRuntimeLibraries::
   (array) The list of runtime library components that are provided by this component. Only components of 
   type "runtime environment" may declare this property.
 
-initModules::
-  (array) A list of modules in terms of module specifiers (strings), that are executed when the component 
-  is initialized. This property may only be declared by components of type "runtime environment" and "runtime library".
-+
-These init modules are executed right before the execution of a user-specified module starts. They may be used to initialize
- polyfills or perform other initialization work with regard to the execution environment (e.g. define global properties).
-
-execModule::
-  (string) The module specifier of the exec module of a runtime environment. This property may only be declared by components 
-  of type "runtime environment" and "runtime library". The exec module of a runtime environment is executed as the entry-point 
-  to the execution of a user-specified module. The underlying script must interpret the execution data and trigger the actual
-  module execution in the runtime environment.
-
 [[package-json-definesPackage, definesPackage]]
 definesPackage::
   (string) The name of the package this component provides type definitions for. Only components of project type "definition" may declare this property.

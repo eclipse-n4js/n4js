@@ -50,8 +50,6 @@ class ProjectDescription {
 	contains ProjectDependency[] projectDependencies
 	String implementationId
 	contains ProjectReference[] implementedProjects
-	contains BootstrapModule[] initModules
-	contains BootstrapModule execModule
 	String outputPath
 	contains SourceContainerDescription[] sourceContainers
 	contains ModuleFilter[] moduleFilters
@@ -123,10 +121,6 @@ class ModuleFilter {
 class ModuleFilterSpecifier {
 	String moduleSpecifierWithWildcard
 	String sourcePath
-}
-
-class BootstrapModule {
-	String moduleSpecifier
 }
 
 enum ProjectType {

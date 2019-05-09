@@ -15,38 +15,25 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowComponent;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.N4JSStandaloneSetup;
-import org.eclipse.n4js.binaries.BinariesLocatorHelper;
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.json.JSON.JSONDocument;
-import org.eclipse.n4js.json.JSON.JSONObject;
-import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-import com.google.inject.Injector;
 
 /**
  * Builds the libraries under top-level folder "n4js-libs". For details see {@link #buildN4jsLibs()}.
  */
 public class BuildN4jsLibs implements IWorkflowComponent {
-
-	private static final String NPM_INSTALL = "npm install";
-	private static final String PATH = "PATH";
 
 	@Override
 	public void preInvoke() {
@@ -87,7 +74,7 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 				+ "\" in n4js repository:");
 		compile(n4jsLibsRoot);
 
-/* @formatter:off
+		/* @formatter:off
 		// step 3: make "nj4s-runtime" self-contained (so that it includes a node_modules folder with all its
 		// dependencies)
 		println("==== STEP 3/3: make project \"" + N4JSGlobals.N4JS_RUNTIME_NAME
@@ -168,85 +155,6 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		} finally {
 			NodeYarnProcessBuilder.additionalEnvironmentVariables.clear();
 		}
-	}
-
-	private static void preinstallRequiredSiblingProjects(Path projectPath) throws IOException {
-		// collect sibling folders
-		Map<String, Path> siblingFoldersByName = Files.list(projectPath.getParent())
-				.collect(Collectors.toMap(file -> file.getFileName().toString(), file -> file));
-
-		// create node_modules folder
-		Path nodeModulesPath = projectPath.resolve(N4JSGlobals.NODE_MODULES);
-		Files.createDirectories(nodeModulesPath); // does not fail if folder already exists
-
-		// go through dependencies of project at 'projectPath' and create symbolic links for
-		// required projects that are available as a sibling folder
-		Path packageJsonPath = projectPath.resolve(N4JSGlobals.PACKAGE_JSON);
-		JSONDocument packageJsonDoc = JSONModelUtils.loadJSON(packageJsonPath, Charsets.UTF_8);
-		JSONObject dependenciesObj = (JSONObject) JSONModelUtils.getProperty(packageJsonDoc, "dependencies").get();
-		for (NameValuePair nvp : dependenciesObj.getNameValuePairs()) {
-			String projectName = nvp.getName();
-			Path siblingFolder = siblingFoldersByName.get(projectName);
-			if (siblingFolder != null) {
-				Path link = nodeModulesPath.resolve(projectName);
-				Path target = siblingFolder;
-				println("Creating symbolic link:\n"
-						+ "    at: " + link + "\n"
-						+ "    to: " + target);
-				Files.createSymbolicLink(link, target);
-			}
-		}
-	}
-
-	private static void runNpmInstall(Path workingDirectory) throws IOException {
-		final String nodePath = findNodePath();
-		if (nodePath == null || nodePath.isEmpty()) {
-			throw new IllegalStateException("unable to obtain location of node binary");
-		}
-
-		String npm = nodePath + File.separator + N4JSGlobals.NPM;
-		final String[] cmd = new String[] { npm, "install" };
-
-		final ProcessBuilder pb = new ProcessBuilder(cmd);
-		pb.inheritIO();
-		pb.directory(workingDirectory.toFile());
-		final Map<String, String> environment = pb.environment();
-		environment.put("NPM_TOKEN", "dummy");
-		final String currentPathValue = environment.get(PATH);
-		if (Strings.isNullOrEmpty(currentPathValue)) {
-			environment.put(PATH, nodePath);
-		} else {
-			environment.put(PATH, currentPathValue + File.pathSeparator + nodePath);
-		}
-
-		try {
-			println("Invoking: " + String.join(" ", cmd));
-			println("    in working directory: " + workingDirectory);
-			final Process p = pb.start();
-			final int exitCode = p.waitFor();
-			if (exitCode != 0) {
-				throw new IllegalStateException("npm exited with non-zero exit code: " + exitCode);
-			}
-			println("Finished \"" + NPM_INSTALL + "\".");
-		} catch (Throwable th) {
-			println("Error while running \"" + NPM_INSTALL + "\":");
-			th.printStackTrace();
-			throw new RuntimeException(th);
-		}
-
-		Path packageJsonLock = workingDirectory.resolve("package-lock.json");
-		if (Files.exists(packageJsonLock)) {
-			println("Deleting package.json lock-file: " + packageJsonLock);
-			Files.delete(packageJsonLock);
-		}
-	}
-
-	// BinariesLocatorHelper#findNodePath() does not truly require injection; it should be refactored into a static
-	// utility method and then this method will no longer need to create an injector:
-	private static String findNodePath() {
-		Injector injector = N4JSStandaloneSetup.doSetup();
-		final BinariesLocatorHelper locator = injector.getInstance(BinariesLocatorHelper.class);
-		return locator.findNodePath().toString();
 	}
 
 	/**

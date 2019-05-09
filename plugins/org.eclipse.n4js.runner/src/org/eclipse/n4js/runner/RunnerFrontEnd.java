@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +30,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.RunnerHelper.ApiUsage;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
-import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.google.common.base.Optional;
@@ -56,9 +53,6 @@ public class RunnerFrontEnd {
 
 	@Inject
 	private RunnerHelper runnerHelper;
-
-	@Inject
-	private RuntimeEnvironmentsHelper hRuntimeEnvironments;
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
@@ -163,8 +157,6 @@ public class RunnerFrontEnd {
 		config.setImplementationId(null);
 		config.setRunnerId(runnerId);
 
-		config.setUseCustomBootstrap(true);
-
 		config.setCoreProjectPaths(ImmutableMap.of(additionalProjectPath, additionalProjectName));
 
 		config.setWorkingDirectory(additionalProjectPath);
@@ -172,7 +164,6 @@ public class RunnerFrontEnd {
 
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 				userSelectionNodePathResolvableTargetFileName);
-		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__INIT_MODULES, config.getInitModules());
 
 		IRunner preparedRunner = runnerRegistry.getRunner(runnerId);
 		preparedRunner.prepareConfiguration(config);
@@ -202,10 +193,6 @@ public class RunnerFrontEnd {
 		configureFileToRun(config);
 
 		configureDependenciesAndPaths(config);
-
-		configureRuntimeEnvironment(config);
-
-		configureNeedsCustomBootstrap(config);
 
 		configureExecutionData(config);
 
@@ -299,7 +286,6 @@ public class RunnerFrontEnd {
 			// would throw an exception)
 			config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION, null);
 		}
-		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__INIT_MODULES, config.getInitModules());
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__PROJECT_NAME_MAPPING,
 				config.getApiImplProjectMapping());
 	}
@@ -316,20 +302,6 @@ public class RunnerFrontEnd {
 		return optionalProject.get();
 	}
 
-	/**
-	 * Computes value of the flag indicating if custom bootstrap is needed. If so, concrete runner will need to provide
-	 * more information for {@link RunConfiguration#getInitModules() init modules} and / or
-	 * {@link RunConfiguration#getExecModule() exec module}.
-	 *
-	 * @param config
-	 *            the run configuration which will have {@link RunConfiguration#isUseCustomBootstrap()} computed
-	 */
-	private void configureNeedsCustomBootstrap(RunConfiguration config) {
-		final boolean useDefaultBootstrap = config.getInitModules().isEmpty()
-				&& (config.getExecModule() == null || config.getExecModule().isEmpty());
-		config.setUseCustomBootstrap(useDefaultBootstrap);
-	}
-
 	private boolean hasValidFileExtension(String fileName) {
 		for (String fileExtension : fileExtensionsRegistry
 				.getFileExtensions(FileExtensionType.RUNNABLE_FILE_EXTENSION)) {
@@ -338,69 +310,6 @@ public class RunnerFrontEnd {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Configures provided configuration based on the {@link RunConfiguration#getRuntimeEnvironment() runtime
-	 * environment} value it stores.
-	 *
-	 * Recomputes {@link RunConfiguration#getInitModules() init modules} and {@link RunConfiguration#getExecModule()
-	 * exec module} based on current state of the workspace.
-	 *
-	 * @param config
-	 *            the runtime configuration whose derived values are computed.
-	 */
-	private void configureRuntimeEnvironment(RunConfiguration config) {
-		configureRuntimeEnvironment(config, getAllWorkspaceProjects());
-	}
-
-	/**
-	 * Configures provided configuration based on the {@link RunConfiguration#getRuntimeEnvironment() runtime
-	 * environment} value it stores.
-	 *
-	 * Recomputes {@link RunConfiguration#getInitModules() init modules} and {@link RunConfiguration#getExecModule()
-	 * exec module} based on current state of the workspace.
-	 *
-	 * @param config
-	 *            the runtime configuration whose derived values are computed.
-	 */
-	public void configureRuntimeEnvironment(RunConfiguration config, Iterable<IN4JSProject> projects) {
-		RuntimeEnvironment runtimeEnvironment = config.getRuntimeEnvironment();
-
-		Optional<IN4JSProject> findRuntimeEnvironmentProject = hRuntimeEnvironments
-				.findRuntimeEnvironmentProject(runtimeEnvironment, projects);
-		if (findRuntimeEnvironmentProject.isPresent()) {
-			IN4JSProject runtimeEnvironmentProject = findRuntimeEnvironmentProject.get();
-			// 3) collect custom(!) init modules based on selected runtime environment
-			final List<String> initModulePaths = getInitModulesPathsFrom(runtimeEnvironmentProject);
-			config.setInitModules(initModulePaths);
-
-			// 4) find compiled .js file to be executed first (the "executionModule" of the runtime environment)
-			Optional<String> executionModule = getExecModulePathFrom(runtimeEnvironmentProject);
-			if (executionModule.isPresent()) {
-				config.setExecModule(executionModule.get());
-			}
-		}
-	}
-
-	private Iterable<IN4JSProject> getAllWorkspaceProjects() {
-		return in4jscore.findAllProjects();
-	}
-
-	/**
-	 * Collect init modules from given runtime environment (and environments it extends).
-	 */
-	private List<String> getInitModulesPathsFrom(IN4JSProject runtimeEnvironment) {
-		Set<IN4JSProject> environemntWithAncestors = hRuntimeEnvironments
-				.getRuntimeEnvironmentAndAllExtendedEnvironments(runtimeEnvironment);
-		return runnerHelper.getInitModulePaths(new ArrayList<>(environemntWithAncestors));
-	}
-
-	/**
-	 * Find exec module from given runtime environment.
-	 */
-	private Optional<String> getExecModulePathFrom(IN4JSProject runtimeEnvironment) {
-		return runnerHelper.getExecModuleURI(Arrays.asList(runtimeEnvironment));
 	}
 
 	/**

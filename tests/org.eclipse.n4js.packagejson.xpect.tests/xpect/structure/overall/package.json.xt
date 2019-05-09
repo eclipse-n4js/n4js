@@ -133,19 +133,6 @@
 		// XPECT noerrors
 		"requiredRuntimeLibraries": [
 			
-		],
-		
-		// XPECT errors --> "Expected array instead of number as init modules." at "123"
-		"initModules": 123,
-		// XPECT noerrors
-		"initModules": [
-			"valid"
-		],
-		
-		// XPECT errors --> "Expected string instead of array as exec module." at "[]"
-		"execModule": [],
-		// XPECT noerrors
-		"execModule": "valid"
-		
+		]
 	}
 }

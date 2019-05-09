@@ -19,13 +19,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.projectDescription.BootstrapModule;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -196,29 +194,6 @@ public class N4JSProject implements IN4JSProject {
 			return null;
 		}
 		return pd.getVendorId();
-	}
-
-	@Override
-	public List<BootstrapModule> getInitModules() {
-		if (!exists())
-			return new ArrayList<>();
-		ProjectDescription pd = model.getProjectDescription(getLocation());
-		if (pd == null) {
-			return new ArrayList<>();
-		}
-		return pd.getInitModules();
-	}
-
-	@Override
-	public Optional<BootstrapModule> getExecModule() {
-		if (!exists()) {
-			return absent();
-		}
-		final ProjectDescription pd = model.getProjectDescription(getLocation());
-		if (pd == null) {
-			return absent();
-		}
-		return Optional.fromNullable(pd.getExecModule());
 	}
 
 	@Override

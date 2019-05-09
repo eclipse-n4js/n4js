@@ -272,8 +272,6 @@ class PackageJsonHelperTest {
 		assertEquals(#[], pd.projectDependencies);
 		assertEquals(null, pd.implementationId);
 		assertEquals(#[], pd.implementedProjects);
-		assertEquals(#[], pd.initModules);
-		assertEquals(null, pd.execModule);
 		assertEquals(OUTPUT.defaultValue, pd.outputPath);
 		assertEquals(#[], pd.moduleFilters);
 		assertEquals(#[], pd.testedProjects);

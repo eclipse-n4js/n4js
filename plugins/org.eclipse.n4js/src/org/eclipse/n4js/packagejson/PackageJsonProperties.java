@@ -79,10 +79,6 @@ public enum PackageJsonProperties {
 	PROVIDED_RUNTIME_LIBRARIES("providedRuntimeLibraries", "", JSONArray.class, N4JS),
 	/** Key of package.json property "requiredRuntimeLibraries". */
 	REQUIRED_RUNTIME_LIBRARIES("requiredRuntimeLibraries", "", JSONArray.class, N4JS),
-	/** Key of package.json property "initModules". */
-	INIT_MODULES("initModules", "", JSONArray.class, N4JS),
-	/** Key of package.json property "execModule". */
-	EXEC_MODULE("execModule", "", N4JS),
 	/** Key of package.json property "definesPackage". */
 	DEFINES_PACKAGE("definesPackage", "", N4JS),
 

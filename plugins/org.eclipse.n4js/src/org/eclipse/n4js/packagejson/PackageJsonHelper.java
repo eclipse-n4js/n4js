@@ -21,8 +21,6 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
-import static org.eclipse.n4js.packagejson.PackageJsonUtils.asBootstrapModuleOrNull;
-import static org.eclipse.n4js.packagejson.PackageJsonUtils.asBootstrapModulesInArrayOrEmpty;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asModuleFiltersInObjectOrEmpty;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asProjectReferenceOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asProjectReferencesInArrayOrEmpty;
@@ -184,12 +182,6 @@ public class PackageJsonHelper {
 				break;
 			case REQUIRED_RUNTIME_LIBRARIES:
 				target.getRequiredRuntimeLibraries().addAll(asProjectReferencesInArrayOrEmpty(value));
-				break;
-			case INIT_MODULES:
-				target.getInitModules().addAll(asBootstrapModulesInArrayOrEmpty(value));
-				break;
-			case EXEC_MODULE:
-				target.setExecModule(asBootstrapModuleOrNull(value));
 				break;
 			case DEFINES_PACKAGE:
 				target.setDefinesPackage(asStringOrNull(value));

@@ -108,7 +108,7 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 		final RunConfiguration config = runnerFrontEnd.createConfiguration(NODE_RUNNER_ID,
 				MODULE_TO_RUN_URI);
 
-		// compute derived value (including execModule)
+		// compute derived values
 		runnerFrontEnd.computeDerivedValues(config);
 
 		// execute node with the test module and assert output of execution

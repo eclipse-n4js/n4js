@@ -14,11 +14,9 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringO
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEFINES_PACKAGE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXEC_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXTENDED_RUNTIME_ENVIRONMENT;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTATION_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.INIT_MODULES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MODULE_FILTERS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
@@ -373,11 +371,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as provided runtime libraries", "as library reference");
 		checkIsArrayOfType(n4jsValues.get(REQUIRED_RUNTIME_LIBRARIES.name),
 				JSONPackage.Literals.JSON_STRING_LITERAL, "as required runtime libraries", "as library reference");
-
-		checkIsArrayOfType(n4jsValues.get(INIT_MODULES.name),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as init modules", "as init module reference");
-		checkIsType(n4jsValues.get(EXEC_MODULE.name),
-				JSONPackage.Literals.JSON_STRING_LITERAL, "as exec module");
 
 		// Check for empty strings
 		checkIsNonEmptyString(n4jsValues.get(VENDOR_ID.name), VENDOR_ID);

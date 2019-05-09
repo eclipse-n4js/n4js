@@ -718,35 +718,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		checkReferencedProjects(references, not(TEST_TYPE).forN4jsProjects, "tested projects", true, false);
 	}
 	
-	/** Checks the 'n4js.initModules' section. */
-	@CheckProperty(property = INIT_MODULES)
-	def checkInitModules(JSONValue initModulesValue) {
-		// initModule usage restriction
-		if (checkFeatureRestrictions(INIT_MODULES.name, initModulesValue, RE_OR_RL_TYPE)) {
-			if (initModulesValue instanceof JSONArray) {
-				// check all init module entries for empty strings
-				initModulesValue.elements.filter(JSONStringLiteral)
-					.filter[ l | l.value.empty ]
-					.forEach[ l |
-						addIssue(IssueCodes.getMessageForPKGJ_EMPTY_INIT_MODULE(), l, 
-							IssueCodes.PKGJ_EMPTY_INIT_MODULE)
-					]
-			}
-		}
-	}
-	
-	/** Checks the 'n4js.execModule' section. */
-	@CheckProperty(property = EXEC_MODULE)
-	def checkExecModule(JSONValue execModuleValue) {
-		// execModule usage restriction
-		if (checkFeatureRestrictions(EXEC_MODULE.name, execModuleValue, RE_OR_RL_TYPE)) {
-			// check for empty string
-			if (execModuleValue instanceof JSONStringLiteral) {
-				checkIsNonEmptyString(execModuleValue, EXEC_MODULE);
-			}
-		}
-	}
-	
 	/** Checks the 'n4js.implementationId' section. */
 	@CheckProperty(property = IMPLEMENTATION_ID)
 	def checkImplementationId(JSONValue implementationIdValue) {

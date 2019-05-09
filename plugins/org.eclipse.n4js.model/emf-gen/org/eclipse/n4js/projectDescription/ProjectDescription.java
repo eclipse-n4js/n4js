@@ -42,8 +42,6 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getProjectDependencies <em>Project Dependencies</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getImplementationId <em>Implementation Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getImplementedProjects <em>Implemented Projects</em>}</li>
- *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getInitModules <em>Init Modules</em>}</li>
- *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getExecModule <em>Exec Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getOutputPath <em>Output Path</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getSourceContainers <em>Source Containers</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getModuleFilters <em>Module Filters</em>}</li>
@@ -290,40 +288,6 @@ public interface ProjectDescription extends EObject {
 	 * @generated
 	 */
 	EList<ProjectReference> getImplementedProjects();
-
-	/**
-	 * Returns the value of the '<em><b>Init Modules</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.projectDescription.BootstrapModule}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Init Modules</em>' containment reference list.
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_InitModules()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<BootstrapModule> getInitModules();
-
-	/**
-	 * Returns the value of the '<em><b>Exec Module</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Exec Module</em>' containment reference.
-	 * @see #setExecModule(BootstrapModule)
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_ExecModule()
-	 * @model containment="true"
-	 * @generated
-	 */
-	BootstrapModule getExecModule();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getExecModule <em>Exec Module</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Exec Module</em>' containment reference.
-	 * @see #getExecModule()
-	 * @generated
-	 */
-	void setExecModule(BootstrapModule value);
 
 	/**
 	 * Returns the value of the '<em><b>Output Path</b></em>' attribute.

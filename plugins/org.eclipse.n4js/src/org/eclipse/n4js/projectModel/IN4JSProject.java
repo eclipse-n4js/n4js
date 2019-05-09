@@ -12,13 +12,11 @@ package org.eclipse.n4js.projectModel;
 
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.N4JSProject;
-import org.eclipse.n4js.projectDescription.BootstrapModule;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -170,16 +168,6 @@ public interface IN4JSProject {
 	 * returns the projects implemented by the receiving project
 	 */
 	ImmutableList<? extends IN4JSProject> getImplementedProjects();
-
-	/**
-	 * returns list of initialization modules of this project (only Runtime Environment), or empty list
-	 */
-	List<BootstrapModule> getInitModules();
-
-	/**
-	 * returns execution module of this project (only Runtime Environment), or empty optional
-	 */
-	Optional<BootstrapModule> getExecModule();
 
 	/**
 	 * Returns with the URI of the file that contains the project description of this project.

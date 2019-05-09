@@ -13,7 +13,6 @@ package org.eclipse.n4js.runner;
 import static com.google.common.base.Strings.nullToEmpty;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -98,16 +97,8 @@ public class RunConfiguration {
 	/** Within the execution data passed to the exec module, this key is used to hold the user selection. */
 	public final static String EXEC_DATA_KEY__USER_SELECTION = "userSelection";
 
-	/** Within the execution data passed to the exec module, this key is used to hold the array of init modules. */
-	public final static String EXEC_DATA_KEY__INIT_MODULES = "initModules";
-
 	/** Within the execution data passed to the exec module, this key is used to hold the API/impl project mapping. */
 	public final static String EXEC_DATA_KEY__PROJECT_NAME_MAPPING = "projectNameMapping";
-	/**
-	 * Within the execution data passed to the exec module, this key is used to hold boolean value of true if COMMON_JS
-	 * format should be used in loading.
-	 */
-	public final static String EXEC_DATA_KEY__CJS = "cjs";
 
 	private String name;
 
@@ -139,12 +130,6 @@ public class RunConfiguration {
 	private final Map<String, String> environmentVariables = new LinkedHashMap<>();
 
 	private final Map<Path, String> coreProjectPaths = new LinkedHashMap<>();
-
-	private final List<String> initModules = new ArrayList<>();
-
-	private boolean useCustomBootstrap;
-
-	private String execModule;
 
 	private final LinkedHashSet<String> additionalPaths = new LinkedHashSet<>();
 
@@ -381,7 +366,7 @@ public class RunConfiguration {
 	}
 
 	/**
-	 * Execution data, derived from user selection and passed on to the execModule, i.e. the low-level start-up code
+	 * Execution data, derived from user selection and passed on to the executed code, i.e. the low-level start-up code
 	 * defined in the runtime environment.
 	 */
 	public Map<String, Object> getExecutionData() {
@@ -432,50 +417,6 @@ public class RunConfiguration {
 	 */
 	public void addCoreProjectPaths(Map<Path, String> paths) {
 		this.coreProjectPaths.putAll(paths);
-	}
-
-	/**
-	 * List of paths to initialization module files, relative to their containing output folder.
-	 */
-	public List<String> getInitModules() {
-		return Collections.unmodifiableList(initModules);
-	}
-
-	/** @see #getInitModules() */
-	public void setInitModules(Collection<String> paths) {
-		this.initModules.clear();
-		this.initModules.addAll(paths);
-	}
-
-	/**
-	 * Flag indicates if custom bootstrap code should be used.
-	 */
-	public boolean isUseCustomBootstrap() {
-		return useCustomBootstrap;
-	}
-
-	/** @see #isUseCustomBootstrap() */
-	public void setUseCustomBootstrap(boolean useCustomBootstrap) {
-		this.useCustomBootstrap = useCustomBootstrap;
-	}
-
-	/**
-	 * Path to the file containing the low-level Javascript start-up code to launch, relative to its containing output
-	 * folder.
-	 * <p>
-	 * IMPORTANT: assuming the user wants to launch an N4JS file <code>A.n4js</code>, this attribute does <b>NOT</b>
-	 * point to the compiled version of that file; instead, this attribute denotes a file provided by the runtime
-	 * environment containing start-up code that will then invoke the compiled version of <code>A.n4js</code>. The
-	 * pointer to file <code>A.n4js</code> is passed to the start-up code via the attribute executionData, see
-	 * {@link #getExecutionData()}.
-	 */
-	public String getExecModule() {
-		return execModule;
-	}
-
-	/** @see #getExecModule() */
-	public void setExecModule(String execModule) {
-		this.execModule = execModule;
 	}
 
 	/**

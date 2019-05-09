@@ -71,7 +71,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 			case ProjectDescriptionPackage.PROJECT_DEPENDENCY: return createProjectDependency();
 			case ProjectDescriptionPackage.MODULE_FILTER: return createModuleFilter();
 			case ProjectDescriptionPackage.MODULE_FILTER_SPECIFIER: return createModuleFilterSpecifier();
-			case ProjectDescriptionPackage.BOOTSTRAP_MODULE: return createBootstrapModule();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -183,17 +182,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	public ModuleFilterSpecifier createModuleFilterSpecifier() {
 		ModuleFilterSpecifierImpl moduleFilterSpecifier = new ModuleFilterSpecifierImpl();
 		return moduleFilterSpecifier;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public BootstrapModule createBootstrapModule() {
-		BootstrapModuleImpl bootstrapModule = new BootstrapModuleImpl();
-		return bootstrapModule;
 	}
 
 	/**
