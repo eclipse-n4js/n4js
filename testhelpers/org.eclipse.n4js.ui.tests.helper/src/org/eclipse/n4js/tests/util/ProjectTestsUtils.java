@@ -93,6 +93,11 @@ import com.google.common.collect.Lists;
  */
 public class ProjectTestsUtils {
 
+	/**
+	 * Version used for dummy "n4js-runtime" packages created with method {@link #createDummyN4JSRuntime(Path)}.
+	 */
+	public static final String N4JS_RUNTIME_DUMMY_VERSION = "0.0.1-dummy";
+
 	/** Default wait time used in waiting for jobs. */
 	public static final long MAX_WAIT_2_MINUTES = 1000 * 60 * 2;
 	/** Default interval used to check state of jobs. */
@@ -109,26 +114,30 @@ public class ProjectTestsUtils {
 		return true;
 	}
 
+	/** Same as {@link #importProject(File, String, Collection)}, but without installing any n4js libraries. */
+	public static IProject importProject(File probandsFolder, String projectName) throws CoreException {
+		return importProject(probandsFolder, projectName, Collections.emptyList());
+	}
+
 	/**
 	 * Imports a project into the running JUnit test workspace. Usage:
 	 *
 	 * <pre>
-	 * IProject project = ProjectTestsUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;);
+	 * IProject project = ProjectTestsUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;, n4jsLibs);
 	 * </pre>
 	 *
 	 * @param probandsFolder
 	 *            the parent folder in which the test project is found
 	 * @param projectName
 	 *            the name of the test project, must be folder contained in probandsFolder
+	 * @param n4jsLibs
+	 *            names of N4JS libraries to install from the local <code>n4js-libs</code> top-level folder (see
+	 *            {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, String...)}).
 	 * @return the imported project
 	 * @see <a href=
 	 *      "http://stackoverflow.com/questions/12484128/how-do-i-import-an-eclipse-project-from-a-zip-file-programmatically">
 	 *      stackoverflow: from zip</a>
 	 */
-	public static IProject importProject(File probandsFolder, String projectName) throws CoreException {
-		return importProject(probandsFolder, projectName, true, true, Collections.emptyList());
-	}
-
 	public static IProject importProject(File probandsFolder, String projectName, Collection<String> n4jsLibs)
 			throws CoreException {
 		return importProject(probandsFolder, projectName, true, true, n4jsLibs);
@@ -271,10 +280,8 @@ public class ProjectTestsUtils {
 	}
 
 	/**
-	 * Imports the given yarn workspace project. Also imports (by reference) all projects located in the subfolder
-	 * 'packages'.
-	 *
-	 * @return yarn workspace project
+	 * Same as {@link #importYarnWorkspace(LibraryManager, File, String, Predicate, Collection)}, but imports all
+	 * packages contained in subfolder "packages" of the yarn workspace and does not install any N4JS libraries.
 	 */
 	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName)
 			throws CoreException {
@@ -282,16 +289,32 @@ public class ProjectTestsUtils {
 				Collections.emptyList());
 	}
 
+	/**
+	 * Same as {@link #importYarnWorkspace(LibraryManager, File, String, Predicate, Collection)}, but imports all
+	 * packages contained in subfolder "packages" of the yarn workspace.
+	 */
 	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName,
 			Collection<String> n4jsLibs) throws CoreException {
 		return importYarnWorkspace(libraryManager, parentFolder, yarnProjectName, Predicates.alwaysTrue(), n4jsLibs);
 	}
 
-	// FIXME GH-1281: refactor this method to not run LibraryManager#runNpmYarnInstall()! Not all clients need that!
 	/**
-	 * Imports the given yarn workspace project. Also imports (by reference) those projects located in the subfolder
-	 * 'packages' for which the given predicate returns <code>true</code>.
+	 * Imports the given yarn workspace project as an Eclipse project into the Eclipse workspace. Also imports (by
+	 * reference) those projects located in the subfolder 'packages' for which the given predicate returns
+	 * <code>true</code>.
 	 *
+	 * @param libraryManager
+	 *            library manager instance.
+	 * @param parentFolder
+	 *            folder containing the test data.
+	 * @param yarnProjectName
+	 *            name of the folder containing the yarn workspace project.
+	 * @param packagesToImport
+	 *            predicate telling whether a given package contained in the 'packages' subfolder of the yarn workspace
+	 *            should be imported as well (the predicate's argument is the package name).
+	 * @param n4jsLibs
+	 *            names of N4JS libraries to install from the local <code>n4js-libs</code> top-level folder (see
+	 *            {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, String...)}).
 	 * @return yarn workspace project
 	 */
 	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName,
@@ -402,6 +425,16 @@ public class ProjectTestsUtils {
 		return result;
 	}
 
+	/**
+	 * Similar to {@link #createDummyN4JSRuntime(Path)}, this method will create a dummy version of "n4js-runtime" for
+	 * testing purposes, with the following differences:
+	 * <ol>
+	 * <li>the new npm package will be created in the given Eclipse project's <code>node_modules</code> folder.
+	 * <li>the given Eclipse project will be refreshed afterwards, to make the newly created files/folders available in
+	 * the Eclipse workspace.
+	 * </ol>
+	 * Note that this method will *not* issue an update of external libraries via the library manager or a rebuild!
+	 */
 	public static IFolder createDummyN4JSRuntime(IProject project) throws CoreException {
 		IFolder nodeModulesFolder = project.getFolder(N4JSGlobals.NODE_MODULES);
 		createDummyN4JSRuntime(nodeModulesFolder.getLocation().toFile().toPath());
@@ -409,6 +442,21 @@ public class ProjectTestsUtils {
 		return nodeModulesFolder.getFolder(N4JSGlobals.N4JS_RUNTIME);
 	}
 
+	/**
+	 * Creates a dummy version of "n4js-runtime" that is sufficient to avoid compilation errors in package.json files
+	 * (i.e. missing dependency to "n4js-runtime") but won't suffice for executing N4JS code. Intended for simple tests
+	 * that only require compilation.
+	 * <p>
+	 * The newly created npm package will have a special dummy version which is available as constant
+	 * {@link #N4JS_RUNTIME_DUMMY_VERSION}, allowing clients to check for this particular version, where needed.
+	 * <p>
+	 * If execution of N4JS code is required for testing, use method
+	 * {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, String...)} instead.
+	 *
+	 * @param location
+	 *            path to a folder that will become the parent folder of the newly created npm package "n4js-runtime".
+	 * @return path to the root folder of the newly created npm package.
+	 */
 	public static Path createDummyN4JSRuntime(Path location) {
 		Path projectPath = location.resolve(N4JSGlobals.N4JS_RUNTIME);
 		Path packageJsonFile = projectPath.resolve(N4JSGlobals.PACKAGE_JSON);
@@ -417,13 +465,11 @@ public class ProjectTestsUtils {
 			Files.write(packageJsonFile, Lists.newArrayList(
 					"{",
 					"    \"name\": \"" + N4JSGlobals.N4JS_RUNTIME + "\",",
-					"    \"version\": \"" + N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION + "\"",
+					"    \"version\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\"",
 					"}"));
 		} catch (IOException e) {
 			throw new RuntimeException("failed to create dummy n4js-runtime for testing purposes", e);
 		}
-		packageJsonFile.toFile().deleteOnExit();
-		projectPath.toFile().deleteOnExit();
 		return projectPath;
 	}
 
@@ -470,6 +516,10 @@ public class ProjectTestsUtils {
 				projectDescriptionWorkspaceFile.exists());
 	}
 
+	/**
+	 * Add the given dependency to the package.json file of the given project. The version constraint may not be
+	 * <code>null</code> but may be the empty string or <code>"*"</code>.
+	 */
 	public static void addProjectToDependencies(IProject toChange, String projectName, String versionConstraint)
 			throws IOException {
 		URI uri = URI.createPlatformResourceURI(toChange.getFile(N4JSGlobals.PACKAGE_JSON).getFullPath().toString(),

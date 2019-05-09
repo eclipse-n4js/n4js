@@ -44,7 +44,7 @@ import com.google.common.base.Predicates;
 /**
  * Provides access to the projects located in the N4JS Git repository under top-level folder "n4js-libs". Assumes that
  * the code invoking the methods in this class is run from source, i.e. that the entire contents of the N4JS Git
- * repository are located on disk uncompressed.
+ * repository are located on disk uncompressed. Only intended for testing purposes, obviously.
  */
 public class N4jsLibsAccess {
 
@@ -58,19 +58,18 @@ public class N4jsLibsAccess {
 	/** Name of the top-level folder containing the "n4js-libs" inside the N4JS Git repository. */
 	private static final String N4JS_LIBS_NAME = "n4js-libs";
 
-	public static boolean isRunningFromSource() {
-		URI myLocation = findMyLocation();
-		return myLocation != null && myLocation.isFile();
-	}
-
-	// FIXME consider using UtilN4#findN4jsRepoRootPath() instead!
+	/**
+	 * Returns the absolute path to the location of the "n4js-libs" in the N4JS Git repository clone on the local file
+	 * system. This will be the "packages" subfolder inside the top-level folder "n4js-libs" in the N4JS repository.
+	 *
+	 * @throws IllegalStateException
+	 *             if that path cannot be obtained.
+	 */
 	public static Path findN4jsLibsLocation() {
 		URI myLocation = findMyLocation();
 		if (myLocation == null || !myLocation.isFile()) {
-			// throw new IllegalStateException(
-			// "cannot obtain location of n4js-libs: current application not running from source");
-			// FIXME temporary: (required for UI case in case of Xpect output plugin[UI] tests)
-			return UtilN4.findN4jsRepoRootPath().resolve(N4JS_LIBS_NAME).resolve("packages");
+			// required for UI case in case of Xpect output plugin[UI] tests:
+			return UtilN4.findN4jsRepoRootPath().resolve(N4JS_LIBS_NAME).resolve("packages").toAbsolutePath();
 		}
 
 		String myLocationStr = myLocation.toFileString();
@@ -92,9 +91,17 @@ public class N4jsLibsAccess {
 		} catch (InvalidPathException e) {
 			throw new IllegalStateException("cannot obtain location of n4js-libs: invalid path", e);
 		}
-		return n4jsLibsLocation.resolve("packages");
+		return n4jsLibsLocation.resolve("packages").toAbsolutePath();
 	}
 
+	/**
+	 * Returns the absolute path to the root folder of the N4JS library with the given name (i.e. one of the npm
+	 * packages located under "n4js-libs/packages" in the N4JS Git repository on the local file system).
+	 *
+	 * @throws IllegalStateException
+	 *             if the {@link #findN4jsLibsLocation() n4js-libs location} cannot be obtained or there is not library
+	 *             with the given name.
+	 */
 	public static Path findN4jsLib(String projectName) {
 		Path base = findN4jsLibsLocation();
 		return findN4jsLib(base, projectName, false);
@@ -115,6 +122,14 @@ public class N4jsLibsAccess {
 		return result;
 	}
 
+	/**
+	 * Returns all N4JS libraries (i.e. the npm packages located under "n4js-libs/packages" in the N4JS Git repository
+	 * on the local file system) as a map from package name to absolute path on local disk.
+	 *
+	 * @throws IllegalStateException
+	 *             if the {@link #findN4jsLibsLocation() n4js-libs location} cannot be obtained or some other havoc
+	 *             occurred.
+	 */
 	public static Map<String, Path> findAllN4jsLibs() {
 		Path location = findN4jsLibsLocation();
 		try {
@@ -126,26 +141,56 @@ public class N4jsLibsAccess {
 		}
 	}
 
+	/** Same as {@link #installN4jsLibs(Path, boolean, boolean, boolean, String...)} but will install all n4js-libs. */
 	public static Map<String, Path> installAllN4jsLibs(Path targetPath, boolean includeDependencies,
 			boolean useSymbolicLinks, boolean deleteOnExit) throws IOException {
 		return installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit,
 				Predicates.alwaysTrue());
 	}
 
+	/** Same as {@link #installN4jsLibs(Path, boolean, boolean, boolean, String...)} but a predicate can be supplied. */
 	public static Map<String, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
-			boolean useSymbolicLinks, boolean deleteOnExit, Predicate<String> predicate) throws IOException {
+			boolean useSymbolicLinks, boolean deleteOnExit, Predicate<String> n4jsLibsToInstall) throws IOException {
 		Map<String, Path> allN4jsLibs = findAllN4jsLibs();
 		Map<String, Path> toBeInstalled = allN4jsLibs.entrySet().stream()
-				.filter(e -> predicate.test(e.getKey()))
+				.filter(e -> n4jsLibsToInstall.test(e.getKey()))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		return installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
 	}
 
+	/**
+	 * Installs one or more N4JS libraries (i.e. the npm packages located under "n4js-libs/packages" in the N4JS Git
+	 * repository on the local file system) by copying or symbolically linking them from their location in the local
+	 * N4JS Git repository clone.
+	 * <p>
+	 * This method should be preferred over an installation from the remote npm registry to use the current version of
+	 * the N4JS libraries of the currently running build. For tests that do not require execution of N4JS code (just
+	 * compilation), method {@code ProjectTestsUtils#createDummyN4JSRuntime(Path)} might be a simpler alternative.
+	 *
+	 * @param targetPath
+	 *            where to install.
+	 * @param includeDependencies
+	 *            if dependencies of the installed N4JS libraries should be installed, too. This includes both other
+	 *            N4JS libraries or third-party dependencies that reside under folder "n4js-libs/node_modules" and will
+	 *            be installed by MWE2 workflow BuildN4jsLibs in the early stages of the N4JS build.
+	 * @param useSymbolicLinks
+	 *            whether symbolic links should be used instead of copying the files.<br>
+	 *            WARNING: if your tests changes the installed packages, this will affect a global location that will
+	 *            influence other tests!
+	 * @param deleteOnExit
+	 *            whether the copied files / created symbolic links should be removed when the JVM shuts down.
+	 * @param n4jsLibsNames
+	 *            One or more package names of N4JS libraries that are to be installed.
+	 * @return actually installed packages (including dependencies, if requested) as a map from package name to absolute
+	 *         path.
+	 * @throws IOException
+	 *             in case of trouble.
+	 */
 	public static Map<String, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
-			boolean useSymbolicLinks, boolean deleteOnExit, String... projectNames) throws IOException {
+			boolean useSymbolicLinks, boolean deleteOnExit, String... n4jsLibsNames) throws IOException {
 		Path n4jsLibsLocation = findN4jsLibsLocation();
 		Map<String, Path> toBeInstalled = new HashMap<>();
-		for (String projectName : projectNames) {
+		for (String projectName : n4jsLibsNames) {
 			Path projectPath = findN4jsLib(n4jsLibsLocation, projectName, false);
 			toBeInstalled.put(projectName, projectPath);
 		}
@@ -153,11 +198,11 @@ public class N4jsLibsAccess {
 	}
 
 	private static Map<String, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
-			boolean useSymbolicLinks, boolean deleteOnExit, Map<String, Path> projectsToBeInstalled)
+			boolean useSymbolicLinks, boolean deleteOnExit, Map<String, Path> n4jsLibsToBeInstalled)
 			throws IOException {
 		Map<String, Path> toBeInstalled = new LinkedHashMap<>();
 		// add projects in 'projectNames' to 'toBeInstalled'
-		toBeInstalled.putAll(projectsToBeInstalled);
+		toBeInstalled.putAll(n4jsLibsToBeInstalled);
 		// add dependencies of projects in 'toBeInstalled' to 'toBeInstalled' (if requested)
 		if (includeDependencies) {
 			Path n4jsLibsLocation = N4jsLibsAccess.findN4jsLibsLocation();

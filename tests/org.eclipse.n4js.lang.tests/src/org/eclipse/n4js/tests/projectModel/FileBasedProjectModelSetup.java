@@ -11,7 +11,7 @@
 package org.eclipse.n4js.tests.projectModel;
 
 import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME;
-import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION;
+import static org.eclipse.n4js.tests.util.ProjectTestsUtils.N4JS_RUNTIME_DUMMY_VERSION;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;

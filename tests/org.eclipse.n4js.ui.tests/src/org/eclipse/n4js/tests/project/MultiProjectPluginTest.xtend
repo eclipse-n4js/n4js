@@ -59,8 +59,8 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		src = configureProjectWithXtext(firstProjectUnderTest)
 		src2 = configureProjectWithXtext(secondProjectUnderTest)
 
-		addProjectToDependencies(firstProjectUnderTest, N4JSGlobals.N4JS_RUNTIME, N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION);
-		addProjectToDependencies(secondProjectUnderTest, N4JSGlobals.N4JS_RUNTIME, N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION);
+		addProjectToDependencies(firstProjectUnderTest, N4JSGlobals.N4JS_RUNTIME, ProjectTestsUtils.N4JS_RUNTIME_DUMMY_VERSION);
+		addProjectToDependencies(secondProjectUnderTest, N4JSGlobals.N4JS_RUNTIME, ProjectTestsUtils.N4JS_RUNTIME_DUMMY_VERSION);
 		createAndRegisterDummyN4JSRuntime(firstProjectUnderTest)
 		createAndRegisterDummyN4JSRuntime(secondProjectUnderTest)
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor())

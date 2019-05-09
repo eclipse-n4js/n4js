@@ -39,14 +39,12 @@ public final class N4JSGlobals {
 	 */
 	public static final String N4JS_FILE_EXTENSION = "n4js";
 	/**
-	 * Files extension of JSX source files (<b>not</b> including the separator dot). TODO: This will be OK when JSX is
-	 * merged into N4JS.
+	 * Files extension of JSX source files (<b>not</b> including the separator dot).
 	 */
 	public static final String JSX_FILE_EXTENSION = "jsx";
 
 	/**
-	 * Files extension of N4JSX source files (<b>not</b> including the separator dot). TODO: This will be OK when N4JSX
-	 * is merged into N4JS.
+	 * Files extension of N4JSX source files (<b>not</b> including the separator dot).
 	 */
 	public static final String N4JSX_FILE_EXTENSION = "n4jsx";
 
@@ -129,8 +127,9 @@ public final class N4JSGlobals {
 	 */
 	public static final String N4JS_RUNTIME = "n4js-runtime";
 
-	public static final String N4JS_RUNTIME_DUMMY_VERSION = "0.0.1-dummy";
-
+	/**
+	 * Project types for which a dependency to the {@link #N4JS_RUNTIME n4js-runtime} is mandatory.
+	 */
 	public static final Set<ProjectType> PROJECT_TYPES_REQUIRING_N4JS_RUNTIME = ImmutableSet.of(
 			ProjectType.LIBRARY,
 			ProjectType.APPLICATION,

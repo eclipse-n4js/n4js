@@ -39,6 +39,7 @@ import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
@@ -143,6 +144,11 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		return project;
 	}
 
+	/**
+	 * Same as {@link ProjectTestsUtils#createDummyN4JSRuntime(IProject)}, but will
+	 * {@link LibraryManager#registerAllExternalProjects(org.eclipse.core.runtime.IProgressMonitor) refresh all external
+	 * libraries} in the library manager.
+	 */
 	protected IFolder createAndRegisterDummyN4JSRuntime(IProject project) throws CoreException {
 		IFolder runtimeProjectFolder = createDummyN4JSRuntime(project);
 		waitForAutoBuild();
@@ -150,6 +156,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		return runtimeProjectFolder;
 	}
 
+	/** Same as {@link ProjectTestsUtils#createDummyN4JSRuntime(IProject)}. */
 	protected IFolder createDummyN4JSRuntime(IProject project) throws CoreException {
 		return ProjectTestsUtils.createDummyN4JSRuntime(project);
 	}
