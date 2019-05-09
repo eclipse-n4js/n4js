@@ -169,7 +169,7 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 				description.getURI());
 		Assert.assertNotNull(moduleAsString);
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n" +
-				"<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" qualifiedName=\"Client\" projectName=\"Client\" vendorID=\"org.eclipse.n4js\" moduleLoader=\"N4JS\">\n"
+				"<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" qualifiedName=\"Client\" projectName=\"Client\" vendorID=\"org.eclipse.n4js\">\n"
 				+
 				"  <astElement href=\"#/0\"/>\n" +
 				"  <variables name=\"a\" exportedName=\"a\" const=\"true\" newExpression=\"true\">\n" +

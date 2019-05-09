@@ -291,9 +291,6 @@ noValidate:::
   If they are contained in source or test source fragments, it must be possible to bind references
   to declarations inside these modules.
   Note that switching off validation for n4js files is disallowed.
-noModuleWrap:::
-  Files matching this filter are not wrapped into modules and they are not semantically validated.
-  Since they are assumed to be wrapped into modules, declarations inside these modules cannot be referenced by n4js code.
 
 .Module Filters
 [example]
@@ -308,9 +305,6 @@ A simple and a source-container-specific module filter in the `n4js` section of 
 			"module": "xyz*",
 			"sourceContainer": "src/n4js"
 		}
-	],
-	"noModuleWrap": [
-		// syntax same as for noValidate above
 	]
 }
 ----
@@ -350,22 +344,6 @@ requiredRuntimeLibraries::
  component. All components but components of type "runtime environment" may declare this property. Each 
  required runtime library must also be specified as a dependency using one of the top-level 
  properties `dependencies` or `devDependencies`.
-
-moduleLoader::
-  (string) This property defines what module loaders are supported by the modules in this component. Possible values are the following:
-+
-n4js:::: 
-  (default) The modules in this component can be loaded with SystemJS or with CommonJS.
-+
-commonjs:::: 
-  Modules in this component must be loaded with CommonJS. When these modules are referenced in 
-  generated code (i.e. when importing from these modules), the module specifier will be prefixed 
-  with `@@cjs/`.
-+
-node_builtin::::
-  Modules in this component represent node built-in modules such as fs or https. When these modules 
-  are referenced in generated code (i.e. when importing from these modules), the module specifier will 
-  be prefixed with `@node/`.
 
 extendedRuntimeEnvironment::
   (string) The name of the runtime environment project that is extended by this component. Only components of 
@@ -454,9 +432,6 @@ The following example illustrates how to use the N4JS-related package.json prope
 					"module": "xyz*",
 					"sourceContainer": "src/n4js"
 				}
-			],
-			"noModuleWrap": [
-				// syntax same as for noValidate above
 			]
 		},
 		"requiredRuntimeLibraries": [

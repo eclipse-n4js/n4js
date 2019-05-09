@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.tests.projectModel;
 
-import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -95,8 +95,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"      \"source\": [\n" +
 					"        \"src\"\n" +
 					"      ]\n" +
-					"    },\n" +
-					"    \"moduleLoader\": \"n4js\"\n" +
+					"    }\n" +
 					"  }\n" +
 					"}");
 			final URI libProjectURI = URIUtils.normalize(createTempProject(host.libProjectName));

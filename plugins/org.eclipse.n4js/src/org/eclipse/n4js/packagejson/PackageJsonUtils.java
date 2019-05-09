@@ -121,12 +121,6 @@ public class PackageJsonUtils {
 	 *         "module": "abc*"
 	 *     }
 	 * ]
-	 *
-	 * // or:
-	 *
-	 * "noModuleWrap": [
-	 *     // same as above
-	 * ]
 	 * </pre>
 	 */
 	public static ModuleFilter asModuleFilterOrNull(NameValuePair pair) {

@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.tests.projectModel;
 
-import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME_DUMMY_VERSION;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
@@ -71,8 +71,7 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"      \"source\": [\n" +
 					"        \"src\"\n" +
 					"      ]\n" +
-					"    },\n" +
-					"    \"moduleLoader\": \"n4js\"\n" +
+					"    }\n" +
 					"  }\n" +
 					"}");
 			host.setLibProjectURI(createTempProject(host.libProjectName));

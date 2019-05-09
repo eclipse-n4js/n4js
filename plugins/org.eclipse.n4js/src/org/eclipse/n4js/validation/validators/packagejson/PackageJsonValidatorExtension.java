@@ -819,7 +819,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		// make sure the module filter type could be parsed successfully
 		if (filterType == null) {
 			final String message = IssueCodes.getMessageForPKGJ_INVALID_MODULE_FILTER_TYPE(
-					moduleFilterPair.getName(), "noValidate and noModuleWrap");
+					moduleFilterPair.getName(), "noValidate");
 			addIssue(message, moduleFilterPair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
 					IssueCodes.PKGJ_INVALID_MODULE_FILTER_TYPE);
 		}

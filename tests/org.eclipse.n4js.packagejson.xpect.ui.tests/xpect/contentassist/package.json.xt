@@ -46,13 +46,10 @@
 	   	initModules -,
 	   	mainModule - Main module specifier. Starts from source folder(s),
 	   	moduleFilters -,
-	   	moduleLoader -,
-	   	noModuleWrap -,
 	   	noValidate -,
 	   	providedRuntimeLibraries -,
 	   	requiredRuntimeLibraries -,
 	   	testedProjects - Projects that are tested by this project,
-	   	useES6Imports - EXPERIMENTAL: if value is 'true' transpiler will generate ES6 imports/exports in the output code.,
 	   	vendorId -,
 	   	vendorName -
 	--- */
