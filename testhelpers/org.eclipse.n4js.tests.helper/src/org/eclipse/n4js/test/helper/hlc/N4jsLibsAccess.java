@@ -34,9 +34,11 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
+import org.eclipse.n4js.libs.build.BuildN4jsLibs;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileCopier;
+import org.junit.Assert;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Predicates;
@@ -59,8 +61,10 @@ public class N4jsLibsAccess {
 	private static final String N4JS_LIBS_NAME = "n4js-libs";
 
 	/**
-	 * Returns the absolute path to the location of the "n4js-libs" in the N4JS Git repository clone on the local file
-	 * system. This will be the "packages" subfolder inside the top-level folder "n4js-libs" in the N4JS repository.
+	 * Returns the absolute path to the location of the N4JS libraries (i.e. the npm packages located under
+	 * "n4js-libs/packages" in the N4JS Git repository on the local file system) in the N4JS Git repository clone on the
+	 * local file system. This will be the "packages" subfolder inside the top-level folder "n4js-libs" in the N4JS
+	 * repository.
 	 *
 	 * @throws IllegalStateException
 	 *             if that path cannot be obtained.
@@ -68,8 +72,10 @@ public class N4jsLibsAccess {
 	public static Path findN4jsLibsLocation() {
 		URI myLocation = findMyLocation();
 		if (myLocation == null || !myLocation.isFile()) {
-			// required for UI case in case of Xpect output plugin[UI] tests:
-			return UtilN4.findN4jsRepoRootPath().resolve(N4JS_LIBS_NAME).resolve("packages").toAbsolutePath();
+			// use different approach (required for UI case in case of Xpect output plugin[UI] tests):
+			Path result = UtilN4.findN4jsRepoRootPath().resolve(N4JS_LIBS_NAME).resolve("packages").toAbsolutePath();
+			assertN4jsLibsAreBuilt(result);
+			return result;
 		}
 
 		String myLocationStr = myLocation.toFileString();
@@ -91,7 +97,9 @@ public class N4jsLibsAccess {
 		} catch (InvalidPathException e) {
 			throw new IllegalStateException("cannot obtain location of n4js-libs: invalid path", e);
 		}
-		return n4jsLibsLocation.resolve("packages").toAbsolutePath();
+		Path result = n4jsLibsLocation.resolve("packages").toAbsolutePath();
+		assertN4jsLibsAreBuilt(result);
+		return result;
 	}
 
 	/**
@@ -323,5 +331,24 @@ public class N4jsLibsAccess {
 	private static URI findMyLocation() {
 		URL url = N4jsLibsAccess.class.getResource(N4jsLibsAccess.class.getSimpleName() + ".class");
 		return url != null ? URI.createURI(url.toString()) : null;
+	}
+
+	/**
+	 * Uses a heuristic to check if MWE2 workflow {@link BuildN4jsLibs} has been run and throw an {@link AssertionError}
+	 * if this isn't the case.
+	 */
+	private static void assertN4jsLibsAreBuilt(Path n4jsLibsLocation) {
+		Path n4jsLibsFolder = n4jsLibsLocation.getParent(); // remove trailing "packages" segment
+		Path nodeModulesFolder = n4jsLibsFolder.resolve(N4JSGlobals.NODE_MODULES);
+		Path n4jsRuntimeLink = nodeModulesFolder.resolve(N4JSGlobals.N4JS_RUNTIME);
+		Path n4jsRuntimeSrcGen = n4jsRuntimeLink.resolve("src-gen");
+		String warning = "\n" +
+				"******************************************************************\n" +
+				"Maybe you forgot to run MWE2 workflow " + BuildN4jsLibs.class.getSimpleName() + "?\n" +
+				"******************************************************************";
+		Assert.assertTrue("not a symbolic link pointing to package \"" + N4JSGlobals.N4JS_RUNTIME + "\": "
+				+ n4jsRuntimeLink + warning, Files.isSymbolicLink(n4jsRuntimeLink));
+		Assert.assertTrue("src-gen folder in n4js-runtime does not exist: " + n4jsRuntimeSrcGen + warning,
+				Files.isDirectory(n4jsRuntimeSrcGen));
 	}
 }
