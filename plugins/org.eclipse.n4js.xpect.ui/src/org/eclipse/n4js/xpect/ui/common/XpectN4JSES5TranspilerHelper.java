@@ -47,7 +47,6 @@ import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.nodejs.NodeRunner;
 import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
-import org.eclipse.n4js.runner.ui.ChooseImplementationHelper;
 import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.utils.io.FileCopier;
@@ -84,9 +83,6 @@ public class XpectN4JSES5TranspilerHelper {
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
-
-	@Inject
-	private ChooseImplementationHelper chooseImplHelper;
 
 	private ReadOutConfiguration readOutConfiguration;
 
@@ -137,23 +133,7 @@ public class XpectN4JSES5TranspilerHelper {
 			// If we are in the IDE, execute the test the same as for "Run in Node.js" and this way avoid
 			// the effort of calculating dependencies etc.
 
-			final String implementationId = chooseImplHelper.chooseImplementationIfRequired(NodeRunner.ID,
-					resource.getURI().trimFileExtension());
-
-			Path nodeModulesPath = artificialRoot.resolve(N4JSGlobals.NODE_MODULES);
-			Files.createDirectories(nodeModulesPath);
-			Path packagesPath = artificialRoot.resolve("packages");
-			Files.createDirectories(packagesPath);
-
-			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-				Path target = packagesPath.resolve(project.getName());
-				FileCopier.copy(
-						project.getLocation().toFile().toPath(),
-						target);
-				Files.createSymbolicLink(
-						nodeModulesPath.resolve(project.getName()),
-						target);
-			}
+			Path packagesPath = createTemporaryYarnWorkspace(artificialRoot);
 
 			boolean replaceQuotes = false;
 			// We have to generate JS code for the resource. Because if Xpect test is quickfixAndRun the resource
@@ -162,18 +142,6 @@ public class XpectN4JSES5TranspilerHelper {
 			Script script = (Script) resource.getContents().get(0);
 			createTempJsFileWithScript(packagesPath, script, options, replaceQuotes).toPath().getParent();
 
-			Files.write(artificialRoot.resolve(N4JSGlobals.PACKAGE_JSON), Lists.newArrayList(
-					"{\n",
-					"  \"private\": true,\n",
-					"  \"workspaces\": [ \"packages/*\" ]\n",
-					"}\n"));
-
-			// provide n4js-runtime in the version of the current build
-			N4jsLibsAccess.installN4jsLibs(
-					nodeModulesPath,
-					true, true, true,
-					N4JSGlobals.N4JS_RUNTIME);
-
 			String fileToRun = jsModulePathToRun(script);
 			fileToRun = fileToRun.substring(fileToRun.indexOf('/') + 1);
 			String artificialProjectName = script.getModule().getProjectName();
@@ -181,12 +149,6 @@ public class XpectN4JSES5TranspilerHelper {
 					fileToRun,
 					packagesPath.resolve(artificialProjectName),
 					artificialProjectName);
-
-			// FIXME change the above code to use one of the ordinary #createConfiguration() methods:
-			final String todo = "FIXME";
-			// runConfig = runnerFrontEnd.createConfiguration(NodeRunner.ID,
-			// (implementationId == ChooseImplementationHelper.CANCEL) ? null : implementationId,
-			// resource.getURI().trimFileExtension(), artificialRoot.getAbsolutePath().toString());
 		} else {
 			// In the non-GUI case, we need to calculate dependencies etc. manually
 			final Iterable<Resource> dependencies = from(getDependentResources());
@@ -233,6 +195,45 @@ public class XpectN4JSES5TranspilerHelper {
 		}
 
 		return configRunner.executeWithConfig(runConfig, decorateStdStreams);
+	}
+
+	/**
+	 * TODO GH-1308 remove this work-around
+	 *
+	 * TEMPORARY WORKAROUND: since Xpect Plugin[UI] with two or more interdependent N4JS projects use an invalid setup
+	 * at the moment (they follow the "side-by-side" use case), we do not execute right inside the Eclipse workspace,
+	 * which would be preferable, but instead execute in a temporary folder where we create a yarn workspace setup on
+	 * the fly.
+	 */
+	private Path createTemporaryYarnWorkspace(Path location) throws IOException {
+		Path nodeModulesPath = location.resolve(N4JSGlobals.NODE_MODULES);
+		Files.createDirectories(nodeModulesPath);
+		Path packagesPath = location.resolve("packages");
+		Files.createDirectories(packagesPath);
+
+		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+			Path target = packagesPath.resolve(project.getName());
+			FileCopier.copy(
+					project.getLocation().toFile().toPath(),
+					target);
+			Files.createSymbolicLink(
+					nodeModulesPath.resolve(project.getName()),
+					target);
+		}
+
+		Files.write(location.resolve(N4JSGlobals.PACKAGE_JSON), Lists.newArrayList(
+				"{\n",
+				"  \"private\": true,\n",
+				"  \"workspaces\": [ \"packages/*\" ]\n",
+				"}\n"));
+
+		// provide n4js-runtime in the version of the current build
+		N4jsLibsAccess.installN4jsLibs(
+				nodeModulesPath,
+				true, true, true,
+				N4JSGlobals.N4JS_RUNTIME);
+
+		return packagesPath;
 	}
 
 	/**
