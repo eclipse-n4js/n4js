@@ -364,8 +364,7 @@ public class N4CliHelper {
 	/**
 	 * Copies the n4js libraries to the given testing workspace {@code location}.
 	 *
-	 * Only includes n4js libraries (cf. shipped code), for whose project name {@code n4jsLibrariesPredicate} returns
-	 * {@code true}.
+	 * Only includes n4js libraries, for whose project name {@code n4jsLibrariesPredicate} returns {@code true}.
 	 *
 	 * @throws IOException
 	 *             In case the copying is not successful.

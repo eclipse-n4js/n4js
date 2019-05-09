@@ -158,77 +158,9 @@ supported via `.npmrc` file (see https://docs.npmjs.com/files/npmrc).
 
 In N4JSIDE user can specify path to his custom configuration file in the preference page.
 
-
 For the commandline N4JSC.jar provides special option `-npmrcRootLocation` that allows headless compiler to
 use custom settings.
 
-[[sec:Built-in_External_Libraries]]
-[.language-n4js]
-==  Built-in External Libraries / Shipped Code
-
-The library manager is provided with a number of built-in external libraries, consisting of:
-
-* default runtime environments and runtime libraries, e.g. `n4js-es5`, `n4js-runtime-es2015`, `n4js-runtime-v8`.
-* a library `n4js.lang` providing N4JS implementations for runtime functionality required by some N4JS language features
-  (currently this contains only dependency injection support, implemented in file `N4Injector.n4js`).
-* the mangelhaft test framework.
-
-At runtime, these appear as default libraries in the library manager and are available in the workspace without any
-further installation. However, at the moment, this is only supported within the N4JS IDE, not the `n4jsc.jar`.
-
-The above libraries are located in the N4JS Git repository in two distinct locations:
-
-* below the top-level folder `n4js-libs`: this is the main source and will be edited by developers working on fixes /
-  improvements of the runtime environments, libraries, and mangelhaft.
-* below the folder `shipped-code` in bundle `org.eclipse.n4js.external.libraries`: this is a copy of the code contained below
-  top-level folder `n4js-libs`, plus the transpiled output code, plus NPM dependencies.
-
-The contents of folder `shipped-code` is what will actually be bundled into the N4JS IDE product. These contents should
-**never** be modified manually. Instead, an MWE2 work flow exists for updating this shipped code: `UpdateShippedCode.mwe2`,
-located in its own bundle `org.eclipse.n4js.external.libraries.update`. When executed, this work flow will
-
-1. compile the code below top-level folder `n4js-libs`,
-2. clean folder `shipped-code`,
-3. copy everything from top-level folder `n4js-libs` to folder `shipped-code` (including the transpiled output code
-   generated in step 1, above),
-4. run `npm install` in those projects below folder `shipped-code`, that have third-party dependencies (currently this
-   applies only to runtime environment `n4js-node`).
-
-A JUnit test is located in bundle `org.eclipse.n4js.external.libraries.update.tests` that will assert the shipped code is
-up-to-date. When this test fails, it should be enough to re-run the MWE2 work flow and commit the resulting changes
-in folder `shipped-code`.
-
-
-
-[[sec:Additional_Notes]]
-[.language-n4js]
-==  Additional Notes
-
-[[subsec:Enabling_Built-in_External_Libraries]]
-===  Enabling Built-in External Libraries
-
-By default, built-in external libraries (such as _node_modules_, _N4JS Language_, _N4JS Runtime_ and _Mangelhaft_),
-also known as "shipped code", are only available when the N4JS IDE is running in production mode, i.e. when
-`Platform#inDebugMode()` and `Platform#inDevelopmentMode()` both return `false`). This means built-in external libraries
-are not available in the N4JS IDE when it is started from Eclipse development environment or when running any
-plug-in, plug-in UI and/or SWTBot tests.
-
-There are two ways of enabling built-in external libraries in NON-production mode:
-
-1. start the application with the following VM argument (but note the comment below!):
-+
-[source]
-----
--Dorg.eclipse.n4js.includesBuiltInLibraries=true
-----
-2. invoke methods `ExternalLibrariesSetupHelper#setupExternalLibraries(boolean, boolean)` with first argument set to `true`,
-and `ExternalLibrariesSetupHelper#tearDownExternalLibraries(boolean)` inside the test code. For SWTBot tests there are
-corresponding convenience methods provided in `BaseSwtBotTest`. For an example, see `N4jsTasksExampleSwtBotTest`.
-
-The first option is only intended for the case of starting an N4JS IDE from an Eclipse development environment;
-in all kinds of tests, the helper methods mentioned above should be used instead (i.e. option 2.). In other
-words, the configuration property `org.eclipse.n4js.includesBuiltInLibraries` should only be used in our two launch
-configurations "N4JS\__IDE.launch" and "N4JS_N4__IDE.launch" that are checked-in to our repository.
 
 [[sec:lmFutureWork]]
 ==  Future Work

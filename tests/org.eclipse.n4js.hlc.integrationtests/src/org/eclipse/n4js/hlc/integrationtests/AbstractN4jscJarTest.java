@@ -83,8 +83,7 @@ public abstract class AbstractN4jscJarTest {
 	 * @param fixturePath
 	 *            The bundle relative path of the folder that contains the test data.
 	 * @param includeN4jsLibraries
-	 *            Specified whether the n4js libraries (shipped code) should be copied to the temporary testing
-	 *            workspace location.
+	 *            Specified whether the n4js libraries should be copied to the temporary testing workspace location.
 	 */
 	protected AbstractN4jscJarTest(String fixturePath, boolean includeN4jsLibraries) {
 		this.fixture = fixturePath;
