@@ -1839,6 +1839,16 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.JSX_FRAGMENT: {
+				JSXFragment jsxFragment = (JSXFragment)theEObject;
+				T result = caseJSXFragment(jsxFragment);
+				if (result == null) result = caseExpression(jsxFragment);
+				if (result == null) result = caseJSXChild(jsxFragment);
+				if (result == null) result = caseTypableElement(jsxFragment);
+				if (result == null) result = caseControlFlowElement(jsxFragment);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.VERSIONED_ELEMENT: {
 				VersionedElement versionedElement = (VersionedElement)theEObject;
 				T result = caseVersionedElement(versionedElement);
@@ -4407,6 +4417,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseJSXElement(JSXElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Fragment</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Fragment</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXFragment(JSXFragment object) {
 		return null;
 	}
 

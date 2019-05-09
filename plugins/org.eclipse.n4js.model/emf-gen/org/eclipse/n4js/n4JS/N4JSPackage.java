@@ -15253,6 +15253,52 @@ public interface N4JSPackage extends EPackage {
 	int JSX_ELEMENT_OPERATION_COUNT = EXPRESSION_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.JSXFragmentImpl <em>JSX Fragment</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4JS.impl.JSXFragmentImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXFragment()
+	 * @generated
+	 */
+	int JSX_FRAGMENT = 169;
+
+	/**
+	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSX_FRAGMENT__JSX_CHILDREN = EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>JSX Fragment</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSX_FRAGMENT_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Valid Simple Assignment Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSX_FRAGMENT___IS_VALID_SIMPLE_ASSIGNMENT_TARGET = EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET;
+
+	/**
+	 * The number of operations of the '<em>JSX Fragment</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSX_FRAGMENT_OPERATION_COUNT = EXPRESSION_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.VersionedElementImpl <em>Versioned Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15260,7 +15306,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVersionedElement()
 	 * @generated
 	 */
-	int VERSIONED_ELEMENT = 169;
+	int VERSIONED_ELEMENT = 170;
 
 	/**
 	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
@@ -15315,7 +15361,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVersionedIdentifierRef()
 	 * @generated
 	 */
-	int VERSIONED_IDENTIFIER_REF = 170;
+	int VERSIONED_IDENTIFIER_REF = 171;
 
 	/**
 	 * The feature id for the '<em><b>Strict Mode</b></em>' attribute.
@@ -15415,7 +15461,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMigrationContextVariable()
 	 * @generated
 	 */
-	int MIGRATION_CONTEXT_VARIABLE = 171;
+	int MIGRATION_CONTEXT_VARIABLE = 172;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Ref</b></em>' containment reference.
@@ -15506,7 +15552,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVariableStatementKeyword()
 	 * @generated
 	 */
-	int VARIABLE_STATEMENT_KEYWORD = 172;
+	int VARIABLE_STATEMENT_KEYWORD = 173;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PropertyNameKind <em>Property Name Kind</em>}' enum.
@@ -15516,7 +15562,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPropertyNameKind()
 	 * @generated
 	 */
-	int PROPERTY_NAME_KIND = 173;
+	int PROPERTY_NAME_KIND = 174;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PostfixOperator <em>Postfix Operator</em>}' enum.
@@ -15526,7 +15572,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPostfixOperator()
 	 * @generated
 	 */
-	int POSTFIX_OPERATOR = 174;
+	int POSTFIX_OPERATOR = 175;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.UnaryOperator <em>Unary Operator</em>}' enum.
@@ -15536,7 +15582,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getUnaryOperator()
 	 * @generated
 	 */
-	int UNARY_OPERATOR = 175;
+	int UNARY_OPERATOR = 176;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.MultiplicativeOperator <em>Multiplicative Operator</em>}' enum.
@@ -15546,7 +15592,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMultiplicativeOperator()
 	 * @generated
 	 */
-	int MULTIPLICATIVE_OPERATOR = 176;
+	int MULTIPLICATIVE_OPERATOR = 177;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AdditiveOperator <em>Additive Operator</em>}' enum.
@@ -15556,7 +15602,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAdditiveOperator()
 	 * @generated
 	 */
-	int ADDITIVE_OPERATOR = 177;
+	int ADDITIVE_OPERATOR = 178;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.RelationalOperator <em>Relational Operator</em>}' enum.
@@ -15566,7 +15612,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getRelationalOperator()
 	 * @generated
 	 */
-	int RELATIONAL_OPERATOR = 178;
+	int RELATIONAL_OPERATOR = 179;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.EqualityOperator <em>Equality Operator</em>}' enum.
@@ -15576,7 +15622,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getEqualityOperator()
 	 * @generated
 	 */
-	int EQUALITY_OPERATOR = 179;
+	int EQUALITY_OPERATOR = 180;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryBitwiseOperator <em>Binary Bitwise Operator</em>}' enum.
@@ -15586,7 +15632,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryBitwiseOperator()
 	 * @generated
 	 */
-	int BINARY_BITWISE_OPERATOR = 180;
+	int BINARY_BITWISE_OPERATOR = 181;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryLogicalOperator <em>Binary Logical Operator</em>}' enum.
@@ -15596,7 +15642,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryLogicalOperator()
 	 * @generated
 	 */
-	int BINARY_LOGICAL_OPERATOR = 181;
+	int BINARY_LOGICAL_OPERATOR = 182;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.ShiftOperator <em>Shift Operator</em>}' enum.
@@ -15606,7 +15652,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getShiftOperator()
 	 * @generated
 	 */
-	int SHIFT_OPERATOR = 182;
+	int SHIFT_OPERATOR = 183;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AssignmentOperator <em>Assignment Operator</em>}' enum.
@@ -15616,7 +15662,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAssignmentOperator()
 	 * @generated
 	 */
-	int ASSIGNMENT_OPERATOR = 183;
+	int ASSIGNMENT_OPERATOR = 184;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.N4Modifier <em>N4 Modifier</em>}' enum.
@@ -15626,7 +15672,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4Modifier()
 	 * @generated
 	 */
-	int N4_MODIFIER = 184;
+	int N4_MODIFIER = 185;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Expression</em>' data type.
@@ -15636,7 +15682,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfExpression()
 	 * @generated
 	 */
-	int ITERATOR_OF_EXPRESSION = 185;
+	int ITERATOR_OF_EXPRESSION = 186;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Yield Expression</em>' data type.
@@ -15646,7 +15692,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfYieldExpression()
 	 * @generated
 	 */
-	int ITERATOR_OF_YIELD_EXPRESSION = 186;
+	int ITERATOR_OF_YIELD_EXPRESSION = 187;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Statement</em>' data type.
@@ -15656,7 +15702,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfStatement()
 	 * @generated
 	 */
-	int ITERATOR_OF_STATEMENT = 187;
+	int ITERATOR_OF_STATEMENT = 188;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Return Statement</em>' data type.
@@ -15666,7 +15712,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfReturnStatement()
 	 * @generated
 	 */
-	int ITERATOR_OF_RETURN_STATEMENT = 188;
+	int ITERATOR_OF_RETURN_STATEMENT = 189;
 
 
 	/**
@@ -21206,6 +21252,27 @@ public interface N4JSPackage extends EPackage {
 	EReference getJSXElement_JsxClosingName();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.JSXFragment <em>JSX Fragment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>JSX Fragment</em>'.
+	 * @see org.eclipse.n4js.n4JS.JSXFragment
+	 * @generated
+	 */
+	EClass getJSXFragment();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.JSXFragment#getJsxChildren <em>Jsx Children</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Jsx Children</em>'.
+	 * @see org.eclipse.n4js.n4JS.JSXFragment#getJsxChildren()
+	 * @see #getJSXFragment()
+	 * @generated
+	 */
+	EReference getJSXFragment_JsxChildren();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.VersionedElement <em>Versioned Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -26084,6 +26151,24 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference JSX_ELEMENT__JSX_CLOSING_NAME = eINSTANCE.getJSXElement_JsxClosingName();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.JSXFragmentImpl <em>JSX Fragment</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.n4JS.impl.JSXFragmentImpl
+		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXFragment()
+		 * @generated
+		 */
+		EClass JSX_FRAGMENT = eINSTANCE.getJSXFragment();
+
+		/**
+		 * The meta object literal for the '<em><b>Jsx Children</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JSX_FRAGMENT__JSX_CHILDREN = eINSTANCE.getJSXFragment_JsxChildren();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.VersionedElementImpl <em>Versioned Element</em>}' class.

@@ -43,6 +43,7 @@ import org.eclipse.n4js.n4JS.JSXAttribute;
 import org.eclipse.n4js.n4JS.JSXChild;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXExpression;
+import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.Literal;
@@ -433,6 +434,24 @@ final class CFEChildren {
 			}
 			if (jsxel.getJsxClosingName() != null) {
 				addDelegatingNode(cfc, "closeTagName", jsxel, jsxel.getJsxClosingName().getExpression());
+			}
+			return cfc;
+		}
+
+		@Override
+		public List<Node> caseJSXFragment(JSXFragment jsxFrag) {
+			List<Node> cfc = new LinkedList<>();
+
+			for (int i = 0; i < jsxFrag.getJsxChildren().size(); i++) {
+				JSXChild jsxChild = jsxFrag.getJsxChildren().get(i);
+				if (jsxChild instanceof JSXElement) {
+					JSXElement jsxElem = (JSXElement) jsxChild;
+					addDelegatingNode(cfc, "child_" + i, jsxFrag, jsxElem);
+				}
+				if (jsxChild instanceof JSXExpression) {
+					JSXExpression jsxEx = (JSXExpression) jsxChild;
+					addDelegatingNode(cfc, "child_" + i, jsxFrag, jsxEx.getExpression());
+				}
 			}
 			return cfc;
 		}

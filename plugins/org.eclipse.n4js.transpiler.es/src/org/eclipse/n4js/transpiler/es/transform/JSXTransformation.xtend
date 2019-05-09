@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.JSXAttribute
 import org.eclipse.n4js.n4JS.JSXChild
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXExpression
+import org.eclipse.n4js.n4JS.JSXFragment
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
@@ -28,8 +29,10 @@ import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
+import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.Script_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtext.EcoreUtil2
 
@@ -51,6 +54,7 @@ class JSXTransformation extends Transformation {
 
 	private SymbolTableEntryOriginal steForJsxBackendNamespace;
 	private SymbolTableEntryOriginal steForJsxBackendElementFactoryFunction;
+	private SymbolTableEntryOriginal steForJsxBackendFragmentComponent;
 
 	@Inject
 	private ReactHelper reactHelper;
@@ -91,16 +95,19 @@ class JSXTransformation extends Transformation {
 		if(!inJSX) {
 			return; // this transformation is not applicable
 		}
-		val jsxElements = collectNodes(state.im, JSXElement, true);
-		if(jsxElements.empty) {
-			return; // nothing to transform
-		}
 
 		steForJsxBackendNamespace = prepareImportOfJsxBackend();
 		steForJsxBackendElementFactoryFunction = prepareElementFactoryFunction();
+		steForJsxBackendFragmentComponent = prepareFragmentComponent();
 
+		// Transform JSXFragments		
+		val jsxFragments = collectNodes(state.im, JSXFragment, true);
+		jsxFragments.forEach[transformJSXFragment];
+
+		val jsxElements = collectNodes(state.im, JSXElement, true);
 		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
 		jsxElements.forEach[transformJSXElement];
+
 	}
 
 	def private SymbolTableEntryOriginal prepareImportOfJsxBackend() {
@@ -131,6 +138,14 @@ class JSXTransformation extends Transformation {
 		}
 		return getSymbolTableEntryOriginal(elementFactoryFunction, true);
 	}
+	
+	def private SymbolTableEntryOriginal prepareFragmentComponent() {
+		val fragmentComponent = reactHelper.getJsxBackendFragmentComponent(state.resource);
+		if(fragmentComponent===null) {
+			throw new RuntimeException("cannot locate fragment component of JSX backend for N4JSX resource " + state.resource.URI);
+		}
+		return getSymbolTableEntryOriginal(fragmentComponent, true);
+	}
 
 	def private void transformJSXElement(JSXElement elem) {
 		// IMPORTANT: 'elem' might be a direct or indirect child, but if it is a direct child, it was already
@@ -140,6 +155,16 @@ class JSXTransformation extends Transformation {
 			return;
 		}
 		replace(elem, convertJSXElement(elem));
+	}
+
+	def private void transformJSXFragment(JSXFragment elem) {
+		// IMPORTANT: 'elem' might be a direct or indirect child, but if it is a direct child, it was already
+		// transformed when this method was invoked with its ancestor JSXElement as argument
+		if(EcoreUtil2.getContainerOfType(elem, Script_IM)===null) {
+			// 'elem' was already processed -> simply ignore it
+			return;
+		}
+		replace(elem, convertJSXFragment(elem));
 	}
 
 	def private ParameterizedCallExpression convertJSXElement(JSXElement elem) {
@@ -155,6 +180,22 @@ class JSXTransformation extends Transformation {
 		);
 	}
 
+	def private ParameterizedCallExpression convertJSXFragment(JSXFragment elem) {
+//		var identifiableElem = TypesFactory.eINSTANCE.createIdentifiableElement();
+//		identifiableElem.name = "React.Fragment";
+		var idRef = ImFactory.eINSTANCE.createIdentifierRef_IM();
+//		idRef.id = identifiableElem;
+
+		return _CallExpr(
+			_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendElementFactoryFunction),
+			(
+				#[
+					_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendFragmentComponent)
+				]
+				+ elem.jsxChildren.map[convertJSXChild]
+			)
+		);
+	}
 	def private Expression convertJSXChild(JSXChild child) {
 		switch(child) {
 			JSXElement:

@@ -2287,6 +2287,9 @@ class JSXElement extends Expression, JSXChild {
 	contains JSXElementName jsxClosingName
 }
 
+class JSXFragment extends Expression, JSXChild {
+	contains JSXChild[] jsxChildren
+}
 
 // ****************************************************************************************************
 // N4IDL related model elements

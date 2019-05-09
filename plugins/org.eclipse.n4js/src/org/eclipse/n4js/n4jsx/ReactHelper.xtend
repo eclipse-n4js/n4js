@@ -19,6 +19,7 @@ import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFunction
@@ -49,9 +50,11 @@ class ReactHelper {
 	public final static String REACT_PROJECT_ID = "react"
 	public final static String REACT_COMPONENT = "Component"
 	public final static String REACT_ELEMENT = "Element"
+	public final static String REACT_FRAGMENT_NAME = "Fragment";
 
 	public final static String REACT_NAMESPACE_NAME = REACT_PROJECT_ID.toFirstUpper;
 	public final static String REACT_ELEMENT_FACTORY_FUNCTION_NAME = "createElement";
+	
 
 	private final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
 
@@ -112,6 +115,18 @@ class ReactHelper {
 		val module = this.getJsxBackendModule(resource);
 		if (module !== null) {
 			return lookUpReactElementFactoryFunction(module);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the fragment factory function for JSX elements which can be extracted
+	 * from the given {@link Resource}.
+	 */
+	def public TClass getJsxBackendFragmentComponent(Resource resource) {
+		val module = this.getJsxBackendModule(resource);
+		if (module !== null) {
+			return lookUpReactFragmentComponent(module);
 		}
 		return null;
 	}
@@ -205,7 +220,18 @@ class ReactHelper {
 			return tClassifier;
 		]);
 	}
-	
+
+	def private TClass lookUpReactFragmentComponent(TModule module) {
+		if (module !== null) {
+			for (Type currTopLevelType : module.getTopLevelTypes()) {
+				if (currTopLevelType instanceof TClass
+						&& REACT_FRAGMENT_NAME.equals(currTopLevelType.getName())) {
+					return currTopLevelType as TClass;
+				}
+			}
+		}
+		return null;
+	}
 	/**
 	 * Looks up the element factory function to use, assuming the react implementation in use
 	 * is to be found in the given {@code module}.

@@ -105,6 +105,7 @@ import org.eclipse.n4js.n4JS.JSXChild;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXElementName;
 import org.eclipse.n4js.n4JS.JSXExpression;
+import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.JSXText;
@@ -1404,6 +1405,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass jsxElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxFragmentEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -6947,6 +6955,26 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getJSXFragment() {
+		return jsxFragmentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getJSXFragment_JsxChildren() {
+		return (EReference)jsxFragmentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getVersionedElement() {
 		return versionedElementEClass;
 	}
@@ -7922,6 +7950,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CHILDREN);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CLOSING_NAME);
 
+		jsxFragmentEClass = createEClass(JSX_FRAGMENT);
+		createEReference(jsxFragmentEClass, JSX_FRAGMENT__JSX_CHILDREN);
+
 		versionedElementEClass = createEClass(VERSIONED_ELEMENT);
 		createEAttribute(versionedElementEClass, VERSIONED_ELEMENT__DECLARED_VERSION);
 		createEOperation(versionedElementEClass, VERSIONED_ELEMENT___HAS_DECLARED_VERSION);
@@ -8237,6 +8268,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxSpreadAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
 		jsxElementEClass.getESuperTypes().add(this.getExpression());
 		jsxElementEClass.getESuperTypes().add(this.getJSXChild());
+		jsxFragmentEClass.getESuperTypes().add(this.getExpression());
+		jsxFragmentEClass.getESuperTypes().add(this.getJSXChild());
 		versionedIdentifierRefEClass.getESuperTypes().add(this.getIdentifierRef());
 		versionedIdentifierRefEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedReference());
 		migrationContextVariableEClass.getESuperTypes().add(this.getVariable());
@@ -9101,6 +9134,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getJSXElement_JsxAttributes(), this.getJSXAttribute(), null, "jsxAttributes", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getJSXElement_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getJSXElement_JsxClosingName(), this.getJSXElementName(), null, "jsxClosingName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsxFragmentEClass, JSXFragment.class, "JSXFragment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSXFragment_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXFragment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(versionedElementEClass, VersionedElement.class, "VersionedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getVersionedElement_DeclaredVersion(), theEcorePackage.getEBigDecimal(), "declaredVersion", null, 0, 1, VersionedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
