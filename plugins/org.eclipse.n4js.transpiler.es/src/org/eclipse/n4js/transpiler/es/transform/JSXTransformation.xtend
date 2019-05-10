@@ -96,18 +96,21 @@ class JSXTransformation extends Transformation {
 			return; // this transformation is not applicable
 		}
 
+		// Transform JSXFragments and JSXElements	
+		val jsxFragments = collectNodes(state.im, JSXFragment, true);
+		val jsxElements = collectNodes(state.im, JSXElement, true);
+		if (jsxFragments.isEmpty && jsxElements.isEmpty) {
+			// Nothing to transform
+			return;
+		}
+		
 		steForJsxBackendNamespace = prepareImportOfJsxBackend();
 		steForJsxBackendElementFactoryFunction = prepareElementFactoryFunction();
 		steForJsxBackendFragmentComponent = prepareFragmentComponent();
-
-		// Transform JSXFragments		
-		val jsxFragments = collectNodes(state.im, JSXFragment, true);
-		jsxFragments.forEach[transformJSXFragment];
-
-		val jsxElements = collectNodes(state.im, JSXElement, true);
+		
 		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
+		jsxFragments.forEach[transformJSXFragment];
 		jsxElements.forEach[transformJSXElement];
-
 	}
 
 	def private SymbolTableEntryOriginal prepareImportOfJsxBackend() {

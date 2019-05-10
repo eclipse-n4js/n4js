@@ -89,5 +89,5 @@ export external public class ~PropTypes {
 @Final
 export external public class Fragment extends Component<ComponentProps, Object> {
     @Override
-    public render(): [Element|string|number|boolean] | Element | string | number | boolean;
+    public render(): Element;
 }
