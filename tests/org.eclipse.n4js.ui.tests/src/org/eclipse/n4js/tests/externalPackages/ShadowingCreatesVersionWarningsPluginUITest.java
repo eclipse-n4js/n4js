@@ -19,6 +19,7 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.N4JSExternalProject;
@@ -29,14 +30,12 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
 
 /**
  */
-@Ignore("GH-1281") // FIXME GH-1281 does this test still make sense after removing shipped code???
 public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilderParticipantTest {
 	private static final String PROBANDS = "probands";
 	private static final String WORKSPACE_LOC = "ShadowingCreatesVersionWarnings";
@@ -64,6 +63,8 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 	public void testShadowingCreatesVersionWarnings() throws Exception {
 		File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 		ProjectTestsUtils.importYarnWorkspace(libraryManager, projectsRoot, YARN_PROJECT);
+		ProjectTestsUtils.importProject(projectsRoot, PROJECT_N4JSLANG);
+		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 
 		syncExtAndBuild();
 

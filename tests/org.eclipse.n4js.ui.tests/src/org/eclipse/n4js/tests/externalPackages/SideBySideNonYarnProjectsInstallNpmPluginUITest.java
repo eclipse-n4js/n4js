@@ -10,16 +10,8 @@
  */
 package org.eclipse.n4js.tests.externalPackages;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -29,15 +21,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.runner.IExecutor;
-import org.eclipse.n4js.runner.RunConfiguration;
-import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -53,19 +40,12 @@ import com.google.inject.Inject;
  * b) run "npm install" in P1 -> errors in P1 gone<br>
  * c) run "npm install" in P2 -> all errors gone<br>
  */
-@Ignore("GH-1281") // FIXME GH-1281 does this test still make sense after removing shipped code???
 public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBuilderParticipantTest {
-
-	// the id of the runner to launch
-	private static final String NODE_RUNNER_ID = "org.eclipse.n4js.runner.nodejs.NODEJS";
 
 	private static final String PROBANDS = "probands";
 	private static final String DIFFERENT_NPM_SUBFOLDER = "InstallDifferentNpms";
 	private static final String SAME_NPM_SUBFOLDER = "InstallSameNpm";
 	private static final String DIFFERENT_NPMS_DEPENDENT_PROJECTS_SUBFOLDER = "InstallDifferentNpmsInDependentProjects";
-
-	@Inject
-	private RunnerFrontEnd runnerFrontEnd;
 
 	@Inject
 	private ProjectDescriptionLoader prjDescLoader;
@@ -93,13 +73,17 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		IFile pkgJsonP2 = prjP2.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 
 		assertIssues(pkgJsonP1,
-				"line 15: Project does not exist with project ID: lodash.",
-				"line 16: Project depends on workspace project P2 which is missing in the node_modules folder. "
+				"line 15: Project does not exist with project ID: n4js-runtime.",
+				"line 16: Project does not exist with project ID: lodash.",
+				"line 17: Project depends on workspace project P2 which is missing in the node_modules folder. "
 						+ "Either install project P2 or introduce a yarn workspace of both of the projects.");
-		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: immutable.");
+		assertIssues(pkgJsonP2,
+				"line 15: Project does not exist with project ID: n4js-runtime.",
+				"line 16: Project does not exist with project ID: immutable.");
 
 		URI prjP1URI = URI.createFileURI(prjP1.getLocation().toString());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
+		libraryManager.installNPM("n4js-runtime", prjP1URI, new NullProgressMonitor());
 		libraryManager.installNPM("lodash", lodashVersion, prjP1URI, new NullProgressMonitor());
 		waitForAutoBuild();
 
@@ -107,10 +91,13 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		assertIssues(pkgJsonP1,
 				"line 15: Project depends on workspace project P2 which is missing in the node_modules folder. "
 						+ "Either install project P2 or introduce a yarn workspace of both of the projects.");
-		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: immutable.");
+		assertIssues(pkgJsonP2,
+				"line 15: Project does not exist with project ID: n4js-runtime.",
+				"line 16: Project does not exist with project ID: immutable.");
 
 		URI prjP2URI = URI.createFileURI(prjP2.getLocation().toString());
 		String immutableVersion = getDependencyVersion(prjP2URI, "immutable");
+		libraryManager.installNPM("n4js-runtime", prjP2URI, new NullProgressMonitor());
 		libraryManager.installNPM("immutable", immutableVersion, prjP2URI, new NullProgressMonitor());
 		waitForAutoBuild();
 
@@ -141,15 +128,22 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		IFile pkgJsonP1 = prjP1.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 		IFile pkgJsonP2 = prjP2.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 
-		assertIssues(pkgJsonP1, "line 15: Project does not exist with project ID: lodash.");
-		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: lodash.");
+		assertIssues(pkgJsonP1,
+				"line 15: Project does not exist with project ID: n4js-runtime.",
+				"line 16: Project does not exist with project ID: lodash.");
+		assertIssues(pkgJsonP2,
+				"line 15: Project does not exist with project ID: n4js-runtime.",
+				"line 16: Project does not exist with project ID: lodash.");
 
 		URI prjP1URI = URI.createFileURI(prjP1.getLocation().toString());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
+		libraryManager.installNPM("n4js-runtime", prjP1URI, new NullProgressMonitor());
 		libraryManager.installNPM("lodash", lodashVersion, prjP1URI, new NullProgressMonitor());
 		waitForAutoBuild();
 		assertIssues(pkgJsonP1); // No errors in P1 anymore
-		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: lodash.");
+		assertIssues(pkgJsonP2,
+				"line 15: Project does not exist with project ID: n4js-runtime.",
+				"line 16: Project does not exist with project ID: lodash.");
 	}
 
 	/**
@@ -159,9 +153,12 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 	 * 3) P1, P2 im Eclipse workspace; P1 -> P2; P1 -> lodash; P2 -> immutable like 1) above
 	 * 	  but also test executing P1 with runner (reference to P2 must work at runtime)
 	 * </pre>
+	 *
+	 * NOTE: execution of code in the (invalid) side-by-side use case is no longer supported; hence, the execution step
+	 * in this test was removed.
 	 */
 	@Test
-	public void installDifferentNpmsInTwoDependentProjects() throws ExecutionException, CoreException, IOException {
+	public void installDifferentNpmsInTwoDependentProjects() throws CoreException {
 		System.out.println("start");
 
 		File prjDir = new File(getResourceUri(PROBANDS, DIFFERENT_NPMS_DEPENDENT_PROJECTS_SUBFOLDER));
@@ -174,13 +171,17 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		IFile pkgJsonP2 = prjP2.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 
 		assertIssues(pkgJsonP1,
-				"line 16: Project depends on workspace project P2 which is missing in the node_modules folder. "
+				"line 15: Project does not exist with project ID: n4js-runtime.",
+				"line 17: Project depends on workspace project P2 which is missing in the node_modules folder. "
 						+ "Either install project P2 or introduce a yarn workspace of both of the projects.",
-				"line 15: Project does not exist with project ID: lodash.");
-		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: immutable.");
+				"line 16: Project does not exist with project ID: lodash.");
+		assertIssues(pkgJsonP2,
+				"line 15: Project does not exist with project ID: n4js-runtime.",
+				"line 16: Project does not exist with project ID: immutable.");
 
 		URI prjP1URI = URI.createFileURI(prjP1.getLocation().toString());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
+		libraryManager.installNPM("n4js-runtime", prjP1URI, new NullProgressMonitor());
 		libraryManager.installNPM("lodash", lodashVersion, prjP1URI, new NullProgressMonitor());
 		waitForAutoBuild();
 
@@ -188,10 +189,13 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		assertIssues(pkgJsonP1,
 				"line 15: Project depends on workspace project P2 which is missing in the node_modules folder. "
 						+ "Either install project P2 or introduce a yarn workspace of both of the projects.");
-		assertIssues(pkgJsonP2, "line 15: Project does not exist with project ID: immutable.");
+		assertIssues(pkgJsonP2,
+				"line 15: Project does not exist with project ID: n4js-runtime.",
+				"line 16: Project does not exist with project ID: immutable.");
 
 		URI prjP2URI = URI.createFileURI(prjP2.getLocation().toString());
 		String immutableVersion = getDependencyVersion(prjP2URI, "immutable");
+		libraryManager.installNPM("n4js-runtime", prjP2URI, new NullProgressMonitor());
 		libraryManager.installNPM("immutable", immutableVersion, prjP2URI, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
@@ -200,67 +204,6 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 				"line 15: Project depends on workspace project P2 which is missing in the node_modules folder. "
 						+ "Either install project P2 or introduce a yarn workspace of both of the projects.");
 		assertIssues(pkgJsonP2); // No errors in P2 anymore
-
-		// the uri of the module to be executed
-		final URI moduleToRunURI = URI.createPlatformResourceURI("P1/src/A.n4js", true);
-		final RunConfiguration config = runnerFrontEnd.createConfiguration(NODE_RUNNER_ID, moduleToRunURI);
-		runnerFrontEnd.computeDerivedValues(config);
-
-		final Process process = runnerFrontEnd.run(config, createTestExecutor());
-		final String output = captureOutput(process);
-
-		Assert.assertEquals("The process output matches the expectation.",
-				"stdout:\n" + "Hello n4js!\n" + "stderr:", output);
-	}
-
-	/**
-	 * Returns a custom {@link IExecutor} that does not inherit the IO of the current process but rather allows to
-	 * capture the output of the executed command via {@link Process#getInputStream()}.
-	 */
-	private IExecutor createTestExecutor() {
-		return new IExecutor() {
-			@Override
-			public Process exec(String[] cmdLine, File workingDirectory, Map<String, String> envp)
-					throws ExecutionException {
-
-				ProcessBuilder pb = new ProcessBuilder(cmdLine);
-				pb.environment().putAll(envp);
-				pb.directory(workingDirectory);
-
-				try {
-					return pb.start();
-				} catch (IOException e) {
-					throw new ExecutionException(e);
-				}
-			}
-		};
-	}
-
-	/**
-	 * Captures the output of the given {@code process} and returns it as a string.
-	 *
-	 * Returns a concatenated version of stdout and stderr output.
-	 */
-	private static String captureOutput(Process process) throws IOException {
-		List<String> out = new ArrayList<>();
-		String line;
-
-		out.add("stdout:");
-
-		try (BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-			while ((line = outputReader.readLine()) != null) {
-				out.add(line);
-			}
-		}
-
-		out.add("stderr:");
-
-		try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-			while ((line = errorReader.readLine()) != null) {
-				out.add(line);
-			}
-		}
-		return out.stream().collect(Collectors.joining("\n"));
 	}
 
 	private String getDependencyVersion(URI prjURI, String dependencyName) {
@@ -274,5 +217,4 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 			return null;
 		}
 	}
-
 }

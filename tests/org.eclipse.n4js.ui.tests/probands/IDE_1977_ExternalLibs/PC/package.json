@@ -18,6 +18,7 @@
 		"node": ">= 5.0.0"
 	},
 	"dependencies": {
+		"n4js-runtime": "*",
 		"PB": "*"
 	},
 	"n4js": {

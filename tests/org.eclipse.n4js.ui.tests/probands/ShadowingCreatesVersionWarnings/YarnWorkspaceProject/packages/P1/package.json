@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "dependencies": {
 	"n4js.lang": "",
-	"n4js-es5": "0.13.4"
+	"n4js-es5": "0.13.4",
+    "n4js-runtime": ""
   },
   "n4js": {
     "projectType": "library",
