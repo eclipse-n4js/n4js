@@ -85,10 +85,28 @@ echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
 if [ "$DESTINATION" = "public" ]; then
     echo "==== STEP 4/9: Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
-    echo "!!! SKIPPED !!! (will always publish)"
+
+    # Obtain the latest commit on npm registry, using the representative
+    N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.["dist-tags"].latest'`
+    echo "  - version of latest published n4js-libs       : $N4JS_LIBS_VERSION_PUBLIC"
+
+    N4JS_LIBS_COMMIT_ID_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.versions."'${N4JS_LIBS_VERSION_PUBLIC}'".gitHead'`
+    if [ "${N4JS_LIBS_COMMIT_ID_PUBLIC}" = "null" ]; then
+        N4JS_LIBS_COMMIT_ID_PUBLIC=unknown
+    fi
+    echo "  - commit ID of latest published n4js-libs     : $N4JS_LIBS_COMMIT_ID_PUBLIC"
 
     N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" ${N4JS_LIBS_ROOT}`
     echo "  - commit ID of local n4js-libs                : $N4JS_LIBS_COMMIT_ID_LOCAL"
+
+    # Stop if the local ID equals public ID
+    if [ "${N4JS_LIBS_COMMIT_ID_LOCAL}" = "${N4JS_LIBS_COMMIT_ID_PUBLIC}" ]; then
+        echo '-> will NOT publish (because commit IDs are identical, i.e. no changes since last publication)'
+        echo "==== DONE (nothing published)"
+        exit 0
+    else
+        echo '-> will publish (because commit IDs are different, i.e. there are changes since last publication)'
+    fi
 
     # update repository meta-info in package.json of all n4js-libs to point to the GitHub and the correct commit
     # (yarn isn't doing this at the moment: https://github.com/yarnpkg/yarn/issues/2978 )
@@ -98,9 +116,35 @@ if [ "$DESTINATION" = "public" ]; then
     lerna exec -- rm package.json_TEMP
 
     echo "==== STEP 6/9: Compute new version number for publishing ..."
-    echo "!!! SKIPPED !!! (using version hard-coded in shell script)"
-    export PUBLISH_VERSION="0.14.0"
-    echo "Version for publishing: ${PUBLISH_VERSION}"
+    VERSION_MAJOR_REQUESTED=`jq -r '.major' version.json`
+    VERSION_MINOR_REQUESTED=`jq -r '.minor' version.json`
+    echo "Requested major segment       : ${VERSION_MAJOR_REQUESTED} (from file n4js-libs/version.json)"
+    echo "Requested minor segment       : ${VERSION_MINOR_REQUESTED} (from file n4js-libs/version.json)"
+    echo "Latest published version      : ${N4JS_LIBS_VERSION_PUBLIC}"
+    MAJOR_MINOR_PATTERN="([0-9]+)\\.([0-9]+)\\..*"
+    if [[ "${N4JS_LIBS_VERSION_PUBLIC}" =~ ${MAJOR_MINOR_PATTERN} ]]; then
+        VERSION_MAJOR_PUBLIC="${BASH_REMATCH[1]}"
+        VERSION_MINOR_PUBLIC="${BASH_REMATCH[2]}"
+    else
+        echo "ERROR: cannot extract major/minor segments from latest published version!"
+        exit -1
+    fi
+    if [ "$VERSION_MAJOR_REQUESTED" -gt "$VERSION_MAJOR_PUBLIC" ]; then
+        echo "New major version segment requested in file n4js-libs/version.json -> will bump major segment"
+        PUBLISH_VERSION="$VERSION_MAJOR_REQUESTED.$VERSION_MINOR_REQUESTED.0"
+    elif [ "$VERSION_MINOR_REQUESTED" -gt "$VERSION_MINOR_PUBLIC" ]; then
+        echo "New minor version segment requested in file n4js-libs/version.json -> will bump minor segment"
+        # for major segment we use the latest public version as template to make sure
+        # we do not end up with a lower version than the latest public version
+        PUBLISH_VERSION="$VERSION_MAJOR_PUBLIC.$VERSION_MINOR_REQUESTED.0"
+    elif [ "$VERSION_MAJOR_REQUESTED" -eq "$VERSION_MAJOR_PUBLIC" ] && [ "$VERSION_MINOR_REQUESTED" -eq "$VERSION_MINOR_PUBLIC" ]; then
+        echo "No new major/minor version segment requested in file n4js-libs/version.json -> will bump patch segment"
+        PUBLISH_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
+    else
+        echo "ERROR: requested major/minor segment must not be lower than latest published major/minor segment!"
+        exit -1
+    fi
+    echo "Bumped version for publishing : ${PUBLISH_VERSION}"
 
     echo "==== STEP 7/9: Appending version information to README.md files ..."
     export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\n"
