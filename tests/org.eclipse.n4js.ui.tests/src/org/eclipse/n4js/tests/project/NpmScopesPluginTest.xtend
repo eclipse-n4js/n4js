@@ -29,7 +29,6 @@ import org.eclipse.n4js.tests.util.ProjectTestsHelper
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.URIUtils
-import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 import org.junit.Before
 import org.junit.Test
 
@@ -231,8 +230,6 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	def private void setContentsOfClientModule(CharSequence source) {
 		changeTestFile(clientModule, source);
 		waitForAutoBuild();
-// FIXME GH-1281 do not merge this to master! (should no longer be required after merging SZ's fixes of randomly failing tests)
-IResourcesSetupUtil.fullBuild
 	}
 
 	def private void assertCorrectOutput(CharSequence expectedOutput) {

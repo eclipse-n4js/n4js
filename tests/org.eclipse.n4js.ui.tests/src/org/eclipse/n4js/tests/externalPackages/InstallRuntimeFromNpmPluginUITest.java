@@ -34,12 +34,9 @@ import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.wizard.dependencies.InstallOptions;
 import org.eclipse.n4js.ui.wizard.dependencies.RunnableInstallDependencies;
-import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -49,7 +46,6 @@ import com.google.inject.Inject;
  *
  * Asserts that a module can be executed using a runtime environment that was installed from npm.
  */
-@Ignore("GH-1281") // FIXME GH-1281 requires n4js-libs on public npm registry
 public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipantTest {
 
 	// the id of the runner to launch
@@ -79,14 +75,14 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 						// test project of type 'library'
 						.withType(ProjectType.LIBRARY)
 						// add dependency to node runtime environment in specific version
-						.withDependency("n4js-runtime-node", "0.13.1")
-						.withDependency("n4js-node", "0.13.1"));
+						.withDependency("n4js-runtime", "0.14.0")
+						.withDependency("n4js-runtime-node", "0.14.0"));
 
 		configureProjectWithXtext(project);
 
-		// duh! the 'n4js-runtime-node' in the shipped code does not satisfy our version constraint:
+		testedWorkspace.fullBuild();
 		assertIssues(project.getFile(N4JSGlobals.PACKAGE_JSON),
-				"line 5: Project does not exist with project ID: n4js-node.",
+				"line 5: Project does not exist with project ID: n4js-runtime.",
 				"line 6: Project does not exist with project ID: n4js-runtime-node.");
 
 		// create hello world file
@@ -99,9 +95,7 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 		assertTrue("installing dependencies (aka 'big button') failed: " + runnable.getResultStatus().getMessage(),
 				runnable.getResultStatus().isOK());
 
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
-		ProjectTestsUtils.waitForAllJobs();
+		testedWorkspace.fullBuild();
 		assertNoIssues();
 
 		// create module run configuration

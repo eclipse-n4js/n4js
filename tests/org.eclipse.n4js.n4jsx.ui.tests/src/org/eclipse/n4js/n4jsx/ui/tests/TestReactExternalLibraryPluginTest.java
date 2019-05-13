@@ -37,7 +37,6 @@ import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -45,7 +44,6 @@ import com.google.inject.Inject;
 /**
  * Test for checking the runtime behavior of the React external library.
  */
-@Ignore("GH-1281") // FIXME GH-1281 requires runtime on public npm registry (also note the FIXME below!!!!)
 public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String PACKAGE_REACT = "react";
@@ -98,18 +96,14 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
 		assertTrue(projectDescriptionFile + " client module is not accessible.", projectDescriptionFile.isAccessible());
 
-		assertMarkers("Expected exactly 3 errors in client module.", clientModule, 3);
-		// line 5: Project does not exist with project ID: n4js-runtime.
-		// line 6: Project does not exist with project ID: react.
-		// line 7: Project does not exist with project ID: @n4jsd/react.
-		assertMarkers("Expected exactly 3 error in package.json.", projectDescriptionFile, 3);
-
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// FIXME GH-1281
-		// reconsider how tests will work that want to combine n4js-libs with something installed from public npm
-		// registry ('react' in this case)
-		// PROBLEM: when doing 'npm install react' then npm will corrupt an already locally-installed project from
-		// n4js-libs
+		assertIssues(clientModule,
+				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules",
+				"line 14: Cannot resolve JSX implementation.",
+				"line 15: Couldn't resolve reference to IdentifiableElement 'Component'.");
+		assertIssues(projectDescriptionFile,
+				"line 5: Project does not exist with project ID: n4js-runtime.",
+				"line 6: Project does not exist with project ID: react.",
+				"line 7: Project does not exist with project ID: @n4jsd/react.");
 
 		libManager.installNPM(N4JS_RUNTIME, URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
