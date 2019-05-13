@@ -185,7 +185,7 @@ public class XpectN4JSES5TranspilerHelper {
 			// provide n4js-runtime in the version of the current build
 			N4jsLibsAccess.installN4jsLibs(
 					artificialRoot.resolve(artificialProjectName).resolve(N4JSGlobals.NODE_MODULES),
-					true, true, true,
+					true, false, true,
 					N4JSGlobals.N4JS_RUNTIME);
 
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
@@ -230,7 +230,7 @@ public class XpectN4JSES5TranspilerHelper {
 		// provide n4js-runtime in the version of the current build
 		N4jsLibsAccess.installN4jsLibs(
 				nodeModulesPath,
-				true, true, true,
+				true, false, true,
 				N4JSGlobals.N4JS_RUNTIME);
 
 		return packagesPath;
