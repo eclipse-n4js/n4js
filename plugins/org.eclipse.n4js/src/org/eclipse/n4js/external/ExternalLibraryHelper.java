@@ -10,10 +10,6 @@
  */
 package org.eclipse.n4js.external;
 
-import static java.lang.Boolean.parseBoolean;
-import static org.eclipse.core.runtime.Platform.inDebugMode;
-import static org.eclipse.core.runtime.Platform.inDevelopmentMode;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,8 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IProduct;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
@@ -32,23 +26,6 @@ import com.google.common.collect.ImmutableList;
  * Utilities and core rules for external libraries.
  */
 public final class ExternalLibraryHelper {
-
-	/**
-	 * Property configured and available only in the N4JS IDE product. If the associated value of the property can be
-	 * parsed to {@code true} value via the {@link Boolean#parseBoolean(String)}. This property is here to control
-	 * presence of the built in libraries or the type definitions repository.
-	 */
-	public static final String INCLUDES_BUILT_INS_PRODUCT_PROPERTY = "includesBuiltInLibraries";
-
-	/**
-	 * System property that is checked only and if only the N4JS IDE product is running, it is configured to include the
-	 * built-in libraries but the application is running either in {@link Platform#inDebugMode() debug mode} or in
-	 * {@link Platform#inDevelopmentMode() development mode}, in other words not in production mode. If the N4JS IDE
-	 * product is not in production mode, then if the {@link Boolean#parseBoolean(String) boolean value} of this
-	 * property is {@code true}, then the built-in libraries (such as N4JS Runtime and Mangelhaft) will be included.
-	 * Otherwise they will not be.
-	 */
-	public static final String INCLUDES_BUILT_INS_SYSTEM_PROPERTY = "org.eclipse.n4js.includesBuiltInLibraries";
 
 	/** Unique name of the {@code npm} category. */
 	public static final String NPM_CATEGORY = "node_modules";
@@ -82,41 +59,6 @@ public final class ExternalLibraryHelper {
 		final String name = scopeDirectory.getName();
 		return name.startsWith(ProjectDescriptionUtils.NPM_SCOPE_PREFIX) &&
 				ProjectDescriptionUtils.isValidScopeName(name);
-	}
-
-	/**
-	 * Returns with {@code true} if all the followings are {@code true}
-	 * <p>
-	 * <ul>
-	 * <li>The {@link Platform#isRunning() platform is running}.</li>
-	 * <li>The platforms runs a {@link IProduct product}.</li>
-	 * <li>The platforms runs the N4JS IDE product and it is configured to include built-in libraries.</li>
-	 * <ul>
-	 * <li>The N4JS IDE runs in production mode {@code OR}</li>
-	 * <li>The N4JS IDE runs in either {@link Platform#inDebugMode() debug mode} or {@link Platform#inDevelopmentMode()
-	 * development mode} and the {@link #INCLUDES_BUILT_INS_SYSTEM_PROPERTY} is configured to be {@code true}</li>
-	 * </ul>
-	 * </ul>
-	 * Otherwise returns with {@code false} and neither built-in libraries nor local git repository for the N4JS
-	 * definition files has to be set up .
-	 *
-	 * @return {@code true} if the infrastructure is required for the built-in and NPM support.
-	 */
-	public static boolean requiresInfrastructureForLibraryManager() {
-		if (Platform.isRunning()) {
-			final IProduct product = Platform.getProduct();
-			if (null != product) {
-				if (parseBoolean(product.getProperty(INCLUDES_BUILT_INS_PRODUCT_PROPERTY))) {
-					// Runs in *non-production* mode and the system property is NOT set to include the built-ins.
-					boolean includeBuiltins = parseBoolean(System.getProperty(INCLUDES_BUILT_INS_SYSTEM_PROPERTY));
-					if ((inDebugMode() || inDevelopmentMode()) && !includeBuiltins) {
-						return false;
-					}
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	/** Sorts given set of locations and returns sorted list */

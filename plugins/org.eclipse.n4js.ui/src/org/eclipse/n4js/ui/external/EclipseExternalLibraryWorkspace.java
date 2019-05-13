@@ -40,7 +40,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
@@ -264,10 +263,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	private RegisterResult deregisterProjectsInternal(IProgressMonitor monitor, Set<URI> toBeDeleted,
 			Set<URI> toBeWiped) {
-		if (!ExternalLibraryHelper.requiresInfrastructureForLibraryManager()) {
-			logger.warn("Built-in libraries and NPM support are disabled.");
-		}
-
 		SubMonitor subMonitor = convert(monitor, 1);
 
 		// Clean projects.
@@ -316,11 +311,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	private RegisterResult registerProjectsInternal(IProgressMonitor monitor, Set<URI> toBeUpdated) {
 		Collection<IProject> extPrjBuilt = new LinkedList<>();
-
-		if (!ExternalLibraryHelper.requiresInfrastructureForLibraryManager()) {
-			logger.warn("Built-in libraries and NPM support are disabled.");
-		}
-
 		SubMonitor subMonitor = convert(monitor, 1);
 
 		// Rebuild whole external workspace. Filter out projects that are present in the Eclipse workspace.
