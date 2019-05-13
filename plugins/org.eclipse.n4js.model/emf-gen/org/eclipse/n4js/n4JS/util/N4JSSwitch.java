@@ -1829,11 +1829,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.JSX_ABSTRACT_ELEMENT: {
+				JSXAbstractElement jsxAbstractElement = (JSXAbstractElement)theEObject;
+				T result = caseJSXAbstractElement(jsxAbstractElement);
+				if (result == null) result = caseExpression(jsxAbstractElement);
+				if (result == null) result = caseTypableElement(jsxAbstractElement);
+				if (result == null) result = caseControlFlowElement(jsxAbstractElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.JSX_ELEMENT: {
 				JSXElement jsxElement = (JSXElement)theEObject;
 				T result = caseJSXElement(jsxElement);
-				if (result == null) result = caseExpression(jsxElement);
 				if (result == null) result = caseJSXChild(jsxElement);
+				if (result == null) result = caseJSXAbstractElement(jsxElement);
+				if (result == null) result = caseExpression(jsxElement);
 				if (result == null) result = caseTypableElement(jsxElement);
 				if (result == null) result = caseControlFlowElement(jsxElement);
 				if (result == null) result = defaultCase(theEObject);
@@ -1842,8 +1852,9 @@ public class N4JSSwitch<T> extends Switch<T> {
 			case N4JSPackage.JSX_FRAGMENT: {
 				JSXFragment jsxFragment = (JSXFragment)theEObject;
 				T result = caseJSXFragment(jsxFragment);
-				if (result == null) result = caseExpression(jsxFragment);
 				if (result == null) result = caseJSXChild(jsxFragment);
+				if (result == null) result = caseJSXAbstractElement(jsxFragment);
+				if (result == null) result = caseExpression(jsxFragment);
 				if (result == null) result = caseTypableElement(jsxFragment);
 				if (result == null) result = caseControlFlowElement(jsxFragment);
 				if (result == null) result = defaultCase(theEObject);
@@ -4402,6 +4413,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseJSXSpreadAttribute(JSXSpreadAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Abstract Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Abstract Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXAbstractElement(JSXAbstractElement object) {
 		return null;
 	}
 

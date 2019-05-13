@@ -39,6 +39,7 @@ import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.JSXAbstractElement;
 import org.eclipse.n4js.n4JS.JSXAttribute;
 import org.eclipse.n4js.n4JS.JSXChild;
 import org.eclipse.n4js.n4JS.JSXElement;
@@ -421,17 +422,7 @@ final class CFEChildren {
 				JSXAttribute jsxAttr = jsxel.getJsxAttributes().get(i);
 				addDelegatingNode(cfc, "attr_" + i, jsxel, jsxAttr);
 			}
-			for (int i = 0; i < jsxel.getJsxChildren().size(); i++) {
-				JSXChild jsxChild = jsxel.getJsxChildren().get(i);
-				if (jsxChild instanceof JSXElement) {
-					JSXElement jsxElem = (JSXElement) jsxChild;
-					addDelegatingNode(cfc, "child_" + i, jsxel, jsxElem);
-				}
-				if (jsxChild instanceof JSXExpression) {
-					JSXExpression jsxEx = (JSXExpression) jsxChild;
-					addDelegatingNode(cfc, "child_" + i, jsxel, jsxEx.getExpression());
-				}
-			}
+			handleJSXAbstractElement(cfc, jsxel);
 			if (jsxel.getJsxClosingName() != null) {
 				addDelegatingNode(cfc, "closeTagName", jsxel, jsxel.getJsxClosingName().getExpression());
 			}
@@ -441,19 +432,22 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseJSXFragment(JSXFragment jsxFrag) {
 			List<Node> cfc = new LinkedList<>();
+			handleJSXAbstractElement(cfc, jsxFrag);
+			return cfc;
+		}
 
-			for (int i = 0; i < jsxFrag.getJsxChildren().size(); i++) {
-				JSXChild jsxChild = jsxFrag.getJsxChildren().get(i);
+		private void handleJSXAbstractElement(List<Node> addHere, JSXAbstractElement jsxel) {
+			for (int i = 0; i < jsxel.getJsxChildren().size(); i++) {
+				JSXChild jsxChild = jsxel.getJsxChildren().get(i);
 				if (jsxChild instanceof JSXElement) {
 					JSXElement jsxElem = (JSXElement) jsxChild;
-					addDelegatingNode(cfc, "child_" + i, jsxFrag, jsxElem);
+					addDelegatingNode(addHere, "child_" + i, jsxel, jsxElem);
 				}
 				if (jsxChild instanceof JSXExpression) {
 					JSXExpression jsxEx = (JSXExpression) jsxChild;
-					addDelegatingNode(cfc, "child_" + i, jsxFrag, jsxEx.getExpression());
+					addDelegatingNode(addHere, "child_" + i, jsxel, jsxEx.getExpression());
 				}
 			}
-			return cfc;
 		}
 
 		@Override

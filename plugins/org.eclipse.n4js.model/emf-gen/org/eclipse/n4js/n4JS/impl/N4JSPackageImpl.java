@@ -100,6 +100,7 @@ import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.IterationStatement;
+import org.eclipse.n4js.n4JS.JSXAbstractElement;
 import org.eclipse.n4js.n4JS.JSXAttribute;
 import org.eclipse.n4js.n4JS.JSXChild;
 import org.eclipse.n4js.n4JS.JSXElement;
@@ -1398,6 +1399,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass jsxSpreadAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxAbstractElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -6905,6 +6913,26 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getJSXAbstractElement() {
+		return jsxAbstractElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getJSXAbstractElement_JsxChildren() {
+		return (EReference)jsxAbstractElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getJSXElement() {
 		return jsxElementEClass;
 	}
@@ -6935,18 +6963,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getJSXElement_JsxChildren() {
-		return (EReference)jsxElementEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getJSXElement_JsxClosingName() {
-		return (EReference)jsxElementEClass.getEStructuralFeatures().get(3);
+		return (EReference)jsxElementEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -6957,16 +6975,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EClass getJSXFragment() {
 		return jsxFragmentEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getJSXFragment_JsxChildren() {
-		return (EReference)jsxFragmentEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -7944,14 +7952,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxSpreadAttributeEClass = createEClass(JSX_SPREAD_ATTRIBUTE);
 		createEReference(jsxSpreadAttributeEClass, JSX_SPREAD_ATTRIBUTE__EXPRESSION);
 
+		jsxAbstractElementEClass = createEClass(JSX_ABSTRACT_ELEMENT);
+		createEReference(jsxAbstractElementEClass, JSX_ABSTRACT_ELEMENT__JSX_CHILDREN);
+
 		jsxElementEClass = createEClass(JSX_ELEMENT);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_ELEMENT_NAME);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_ATTRIBUTES);
-		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CHILDREN);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CLOSING_NAME);
 
 		jsxFragmentEClass = createEClass(JSX_FRAGMENT);
-		createEReference(jsxFragmentEClass, JSX_FRAGMENT__JSX_CHILDREN);
 
 		versionedElementEClass = createEClass(VERSIONED_ELEMENT);
 		createEAttribute(versionedElementEClass, VERSIONED_ELEMENT__DECLARED_VERSION);
@@ -8266,10 +8275,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxPropertyAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
 		jsxPropertyAttributeEClass.getESuperTypes().add(this.getMemberAccess());
 		jsxSpreadAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
+		jsxAbstractElementEClass.getESuperTypes().add(this.getExpression());
 		jsxElementEClass.getESuperTypes().add(this.getExpression());
 		jsxElementEClass.getESuperTypes().add(this.getJSXChild());
-		jsxFragmentEClass.getESuperTypes().add(this.getExpression());
+		jsxElementEClass.getESuperTypes().add(this.getJSXAbstractElement());
 		jsxFragmentEClass.getESuperTypes().add(this.getJSXChild());
+		jsxFragmentEClass.getESuperTypes().add(this.getJSXAbstractElement());
 		versionedIdentifierRefEClass.getESuperTypes().add(this.getIdentifierRef());
 		versionedIdentifierRefEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedReference());
 		migrationContextVariableEClass.getESuperTypes().add(this.getVariable());
@@ -9129,14 +9140,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(jsxSpreadAttributeEClass, JSXSpreadAttribute.class, "JSXSpreadAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJSXSpreadAttribute_Expression(), this.getExpression(), null, "expression", null, 0, 1, JSXSpreadAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(jsxAbstractElementEClass, JSXAbstractElement.class, "JSXAbstractElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSXAbstractElement_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXAbstractElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(jsxElementEClass, JSXElement.class, "JSXElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJSXElement_JsxElementName(), this.getJSXElementName(), null, "jsxElementName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getJSXElement_JsxAttributes(), this.getJSXAttribute(), null, "jsxAttributes", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getJSXElement_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getJSXElement_JsxClosingName(), this.getJSXElementName(), null, "jsxClosingName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(jsxFragmentEClass, JSXFragment.class, "JSXFragment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getJSXFragment_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXFragment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(versionedElementEClass, VersionedElement.class, "VersionedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getVersionedElement_DeclaredVersion(), theEcorePackage.getEBigDecimal(), "declaredVersion", null, 0, 1, VersionedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -147,9 +147,6 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def public void checkReactElementBinding(JSXElement jsxElem) {
-		if (jsxElem.jsxElementName === null) {
-			return;
-		}
 		val expr = jsxElem.jsxElementName.expression;
 		val TypeRef exprTypeRef = reactHelper.getJsxElementBindingType(jsxElem);
 		var isFunction = exprTypeRef instanceof FunctionTypeExprOrRef;

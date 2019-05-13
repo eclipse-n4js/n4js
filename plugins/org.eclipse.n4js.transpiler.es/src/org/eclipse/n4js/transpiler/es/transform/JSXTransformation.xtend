@@ -16,6 +16,7 @@ import java.util.List
 import java.util.stream.IntStream
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.JSXAbstractElement
 import org.eclipse.n4js.n4JS.JSXAttribute
 import org.eclipse.n4js.n4JS.JSXChild
 import org.eclipse.n4js.n4JS.JSXElement
@@ -29,10 +30,8 @@ import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
-import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.Script_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
-import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtext.EcoreUtil2
 
@@ -97,9 +96,8 @@ class JSXTransformation extends Transformation {
 		}
 
 		// Transform JSXFragments and JSXElements	
-		val jsxFragments = collectNodes(state.im, JSXFragment, true);
-		val jsxElements = collectNodes(state.im, JSXElement, true);
-		if (jsxFragments.isEmpty && jsxElements.isEmpty) {
+		val jsxAbstractElements = collectNodes(state.im, JSXAbstractElement, true);
+		if (jsxAbstractElements.isEmpty) {
 			// Nothing to transform
 			return;
 		}
@@ -109,8 +107,7 @@ class JSXTransformation extends Transformation {
 		steForJsxBackendFragmentComponent = prepareFragmentComponent();
 		
 		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
-		jsxFragments.forEach[transformJSXFragment];
-		jsxElements.forEach[transformJSXElement];
+		jsxAbstractElements.forEach[transformJSXAbstractElement];
 	}
 
 	def private SymbolTableEntryOriginal prepareImportOfJsxBackend() {
@@ -150,59 +147,39 @@ class JSXTransformation extends Transformation {
 		return getSymbolTableEntryOriginal(fragmentComponent, true);
 	}
 
-	def private void transformJSXElement(JSXElement elem) {
+	def private void transformJSXAbstractElement(JSXAbstractElement elem) {
 		// IMPORTANT: 'elem' might be a direct or indirect child, but if it is a direct child, it was already
 		// transformed when this method was invoked with its ancestor JSXElement as argument
 		if(EcoreUtil2.getContainerOfType(elem, Script_IM)===null) {
 			// 'elem' was already processed -> simply ignore it
 			return;
 		}
-		replace(elem, convertJSXElement(elem));
+		replace(elem, convertJSXAbstractElement(elem));
 	}
 
-	def private void transformJSXFragment(JSXFragment elem) {
-		// IMPORTANT: 'elem' might be a direct or indirect child, but if it is a direct child, it was already
-		// transformed when this method was invoked with its ancestor JSXElement as argument
-		if(EcoreUtil2.getContainerOfType(elem, Script_IM)===null) {
-			// 'elem' was already processed -> simply ignore it
-			return;
-		}
-		replace(elem, convertJSXFragment(elem));
-	}
-
-	def private ParameterizedCallExpression convertJSXElement(JSXElement elem) {
+	def private ParameterizedCallExpression convertJSXAbstractElement(JSXAbstractElement elem) {
+		val firstParams = if (elem instanceof JSXElement) {
+			#[ elem.tagNameFromElement,
+			   convertJSXAttributes(elem.jsxAttributes)
+			]
+		} else {
+			#[
+				_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendFragmentComponent)
+			]
+		};
 		return _CallExpr(
 			_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendElementFactoryFunction),
 			(
-				#[
-					elem.tagNameFromElement,
-					convertJSXAttributes(elem.jsxAttributes)
-				]
+				firstParams
 				+ elem.jsxChildren.map[convertJSXChild]
 			)
 		);
 	}
 
-	def private ParameterizedCallExpression convertJSXFragment(JSXFragment elem) {
-//		var identifiableElem = TypesFactory.eINSTANCE.createIdentifiableElement();
-//		identifiableElem.name = "React.Fragment";
-		var idRef = ImFactory.eINSTANCE.createIdentifierRef_IM();
-//		idRef.id = identifiableElem;
-
-		return _CallExpr(
-			_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendElementFactoryFunction),
-			(
-				#[
-					_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendFragmentComponent)
-				]
-				+ elem.jsxChildren.map[convertJSXChild]
-			)
-		);
-	}
 	def private Expression convertJSXChild(JSXChild child) {
 		switch(child) {
 			JSXElement:
-				convertJSXElement(child)
+				convertJSXAbstractElement(child)
 			JSXExpression:
 				child.expression
 		}
@@ -264,15 +241,18 @@ class JSXTransformation extends Transformation {
 			attr.valueExpressionFromPropertyAttribute)
 	}
 
-	def private Expression getTagNameFromElement(JSXElement elem) {
-		val nameExpr = elem.jsxElementName.expression;
-		if(nameExpr instanceof IdentifierRef_IM) {
-			val id = nameExpr.id_IM;
-			if(id===null) {
-				return _StringLiteral(nameExpr.idAsText);
+	def private Expression getTagNameFromElement(JSXAbstractElement elem) {
+		if (elem instanceof JSXElement) {
+			val nameExpr = elem.jsxElementName.expression;
+			if(nameExpr instanceof IdentifierRef_IM) {
+				val id = nameExpr.id_IM;
+				if(id===null) {
+					return _StringLiteral(nameExpr.idAsText);
+				}
 			}
+			return nameExpr;			
 		}
-		return nameExpr;
+		return null;
 	}
 
 	def private String getNameFromPropertyAttribute(JSXPropertyAttribute attr) {
