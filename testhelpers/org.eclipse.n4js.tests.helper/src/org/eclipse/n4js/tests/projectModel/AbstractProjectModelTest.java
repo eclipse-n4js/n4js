@@ -88,7 +88,7 @@ public abstract class AbstractProjectModelTest {
 	/** Validates the project description of all temporarily created test projects. */
 	private void validateTempProjects() throws IOException {
 		validateProjectDescription(myProjectURI, getExpectedIssuesInInitialSetup(myProjectName));
-		validateProjectDescription(libProjectURI, getExpectedIssuesInInitialSetup(myProjectName));
+		validateProjectDescription(libProjectURI, getExpectedIssuesInInitialSetup(libProjectName));
 	}
 
 	/**
