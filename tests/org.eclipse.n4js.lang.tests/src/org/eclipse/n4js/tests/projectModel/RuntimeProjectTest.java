@@ -40,6 +40,11 @@ public class RuntimeProjectTest extends AbstractN4JSProjectTest {
 	}
 
 	@Override
+	protected String[] getExpectedIssuesInInitialSetup(String projectName) {
+		return new String[0];
+	}
+
+	@Override
 	public void setUp() {
 		workspace = injector.getInstance(FileBasedWorkspace.class);
 		testMe = injector.getInstance(N4JSRuntimeCore.class);

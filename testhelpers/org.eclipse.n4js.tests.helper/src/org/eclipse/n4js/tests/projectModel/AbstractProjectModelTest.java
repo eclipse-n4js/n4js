@@ -47,6 +47,12 @@ public abstract class AbstractProjectModelTest {
 	/***/
 	protected abstract AbstractProjectModelSetup createSetup();
 
+	/**
+	 * Returns expected issues in the initial state of the test project with the given name. Checked by test method
+	 * {@link #testSetup()}.
+	 */
+	protected abstract String[] getExpectedIssuesInInitialSetup(String projectName);
+
 	/***/
 	public final String myProjectName = "myProject";
 	/***/
@@ -81,9 +87,8 @@ public abstract class AbstractProjectModelTest {
 
 	/** Validates the project description of all temporarily created test projects. */
 	private void validateTempProjects() throws IOException {
-		validateProjectDescription(myProjectURI,
-				"line 6: Project depends on workspace project libProject which is missing in the node_modules folder. Either install project libProject or introduce a yarn workspace of both of the projects.");
-		validateProjectDescription(libProjectURI);
+		validateProjectDescription(myProjectURI, getExpectedIssuesInInitialSetup(myProjectName));
+		validateProjectDescription(libProjectURI, getExpectedIssuesInInitialSetup(myProjectName));
 	}
 
 	/**
