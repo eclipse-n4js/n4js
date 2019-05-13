@@ -415,6 +415,12 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		ProjectTestsUtils.assertIssues(resource, expectedMessages);
 	}
 
+	/** See {@link ProjectTestsUtils#assertIssues(String, IResource, String...)}. */
+	protected void assertIssues(String message, final IResource resource, String... expectedMessages)
+			throws CoreException {
+		ProjectTestsUtils.assertIssues(message, resource, expectedMessages);
+	}
+
 	/** See {@link ProjectTestsHelper#runWithNodeRunnerUI(URI)}. */
 	protected ProcessResult runWithNodeRunnerUI(URI moduleToRun) throws ExecutionException {
 		return projectTestsHelper.runWithNodeRunnerUI(moduleToRun);

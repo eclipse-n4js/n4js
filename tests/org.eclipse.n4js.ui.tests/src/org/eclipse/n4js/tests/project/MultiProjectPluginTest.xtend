@@ -160,9 +160,13 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testTwoFilesSourceFolderRemovedFromProjectDescriptionFile() throws Exception {
+		val packageJsonOfFirstProject = firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON);
+		assertMarkers("project description file (package.json) should have no errors before adding dependency",
+			packageJsonOfFirstProject, 0, errorMarkerPredicate);
 		addSecondProjectToDependencies
-		assertMarkers("project description file (package.json) should have no errors after adding dependency",
-			firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON), 0, errorMarkerPredicate);
+		assertIssues("project description file (package.json) should have 1 error after adding dependency",
+			packageJsonOfFirstProject,
+			"line 18: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		val c = createTestFile(
 			src,
 			"C",
@@ -174,11 +178,11 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		createTestFile(src2, "D", "export public class D {}");
 		assertMarkers("file should have no errors", c, 0, errorMarkerPredicate);
 		removeDependency
-		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Couldn't resolve reference to IdentifiableElement 'D'.
-		// Couldn't resolve reference to Type 'D'.
-		// Import of D cannot be resolved.
-		assertMarkers("file should have four errors", c, 4);
+		assertIssues("file should have four errors", c,
+			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Couldn't resolve reference to TExportableElement 'D'.",
+			"line 2: Couldn't resolve reference to Type 'D'.",
+			"line 1: Import of D cannot be resolved.");
 	}
 	
 	@Test

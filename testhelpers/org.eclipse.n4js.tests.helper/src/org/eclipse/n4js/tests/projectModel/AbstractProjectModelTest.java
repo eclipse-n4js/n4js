@@ -15,6 +15,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -22,10 +24,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.xtext.testing.validation.ValidationTestHelper;
+import org.eclipse.xtext.validation.Issue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.base.Joiner;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -77,7 +81,8 @@ public abstract class AbstractProjectModelTest {
 
 	/** Validates the project description of all temporarily created test projects. */
 	private void validateTempProjects() throws IOException {
-		validateProjectDescription(myProjectURI);
+		validateProjectDescription(myProjectURI,
+				"line 6: Project depends on workspace project libProject which is missing in the node_modules folder. Either install project libProject or introduce a yarn workspace of both of the projects.");
 		validateProjectDescription(libProjectURI);
 	}
 
@@ -87,7 +92,7 @@ public abstract class AbstractProjectModelTest {
 	 * @throws IOException
 	 *             If loading the project description resource fails
 	 */
-	private void validateProjectDescription(URI projectLocation) throws IOException {
+	private void validateProjectDescription(URI projectLocation, String... expectedIssues) throws IOException {
 		final ResourceSet resourceSet = resourceSetProvider.get();
 		final URI projectDescriptionURI = projectLocation
 				.appendSegment(AbstractProjectModelSetup.PROJECT_DESCRIPTION_FILENAME);
@@ -95,14 +100,14 @@ public abstract class AbstractProjectModelTest {
 		final Resource projectDescriptionResource = resourceSet
 				.createResource(projectDescriptionURI);
 		projectDescriptionResource.load(Collections.emptyMap());
-		try {
-			validationTestHelper.assertNoErrors(projectDescriptionResource);
-		} catch (AssertionError e) {
-			// re-throw assertion failure with more detailed message (include URI)
-			throw new AssertionError(
-					"Project description file " + projectDescriptionURI.toString() + " did not validate: " +
-							e.getMessage());
-		}
+		List<Issue> issues = validationTestHelper.validate(projectDescriptionResource);
+		String allIssuesStr = issues.stream()
+				.map(issue -> "line " + issue.getLineNumber() + ": " + issue.getMessage())
+				.collect(Collectors.joining("\n"));
+		String expectedIssuesStr = Joiner.on("\n").join(expectedIssues);
+		assertEquals(
+				"Unexpected issues in project description file " + projectDescriptionURI.toString() + ".",
+				expectedIssuesStr, allIssuesStr);
 	}
 
 	private void deleteTempProjects() {

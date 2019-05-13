@@ -1,6 +1,7 @@
 {
 	"name": "foo.bar",
 	"version": "0.0.1",
+	"main": "src-gen/some/deep/path/baz.js",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

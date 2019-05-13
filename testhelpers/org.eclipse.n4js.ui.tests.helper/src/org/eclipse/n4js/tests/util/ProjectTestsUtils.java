@@ -86,6 +86,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Stopwatch;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 /**
@@ -783,6 +784,13 @@ public class ProjectTestsUtils {
 	}
 
 	/**
+	 * Like {@link #assertIssues(String, IResource, String...)}, but without a custom message.
+	 */
+	public static void assertIssues(IResource resource, String... expectedMessages) throws CoreException {
+		assertIssues(null, resource, expectedMessages);
+	}
+
+	/**
 	 * Asserts that the given resource (usually an N4JS file) contains issues with the given messages and no other
 	 * issues. Each message given should be prefixed with the line numer where the issues occurs, e.g.:
 	 *
@@ -791,8 +799,18 @@ public class ProjectTestsUtils {
 	 * </pre>
 	 *
 	 * Column information is not provided, so this method is not intended for several issues within a single line.
+	 *
+	 * @param msg
+	 *            human-readable, informative message prepended to the standard message in case of assertion failure.
+	 * @param resource
+	 *            resource to be validated.
+	 * @param expectedMessages
+	 *            expected issues messages to check or empty array to assert no issues.
+	 * @throws CoreException
+	 *             in case of mishap.
 	 */
-	public static void assertIssues(final IResource resource, String... expectedMessages) throws CoreException {
+	public static void assertIssues(String msg, final IResource resource, String... expectedMessages)
+			throws CoreException {
 		waitForAutoBuild();
 
 		final IMarker[] markers = resource.findMarkers(MarkerTypes.ANY_VALIDATION, true, IResource.DEPTH_INFINITE);
@@ -805,14 +823,15 @@ public class ProjectTestsUtils {
 				new HashSet<>(Arrays.asList(actualMessages)),
 				new HashSet<>(Arrays.asList(expectedMessages)))) {
 			final Joiner joiner = Joiner.on("\n    ");
-			final String msg = "expected these issues:\n"
+			final String actualMsg = (Strings.isNullOrEmpty(msg) ? "" : msg + "; ")
+					+ "expected these issues:\n"
 					+ "    " + joiner.join(expectedMessages) + "\n"
 					+ "but got these:\n"
 					+ "    " + joiner.join(actualMessages);
 			System.out.println("*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*");
-			System.out.println(msg);
+			System.out.println(actualMsg);
 			System.out.println("*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*");
-			Assert.fail(msg);
+			Assert.fail(actualMsg);
 		}
 	}
 
