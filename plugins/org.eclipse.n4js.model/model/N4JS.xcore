@@ -2280,13 +2280,19 @@ class JSXSpreadAttribute extends JSXAttribute {
 	contains Expression expression
 }
 
-class JSXElement extends Expression, JSXChild {
+/** Common abstract class of JSXElement and JSXFragment */
+abstract class JSXAbstractElement extends Expression {
+	contains JSXChild[] jsxChildren
+}
+
+class JSXElement extends Expression, JSXChild, JSXAbstractElement {
 	contains JSXElementName jsxElementName
 	contains JSXAttribute[] jsxAttributes
-	contains JSXChild[] jsxChildren
 	contains JSXElementName jsxClosingName
 }
 
+class JSXFragment extends JSXChild, JSXAbstractElement {
+}
 
 // ****************************************************************************************************
 // N4IDL related model elements
