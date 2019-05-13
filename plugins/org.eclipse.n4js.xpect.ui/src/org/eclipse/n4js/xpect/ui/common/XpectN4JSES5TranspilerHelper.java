@@ -128,7 +128,6 @@ public class XpectN4JSES5TranspilerHelper {
 
 		RunConfiguration runConfig;
 		// if Xpect configured workspace is null, this has been triggered directly in the IDE
-		// && (((ReadOutWorkspaceConfiguration) readOutConfiguration).getXpectConfiguredWorkspace() == null)
 		if (Platform.isRunning()) {
 			// If we are in the IDE, execute the test the same as for "Run in Node.js" and this way avoid
 			// the effort of calculating dependencies etc.
@@ -143,7 +142,6 @@ public class XpectN4JSES5TranspilerHelper {
 			createTempJsFileWithScript(packagesPath, script, options, replaceQuotes).toPath().getParent();
 
 			String fileToRun = jsModulePathToRun(script);
-			fileToRun = fileToRun.substring(fileToRun.indexOf('/') + 1);
 			String artificialProjectName = script.getModule().getProjectName();
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
@@ -177,7 +175,6 @@ public class XpectN4JSES5TranspilerHelper {
 			// determine module to run
 			createTempJsFileWithScript(artificialRoot, testScript, options, replaceQuotes);
 			String fileToRun = jsModulePathToRun(testScript);
-			fileToRun = fileToRun.substring(fileToRun.indexOf('/') + 1);
 
 			// Not in UI case, hence manually set up the resources
 			String artificialProjectName = testScript.getModule().getProjectName();
@@ -306,7 +303,7 @@ public class XpectN4JSES5TranspilerHelper {
 		// Compile script to get file content.
 		final String content = xpectGenerator.compile(script, options, replaceQuotes);
 
-		String srcgenSegments = getCompiledFileBasePath(script);
+		String srcgenSegments = getCompiledFileBasePath(script, true);
 		Path srcgenPath = createNestedDirectory(root, srcgenSegments);
 
 		// Get folder structure from qualified names.
@@ -339,22 +336,24 @@ public class XpectN4JSES5TranspilerHelper {
 	}
 
 	/**
-	 * Composes the name of the module as seen from the node-path. Is uses '/' as the path-separator, since it the path
-	 * is consumed from js-code.
+	 * Composes the name of the module as seen from the root folder of the containing npm package. Is uses '/' as the
+	 * path-separator, since this path is consumed from js-code.
 	 */
 	private String jsModulePathToRun(Script script) {
 		StringJoiner sj = new StringJoiner("/");
-		sj.add(getCompiledFileBasePath(script));
+		sj.add(getCompiledFileBasePath(script, false));
 		moduleQualifiedNameSegments(script).forEach(sj::add);
 		return sj.toString();
 	}
 
-	private String getCompiledFileBasePath(final Script script) {
-		String path = script.getModule().getProjectName() + '/' + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
+	private String getCompiledFileBasePath(final Script script, boolean includeProjectName) {
+		String path = includeProjectName
+				? script.getModule().getProjectName() + '/' + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
+				: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
 		IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
 		if (project != null) {
-			path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
+			path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project, includeProjectName);
 		}
 
 		return path;

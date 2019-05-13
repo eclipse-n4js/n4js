@@ -277,7 +277,7 @@ public class RunnerFrontEnd {
 			final String userSelection_targetFileName = resourceNameComputer.generateFileDescriptor(userSelection,
 					null);
 			IN4JSProject project = resolveProject(userSelection);
-			String base = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
+			String base = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project, true);
 			config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 					base + "/" + userSelection_targetFileName);
 		} else {

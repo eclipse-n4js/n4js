@@ -77,8 +77,7 @@ class EnumDeclarationTransformation extends Transformation {
  	}
 
 	/**
-	 * Same as {@link #createVarDecl(N4EnumDeclaration)}, but creates a function declaration
-	 * instead of variable declaration with function expression as initializer.
+	 * Creates a function declaration that will represent the enumeration.
 	 */
 	def private FunctionDeclaration createFunDecl(N4EnumDeclaration enumDecl) {
 		return _FunDecl(enumDecl.name, #[ _Fpar("name"), _Fpar("value") ],
