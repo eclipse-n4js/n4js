@@ -38,7 +38,6 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Joiner;
@@ -74,7 +73,6 @@ import com.google.inject.Inject;
  * method.
  *
  */
-@Ignore("GH-1281") // FIXME GH-1281 does this test still make sense after removing shipped code??? (see also 2 FIXME's below!)
 @SuppressWarnings({ "restriction" })
 public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG_Test {
 
@@ -135,23 +133,10 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 		final Iterable<EObject> beforeCrashResource = newArrayList(resource.getContents());
 		final int persistedBeforeReloadSize = resource.getContents().size();
 
-		// Imitate VM crash with force built-in unload and reload.
-//		unLoadBuiltIns(); // FIXME GH-1281
-		syncExtAndBuild();
-
-		// Test module issues:
-		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Couldn't resolve reference to IdentifiableElement 'Assert'.
-		// Couldn't resolve reference to TExportableElement 'Assert'.
-		// Import of Assert cannot be resolved.
-
-		// package.json issues:
-		// Project does not exist with project ID: org.eclipse.n4js.mangelhaft.
-		// Project does not exist with project ID: org.eclipse.n4js.mangelhaft.assert.
-		// Project with test fragment should depend on org.eclipse.n4js.mangelhaft.
-		assertMarkers("Expected exactly 7 issues.", project, 7);
-
-//		loadBuiltIns(); // FIXME GH-1281
+		// Imitate VM crash with forced built-in unload and reload.
+		// NOTE: at this point, the former test code simulated a crash of Eclipse by unloading and loading shipped code
+		// via ShippedCodeInitializeTestHelper#tearDownBuiltIns() and #setupBuiltIns(); however, since the removal of
+		// shipped code, this is no longer possible and was thus removed.
 
 		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 		syncExtAndBuild();
