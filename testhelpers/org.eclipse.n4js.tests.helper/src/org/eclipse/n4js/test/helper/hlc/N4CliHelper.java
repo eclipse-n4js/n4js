@@ -372,9 +372,9 @@ public class N4CliHelper {
 	public static void copyN4jsLibsToLocation(Path location, Predicate<String> n4jsLibrariesPredicate)
 			throws IOException {
 
-		GlobalStateMemento globalState = null;
+		GlobalStateMemento originalGlobalState = null;
 		if (!JSONStandaloneSetup.isSetUp()) {
-			globalState = GlobalRegistries.makeCopyOfGlobalState();
+			originalGlobalState = GlobalRegistries.makeCopyOfGlobalState();
 			JSONStandaloneSetup.doSetup();
 		}
 
@@ -386,8 +386,16 @@ public class N4CliHelper {
 					false, // do not delete on exit (because tests using this method are responsible for cleaning up)
 					libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
 		} finally {
-			if (globalState != null) {
-				globalState.restoreGlobalState();
+			if (originalGlobalState != null) {
+				// Restore the original global state (if we had to change it)
+				// This is important for these cases in particular:
+				// 1) tests that invoke N4jscBase#doMain() should run *without* any global setup, because #doMain()
+				// should work if invoked from a plain Java main() method; if we provided the JSON setup as a
+				// side-effect of this utility method we would "help" the implementation of #doMain() and might overlook
+				// problems in #doMain()'s own setup.
+				// 2) some tests deliberately run without any or with an incomplete setup in order to test some failure
+				// behavior in this broken case.
+				originalGlobalState.restoreGlobalState();
 			}
 		}
 	}

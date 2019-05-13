@@ -42,7 +42,7 @@ import com.google.inject.Provider;
  */
 public class NodeRunner implements IRunner {
 
-	/** Name of environemnt variable used by node to obtain list of search paths. */
+	/** Name of environment variable used by node to obtain list of search paths. */
 	private static final String NODE_PATH = "NODE_PATH";
 
 	/** Separator used in {@link #NODE_PATH}. */

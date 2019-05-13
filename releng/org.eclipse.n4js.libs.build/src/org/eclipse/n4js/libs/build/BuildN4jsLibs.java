@@ -65,30 +65,14 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		final File n4jsLibsRoot = n4jsLibsRootPath.toFile();
 
 		// step 1: clean
-		println("==== STEP 1/3: cleaning projects under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
+		println("==== STEP 1/2: cleaning projects under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
 				+ "\" in n4js repository:");
 		clean(n4jsLibsRoot);
 
 		// step 2: compile projects under top-level folder "n4js-libs"
-		println("==== STEP 2/3: compiling code under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
+		println("==== STEP 2/2: compiling code under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
 				+ "\" in n4js repository:");
 		compile(n4jsLibsRoot);
-
-		/* @formatter:off
-		// step 3: make "nj4s-runtime" self-contained (so that it includes a node_modules folder with all its
-		// dependencies)
-		println("==== STEP 3/3: make project \"" + N4JSGlobals.N4JS_RUNTIME_NAME
-				+ "\" self-contained (required only for tests)");
-
-		println("==== STEP 3a: create symbolic links in " + N4JSGlobals.N4JS_RUNTIME_NAME + "/"
-				+ N4JSGlobals.NODE_MODULES + " to sibling folders (iff they appear as dependency in package.json)");
-		final Path n4jsRuntimePath = n4jsLibsRootPath.resolve(N4JSGlobals.N4JS_RUNTIME_NAME);
-		preinstallRequiredSiblingProjects(n4jsRuntimePath);
-
-		println("==== STEP 3b: running \"" + NPM_INSTALL + "\" in project \"" + N4JSGlobals.N4JS_RUNTIME_NAME
-				+ "\" (to install remaining, third-party dependencies)");
-		runNpmInstall(n4jsRuntimePath);
-@formatter:on */
 
 		println("==== BUILD N4JS-LIBS finished ====");
 	}
