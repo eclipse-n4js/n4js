@@ -109,6 +109,9 @@ For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow t
    Tip: contents of the Eclipse Orbit can be found at https://download.eclipse.org/tools/orbit/downloads/ +
    (choose the correct link for the chosen Eclipse version!)
 .. For all remaining dependencies (i.e. unrelated to Eclipse and not in Orbit), choose a version to use and define it in `N4JS.setup`.
+. Check `Require-Bundle` sections of MANIFEST.MF files by searching for related bundle names or for `;bundle-version="`:
+.. There should be at most one version constraint for a specific bundle
+.. There should be no version constraints to our bundles (i.e. `org.eclipse.n4js...`)
 . Review parent pom.xml files, i.e. `releng/org.eclipse.n4js.parent/pom.xml`:
 .. Update property `xtext-version`.
 .. Check all other `*-version` properties and update them where needed.
