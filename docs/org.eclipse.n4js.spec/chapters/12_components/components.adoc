@@ -13,71 +13,62 @@ Contributors:
 :find:
 
 [.language-n4js]
-== N4JS Platform Architecture
+== Overview
 
-=== Overview
+For modularization purposes, N4JS code is managed in so-called _components_. These components correspond to what
+node and npm call _packages_, what OSGi calls _bundle_, and what Eclipse calls _project_.
 
-<<fig-cmpd_components_in_n4js>> shows the N4JS components described in detail in this
-chapter.footnote:[Note that this diagram does not necessarily reflect the actual internal implementation but only the external view.]
-<<fig-cmp_components>> shows a recently updated diagram, which is not yet fully reflected in the implementation.
+N4JS distinguishes several types of such components. <<fig-cmpd_components_in_n4js>> shows the N4JS component types
+described in detail in this chapter. <<fig-cmp_components>> shows a recently updated diagram, which is not yet fully
+reflected in the implementation.
 
 [[fig-cmpd_components_in_n4js]]
-.N4JS Component Overview (OLD)
+.Overview of N4JS Components (OLD)
 image::{find}fig/cmpd_components_in_n4js.svg[align="center"]
 
 [[fig-cmp_components]]
 .Overview of N4JS Components and Dependencies (NEW)
 image::{find}fig/cmp_components.svg[align="center"]
 
-
-The N4JS platform distinguishes several types of components. The
-following components can only be created by internal developers:
-
+The following types of components can only be created by internal developers:
 
 Runtime Environment::
-  Definition of a runtime environment such as ECMAScript 5.
-  A Runtime Environment describes the base types provided by the runtime directly which are usually globally available.
+  Definition of a runtime environment such as ECMAScript 5, node.js, or Chrome.
+  A Runtime Environment provides a number of base types which are usually globally available.
   Other components do not directly rely on runtime environments, but on runtime libraries.
+  NOTE: runtime environments are not fully implemented at this time (see GH-1291).
 Runtime Library::
-  Collections of types provided by the runtime.
+  Contains type definitions for the base types provided by one or more runtime environments.
   These types may be extensions to certain language specifications.
   E.g., the ECMAScript 6 collection classes are already provided by some environments otherwise only supporting ECMAScript 5.
   The collections are defined in terms of a runtime library which can then be provided by these environments.
-  Runtime libraries may also contain polyfils to alter types predefined in the environment.
-Test Environment::
-  Not yet clear. Environments defined for tests.
-Test Library::
-  Not yet clear. Libraries defined for tests supported by the to enable running tests and viewing test reports directly within the , such as __Mangelhaft__.
-
-// TODO missing annotation here possibly ACRONYM
+  Runtime libraries may also contain polyfills to alter types predefined in the environment.
 
 The following components can be created by external developers:
 
-[[Apps]]
-Apps::
-  User-written N4JS applications running in a web browser (the reference browser is Chrome).
-Processors::
-  User-written N4JS processors running on Node.js.
-Libraries::
-  User-written libraries used by apps, processors or other libraries.
+[[App]]
+App::
+  User-written N4JS applications.
+Processor::
+  User-written N4JS code running server-side on the N4 platform. Not implemented yet.
+Library::
+  User-written libraries used by apps, processors, or other libraries.
 
-These components are described in detail later.
-// TODO where ^^
+The available component types are described in more detail in <<Component_Types>>.
 
-A component is similar to a single project in the N4JS IDE. Generally, it contains the following:
-
+A component corresponds to a single project in the N4JS IDE. Generally, it contains the following:
 
 Package.json File::
-  The `package.json` file describing the components, dependencies and metadata.
+  The `package.json` file describing the contents, dependencies and metadata.
 Resources::
-  Resources such as images, N4ML files etc.
+  Resources such as images, data files etc.
 Sources::
-  Source files of modules - actual N4JS files used in a project.
-Compilation::
-  Compiled, minified and concatenated versions of the N4JS files and
-  other JS files.
+  Source files containing either N4JS code or plain Javascript. The actual code used in a project.
+Output Code::
+  Compiled and possibly adjusted (e.g. minified, concatenated) versions of the N4JS source files and
+  plain Javascript files.
 Tests::
-  Optional test sources and compiled tests.
+  Optional test sources and compiled output code.
 Source Maps::
   Optional source maps.
 
@@ -87,21 +78,25 @@ Components contain modules. <<fig-component_content>> describes what can be cont
 .Content of a Component
 image::{find}fig/cmpd_component_content.svg[scaledwidth="70%",align="center"]
 
+At both compile time and runtime, all components defined as dependency have to be available. Since dependencies
+are defined in `package.json` files in a form compliant to node/npm, this can be fully managed by npm (or yarn).
+
 
 
 [.language-n4js]
+[[Component_Types]]
 == Component Types
 
-
 Different N4JS component types are described in this section.
-At compile time and runtime, dependent components have to be available.
-This is the responsibility of the user interface (<<AC,IDE>> or <<AC,CLI>>) and described in the <<AC,N4IDE>> specification.
 
 === Libraries
 
 A library is a user project providing modules with declaration.
 
 === Runtime Environment and Runtime Libraries
+
+NOTE: runtime environments are not fully implemented at this time (see GH-1291).
+
 Runtime environments and libraries define globally available elements (types, variables, functions) provided by the JavaScript engine.
 Both must contain _only_ definition files (n4jsd) of which all elements are marked as `@ProvidedByRuntime` (<<_runtime-definitions>>) and `@Global` (<<_global-definitions>>).
 
@@ -122,8 +117,6 @@ When browser API differences are adapted by a library, this is called a __polyfi
 Other adaptations, such as enabling ECMSScript 6 object types in ECMAScript 5 environments, are known as __shim__.
 Instead of directly supporting these kind of 'hacks', other components specify which runtime environment and libraries they depend on by specifying unique runtime ids.
 Possible shims (in case of environments) or polyfils (in case of libraries) are transparently provided by the execution environment and the bootstrap code.
-
-
 
 === Tests
 Tests are special projects which contain tests for other projects.
@@ -159,18 +152,6 @@ For type definition projects, the following constraints must hold true with rega
 
 --
 
-[.language-n4js]
-== Component Content
-
-
-A component is similar to a project in the N4JS IDE. It consists of sources and test sources.
-These items are contained in separate folders alongside output folders and settings specified in the `package.json` file.
-The `package.json` file serves as the project description file and is stored at the root of the project (see <<package-json>> for details).
-
-For build and production purposes, other files such as `pom.xml` or `.project` files are automatically derived from the `package.json`. 
-These files are not to be added manually.
-
-
 
 [.language-n4js]
 [[package-json, Package.json File]]
@@ -179,10 +160,10 @@ These files are not to be added manually.
 A folder is a "component" if and only if it contains a `package.json` file. Being a component means
 that this folder is recognized by all N4JS-related tools but does not necessarily mean the component
 contains N4JS code (it could just contain plain Javascript). The main benefit of being a component
-in this sense is that this unit of code can be used from N4JS components as a dependency.
+in this sense is that this unit of code can be used by other N4JS components as a dependency.
 
 For example, a plain npm project containing only plain Javascript can be a component and
-can therefore be used as a project dependency of a full-blown N4JS project.
+can therefore be used as a project dependency of a full-blown N4JS component.
 
 
 === Basic Properties
@@ -234,7 +215,7 @@ an object that may have any combination of the following properties:
 projectType::
   (string) Must be one of the following strings:
 application:::
-  An application. See <<Apps>>.
+  An application. See <<App>>.
 library:::
   A library. See <<Libraries>>.
 processor:::
@@ -245,8 +226,10 @@ test:::
 api:::
   For N4JS projects that contain only API (in `.n4jsd` files) to be implemented by other,
   so-called implementation projects. See properties "implementationId", "implementedProjects".
+  NOTE: the API/Implementation concept is not fully implemented at this time (see GH-1291).
 runtimeEnvironment:::
   Runtime environments. See <<Runtime Environment Resolution>>.
+  NOTE: runtime environments are not fully implemented at this time (see GH-1291).
 runtimeLibrary:::
   Runtime libraries. See <<Runtime Environment and Runtime Libraries>>.
 validation:::
@@ -540,86 +523,6 @@ project's name. This is in line with conventions in Javascript.
 --
 
 
-
-[.language-n4js]
-== Component Dependencies
-
-There are several dependencies between components.
-We can distinguish between _require_ dependencies and _provide_ dependencies.
-
-require::
-  _N4JS Components_ require:
-* _APIs_
-* _RuntimeLiberaries_ and
-* _Libraries_
-provide::
-* _Runtime Environments_ provide _Runtime Libraries_ and maybe extend other _Runtime Environments_ (which means they provide the same runtime libraries as the extended environments and the same base types).
-* _SysLibs_ implement (__provide implementations__ of) _APIs_
-
-=== Runtime Environment Resolution
-
-In order to execute (run, debug, or test) an __N4JS Component__, an actual _runner_ has to be determined.
-Since runners support runtime environments, this basically means calculating runtime environments which provide all necessary runtime libraries needed by the component.
-This is done by computing the transitive closure of required runtime libraries and by comparing that with the transitive closure of runtime libraries provided by an environment.
-
-
-.Transitive Component Dependencies
-[def]
---
-We defined the following transitive closures of dependencies:
-
-For a given N4JS Component `C` we define
-
-[math]
-++++
-\beginalign
- C.requiredAPIs^* & = C.requiredPIs \\
-                    & \hspace{4em} \cup \\
-                    & \bigcup_{L \in C.requiredLibs}C.requiredPIs^* \\
-                    & \hspace{4em} \cup \\
-                    & \bigcup_{S \in C.requiredAPIs}S.requiredAPIs^* \\
-C.requiredLibs^*    & = C.requiredRTLibs \\
-                    & \hspace{4em} \cup \\
-                    & \bigcup_{L \in C.requiredLibs}L.requiredRTLibs^*
-\endalign
-++++
-
-For a given Runtime Environment `E` we define
-
-[math]
-++++
-\beginalign
-E.providedRTLibs^* & = E.providedRTLibs \\
-                    & \hspace{4em} \cup \\
-                    & \bigcup_{ES \in E.extendedRTEnvs} ES.E.providedRTLibs^*
-\endalign
-++++
-
---
-
-
-.Runtime Environment Resolution
-[req,id=IDE-162,version=1]
---
-An N4JS Component `C` can be executed in an runtime environment `E`, written as $E \models C$ if the following constraints hold: +
-
-. The environment must provide all runtime libraries transitively required by the component:
-+
-[math]
-++++
-\forall R \in C.requiredRTLibs^*: R \in E.providedRTLibs^ *
-++++
-. There exist libraries which can be executed by the environment, so that all APIs are implemented:
-+
-[math]
-++++
-\forall S \in C.requiredAPIs^*: \exists I: S \in I.implementedAPIs \land E \models I
-++++
-
---
-
-
-
 [[sec:N4JS-Type-Definitions]]
 .N4JS Type Definitions
 == N4JS Type Definitions
@@ -777,7 +680,7 @@ this convention guarantees that a compatible version of the type definition proj
 == Modules
 
 
-All N4JS files are modules, sometimes also called compilation unit (CU).
+Each N4JS source file defines a module in the sense of ECMAScript2015, cite:[ECMA15a(S14)].
 This is the overall structure of a module, based on cite:[ECMA15a(S14)].
 
 [source,xtext]
@@ -802,81 +705,16 @@ ScriptElement:
 
 Grammar and semantics of import statement is described in <<_import-statement>>; of export statement described in <<_export-statement>>.
 
-
 An import statement imports a variable declaration, function declaration, or N4 type declaration defined and exported by another module into the current
 module under the given alias (which is similar to the original name if no alias is defined).
 The name of the module is its project’s source folder’s relative path without any extension, see <<_qualified-names>> for details.
 
-This are the properties of script, which can be specified by the user:
 
-
-`annotations` :: Arbitrary annotations, see <<_annotations>> and below for details.
-
-`scriptElements`:: The content of the script.
-
-And we additionally define the following pseudo properties:
-
-`path` :: File system path (path delimiter is always `’/’`) relative to the source fragment of the file without the extension.
-E.g.: given a source folder `src`, `path` of a module located at:
-+
-* `src/n4/lang/List.js` is `n4/lang/List`
-* `src/n4/lang/Objects.prototypes` is `n4/lang/Objects`
-
-`expandedPath` :: Pseudo property consists of the project name and project version of the module followed by the path,
-the concrete syntax is: `<project.name>-<project.version>/<module.path>` where project version includes all version parts except the qualifier.
-+
-E.g. given a module with path `n4/lang/List` in a project `lib` with
-version `1.0.0`, the `expandedPath` is `lib-1.0.0/n4/lang/List`.
-
-`loadtimeDeps` :: Pseudo property contains all load time dependencies of this module.
-
-`runtimeDeps` :: Pseudo property contains all runtime dependencies of this module.
-
-`allDeps` :: Pseudo property contains all dependencies of this module.
-This is the union of _loadtimeDeps_ and _runtimeDeps_ which maintains the ordering of both lists, with the _loadtimeDeps_ at the front.
-
-Pseudo properties to be set via annotations are explained in <<_annotations>>.
 
 [.language-n4js]
-== Properties Files
+== API and Implementation Component
 
-//\Rightarrowdo{review}
-
-Properties files have the file extension `properties` and describe how to localize text in a project.
-They basically define keys <<_primitive-pathselector-and-i18nkey>> with their values.
-The key is used during runtime to retrieve text localized to the user’s locale.
-
-[[property-file-syntax]]
-=== Syntax
-
-The syntax of a resource file is defined as:
-
-[source,xtext]
-----
-ResourceFile:   Comment* | $entry+=$ Entry*;
-Comment:        'pass:[#]' .* EOL;
-Entry:          $key$ = KeyIdentifier '=' $value$ = .* EOL;
-KeyIdentifier:  LETTER (DIGIT | LETTER | '.')*;
-----
-
-// Added pass above for editor syntax highlighting.
-
-=== Constraints
-
-Properties files have to be stored in source fragment of type source.
-The _base folder_ for storing the properties files of a project $p$ is $p.name\lstnfjs{/nls}$.
-The language-specific resource files are stored in subfolders of the base folder.
-The base language (normally english) has to be located in a subfolder of the base folder.
-The resource files for other languages have to be located in a subfolder with the name given by syntax `<ISO Language Code>pass:[_]<ISO Country Code>`,
-where ISO Language Code is given by the ISO-639 standard and ISO Country Code is given by the ISO-3166 standard.
-
-All resource files stored in a language folder are compiled to a JavaScript file which exports all resource keys as an object literal.
-
-The resource files of a project are automatically loaded.
-To access a resource key `key` stored in a resource file `my.properties`, you have to use the file name as a prefix (e.g. you have to use the key `my.key`).
-
-[.language-n4js]
-== API and Implementation Components
+NOTE: the API/Implementation concept is not fully implemented at this time (see GH-1291).
 
 Instead of providing an implementation, N4JS components may only define an API by way of one or more n4jsd files which is then implemented by separate implementation projects.
 For one such API project, several implementation projects may be provided.
@@ -929,7 +767,7 @@ Having found an implementation project $I_n$ for each API project $A_n$, launch 
 output folder (esp. when constructing a `class path`) and when loading or importing a type from $A_n$ return the corresponding type with the same fully-qualified name from $I_n$.
 
 [.language-n4js]
-== API and Implementation With DI
+=== API and Implementation With DI
 
 API projects may use N4JS DI (<<_dependency-injection>>) language features which require Implementation projects to provide DI-compatible behaviour
 in order to allow a Client (implemented against an API project) to be executed with a given Implementation project.
