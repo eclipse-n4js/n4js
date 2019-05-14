@@ -8,62 +8,68 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {FIXME1} from "org/eclipse/n4js/mangelhaft/Test"
-import {FIXME2} from "org/eclipse/n4js/mangelhaft/Test"
-import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test"
-import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test"
-import {TestController} from "org/eclipse/n4js/mangelhaft/TestController"
-import { ITestReporter } from "org/eclipse/n4js/mangelhaft/types/ITestReporter"
-import { TestDIComponent } from "org/eclipse/n4js/mangelhaft/types/TestDIComponent"
-import { TestInfo } from "org/eclipse/n4js/mangelhaft/types/TestInfo"
-import { TestInfos } from "org/eclipse/n4js/mangelhaft/types/TestInfos"
-import { ConsoleReporter } from "org/eclipse/n4js/mangelhaft/reporter/console/ConsoleReporter"
-import { XUnitReporter } from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter"
-import NodeTestCLI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI"
-import {N4Injector} from "n4js/lang/N4Injector"
-import * as lib_fs from "fs"
-import * as cli_color_+ from "cli-color"
+
+import fetch from "deps/node-fetch";
+import {Module} from "module";
+import {N4Injector} from "n4js/lang/N4Injector";
+import {FIXME1} from "org/eclipse/n4js/mangelhaft/Test";
+import {FIXME2} from "org/eclipse/n4js/mangelhaft/Test";
+import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test";
+import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test";
+import {TestController} from "org/eclipse/n4js/mangelhaft/TestController";
+import {ConsoleReporter} from "org/eclipse/n4js/mangelhaft/reporter/console/ConsoleReporter";
+import {IDEReporter} from "org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter";
+import {XUnitReporter} from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter";
+import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
+import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
+import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent";
+import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
+import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
+import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
+import * as cli_color_+ from "cli-color";
 
 class NodeTestRunner  {
     @Inject
-    protected controller: TestController;
+    controller: TestController;
     @Inject
-    public consoleReporter: ConsoleReporter;
+    consoleReporter: ConsoleReporter;
     @Inject
-    public xunitReporter: XUnitReporter;
+    xunitReporter: XUnitReporter;
+    @Inject
+    ideReporter: IDEReporter;
 
     @Final public async run(): void {
-        let options = NodeTestCLI.parseCommandLine(),
-            testCatalog: TestInfos;
-
+        const options = NodeTestCLI.parseCommandLine();
         if (!options) {
             return;
         }
  
-        if (options.testCatalog.startsWith("http://")) { // running IDE
-            let req = await fetch(options.testCatalog, {
+        let testCatalog: TestInfos;
+ 
+        if (isHTTP_re.test(options.testCatalog)) { // running IDE
+            const req = await fetch(options.testCatalog, {
                 headers: {
                     "Content-Type": "application/vnd.n4js.assemble_test_catalog_req.tm+json"
                 }
             });
             testCatalog = (await req.json()) as TestInfos;
         } else {
-            testCatalog = {
-                testDescriptors: JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as Array<TestInfo>
-            } as TestInfos;
+            testCatalog = readJsonFile(options.testCatalog) as TestInfos;
         }
 
         if (options.filter && options.filter.length) { // filter out tests
             const filters = options.filter.slice(0).sort();
             const descriptors: Array<TestInfo> = [];
 
-            for (let info of testCatalog.testDescriptors) {
+            for (const info of testCatalog.testDescriptors) {
                 let methods = new Set<string>();
-                for (let filter of filters) {
+                for (const filter of filters) {
                     const [fqnFilter, methodFilter] = filter.split("#");
                     if (!fqnFilter || info.fqn.indexOf(fqnFilter) >= 0) {
                         if (methodFilter) { // filter methods
-                            for (let method of info.testMethods) {
+                            for (const method of info.testMethods) {
                                 if (method.indexOf(methodFilter) >= 0) {
                                     methods.add(method);
                                 }
@@ -82,23 +88,26 @@ class NodeTestRunner  {
             testCatalog.testDescriptors = descriptors;
         }
         
-        const log = console.log.bind(console);
-        const consoleObj: Object+ = console;
-        if (options.quiet) {
-            consoleObj.log = consoleObj.error = consoleObj.warn = function(){};
-        }
-        if (options.showOnlyErrors) {
-            this.consoleReporter.setErrorsOnly();
-        }
-
+        const log = options.quiet ? function() {} : console.log.bind(console);
         this.consoleReporter.cliColor = cli_color_.default;
         this.consoleReporter.setLogger(log);
-        
-        let reporters: Array<ITestReporter> = [this.consoleReporter];
+
+        const reporters: Array<ITestReporter> = [this.consoleReporter];
+
         if (options.xunitReportFile) {
             this.xunitReporter.spec = options;
             reporters.push(this.xunitReporter);
         }
+
+        const ideReportEndpoint = testCatalog.endpoint;
+        if (ideReportEndpoint) {
+            if (!isHTTP_re.test(ideReportEndpoint)) {
+                throw new Error(`no report URL: ${ideReportEndpoint}`);
+            }
+            this.ideReporter.endpoint = ideReportEndpoint;
+            reporters.push(this.ideReporter);
+        }
+
         this.controller.reporters = reporters;
 
         const resGroups = await this.controller.runGroups(testCatalog, 420187, options.testScope);
@@ -113,10 +122,11 @@ class NodeTestRunner  {
             log(`${fail("Test run failed.")} To rerun just the failing tests use the command: \n n4js-mangelhaft ${this.consoleReporter.unsuccessfulTests.map(test => `\\\n    -f ${test}`).join(" ")}`);
         }
 
-        // Don't wait for async promises to finish, e.g. stale auth prompts.
-        // In case of exceptions, the process is already exiting with code 1 (see n4js-cli):
-        // Flush stdout and exit:
-        process.stdout.write("", "utf-8", () => process.exit(failed ? 8 : 0));
+        // Don't wait for async promises to finish.
+        // In case of exceptions, the process is already exiting with code 1.
+        if (failed) { // use different error code
+            throw 8;
+        }
     }
 }
 
@@ -135,5 +145,16 @@ class Root {
 
 const parentinj = N4Injector.of(TestDIComponent);
 const root = N4Injector.of(Root, parentinj).create(Root);
+ 
+// TODO: fragile, will be removed once we have proper api/impl binding
+if (process.env.N4JS_RT_strip_api_prj_suffix) {
+    const objModule: Object+ = Module;
+    const _resolveFilename = objModule._resolveFilename;
+    const stripApiSuffix_re = /^([^/]+)\.api\//;
+    objModule._resolveFilename = function(request: string, parent, isMain) {
+        request = request.replace(stripApiSuffix_re, "$1/");
+        return _resolveFilename(request, parent, isMain);
+    };
+}
 
-export default public const main = root.runner;
+waitAndExitProcess(root.runner.run.bind(root.runner), true /* keep event loop */);

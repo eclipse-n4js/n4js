@@ -1,8 +1,0 @@
-{
-	"version": 3,
-	"file": "ResultGroup.js",
-	"sourceRoot": "",
-	"sources": ["../../../../../../src/n4js/org/eclipse/n4js/mangelhaft/types/ResultGroup.n4js"],
-	"names": [],
-	"mappings": ";;;;;;EAaA,mCAOuB,aAAgC;sBANrB;sBACW;oBACd;mBACD;iBACF;kBACC;GAErB,mBAAmB;GACnB,mBAAmB;GACnB,QAAS,cAAc;IACnB,OAAO;KACH,KAAK;MACD,kBAAkB;MAClB;KACJ,KAAK;MACD,eAAe;MACf;KACJ,KAAK;MACD,iBAAiB;MACjB;KACJ,KAAK;KACL,KAAK;KACL,KAAK;KACL,KAAK;KACL,KAAK;MACD,gBAAgB;MAChB;KACJ;MACA,MAAM,IAAI,MAAM;;;;;;;;IA7BZ"
-}

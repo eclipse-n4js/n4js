@@ -31,21 +31,18 @@
       ]
     },
     "requiredRuntimeLibraries": [
-      "n4js-runtime-fetch",
-      "n4js-runtime-mangelhaft"
+      "n4js-runtime-fetch"
     ],
     "testedProjects": [
       "org.eclipse.n4js.mangelhaft.reporter.ide"
-    ],
-    "moduleLoader": "n4js"
+    ]
   },
   "dependencies": {
     "org.eclipse.n4js.mangelhaft.reporter.ide": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
-    "n4js-node": "^0.1.0",
-    "n4js-runtime-fetch": "^0.1.0",
-    "n4js-runtime-mangelhaft": "^0.1.0"
+    "n4js-runtime": "^0.1.0",
+    "n4js-runtime-fetch": "^0.1.0"
   },
   "devDependencies": {}
 }

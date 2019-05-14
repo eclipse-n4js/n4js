@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -26,8 +27,6 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.base.Predicates;
 
 /**
  * Downloads, installs, compiles and runs 'express' for different target platform configurations.
@@ -44,7 +43,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(EXTERNAL_WITH_N4JSD_TPT, Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace(EXTERNAL_WITH_N4JSD_TPT, true, N4JSGlobals.N4JS_RUNTIME);
 		wsRoot = workspace.getAbsolutePath().toString();
 		packages = wsRoot + "/packages";
 		node_modules = new File(wsRoot, NODE_MODULES);
@@ -87,6 +86,8 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	public void testCompileCheckNodeModulesLocation() throws IOException, ExitCodeException {
 
 		// force creating install location
+		FileDeleter.delete(node_modules);
+
 		Files.createDirectory(node_modules.toPath());
 		File testFile = new File(node_modules, "tst.txt");
 		testFile.createNewFile();

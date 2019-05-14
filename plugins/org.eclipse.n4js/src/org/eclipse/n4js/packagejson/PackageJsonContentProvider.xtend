@@ -21,21 +21,24 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectDescription.SourceContainerType
 
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXTENDED_RUNTIME_ENVIRONMENT
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTATION_ID
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROVIDED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PRIVATE
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROVIDED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.REQUIRED_RUNTIME_LIBRARIES
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.SOURCES
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.TESTED_PROJECTS
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_NAME
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.WORKSPACES
 
 /**
  * Class for providing the content of N4JS-specific package.json files.
@@ -65,14 +68,17 @@ package class PackageJsonContentProvider {
 	 * @return the N4JS package.json content as a string.
 	 */
 	package static def JSONDocument getModel(
-		String projectName,
+		Optional<String> projectName,
 		Optional<String> version,
-		ProjectType type,
+		Optional<Boolean> _private,
+		Iterable<String> workspaces,
+		Optional<ProjectType> type,
 		Optional<String> vendorId,
 		Optional<String> vendorName,
 		Optional<String> output,
 		Optional<String> extendedRE,
 		SortedMap<String, String> dependencies,
+		SortedMap<String, String> devDependencies,
 		Iterable<String> providedRL,
 		Iterable<String> requiredRL,
 		Optional<String> implementationId,
@@ -82,30 +88,40 @@ package class PackageJsonContentProvider {
 	) {
 		val JSONObject root = JSONFactory.eINSTANCE.createJSONObject();
 
-		JSONModelUtils.addProperty(root, NAME.name, projectName);
+		if (projectName.present)
+			JSONModelUtils.addProperty(root, NAME.name, projectName.get());
 
 		if (version.present)
 			JSONModelUtils.addProperty(root, VERSION.name, version.get());
 
+		if (_private.present) {
+			JSONModelUtils.addProperty(root, PRIVATE.name,
+				JSONModelUtils.createBooleanLiteral(_private.get()));
+		}
+
+		if (!workspaces.empty) {
+			JSONModelUtils.addProperty(root, WORKSPACES.name,
+				JSONModelUtils.createStringArray(workspaces));
+		}
+
 		// add "dependencies" section
 		if (!dependencies.empty) {
-			// add dependencies section
-			val JSONObject dependenciesSection = JSONFactory.eINSTANCE.createJSONObject();
-			dependenciesSection.nameValuePairs.addAll(dependencies.entrySet.map [ e |
-				val pair = JSONFactory.eINSTANCE.createNameValuePair();
-				pair.name = e.key;
-				pair.value = JSONModelUtils.createStringLiteral(e.value);
-				return pair;
-			]);
-			JSONModelUtils.addProperty(root, DEPENDENCIES.name, dependenciesSection);
+			val dependenciesValue = createDependenciesValue(dependencies);
+			JSONModelUtils.addProperty(root, DEPENDENCIES.name, dependenciesValue);
 		}
 		
-		// add "n4js" section
-		val JSONObject n4jsRoot = JSONModelUtils.addProperty(root, N4JS.name,
-			JSONFactory.eINSTANCE.createJSONObject());
+		// add "devDependencies" section
+		if (!devDependencies.empty) {
+			val devDependenciesValue = createDependenciesValue(devDependencies);
+			JSONModelUtils.addProperty(root, DEV_DEPENDENCIES.name, devDependenciesValue);
+		}
+		
+		// create "n4js" section (will be added below iff it will be non-empty)
+		val JSONObject n4jsRoot = JSONFactory.eINSTANCE.createJSONObject();
 		
 		// project type
-		JSONModelUtils.addProperty(n4jsRoot, PROJECT_TYPE.name, getEnumAsString(type));
+		if (type.present)
+			JSONModelUtils.addProperty(n4jsRoot, PROJECT_TYPE.name, getEnumAsString(type.get()));
 
 		// add vendor related properties
 		if (vendorId.present)
@@ -114,22 +130,24 @@ package class PackageJsonContentProvider {
 			JSONModelUtils.addProperty(n4jsRoot, VENDOR_NAME.name, vendorName.get());
 
 		// add sources section
-		val JSONObject sourcesSection = JSONModelUtils.addProperty(n4jsRoot, SOURCES.name,
-			JSONFactory.eINSTANCE.createJSONObject());
-
-		// add sources sub-sections
-		sourceContainers.entrySet
-			// sort by container type
-			.sortBy[ e | e.key.literal ]
-			// group by source container type
-			.groupBy[ e | e.key ]
-			// add source container sub-section for each specified source container type 
-			.forEach[containerType, paths| 
-				val JSONArray typeSectionArray = JSONModelUtils.addProperty(sourcesSection,
-					containerType.getLiteral().toLowerCase(), JSONFactory.eINSTANCE.createJSONArray());
-				val pathLiterals = paths.map[pathEntry | JSONModelUtils.createStringLiteral(pathEntry.value) ];
-				typeSectionArray.getElements().addAll(pathLiterals);
-			]
+		if (!sourceContainers.empty) {
+			val JSONObject sourcesSection = JSONModelUtils.addProperty(n4jsRoot, SOURCES.name,
+				JSONFactory.eINSTANCE.createJSONObject());
+	
+			// add sources sub-sections
+			sourceContainers.entrySet
+				// sort by container type
+				.sortBy[ e | e.key.literal ]
+				// group by source container type
+				.groupBy[ e | e.key ]
+				// add source container sub-section for each specified source container type 
+				.forEach[containerType, paths| 
+					val JSONArray typeSectionArray = JSONModelUtils.addProperty(sourcesSection,
+						containerType.getLiteral().toLowerCase(), JSONFactory.eINSTANCE.createJSONArray());
+					val pathLiterals = paths.map[pathEntry | JSONModelUtils.createStringLiteral(pathEntry.value) ];
+					typeSectionArray.getElements().addAll(pathLiterals);
+				];
+		}
 
 		// add output folder
 		if (output.present)
@@ -164,11 +182,27 @@ package class PackageJsonContentProvider {
 				JSONModelUtils.createStringArray(testedProjects));
 		}
 
+		// add "n4js" section (if non-empty)
+		if (!n4jsRoot.nameValuePairs.empty) {
+			JSONModelUtils.addProperty(root, N4JS.name, n4jsRoot);
+		}
+
 		// finally serialize as JSONDocument
 		val JSONDocument document = JSONFactory.eINSTANCE.createJSONDocument();
 		document.setContent(root);
 
 		return document;
+	}
+
+	private def static JSONObject createDependenciesValue(Map<String,String> dependencies) {
+		val JSONObject dependenciesValue = JSONFactory.eINSTANCE.createJSONObject();
+		dependenciesValue.nameValuePairs.addAll(dependencies.entrySet.map [ e |
+			val pair = JSONFactory.eINSTANCE.createNameValuePair();
+			pair.name = e.key;
+			pair.value = JSONModelUtils.createStringLiteral(e.value);
+			return pair;
+		]);
+		return dependenciesValue;
 	}
 
 	/** Returns the string representation of the given {@link ProjectType} */

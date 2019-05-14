@@ -28,8 +28,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
-
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
@@ -39,7 +37,7 @@ public class TargetPlatformReuseTest extends AbstractN4jscTest {
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("GH-963-reuse-tp", Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace("GH-963-reuse-tp", true);
 	}
 
 	/** Delete workspace. */

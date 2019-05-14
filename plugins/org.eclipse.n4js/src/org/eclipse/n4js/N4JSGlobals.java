@@ -19,7 +19,9 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.n4js.external.libraries.ExternalLibraryFolderUtils;
+import org.eclipse.n4js.projectDescription.ProjectType;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Global hook for static information about the current setup. Contains file extensions, library names, and other
@@ -37,14 +39,12 @@ public final class N4JSGlobals {
 	 */
 	public static final String N4JS_FILE_EXTENSION = "n4js";
 	/**
-	 * Files extension of JSX source files (<b>not</b> including the separator dot). TODO: This will be OK when JSX is
-	 * merged into N4JS.
+	 * Files extension of JSX source files (<b>not</b> including the separator dot).
 	 */
 	public static final String JSX_FILE_EXTENSION = "jsx";
 
 	/**
-	 * Files extension of N4JSX source files (<b>not</b> including the separator dot). TODO: This will be OK when N4JSX
-	 * is merged into N4JS.
+	 * Files extension of N4JSX source files (<b>not</b> including the separator dot).
 	 */
 	public static final String N4JSX_FILE_EXTENSION = "n4jsx";
 
@@ -81,6 +81,11 @@ public final class N4JSGlobals {
 	public static final String MANGELHAFT_ASSERT = MANGELHAFT + ".assert";
 
 	/**
+	 * Name of the npm package containing the mangelhaft command-line interface.
+	 */
+	public static final String MANGELHAFT_CLI = "n4js-mangelhaft-cli";
+
+	/**
 	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
 	 * {@link #N4JS_FILE_EXTENSION},{@link #N4JSX_FILE_EXTENSION}, {@link #JS_FILE_EXTENSION},
 	 * {@link #JSX_FILE_EXTENSION}.
@@ -103,16 +108,32 @@ public final class N4JSGlobals {
 	 * other code shipped with the IDE.
 	 * <p>
 	 * NOTE: the actual projects are not contained directly in this folder but in a sub folder, see
-	 * {@link #SHIPPED_CODE_SOURCES_FOLDER_NAME}.
+	 * {@link #N4JS_LIBS_SOURCES_PATH}.
 	 */
 	public static final String N4JS_LIBS_FOLDER_NAME = "n4js-libs";
 
 	/**
-	 * Relative path to the folder in the N4JS Git repository containing the projects with the source code that will be
-	 * shipped with the IDE, as part of the library manager. The path is relative to the root folder of the N4JS Git
-	 * repository.
+	 * Path to the folder in the N4JS Git repository containing the source code of the "n4js-libs", relative to the
+	 * repository's root folder.
 	 */
-	public static final String SHIPPED_CODE_SOURCES_FOLDER_NAME = N4JS_LIBS_FOLDER_NAME + "/" + "packages";
+	public static final String N4JS_LIBS_SOURCES_PATH = N4JS_LIBS_FOLDER_NAME + "/" + "packages";
+
+	/**
+	 * Name of the npm package containing the N4JS bootstrap and runtime code, i.e. the code defining internal low-level
+	 * functions such as {@code $makeClass()} and containing core runtime code such as the implementation of N4Injector.
+	 * <p>
+	 * It is expected that this npm package lives in the N4JS Git repository at path {@value #N4JS_LIBS_SOURCES_PATH},
+	 * cf. {@link #N4JS_LIBS_SOURCES_PATH}.
+	 */
+	public static final String N4JS_RUNTIME = "n4js-runtime";
+
+	/**
+	 * Project types for which a dependency to the {@link #N4JS_RUNTIME n4js-runtime} is mandatory.
+	 */
+	public static final Set<ProjectType> PROJECT_TYPES_REQUIRING_N4JS_RUNTIME = ImmutableSet.of(
+			ProjectType.LIBRARY,
+			ProjectType.APPLICATION,
+			ProjectType.TEST);
 
 	/**
 	 * The name of an npm command.
@@ -123,17 +144,9 @@ public final class N4JSGlobals {
 	 */
 	public static final String NODE_MODULES = "node_modules";
 	/**
-	 * The name of an npm install command.
-	 */
-	public static final String NPM_INSTALL = NPM + " install";
-	/**
 	 * The name of NPM's package json file.
 	 */
-	public static final String PACKAGE_JSON = ExternalLibraryFolderUtils.PACKAGE_JSON;
-	/**
-	 * Name of the package.json fragment file from the "n4jsd" type definitions repository.
-	 */
-	public static final String PACKAGE_FRAGMENT_JSON = "package-fragment.json";
+	public static final String PACKAGE_JSON = "package.json";
 
 	/**
 	 * All HTML tags.

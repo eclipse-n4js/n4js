@@ -59,7 +59,7 @@ class EnumDeclarationTransformation extends Transformation {
 			val root = enumDecl.orContainingExportDeclaration;
 			remove(root);
 		} else {
-			val EObject varOrFunDecl = if (state.project.isUseES6Imports) createFunDecl(enumDecl) else createVarDecl(enumDecl);
+			val EObject varOrFunDecl = createFunDecl(enumDecl);
 			val makeEnumCall = bootstrapCallAssistant.createMakeEnumCall(enumDecl);
 			state.tracer.copyTrace(enumDecl, makeEnumCall);
 
@@ -77,22 +77,7 @@ class EnumDeclarationTransformation extends Transformation {
  	}
 
 	/**
-	 * Creates declaration of the variable that will represent the enumeration.
-	 */
-	def private VariableDeclaration createVarDecl(N4EnumDeclaration enumDecl) {
-		return _VariableDeclaration(enumDecl.name)=>[
-			expression = _FunExpr(false, enumDecl.name, #[ _Fpar("name"), _Fpar("value") ],
-				_SnippetAsStmnt('''
-					this.name = name;
-					this.value = value;
-				''')
-			);
-		];
-	}
-
-	/**
-	 * Same as {@link #createVarDecl(N4EnumDeclaration)}, but creates a function declaration
-	 * instead of variable declaration with function expression as initializer.
+	 * Creates a function declaration that will represent the enumeration.
 	 */
 	def private FunctionDeclaration createFunDecl(N4EnumDeclaration enumDecl) {
 		return _FunDecl(enumDecl.name, #[ _Fpar("name"), _Fpar("value") ],

@@ -13,6 +13,7 @@ package org.eclipse.n4js.hlc.tests;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
@@ -34,7 +35,7 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WS_IDEBUG_695, false);
+		workspace = setupWorkspace(WS_IDEBUG_695, false, N4JSGlobals.N4JS_RUNTIME);
 
 	}
 

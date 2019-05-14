@@ -5,7 +5,6 @@
 		"projectType": "runtimeLibrary",
 		"vendorId": "MyVendorID",
 		"vendorName": "My Vendor Name",
-		"output": "src-gen",
-		"moduleLoader": "n4js"
+		"output": "src-gen"
 	}
 }

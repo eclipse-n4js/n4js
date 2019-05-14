@@ -13,9 +13,12 @@ import com.google.inject.Inject
 import java.io.File
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IProject
+import org.eclipse.core.resources.IResource
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
+import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.ProjectTestsHelper
@@ -28,8 +31,9 @@ import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
 
 /**
- * Testing the use of a yarn workspace inside the N4JS IDE, including the case that
- * the packages contained in the workspace are imported only partially.
+ * Testing the use of a yarn workspace inside the N4JS IDE, including the case that only
+ * some of the packages contained in the yarn workspace are imported as Eclipse projects
+ * into the Eclipse workspace.
  */
 class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 
@@ -70,20 +74,34 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		assertCorrectOutput(expectedOutput);
 	}
 
+	/**
+	 * Test the case that only some of the projects contained in a yarn workspace are imported into
+	 * the Eclipse workspace. Sub case: a non-scoped project is missing.
+	 */
 	@Test
 	def void testPartialOmitNonScoped() throws CoreException {
-		importYarnWorkspace("XClient", "@myScope/Lib");
+		importYarnWorkspace("XClient", "Lib", "@myScope/Lib"); // importing 'Lib' only to have it compiled!
 		assertNoIssues;
-// TODO GH-1281: activate runner once they properly support dependencies
-//		assertCorrectOutput(expectedOutput);
+		nonScopedProject.delete(IResource.NEVER_DELETE_PROJECT_CONTENT, null);
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		testedWorkspace.fullBuild();
+		assertNoIssues;
+		assertCorrectOutput(expectedOutput);
 	}
 
+	/**
+	 * Test the case that only some of the projects contained in a yarn workspace are imported into
+	 * the Eclipse workspace. Sub case: a scoped project is missing.
+	 */
 	@Test
 	def void testPartialOmitScoped() throws CoreException {
-		importYarnWorkspace("XClient", "Lib");
+		importYarnWorkspace("XClient", "Lib", "@myScope/Lib"); // importing '@myScope/Lib' only to have it compiled!
 		assertNoIssues;
-// TODO GH-1281: activate runner once they properly support dependencies
-//		assertCorrectOutput(expectedOutput);
+		scopedProject.delete(IResource.NEVER_DELETE_PROJECT_CONTENT, null);
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		testedWorkspace.fullBuild();
+		assertNoIssues;
+		assertCorrectOutput(expectedOutput);
 	}
 
 	@Test
@@ -102,7 +120,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		scopedProject.close(null);
 		testedWorkspace.fullBuild;
 		assertIssues(
-			"line 5: Project does not exist with project ID: @myScope/Lib.",
+			"line 6: Project does not exist with project ID: @myScope/Lib.",
 			"line 2: Import of C as C2 cannot be resolved.",
 			"line 2: Couldn't resolve reference to TExportableElement 'C'.",
 			"line 5: Couldn't resolve reference to IdentifiableElement 'C2'.",
@@ -118,6 +136,8 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		val parentFolder = new File(getResourceUri(PROBANDS, YARN_WORKSPACE_BASE));
 		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT, [pkgName|
 			return Arrays.contains(packagesToImport, pkgName);
+		], #[
+			N4JSGlobals.N4JS_RUNTIME
 		]);
 		testedWorkspace.fullBuild
 

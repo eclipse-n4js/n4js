@@ -1,8 +1,0 @@
-{
-	"version": 3,
-	"file": "Test.js",
-	"sourceRoot": "",
-	"sources": ["../../../../../src/n4js/org/eclipse/n4js/mangelhaft/Test.n4js"],
-	"names": [],
-	"mappings": ";;;;;;EAsBA,uBAA6B,IAAc,QAA4B;GACtE,OAAO,WAAW;;IAChB,IAAI;KACH,SAAS,MAAgB;KACxB,OAAM,IAAI;KACX,IAAI;MACH,YAAY,IAAI;MACf,OAAO,KAAK;MACb,YAAY;;;;;;EAOjB;;EAMA;;;;;;EASA;;EAQA;;;;;;;;;;IAvBwB;IAAA;;;;;;;;;;;;;;;;;;;;IAMJ;;;;qCAGC;OACnB,OAAO;;;;;;;;;;;;;;;;;;;;;;;;;;;;mDAQO;;;;oBAAA;;;;IAHQ;IAAA;;;;;;;;;;;;;;;;;;;;;;;;;IAQJ;;;;qCAGC;OACnB,OAAO"
-}

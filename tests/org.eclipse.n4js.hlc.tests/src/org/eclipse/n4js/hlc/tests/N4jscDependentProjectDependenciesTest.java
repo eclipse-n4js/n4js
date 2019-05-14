@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
@@ -57,7 +56,6 @@ public class N4jscDependentProjectDependenciesTest extends AbstractN4jscTest {
 	@Test
 	public void testSuccessfulCompilationWithInterdependentProjects() throws ExitCodeException {
 		final String[] args = {
-				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--projectlocations", proot.toString(),
 				"--buildType", BuildType.allprojects.toString()

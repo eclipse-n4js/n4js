@@ -107,16 +107,20 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("Client");
 		IFile projectDescriptionFile = project.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 
-		// line 5: Project depends on workspace project Impl which is missing in the node_modules folder.
+		// line 5: Project depends on workspace project n4js-runtime which is missing in the node_modules folder.
 		// Either install project Impl or introduce a yarn workspace of both of the projects.
-		// line 6: Project depends on workspace project Def which is missing in the node_modules folder.
+		// line 6: Project depends on workspace project Impl which is missing in the node_modules folder.
 		// Either install project Impl or introduce a yarn workspace of both of the projects.
-		assertMarkers("package.json should have 2 markers", projectDescriptionFile, 2);
-		assertMarkers("workspace should have 2 markers", ResourcesPlugin.getWorkspace().getRoot(), 2);
+		// line 7: Project depends on workspace project Def which is missing in the node_modules folder.
+		// Either install project Impl or introduce a yarn workspace of both of the projects.
+		assertMarkers("package.json should have 3 markers", projectDescriptionFile, 3);
+		assertMarkers("workspace should have 3 markers", ResourcesPlugin.getWorkspace().getRoot(), 3);
 	}
 
 	private void importProjects(boolean incremental) throws CoreException {
 		final File testdataLocation = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER));
+		// not executing anything, so a dummy n4js-runtime is sufficient:
+		ProjectTestsUtils.importProject(testdataLocation, N4JSGlobals.N4JS_RUNTIME);
 		for (String projectName : projectsToImport) {
 			ProjectTestsUtils.importProject(testdataLocation, projectName);
 		}
@@ -165,7 +169,7 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 				description.getURI());
 		Assert.assertNotNull(moduleAsString);
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n" +
-				"<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" qualifiedName=\"Client\" projectName=\"Client\" vendorID=\"org.eclipse.n4js\" moduleLoader=\"N4JS\">\n"
+				"<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" qualifiedName=\"Client\" projectName=\"Client\" vendorID=\"org.eclipse.n4js\">\n"
 				+
 				"  <astElement href=\"#/0\"/>\n" +
 				"  <variables name=\"a\" exportedName=\"a\" const=\"true\" newExpression=\"true\">\n" +

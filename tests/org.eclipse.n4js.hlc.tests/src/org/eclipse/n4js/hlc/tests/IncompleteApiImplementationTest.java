@@ -26,6 +26,7 @@ import org.junit.runners.MethodSorters;
 
 /**
  */
+@Ignore("GH-1291") // when removing this @Ignore: check and maybe remove older @Ignore annotations below too!!
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 

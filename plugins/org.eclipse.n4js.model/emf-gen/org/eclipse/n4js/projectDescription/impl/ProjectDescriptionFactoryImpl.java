@@ -71,7 +71,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 			case ProjectDescriptionPackage.PROJECT_DEPENDENCY: return createProjectDependency();
 			case ProjectDescriptionPackage.MODULE_FILTER: return createModuleFilter();
 			case ProjectDescriptionPackage.MODULE_FILTER_SPECIFIER: return createModuleFilterSpecifier();
-			case ProjectDescriptionPackage.BOOTSTRAP_MODULE: return createBootstrapModule();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -91,8 +90,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 				return createSourceContainerTypeFromString(eDataType, initialValue);
 			case ProjectDescriptionPackage.MODULE_FILTER_TYPE:
 				return createModuleFilterTypeFromString(eDataType, initialValue);
-			case ProjectDescriptionPackage.MODULE_LOADER:
-				return createModuleLoaderFromString(eDataType, initialValue);
 			case ProjectDescriptionPackage.DEPENDENCY_TYPE:
 				return createDependencyTypeFromString(eDataType, initialValue);
 			default:
@@ -114,8 +111,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 				return convertSourceContainerTypeToString(eDataType, instanceValue);
 			case ProjectDescriptionPackage.MODULE_FILTER_TYPE:
 				return convertModuleFilterTypeToString(eDataType, instanceValue);
-			case ProjectDescriptionPackage.MODULE_LOADER:
-				return convertModuleLoaderToString(eDataType, instanceValue);
 			case ProjectDescriptionPackage.DEPENDENCY_TYPE:
 				return convertDependencyTypeToString(eDataType, instanceValue);
 			default:
@@ -194,17 +189,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public BootstrapModule createBootstrapModule() {
-		BootstrapModuleImpl bootstrapModule = new BootstrapModuleImpl();
-		return bootstrapModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public ProjectType createProjectTypeFromString(EDataType eDataType, String initialValue) {
 		ProjectType result = ProjectType.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
@@ -257,26 +241,6 @@ public class ProjectDescriptionFactoryImpl extends EFactoryImpl implements Proje
 	 * @generated
 	 */
 	public String convertModuleFilterTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ModuleLoader createModuleLoaderFromString(EDataType eDataType, String initialValue) {
-		ModuleLoader result = ModuleLoader.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertModuleLoaderToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

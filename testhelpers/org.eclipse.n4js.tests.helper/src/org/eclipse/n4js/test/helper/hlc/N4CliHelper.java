@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.test.helper.hlc;
 
-import static com.google.common.base.Preconditions.checkState;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -22,6 +21,7 @@ import java.lang.ProcessBuilder.Redirect;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -29,14 +29,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.utils.io.FileCopier;
+import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.xtext.testing.GlobalRegistries;
+import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 
 /**
  * Central helper in running tests with the command line tools (e.g. {@code n4jsc.jar} or {@link N4jscBase}}.
@@ -44,10 +48,20 @@ import com.google.common.base.Predicate;
 public class N4CliHelper {
 
 	/**
+	 * name of subfolder containing the actual projects iff a yarn workspace was created, see
+	 * {@link #setupWorkspace(Path, Path, Predicate, boolean)}
+	 */
+	public static final String PACKAGES = "packages";
+
+	/**
 	 * A black list of n4js-libs that are never copied into a headless compiler test workspace.
 	 */
 	private static final Set<String> N4JS_LIBS_BLACKLIST = new HashSet<>(
-			Arrays.asList("org.eclipse.n4js.mangelhaft.reporter.xunit", "n4js-cli", "n4js-mangelhaft-cli"));
+			Arrays.asList(
+					"n4js-cli",
+					"org.eclipse.n4js.mangelhaft.test",
+					"org.eclipse.n4js.mangelhaft.assert.test",
+					"org.eclipse.n4js.mangelhaft.reporter.ide.test"));
 
 	/**
 	 * @param expectedString
@@ -239,15 +253,15 @@ public class N4CliHelper {
 	 *
 	 * @param log
 	 *            file to redirect to
-	 * @param target
-	 *            path of target-folder
+	 * @param workingDir
+	 *            path of working directory
 	 * @param args
 	 *            process arguments
 	 * @return started process
 	 * @throws IOException
 	 *             if errored.
 	 */
-	public static Process createAndStartProcessIntern(File log, String target, Map<String, String> environment,
+	public static Process createAndStartProcessIntern(File log, String workingDir, Map<String, String> environment,
 			String... args) throws IOException {
 		ProcessBuilder pb = new ProcessBuilder(args);
 		/*- // Environment can be actively modified, e.g.:
@@ -258,7 +272,7 @@ public class N4CliHelper {
 		 */
 		// include user-provided environment variables
 		pb.environment().putAll(environment);
-		pb.directory(new File(target));
+		pb.directory(new File(workingDir));
 		EnvironmentVariableUtils.inheritNodeJsPathEnvVariableUtils(pb);
 
 		pb.redirectErrorStream(true);
@@ -280,35 +294,108 @@ public class N4CliHelper {
 	}
 
 	/**
+	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests. Also includes all N4JS
+	 * libraries from the {@code n4js} Git repository which name provides {@code true} value for the given predicate.
+	 *
+	 * @param createYarnWorkspace
+	 *            if true, a yarn workspace will be created, i.e. projects will be put into a subfolder
+	 *            {@value #PACKAGES} and an appropriate package.json file will be generated.
+	 *
+	 * @returns file indicating the relative path to the copied data set
+	 */
+	public static void setupWorkspace(Path sourceLocation, Path destinationLocation,
+			Predicate<String> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
+
+		Path projectLocation = createYarnWorkspace ? destinationLocation.resolve(PACKAGES) : destinationLocation;
+
+		// clean
+		if (Files.exists(destinationLocation)) {
+			FileDeleter.delete(destinationLocation, true);
+		}
+		Files.createDirectories(destinationLocation);
+		Files.createDirectories(projectLocation);
+
+		// copy fixtures to workspace
+		FileCopier.copy(sourceLocation, projectLocation, true);
+
+		// copy required n4js libraries to workspace / node_modules location
+		Path libsLocation;
+		if (createYarnWorkspace) {
+			// in case of a yarn workspace, we install the n4js-libs as siblings of the main project(s)
+			libsLocation = projectLocation;
+		} else {
+			// otherwise, we install the n4js-libs in the main project's node_modules folder
+			// (note: we assume fixture contains only a single project (i.e. only a single sub folder))
+			libsLocation = Files.list(projectLocation).findFirst().get().resolve(N4JSGlobals.NODE_MODULES);
+		}
+		N4CliHelper.copyN4jsLibsToLocation(libsLocation, n4jsLibrariesPredicate);
+
+		// create yarn workspace
+		if (createYarnWorkspace) {
+			// create package.json
+			List<String> packageJsonLines = Lists.newArrayList(
+					"{",
+					"\t\"private\": true,",
+					"\t\"workspaces\": [ \"packages/*\" ]",
+					"}");
+			Files.write(destinationLocation.resolve(N4JSGlobals.PACKAGE_JSON), packageJsonLines);
+
+			// create node_modules folder
+			Path nodeModulesFolder = destinationLocation.resolve(N4JSGlobals.NODE_MODULES);
+			Files.createDirectories(nodeModulesFolder);
+			for (Path project : Files.list(projectLocation).collect(Collectors.toList())) {
+				if (Files.isDirectory(project)) {
+					Files.createSymbolicLink(
+							nodeModulesFolder.resolve(project.getFileName()),
+							project.toAbsolutePath());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Same as {@link #copyN4jsLibsToLocation(Path, Predicate)}, but the n4js libraries that are to be installed can be
+	 * provided by name instead of a predicate.
+	 */
+	public static void copyN4jsLibsToLocation(Path location, String... n4jsLibs) throws IOException {
+		copyN4jsLibsToLocation(location, libName -> org.eclipse.xtext.util.Arrays.contains(n4jsLibs, libName));
+	}
+
+	/**
 	 * Copies the n4js libraries to the given testing workspace {@code location}.
 	 *
-	 * Only includes n4js libraries (cf. shipped code), for whose project name {@code n4jsLibrariesPredicate} returns
-	 * {@code true}.
+	 * Only includes n4js libraries, for whose project name {@code n4jsLibrariesPredicate} returns {@code true}.
 	 *
 	 * @throws IOException
 	 *             In case the copying is not successful.
 	 */
-	public static void copyN4jsLibsToLocation(File location,
-			Predicate<String> n4jsLibrariesPredicate) throws IOException {
-		// obtain paths of all shipped code projects
-		final List<File> n4jsLibraries = StreamSupport
-				.stream(ShippedCodeAccess.getAllShippedPaths().spliterator(), false)
-				.flatMap(path -> Arrays.asList(new File(path).listFiles()).stream()).collect(Collectors.toList());
+	public static void copyN4jsLibsToLocation(Path location, Predicate<String> n4jsLibrariesPredicate)
+			throws IOException {
 
-		// copy N4JS libraries on demand
-		if (!n4jsLibraries.isEmpty()) {
-			for (final File n4jsLibrary : n4jsLibraries) {
-				if (n4jsLibrariesPredicate.apply(n4jsLibrary.getName())) {
-					if (N4JS_LIBS_BLACKLIST.contains(n4jsLibrary.getName())) {
-						continue;
-					}
-					System.out.println("Including N4JS library in workspace: '" + n4jsLibrary.getName() + "'.");
-					final File libFolder = new File(location, n4jsLibrary.getName());
-					libFolder.mkdir();
-					checkState(libFolder.isDirectory(),
-							"Error while copying N4JS library '" + n4jsLibrary.getName() + "' to workspace.");
-					FileCopier.copy(n4jsLibrary.toPath(), libFolder.toPath(), true);
-				}
+		GlobalStateMemento originalGlobalState = null;
+		if (!JSONStandaloneSetup.isSetUp()) {
+			originalGlobalState = GlobalRegistries.makeCopyOfGlobalState();
+			JSONStandaloneSetup.doSetup();
+		}
+
+		try {
+			N4jsLibsAccess.installN4jsLibs(
+					location,
+					true,
+					false, // do not use symbolic links (because some tests modify the files in the destination folder)
+					false, // do not delete on exit (because tests using this method are responsible for cleaning up)
+					libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
+		} finally {
+			if (originalGlobalState != null) {
+				// Restore the original global state (if we had to change it)
+				// This is important for these cases in particular:
+				// 1) tests that invoke N4jscBase#doMain() should run *without* any global setup, because #doMain()
+				// should work if invoked from a plain Java main() method; if we provided the JSON setup as a
+				// side-effect of this utility method we would "help" the implementation of #doMain() and might overlook
+				// problems in #doMain()'s own setup.
+				// 2) some tests deliberately run without any or with an incomplete setup in order to test some failure
+				// behavior in this broken case.
+				originalGlobalState.restoreGlobalState();
 			}
 		}
 	}

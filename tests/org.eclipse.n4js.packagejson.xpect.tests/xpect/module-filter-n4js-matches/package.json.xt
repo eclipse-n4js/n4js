@@ -28,20 +28,6 @@
 				{"sourceContainer": "src/n4js", "module": "D*"},
 				// nested/E* matches src1/nested/E1.js, src2/nested/E2.n4js XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at ""nested/E*""
 				"nested/E*"
-			],
-			"noModuleWrap": [
-				// C matches src1/C.js, src2/C.js, src3/C.n4jsd XPECT errors --> "Module filters of type noModuleWrap must not match N4JS modules/files." at ""C""
-				"C",
-				// A matches src1/A.js, src2/A.n4jsd XPECT errors --> "Module filters of type noModuleWrap must not match N4JS modules/files." at ""A""
-				"A",
-				// B matches src1/B.js XPECT noerrors
-				{"sourceContainer": "src1", "module": "B"},
-				// D* matches src/js/D1.js, src/js/D2.js XPECT noerrors
-				{"sourceContainer": "src/js", "module": "D*"},
-				// D* matches src/js/D1.n4js, src/js/D2.n4js XPECT errors --> "Module filters of type noModuleWrap must not match N4JS modules/files." at "{"sourceContainer": "src/n4js", "module": "D*"}"
-				{"sourceContainer": "src/n4js", "module": "D*"},
-				// nested/E* matches src1/nested/E1.js, src2/nested/E2.n4js XPECT errors --> "Module filters of type noModuleWrap must not match N4JS modules/files." at ""nested/E*""
-				"nested/E*"
 			]
 		},
 		"sources": {

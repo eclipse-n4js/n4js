@@ -1018,7 +1018,7 @@ import org.eclipse.xtext.EcoreUtil2;
 			// single-name binding
 			process(original.getValue().getVarDecl());
 		} else {
-			write(original.getName());
+			processPropertyName(original);
 			write(": ");
 			process(original.getValue());
 		}

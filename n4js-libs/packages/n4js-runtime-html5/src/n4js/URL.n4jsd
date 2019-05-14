@@ -10,7 +10,21 @@
  */
 @@Global @@ProvidedByRuntime
 
-@Polyfill export external public class ~URL extends URL {
+export external public class URL {
+    public constructor(urlString: string);
+
+    public href?: string;
+    public protocol?: string;
+    public host?: string;
+    public hostname?: string;
+    public port?: string;
+    public pathname?: string;
+    public search?: string;
+    public hash?: string;
+
+    public username?: string;
+    public password?: string;
+
     //@Override public constructor(string urlString, union{string, URL}? baseURL);
 
     public static createObjectURL(object: union{/*File, */Blob}): string;

@@ -15,7 +15,6 @@
     "implementationId": "web",
     "implementedProjects": [
       "org.eclipse.n4js.lib.model.common.api"
-    ],
-    "moduleLoader": "n4js"
+    ]
   }
 }

@@ -17,9 +17,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 
@@ -36,9 +40,15 @@ public class ProjectImporter {
 	public static ProjectImporter NOOP = new ProjectImporter();
 
 	private final File rootFolder;
+	private final Collection<String> n4jsLibs;
 
 	private ProjectImporter() {
 		this(FileUtils.createTempDirectory().toFile());
+	}
+
+	/** Same as {@link #ProjectImporter(File, Collection)}, but never installs any 'n4js-libs'. */
+	public ProjectImporter(final File rootFolder) {
+		this(rootFolder, Collections.emptyList());
 	}
 
 	/**
@@ -46,14 +56,18 @@ public class ProjectImporter {
 	 *
 	 * @param rootFolder
 	 *            the root folder.
+	 * @param n4jsLibs
+	 *            names of 'n4js-libs' to install from local Git clone (see {@link N4jsLibsAccess}) or an empty list if
+	 *            nothing should be installed.
 	 */
-	public ProjectImporter(final File rootFolder) {
+	public ProjectImporter(final File rootFolder, Collection<String> n4jsLibs) {
 		assertNotNull("Root folder cannot be null.", rootFolder);
 		assertTrue("Root folder does not exist: " + rootFolder, rootFolder.exists());
 		assertTrue("Root folder must be a folder. But was a file: " + rootFolder, rootFolder.isDirectory());
 		assertTrue("Root folder directory content cannot be read: " + rootFolder, rootFolder.canRead());
 		assertTrue("No files were found in the directory: " + rootFolder, null != rootFolder.listFiles());
 		this.rootFolder = rootFolder;
+		this.n4jsLibs = new ArrayList<>(n4jsLibs);
 	}
 
 	void importProjects() throws Exception {
@@ -71,15 +85,12 @@ public class ProjectImporter {
 						pw.print(DotProjectContentProvider.getDotProjectContentForProject(projectName));
 					}
 					dotProject.deleteOnExit();
-					LOG
-							.info("Temporary .project file was successfully created for \'" + projectName
-									+ "\' project.");
+					LOG.info("Temporary .project file was successfully created for \'" + projectName + "\' project.");
 				}
 
 				LOG.info("Importing " + file.getName() + " into workspace...");
-				importProject(rootFolder, file.getName());
-				LOG
-						.info("Project " + file.getName() + " was successfully imported into the workspace.");
+				importProject(rootFolder, file.getName(), n4jsLibs);
+				LOG.info("Project " + file.getName() + " was successfully imported into the workspace.");
 			} else {
 				LOG.warn("Skipped importing project from " + file + ".");
 			}

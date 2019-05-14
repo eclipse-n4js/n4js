@@ -140,7 +140,6 @@ public class TesterModule implements Module {
 		binder.bind(TestCatalogSupplier.class);
 		binder.bind(ServletHolderBuilder.class);
 		binder.bind(DefaultTestTreeTransformer.class);
-		binder.bind(TesterFileBasedShippedCodeConfigurationHelper.class);
 
 		binder.bind(TestFsm.class).to(TestFsmImpl.class);
 		binder.bind(HttpServerManager.class).to(JettyManager.class);

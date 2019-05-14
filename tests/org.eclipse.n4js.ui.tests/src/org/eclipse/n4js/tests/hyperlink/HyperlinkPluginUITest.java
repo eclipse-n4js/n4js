@@ -65,11 +65,6 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	private static final String SUBFOLDER = "Hyperlink";
 	private static final String PROJECT_NAME = "Hyperlink";
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	@Inject
 	private N4JSHyperlinkDetector hyperlinkDetector;
 

@@ -15,7 +15,6 @@
     "implementationId": "web",
     "implementedProjects": [
       "A.API"
-    ],
-    "moduleLoader": "n4js"
+    ]
   }
 }

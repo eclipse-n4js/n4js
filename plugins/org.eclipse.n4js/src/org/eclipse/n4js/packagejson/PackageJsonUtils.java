@@ -33,11 +33,9 @@ import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
-import org.eclipse.n4js.projectDescription.BootstrapModule;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
-import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionPackage;
 import org.eclipse.n4js.projectDescription.ProjectReference;
@@ -86,30 +84,6 @@ public class PackageJsonUtils {
 	}
 
 	/**
-	 * Converts given JSON value to a {@link BootstrapModule}; returns <code>null</code> if not possible.
-	 */
-	public static BootstrapModule asBootstrapModuleOrNull(JSONValue jsonValue) {
-		String valueStr = asNonEmptyStringOrNull(jsonValue);
-		if (!Strings.isNullOrEmpty(valueStr)) {
-			final BootstrapModule result = ProjectDescriptionFactory.eINSTANCE.createBootstrapModule();
-			result.setModuleSpecifier(valueStr);
-			return result;
-		}
-		return null;
-	}
-
-	/**
-	 * If the given JSON value is a {@link JSONArray}, returns its elements converted to {@link BootstrapModule}s with
-	 * {@link #asBootstrapModuleOrNull(JSONValue)}; otherwise an empty list is returned.
-	 */
-	public static List<BootstrapModule> asBootstrapModulesInArrayOrEmpty(JSONValue jsonValue) {
-		return asArrayElementsOrEmpty(jsonValue).stream()
-				.map(PackageJsonUtils::asBootstrapModuleOrNull)
-				.filter(boomod -> boomod != null)
-				.collect(Collectors.toList());
-	}
-
-	/**
 	 * Converts given name/value pair to a {@link ModuleFilter}; returns <code>null</code> if not possible.
 	 * <p>
 	 * Expected format of argument:
@@ -121,12 +95,6 @@ public class PackageJsonUtils {
 	 *         "sourceContainer": "src",
 	 *         "module": "abc*"
 	 *     }
-	 * ]
-	 *
-	 * // or:
-	 *
-	 * "noModuleWrap": [
-	 *     // same as above
 	 * ]
 	 * </pre>
 	 */
@@ -262,8 +230,6 @@ public class PackageJsonUtils {
 	public static ModuleFilterType parseModuleFilterType(String value) {
 		if (value.equals("noValidate")) {
 			return ModuleFilterType.NO_VALIDATE;
-		} else if (value.equals("noModuleWrap")) {
-			return ModuleFilterType.NO_MODULE_WRAP;
 		} else {
 			return null;
 		}
@@ -275,8 +241,6 @@ public class PackageJsonUtils {
 	public static String getModuleFilterTypeStringRepresentation(ModuleFilterType type) {
 		if (type == ModuleFilterType.NO_VALIDATE) {
 			return "noValidate";
-		} else if (type == ModuleFilterType.NO_MODULE_WRAP) {
-			return "noModuleWrap";
 		} else {
 			return "<invalid module filter type>";
 		}
@@ -294,16 +258,6 @@ public class PackageJsonUtils {
 			return ProjectType.RUNTIME_LIBRARY;
 		return parseEnumLiteral(ProjectDescriptionPackage.eINSTANCE.getProjectType(), ProjectType.class,
 				projectTypeStr);
-	}
-
-	/**
-	 * Parses a {@link ModuleLoader} from the given string representation.
-	 *
-	 * Returns {@code null} if {@code value} is not a valid string representation of a {@link ModuleLoader}.
-	 */
-	public static ModuleLoader parseModuleLoader(String moduleLoaderStr) {
-		return parseEnumLiteral(ProjectDescriptionPackage.eINSTANCE.getModuleLoader(), ModuleLoader.class,
-				moduleLoaderStr);
 	}
 
 	/**

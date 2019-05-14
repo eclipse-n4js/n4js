@@ -45,6 +45,11 @@ public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest {
 	}
 
 	@Override
+	protected String[] getExpectedIssuesInInitialSetup(String projectName) {
+		return new String[0];
+	}
+
+	@Override
 	public void setUp() {
 		workspace = new FileBasedWorkspace(projectDescriptionLoader);
 		N4JSModel model = new N4JSModel(workspace);

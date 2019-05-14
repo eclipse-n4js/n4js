@@ -22,8 +22,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS
-
 /**
  * Compiles and runs a basic N4IDL project.
  *
@@ -63,7 +61,6 @@ public class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 		val projectToCompile = packages + "/" + projectName;
 
 		val String[] args = #[
-				"--systemLoader", COMMON_JS.getId(),
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--buildType", BuildType.projects.toString(),

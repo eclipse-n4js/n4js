@@ -9,6 +9,7 @@
  */
 package org.eclipse.n4js.tests.project
 
+import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.io.File
 import org.eclipse.core.resources.IFile
@@ -21,6 +22,7 @@ import org.eclipse.core.runtime.IPath
 import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.ProjectTestsHelper
@@ -57,7 +59,8 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	def void before() {
 		val workspace = ResourcesPlugin.workspace;
 		val parentFolder = new File(getResourceUri(PROBANDS, YARN_WORKSPACE_BASE));
-		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT);
+		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT,
+			Lists.newArrayList(N4JSGlobals.N4JS_RUNTIME));
 		testedWorkspace.fullBuild
 
 		scopedProject = workspace.root.getProject("@myScope:Lib");

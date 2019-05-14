@@ -10,11 +10,10 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
-
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
@@ -22,8 +21,6 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.base.Predicates;
 
 /**
  * Tells N4JSC to build few projects and run one of them. Projects being built have missing dependencies, so N4JSC is
@@ -36,7 +33,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_project_install_dependencies", Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace("external_project_install_dependencies", true, N4JSGlobals.N4JS_RUNTIME);
 	}
 
 	/** Delete workspace. */
@@ -56,7 +53,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 		final String fileToRun = packages + "/P3/src/f3.n4jsx";
 
 		final String[] args = {
-				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
@@ -86,7 +82,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 		final String fileToRun = packages + "/P3/src/f3.n4jsx";
 
 		final String[] args = {
-				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"-rw", "nodejs",
 				"-r", fileToRun,

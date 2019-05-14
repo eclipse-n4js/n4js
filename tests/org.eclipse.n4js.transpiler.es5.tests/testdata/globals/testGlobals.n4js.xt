@@ -36,4 +36,4 @@ stderr:
 console.log(globalExportedVar);
 //console.log(globalVar);//err
 
-console.log(n4 instanceof Object);
+console.log($makeClass instanceof Function);
