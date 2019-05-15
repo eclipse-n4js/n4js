@@ -15,13 +15,13 @@
 		Project "N4JSXSpecTest" {
 			Folder "src" {
 				ThisFile {}
+				File "replacer.n4js" { from = "replacer.n4js" }
 			}
 			File "package.json" { from="../../package.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "../react/index.n4jsd" }
 			File "index.js" { from = "../react/index.js" }
-			File "replacer.n4js" { from = "../react/replacer.n4js" }
 			File "package.json" { from = "../react/package.json" }
 		}
 	}
@@ -45,7 +45,7 @@ stderr:
 --- */
 
 import * as React from "react"
-import { replacer } from "react/replacer"
+import { replacer } from "replacer"
 
 class ~Props {
 	public myProp: string;

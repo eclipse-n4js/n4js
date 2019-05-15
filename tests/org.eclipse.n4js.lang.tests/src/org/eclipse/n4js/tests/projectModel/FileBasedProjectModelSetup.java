@@ -10,13 +10,17 @@
  */
 package org.eclipse.n4js.tests.projectModel;
 
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME;
+import static org.eclipse.n4js.tests.util.ProjectTestsUtils.N4JS_RUNTIME_DUMMY_VERSION;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Charsets;
@@ -79,26 +83,9 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"  \"name\": \"" + host.myProjectName + "\",\n" +
 					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"dependencies\": {\n" +
+					"    \"" + N4JS_RUNTIME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\",\n" +
 					"    \"" + host.libProjectName + "\": \"0.0.1-SNAPSHOT\"\n" +
 					"  },\n" +
-					"  \"n4js\": {\n" +
-					"    \"projectType\": \"library\",\n" +
-					"    \"vendorId\": \"org.eclipse.n4js\",\n" +
-					"    \"vendorName\": \"Eclipse N4JS Project\",\n" +
-					"    \"output\": \"src-gen\",\n" +
-					"    \"sources\": {\n" +
-					"      \"source\": [\n" +
-					"        \"src\"\n" +
-					"      ]\n" +
-					"    },\n" +
-					"    \"moduleLoader\": \"n4js\"\n" +
-					"  }\n" +
-					"}");
-			final URI libProjectURI = URIUtils.normalize(createTempProject(host.libProjectName));
-			host.setLibProjectURI(libProjectURI);
-			createProject(libProjectURI, "{\n" +
-					"  \"name\": \"" + host.libProjectName + "\",\n" +
-					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
 					"  \"n4js\": {\n" +
 					"    \"projectType\": \"library\",\n" +
 					"    \"vendorId\": \"org.eclipse.n4js\",\n" +
@@ -111,8 +98,30 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"    }\n" +
 					"  }\n" +
 					"}");
+			final URI libProjectURI = URIUtils.normalize(createTempProject(host.libProjectName));
+			host.setLibProjectURI(libProjectURI);
+			createProject(libProjectURI, "{\n" +
+					"  \"name\": \"" + host.libProjectName + "\",\n" +
+					"  \"version\": \"0.0.1-SNAPSHOT\",\n" +
+					"  \"dependencies\": {\n" +
+					"    \"" + N4JS_RUNTIME + "\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\"\n" +
+					"  },\n" +
+					"  \"n4js\": {\n" +
+					"    \"projectType\": \"library\",\n" +
+					"    \"vendorId\": \"org.eclipse.n4js\",\n" +
+					"    \"vendorName\": \"Eclipse N4JS Project\",\n" +
+					"    \"output\": \"src-gen\",\n" +
+					"    \"sources\": {\n" +
+					"      \"source\": [\n" +
+					"        \"src\"\n" +
+					"      ]\n" +
+					"    }\n" +
+					"  }\n" +
+					"}");
+			ProjectTestsUtils.createDummyN4JSRuntime(workspaceRoot.toPath());
 			workspace.registerProject(myProjectURI);
 			workspace.registerProject(libProjectURI);
+			workspace.registerProject(toProjectURI(workspaceRoot, N4JSGlobals.N4JS_RUNTIME));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -147,7 +156,11 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 		if (!myProjectDir.mkdir()) {
 			throw new RuntimeException();
 		}
-		return URI.createURI(myProjectDir.toURI().toString()).trimSegments(1);
+		return toProjectURI(workspaceRoot, projectName);
 	}
 
+	/** Returns project URI for a project at the given location with the given name. */
+	private URI toProjectURI(File location, String projectName) {
+		return URI.createURI(new File(location, projectName).toURI().toString()).trimSegments(1);
+	}
 }

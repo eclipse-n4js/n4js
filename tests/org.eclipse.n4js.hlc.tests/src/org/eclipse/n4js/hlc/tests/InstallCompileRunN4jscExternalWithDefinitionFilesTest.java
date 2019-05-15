@@ -10,12 +10,11 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.StringJoiner;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
@@ -23,8 +22,6 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.base.Predicates;
 
 /**
  * Downloads, installs, compiles and runs 'express' with N4JS definition file support.
@@ -40,7 +37,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_with_n4jsd", Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace("external_with_n4jsd", true, N4JSGlobals.N4JS_RUNTIME);
 	}
 
 	/** Delete workspace. */
@@ -60,14 +57,13 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 		final String fileToRun = packages + "/" + PROJECT_NAME_N4JS + "/src/Main.n4js";
 
 		final String[] args = {
-				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--projectlocations", packages,
 				"--buildType", BuildType.projects.toString(),
 				packages + "/" + PROJECT_NAME_N4JS,
-				packages + "/n4js-runtime-node"
+				packages + "/n4js-runtime"
 		};
 		final String out = runAndCaptureOutput(args);
 		N4CliHelper.assertExpectedOutput(EXPECTED, out);
@@ -84,14 +80,13 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 		final String fileToRun = packages + "/" + PROJECT_NAME_N4JSX + "/src/MainX.n4jsx";
 
 		final String[] args = {
-				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,
 				"--projectlocations", packages,
 				"--buildType", BuildType.projects.toString(),
 				packages + "/" + PROJECT_NAME_N4JSX,
-				packages + "/n4js-runtime-node"
+				packages + "/n4js-runtime"
 		};
 
 		final String out = runAndCaptureOutput(args);

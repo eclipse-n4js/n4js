@@ -86,12 +86,6 @@
 		// XPECT noerrors
 		"implementedProjects": [],
 		
-		// XPECT warnings --> "InitModules cannot be specified for library projects." at ""initModules": [""]"
-		"initModules": [""],
-		
-		// XPECT warnings --> "ExecModule cannot be specified for library projects." at ""execModule": "some-execution-module""
-		"execModule": "some-execution-module",
-		
 		// XPECT noerrors
 		"requiredRuntimeLibraries" : [],
 		

@@ -574,6 +574,7 @@ PrimaryExpression <Yield> returns Expression:
 	  ThisLiteral
 	| SuperLiteral
 	| IdentifierRef<Yield>
+	| JSXFragment /* see JSX  */
 	| JSXElement /* see JSX  */
 	| ParameterizedCallExpression<Yield>
 	| Literal
@@ -1496,6 +1497,10 @@ JSXElement:
 	'<' jsxElementName=JSXElementName JSXAttributes
 	(('>' jsxChildren+=JSXChild* JSXClosingElement) | ('/' '>'));
 
+JSXFragment:
+	{JSXFragment} ('<' '>' jsxChildren+=JSXChild* '<' '/' '>') | {JSXFragment} ('<' '/' '>')	
+;
+	
 fragment JSXClosingElement *:
 	'<' '/' jsxClosingName=JSXElementName '>';
 

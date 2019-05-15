@@ -45,7 +45,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getQualifiedName <em>Qualified Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getProjectName <em>Project Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVendorID <em>Vendor ID</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getModuleLoader <em>Module Loader</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isN4jsdModule <em>N4jsd Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isStaticPolyfillModule <em>Static Polyfill Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isStaticPolyfillAware <em>Static Polyfill Aware</em>}</li>
@@ -134,26 +133,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @ordered
 	 */
 	protected String vendorID = VENDOR_ID_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getModuleLoader() <em>Module Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getModuleLoader()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String MODULE_LOADER_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getModuleLoader() <em>Module Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getModuleLoader()
-	 * @generated
-	 * @ordered
-	 */
-	protected String moduleLoader = MODULE_LOADER_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isN4jsdModule() <em>N4jsd Module</em>}' attribute.
@@ -472,29 +451,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public String getModuleLoader() {
-		return moduleLoader;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setModuleLoader(String newModuleLoader) {
-		String oldModuleLoader = moduleLoader;
-		moduleLoader = newModuleLoader;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__MODULE_LOADER, oldModuleLoader, moduleLoader));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isN4jsdModule() {
 		return n4jsdModule;
 	}
@@ -780,8 +736,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return getProjectName();
 			case TypesPackage.TMODULE__VENDOR_ID:
 				return getVendorID();
-			case TypesPackage.TMODULE__MODULE_LOADER:
-				return getModuleLoader();
 			case TypesPackage.TMODULE__N4JSD_MODULE:
 				return isN4jsdModule();
 			case TypesPackage.TMODULE__STATIC_POLYFILL_MODULE:
@@ -835,9 +789,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return;
 			case TypesPackage.TMODULE__VENDOR_ID:
 				setVendorID((String)newValue);
-				return;
-			case TypesPackage.TMODULE__MODULE_LOADER:
-				setModuleLoader((String)newValue);
 				return;
 			case TypesPackage.TMODULE__N4JSD_MODULE:
 				setN4jsdModule((Boolean)newValue);
@@ -908,9 +859,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__VENDOR_ID:
 				setVendorID(VENDOR_ID_EDEFAULT);
 				return;
-			case TypesPackage.TMODULE__MODULE_LOADER:
-				setModuleLoader(MODULE_LOADER_EDEFAULT);
-				return;
 			case TypesPackage.TMODULE__N4JSD_MODULE:
 				setN4jsdModule(N4JSD_MODULE_EDEFAULT);
 				return;
@@ -970,8 +918,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return PROJECT_NAME_EDEFAULT == null ? projectName != null : !PROJECT_NAME_EDEFAULT.equals(projectName);
 			case TypesPackage.TMODULE__VENDOR_ID:
 				return VENDOR_ID_EDEFAULT == null ? vendorID != null : !VENDOR_ID_EDEFAULT.equals(vendorID);
-			case TypesPackage.TMODULE__MODULE_LOADER:
-				return MODULE_LOADER_EDEFAULT == null ? moduleLoader != null : !MODULE_LOADER_EDEFAULT.equals(moduleLoader);
 			case TypesPackage.TMODULE__N4JSD_MODULE:
 				return n4jsdModule != N4JSD_MODULE_EDEFAULT;
 			case TypesPackage.TMODULE__STATIC_POLYFILL_MODULE:
@@ -1052,8 +998,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 		result.append(projectName);
 		result.append(", vendorID: ");
 		result.append(vendorID);
-		result.append(", moduleLoader: ");
-		result.append(moduleLoader);
 		result.append(", n4jsdModule: ");
 		result.append(n4jsdModule);
 		result.append(", staticPolyfillModule: ");

@@ -31,12 +31,11 @@
     },
     "requiredRuntimeLibraries": [
       "n4js-runtime-fetch"
-    ],
-    "moduleLoader": "n4js"
+    ]
   },
   "dependencies": {
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
-    "n4js-node": "^0.1.0",
+    "n4js-runtime": "^0.1.0",
     "n4js-runtime-fetch": "^0.1.0"
   },
   "devDependencies": {}

@@ -16,10 +16,12 @@ import java.util.List
 import java.util.stream.IntStream
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.JSXAbstractElement
 import org.eclipse.n4js.n4JS.JSXAttribute
 import org.eclipse.n4js.n4JS.JSXChild
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXExpression
+import org.eclipse.n4js.n4JS.JSXFragment
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
@@ -51,6 +53,7 @@ class JSXTransformation extends Transformation {
 
 	private SymbolTableEntryOriginal steForJsxBackendNamespace;
 	private SymbolTableEntryOriginal steForJsxBackendElementFactoryFunction;
+	private SymbolTableEntryOriginal steForJsxBackendFragmentComponent;
 
 	@Inject
 	private ReactHelper reactHelper;
@@ -91,16 +94,20 @@ class JSXTransformation extends Transformation {
 		if(!inJSX) {
 			return; // this transformation is not applicable
 		}
-		val jsxElements = collectNodes(state.im, JSXElement, true);
-		if(jsxElements.empty) {
-			return; // nothing to transform
-		}
 
+		// Transform JSXFragments and JSXElements	
+		val jsxAbstractElements = collectNodes(state.im, JSXAbstractElement, true);
+		if (jsxAbstractElements.isEmpty) {
+			// Nothing to transform
+			return;
+		}
+		
 		steForJsxBackendNamespace = prepareImportOfJsxBackend();
 		steForJsxBackendElementFactoryFunction = prepareElementFactoryFunction();
-
+		steForJsxBackendFragmentComponent = prepareFragmentComponent();
+		
 		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
-		jsxElements.forEach[transformJSXElement];
+		jsxAbstractElements.forEach[transformJSXAbstractElement];
 	}
 
 	def private SymbolTableEntryOriginal prepareImportOfJsxBackend() {
@@ -131,25 +138,39 @@ class JSXTransformation extends Transformation {
 		}
 		return getSymbolTableEntryOriginal(elementFactoryFunction, true);
 	}
+	
+	def private SymbolTableEntryOriginal prepareFragmentComponent() {
+		val fragmentComponent = reactHelper.getJsxBackendFragmentComponent(state.resource);
+		if(fragmentComponent===null) {
+			throw new RuntimeException("cannot locate fragment component of JSX backend for N4JSX resource " + state.resource.URI);
+		}
+		return getSymbolTableEntryOriginal(fragmentComponent, true);
+	}
 
-	def private void transformJSXElement(JSXElement elem) {
+	def private void transformJSXAbstractElement(JSXAbstractElement elem) {
 		// IMPORTANT: 'elem' might be a direct or indirect child, but if it is a direct child, it was already
 		// transformed when this method was invoked with its ancestor JSXElement as argument
 		if(EcoreUtil2.getContainerOfType(elem, Script_IM)===null) {
 			// 'elem' was already processed -> simply ignore it
 			return;
 		}
-		replace(elem, convertJSXElement(elem));
+		replace(elem, convertJSXAbstractElement(elem));
 	}
 
-	def private ParameterizedCallExpression convertJSXElement(JSXElement elem) {
+	def private ParameterizedCallExpression convertJSXAbstractElement(JSXAbstractElement elem) {
+		val firstParams = if (elem instanceof JSXElement) {
+			#[ elem.tagNameFromElement,
+			   convertJSXAttributes(elem.jsxAttributes)
+			]
+		} else {
+			#[
+				_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendFragmentComponent)
+			]
+		};
 		return _CallExpr(
 			_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendElementFactoryFunction),
 			(
-				#[
-					elem.tagNameFromElement,
-					convertJSXAttributes(elem.jsxAttributes)
-				]
+				firstParams
 				+ elem.jsxChildren.map[convertJSXChild]
 			)
 		);
@@ -158,7 +179,7 @@ class JSXTransformation extends Transformation {
 	def private Expression convertJSXChild(JSXChild child) {
 		switch(child) {
 			JSXElement:
-				convertJSXElement(child)
+				convertJSXAbstractElement(child)
 			JSXExpression:
 				child.expression
 		}
@@ -220,15 +241,18 @@ class JSXTransformation extends Transformation {
 			attr.valueExpressionFromPropertyAttribute)
 	}
 
-	def private Expression getTagNameFromElement(JSXElement elem) {
-		val nameExpr = elem.jsxElementName.expression;
-		if(nameExpr instanceof IdentifierRef_IM) {
-			val id = nameExpr.id_IM;
-			if(id===null) {
-				return _StringLiteral(nameExpr.idAsText);
+	def private Expression getTagNameFromElement(JSXAbstractElement elem) {
+		if (elem instanceof JSXElement) {
+			val nameExpr = elem.jsxElementName.expression;
+			if(nameExpr instanceof IdentifierRef_IM) {
+				val id = nameExpr.id_IM;
+				if(id===null) {
+					return _StringLiteral(nameExpr.idAsText);
+				}
 			}
+			return nameExpr;			
 		}
-		return nameExpr;
+		return null;
 	}
 
 	def private String getNameFromPropertyAttribute(JSXPropertyAttribute attr) {

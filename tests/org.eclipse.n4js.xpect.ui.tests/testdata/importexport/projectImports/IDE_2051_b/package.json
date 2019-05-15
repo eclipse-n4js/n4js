@@ -1,6 +1,7 @@
 {
 	"name": "IDE_2051_b",
 	"version": "0.0.1",
+	"main": "src-gen/def.js",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

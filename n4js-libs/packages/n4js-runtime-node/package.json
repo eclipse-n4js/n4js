@@ -27,8 +27,7 @@
       "source": [
         "src/n4js"
       ]
-    },
-    "moduleLoader": "node_builtin"
+    }
   },
   "dependencies": {
     "n4js-runtime-esnext": "^0.1.0",

@@ -193,4 +193,9 @@ export external public function createWriteStream(path: string, options: ~Object
     mode?: number;
 }=): WriteStream;
 
-
+export external public const constants: ~Object with {
+    F_OK: int,
+    R_OK: int,
+    W_OK: int,
+    X_OK: int
+};

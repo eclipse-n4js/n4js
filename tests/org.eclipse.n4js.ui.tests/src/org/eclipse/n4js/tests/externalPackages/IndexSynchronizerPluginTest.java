@@ -57,11 +57,6 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		assertTrue("Expected running platform. Run the tests as JUnit Plug-in Tests.", Platform.isRunning());
 	}
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/** Install an NPM, delete folder of NPM on disk, run IndexSynchronizer, check if NPM was removed from index */
 	@Test
 	public void testCleanRemovedNpm() throws Exception {
@@ -138,11 +133,12 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		IResource packagejson = project.findMember("package.json");
 		IResource abc = project.findMember("src/ABC.n4js");
 		build.accept(project);
 
-		assertIssues(packagejson, "line 5: Project does not exist with project ID: snafu.");
+		assertIssues(packagejson, "line 6: Project does not exist with project ID: snafu.");
 		assertIssues(abc,
 				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules");
 
@@ -169,12 +165,12 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		assertFalse(file.exists());
 		build.accept(project);
 
-		assertIssues(packagejson, "line 5: Project does not exist with project ID: snafu.");
+		assertIssues(packagejson, "line 6: Project does not exist with project ID: snafu.");
 		assertIssues(abc,
 				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules");
 
 		build.accept(project);
-		assertIssues(packagejson, "line 5: Project does not exist with project ID: snafu.");
+		assertIssues(packagejson, "line 6: Project does not exist with project ID: snafu.");
 		assertIssues(abc,
 				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules");
 
@@ -182,7 +178,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		assertTrue(file.exists());
 		build.accept(project);
 
-		assertIssues(packagejson, "line 5: Project snafu is not registered.");
+		assertIssues(packagejson, "line 6: Project snafu is not registered.");
 		assertIssues(abc,
 				"line 12: Cannot resolve import target :: resolving project import : found no matching modules");
 

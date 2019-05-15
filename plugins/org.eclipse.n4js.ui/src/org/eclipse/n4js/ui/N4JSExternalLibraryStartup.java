@@ -18,7 +18,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.ui.IStartup;
@@ -55,28 +54,26 @@ public class N4JSExternalLibraryStartup implements IStartup {
 	@Override
 	public void earlyStartup() {
 		// Client code can still clone the repository on demand. (Mind plug-in UI tests.)
-		if (ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
-			// TODO this should be a job that we can wait for
-			new Thread(() -> {
-				// trigger index loading which will potentially announce a recovery build on all projects to be
-				// necessary
 
-				// XXX is is crucial to call isEmpty before isRecoveryBuildRequired is checked, since isEmpty
-				// will set internal state that is afterwards queried by isRecoveryBuildRequired
-				boolean indexIsEmpty = builderState.isEmpty();
+		// TODO this should be a job that we can wait for
+		new Thread(() -> {
+			// trigger index loading which will potentially announce a recovery build on all projects to be
+			// necessary
 
-				// check if this recovery build was really required
-				if (descriptionPersister.isRecoveryBuildRequired() || indexIsEmpty) {
-					// TODO return something like a Future that allows to say
-					// descriptionPersister.scheduleRecoveryBuildOnContributions().andThen(buildManager...)
-					descriptionPersister.scheduleRecoveryBuildOnContributions();
-					Map<String, String> args = Maps.newHashMap();
-					IBuildFlag.RECOVERY_BUILD.addToMap(args);
-					builderStateDiscarder.forgetLastBuildState(Arrays.asList(workspace.getRoot().getProjects()), args);
-				}
-			}).start();
+			// XXX it is crucial to call isEmpty before isRecoveryBuildRequired is checked, since isEmpty
+			// will set internal state that is afterwards queried by isRecoveryBuildRequired
+			boolean indexIsEmpty = builderState.isEmpty();
 
-		}
+			// check if this recovery build was really required
+			if (descriptionPersister.isRecoveryBuildRequired() || indexIsEmpty) {
+				// TODO return something like a Future that allows to say
+				// descriptionPersister.scheduleRecoveryBuildOnContributions().andThen(buildManager...)
+				descriptionPersister.scheduleRecoveryBuildOnContributions();
+				Map<String, String> args = Maps.newHashMap();
+				IBuildFlag.RECOVERY_BUILD.addToMap(args);
+				builderStateDiscarder.forgetLastBuildState(Arrays.asList(workspace.getRoot().getProjects()), args);
+			}
+		}).start();
 
 		// Add listener to monitor Cut and Copy commands
 		ICommandService commandService = PlatformUI.getWorkbench().getAdapter(ICommandService.class);

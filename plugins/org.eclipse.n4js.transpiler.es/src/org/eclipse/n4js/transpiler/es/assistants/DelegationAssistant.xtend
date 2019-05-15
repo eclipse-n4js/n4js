@@ -175,7 +175,7 @@ class DelegationAssistant extends TransformationAssistant {
 				if(!targetIsSymbol) {
 					// I.$methods.t.value
 					_ConditionalExpr(
-						__NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE),
+						_AND(__NSSafe_IdentRef(baseSTE), __NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE)),
 						__NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE, targetSTE, valueSTE),
 						_FunExpr(false, #[
 							_ReturnStmnt(_CallExpr(
@@ -191,7 +191,7 @@ class DelegationAssistant extends TransformationAssistant {
 				} else {
 					// I.$methods[Symbol.iterator].value
 					_ConditionalExpr(
-						__NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE),
+						_AND(__NSSafe_IdentRef(baseSTE), __NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE)),
 						_PropertyAccessExpr(
 							_IndexAccessExpr(
 								__NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE),

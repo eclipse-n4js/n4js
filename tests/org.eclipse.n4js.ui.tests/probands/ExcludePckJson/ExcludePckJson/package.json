@@ -1,6 +1,7 @@
 {
 	"name": "ExcludePckJson",
 	"dependencies": {
+		"n4js-runtime": "0.0.1-dummy",
 		"missingDependency": "*"
 	},
 	"n4js": {

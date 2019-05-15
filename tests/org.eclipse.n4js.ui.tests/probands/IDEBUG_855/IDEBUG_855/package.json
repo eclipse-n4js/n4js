@@ -2,7 +2,8 @@
   "name": "IDEBUG_855",
   "version": "0.0.1",
   "dependencies": {
-  	"PA": "*"
+    "n4js-runtime": "0.0.1-dummy",
+    "PA": "*"
   },
   "n4js": {
     "projectType": "library",
@@ -13,7 +14,6 @@
       "source": [
         "src"
       ]
-    },
-    "moduleLoader": "n4js"
+    }
   }
 }

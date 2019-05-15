@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -37,7 +38,7 @@ public class N4jscScopedProjectTest extends AbstractN4jscTest {
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(TEST_DATA_SET__NPM_SCOPES, true);
+		workspace = setupWorkspace(TEST_DATA_SET__NPM_SCOPES, true, N4JSGlobals.N4JS_RUNTIME);
 		proot = new File(workspace, PACKAGES).getAbsoluteFile();
 		System.out.println("just for reference workspace base path is: " + workspace.getAbsolutePath().toString());
 	}

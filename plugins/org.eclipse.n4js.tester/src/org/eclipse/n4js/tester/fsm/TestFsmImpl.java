@@ -105,7 +105,7 @@ public class TestFsmImpl implements TestFsm {
 		if (isFailed()) {
 			return this;
 		}
-		if (SESSION_STARTED == currentState || EXECUTING_TESTS == currentState) {
+		if (SESSION_STARTED == currentState || EXECUTING_TESTS == currentState || IDLE == currentState) {
 			if (this.currentSessionId.equals(sessionId)) {
 				return dispose(NOT_INITIALIZED);
 			}

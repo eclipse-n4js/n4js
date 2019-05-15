@@ -37,20 +37,7 @@ public enum ModuleFilterType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	NO_VALIDATE(0, "NO_VALIDATE", "NO_VALIDATE"),
-
-	/**
-	 * The '<em><b>NO MODULE WRAP</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 *  Turns off wrapping of output code *and* validation of affected modules.
-	 * <!-- end-model-doc -->
-	 * @see #NO_MODULE_WRAP_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	NO_MODULE_WRAP(1, "NO_MODULE_WRAP", "NO_MODULE_WRAP");
+	NO_VALIDATE(0, "NO_VALIDATE", "NO_VALIDATE");
 
 	/**
 	 * The '<em><b>NO VALIDATE</b></em>' literal value.
@@ -67,20 +54,6 @@ public enum ModuleFilterType implements Enumerator {
 	public static final int NO_VALIDATE_VALUE = 0;
 
 	/**
-	 * The '<em><b>NO MODULE WRAP</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 *  Turns off wrapping of output code *and* validation of affected modules.
-	 * <!-- end-model-doc -->
-	 * @see #NO_MODULE_WRAP
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int NO_MODULE_WRAP_VALUE = 1;
-
-	/**
 	 * An array of all the '<em><b>Module Filter Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -89,7 +62,6 @@ public enum ModuleFilterType implements Enumerator {
 	private static final ModuleFilterType[] VALUES_ARRAY =
 		new ModuleFilterType[] {
 			NO_VALIDATE,
-			NO_MODULE_WRAP,
 		};
 
 	/**
@@ -147,7 +119,6 @@ public enum ModuleFilterType implements Enumerator {
 	public static ModuleFilterType get(int value) {
 		switch (value) {
 			case NO_VALIDATE_VALUE: return NO_VALIDATE;
-			case NO_MODULE_WRAP_VALUE: return NO_MODULE_WRAP;
 		}
 		return null;
 	}

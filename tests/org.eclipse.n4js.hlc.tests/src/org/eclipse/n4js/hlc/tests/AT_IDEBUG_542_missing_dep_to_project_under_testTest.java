@@ -13,14 +13,13 @@ package org.eclipse.n4js.hlc.tests;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.base.Predicates;
 
 /**
  */
@@ -35,7 +34,10 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WSP_542, Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace(WSP_542, true,
+				N4JSGlobals.N4JS_RUNTIME,
+				N4JSGlobals.MANGELHAFT,
+				"n4js-runtime-es2015");
 	}
 
 	/** Delete workspace. */
@@ -56,7 +58,8 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 		new N4jscBase().doMain(args);
 
 		// Make sure, we get here and have exactly two files compiled:
-		assertFilesCompiledToES(2, proot);
+		assertFilesCompiledToES(0, proot + "/" + "APIx");
+		assertFilesCompiledToES(2, proot + "/" + "APIx-test");
 
 	}
 }

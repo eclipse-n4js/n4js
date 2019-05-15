@@ -10,7 +10,6 @@
       "source": [
         "testdata"
       ]
-    },
-    "moduleLoader": "n4js"
+    }
   }
 }

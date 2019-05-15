@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.packagejson;
 
-import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asBooleanOrFalse;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
@@ -22,13 +21,10 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
-import static org.eclipse.n4js.packagejson.PackageJsonUtils.asBootstrapModuleOrNull;
-import static org.eclipse.n4js.packagejson.PackageJsonUtils.asBootstrapModulesInArrayOrEmpty;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asModuleFiltersInObjectOrEmpty;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asProjectReferenceOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asProjectReferencesInArrayOrEmpty;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asSourceContainerDescriptionsOrEmpty;
-import static org.eclipse.n4js.packagejson.PackageJsonUtils.parseModuleLoader;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.parseProjectType;
 
 import java.util.HashSet;
@@ -45,7 +41,6 @@ import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
-import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.semver.SemverHelper;
@@ -188,20 +183,8 @@ public class PackageJsonHelper {
 			case REQUIRED_RUNTIME_LIBRARIES:
 				target.getRequiredRuntimeLibraries().addAll(asProjectReferencesInArrayOrEmpty(value));
 				break;
-			case MODULE_LOADER:
-				target.setModuleLoader(parseModuleLoader(asNonEmptyStringOrNull(value)));
-				break;
-			case INIT_MODULES:
-				target.getInitModules().addAll(asBootstrapModulesInArrayOrEmpty(value));
-				break;
-			case EXEC_MODULE:
-				target.setExecModule(asBootstrapModuleOrNull(value));
-				break;
 			case DEFINES_PACKAGE:
 				target.setDefinesPackage(asStringOrNull(value));
-				break;
-			case USE_ES6_IMPORTS:
-				target.setUseES6Imports(asBooleanOrFalse(value));
 				break;
 			default:
 				break;
@@ -320,11 +303,6 @@ public class PackageJsonHelper {
 			} else if (scd.getPaths().isEmpty()) {
 				scd.getPaths().add(OUTPUT.defaultValue);
 			}
-		}
-		// module loader must be commonjs for VALIDATION and PLAINJS projects
-		// (no need to set default in case of other project types, because this is handled by EMF)
-		if (target.getProjectType() == ProjectType.VALIDATION || target.getProjectType() == ProjectType.PLAINJS) {
-			target.setModuleLoader(PackageJsonProperties.DEFAULT_MODULE_LOADER_FOR_PLAINJS_AND_VALIDATION);
 		}
 	}
 

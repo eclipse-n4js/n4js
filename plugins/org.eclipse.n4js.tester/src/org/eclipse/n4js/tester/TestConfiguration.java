@@ -31,15 +31,14 @@ public class TestConfiguration extends RunConfiguration {
 	 */
 	public final static String TESTER_ID = "TESTER_ID";
 
-	/** Within the execution data passed to the exec module, this key is used to store the test tree. */
-	public final static String EXEC_DATA_KEY__TEST_TREE = "testTree";
-
 	/** Key used for attribute specifying test cases, also see {@link #getTestMethodSelection()} */
 	public final static String TESTCASE_SELECTION = "TESTCASE_SELECTION";
 
 	private String testerId;
 
 	private TestTree testTree;
+
+	private String testTreeAsJSON;
 
 	private int resultReportingPort; // volatile
 
@@ -72,6 +71,19 @@ public class TestConfiguration extends RunConfiguration {
 	/** @see #getTestTree() */
 	public void setTestTree(TestTree testTree) {
 		this.testTree = testTree;
+	}
+
+	/**
+	 * Returns the {@link #getTestTree() test tree} in JSON format, possibly including some additional information not
+	 * part of the original test tree as returned by {@link #getTestTree()}, e.g. HTTP server port.
+	 */
+	public String getTestTreeAsJSON() {
+		return testTreeAsJSON;
+	}
+
+	/** @see #getTestTreeAsJSON() */
+	public void setTestTreeAsJSON(String testTreeAsJSON) {
+		this.testTreeAsJSON = testTreeAsJSON;
 	}
 
 	@Override

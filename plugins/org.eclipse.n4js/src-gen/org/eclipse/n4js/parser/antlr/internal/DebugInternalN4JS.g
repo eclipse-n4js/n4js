@@ -2577,6 +2577,8 @@ rulePrimaryExpression:
 		    |
 		ruleIdentifierRef
 		    |
+		ruleJSXFragment
+		    |
 		ruleJSXElement
 		    |
 		ruleParameterizedCallExpression
@@ -2615,6 +2617,8 @@ norm1_PrimaryExpression:
 		ruleSuperLiteral
 		    |
 		norm1_IdentifierRef
+		    |
+		ruleJSXFragment
 		    |
 		ruleJSXElement
 		    |
@@ -8114,6 +8118,23 @@ ruleJSXElement:
 		*
 		ruleJSXClosingElement
 		    |
+		'/'
+		'>'
+	)
+;
+
+// Rule JSXFragment
+ruleJSXFragment:
+	(
+		'<'
+		'>'
+		ruleJSXChild
+		*
+		'<'
+		'/'
+		'>'
+		    |
+		'<'
 		'/'
 		'>'
 	)

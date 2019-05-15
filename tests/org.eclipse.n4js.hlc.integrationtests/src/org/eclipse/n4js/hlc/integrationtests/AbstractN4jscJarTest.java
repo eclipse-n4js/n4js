@@ -16,12 +16,16 @@ import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPAC
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
-import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -30,6 +34,7 @@ import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 /**
@@ -46,6 +51,9 @@ import com.google.common.base.Predicates;
  * </ul>
  */
 public abstract class AbstractN4jscJarTest {
+
+	/** see {@link N4CliHelper#PACKAGES} */
+	protected static final String PACKAGES = N4CliHelper.PACKAGES;
 
 	// Running directory will be ${TARGET}/${WSP}
 
@@ -65,7 +73,7 @@ public abstract class AbstractN4jscJarTest {
 	 * Subclass must provide the fixture, i.e. name of folder containing test data.
 	 *
 	 * Per default, this will not include the n4js libraries (cf.
-	 * {@link N4CliHelper#copyN4jsLibsToLocation(File, com.google.common.base.Predicate)} in the fixture workspace.
+	 * {@link N4CliHelper#copyN4jsLibsToLocation(Path, com.google.common.base.Predicate)} in the fixture workspace.
 	 */
 	protected AbstractN4jscJarTest(String fixture) {
 		this(fixture, false);
@@ -75,8 +83,7 @@ public abstract class AbstractN4jscJarTest {
 	 * @param fixturePath
 	 *            The bundle relative path of the folder that contains the test data.
 	 * @param includeN4jsLibraries
-	 *            Specified whether the n4js libraries (shipped code) should be copied to the temporary testing
-	 *            workspace location.
+	 *            Specified whether the n4js libraries should be copied to the temporary testing workspace location.
 	 */
 	protected AbstractN4jscJarTest(String fixturePath, boolean includeN4jsLibraries) {
 		this.fixture = fixturePath;
@@ -91,13 +98,13 @@ public abstract class AbstractN4jscJarTest {
 		@Override
 		protected void starting(Description desc) {
 			description = desc;
-			System.out.println("Started of: " + desc.getClassName() + "." + desc.getMethodName());
+			System.out.println("Started: " + desc.getClassName() + "." + desc.getMethodName());
 		}
 
 		@Override
 		protected void finished(Description desc) {
 			description = null;
-			System.out.println("Finished of: " + desc.getClassName() + "." + desc.getMethodName());
+			System.out.println("Finished: " + desc.getClassName() + "." + desc.getMethodName());
 		}
 
 	};
@@ -107,30 +114,17 @@ public abstract class AbstractN4jscJarTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		// Create target folder if not exists
-		File targetFolder = new File(TARGET);
-		if (!targetFolder.exists()) {
-			System.out.println(TARGET + " folder does not exist. Creating one.");
-			targetFolder.mkdirs();
-		}
+		Path fixturePath = Paths.get(fixture);
+		List<Path> fixtureSubFolders = Files.list(fixturePath).filter(p -> Files.isDirectory(p))
+				.collect(Collectors.toList());
+		boolean needYarnWorkspace = fixtureSubFolders.size() > 1;
 
-		File wsp = new File(TARGET, WORKSPACE_FOLDER);
-		File fixtureFile = new File(fixture);
+		Path wsp = Paths.get(TARGET, WORKSPACE_FOLDER);
+		Files.createDirectories(wsp);
 
-		System.out.println("BEFORE: 	current root " + new File(".").getAbsolutePath());
-		System.out.println("BEFORE: current workspace would be " + wsp.getAbsolutePath());
+		Predicate<String> n4jsLibsPredicate = includeN4jsLibraries ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
 
-		// clean
-		// Files.deleteIfExists(wsp.toPath());
-		FileDeleter.delete(wsp.toPath());
-		// copy
-		FileCopier.copy(fixtureFile.toPath(), wsp.toPath());
-
-		// copy n4js libraries, if required
-		if (includeN4jsLibraries) {
-			// if specified, copy all of the n4js libraries (no filtering)
-			N4CliHelper.copyN4jsLibsToLocation(wsp, Predicates.alwaysTrue());
-		}
+		N4CliHelper.setupWorkspace(fixturePath, wsp, n4jsLibsPredicate, needYarnWorkspace);
 	}
 
 	/**

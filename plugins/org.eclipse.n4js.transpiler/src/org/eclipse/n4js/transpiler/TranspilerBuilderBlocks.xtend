@@ -681,23 +681,6 @@ public class TranspilerBuilderBlocks
 		return N4JSFactory.eINSTANCE.createEmptyStatement
 	}
 
-	/** generic export where the {@code steExportedElement} is exported under its name. */
-	public static def _N4ExportExpr(SymbolTableEntry steExportedElement, SymbolTableEntry symbolFor_n4Export )
-	{
-		return _N4ExportExpr(steExportedElement, _IdentRef( steExportedElement ), symbolFor_n4Export)
-	}
-
-	/** export of {@code expression}-to-be-evaluated under the name of {@code steExportedElement} */
-	public static def _N4ExportExpr(SymbolTableEntry steExportedElement, Expression expression, SymbolTableEntry symbolFor_n4Export )
-	{
-		return _CallExpr => [
-			target = _IdentRef(symbolFor_n4Export)
-			arguments += _Argument(_StringLiteralForSTE( steExportedElement, true ))
-			arguments += _Argument(expression)
-		]
-	}
-
-
 	public static def N4EnumDeclaration _EnumDeclaration(String name, List<N4EnumLiteral> literals) {
 		val result = N4JSFactory.eINSTANCE.createN4EnumDeclaration;
 		result.name = name;

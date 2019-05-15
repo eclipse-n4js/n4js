@@ -36,8 +36,6 @@
 			"source": [
 				"src"
 			]
-		},
-		// empy block causes no errors XPECT noerrors
-		"initModules": []
+		}
 	}
 }

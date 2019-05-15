@@ -27,10 +27,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringJoiner;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.GeneratorOption;
@@ -41,12 +44,12 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
-import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.nodejs.NodeRunner;
 import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
-import org.eclipse.n4js.runner.ui.ChooseImplementationHelper;
+import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
+import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
 import org.eclipse.xtext.resource.FileExtensionProvider;
@@ -54,6 +57,7 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.junit.Assert;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -79,9 +83,6 @@ public class XpectN4JSES5TranspilerHelper {
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
-
-	@Inject
-	private ChooseImplementationHelper chooseImplHelper;
 
 	private ReadOutConfiguration readOutConfiguration;
 
@@ -109,14 +110,12 @@ public class XpectN4JSES5TranspilerHelper {
 	 *            stdout: ..."
 	 * @param resourceTweaker
 	 *            - resource-modifier like QuickFix application, can be null
-	 * @param systemLoader
-	 *            the system loader to use (SYSTEM_JS[default], COMMON_JS,...)
 	 * @return output streams concatenated
 	 */
 	public String doCompileAndExecute(final XtextResource resource,
 			org.eclipse.xpect.setup.ISetupInitializer<Object> init,
 			FileSetupContext fileSetupContext, boolean decorateStdStreams, ResourceTweaker resourceTweaker,
-			GeneratorOption[] options, SystemLoaderInfo systemLoader) throws IOException {
+			GeneratorOption[] options) throws IOException {
 
 		// Apply some modification to the resource here.
 		if (resourceTweaker != null) {
@@ -125,28 +124,29 @@ public class XpectN4JSES5TranspilerHelper {
 
 		loadXpectConfiguration(init, fileSetupContext);
 
-		File artificialRoot = Files.createTempDirectory("n4jsXpect").toFile();
+		Path artificialRoot = Files.createTempDirectory("n4jsXpectOutputTest");
 
 		RunConfiguration runConfig;
 		// if Xpect configured workspace is null, this has been triggered directly in the IDE
-		// && (((ReadOutWorkspaceConfiguration) readOutConfiguration).getXpectConfiguredWorkspace() == null)
 		if (Platform.isRunning()) {
 			// If we are in the IDE, execute the test the same as for "Run in Node.js" and this way avoid
 			// the effort of calculating dependencies etc.
 
-			final String implementationId = chooseImplHelper.chooseImplementationIfRequired(NodeRunner.ID,
-					resource.getURI().trimFileExtension());
+			Path packagesPath = createTemporaryYarnWorkspace(artificialRoot);
 
 			boolean replaceQuotes = false;
 			// We have to generate JS code for the resource. Because if Xpect test is quickfixAndRun the resource
 			// contains errors and hence no generated JS code is available for execution.
 			// Then sneak in the path to the generated JS code.
 			Script script = (Script) resource.getContents().get(0);
-			createTempJsFileWithScript(artificialRoot.toPath(), script, options, replaceQuotes);
-			runConfig = runnerFrontEnd.createConfiguration(NodeRunner.ID,
-					(implementationId == ChooseImplementationHelper.CANCEL) ? null : implementationId,
-					systemLoader.getId(),
-					resource.getURI().trimFileExtension(), artificialRoot.getAbsolutePath().toString());
+			createTempJsFileWithScript(packagesPath, script, options, replaceQuotes).toPath().getParent();
+
+			String fileToRun = jsModulePathToRun(script);
+			String artificialProjectName = script.getModule().getProjectName();
+			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
+					fileToRun,
+					packagesPath.resolve(artificialProjectName),
+					artificialProjectName);
 		} else {
 			// In the non-GUI case, we need to calculate dependencies etc. manually
 			final Iterable<Resource> dependencies = from(getDependentResources());
@@ -160,10 +160,10 @@ public class XpectN4JSES5TranspilerHelper {
 			// replace n4jsd resource with provided js resource
 			for (final Resource dep : from(dependencies).filter(r -> !r.getURI().equals(resource.getURI()))) {
 				if ("n4jsd".equalsIgnoreCase(dep.getURI().fileExtension())) {
-					compileImplementationOfN4JSDFile(artificialRoot.toPath(), errorResult, dep, options, replaceQuotes);
+					compileImplementationOfN4JSDFile(artificialRoot, errorResult, dep, options, replaceQuotes);
 				} else if (xpectGenerator.isCompilable(dep, errorResult)) {
 					final Script script = (Script) dep.getContents().get(0);
-					createTempJsFileWithScript(artificialRoot.toPath(), script, options, replaceQuotes);
+					createTempJsFileWithScript(artificialRoot, script, options, replaceQuotes);
 				}
 			}
 
@@ -173,19 +173,64 @@ public class XpectN4JSES5TranspilerHelper {
 
 			// No error so far
 			// determine module to run
-			createTempJsFileWithScript(artificialRoot.toPath(), testScript, options, replaceQuotes);
+			createTempJsFileWithScript(artificialRoot, testScript, options, replaceQuotes);
 			String fileToRun = jsModulePathToRun(testScript);
 
 			// Not in UI case, hence manually set up the resources
 			String artificialProjectName = testScript.getModule().getProjectName();
+
+			// provide n4js-runtime in the version of the current build
+			N4jsLibsAccess.installN4jsLibs(
+					artificialRoot.resolve(artificialProjectName).resolve(N4JSGlobals.NODE_MODULES),
+					true, false, true,
+					N4JSGlobals.N4JS_RUNTIME);
+
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
-					systemLoader,
-					artificialRoot.toPath().resolve(artificialProjectName),
+					artificialRoot.resolve(artificialProjectName),
 					artificialProjectName);
 		}
 
 		return configRunner.executeWithConfig(runConfig, decorateStdStreams);
+	}
+
+	/**
+	 * TODO GH-1308 remove this work-around
+	 *
+	 * TEMPORARY WORKAROUND: since Xpect Plugin[UI] with two or more interdependent N4JS projects use an invalid setup
+	 * at the moment (they follow the "side-by-side" use case), we do not execute right inside the Eclipse workspace,
+	 * which would be preferable, but instead execute in a temporary folder where we create a yarn workspace setup on
+	 * the fly.
+	 */
+	private Path createTemporaryYarnWorkspace(Path location) throws IOException {
+		Path nodeModulesPath = location.resolve(N4JSGlobals.NODE_MODULES);
+		Files.createDirectories(nodeModulesPath);
+		Path packagesPath = location.resolve("packages");
+		Files.createDirectories(packagesPath);
+
+		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+			Path target = packagesPath.resolve(project.getName());
+			FileCopier.copy(
+					project.getLocation().toFile().toPath(),
+					target);
+			Files.createSymbolicLink(
+					nodeModulesPath.resolve(project.getName()),
+					target);
+		}
+
+		Files.write(location.resolve(N4JSGlobals.PACKAGE_JSON), Lists.newArrayList(
+				"{\n",
+				"  \"private\": true,\n",
+				"  \"workspaces\": [ \"packages/*\" ]\n",
+				"}\n"));
+
+		// provide n4js-runtime in the version of the current build
+		N4jsLibsAccess.installN4jsLibs(
+				nodeModulesPath,
+				true, false, true,
+				N4JSGlobals.N4JS_RUNTIME);
+
+		return packagesPath;
 	}
 
 	/**
@@ -258,7 +303,7 @@ public class XpectN4JSES5TranspilerHelper {
 		// Compile script to get file content.
 		final String content = xpectGenerator.compile(script, options, replaceQuotes);
 
-		String srcgenSegments = getCompiledFileBasePath(script);
+		String srcgenSegments = getCompiledFileBasePath(script, true);
 		Path srcgenPath = createNestedDirectory(root, srcgenSegments);
 
 		// Get folder structure from qualified names.
@@ -291,22 +336,24 @@ public class XpectN4JSES5TranspilerHelper {
 	}
 
 	/**
-	 * Composes the name of the module as seen from the node-path. Is uses '/' as the path-separator, since it the path
-	 * is consumed from js-code.
+	 * Composes the name of the module as seen from the root folder of the containing npm package. Is uses '/' as the
+	 * path-separator, since this path is consumed from js-code.
 	 */
 	private String jsModulePathToRun(Script script) {
 		StringJoiner sj = new StringJoiner("/");
-		sj.add(getCompiledFileBasePath(script));
+		sj.add(getCompiledFileBasePath(script, false));
 		moduleQualifiedNameSegments(script).forEach(sj::add);
 		return sj.toString();
 	}
 
-	private String getCompiledFileBasePath(final Script script) {
-		String path = script.getModule().getProjectName() + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
+	private String getCompiledFileBasePath(final Script script, boolean includeProjectName) {
+		String path = includeProjectName
+				? script.getModule().getProjectName() + '/' + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
+				: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
 		IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
 		if (project != null) {
-			path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
+			path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project, includeProjectName);
 		}
 
 		return path;

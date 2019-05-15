@@ -8,15 +8,12 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-@@ProvidedByRuntime
+@@Global @@ProvidedByRuntime
 
-export public interface ~Body {
+export external public abstract class ~Body {
     public get bodyUsed(): boolean;
 
     public async arrayBuffer(): ArrayBuffer;
-//    public async Blob blob();
-//    public async FormData formData();
     public async json(): any;
     public async text(): string;
 }
-

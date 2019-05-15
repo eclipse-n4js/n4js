@@ -9,7 +9,6 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import {PlatformId} from "n4/RuntimeInfo";
 import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition";
 import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet";
@@ -92,14 +91,6 @@ export public class PreconditionTest {
         Assert.throws(function() {
             Precondition.notStrictEqual(1, 1, "1 and 1 are not not equal even truthily")
         }, PreconditionNotMet, "Should throw PreconditionNotMet");
-    }
-    @Test
-    skippedTestInNode() {
-        Precondition.notEqual(n4.runtimeInfo.platformId, PlatformId.NODEJS, "check for node.js");
-    }
-    @Test
-    skippedTestInBrowser() {
-        Precondition.notEqual(n4.runtimeInfo.platformId, PlatformId.WEB, "check web");
     }
     /**
      * these tests do not use Assert.throws like in the rest of the tests

@@ -17,7 +17,6 @@ import static java.util.Collections.emptyList;
 
 import java.io.File;
 import java.net.URI;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -259,7 +258,6 @@ import com.google.inject.Inject;
 		if (isExistingFolder(rootFolder)) {
 			return from(getDirectoryContents(rootFolder))
 					.filter(f -> isExistingFolder(f))
-					.filter(f -> !Files.isSymbolicLink(f.toPath()))
 					.filter(f -> externalLibraryHelper.isExternalProjectDirectory(f))
 					.transform(file -> file.toURI());
 		}

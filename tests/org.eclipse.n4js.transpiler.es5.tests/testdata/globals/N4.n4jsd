@@ -11,4 +11,4 @@
 
 @@ProvidedByRuntime @@Global
 
-export external public var n4;
+export external public function $makeClass()

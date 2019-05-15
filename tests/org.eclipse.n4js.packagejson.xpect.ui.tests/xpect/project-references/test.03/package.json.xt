@@ -88,8 +88,6 @@
 			"test.data.test.project.one",
 			// XPECT noerrors -->
 			"test.data.rl.project.two"
-		],
-		// XPECT noerrors
-		"initModules": []
+		]
 	}
 }

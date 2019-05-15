@@ -18,10 +18,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
-import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 
@@ -37,6 +37,8 @@ public enum PackageJsonProperties {
 	NAME("name", "Npm name"),
 	/** Key of package.json property "version". */
 	VERSION("version", "Npm semver version", "0.0.1"),
+	/** Key of package.json property "private". */
+	PRIVATE("private", "Whether npm should refuse to publish this package.", JSONBooleanLiteral.class),
 	/** Key of package.json property "dependencies". */
 	DEPENDENCIES("dependencies", "Dependencies of this npm", JSONObject.class),
 	/** Key of package.json property "devDependences". */
@@ -77,42 +79,18 @@ public enum PackageJsonProperties {
 	PROVIDED_RUNTIME_LIBRARIES("providedRuntimeLibraries", "", JSONArray.class, N4JS),
 	/** Key of package.json property "requiredRuntimeLibraries". */
 	REQUIRED_RUNTIME_LIBRARIES("requiredRuntimeLibraries", "", JSONArray.class, N4JS),
-	/** Key of package.json property "moduleLoader". */
-	MODULE_LOADER("moduleLoader", "", ModuleLoader.N4JS.name(), N4JS),
-	/** Key of package.json property "initModules". */
-	INIT_MODULES("initModules", "", JSONArray.class, N4JS),
-	/** Key of package.json property "execModule". */
-	EXEC_MODULE("execModule", "", N4JS),
 	/** Key of package.json property "definesPackage". */
 	DEFINES_PACKAGE("definesPackage", "", N4JS),
-	/** EXPERIMENTAL: if value is <code>true</code>, transpiler will generate ES6 imports/exports in the output code. */
-	USE_ES6_IMPORTS("useES6Imports",
-			"EXPERIMENTAL: if value is \'true\', transpiler will generate ES6 imports/exports in the output code.",
-			N4JS),
 
 	/** Key of package.json property "noValidate". */
 	NO_VALIDATE("noValidate", "", JSONObject.class, N4JS),
-	/** Key of package.json property "noValidate". */
-	NO_MODULE_WRAP("noModuleWrap", "", JSONObject.class, N4JS),
 	/** Key of package.json property "sourceContainer" of property "noValidate". */
 	NV_SOURCE_CONTAINER("sourceContainer", "", JSONObject.class, N4JS, NO_VALIDATE),
 	/** Key of package.json property "module" of property "noValidate". */
 	NV_MODULE("module", "", N4JS, NO_VALIDATE),
-	/** Key of package.json property "sourceContainer" of property "noModuleWrap". */
-	NMW_SOURCE_CONTAINER("sourceContainer", "", JSONObject.class, N4JS, NO_MODULE_WRAP),
-	/** Key of package.json property "module" of property "noModuleWrap". */
-	NMW_MODULE("module", "", N4JS, NO_MODULE_WRAP),
 
 	/** Key of package.json property "source" inside "sources". */
 	SOURCE("source", "List of source folders", JSONArray.class, N4JS, SOURCES);
-
-	/**
-	 * Default for property "moduleLoader" for *other* project types than {@link ProjectType#VALIDATION VALIDATION} and
-	 * {@link ProjectType#PLAINJS PLAINJS}.
-	 */
-	public static final ModuleLoader DEFAULT_MODULE_LOADER = ModuleLoader.N4JS;
-	/** Default for property "moduleLoader" for project type {@link ProjectType#VALIDATION VALIDATION}. */
-	public static final ModuleLoader DEFAULT_MODULE_LOADER_FOR_PLAINJS_AND_VALIDATION = ModuleLoader.COMMONJS;
 
 	/** section of the property within the package.json */
 	final public PackageJsonProperties[] parents;
