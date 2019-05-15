@@ -129,12 +129,6 @@ public class N4JSJavaScriptVariantHelper extends BaseJavaScriptVariantHelper {
 		this.addEntry(EXT_JSX, CONSTANT_HAS_INITIALIZER, false);
 		this.addEntry(EXT_N4IDL, CONSTANT_HAS_INITIALIZER, true);
 
-		this.addEntry(EXT_N4JS, CHECK_NO_N4JS_IN_RUNTIME_ENV_OR_LIB, true);
-		this.addEntry(EXT_N4JSD, CHECK_NO_N4JS_IN_RUNTIME_ENV_OR_LIB, false);
-		this.addEntry(EXT_N4JSX, CHECK_NO_N4JS_IN_RUNTIME_ENV_OR_LIB, true);
-		this.addEntry(EXT_JSX, CHECK_NO_N4JS_IN_RUNTIME_ENV_OR_LIB, false);
-		this.addEntry(EXT_N4IDL, CHECK_NO_N4JS_IN_RUNTIME_ENV_OR_LIB, true);
-
 		this.addEntry(EXT_N4JS, ALLOW_WRONG_READ_WRITE, false);
 		this.addEntry(EXT_N4JSD, ALLOW_WRONG_READ_WRITE, false);
 		this.addEntry(EXT_N4JSX, ALLOW_WRONG_READ_WRITE, false);

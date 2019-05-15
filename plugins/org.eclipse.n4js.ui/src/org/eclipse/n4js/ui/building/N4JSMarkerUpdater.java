@@ -23,7 +23,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
@@ -76,13 +75,6 @@ public class N4JSMarkerUpdater extends MarkerUpdaterImpl {
 			throws OperationCanceledException {
 
 		URI uri = delta.getUri();
-
-		// quick exit for js files
-		// (pure performance tweak, because those resources have an empty AST anyway; see N4JSResource#doLoad())
-		Resource res = resourceSet != null ? resourceSet.getResource(uri, false) : null;
-		if (res instanceof N4JSResource && ((N4JSResource) res).isOpaque()) {
-			return;
-		}
 
 		Iterable<Pair<IStorage, IProject>> pairs = mapper.getStorages(uri);
 		if (resourceSet != null && pairs.iterator().hasNext()) {
