@@ -21,7 +21,6 @@ import org.eclipse.n4js.n4JS.JSXAttribute
 import org.eclipse.n4js.n4JS.JSXChild
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXExpression
-import org.eclipse.n4js.n4JS.JSXFragment
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
