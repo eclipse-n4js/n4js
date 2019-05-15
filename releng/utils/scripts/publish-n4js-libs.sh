@@ -20,7 +20,7 @@ EXTRACT_COMMIT_ID_REGEX=".*\/n4js\/tree\/([^\/]+)\/n4js-libs\/packages\/.*"
 
 # this is the n4js-libs package that will be used to obtain the version number and commit ID
 # of the latest published version of all n4js-libs packages
-N4JS_LIBS_REPRESENTATIVE="n4js-node"
+N4JS_LIBS_REPRESENTATIVE="n4js-runtime"
 
 
 echo "==== PUBLISH n4js-libs (including n4js-cli)"
