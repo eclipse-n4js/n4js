@@ -3,6 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.tester.tests.helper
 Bundle-Version: 0.0.1.qualifier
+Require-Bundle: javax.xml.bind,
+ javax.xml.stream
 Bundle-ClassPath: commons-codec-1.6.jar,
  commons-lang3-3.3.2.jar,
  commons-logging-1.1.3.jar,
