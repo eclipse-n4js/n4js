@@ -100,8 +100,11 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 			updateOutputPath(fsa, getCompilerID, input);
 			internalDoGenerate(input, GeneratorOption.DEFAULT_OPTIONS, fsa);
-		} catch (Exception e) {
 
+		} catch (UnresolvedProxyInSubGeneratorException e) {
+			genMarkerSupport.createMarker(input, e.message, Severity.ERROR);
+			
+		} catch (Exception e) {
 			// cancellation is not an error case, so simply propagate as usual
 			operationCanceledManager.propagateIfCancelException(e);
 

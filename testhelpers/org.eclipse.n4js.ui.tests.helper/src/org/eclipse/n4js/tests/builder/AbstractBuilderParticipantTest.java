@@ -96,10 +96,12 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	Predicate<IMarker> ignoreSomeWarnings = (IMarker marker) -> {
 		String code = issueUtil.getCode(marker);
-		switch (code) {
-		case IssueCodes.CFG_LOCAL_VAR_UNUSED:
-		case IssueCodes.DFG_NULL_DEREFERENCE:
-			return false;
+		if (code != null) {
+			switch (code) {
+			case IssueCodes.CFG_LOCAL_VAR_UNUSED:
+			case IssueCodes.DFG_NULL_DEREFERENCE:
+				return false;
+			}
 		}
 		return true;
 	};

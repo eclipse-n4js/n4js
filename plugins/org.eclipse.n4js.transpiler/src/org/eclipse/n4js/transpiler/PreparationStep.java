@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.generator.GeneratorOption;
+import org.eclipse.n4js.generator.UnresolvedProxyInSubGeneratorException;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -63,9 +64,11 @@ import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.Arrays;
+import org.eclipse.xtext.util.LineAndColumn;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -342,9 +345,10 @@ public class PreparationStep {
 				} else if (MigrationUtils.isMigrateCall(eObject.eContainer())) {
 					// unresolved migrate-calls can still be transpiled
 				} else {
-					throw new IllegalStateException("Rewire() called for a proxified original target. IM-eobject = "
-							+ eObject + "   origTarget is "
-							+ originalTarget);
+					final ICompositeNode node = NodeModelUtils.findActualNodeFor(eObject);
+					final LineAndColumn pos = NodeModelUtils.getLineAndColumn(node, node.getOffset());
+					throw new UnresolvedProxyInSubGeneratorException(
+							eObject.eResource(), pos.getLine(), pos.getColumn());
 				}
 			}
 		}
