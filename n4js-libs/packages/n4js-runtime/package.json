@@ -20,7 +20,7 @@
     "src-gen"
   ],
   "dependencies": {
-    "esm": "~3.2.10",
+    "esm": "3.2.22",
     "n4js-runtime-es2015": "^0.1.0"
   },
   "keywords": [
