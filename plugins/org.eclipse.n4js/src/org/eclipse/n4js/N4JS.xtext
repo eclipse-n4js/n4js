@@ -56,7 +56,7 @@ ScriptElement:
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
 	| N4EnumDeclaration<Yield=false>
-	| ImportDeclaration
+	| => ImportDeclaration // syntactic predicate required due to RootStatement > ExpressionStatement > ... > ImportCallExpression
 	| ExportDeclaration
 	| RootStatement<Yield=false>
 ;
@@ -576,6 +576,7 @@ PrimaryExpression <Yield> returns Expression:
 	| IdentifierRef<Yield>
 	| JSXFragment /* see JSX  */
 	| JSXElement /* see JSX  */
+	| ImportCallExpression<Yield>
 	| ParameterizedCallExpression<Yield>
 	| Literal
 	| ArrayLiteral<Yield>
@@ -736,6 +737,10 @@ ParameterizedCallExpression <Yield>:
 
 fragment ConcreteTypeArguments*:
 	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>'
+;
+
+ImportCallExpression<Yield>:
+	'import' '(' argument=Argument<Yield> ')'
 ;
 
 LeftHandSideExpression <Yield> returns Expression:

@@ -1414,6 +1414,10 @@ class ParameterizedCallExpression extends Expression, ParameterizedAccess {
 	}
 }
 
+class ImportCallExpression extends Expression {
+	contains Argument argument
+}
+
 /* Argument in a new or call expression. */
 class Argument extends TypableElement {
 	boolean spread

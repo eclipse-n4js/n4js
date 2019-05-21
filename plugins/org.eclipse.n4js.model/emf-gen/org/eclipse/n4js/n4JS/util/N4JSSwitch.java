@@ -1038,6 +1038,15 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.IMPORT_CALL_EXPRESSION: {
+				ImportCallExpression importCallExpression = (ImportCallExpression)theEObject;
+				T result = caseImportCallExpression(importCallExpression);
+				if (result == null) result = caseExpression(importCallExpression);
+				if (result == null) result = caseTypableElement(importCallExpression);
+				if (result == null) result = caseControlFlowElement(importCallExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.ARGUMENT: {
 				Argument argument = (Argument)theEObject;
 				T result = caseArgument(argument);
@@ -3348,6 +3357,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseParameterizedCallExpression(ParameterizedCallExpression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Import Call Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Import Call Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseImportCallExpression(ImportCallExpression object) {
 		return null;
 	}
 
