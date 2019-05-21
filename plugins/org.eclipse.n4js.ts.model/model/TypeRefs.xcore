@@ -474,7 +474,8 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 class ParameterizedTypeRef extends BaseTypeRef {
 	refers Type declaredType
 	contains TypeArgument[] typeArgs
-	boolean arrayTypeLiteral = "false"
+	boolean arrayTypeExpression = "false"
+	boolean iterableTypeExpression = "false"
 
 	/*
 	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source

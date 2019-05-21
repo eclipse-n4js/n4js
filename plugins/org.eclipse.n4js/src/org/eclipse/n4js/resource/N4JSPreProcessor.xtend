@@ -11,11 +11,11 @@
 package org.eclipse.n4js.resource
 
 import com.google.inject.Singleton
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.validation.ASTStructureValidator
-import org.eclipse.emf.ecore.EObject
 
 /**
  * This class performs some early pre-processing of the AST. This happens after {@link N4JSLinker lazy linking} and
@@ -48,12 +48,29 @@ package final class N4JSPreProcessor {
 	/**
 	 * Support for new array type syntax:
 	 * <pre>
-	 * var arr: [string];
+	 * let arr: string[];
+	 * </pre>
+	 * and tuple syntax:
+	 * <pre>
+	 * let tup: [string, int];
 	 * </pre>
 	 */
 	def private dispatch void processNode(ParameterizedTypeRef typeRef, N4JSResource resource, BuiltInTypeScope builtInTypes) {
-		if (typeRef.isArrayTypeLiteral) {
+		if (typeRef.isArrayTypeExpression) {
 			typeRef.declaredType = builtInTypes.arrayType;
+		} else if (typeRef.isIterableTypeExpression) {
+			val n = typeRef.typeArgs.size;
+			if (n < 2) {
+				typeRef.declaredType = builtInTypes.iterableType;
+			} else if (n <= BuiltInTypeScope.ITERABLE_N__MAX_LEN) {
+				typeRef.declaredType = builtInTypes.getIterableNType(n);
+			} else {
+				// error (a validation will create an issue)
+				// NOTE: it would be nice to create an InterableN with a union as last type argument
+				// containing those element types that exceed the ITERABLE_N__MAX_LEN; however, this
+				// would require AST rewriting, which isn't allowed.
+				typeRef.declaredType = builtInTypes.getIterableNType(BuiltInTypeScope.ITERABLE_N__MAX_LEN);
+			}
 		}
 	}
 }

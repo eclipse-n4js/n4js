@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// XPECT type of 'a01' --> Array<string>
+let a01: string[];
+
+// XPECT type of 'a02' --> Array<Array<Array<string>>>
+let a02: string[][][];
+
+
+
+// XPECT type of 'a11' --> union{string,Array<number>}
+let a11: string|number[];
+
+// XPECT type of 'a12' --> union{string,Array<number>}
+let a12: string|(number[]);
+
+// XPECT type of 'a13' --> Array<union{string,number}>
+let a13: (string|number)[];
+
+// XPECT type of 'a14' --> union{Array<string>,number}
+let a14: string[]|number;
+
+// XPECT type of 'a15' --> union{Array<string>,Array<number>}
+let a15: string[]|number[];
+
+// XPECT type of 'a16' --> union{Array<string>,Array<Array<number>>}
+let a16: string[]|number[][];
+
+// XPECT type of 'a17' --> Array<union{Array<string>,Array<number>}>
+let a17: (string[]|number[])[];
+
+
+
+// XPECT type of 'a21' --> intersection{string,Array<number>}
+let a21: string&number[];
+
+// XPECT type of 'a22' --> intersection{string,Array<number>}
+let a22: string&(number[]);
+
+// XPECT type of 'a23' --> Array<intersection{string,number}>
+let a23: (string&number)[];
+
+// XPECT type of 'a24' --> intersection{Array<string>,number}
+let a24: string[]&number;
+
+// XPECT type of 'a25' --> intersection{Array<string>,Array<number>}
+let a25: string[]&number[];
+
+// XPECT type of 'a26' --> intersection{Array<string>,Array<Array<number>>}
+let a26: string[]&number[][];
+
+// XPECT type of 'a27' --> Array<intersection{Array<string>,Array<number>}>
+let a27: (string[]&number[])[];
+
+
+
+// XPECT type of 'a31' --> union{string,intersection{number,Array<int>}}
+let a31: string|number&int[];
+
+
+
+// XPECT type of 'a41' --> Array<Array<Iterable<?>>>
+let a41: [][][];
+
+// XPECT type of 'a42' --> Array<Array<Iterable2<string,number>>>
+let a42: [string,number][][];

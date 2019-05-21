@@ -623,6 +623,18 @@ ruleTEnumLiteral:
 	RULE_IDENTIFIER
 ;
 
+// Rule ArrayTypeExpression
+ruleArrayTypeExpression:
+	rulePrimaryTypeExpression
+	(
+		('['
+		']'
+		)=>
+		'['
+		']'
+	)*
+;
+
 // Rule PrimaryTypeExpression
 rulePrimaryTypeExpression:
 	(
@@ -635,7 +647,7 @@ rulePrimaryTypeExpression:
 			ruleArrowFunctionTypeExpression
 		)
 		    |
-		ruleArrayTypeRef
+		ruleIterableTypeExpression
 		    |
 		ruleTypeRefWithModifiers
 		    |
@@ -684,7 +696,7 @@ ruleTypeRefFunctionTypeExpression:
 	(
 		ruleParameterizedTypeRef
 		    |
-		ruleArrayTypeRef
+		ruleIterableTypeExpression
 		    |
 		ruleTypeTypeRef
 		    |
@@ -893,10 +905,23 @@ ruleParameterizedTypeRefStructural:
 	)?
 ;
 
-// Rule ArrayTypeRef
-ruleArrayTypeRef:
+// Rule IterableTypeExpression
+ruleIterableTypeExpression:
 	'['
-	ruleTypeArgument
+	(
+		ruleEmptyIterableTypeExpressionTail
+		    |
+		ruleTypeArgument
+		(
+			','
+			ruleTypeArgument
+		)*
+		']'
+	)
+;
+
+// Rule EmptyIterableTypeExpressionTail
+ruleEmptyIterableTypeExpressionTail:
 	']'
 ;
 

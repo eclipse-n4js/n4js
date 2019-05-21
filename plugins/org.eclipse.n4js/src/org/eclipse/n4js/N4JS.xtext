@@ -1187,11 +1187,10 @@ TypeRefAnnotationArgument:
 
 TypeRefForCast returns types::StaticBaseTypeRef:
 	  ParameterizedTypeRef
-	| ArrayTypeRef
+	| IterableTypeExpression
 	| ThisTypeRef
 	| TypeTypeRef
 	| ArrowFunctionTypeExpression
-
 	| FunctionTypeExpressionOLD
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;

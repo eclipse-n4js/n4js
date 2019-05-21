@@ -14754,7 +14754,7 @@ ruleTypeRefForCast
 (
 	ParameterizedTypeRefParserRuleCall_0=ruleParameterizedTypeRef{ announce($ParameterizedTypeRefParserRuleCall_0.start, $ParameterizedTypeRefParserRuleCall_0.stop, grammarAccess.getTypeRefForCastAccess().getParameterizedTypeRefParserRuleCall_0()); }
 	    |
-	ArrayTypeRefParserRuleCall_1=ruleArrayTypeRef{ announce($ArrayTypeRefParserRuleCall_1.start, $ArrayTypeRefParserRuleCall_1.stop, grammarAccess.getTypeRefForCastAccess().getArrayTypeRefParserRuleCall_1()); }
+	IterableTypeExpressionParserRuleCall_1=ruleIterableTypeExpression{ announce($IterableTypeExpressionParserRuleCall_1.start, $IterableTypeExpressionParserRuleCall_1.stop, grammarAccess.getTypeRefForCastAccess().getIterableTypeExpressionParserRuleCall_1()); }
 	    |
 	ThisTypeRefParserRuleCall_2=ruleThisTypeRef{ announce($ThisTypeRefParserRuleCall_2.start, $ThisTypeRefParserRuleCall_2.stop, grammarAccess.getTypeRefForCastAccess().getThisTypeRefParserRuleCall_2()); }
 	    |
@@ -19281,7 +19281,7 @@ ruleIntersectionTypeExpression
 @init {
 }:
 (
-	PrimaryTypeExpressionParserRuleCall_0=rulePrimaryTypeExpression{ announce($PrimaryTypeExpressionParserRuleCall_0.start, $PrimaryTypeExpressionParserRuleCall_0.stop, grammarAccess.getIntersectionTypeExpressionAccess().getPrimaryTypeExpressionParserRuleCall_0()); }
+	ArrayTypeExpressionParserRuleCall_0=ruleArrayTypeExpression{ announce($ArrayTypeExpressionParserRuleCall_0.start, $ArrayTypeExpressionParserRuleCall_0.stop, grammarAccess.getIntersectionTypeExpressionAccess().getArrayTypeExpressionParserRuleCall_0()); }
 	(
 		(
 			AmpersandKeyword_1_1_0=Ampersand
@@ -19290,13 +19290,53 @@ ruleIntersectionTypeExpression
 			}
 			(
 				(
-					TypeRefsPrimaryTypeExpressionParserRuleCall_1_1_1_0=rulePrimaryTypeExpression{
-						announce($TypeRefsPrimaryTypeExpressionParserRuleCall_1_1_1_0.start, $TypeRefsPrimaryTypeExpressionParserRuleCall_1_1_1_0.stop, grammarAccess.getIntersectionTypeExpressionAccess().getTypeRefsAssignment_1_1_1());
+					TypeRefsArrayTypeExpressionParserRuleCall_1_1_1_0=ruleArrayTypeExpression{
+						announce($TypeRefsArrayTypeExpressionParserRuleCall_1_1_1_0.start, $TypeRefsArrayTypeExpressionParserRuleCall_1_1_1_0.stop, grammarAccess.getIntersectionTypeExpressionAccess().getTypeRefsAssignment_1_1_1());
 					}
 				)
 			)
 		)+
 	)?
+)
+;
+
+// Entry rule entryRuleArrayTypeExpression
+entryRuleArrayTypeExpression
+	:
+	ruleArrayTypeExpression
+	EOF;
+
+// Rule ArrayTypeExpression
+ruleArrayTypeExpression
+@init {
+}:
+(
+	PrimaryTypeExpressionParserRuleCall_0=rulePrimaryTypeExpression{ announce($PrimaryTypeExpressionParserRuleCall_0.start, $PrimaryTypeExpressionParserRuleCall_0.stop, grammarAccess.getArrayTypeExpressionAccess().getPrimaryTypeExpressionParserRuleCall_0()); }
+	(
+		((
+			(
+				(
+					LeftSquareBracket
+				)
+			)
+			RightSquareBracket
+		)
+		)=>
+		(
+			(
+				(
+					ArrayTypeExpressionLeftSquareBracketKeyword_1_0_1_0=LeftSquareBracket
+					 {
+						announce($ArrayTypeExpressionLeftSquareBracketKeyword_1_0_1_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_1_0_1_0());
+					}
+				)
+			)
+			RightSquareBracketKeyword_1_0_2=RightSquareBracket
+			 {
+				announce($RightSquareBracketKeyword_1_0_2, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_1_0_2());
+			}
+		)
+	)*
 )
 ;
 
@@ -19322,7 +19362,7 @@ rulePrimaryTypeExpression
 		ArrowFunctionTypeExpressionParserRuleCall_0=ruleArrowFunctionTypeExpression{ announce($ArrowFunctionTypeExpressionParserRuleCall_0.start, $ArrowFunctionTypeExpressionParserRuleCall_0.stop, grammarAccess.getPrimaryTypeExpressionAccess().getArrowFunctionTypeExpressionParserRuleCall_0()); }
 	)
 	    |
-	ArrayTypeRefParserRuleCall_1=ruleArrayTypeRef{ announce($ArrayTypeRefParserRuleCall_1.start, $ArrayTypeRefParserRuleCall_1.stop, grammarAccess.getPrimaryTypeExpressionAccess().getArrayTypeRefParserRuleCall_1()); }
+	IterableTypeExpressionParserRuleCall_1=ruleIterableTypeExpression{ announce($IterableTypeExpressionParserRuleCall_1.start, $IterableTypeExpressionParserRuleCall_1.stop, grammarAccess.getPrimaryTypeExpressionAccess().getIterableTypeExpressionParserRuleCall_1()); }
 	    |
 	TypeRefWithModifiersParserRuleCall_2=ruleTypeRefWithModifiers{ announce($TypeRefWithModifiersParserRuleCall_2.start, $TypeRefWithModifiersParserRuleCall_2.stop, grammarAccess.getPrimaryTypeExpressionAccess().getTypeRefWithModifiersParserRuleCall_2()); }
 	    |
@@ -19421,7 +19461,7 @@ ruleTypeRefFunctionTypeExpression
 (
 	ParameterizedTypeRefParserRuleCall_0=ruleParameterizedTypeRef{ announce($ParameterizedTypeRefParserRuleCall_0.start, $ParameterizedTypeRefParserRuleCall_0.stop, grammarAccess.getTypeRefFunctionTypeExpressionAccess().getParameterizedTypeRefParserRuleCall_0()); }
 	    |
-	ArrayTypeRefParserRuleCall_1=ruleArrayTypeRef{ announce($ArrayTypeRefParserRuleCall_1.start, $ArrayTypeRefParserRuleCall_1.stop, grammarAccess.getTypeRefFunctionTypeExpressionAccess().getArrayTypeRefParserRuleCall_1()); }
+	IterableTypeExpressionParserRuleCall_1=ruleIterableTypeExpression{ announce($IterableTypeExpressionParserRuleCall_1.start, $IterableTypeExpressionParserRuleCall_1.stop, grammarAccess.getTypeRefFunctionTypeExpressionAccess().getIterableTypeExpressionParserRuleCall_1()); }
 	    |
 	TypeTypeRefParserRuleCall_2=ruleTypeTypeRef{ announce($TypeTypeRefParserRuleCall_2.start, $TypeTypeRefParserRuleCall_2.stop, grammarAccess.getTypeRefFunctionTypeExpressionAccess().getTypeTypeRefParserRuleCall_2()); }
 	    |
@@ -19958,35 +19998,78 @@ ruleParameterizedTypeRefStructural
 )
 ;
 
-// Entry rule entryRuleArrayTypeRef
-entryRuleArrayTypeRef
+// Entry rule entryRuleIterableTypeExpression
+entryRuleIterableTypeExpression
 	:
-	ruleArrayTypeRef
+	ruleIterableTypeExpression
 	EOF;
 
-// Rule ArrayTypeRef
-ruleArrayTypeRef
+// Rule IterableTypeExpression
+ruleIterableTypeExpression
 @init {
 }:
 (
 	(
 		(
-			ArrayTypeLiteralLeftSquareBracketKeyword_0_0=LeftSquareBracket
+			IterableTypeExpressionLeftSquareBracketKeyword_0_0=LeftSquareBracket
 			 {
-				announce($ArrayTypeLiteralLeftSquareBracketKeyword_0_0, grammarAccess.getArrayTypeRefAccess().getArrayTypeLiteralLeftSquareBracketKeyword_0_0());
+				announce($IterableTypeExpressionLeftSquareBracketKeyword_0_0, grammarAccess.getIterableTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0());
 			}
 		)
 	)
 	(
 		(
-			TypeArgsTypeArgumentParserRuleCall_1_0=ruleTypeArgument{
-				announce($TypeArgsTypeArgumentParserRuleCall_1_0.start, $TypeArgsTypeArgumentParserRuleCall_1_0.stop, grammarAccess.getArrayTypeRefAccess().getTypeArgsAssignment_1());
+			(
+				TypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0=ruleEmptyIterableTypeExpressionTail{
+					announce($TypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0.start, $TypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0.stop, grammarAccess.getIterableTypeExpressionAccess().getTypeArgsAssignment_1_0());
+				}
+			)
+		)
+		    |
+		(
+			(
+				(
+					TypeArgsTypeArgumentParserRuleCall_1_1_0_0=ruleTypeArgument{
+						announce($TypeArgsTypeArgumentParserRuleCall_1_1_0_0.start, $TypeArgsTypeArgumentParserRuleCall_1_1_0_0.stop, grammarAccess.getIterableTypeExpressionAccess().getTypeArgsAssignment_1_1_0());
+					}
+				)
+			)
+			(
+				CommaKeyword_1_1_1_0=Comma
+				 {
+					announce($CommaKeyword_1_1_1_0, grammarAccess.getIterableTypeExpressionAccess().getCommaKeyword_1_1_1_0());
+				}
+				(
+					(
+						TypeArgsTypeArgumentParserRuleCall_1_1_1_1_0=ruleTypeArgument{
+							announce($TypeArgsTypeArgumentParserRuleCall_1_1_1_1_0.start, $TypeArgsTypeArgumentParserRuleCall_1_1_1_1_0.stop, grammarAccess.getIterableTypeExpressionAccess().getTypeArgsAssignment_1_1_1_1());
+						}
+					)
+				)
+			)*
+			RightSquareBracketKeyword_1_1_2=RightSquareBracket
+			 {
+				announce($RightSquareBracketKeyword_1_1_2, grammarAccess.getIterableTypeExpressionAccess().getRightSquareBracketKeyword_1_1_2());
 			}
 		)
 	)
-	RightSquareBracketKeyword_2=RightSquareBracket
+)
+;
+
+// Entry rule entryRuleEmptyIterableTypeExpressionTail
+entryRuleEmptyIterableTypeExpressionTail
+	:
+	ruleEmptyIterableTypeExpressionTail
+	EOF;
+
+// Rule EmptyIterableTypeExpressionTail
+ruleEmptyIterableTypeExpressionTail
+@init {
+}:
+(
+	RightSquareBracketKeyword_1=RightSquareBracket
 	 {
-		announce($RightSquareBracketKeyword_2, grammarAccess.getArrayTypeRefAccess().getRightSquareBracketKeyword_2());
+		announce($RightSquareBracketKeyword_1, grammarAccess.getEmptyIterableTypeExpressionTailAccess().getRightSquareBracketKeyword_1());
 	}
 )
 ;

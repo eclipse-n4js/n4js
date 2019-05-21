@@ -96,11 +96,12 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) '{' 'function' '(' ')' '}' followedByQuestionMark?='?'
 	 *     (rule start) (ambiguity) '{' 'function' '<' ownedTypeVars+=TypeVariable
 	 *     (rule start) (ambiguity) (('{' 'function' '(') | '(') fpars+=TAnonymousFormalParameter
-	 *     (rule start) (ambiguity) arrayTypeLiteral?='['
 	 *     (rule start) (ambiguity) constructorRef?='constructor'
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
+	 *     (rule start) (ambiguity) iterableTypeExpression?='['
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
+	 *     (rule start) (ambiguity) {ParameterizedTypeRef.typeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
 	 */
 	protected void emit_PrimaryTypeExpression_LeftParenthesisKeyword_3_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -113,6 +114,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
+	 *     (rule start) (ambiguity) {ParameterizedTypeRef.typeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
 	 */
 	protected void emit_PrimaryTypeExpression_LeftParenthesisKeyword_3_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {

@@ -45,11 +45,14 @@ TypeRef returns TypeRef:
 	IntersectionTypeExpression ({UnionTypeExpression.typeRefs+=current} ("|" typeRefs+=IntersectionTypeExpression)+)?;
 
 IntersectionTypeExpression returns TypeRef:
-	PrimaryTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=PrimaryTypeExpression)+)?;
+	ArrayTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=ArrayTypeExpression)+)?;
+
+ArrayTypeExpression returns TypeRef:
+	PrimaryTypeExpression =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*;
 
 PrimaryTypeExpression returns TypeRef:
 	( ArrowFunctionTypeExpression
-	| ArrayTypeRef
+	| IterableTypeExpression
 	| TypeRefWithModifiers
 	| "(" TypeRef ")"
 	);
@@ -60,19 +63,16 @@ TypeRefWithModifiers returns StaticBaseTypeRef:
 TypeRefWithoutModifiers returns StaticBaseTypeRef:
 	  ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
 	| TypeTypeRef
-
 	| FunctionTypeExpressionOLD
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
 
 TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
 	  ParameterizedTypeRef
-	| ArrayTypeRef
+	| IterableTypeExpression
 	| TypeTypeRef
-
 	| UnionTypeExpressionOLD
-	| IntersectionTypeExpressionOLD
-	;
+	| IntersectionTypeExpressionOLD;
 
 TypeArgInTypeTypeRef returns TypeArgument:
 	  ParameterizedTypeRefNominal
@@ -164,8 +164,15 @@ ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
 	('with' TStructMemberList)?
 ;
 
-ArrayTypeRef returns ParameterizedTypeRef:
-	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
+IterableTypeExpression returns ParameterizedTypeRef:
+	iterableTypeExpression?='['
+	(
+		typeArgs+=EmptyIterableTypeExpressionTail
+	|	typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'
+	);
+
+EmptyIterableTypeExpressionTail returns Wildcard:
+	{Wildcard} ']';
 
 fragment VersionRequest*: requestedVersion=VERSION;
 

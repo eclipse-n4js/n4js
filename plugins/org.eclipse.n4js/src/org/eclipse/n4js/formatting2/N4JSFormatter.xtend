@@ -11,7 +11,8 @@
 package org.eclipse.n4js.formatting2;
 
 import com.google.inject.Inject
-import org.eclipse.n4js.formatting2.N4JSFormatter.StateTrack
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
 import org.eclipse.n4js.n4JS.AbstractCaseClause
 import org.eclipse.n4js.n4JS.AdditiveExpression
@@ -52,6 +53,7 @@ import org.eclipse.n4js.n4JS.IfStatement
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IntLiteral
+import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.ModifiableElement
 import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -105,8 +107,6 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.AbstractRule
 import org.eclipse.xtext.Keyword
 import org.eclipse.xtext.formatting2.IAutowrapFormatter
@@ -126,7 +126,6 @@ import org.eclipse.xtext.xtext.generator.parser.antlr.splitting.simpleExpression
 
 import static org.eclipse.n4js.formatting2.N4JSFormatterPreferenceKeys.*
 import static org.eclipse.n4js.formatting2.N4JSGenericFormatter.*
-import org.eclipse.n4js.n4JS.JSXElement
 
 class N4JSFormatter extends TypeExpressionsFormatter {
 
@@ -1318,7 +1317,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 		// Union / Intersection
 		ptr.regionFor.keywords("&","|").forEach[ surround[oneSpace;newLines=0].append[autowrap;highPriority]];
 		// ArrayTypeRef
-		if( ptr.isArrayTypeLiteral ) {
+		if( ptr.isIterableTypeExpression ) {
 			ptr.regionFor.keyword("[").append[noSpace];
 			ptr.regionFor.keyword("]").append[noSpace];
 		}

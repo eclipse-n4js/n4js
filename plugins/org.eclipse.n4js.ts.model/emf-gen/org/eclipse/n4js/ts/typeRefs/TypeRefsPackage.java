@@ -2962,13 +2962,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__TYPE_ARGS = BASE_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL = BASE_TYPE_REF_FEATURE_COUNT + 2;
+	int PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -2977,7 +2986,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__AST_NAMESPACE = BASE_TYPE_REF_FEATURE_COUNT + 3;
+	int PARAMETERIZED_TYPE_REF__AST_NAMESPACE = BASE_TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -2986,7 +2995,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
@@ -2995,7 +3004,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>Parameterized Type Ref</em>' class.
@@ -3004,7 +3013,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -3378,13 +3387,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__TYPE_ARGS = PARAMETERIZED_TYPE_REF__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -4986,13 +5004,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__TYPE_ARGS = PARAMETERIZED_TYPE_REF__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
+	int FUNCTION_TYPE_REF__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -6134,13 +6161,22 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF__TYPE_ARGS = PARAMETERIZED_TYPE_REF__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
+	int VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -6477,13 +6513,22 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_FUNCTION_TYPE_REF__TYPE_ARGS = VERSIONED_PARAMETERIZED_TYPE_REF__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF__ARRAY_TYPE_LITERAL = VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
+	int VERSIONED_FUNCTION_TYPE_REF__ARRAY_TYPE_EXPRESSION = VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_FUNCTION_TYPE_REF__ITERABLE_TYPE_EXPRESSION = VERSIONED_PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -6892,13 +6937,22 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__TYPE_ARGS = VERSIONED_PARAMETERIZED_TYPE_REF__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_TYPE_LITERAL = VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_TYPE_EXPRESSION = VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__ITERABLE_TYPE_EXPRESSION = VERSIONED_PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -7902,15 +7956,26 @@ public interface TypeRefsPackage extends EPackage {
 	EReference getParameterizedTypeRef_TypeArgs();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeLiteral <em>Array Type Literal</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Array Type Literal</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeLiteral()
+	 * @return the meta object for the attribute '<em>Array Type Expression</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression()
 	 * @see #getParameterizedTypeRef()
 	 * @generated
 	 */
-	EAttribute getParameterizedTypeRef_ArrayTypeLiteral();
+	EAttribute getParameterizedTypeRef_ArrayTypeExpression();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression <em>Iterable Type Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Iterable Type Expression</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression()
+	 * @see #getParameterizedTypeRef()
+	 * @generated
+	 */
+	EAttribute getParameterizedTypeRef_IterableTypeExpression();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}'.
@@ -9458,12 +9523,20 @@ public interface TypeRefsPackage extends EPackage {
 		EReference PARAMETERIZED_TYPE_REF__TYPE_ARGS = eINSTANCE.getParameterizedTypeRef_TypeArgs();
 
 		/**
-		 * The meta object literal for the '<em><b>Array Type Literal</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Array Type Expression</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL = eINSTANCE.getParameterizedTypeRef_ArrayTypeLiteral();
+		EAttribute PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION = eINSTANCE.getParameterizedTypeRef_ArrayTypeExpression();
+
+		/**
+		 * The meta object literal for the '<em><b>Iterable Type Expression</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION = eINSTANCE.getParameterizedTypeRef_IterableTypeExpression();
 
 		/**
 		 * The meta object literal for the '<em><b>Ast Namespace</b></em>' reference feature.

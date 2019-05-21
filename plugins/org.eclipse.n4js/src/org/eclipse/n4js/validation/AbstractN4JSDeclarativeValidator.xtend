@@ -43,7 +43,9 @@ import org.eclipse.n4js.n4JS.WhileStatement
 import org.eclipse.n4js.n4JS.WithStatement
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.services.N4JSGrammarAccess
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -183,7 +185,11 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 
 		// check for correct number of type arguments
 		if (typeParameterCount !== typeArgumentCount) {
-			if (parameterizedElement !== null && parameterizedElement.name !== null) {
+			if (source instanceof ParameterizedTypeRef && (source as ParameterizedTypeRef).isIterableTypeExpression) {
+				val message = IssueCodes.
+					getMessageForEXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ITERABLE_N_SYNTAX(BuiltInTypeScope.ITERABLE_N__MAX_LEN);
+				addIssue(message, source, feature, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ITERABLE_N_SYNTAX);
+			} else if (parameterizedElement !== null && parameterizedElement.name !== null) {
 				val message = IssueCodes.
 					getMessageForEXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ELEMENT(parameterizedElement.keyword,
 						parameterizedElement.name, typeParameterCount, typeArgumentCount);

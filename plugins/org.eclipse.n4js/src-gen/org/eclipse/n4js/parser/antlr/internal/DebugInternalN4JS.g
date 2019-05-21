@@ -6178,7 +6178,7 @@ ruleTypeRefForCast:
 	(
 		ruleParameterizedTypeRef
 		    |
-		ruleArrayTypeRef
+		ruleIterableTypeExpression
 		    |
 		ruleThisTypeRef
 		    |
@@ -8233,13 +8233,25 @@ ruleTypeRef:
 
 // Rule IntersectionTypeExpression
 ruleIntersectionTypeExpression:
-	rulePrimaryTypeExpression
+	ruleArrayTypeExpression
 	(
 		(
 			'&'
-			rulePrimaryTypeExpression
+			ruleArrayTypeExpression
 		)+
 	)?
+;
+
+// Rule ArrayTypeExpression
+ruleArrayTypeExpression:
+	rulePrimaryTypeExpression
+	(
+		('['
+		']'
+		)=>
+		'['
+		']'
+	)*
 ;
 
 // Rule PrimaryTypeExpression
@@ -8254,7 +8266,7 @@ rulePrimaryTypeExpression:
 			ruleArrowFunctionTypeExpression
 		)
 		    |
-		ruleArrayTypeRef
+		ruleIterableTypeExpression
 		    |
 		ruleTypeRefWithModifiers
 		    |
@@ -8303,7 +8315,7 @@ ruleTypeRefFunctionTypeExpression:
 	(
 		ruleParameterizedTypeRef
 		    |
-		ruleArrayTypeRef
+		ruleIterableTypeExpression
 		    |
 		ruleTypeTypeRef
 		    |
@@ -8503,10 +8515,23 @@ ruleParameterizedTypeRefStructural:
 	)?
 ;
 
-// Rule ArrayTypeRef
-ruleArrayTypeRef:
+// Rule IterableTypeExpression
+ruleIterableTypeExpression:
 	'['
-	ruleTypeArgument
+	(
+		ruleEmptyIterableTypeExpressionTail
+		    |
+		ruleTypeArgument
+		(
+			','
+			ruleTypeArgument
+		)*
+		']'
+	)
+;
+
+// Rule EmptyIterableTypeExpressionTail
+ruleEmptyIterableTypeExpressionTail:
 	']'
 ;
 

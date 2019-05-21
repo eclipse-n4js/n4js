@@ -911,13 +911,22 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS = TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
+	int PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -1272,13 +1281,22 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -3079,13 +3097,22 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -3467,13 +3494,22 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
