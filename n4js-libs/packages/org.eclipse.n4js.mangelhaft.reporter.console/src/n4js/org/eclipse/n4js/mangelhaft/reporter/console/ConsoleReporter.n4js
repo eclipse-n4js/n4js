@@ -63,7 +63,7 @@ export public class ConsoleReporter implements ITestReporter {
         return this;
     }
     
-    public unsuccessfulTests:Array<string> = [];
+    public unsuccessfulTests: string[] = [];
     
     @Override public async register() {
         let indent = 0;

@@ -23,7 +23,7 @@ import {DateTimeFormatOptions} from "IntlClasses";
 	 * @see https://www.ecma-international.org/ecma-402/4.0/
 	 */
     @Override
-    public toLocaleString(locales: string | [string]=, options: ~r~DateTimeFormatOptions=): string
+    public toLocaleString(locales: string | string[]=, options: ~r~DateTimeFormatOptions=): string
     /**
 	 * Returns formatted date using locales and options as defined in 
 	 * DateTimeFormat of ECMA-402 (Internationalization API).
@@ -33,7 +33,7 @@ import {DateTimeFormatOptions} from "IntlClasses";
 	 * @see https://www.ecma-international.org/ecma-402/4.0/
 	 */
  	@Override
- 	public toLocaleDateString(locales: string | [string]=, options: ~r~DateTimeFormatOptions=): string
+ 	public toLocaleDateString(locales: string | string[]=, options: ~r~DateTimeFormatOptions=): string
  	/**
 	 * Returns formatted time using locales and options as defined in 
 	 * DateTimeFormat of ECMA-402 (Internationalization API).
@@ -43,6 +43,6 @@ import {DateTimeFormatOptions} from "IntlClasses";
 	 * @see https://www.ecma-international.org/ecma-402/4.0/
 	 */
 	@Override
-	public toLocaleTimeString(locales: string | [string]=, options: ~r~DateTimeFormatOptions=): string
+	public toLocaleTimeString(locales: string | string[]=, options: ~r~DateTimeFormatOptions=): string
 }
 

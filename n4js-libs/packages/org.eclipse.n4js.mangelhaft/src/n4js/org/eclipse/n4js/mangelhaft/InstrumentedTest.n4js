@@ -23,19 +23,19 @@ import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethod
 export public class InstrumentedTest implements IInstrumentedTest {
 
     @Override
-    public tests: Array<TestMethodDescriptor> = [];
+    public tests: TestMethodDescriptor[] = [];
 
     @Override
-    public beforeAlls: Array<TestMethodDescriptor> = [];
+    public beforeAlls: TestMethodDescriptor[] = [];
 
     @Override
-    public afterAlls: Array<TestMethodDescriptor> = [];
+    public afterAlls: TestMethodDescriptor[] = [];
 
     @Override
-    public befores: Array<TestMethodDescriptor> = [];
+    public befores: TestMethodDescriptor[] = [];
 
     @Override
-    public afters: Array<TestMethodDescriptor> = [];
+    public afters: TestMethodDescriptor[] = [];
 
     @Override
     public fqn: string = "";
@@ -52,14 +52,14 @@ export public class InstrumentedTest implements IInstrumentedTest {
     private classIgnoreAnnotation: N4Annotation;
 
     @Override
-    public filterTests(testNames: Array<string>) {
+    public filterTests(testNames: string[]) {
         this.tests = this.tests.filter(function(test) {
             return testNames.indexOf(test.name) !== -1;
         });
     }
 
     public constructor(testClass: constructor{? extends N4Object}=, info: TestInfo=, testObject: N4Object=,
-        parameterizedName: string=, parameterizedTests: [? extends IInstrumentedTest]=) {
+        parameterizedName: string=, parameterizedTests: Array<? extends IInstrumentedTest>=) {
         if (testClass) {
             this.load(testClass, info);
             this.parameterizedName = parameterizedName;
@@ -93,10 +93,10 @@ export public class InstrumentedTest implements IInstrumentedTest {
      * Gets the fully instrumented, ready-to-run, parameterized tests for a test class.
      */
     private static getParameterizedInstrumentedTests(testClass: constructor{N4Object}, info: TestInfo,
-        testInjector: N4Injector, parameterGroups: Array<Array<any>>, nameTemplate: string): Array<InstrumentedTest> {
+        testInjector: N4Injector, parameterGroups: any[][], nameTemplate: string): InstrumentedTest[] {
 
         nameTemplate = nameTemplate || "{index}";
-        let tests: Array<InstrumentedTest> = [];
+        let tests: InstrumentedTest[] = [];
         let parameterizedFields = this.getParameterizedFields(testClass);
         if (parameterGroups && parameterGroups.length) {
             let ii = 0;
@@ -132,7 +132,7 @@ export public class InstrumentedTest implements IInstrumentedTest {
     public static getInstrumentedTest(testClass: constructor{N4Object}, info: TestInfo, testInjector: N4Injector,
         controller: TestController): IInstrumentedTest {
 
-        let parameters: Array<Array<any>> = null;
+        let parameters: any[][] = null;
         let nameTemplate: string = null;
         let pMeth = testClass.n4type.methodsWithAnnotation("Parameters", true, true, true).pop();
         if (pMeth) {
@@ -141,7 +141,7 @@ export public class InstrumentedTest implements IInstrumentedTest {
             parameters = pMeth.jsFunction.call(testClass) as Array<Array<any>>;
         }
 
-        let parameterizedTests: Array<InstrumentedTest>;
+        let parameterizedTests: InstrumentedTest[];
 
         if (parameters) {
             parameterizedTests = this.getParameterizedInstrumentedTests(testClass, info, testInjector, parameters, nameTemplate);
@@ -177,7 +177,7 @@ export public class InstrumentedTest implements IInstrumentedTest {
      * Processes a test method and extracts info from annotations.
      */
     private getTestMethodDescriptors(meths: Array<? extends N4Method>,
-        tftype: TestFunctionType): Array<TestMethodDescriptor> {
+        tftype: TestFunctionType): TestMethodDescriptor[] {
 
         return meths.map((methodDescriptor: N4Method) => {
                 const desc = methodDescriptor.anyAnnotation("Description");

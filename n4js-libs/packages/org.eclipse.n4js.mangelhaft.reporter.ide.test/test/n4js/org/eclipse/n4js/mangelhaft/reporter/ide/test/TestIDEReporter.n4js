@@ -62,7 +62,7 @@
 //        Assert.deepEqual(this.fetchInit,
 //            {
 //               Method method: Method.POST,
-//               union{Headers,Array<Array<string>>,Object} headers: { "Content-Type": "application/vnd.n4js.start_session_req.tm+json"
+//               union{Headers,string[][],Object} headers: { "Content-Type": "application/vnd.n4js.start_session_req.tm+json"
 //                            , "Accept": "application/json"
 //                        },
 //               string body: JSON.stringify(undefined, null, 2)
@@ -88,7 +88,7 @@
 //        Assert.deepEqual(this.fetchInit,
 //            {
 //               Method method: Method.POST
-//               ,union{Headers,Array<Array<string>>,Object} headers: { "Content-Type": "application/vnd.n4js.start_test_req.tm+json"
+//               ,union{Headers,string[][],Object} headers: { "Content-Type": "application/vnd.n4js.start_test_req.tm+json"
 //                            , "Accept": "application/json"
 //                        }
 //               , string body:
@@ -127,7 +127,7 @@
 //        Assert.deepEqual(this.fetchInit,
 //            {
 //               Method method: Method.POST
-//               ,union{Headers,Array<Array<string>>,Object} headers: { "Content-Type": "application/vnd.n4js.end_test_req.tm+json"
+//               ,union{Headers,string[][],Object} headers: { "Content-Type": "application/vnd.n4js.end_test_req.tm+json"
 //                            , "Accept": "application/json"
 //                        }
 //               , string body: null
@@ -159,7 +159,7 @@
 //        Assert.deepEqual(this.fetchInit,
 //            {
 //               Method method: Method.POST
-//               ,union{Headers,Array<Array<string>>,Object} headers: { "Content-Type": "application/vnd.n4js.end_session_req.tm+json"
+//               ,union{Headers,string[][],Object} headers: { "Content-Type": "application/vnd.n4js.end_session_req.tm+json"
 //                            , "Accept": "application/json"
 //                        }
 //               , string body:

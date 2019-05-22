@@ -19,6 +19,6 @@
 	 * @see https://www.ecma-international.org/ecma-402/4.0/
 	 */
 	@Override
-	public toLocaleString(locales: string | [string]=, options: any+ =): string
+	public toLocaleString(locales: string | string[]=, options: any+ =): string
 }
 

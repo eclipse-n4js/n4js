@@ -15,7 +15,7 @@
  */
 export public class DispatchQueue<TListener extends Function> {
    
-    protected listeners: Array<ListenerDS<TListener>>;
+    protected listeners: ListenerDS<TListener>[];
     protected lastIndex: int = 0;
     protected lastInsertionOrder: int = 0;
     private shouldHalt: boolean = false;
@@ -119,7 +119,7 @@ export public class DispatchQueue<TListener extends Function> {
         this.shouldHalt = false;
     }
     
-    public getListOfListeners(): Array<~Object with {listener: TListener, listenerContext: Object, priority: int, insertionOrder: int, applyOnlyOnce: boolean}> {
+    public getListOfListeners(): ~Object with {listener: TListener, listenerContext: Object, priority: int, insertionOrder: int, applyOnlyOnce: boolean}[] {
         var oldListeners = this.listeners.slice();
         var oldLastIndex = this.lastIndex;
         var oldLastInsertionOrder = this.lastInsertionOrder;

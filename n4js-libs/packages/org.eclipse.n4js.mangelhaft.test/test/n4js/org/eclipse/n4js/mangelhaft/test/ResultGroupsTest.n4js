@@ -40,7 +40,7 @@ export public class ResultGroupsTest {
     @Before
     async setup() {
         let injector = N4Injector.of(TestSubject, this.parentInjector, new TestBinder());
-        let tests: Array<InstrumentedTest> = [];
+        let tests: InstrumentedTest[] = [];
         this.subject = injector.create(TestSubject);
         tests.push(new InstrumentedTest().load(MixedBag).setTestObject(new MixedBag()));
         this.resultGroups = await this.subject.executor.runTestsAsync(tests);

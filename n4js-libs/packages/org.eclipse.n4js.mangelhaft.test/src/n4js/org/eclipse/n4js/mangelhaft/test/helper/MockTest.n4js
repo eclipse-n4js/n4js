@@ -14,7 +14,7 @@ export public class MockTest  {
     public static afterAllCount = 0;
     public static afterCount = 0;
     public static testCount = 0;
-    public static called: Array<string> = [];
+    public static called: string[] = [];
     public static reset() {
         MockTest.beforeAllCount = MockTest.beforeCount = MockTest.afterAllCount = MockTest.afterCount = MockTest.testCount = 0;
         MockTest.called = []

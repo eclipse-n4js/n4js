@@ -35,16 +35,16 @@ export external public function exec(
 @Promisifiable
 export external public function execFile(
     file: string,
-    args: Array<string> =,
+    args: string[] =,
     options: Object=,
     callback: {function(err: any, stdout: Buffer, stderr: Buffer)}=): ChildProcess;
 
 export external public function execSync(command: string, options: Object=): union{Buffer, string};
-export external public function execFileSync(file: string, args: Array<string> =, options: Object=): union{Buffer, string};
+export external public function execFileSync(file: string, args: string[] =, options: Object=): union{Buffer, string};
 
-export external public function fork(modulePath: string, args: Array<string> =, options: Object=): ChildProcess;
-export external public function spawn(command: string, args: Array<string> =, options: Object=): ChildProcess;
-export external public function spawnSync(command: string, args: Array<string> =, options: Object=): ~Object with {
+export external public function fork(modulePath: string, args: string[] =, options: Object=): ChildProcess;
+export external public function spawn(command: string, args: string[] =, options: Object=): ChildProcess;
+export external public function spawnSync(command: string, args: string[] =, options: Object=): ~Object with {
     pid: int;
     output: Array<?>;
     stdout: union{Buffer, string};

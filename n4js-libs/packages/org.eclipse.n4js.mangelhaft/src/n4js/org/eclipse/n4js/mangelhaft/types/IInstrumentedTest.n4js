@@ -14,11 +14,11 @@ import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethod
 
 export public interface IInstrumentedTest {
     public name: string;
-    public tests: Array<TestMethodDescriptor>;
-    public beforeAlls: Array<TestMethodDescriptor>;
-    public afterAlls: Array<TestMethodDescriptor>;
-    public befores: Array<TestMethodDescriptor>;
-    public afters: Array<TestMethodDescriptor>;
+    public tests: TestMethodDescriptor[];
+    public beforeAlls: TestMethodDescriptor[];
+    public afterAlls: TestMethodDescriptor[];
+    public befores: TestMethodDescriptor[];
+    public afters: TestMethodDescriptor[];
     public testObject: N4Object;
     public fqn: string;
     public parent: IInstrumentedTest = null;
@@ -26,7 +26,7 @@ export public interface IInstrumentedTest {
     public error: any;
     public parameterizedName: string;
     public parameterizedTests: Array<? extends IInstrumentedTest>;
-    public filterTests(testNames: Array<string>);
+    public filterTests(testNames: string[]);
 
     public load(test: constructor{N4Object}, info: TestInfo=): this;
     public setTestObject(test: N4Object): this;
