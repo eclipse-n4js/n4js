@@ -10,6 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
 
-@Polyfill export external public class Function extends Function {
+@Polyfill @Final export external public class Function extends Function {
     public get name(): string;
 }
