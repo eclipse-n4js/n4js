@@ -76,3 +76,26 @@ let a41: [][][];
 
 // XPECT type of 'a42' --> Array<Array<Iterable2<string,number>>>
 let a42: [string,number][][];
+
+
+
+// XPECT type of 'a51' --> Array<Object+>
+let a51: Object+[];
+
+// XPECT type of 'a52' --> Array<~Object with {prop: string}>
+let a52: ~Object with {prop: string}[];
+
+// XPECT type of 'a53' --> Array<Iterable2<string,number>>
+let a53: Iterable2<string,number>[];
+
+// XPECT type of 'a54a' --> union{string,Array<number>}
+let a54a: union{string,number[]};
+
+// XPECT type of 'a54b' --> Array<union{string,number}>
+let a54b: union{string,number}[];
+
+// XPECT type of 'a54c' --> intersection{string,Array<number>}
+let a54c: intersection{string,number[]};
+
+// XPECT type of 'a54d' --> Array<intersection{string,number}>
+let a54d: intersection{string,number}[];

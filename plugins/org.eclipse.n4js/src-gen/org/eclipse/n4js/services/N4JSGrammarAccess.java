@@ -13594,7 +13594,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//UnionTypeExpressionOLD UnionTypeExpression:
 	//	{UnionTypeExpression}
-	//	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	//	'union' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 	public TypeExpressionsGrammarAccess.UnionTypeExpressionOLDElements getUnionTypeExpressionOLDAccess() {
 		return gaTypeExpressions.getUnionTypeExpressionOLDAccess();
 	}
@@ -13605,7 +13605,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//IntersectionTypeExpressionOLD IntersectionTypeExpression:
 	//	{IntersectionTypeExpression}
-	//	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	//	'intersection' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 	public TypeExpressionsGrammarAccess.IntersectionTypeExpressionOLDElements getIntersectionTypeExpressionOLDAccess() {
 		return gaTypeExpressions.getIntersectionTypeExpressionOLDAccess();
 	}

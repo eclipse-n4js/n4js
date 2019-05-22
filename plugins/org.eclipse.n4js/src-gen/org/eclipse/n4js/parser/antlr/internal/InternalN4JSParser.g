@@ -35060,9 +35060,9 @@ ruleUnionTypeExpressionOLD returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0());
+					newCompositeNode(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_3_0());
 				}
-				lv_typeRefs_3_0=ruleTypeRefWithoutModifiers
+				lv_typeRefs_3_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getUnionTypeExpressionOLDRule());
@@ -35071,7 +35071,7 @@ ruleUnionTypeExpressionOLD returns [EObject current=null]
 						$current,
 						"typeRefs",
 						lv_typeRefs_3_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithoutModifiers");
+						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -35084,9 +35084,9 @@ ruleUnionTypeExpressionOLD returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0());
+						newCompositeNode(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_4_1_0());
 					}
-					lv_typeRefs_5_0=ruleTypeRefWithoutModifiers
+					lv_typeRefs_5_0=ruleTypeRef
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getUnionTypeExpressionOLDRule());
@@ -35095,7 +35095,7 @@ ruleUnionTypeExpressionOLD returns [EObject current=null]
 							$current,
 							"typeRefs",
 							lv_typeRefs_5_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithoutModifiers");
+							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -35142,9 +35142,9 @@ ruleIntersectionTypeExpressionOLD returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0());
+					newCompositeNode(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_3_0());
 				}
-				lv_typeRefs_3_0=ruleTypeRefWithoutModifiers
+				lv_typeRefs_3_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getIntersectionTypeExpressionOLDRule());
@@ -35153,7 +35153,7 @@ ruleIntersectionTypeExpressionOLD returns [EObject current=null]
 						$current,
 						"typeRefs",
 						lv_typeRefs_3_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithoutModifiers");
+						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -35166,9 +35166,9 @@ ruleIntersectionTypeExpressionOLD returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0());
+						newCompositeNode(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_4_1_0());
 					}
-					lv_typeRefs_5_0=ruleTypeRefWithoutModifiers
+					lv_typeRefs_5_0=ruleTypeRef
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getIntersectionTypeExpressionOLDRule());
@@ -35177,7 +35177,7 @@ ruleIntersectionTypeExpressionOLD returns [EObject current=null]
 							$current,
 							"typeRefs",
 							lv_typeRefs_5_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithoutModifiers");
+							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
 				)

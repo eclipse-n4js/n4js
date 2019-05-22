@@ -19833,8 +19833,8 @@ ruleUnionTypeExpressionOLD
 	}
 	(
 		(
-			TypeRefsTypeRefWithoutModifiersParserRuleCall_3_0=ruleTypeRefWithoutModifiers{
-				announce($TypeRefsTypeRefWithoutModifiersParserRuleCall_3_0.start, $TypeRefsTypeRefWithoutModifiersParserRuleCall_3_0.stop, grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsAssignment_3());
+			TypeRefsTypeRefParserRuleCall_3_0=ruleTypeRef{
+				announce($TypeRefsTypeRefParserRuleCall_3_0.start, $TypeRefsTypeRefParserRuleCall_3_0.stop, grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsAssignment_3());
 			}
 		)
 	)
@@ -19845,8 +19845,8 @@ ruleUnionTypeExpressionOLD
 		}
 		(
 			(
-				TypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0=ruleTypeRefWithoutModifiers{
-					announce($TypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0.start, $TypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0.stop, grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsAssignment_4_1());
+				TypeRefsTypeRefParserRuleCall_4_1_0=ruleTypeRef{
+					announce($TypeRefsTypeRefParserRuleCall_4_1_0.start, $TypeRefsTypeRefParserRuleCall_4_1_0.stop, grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsAssignment_4_1());
 				}
 			)
 		)
@@ -19879,8 +19879,8 @@ ruleIntersectionTypeExpressionOLD
 	}
 	(
 		(
-			TypeRefsTypeRefWithoutModifiersParserRuleCall_3_0=ruleTypeRefWithoutModifiers{
-				announce($TypeRefsTypeRefWithoutModifiersParserRuleCall_3_0.start, $TypeRefsTypeRefWithoutModifiersParserRuleCall_3_0.stop, grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsAssignment_3());
+			TypeRefsTypeRefParserRuleCall_3_0=ruleTypeRef{
+				announce($TypeRefsTypeRefParserRuleCall_3_0.start, $TypeRefsTypeRefParserRuleCall_3_0.stop, grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsAssignment_3());
 			}
 		)
 	)
@@ -19891,8 +19891,8 @@ ruleIntersectionTypeExpressionOLD
 		}
 		(
 			(
-				TypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0=ruleTypeRefWithoutModifiers{
-					announce($TypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0.start, $TypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0.stop, grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsAssignment_4_1());
+				TypeRefsTypeRefParserRuleCall_4_1_0=ruleTypeRef{
+					announce($TypeRefsTypeRefParserRuleCall_4_1_0.start, $TypeRefsTypeRefParserRuleCall_4_1_0.stop, grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsAssignment_4_1());
 				}
 			)
 		)

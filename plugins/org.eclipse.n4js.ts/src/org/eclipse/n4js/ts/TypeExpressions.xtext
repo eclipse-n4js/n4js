@@ -136,11 +136,11 @@ fragment DefaultFormalParameter*:
 
 UnionTypeExpressionOLD returns UnionTypeExpression:
 	{UnionTypeExpression}
-	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	'union' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 
 IntersectionTypeExpressionOLD returns IntersectionTypeExpression:
 	{IntersectionTypeExpression}
-	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	'intersection' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 
 ParameterizedTypeRef returns ParameterizedTypeRef:
 	ParameterizedTypeRefNominal | ParameterizedTypeRefStructural;

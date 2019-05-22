@@ -545,7 +545,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpressionOLD returns IntersectionTypeExpression
 	 *
 	 * Constraint:
-	 *     (typeRefs+=TypeRefWithoutModifiers typeRefs+=TypeRefWithoutModifiers*)
+	 *     (typeRefs+=TypeRef typeRefs+=TypeRef*)
 	 */
 	protected void sequence_IntersectionTypeExpressionOLD(ISerializationContext context, IntersectionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -557,7 +557,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeRefWithModifiers returns IntersectionTypeExpression
 	 *
 	 * Constraint:
-	 *     (typeRefs+=TypeRefWithoutModifiers typeRefs+=TypeRefWithoutModifiers* followedByQuestionMark?='?'?)
+	 *     (typeRefs+=TypeRef typeRefs+=TypeRef* followedByQuestionMark?='?'?)
 	 */
 	protected void sequence_IntersectionTypeExpressionOLD_TypeRefWithModifiers(ISerializationContext context, IntersectionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -578,7 +578,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 	 *         (typeRefs+=IntersectionTypeExpression_IntersectionTypeExpression_1_0 typeRefs+=ArrayTypeExpression+) | 
-	 *         (typeRefs+=TypeRefWithoutModifiers typeRefs+=TypeRefWithoutModifiers* followedByQuestionMark?='?'?)
+	 *         (typeRefs+=TypeRef typeRefs+=TypeRef* followedByQuestionMark?='?'?)
 	 *     )
 	 */
 	protected void sequence_IntersectionTypeExpression_IntersectionTypeExpressionOLD_TypeRefWithModifiers(ISerializationContext context, IntersectionTypeExpression semanticObject) {
@@ -964,7 +964,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeRefWithModifiers returns UnionTypeExpression
 	 *
 	 * Constraint:
-	 *     (typeRefs+=TypeRefWithoutModifiers typeRefs+=TypeRefWithoutModifiers* followedByQuestionMark?='?'?)
+	 *     (typeRefs+=TypeRef typeRefs+=TypeRef* followedByQuestionMark?='?'?)
 	 */
 	protected void sequence_TypeRefWithModifiers_UnionTypeExpressionOLD(ISerializationContext context, UnionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -985,7 +985,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 	 *         (typeRefs+=TypeRef_UnionTypeExpression_1_0 typeRefs+=IntersectionTypeExpression+) | 
-	 *         (typeRefs+=TypeRefWithoutModifiers typeRefs+=TypeRefWithoutModifiers* followedByQuestionMark?='?'?)
+	 *         (typeRefs+=TypeRef typeRefs+=TypeRef* followedByQuestionMark?='?'?)
 	 *     )
 	 */
 	protected void sequence_TypeRef_TypeRefWithModifiers_UnionTypeExpressionOLD(ISerializationContext context, UnionTypeExpression semanticObject) {
@@ -1026,7 +1026,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     UnionTypeExpressionOLD returns UnionTypeExpression
 	 *
 	 * Constraint:
-	 *     (typeRefs+=TypeRefWithoutModifiers typeRefs+=TypeRefWithoutModifiers*)
+	 *     (typeRefs+=TypeRef typeRefs+=TypeRef*)
 	 */
 	protected void sequence_UnionTypeExpressionOLD(ISerializationContext context, UnionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

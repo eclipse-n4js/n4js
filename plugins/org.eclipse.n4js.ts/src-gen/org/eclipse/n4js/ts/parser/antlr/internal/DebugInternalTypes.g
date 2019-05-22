@@ -842,10 +842,10 @@ ruleDefaultFormalParameter:
 ruleUnionTypeExpressionOLD:
 	'union'
 	'{'
-	ruleTypeRefWithoutModifiers
+	ruleTypeRef
 	(
 		','
-		ruleTypeRefWithoutModifiers
+		ruleTypeRef
 	)*
 	'}'
 ;
@@ -854,10 +854,10 @@ ruleUnionTypeExpressionOLD:
 ruleIntersectionTypeExpressionOLD:
 	'intersection'
 	'{'
-	ruleTypeRefWithoutModifiers
+	ruleTypeRef
 	(
 		','
-		ruleTypeRefWithoutModifiers
+		ruleTypeRef
 	)*
 	'}'
 ;

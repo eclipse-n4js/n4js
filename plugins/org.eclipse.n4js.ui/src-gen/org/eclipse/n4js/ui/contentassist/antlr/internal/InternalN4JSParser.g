@@ -84563,9 +84563,9 @@ rule__UnionTypeExpressionOLD__TypeRefsAssignment_3
 	}
 :
 	(
-		{ before(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0()); }
-		ruleTypeRefWithoutModifiers
-		{ after(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0()); }
+		{ before(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_3_0()); }
+		ruleTypeRef
+		{ after(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_3_0()); }
 	)
 ;
 finally {
@@ -84578,9 +84578,9 @@ rule__UnionTypeExpressionOLD__TypeRefsAssignment_4_1
 	}
 :
 	(
-		{ before(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0()); }
-		ruleTypeRefWithoutModifiers
-		{ after(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0()); }
+		{ before(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_4_1_0()); }
+		ruleTypeRef
+		{ after(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_4_1_0()); }
 	)
 ;
 finally {
@@ -84593,9 +84593,9 @@ rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_3
 	}
 :
 	(
-		{ before(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0()); }
-		ruleTypeRefWithoutModifiers
-		{ after(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0()); }
+		{ before(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_3_0()); }
+		ruleTypeRef
+		{ after(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_3_0()); }
 	)
 ;
 finally {
@@ -84608,9 +84608,9 @@ rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_4_1
 	}
 :
 	(
-		{ before(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0()); }
-		ruleTypeRefWithoutModifiers
-		{ after(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0()); }
+		{ before(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_4_1_0()); }
+		ruleTypeRef
+		{ after(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_4_1_0()); }
 	)
 ;
 finally {

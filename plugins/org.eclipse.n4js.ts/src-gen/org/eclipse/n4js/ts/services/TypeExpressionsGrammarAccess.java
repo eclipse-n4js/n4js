@@ -757,19 +757,19 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cUnionKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Assignment cTypeRefsAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0 = (RuleCall)cTypeRefsAssignment_3.eContents().get(0);
+		private final RuleCall cTypeRefsTypeRefParserRuleCall_3_0 = (RuleCall)cTypeRefsAssignment_3.eContents().get(0);
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
 		private final Keyword cCommaKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
 		private final Assignment cTypeRefsAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0 = (RuleCall)cTypeRefsAssignment_4_1.eContents().get(0);
+		private final RuleCall cTypeRefsTypeRefParserRuleCall_4_1_0 = (RuleCall)cTypeRefsAssignment_4_1.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		
 		//UnionTypeExpressionOLD UnionTypeExpression:
 		//	{UnionTypeExpression}
-		//	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+		//	'union' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{UnionTypeExpression} 'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}'
+		//{UnionTypeExpression} 'union' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//{UnionTypeExpression}
@@ -781,23 +781,23 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
 		
-		//typeRefs+=TypeRefWithoutModifiers
+		//typeRefs+=TypeRef
 		public Assignment getTypeRefsAssignment_3() { return cTypeRefsAssignment_3; }
 		
-		//TypeRefWithoutModifiers
-		public RuleCall getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0() { return cTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0; }
+		//TypeRef
+		public RuleCall getTypeRefsTypeRefParserRuleCall_3_0() { return cTypeRefsTypeRefParserRuleCall_3_0; }
 		
-		//(',' typeRefs+=TypeRefWithoutModifiers)*
+		//(',' typeRefs+=TypeRef)*
 		public Group getGroup_4() { return cGroup_4; }
 		
 		//','
 		public Keyword getCommaKeyword_4_0() { return cCommaKeyword_4_0; }
 		
-		//typeRefs+=TypeRefWithoutModifiers
+		//typeRefs+=TypeRef
 		public Assignment getTypeRefsAssignment_4_1() { return cTypeRefsAssignment_4_1; }
 		
-		//TypeRefWithoutModifiers
-		public RuleCall getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0() { return cTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0; }
+		//TypeRef
+		public RuleCall getTypeRefsTypeRefParserRuleCall_4_1_0() { return cTypeRefsTypeRefParserRuleCall_4_1_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_5() { return cRightCurlyBracketKeyword_5; }
@@ -809,20 +809,19 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cIntersectionKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Assignment cTypeRefsAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0 = (RuleCall)cTypeRefsAssignment_3.eContents().get(0);
+		private final RuleCall cTypeRefsTypeRefParserRuleCall_3_0 = (RuleCall)cTypeRefsAssignment_3.eContents().get(0);
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
 		private final Keyword cCommaKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
 		private final Assignment cTypeRefsAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0 = (RuleCall)cTypeRefsAssignment_4_1.eContents().get(0);
+		private final RuleCall cTypeRefsTypeRefParserRuleCall_4_1_0 = (RuleCall)cTypeRefsAssignment_4_1.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		
 		//IntersectionTypeExpressionOLD IntersectionTypeExpression:
 		//	{IntersectionTypeExpression}
-		//	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+		//	'intersection' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{IntersectionTypeExpression} 'intersection' '{' typeRefs+=TypeRefWithoutModifiers (','
-		//typeRefs+=TypeRefWithoutModifiers)* '}'
+		//{IntersectionTypeExpression} 'intersection' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//{IntersectionTypeExpression}
@@ -834,23 +833,23 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
 		
-		//typeRefs+=TypeRefWithoutModifiers
+		//typeRefs+=TypeRef
 		public Assignment getTypeRefsAssignment_3() { return cTypeRefsAssignment_3; }
 		
-		//TypeRefWithoutModifiers
-		public RuleCall getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0() { return cTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0; }
+		//TypeRef
+		public RuleCall getTypeRefsTypeRefParserRuleCall_3_0() { return cTypeRefsTypeRefParserRuleCall_3_0; }
 		
-		//(',' typeRefs+=TypeRefWithoutModifiers)*
+		//(',' typeRefs+=TypeRef)*
 		public Group getGroup_4() { return cGroup_4; }
 		
 		//','
 		public Keyword getCommaKeyword_4_0() { return cCommaKeyword_4_0; }
 		
-		//typeRefs+=TypeRefWithoutModifiers
+		//typeRefs+=TypeRef
 		public Assignment getTypeRefsAssignment_4_1() { return cTypeRefsAssignment_4_1; }
 		
-		//TypeRefWithoutModifiers
-		public RuleCall getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0() { return cTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0; }
+		//TypeRef
+		public RuleCall getTypeRefsTypeRefParserRuleCall_4_1_0() { return cTypeRefsTypeRefParserRuleCall_4_1_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_5() { return cRightCurlyBracketKeyword_5; }
@@ -2604,7 +2603,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//UnionTypeExpressionOLD UnionTypeExpression:
 	//	{UnionTypeExpression}
-	//	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	//	'union' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 	public UnionTypeExpressionOLDElements getUnionTypeExpressionOLDAccess() {
 		return pUnionTypeExpressionOLD;
 	}
@@ -2615,7 +2614,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//IntersectionTypeExpressionOLD IntersectionTypeExpression:
 	//	{IntersectionTypeExpression}
-	//	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	//	'intersection' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 	public IntersectionTypeExpressionOLDElements getIntersectionTypeExpressionOLDAccess() {
 		return pIntersectionTypeExpressionOLD;
 	}

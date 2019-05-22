@@ -2821,7 +2821,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//UnionTypeExpressionOLD UnionTypeExpression:
 	//	{UnionTypeExpression}
-	//	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	//	'union' '{' typeRefs+=super::TypeRef (',' typeRefs+=super::TypeRef)* '}';
 	public TypeExpressionsGrammarAccess.UnionTypeExpressionOLDElements getUnionTypeExpressionOLDAccess() {
 		return gaTypeExpressions.getUnionTypeExpressionOLDAccess();
 	}
@@ -2832,7 +2832,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//IntersectionTypeExpressionOLD IntersectionTypeExpression:
 	//	{IntersectionTypeExpression}
-	//	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	//	'intersection' '{' typeRefs+=super::TypeRef (',' typeRefs+=super::TypeRef)* '}';
 	public TypeExpressionsGrammarAccess.IntersectionTypeExpressionOLDElements getIntersectionTypeExpressionOLDAccess() {
 		return gaTypeExpressions.getIntersectionTypeExpressionOLDAccess();
 	}

@@ -51472,28 +51472,28 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__UnionTypeExpressionOLD__TypeRefsAssignment_3"
-    // InternalTypesParser.g:15615:1: rule__UnionTypeExpressionOLD__TypeRefsAssignment_3 : ( ruleTypeRefWithoutModifiers ) ;
+    // InternalTypesParser.g:15615:1: rule__UnionTypeExpressionOLD__TypeRefsAssignment_3 : ( ruleTypeRef ) ;
     public final void rule__UnionTypeExpressionOLD__TypeRefsAssignment_3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalTypesParser.g:15619:1: ( ( ruleTypeRefWithoutModifiers ) )
-            // InternalTypesParser.g:15620:2: ( ruleTypeRefWithoutModifiers )
+            // InternalTypesParser.g:15619:1: ( ( ruleTypeRef ) )
+            // InternalTypesParser.g:15620:2: ( ruleTypeRef )
             {
-            // InternalTypesParser.g:15620:2: ( ruleTypeRefWithoutModifiers )
-            // InternalTypesParser.g:15621:3: ruleTypeRefWithoutModifiers
+            // InternalTypesParser.g:15620:2: ( ruleTypeRef )
+            // InternalTypesParser.g:15621:3: ruleTypeRef
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0()); 
+               before(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_3_0()); 
             }
             pushFollow(FOLLOW_2);
-            ruleTypeRefWithoutModifiers();
+            ruleTypeRef();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0()); 
+               after(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_3_0()); 
             }
 
             }
@@ -51517,28 +51517,28 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__UnionTypeExpressionOLD__TypeRefsAssignment_4_1"
-    // InternalTypesParser.g:15630:1: rule__UnionTypeExpressionOLD__TypeRefsAssignment_4_1 : ( ruleTypeRefWithoutModifiers ) ;
+    // InternalTypesParser.g:15630:1: rule__UnionTypeExpressionOLD__TypeRefsAssignment_4_1 : ( ruleTypeRef ) ;
     public final void rule__UnionTypeExpressionOLD__TypeRefsAssignment_4_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalTypesParser.g:15634:1: ( ( ruleTypeRefWithoutModifiers ) )
-            // InternalTypesParser.g:15635:2: ( ruleTypeRefWithoutModifiers )
+            // InternalTypesParser.g:15634:1: ( ( ruleTypeRef ) )
+            // InternalTypesParser.g:15635:2: ( ruleTypeRef )
             {
-            // InternalTypesParser.g:15635:2: ( ruleTypeRefWithoutModifiers )
-            // InternalTypesParser.g:15636:3: ruleTypeRefWithoutModifiers
+            // InternalTypesParser.g:15635:2: ( ruleTypeRef )
+            // InternalTypesParser.g:15636:3: ruleTypeRef
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0()); 
+               before(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_4_1_0()); 
             }
             pushFollow(FOLLOW_2);
-            ruleTypeRefWithoutModifiers();
+            ruleTypeRef();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0()); 
+               after(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_4_1_0()); 
             }
 
             }
@@ -51562,28 +51562,28 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_3"
-    // InternalTypesParser.g:15645:1: rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_3 : ( ruleTypeRefWithoutModifiers ) ;
+    // InternalTypesParser.g:15645:1: rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_3 : ( ruleTypeRef ) ;
     public final void rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalTypesParser.g:15649:1: ( ( ruleTypeRefWithoutModifiers ) )
-            // InternalTypesParser.g:15650:2: ( ruleTypeRefWithoutModifiers )
+            // InternalTypesParser.g:15649:1: ( ( ruleTypeRef ) )
+            // InternalTypesParser.g:15650:2: ( ruleTypeRef )
             {
-            // InternalTypesParser.g:15650:2: ( ruleTypeRefWithoutModifiers )
-            // InternalTypesParser.g:15651:3: ruleTypeRefWithoutModifiers
+            // InternalTypesParser.g:15650:2: ( ruleTypeRef )
+            // InternalTypesParser.g:15651:3: ruleTypeRef
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0()); 
+               before(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_3_0()); 
             }
             pushFollow(FOLLOW_2);
-            ruleTypeRefWithoutModifiers();
+            ruleTypeRef();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0()); 
+               after(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_3_0()); 
             }
 
             }
@@ -51607,28 +51607,28 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_4_1"
-    // InternalTypesParser.g:15660:1: rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_4_1 : ( ruleTypeRefWithoutModifiers ) ;
+    // InternalTypesParser.g:15660:1: rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_4_1 : ( ruleTypeRef ) ;
     public final void rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_4_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalTypesParser.g:15664:1: ( ( ruleTypeRefWithoutModifiers ) )
-            // InternalTypesParser.g:15665:2: ( ruleTypeRefWithoutModifiers )
+            // InternalTypesParser.g:15664:1: ( ( ruleTypeRef ) )
+            // InternalTypesParser.g:15665:2: ( ruleTypeRef )
             {
-            // InternalTypesParser.g:15665:2: ( ruleTypeRefWithoutModifiers )
-            // InternalTypesParser.g:15666:3: ruleTypeRefWithoutModifiers
+            // InternalTypesParser.g:15665:2: ( ruleTypeRef )
+            // InternalTypesParser.g:15666:3: ruleTypeRef
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0()); 
+               before(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_4_1_0()); 
             }
             pushFollow(FOLLOW_2);
-            ruleTypeRefWithoutModifiers();
+            ruleTypeRef();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0()); 
+               after(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsTypeRefParserRuleCall_4_1_0()); 
             }
 
             }
