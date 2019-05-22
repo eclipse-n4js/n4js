@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
-// Test needs to be run in project configured as ProjectType: runtimeEnvironment (i.e. need package.json in this or parent folder)
+// Test needs to be run in project configured as ProjectType: runtimeLibrary (i.e. need package.json in this or parent folder)
 
 @@ProvidedByRuntime
 @@Global
@@ -24,7 +24,10 @@ export external public class Object extends Object {
 	observe();
 }
 
-// XPECT errors --> "Inheritance cycle detected: String, String." at "String"
+// XPECT errors ---
+// "Inheritance cycle detected: String, String." at "String"
+// "Globally defined element named String must be defined in runtime environment." at "external public class String extends String { observe(); }"
+// ---
 export external public class String extends String {
 	observe();
 }
