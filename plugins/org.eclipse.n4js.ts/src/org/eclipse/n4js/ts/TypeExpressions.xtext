@@ -48,7 +48,9 @@ IntersectionTypeExpression returns TypeRef:
 	ArrayTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=ArrayTypeExpression)+)?;
 
 ArrayTypeExpression returns TypeRef:
-	PrimaryTypeExpression =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*;
+	  ({ParameterizedTypeRef} typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*)
+	| ({ParameterizedTypeRef} '(' typeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*)
+	| PrimaryTypeExpression =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*;
 
 PrimaryTypeExpression returns TypeRef:
 	( ArrowFunctionTypeExpression
@@ -77,7 +79,7 @@ TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
 TypeArgInTypeTypeRef returns TypeArgument:
 	  ParameterizedTypeRefNominal
 	| ThisTypeRefNominal
-	| Wildcard;
+	| WildcardOldNotation;
 
 
 ThisTypeRef returns ThisTypeRef:
@@ -262,11 +264,18 @@ TypeReferenceName:
 	IDENTIFIER ('.' IDENTIFIER)*;
 
 TypeArgument returns TypeArgument:
-	Wildcard | WildcardNewNotation | TypeRef;
+	Wildcard | TypeRef;
 
-Wildcard returns Wildcard:
+Wildcard:
+	WildcardOldNotation
+|	WildcardNewNotation;
+
+WildcardOldNotation returns Wildcard:
 	=> ({Wildcard} '?') (('extends' declaredUpperBound=TypeRef) | ('super'
 	declaredLowerBound=TypeRef))?;
+
+WildcardOldNotationWithoutBound returns Wildcard:
+	{Wildcard} '?';
 
 WildcardNewNotation returns Wildcard:
 	(usingInOutNotation?='out' declaredUpperBound=TypeRef)

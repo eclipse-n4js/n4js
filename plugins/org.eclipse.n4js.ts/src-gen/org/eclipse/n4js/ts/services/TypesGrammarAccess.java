@@ -2641,7 +2641,11 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ArrayTypeExpression TypeRef:
-	//	PrimaryTypeExpression => ({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*;
+	//	{ParameterizedTypeRef} typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>
+	//	({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')* | {ParameterizedTypeRef} '('
+	//	typeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' => ({ParameterizedTypeRef.typeArgs+=current}
+	//	arrayTypeExpression?='[' ']')* | PrimaryTypeExpression => ({ParameterizedTypeRef.typeArgs+=current}
+	//	arrayTypeExpression?='[' ']')*;
 	public TypeExpressionsGrammarAccess.ArrayTypeExpressionElements getArrayTypeExpressionAccess() {
 		return gaTypeExpressions.getArrayTypeExpressionAccess();
 	}
@@ -2703,7 +2707,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//TypeArgInTypeTypeRef TypeArgument:
 	//	ParameterizedTypeRefNominal
 	//	| ThisTypeRefNominal
-	//	| Wildcard;
+	//	| WildcardOldNotation;
 	public TypeExpressionsGrammarAccess.TypeArgInTypeTypeRefElements getTypeArgInTypeTypeRefAccess() {
 		return gaTypeExpressions.getTypeArgInTypeTypeRefAccess();
 	}
@@ -3079,7 +3083,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TypeArgument:
-	//	Wildcard | WildcardNewNotation | super::TypeRef;
+	//	Wildcard | super::TypeRef;
 	public TypeExpressionsGrammarAccess.TypeArgumentElements getTypeArgumentAccess() {
 		return gaTypeExpressions.getTypeArgumentAccess();
 	}
@@ -3089,14 +3093,35 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Wildcard:
-	//	=> ({Wildcard} '?') ('extends' declaredUpperBound=super::TypeRef | 'super'
-	//	declaredLowerBound=super::TypeRef)?;
+	//	WildcardOldNotation
+	//	| WildcardNewNotation;
 	public TypeExpressionsGrammarAccess.WildcardElements getWildcardAccess() {
 		return gaTypeExpressions.getWildcardAccess();
 	}
 	
 	public ParserRule getWildcardRule() {
 		return getWildcardAccess().getRule();
+	}
+	
+	//WildcardOldNotation Wildcard:
+	//	=> ({Wildcard} '?') ('extends' declaredUpperBound=super::TypeRef | 'super'
+	//	declaredLowerBound=super::TypeRef)?;
+	public TypeExpressionsGrammarAccess.WildcardOldNotationElements getWildcardOldNotationAccess() {
+		return gaTypeExpressions.getWildcardOldNotationAccess();
+	}
+	
+	public ParserRule getWildcardOldNotationRule() {
+		return getWildcardOldNotationAccess().getRule();
+	}
+	
+	//WildcardOldNotationWithoutBound Wildcard:
+	//	{Wildcard} '?';
+	public TypeExpressionsGrammarAccess.WildcardOldNotationWithoutBoundElements getWildcardOldNotationWithoutBoundAccess() {
+		return gaTypeExpressions.getWildcardOldNotationWithoutBoundAccess();
+	}
+	
+	public ParserRule getWildcardOldNotationWithoutBoundRule() {
+		return getWildcardOldNotationWithoutBoundAccess().getRule();
 	}
 	
 	//WildcardNewNotation Wildcard:

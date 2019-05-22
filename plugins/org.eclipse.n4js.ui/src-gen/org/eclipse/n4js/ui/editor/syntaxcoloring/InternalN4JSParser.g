@@ -19273,32 +19273,136 @@ ruleArrayTypeExpression
 @init {
 }:
 (
-	PrimaryTypeExpressionParserRuleCall_0=rulePrimaryTypeExpression{ announce($PrimaryTypeExpressionParserRuleCall_0.start, $PrimaryTypeExpressionParserRuleCall_0.stop, grammarAccess.getArrayTypeExpressionAccess().getPrimaryTypeExpressionParserRuleCall_0()); }
 	(
-		((
-			(
-				(
-					LeftSquareBracket
-				)
-			)
-			RightSquareBracket
-		)
-		)=>
 		(
 			(
-				(
-					ArrayTypeExpressionLeftSquareBracketKeyword_1_0_1_0=LeftSquareBracket
-					 {
-						announce($ArrayTypeExpressionLeftSquareBracketKeyword_1_0_1_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_1_0_1_0());
-					}
-				)
+				TypeArgsWildcardOldNotationWithoutBoundParserRuleCall_0_1_0=ruleWildcardOldNotationWithoutBound{
+					announce($TypeArgsWildcardOldNotationWithoutBoundParserRuleCall_0_1_0.start, $TypeArgsWildcardOldNotationWithoutBoundParserRuleCall_0_1_0.stop, grammarAccess.getArrayTypeExpressionAccess().getTypeArgsAssignment_0_1());
+				}
 			)
-			RightSquareBracketKeyword_1_0_2=RightSquareBracket
-			 {
-				announce($RightSquareBracketKeyword_1_0_2, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_1_0_2());
-			}
 		)
-	)*
+		(
+			(
+				ArrayTypeExpressionLeftSquareBracketKeyword_0_2_0=LeftSquareBracket
+				 {
+					announce($ArrayTypeExpressionLeftSquareBracketKeyword_0_2_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_0_2_0());
+				}
+			)
+		)
+		RightSquareBracketKeyword_0_3=RightSquareBracket
+		 {
+			announce($RightSquareBracketKeyword_0_3, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_0_3());
+		}
+		(
+			((
+				(
+					(
+						LeftSquareBracket
+					)
+				)
+				RightSquareBracket
+			)
+			)=>
+			(
+				(
+					(
+						ArrayTypeExpressionLeftSquareBracketKeyword_0_4_0_1_0=LeftSquareBracket
+						 {
+							announce($ArrayTypeExpressionLeftSquareBracketKeyword_0_4_0_1_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_0_4_0_1_0());
+						}
+					)
+				)
+				RightSquareBracketKeyword_0_4_0_2=RightSquareBracket
+				 {
+					announce($RightSquareBracketKeyword_0_4_0_2, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_0_4_0_2());
+				}
+			)
+		)*
+	)
+	    |
+	(
+		LeftParenthesisKeyword_1_1=LeftParenthesis
+		 {
+			announce($LeftParenthesisKeyword_1_1, grammarAccess.getArrayTypeExpressionAccess().getLeftParenthesisKeyword_1_1());
+		}
+		(
+			(
+				TypeArgsWildcardParserRuleCall_1_2_0=ruleWildcard{
+					announce($TypeArgsWildcardParserRuleCall_1_2_0.start, $TypeArgsWildcardParserRuleCall_1_2_0.stop, grammarAccess.getArrayTypeExpressionAccess().getTypeArgsAssignment_1_2());
+				}
+			)
+		)
+		RightParenthesisKeyword_1_3=RightParenthesis
+		 {
+			announce($RightParenthesisKeyword_1_3, grammarAccess.getArrayTypeExpressionAccess().getRightParenthesisKeyword_1_3());
+		}
+		(
+			(
+				ArrayTypeExpressionLeftSquareBracketKeyword_1_4_0=LeftSquareBracket
+				 {
+					announce($ArrayTypeExpressionLeftSquareBracketKeyword_1_4_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_1_4_0());
+				}
+			)
+		)
+		RightSquareBracketKeyword_1_5=RightSquareBracket
+		 {
+			announce($RightSquareBracketKeyword_1_5, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_1_5());
+		}
+		(
+			((
+				(
+					(
+						LeftSquareBracket
+					)
+				)
+				RightSquareBracket
+			)
+			)=>
+			(
+				(
+					(
+						ArrayTypeExpressionLeftSquareBracketKeyword_1_6_0_1_0=LeftSquareBracket
+						 {
+							announce($ArrayTypeExpressionLeftSquareBracketKeyword_1_6_0_1_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_1_6_0_1_0());
+						}
+					)
+				)
+				RightSquareBracketKeyword_1_6_0_2=RightSquareBracket
+				 {
+					announce($RightSquareBracketKeyword_1_6_0_2, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_1_6_0_2());
+				}
+			)
+		)*
+	)
+	    |
+	(
+		PrimaryTypeExpressionParserRuleCall_2_0=rulePrimaryTypeExpression{ announce($PrimaryTypeExpressionParserRuleCall_2_0.start, $PrimaryTypeExpressionParserRuleCall_2_0.stop, grammarAccess.getArrayTypeExpressionAccess().getPrimaryTypeExpressionParserRuleCall_2_0()); }
+		(
+			((
+				(
+					(
+						LeftSquareBracket
+					)
+				)
+				RightSquareBracket
+			)
+			)=>
+			(
+				(
+					(
+						ArrayTypeExpressionLeftSquareBracketKeyword_2_1_0_1_0=LeftSquareBracket
+						 {
+							announce($ArrayTypeExpressionLeftSquareBracketKeyword_2_1_0_1_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_2_1_0_1_0());
+						}
+					)
+				)
+				RightSquareBracketKeyword_2_1_0_2=RightSquareBracket
+				 {
+					announce($RightSquareBracketKeyword_2_1_0_2, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_2_1_0_2());
+				}
+			)
+		)*
+	)
 )
 ;
 
@@ -19453,7 +19557,7 @@ ruleTypeArgInTypeTypeRef
 			QuestionMark
 		)
 		)=>
-		WildcardParserRuleCall_2=ruleWildcard{ announce($WildcardParserRuleCall_2.start, $WildcardParserRuleCall_2.stop, grammarAccess.getTypeArgInTypeTypeRefAccess().getWildcardParserRuleCall_2()); }
+		WildcardOldNotationParserRuleCall_2=ruleWildcardOldNotation{ announce($WildcardOldNotationParserRuleCall_2.start, $WildcardOldNotationParserRuleCall_2.stop, grammarAccess.getTypeArgInTypeTypeRefAccess().getWildcardOldNotationParserRuleCall_2()); }
 	)
 )
 ;
@@ -20576,17 +20680,9 @@ ruleTypeArgument
 @init {
 }:
 (
-	(
-		((
-			QuestionMark
-		)
-		)=>
-		WildcardParserRuleCall_0=ruleWildcard{ announce($WildcardParserRuleCall_0.start, $WildcardParserRuleCall_0.stop, grammarAccess.getTypeArgumentAccess().getWildcardParserRuleCall_0()); }
-	)
+	WildcardParserRuleCall_0=ruleWildcard{ announce($WildcardParserRuleCall_0.start, $WildcardParserRuleCall_0.stop, grammarAccess.getTypeArgumentAccess().getWildcardParserRuleCall_0()); }
 	    |
-	WildcardNewNotationParserRuleCall_1=ruleWildcardNewNotation{ announce($WildcardNewNotationParserRuleCall_1.start, $WildcardNewNotationParserRuleCall_1.stop, grammarAccess.getTypeArgumentAccess().getWildcardNewNotationParserRuleCall_1()); }
-	    |
-	TypeRefParserRuleCall_2=ruleTypeRef{ announce($TypeRefParserRuleCall_2.start, $TypeRefParserRuleCall_2.stop, grammarAccess.getTypeArgumentAccess().getTypeRefParserRuleCall_2()); }
+	TypeRefParserRuleCall_1=ruleTypeRef{ announce($TypeRefParserRuleCall_1.start, $TypeRefParserRuleCall_1.stop, grammarAccess.getTypeArgumentAccess().getTypeRefParserRuleCall_1()); }
 )
 ;
 
@@ -20606,10 +20702,33 @@ ruleWildcard
 			QuestionMark
 		)
 		)=>
+		WildcardOldNotationParserRuleCall_0=ruleWildcardOldNotation{ announce($WildcardOldNotationParserRuleCall_0.start, $WildcardOldNotationParserRuleCall_0.stop, grammarAccess.getWildcardAccess().getWildcardOldNotationParserRuleCall_0()); }
+	)
+	    |
+	WildcardNewNotationParserRuleCall_1=ruleWildcardNewNotation{ announce($WildcardNewNotationParserRuleCall_1.start, $WildcardNewNotationParserRuleCall_1.stop, grammarAccess.getWildcardAccess().getWildcardNewNotationParserRuleCall_1()); }
+)
+;
+
+// Entry rule entryRuleWildcardOldNotation
+entryRuleWildcardOldNotation
+	:
+	ruleWildcardOldNotation
+	EOF;
+
+// Rule WildcardOldNotation
+ruleWildcardOldNotation
+@init {
+}:
+(
+	(
+		((
+			QuestionMark
+		)
+		)=>
 		(
 			QuestionMarkKeyword_0_0_1=QuestionMark
 			 {
-				announce($QuestionMarkKeyword_0_0_1, grammarAccess.getWildcardAccess().getQuestionMarkKeyword_0_0_1());
+				announce($QuestionMarkKeyword_0_0_1, grammarAccess.getWildcardOldNotationAccess().getQuestionMarkKeyword_0_0_1());
 			}
 		)
 	)
@@ -20617,12 +20736,12 @@ ruleWildcard
 		(
 			ExtendsKeyword_1_0_0=Extends
 			 {
-				announce($ExtendsKeyword_1_0_0, grammarAccess.getWildcardAccess().getExtendsKeyword_1_0_0());
+				announce($ExtendsKeyword_1_0_0, grammarAccess.getWildcardOldNotationAccess().getExtendsKeyword_1_0_0());
 			}
 			(
 				(
 					DeclaredUpperBoundTypeRefParserRuleCall_1_0_1_0=ruleTypeRef{
-						announce($DeclaredUpperBoundTypeRefParserRuleCall_1_0_1_0.start, $DeclaredUpperBoundTypeRefParserRuleCall_1_0_1_0.stop, grammarAccess.getWildcardAccess().getDeclaredUpperBoundAssignment_1_0_1());
+						announce($DeclaredUpperBoundTypeRefParserRuleCall_1_0_1_0.start, $DeclaredUpperBoundTypeRefParserRuleCall_1_0_1_0.stop, grammarAccess.getWildcardOldNotationAccess().getDeclaredUpperBoundAssignment_1_0_1());
 					}
 				)
 			)
@@ -20631,17 +20750,35 @@ ruleWildcard
 		(
 			SuperKeyword_1_1_0=Super
 			 {
-				announce($SuperKeyword_1_1_0, grammarAccess.getWildcardAccess().getSuperKeyword_1_1_0());
+				announce($SuperKeyword_1_1_0, grammarAccess.getWildcardOldNotationAccess().getSuperKeyword_1_1_0());
 			}
 			(
 				(
 					DeclaredLowerBoundTypeRefParserRuleCall_1_1_1_0=ruleTypeRef{
-						announce($DeclaredLowerBoundTypeRefParserRuleCall_1_1_1_0.start, $DeclaredLowerBoundTypeRefParserRuleCall_1_1_1_0.stop, grammarAccess.getWildcardAccess().getDeclaredLowerBoundAssignment_1_1_1());
+						announce($DeclaredLowerBoundTypeRefParserRuleCall_1_1_1_0.start, $DeclaredLowerBoundTypeRefParserRuleCall_1_1_1_0.stop, grammarAccess.getWildcardOldNotationAccess().getDeclaredLowerBoundAssignment_1_1_1());
 					}
 				)
 			)
 		)
 	)?
+)
+;
+
+// Entry rule entryRuleWildcardOldNotationWithoutBound
+entryRuleWildcardOldNotationWithoutBound
+	:
+	ruleWildcardOldNotationWithoutBound
+	EOF;
+
+// Rule WildcardOldNotationWithoutBound
+ruleWildcardOldNotationWithoutBound
+@init {
+}:
+(
+	QuestionMarkKeyword_1=QuestionMark
+	 {
+		announce($QuestionMarkKeyword_1, grammarAccess.getWildcardOldNotationWithoutBoundAccess().getQuestionMarkKeyword_1());
+	}
 )
 ;
 

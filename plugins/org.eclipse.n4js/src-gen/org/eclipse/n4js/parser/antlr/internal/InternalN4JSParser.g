@@ -33962,54 +33962,238 @@ ruleArrayTypeExpression returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		{
-			newCompositeNode(grammarAccess.getArrayTypeExpressionAccess().getPrimaryTypeExpressionParserRuleCall_0());
-		}
-		this_PrimaryTypeExpression_0=rulePrimaryTypeExpression
-		{
-			$current = $this_PrimaryTypeExpression_0.current;
-			afterParserOrEnumRuleCall();
-		}
 		(
-			((
-				(
-				)
-				(
-					(
-						LeftSquareBracket
-					)
-				)
-				RightSquareBracket
+			(
+				{
+					$current = forceCreateModelElement(
+						grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefAction_0_0(),
+						$current);
+				}
 			)
-			)=>
 			(
 				(
 					{
-						$current = forceCreateModelElementAndAdd(
-							grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_1_0_0(),
-							$current);
+						newCompositeNode(grammarAccess.getArrayTypeExpressionAccess().getTypeArgsWildcardOldNotationWithoutBoundParserRuleCall_0_1_0());
+					}
+					lv_typeArgs_1_0=ruleWildcardOldNotationWithoutBound
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getArrayTypeExpressionRule());
+						}
+						add(
+							$current,
+							"typeArgs",
+							lv_typeArgs_1_0,
+							"org.eclipse.n4js.ts.TypeExpressions.WildcardOldNotationWithoutBound");
+						afterParserOrEnumRuleCall();
 					}
 				)
+			)
+			(
+				(
+					lv_arrayTypeExpression_2_0=LeftSquareBracket
+					{
+						newLeafNode(lv_arrayTypeExpression_2_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_0_2_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
+						}
+						setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+					}
+				)
+			)
+			otherlv_3=RightSquareBracket
+			{
+				newLeafNode(otherlv_3, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_0_3());
+			}
+			(
+				((
+					(
+					)
+					(
+						(
+							LeftSquareBracket
+						)
+					)
+					RightSquareBracket
+				)
+				)=>
 				(
 					(
-						lv_arrayTypeExpression_2_0=LeftSquareBracket
 						{
-							newLeafNode(lv_arrayTypeExpression_2_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_1_0_1_0());
-						}
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
-							}
-							setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+							$current = forceCreateModelElementAndAdd(
+								grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_0_4_0_0(),
+								$current);
 						}
 					)
+					(
+						(
+							lv_arrayTypeExpression_5_0=LeftSquareBracket
+							{
+								newLeafNode(lv_arrayTypeExpression_5_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_0_4_0_1_0());
+							}
+							{
+								if ($current==null) {
+									$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
+								}
+								setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+							}
+						)
+					)
+					otherlv_6=RightSquareBracket
+					{
+						newLeafNode(otherlv_6, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_0_4_0_2());
+					}
 				)
-				otherlv_3=RightSquareBracket
+			)*
+		)
+		    |
+		(
+			(
 				{
-					newLeafNode(otherlv_3, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_1_0_2());
+					$current = forceCreateModelElement(
+						grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefAction_1_0(),
+						$current);
 				}
 			)
-		)*
+			otherlv_8=LeftParenthesis
+			{
+				newLeafNode(otherlv_8, grammarAccess.getArrayTypeExpressionAccess().getLeftParenthesisKeyword_1_1());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getArrayTypeExpressionAccess().getTypeArgsWildcardParserRuleCall_1_2_0());
+					}
+					lv_typeArgs_9_0=ruleWildcard
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getArrayTypeExpressionRule());
+						}
+						add(
+							$current,
+							"typeArgs",
+							lv_typeArgs_9_0,
+							"org.eclipse.n4js.ts.TypeExpressions.Wildcard");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+			otherlv_10=RightParenthesis
+			{
+				newLeafNode(otherlv_10, grammarAccess.getArrayTypeExpressionAccess().getRightParenthesisKeyword_1_3());
+			}
+			(
+				(
+					lv_arrayTypeExpression_11_0=LeftSquareBracket
+					{
+						newLeafNode(lv_arrayTypeExpression_11_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_1_4_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
+						}
+						setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+					}
+				)
+			)
+			otherlv_12=RightSquareBracket
+			{
+				newLeafNode(otherlv_12, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_1_5());
+			}
+			(
+				((
+					(
+					)
+					(
+						(
+							LeftSquareBracket
+						)
+					)
+					RightSquareBracket
+				)
+				)=>
+				(
+					(
+						{
+							$current = forceCreateModelElementAndAdd(
+								grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_1_6_0_0(),
+								$current);
+						}
+					)
+					(
+						(
+							lv_arrayTypeExpression_14_0=LeftSquareBracket
+							{
+								newLeafNode(lv_arrayTypeExpression_14_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_1_6_0_1_0());
+							}
+							{
+								if ($current==null) {
+									$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
+								}
+								setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+							}
+						)
+					)
+					otherlv_15=RightSquareBracket
+					{
+						newLeafNode(otherlv_15, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_1_6_0_2());
+					}
+				)
+			)*
+		)
+		    |
+		(
+			{
+				newCompositeNode(grammarAccess.getArrayTypeExpressionAccess().getPrimaryTypeExpressionParserRuleCall_2_0());
+			}
+			this_PrimaryTypeExpression_16=rulePrimaryTypeExpression
+			{
+				$current = $this_PrimaryTypeExpression_16.current;
+				afterParserOrEnumRuleCall();
+			}
+			(
+				((
+					(
+					)
+					(
+						(
+							LeftSquareBracket
+						)
+					)
+					RightSquareBracket
+				)
+				)=>
+				(
+					(
+						{
+							$current = forceCreateModelElementAndAdd(
+								grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0(),
+								$current);
+						}
+					)
+					(
+						(
+							lv_arrayTypeExpression_18_0=LeftSquareBracket
+							{
+								newLeafNode(lv_arrayTypeExpression_18_0, grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionLeftSquareBracketKeyword_2_1_0_1_0());
+							}
+							{
+								if ($current==null) {
+									$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
+								}
+								setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+							}
+						)
+					)
+					otherlv_19=RightSquareBracket
+					{
+						newLeafNode(otherlv_19, grammarAccess.getArrayTypeExpressionAccess().getRightSquareBracketKeyword_2_1_0_2());
+					}
+				)
+			)*
+		)
 	)
 ;
 
@@ -34332,11 +34516,11 @@ ruleTypeArgInTypeTypeRef returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getTypeArgInTypeTypeRefAccess().getWildcardParserRuleCall_2());
+				newCompositeNode(grammarAccess.getTypeArgInTypeTypeRefAccess().getWildcardOldNotationParserRuleCall_2());
 			}
-			this_Wildcard_2=ruleWildcard
+			this_WildcardOldNotation_2=ruleWildcardOldNotation
 			{
-				$current = $this_Wildcard_2.current;
+				$current = $this_WildcardOldNotation_2.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -36417,38 +36601,21 @@ ruleTypeArgument returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		(
-			((
-				(
-				)
-				QuestionMark
-			)
-			)=>
-			{
-				newCompositeNode(grammarAccess.getTypeArgumentAccess().getWildcardParserRuleCall_0());
-			}
-			this_Wildcard_0=ruleWildcard
-			{
-				$current = $this_Wildcard_0.current;
-				afterParserOrEnumRuleCall();
-			}
-		)
-		    |
 		{
-			newCompositeNode(grammarAccess.getTypeArgumentAccess().getWildcardNewNotationParserRuleCall_1());
+			newCompositeNode(grammarAccess.getTypeArgumentAccess().getWildcardParserRuleCall_0());
 		}
-		this_WildcardNewNotation_1=ruleWildcardNewNotation
+		this_Wildcard_0=ruleWildcard
 		{
-			$current = $this_WildcardNewNotation_1.current;
+			$current = $this_Wildcard_0.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getTypeArgumentAccess().getTypeRefParserRuleCall_2());
+			newCompositeNode(grammarAccess.getTypeArgumentAccess().getTypeRefParserRuleCall_1());
 		}
-		this_TypeRef_2=ruleTypeRef
+		this_TypeRef_1=ruleTypeRef
 		{
-			$current = $this_TypeRef_2.current;
+			$current = $this_TypeRef_1.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -36477,17 +36644,61 @@ ruleWildcard returns [EObject current=null]
 				QuestionMark
 			)
 			)=>
+			{
+				newCompositeNode(grammarAccess.getWildcardAccess().getWildcardOldNotationParserRuleCall_0());
+			}
+			this_WildcardOldNotation_0=ruleWildcardOldNotation
+			{
+				$current = $this_WildcardOldNotation_0.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
+		    |
+		{
+			newCompositeNode(grammarAccess.getWildcardAccess().getWildcardNewNotationParserRuleCall_1());
+		}
+		this_WildcardNewNotation_1=ruleWildcardNewNotation
+		{
+			$current = $this_WildcardNewNotation_1.current;
+			afterParserOrEnumRuleCall();
+		}
+	)
+;
+
+// Entry rule entryRuleWildcardOldNotation
+entryRuleWildcardOldNotation returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getWildcardOldNotationRule()); }
+	iv_ruleWildcardOldNotation=ruleWildcardOldNotation
+	{ $current=$iv_ruleWildcardOldNotation.current; }
+	EOF;
+
+// Rule WildcardOldNotation
+ruleWildcardOldNotation returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			((
+				(
+				)
+				QuestionMark
+			)
+			)=>
 			(
 				(
 					{
 						$current = forceCreateModelElement(
-							grammarAccess.getWildcardAccess().getWildcardAction_0_0_0(),
+							grammarAccess.getWildcardOldNotationAccess().getWildcardAction_0_0_0(),
 							$current);
 					}
 				)
 				otherlv_1=QuestionMark
 				{
-					newLeafNode(otherlv_1, grammarAccess.getWildcardAccess().getQuestionMarkKeyword_0_0_1());
+					newLeafNode(otherlv_1, grammarAccess.getWildcardOldNotationAccess().getQuestionMarkKeyword_0_0_1());
 				}
 			)
 		)
@@ -36495,17 +36706,17 @@ ruleWildcard returns [EObject current=null]
 			(
 				otherlv_2=Extends
 				{
-					newLeafNode(otherlv_2, grammarAccess.getWildcardAccess().getExtendsKeyword_1_0_0());
+					newLeafNode(otherlv_2, grammarAccess.getWildcardOldNotationAccess().getExtendsKeyword_1_0_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getWildcardAccess().getDeclaredUpperBoundTypeRefParserRuleCall_1_0_1_0());
+							newCompositeNode(grammarAccess.getWildcardOldNotationAccess().getDeclaredUpperBoundTypeRefParserRuleCall_1_0_1_0());
 						}
 						lv_declaredUpperBound_3_0=ruleTypeRef
 						{
 							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getWildcardRule());
+								$current = createModelElementForParent(grammarAccess.getWildcardOldNotationRule());
 							}
 							set(
 								$current,
@@ -36521,17 +36732,17 @@ ruleWildcard returns [EObject current=null]
 			(
 				otherlv_4=Super
 				{
-					newLeafNode(otherlv_4, grammarAccess.getWildcardAccess().getSuperKeyword_1_1_0());
+					newLeafNode(otherlv_4, grammarAccess.getWildcardOldNotationAccess().getSuperKeyword_1_1_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getWildcardAccess().getDeclaredLowerBoundTypeRefParserRuleCall_1_1_1_0());
+							newCompositeNode(grammarAccess.getWildcardOldNotationAccess().getDeclaredLowerBoundTypeRefParserRuleCall_1_1_1_0());
 						}
 						lv_declaredLowerBound_5_0=ruleTypeRef
 						{
 							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getWildcardRule());
+								$current = createModelElementForParent(grammarAccess.getWildcardOldNotationRule());
 							}
 							set(
 								$current,
@@ -36544,6 +36755,36 @@ ruleWildcard returns [EObject current=null]
 				)
 			)
 		)?
+	)
+;
+
+// Entry rule entryRuleWildcardOldNotationWithoutBound
+entryRuleWildcardOldNotationWithoutBound returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getWildcardOldNotationWithoutBoundRule()); }
+	iv_ruleWildcardOldNotationWithoutBound=ruleWildcardOldNotationWithoutBound
+	{ $current=$iv_ruleWildcardOldNotationWithoutBound.current; }
+	EOF;
+
+// Rule WildcardOldNotationWithoutBound
+ruleWildcardOldNotationWithoutBound returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				$current = forceCreateModelElement(
+					grammarAccess.getWildcardOldNotationWithoutBoundAccess().getWildcardAction_0(),
+					$current);
+			}
+		)
+		otherlv_1=QuestionMark
+		{
+			newLeafNode(otherlv_1, grammarAccess.getWildcardOldNotationWithoutBoundAccess().getQuestionMarkKeyword_1());
+		}
 	)
 ;
 

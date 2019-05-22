@@ -79,43 +79,72 @@ let a42: [string,number][][];
 
 
 
-// XPECT type of 'a51' --> Array<Object+>
-let a51: Object+[];
+// with wildcards:
 
-// XPECT type of 'a52' --> Array<~Object with {prop: string}>
-let a52: ~Object with {prop: string}[];
+// XPECT type of 'a51' --> Array<?>
+let a51: ?[];
 
-// XPECT type of 'a53' --> Array<Iterable2<string,number>>
-let a53: Iterable2<string,number>[];
+// XPECT type of 'a52' --> Array<Array<Array<?>>>
+let a52: ?[][][];
 
-// XPECT type of 'a54a' --> union{string,Array<number>}
-let a54a: union{string,number[]};
+// XPECT type of 'a53' --> Array<Array<?>>
+let a53: (?)[][];
 
-// XPECT type of 'a54b' --> Array<union{string,number}>
-let a54b: union{string,number}[];
+// XPECT type of 'a54' --> Array<Array<? extends Object>>
+let a54: (? extends Object)[][];
 
-// XPECT type of 'a54c' --> intersection{string,Array<number>}
-let a54c: intersection{string,number[]};
+// XPECT type of 'a55' --> Array<Array<? super undefined>>
+let a55: (? super undefined)[][];
 
-// XPECT type of 'a54d' --> Array<intersection{string,number}>
-let a54d: intersection{string,number}[];
+// XPECT type of 'a56' --> Array<Array<? extends Object>>
+let a56: (out Object)[][];
+
+// XPECT type of 'a57' --> Array<Array<? super undefined>>
+let a57: (in undefined)[][];
+
+
+
+// miscellaneous:
+
+// XPECT type of 'a61' --> Array<Object+>
+let a61: Object+[];
+
+// XPECT type of 'a62' --> Array<~Object with {prop: string}>
+let a62: ~Object with {prop: string}[];
+
+// XPECT type of 'a63' --> Array<Iterable2<string,number>>
+let a63: Iterable2<string,number>[];
+
+// XPECT type of 'a64a' --> union{string,Array<number>}
+let a64a: union{string,number[]};
+
+// XPECT type of 'a64b' --> Array<union{string,number}>
+let a64b: union{string,number}[];
+
+// XPECT type of 'a64c' --> intersection{string,Array<number>}
+let a64c: intersection{string,number[]};
+
+// XPECT type of 'a64d' --> Array<intersection{string,number}>
+let a64d: intersection{string,number}[];
 
 
 // in casts:
 
-// XPECT type of 'a61' --> Array<string>
-let a61 = foo() as string[];
+// XPECT type of 'a71' --> Array<string>
+let a71 = foo() as string[];
 
-// XPECT type of 'a62' --> Array<Array<string>>
-let a62 = foo() as string[] [];
-
-// not supported:
-// X-PECT type of 'a63' --> string
-//let a63 = foo() as string[0];
+// XPECT type of 'a72' --> Array<Array<string>>
+let a72 = foo() as string[] [];
 
 // not supported:
-// X-PECT type of 'a64' --> string
-//let a64 = foo() as string[] [0];
+// X-PECT type of 'a73' --> string
+//let a73 = foo() as string[0];
 
-// XPECT type of 'a65' --> string
-let a65 = (foo() as string[]) [0];
+// not supported:
+// X-PECT type of 'a74' --> string
+//let a74 = foo() as string[] [0];
+
+// XPECT type of 'a75' --> string
+let a75 = (foo() as string[]) [0];
+
+function foo(): any { return undefined; }

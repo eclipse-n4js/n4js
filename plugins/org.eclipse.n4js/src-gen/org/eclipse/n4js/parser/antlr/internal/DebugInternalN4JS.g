@@ -8216,14 +8216,40 @@ ruleIntersectionTypeExpression:
 
 // Rule ArrayTypeExpression
 ruleArrayTypeExpression:
-	rulePrimaryTypeExpression
 	(
-		('['
-		']'
-		)=>
+		ruleWildcardOldNotationWithoutBound
 		'['
 		']'
-	)*
+		(
+			('['
+			']'
+			)=>
+			'['
+			']'
+		)*
+		    |
+		'('
+		ruleWildcard
+		')'
+		'['
+		']'
+		(
+			('['
+			']'
+			)=>
+			'['
+			']'
+		)*
+		    |
+		rulePrimaryTypeExpression
+		(
+			('['
+			']'
+			)=>
+			'['
+			']'
+		)*
+	)
 ;
 
 // Rule PrimaryTypeExpression
@@ -8307,7 +8333,7 @@ ruleTypeArgInTypeTypeRef:
 		(
 			('?'
 			)=>
-			ruleWildcard
+			ruleWildcardOldNotation
 		)
 	)
 ;
@@ -8681,13 +8707,7 @@ ruleTypeTypeRef:
 // Rule TypeArgument
 ruleTypeArgument:
 	(
-		(
-			('?'
-			)=>
-			ruleWildcard
-		)
-		    |
-		ruleWildcardNewNotation
+		ruleWildcard
 		    |
 		ruleTypeRef
 	)
@@ -8695,6 +8715,19 @@ ruleTypeArgument:
 
 // Rule Wildcard
 ruleWildcard:
+	(
+		(
+			('?'
+			)=>
+			ruleWildcardOldNotation
+		)
+		    |
+		ruleWildcardNewNotation
+	)
+;
+
+// Rule WildcardOldNotation
+ruleWildcardOldNotation:
 	(
 		('?'
 		)=>
@@ -8707,6 +8740,11 @@ ruleWildcard:
 		'super'
 		ruleTypeRef
 	)?
+;
+
+// Rule WildcardOldNotationWithoutBound
+ruleWildcardOldNotationWithoutBound:
+	'?'
 ;
 
 // Rule WildcardNewNotation
