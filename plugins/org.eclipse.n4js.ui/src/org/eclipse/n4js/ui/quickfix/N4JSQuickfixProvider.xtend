@@ -736,4 +736,20 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		]
 	}
 
+	@Fix(IssueCodes.TEMP_CONVERT_TO_NEW_ARRAY_SYNTAX)
+	def convertToNewArraySyntax(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue,
+			'Convert to new array syntax',
+			'The short-hand syntax for array types has changed. This will convert to the new syntax.',
+			ImageNames.REORDER) [ context, marker, offset, length, element |
+			val old = context.xtextDocument.get(offset, length).trim();
+			if (old.startsWith('[') && old.endsWith(']')) {
+				val _new = old.substring(1, old.length - 1).trim() + "[]";
+				return #[
+					replace(context.xtextDocument, offset, length, _new)
+				];
+			}
+			return #[];
+		]
+	}
 }
