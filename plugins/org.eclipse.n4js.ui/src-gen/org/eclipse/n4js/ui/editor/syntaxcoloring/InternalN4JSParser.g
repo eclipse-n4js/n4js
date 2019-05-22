@@ -10368,8 +10368,8 @@ ruleCastExpression
 		)
 		(
 			(
-				TargetTypeRefTypeRefForCastParserRuleCall_1_1_0=ruleTypeRefForCast{
-					announce($TargetTypeRefTypeRefForCastParserRuleCall_1_1_0.start, $TargetTypeRefTypeRefForCastParserRuleCall_1_1_0.stop, grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1());
+				TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0=ruleArrayTypeExpression{
+					announce($TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.start, $TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.stop, grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1());
 				}
 			)
 		)
@@ -10399,8 +10399,8 @@ norm1_CastExpression
 		)
 		(
 			(
-				TargetTypeRefTypeRefForCastParserRuleCall_1_1_0=ruleTypeRefForCast{
-					announce($TargetTypeRefTypeRefForCastParserRuleCall_1_1_0.start, $TargetTypeRefTypeRefForCastParserRuleCall_1_1_0.stop, grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1());
+				TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0=ruleArrayTypeExpression{
+					announce($TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.start, $TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.stop, grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1());
 				}
 			)
 		)
@@ -14738,44 +14738,6 @@ ruleTypeRefAnnotationArgument
 			announce($TypeRefTypeRefParserRuleCall_0.start, $TypeRefTypeRefParserRuleCall_0.stop, grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefAssignment());
 		}
 	)
-)
-;
-
-// Entry rule entryRuleTypeRefForCast
-entryRuleTypeRefForCast
-	:
-	ruleTypeRefForCast
-	EOF;
-
-// Rule TypeRefForCast
-ruleTypeRefForCast
-@init {
-}:
-(
-	ParameterizedTypeRefParserRuleCall_0=ruleParameterizedTypeRef{ announce($ParameterizedTypeRefParserRuleCall_0.start, $ParameterizedTypeRefParserRuleCall_0.stop, grammarAccess.getTypeRefForCastAccess().getParameterizedTypeRefParserRuleCall_0()); }
-	    |
-	IterableTypeExpressionParserRuleCall_1=ruleIterableTypeExpression{ announce($IterableTypeExpressionParserRuleCall_1.start, $IterableTypeExpressionParserRuleCall_1.stop, grammarAccess.getTypeRefForCastAccess().getIterableTypeExpressionParserRuleCall_1()); }
-	    |
-	ThisTypeRefParserRuleCall_2=ruleThisTypeRef{ announce($ThisTypeRefParserRuleCall_2.start, $ThisTypeRefParserRuleCall_2.stop, grammarAccess.getTypeRefForCastAccess().getThisTypeRefParserRuleCall_2()); }
-	    |
-	TypeTypeRefParserRuleCall_3=ruleTypeTypeRef{ announce($TypeTypeRefParserRuleCall_3.start, $TypeTypeRefParserRuleCall_3.stop, grammarAccess.getTypeRefForCastAccess().getTypeTypeRefParserRuleCall_3()); }
-	    |
-	(
-		((
-			LeftParenthesis
-			ruleTAnonymousFormalParameterList
-			RightParenthesis
-			EqualsSignGreaterThanSign
-		)
-		)=>
-		ArrowFunctionTypeExpressionParserRuleCall_4=ruleArrowFunctionTypeExpression{ announce($ArrowFunctionTypeExpressionParserRuleCall_4.start, $ArrowFunctionTypeExpressionParserRuleCall_4.stop, grammarAccess.getTypeRefForCastAccess().getArrowFunctionTypeExpressionParserRuleCall_4()); }
-	)
-	    |
-	FunctionTypeExpressionOLDParserRuleCall_5=ruleFunctionTypeExpressionOLD{ announce($FunctionTypeExpressionOLDParserRuleCall_5.start, $FunctionTypeExpressionOLDParserRuleCall_5.stop, grammarAccess.getTypeRefForCastAccess().getFunctionTypeExpressionOLDParserRuleCall_5()); }
-	    |
-	UnionTypeExpressionOLDParserRuleCall_6=ruleUnionTypeExpressionOLD{ announce($UnionTypeExpressionOLDParserRuleCall_6.start, $UnionTypeExpressionOLDParserRuleCall_6.stop, grammarAccess.getTypeRefForCastAccess().getUnionTypeExpressionOLDParserRuleCall_6()); }
-	    |
-	IntersectionTypeExpressionOLDParserRuleCall_7=ruleIntersectionTypeExpressionOLD{ announce($IntersectionTypeExpressionOLDParserRuleCall_7.start, $IntersectionTypeExpressionOLDParserRuleCall_7.stop, grammarAccess.getTypeRefForCastAccess().getIntersectionTypeExpressionOLDParserRuleCall_7()); }
 )
 ;
 

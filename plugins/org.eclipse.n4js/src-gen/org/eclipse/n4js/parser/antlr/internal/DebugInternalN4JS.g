@@ -4385,7 +4385,7 @@ ruleCastExpression:
 			)=>
 			'as'
 		)
-		ruleTypeRefForCast
+		ruleArrayTypeExpression
 	)?
 ;
 
@@ -4398,7 +4398,7 @@ norm1_CastExpression:
 			)=>
 			'as'
 		)
-		ruleTypeRefForCast
+		ruleArrayTypeExpression
 	)?
 ;
 
@@ -6171,34 +6171,6 @@ ruleLiteralAnnotationArgument:
 // Rule TypeRefAnnotationArgument
 ruleTypeRefAnnotationArgument:
 	ruleTypeRef
-;
-
-// Rule TypeRefForCast
-ruleTypeRefForCast:
-	(
-		ruleParameterizedTypeRef
-		    |
-		ruleIterableTypeExpression
-		    |
-		ruleThisTypeRef
-		    |
-		ruleTypeTypeRef
-		    |
-		(
-			('('
-			ruleTAnonymousFormalParameterList
-			')'
-			'=>'
-			)=>
-			ruleArrowFunctionTypeExpression
-		)
-		    |
-		ruleFunctionTypeExpressionOLD
-		    |
-		ruleUnionTypeExpressionOLD
-		    |
-		ruleIntersectionTypeExpressionOLD
-	)
 ;
 
 // Rule AnnotationList

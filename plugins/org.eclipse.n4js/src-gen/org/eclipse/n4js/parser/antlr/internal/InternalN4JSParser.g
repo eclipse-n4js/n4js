@@ -19052,9 +19052,9 @@ ruleCastExpression returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefTypeRefForCastParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0());
 					}
-					lv_targetTypeRef_3_0=ruleTypeRefForCast
+					lv_targetTypeRef_3_0=ruleArrayTypeExpression
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getCastExpressionRule());
@@ -19063,7 +19063,7 @@ ruleCastExpression returns [EObject current=null]
 							$current,
 							"targetTypeRef",
 							lv_targetTypeRef_3_0,
-							"org.eclipse.n4js.N4JS.TypeRefForCast");
+							"org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -19115,9 +19115,9 @@ norm1_CastExpression returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefTypeRefForCastParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0());
 					}
-					lv_targetTypeRef_3_0=ruleTypeRefForCast
+					lv_targetTypeRef_3_0=ruleArrayTypeExpression
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getCastExpressionRule());
@@ -19126,7 +19126,7 @@ norm1_CastExpression returns [EObject current=null]
 							$current,
 							"targetTypeRef",
 							lv_targetTypeRef_3_0,
-							"org.eclipse.n4js.N4JS.TypeRefForCast");
+							"org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -26569,107 +26569,6 @@ ruleTypeRefAnnotationArgument returns [EObject current=null]
 				afterParserOrEnumRuleCall();
 			}
 		)
-	)
-;
-
-// Entry rule entryRuleTypeRefForCast
-entryRuleTypeRefForCast returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getTypeRefForCastRule()); }
-	iv_ruleTypeRefForCast=ruleTypeRefForCast
-	{ $current=$iv_ruleTypeRefForCast.current; }
-	EOF;
-
-// Rule TypeRefForCast
-ruleTypeRefForCast returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		{
-			newCompositeNode(grammarAccess.getTypeRefForCastAccess().getParameterizedTypeRefParserRuleCall_0());
-		}
-		this_ParameterizedTypeRef_0=ruleParameterizedTypeRef
-		{
-			$current = $this_ParameterizedTypeRef_0.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getTypeRefForCastAccess().getIterableTypeExpressionParserRuleCall_1());
-		}
-		this_IterableTypeExpression_1=ruleIterableTypeExpression
-		{
-			$current = $this_IterableTypeExpression_1.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getTypeRefForCastAccess().getThisTypeRefParserRuleCall_2());
-		}
-		this_ThisTypeRef_2=ruleThisTypeRef
-		{
-			$current = $this_ThisTypeRef_2.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getTypeRefForCastAccess().getTypeTypeRefParserRuleCall_3());
-		}
-		this_TypeTypeRef_3=ruleTypeTypeRef
-		{
-			$current = $this_TypeTypeRef_3.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		(
-			((
-				(
-				)
-				LeftParenthesis
-				ruleTAnonymousFormalParameterList[null]
-				RightParenthesis
-				EqualsSignGreaterThanSign
-			)
-			)=>
-			{
-				newCompositeNode(grammarAccess.getTypeRefForCastAccess().getArrowFunctionTypeExpressionParserRuleCall_4());
-			}
-			this_ArrowFunctionTypeExpression_4=ruleArrowFunctionTypeExpression
-			{
-				$current = $this_ArrowFunctionTypeExpression_4.current;
-				afterParserOrEnumRuleCall();
-			}
-		)
-		    |
-		{
-			newCompositeNode(grammarAccess.getTypeRefForCastAccess().getFunctionTypeExpressionOLDParserRuleCall_5());
-		}
-		this_FunctionTypeExpressionOLD_5=ruleFunctionTypeExpressionOLD
-		{
-			$current = $this_FunctionTypeExpressionOLD_5.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getTypeRefForCastAccess().getUnionTypeExpressionOLDParserRuleCall_6());
-		}
-		this_UnionTypeExpressionOLD_6=ruleUnionTypeExpressionOLD
-		{
-			$current = $this_UnionTypeExpressionOLD_6.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getTypeRefForCastAccess().getIntersectionTypeExpressionOLDParserRuleCall_7());
-		}
-		this_IntersectionTypeExpressionOLD_7=ruleIntersectionTypeExpressionOLD
-		{
-			$current = $this_IntersectionTypeExpressionOLD_7.current;
-			afterParserOrEnumRuleCall();
-		}
 	)
 ;
 

@@ -259,7 +259,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) '('* (ambiguity) fpars+=TAnonymousFormalParameter
-	 *     (rule start) (ambiguity) fpars+=TAnonymousFormalParameter
 	 */
 	protected void emit_ArrowFunctionTypeExpression_FunctionTypeExpressionOLD_LeftParenthesisKeyword_0_0_1_or___LeftCurlyBracketKeyword_1_FunctionKeyword_3_LeftParenthesisKeyword_5__(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

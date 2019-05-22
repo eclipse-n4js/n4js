@@ -5586,19 +5586,19 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cCastExpressionExpressionAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
 		private final Keyword cAsKeyword_1_0_0_1 = (Keyword)cGroup_1_0_0.eContents().get(1);
 		private final Assignment cTargetTypeRefAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cTargetTypeRefTypeRefForCastParserRuleCall_1_1_0 = (RuleCall)cTargetTypeRefAssignment_1_1.eContents().get(0);
+		private final RuleCall cTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0 = (RuleCall)cTargetTypeRefAssignment_1_1.eContents().get(0);
 		
 		///* Cast expression (N4JS 6.2.3) */ CastExpression <Yield Expression:
-		//	PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRef=TypeRefForCast)?;
+		//	PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRef=TypeRefForCast)?
+		//PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?
 		public Group getGroup() { return cGroup; }
 		
 		//PostfixExpression<Yield>
 		public RuleCall getPostfixExpressionParserRuleCall_0() { return cPostfixExpressionParserRuleCall_0; }
 		
-		//(=> ({CastExpression.expression=current} 'as') targetTypeRef=TypeRefForCast)?
+		//(=> ({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//=> ({CastExpression.expression=current} 'as')
@@ -5613,11 +5613,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'as'
 		public Keyword getAsKeyword_1_0_0_1() { return cAsKeyword_1_0_0_1; }
 		
-		//targetTypeRef=TypeRefForCast
+		//targetTypeRef=ArrayTypeExpression
 		public Assignment getTargetTypeRefAssignment_1_1() { return cTargetTypeRefAssignment_1_1; }
 		
-		//TypeRefForCast
-		public RuleCall getTargetTypeRefTypeRefForCastParserRuleCall_1_1_0() { return cTargetTypeRefTypeRefForCastParserRuleCall_1_1_0; }
+		//ArrayTypeExpression
+		public RuleCall getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0() { return cTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0; }
 	}
 	public class UnaryExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.UnaryExpression");
@@ -7435,57 +7435,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//TypeRef
 		public RuleCall getTypeRefTypeRefParserRuleCall_0() { return cTypeRefTypeRefParserRuleCall_0; }
-	}
-	public class TypeRefForCastElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.TypeRefForCast");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cParameterizedTypeRefParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cIterableTypeExpressionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cThisTypeRefParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cTypeTypeRefParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cArrowFunctionTypeExpressionParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cFunctionTypeExpressionOLDParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cUnionTypeExpressionOLDParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cIntersectionTypeExpressionOLDParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
-		
-		//TypeRefForCast types::StaticBaseTypeRef:
-		//	ParameterizedTypeRef
-		//	| IterableTypeExpression
-		//	| ThisTypeRef
-		//	| TypeTypeRef
-		//	| ArrowFunctionTypeExpression
-		//	| FunctionTypeExpressionOLD
-		//	| UnionTypeExpressionOLD
-		//	| IntersectionTypeExpressionOLD;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//ParameterizedTypeRef | IterableTypeExpression | ThisTypeRef | TypeTypeRef | ArrowFunctionTypeExpression |
-		//FunctionTypeExpressionOLD | UnionTypeExpressionOLD | IntersectionTypeExpressionOLD
-		public Alternatives getAlternatives() { return cAlternatives; }
-		
-		//ParameterizedTypeRef
-		public RuleCall getParameterizedTypeRefParserRuleCall_0() { return cParameterizedTypeRefParserRuleCall_0; }
-		
-		//IterableTypeExpression
-		public RuleCall getIterableTypeExpressionParserRuleCall_1() { return cIterableTypeExpressionParserRuleCall_1; }
-		
-		//ThisTypeRef
-		public RuleCall getThisTypeRefParserRuleCall_2() { return cThisTypeRefParserRuleCall_2; }
-		
-		//TypeTypeRef
-		public RuleCall getTypeTypeRefParserRuleCall_3() { return cTypeTypeRefParserRuleCall_3; }
-		
-		//ArrowFunctionTypeExpression
-		public RuleCall getArrowFunctionTypeExpressionParserRuleCall_4() { return cArrowFunctionTypeExpressionParserRuleCall_4; }
-		
-		//FunctionTypeExpressionOLD
-		public RuleCall getFunctionTypeExpressionOLDParserRuleCall_5() { return cFunctionTypeExpressionOLDParserRuleCall_5; }
-		
-		//UnionTypeExpressionOLD
-		public RuleCall getUnionTypeExpressionOLDParserRuleCall_6() { return cUnionTypeExpressionOLDParserRuleCall_6; }
-		
-		//IntersectionTypeExpressionOLD
-		public RuleCall getIntersectionTypeExpressionOLDParserRuleCall_7() { return cIntersectionTypeExpressionOLDParserRuleCall_7; }
 	}
 	public class AnnotationListElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotationList");
@@ -10280,7 +10229,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final AnnotationArgumentElements pAnnotationArgument;
 	private final LiteralAnnotationArgumentElements pLiteralAnnotationArgument;
 	private final TypeRefAnnotationArgumentElements pTypeRefAnnotationArgument;
-	private final TypeRefForCastElements pTypeRefForCast;
 	private final AnnotationListElements pAnnotationList;
 	private final ExpressionAnnotationListElements pExpressionAnnotationList;
 	private final PropertyAssignmentAnnotationListElements pPropertyAssignmentAnnotationList;
@@ -10536,7 +10484,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pAnnotationArgument = new AnnotationArgumentElements();
 		this.pLiteralAnnotationArgument = new LiteralAnnotationArgumentElements();
 		this.pTypeRefAnnotationArgument = new TypeRefAnnotationArgumentElements();
-		this.pTypeRefForCast = new TypeRefForCastElements();
 		this.pAnnotationList = new AnnotationListElements();
 		this.pExpressionAnnotationList = new ExpressionAnnotationListElements();
 		this.pPropertyAssignmentAnnotationList = new PropertyAssignmentAnnotationListElements();
@@ -11877,7 +11824,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	///* Cast expression (N4JS 6.2.3) */ CastExpression <Yield Expression:
-	//	PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRef=TypeRefForCast)?;
+	//	PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?;
 	public CastExpressionElements getCastExpressionAccess() {
 		return pCastExpression;
 	}
@@ -12743,23 +12690,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getTypeRefAnnotationArgumentRule() {
 		return getTypeRefAnnotationArgumentAccess().getRule();
-	}
-	
-	//TypeRefForCast types::StaticBaseTypeRef:
-	//	ParameterizedTypeRef
-	//	| IterableTypeExpression
-	//	| ThisTypeRef
-	//	| TypeTypeRef
-	//	| ArrowFunctionTypeExpression
-	//	| FunctionTypeExpressionOLD
-	//	| UnionTypeExpressionOLD
-	//	| IntersectionTypeExpressionOLD;
-	public TypeRefForCastElements getTypeRefForCastAccess() {
-		return pTypeRefForCast;
-	}
-	
-	public ParserRule getTypeRefForCastRule() {
-		return getTypeRefForCastAccess().getRule();
 	}
 	
 	//AnnotationList:

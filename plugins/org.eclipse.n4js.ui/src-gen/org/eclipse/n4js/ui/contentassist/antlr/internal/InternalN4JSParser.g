@@ -6740,31 +6740,6 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleTypeRefForCast
-entryRuleTypeRefForCast
-:
-{ before(grammarAccess.getTypeRefForCastRule()); }
-	 ruleTypeRefForCast
-{ after(grammarAccess.getTypeRefForCastRule()); } 
-	 EOF 
-;
-
-// Rule TypeRefForCast
-ruleTypeRefForCast 
-	@init {
-		int stackSize = keepStackSize();
-	}
-	:
-	(
-		{ before(grammarAccess.getTypeRefForCastAccess().getAlternatives()); }
-		(rule__TypeRefForCast__Alternatives)
-		{ after(grammarAccess.getTypeRefForCastAccess().getAlternatives()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
 // Entry rule entryRuleAnnotationList
 entryRuleAnnotationList
 :
@@ -12540,63 +12515,6 @@ rule__AnnotationArgument__Alternatives
 		{ before(grammarAccess.getAnnotationArgumentAccess().getTypeRefAnnotationArgumentParserRuleCall_1()); }
 		ruleTypeRefAnnotationArgument
 		{ after(grammarAccess.getAnnotationArgumentAccess().getTypeRefAnnotationArgumentParserRuleCall_1()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__TypeRefForCast__Alternatives
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getTypeRefForCastAccess().getParameterizedTypeRefParserRuleCall_0()); }
-		ruleParameterizedTypeRef
-		{ after(grammarAccess.getTypeRefForCastAccess().getParameterizedTypeRefParserRuleCall_0()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeRefForCastAccess().getIterableTypeExpressionParserRuleCall_1()); }
-		ruleIterableTypeExpression
-		{ after(grammarAccess.getTypeRefForCastAccess().getIterableTypeExpressionParserRuleCall_1()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeRefForCastAccess().getThisTypeRefParserRuleCall_2()); }
-		ruleThisTypeRef
-		{ after(grammarAccess.getTypeRefForCastAccess().getThisTypeRefParserRuleCall_2()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeRefForCastAccess().getTypeTypeRefParserRuleCall_3()); }
-		ruleTypeTypeRef
-		{ after(grammarAccess.getTypeRefForCastAccess().getTypeTypeRefParserRuleCall_3()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeRefForCastAccess().getArrowFunctionTypeExpressionParserRuleCall_4()); }
-		(ruleArrowFunctionTypeExpression)
-		{ after(grammarAccess.getTypeRefForCastAccess().getArrowFunctionTypeExpressionParserRuleCall_4()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeRefForCastAccess().getFunctionTypeExpressionOLDParserRuleCall_5()); }
-		ruleFunctionTypeExpressionOLD
-		{ after(grammarAccess.getTypeRefForCastAccess().getFunctionTypeExpressionOLDParserRuleCall_5()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeRefForCastAccess().getUnionTypeExpressionOLDParserRuleCall_6()); }
-		ruleUnionTypeExpressionOLD
-		{ after(grammarAccess.getTypeRefForCastAccess().getUnionTypeExpressionOLDParserRuleCall_6()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeRefForCastAccess().getIntersectionTypeExpressionOLDParserRuleCall_7()); }
-		ruleIntersectionTypeExpressionOLD
-		{ after(grammarAccess.getTypeRefForCastAccess().getIntersectionTypeExpressionOLDParserRuleCall_7()); }
 	)
 ;
 finally {
@@ -79948,9 +79866,9 @@ rule__CastExpression__TargetTypeRefAssignment_1_1
 	}
 :
 	(
-		{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefTypeRefForCastParserRuleCall_1_1_0()); }
-		ruleTypeRefForCast
-		{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefTypeRefForCastParserRuleCall_1_1_0()); }
+		{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0()); }
+		ruleArrayTypeExpression
+		{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0()); }
 	)
 ;
 finally {
@@ -79963,9 +79881,9 @@ norm1_CastExpression__TargetTypeRefAssignment_1_1
 	}
 :
 	(
-		{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefTypeRefForCastParserRuleCall_1_1_0()); }
-		ruleTypeRefForCast
-		{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefTypeRefForCastParserRuleCall_1_1_0()); }
+		{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0()); }
+		ruleArrayTypeExpression
+		{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0()); }
 	)
 ;
 finally {

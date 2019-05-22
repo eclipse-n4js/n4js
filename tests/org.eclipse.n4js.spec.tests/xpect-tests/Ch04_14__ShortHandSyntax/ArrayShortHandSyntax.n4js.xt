@@ -99,3 +99,23 @@ let a54c: intersection{string,number[]};
 
 // XPECT type of 'a54d' --> Array<intersection{string,number}>
 let a54d: intersection{string,number}[];
+
+
+// in casts:
+
+// XPECT type of 'a61' --> Array<string>
+let a61 = foo() as string[];
+
+// XPECT type of 'a62' --> Array<Array<string>>
+let a62 = foo() as string[] [];
+
+// not supported:
+// X-PECT type of 'a63' --> string
+//let a63 = foo() as string[0];
+
+// not supported:
+// X-PECT type of 'a64' --> string
+//let a64 = foo() as string[] [0];
+
+// XPECT type of 'a65' --> string
+let a65 = (foo() as string[]) [0];
