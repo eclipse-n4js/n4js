@@ -25,6 +25,7 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.validation.N4JSResourceValidator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
@@ -42,8 +43,8 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  * Contains module-level validations, i.e. validations that need to be checked once per module / file.
  * For example: unique module names.
  * <p>
- * It contains a helper method to conveniently add issues that do not relate to a particular statement, expression, etc.
- * but instead relate to the entire file. See {@link N4JSModuleValidator#addIssue(String,Script,String)}
+ * In addition to this class, some module-level validations are also implemented in method
+ * {@link N4JSResourceValidator#validate(Resource,CheckMode,CancelIndicator)}.
  */
 class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 

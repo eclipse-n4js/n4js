@@ -103,7 +103,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 		} catch (UnresolvedProxyInSubGeneratorException e) {
 			genMarkerSupport.createMarker(input, e.message, Severity.ERROR);
-			
+
 		} catch (Exception e) {
 			// cancellation is not an error case, so simply propagate as usual
 			operationCanceledManager.propagateIfCancelException(e);
