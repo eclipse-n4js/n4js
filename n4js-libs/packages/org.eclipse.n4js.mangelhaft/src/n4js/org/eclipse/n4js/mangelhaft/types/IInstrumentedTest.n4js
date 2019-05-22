@@ -25,7 +25,7 @@ export public interface IInstrumentedTest {
     public child: IInstrumentedTest = null;
     public error: any;
     public parameterizedName: string;
-    public parameterizedTests: Array<? extends IInstrumentedTest>;
+    public parameterizedTests: (? extends IInstrumentedTest)[];
     public filterTests(testNames: string[]);
 
     public load(test: constructor{N4Object}, info: TestInfo=): this;

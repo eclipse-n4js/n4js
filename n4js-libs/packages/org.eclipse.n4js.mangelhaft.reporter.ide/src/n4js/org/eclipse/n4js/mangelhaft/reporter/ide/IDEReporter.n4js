@@ -46,7 +46,7 @@ export public class IDEReporter implements ITestReporter {
                    }, 2)
             ret = await fetch(this.endpoint + uri, {
                    Method method: method,
-                   union{Headers,Array<Array<string>>,Object} headers: headers,
+                   union{Headers,string[][],Object} headers: headers,
                    string body: bodyStr
             });
         }catch(er) {

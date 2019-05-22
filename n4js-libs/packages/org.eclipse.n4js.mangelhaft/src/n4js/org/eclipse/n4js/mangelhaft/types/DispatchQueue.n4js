@@ -102,7 +102,7 @@ export public class DispatchQueue<TListener extends Function> {
      * priority first), in case of equal priority in the order they were added to the queue.
      * The given parameters will be passed to the listeners.
      */
-    public async dispatch(params: Array<?>) {
+    public async dispatch(params: ?[]) {
         this.isDispatching = true;
         var listeners = this.getListOfListeners();
         for (var i = 0; i < listeners.length;  i++) {

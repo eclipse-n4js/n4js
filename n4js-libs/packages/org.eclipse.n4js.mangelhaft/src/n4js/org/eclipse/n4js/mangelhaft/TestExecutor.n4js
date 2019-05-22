@@ -101,7 +101,7 @@ export public class TestExecutor {
             if (typeof stack === "string") {
                 trace = (stack as string).split("\n");
             } else if (Array.isArray(stack)) {
-                trace = stack as Array<string>;
+                trace = stack as string[];
             } else {
                 trace = [(stack as Object).toString()];
             }
@@ -163,7 +163,7 @@ export public class TestExecutor {
         // get all of the methods top down.
         do {
             let nodeObj: Object = node;
-            const nodeTestMethods = nodeObj[testMethodName] as Array<TestMethodDescriptor>;
+            const nodeTestMethods = nodeObj[testMethodName] as TestMethodDescriptor[];
             if (nodeTestMethods && nodeTestMethods.length) {
                 testMethods.push(nodeTestMethods);
             }
@@ -258,7 +258,7 @@ export public class TestExecutor {
     /**
      * Runs all test groups, collecting results and handling parameterized tests.
      */
-    public async runTestsAsync(instrumentedTests: Array<? extends IInstrumentedTest>, scope: string=): ResultGroups {
+    public async runTestsAsync(instrumentedTests: (? extends IInstrumentedTest)[], scope: string=): ResultGroups {
         let results: ResultGroup[] = [];
 
         for (let test of instrumentedTests) {

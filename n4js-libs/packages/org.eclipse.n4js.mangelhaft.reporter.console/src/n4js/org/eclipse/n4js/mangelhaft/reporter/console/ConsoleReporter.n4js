@@ -42,7 +42,7 @@ export public class ConsoleReporter implements ITestReporter {
     public timeoutBuffer: number = 1000 * 30;
     private logger: {function(...any):void} = function(... messages: any) {console.log.apply(console, messages);};
     private buffered = false;
-    public buffer: Array<Array<?>> = [];
+    public buffer: ?[][] = [];
     public cliColor = new CliColor();
     @Inject
     @Override public spy: TestSpy;

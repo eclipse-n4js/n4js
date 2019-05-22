@@ -105,7 +105,7 @@ export default public class NodeTestAPI {
                         const transpiledFiles = glob.sync("**/*.js", {
                             cwd: lib_path.join(dir, (packageJson.n4js as Object)["output"] as string),
                             absolute: true
-                        }) as Array<string>;
+                        }) as string[];
                         for (const file of transpiledFiles) {
                             const content = lib_fs.readFileSync(file, { encoding: "UTF-8" });
                             let newContent = content.replace(/_n4jsImport/mg, "import");

@@ -44,13 +44,13 @@ export public class TestController {
     @Inject
     public injector: N4Injector;
 
-    private reportersVal: Array<? extends ITestReporter> = [];
+    private reportersVal: (? extends ITestReporter)[] = [];
 
     // TODO GH-710 remove, expose different API
-    public get reporters(): Array<? extends ITestReporter> {
+    public get reporters(): (? extends ITestReporter)[] {
         return this.reportersVal;
     }
-    public set reporters(reporters: Array<? extends ITestReporter>) {
+    public set reporters(reporters: (? extends ITestReporter)[]) {
         reporters.forEach(function(reporter) {
                 let dummy: Promise<any, ?> = reporter.register();
                 dummy;
@@ -101,7 +101,7 @@ export public class TestController {
         const mapper: (TestInfo) => Promise<InstrumentedTest[], ?> = async (testInfo) => await this
             .instrument(testInfo);
         const flatten = (arr: InstrumentedTest[][]): InstrumentedTest[] => Array.prototype.concat.apply([],
-            arr) as Array<InstrumentedTest>;
+            arr) as InstrumentedTest[];
         const instrumentBatch = async function(testInfosBatch: TestInfo[]): InstrumentedTest[] {
                 const instrumentedBatches = testInfosBatch.map(mapper).filter(notNull);
                 const instrumentedTestsBatch1d = await Promise.<InstrumentedTest[]>all(instrumentedBatches);
@@ -179,7 +179,7 @@ export public class TestController {
             }
         }
         const result = (await Promise.all(instrumentedTests)).filter(notNull);
-        return result as Array<InstrumentedTest>;
+        return result as InstrumentedTest[];
     }
 
     /**

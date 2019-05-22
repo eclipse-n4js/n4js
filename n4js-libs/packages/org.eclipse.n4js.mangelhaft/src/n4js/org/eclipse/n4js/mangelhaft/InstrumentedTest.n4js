@@ -59,7 +59,7 @@ export public class InstrumentedTest implements IInstrumentedTest {
     }
 
     public constructor(testClass: constructor{? extends N4Object}=, info: TestInfo=, testObject: N4Object=,
-        parameterizedName: string=, parameterizedTests: Array<? extends IInstrumentedTest>=) {
+        parameterizedName: string=, parameterizedTests: (? extends IInstrumentedTest)[]=) {
         if (testClass) {
             this.load(testClass, info);
             this.parameterizedName = parameterizedName;
@@ -138,7 +138,7 @@ export public class InstrumentedTest implements IInstrumentedTest {
         if (pMeth) {
             let anno = pMeth.anyAnnotation("Parameters");
             [nameTemplate] = anno.details || [""];
-            parameters = pMeth.jsFunction.call(testClass) as Array<Array<any>>;
+            parameters = pMeth.jsFunction.call(testClass) as any[][];
         }
 
         let parameterizedTests: InstrumentedTest[];
@@ -176,12 +176,12 @@ export public class InstrumentedTest implements IInstrumentedTest {
     /**
      * Processes a test method and extracts info from annotations.
      */
-    private getTestMethodDescriptors(meths: Array<? extends N4Method>,
+    private getTestMethodDescriptors(meths: (? extends N4Method)[],
         tftype: TestFunctionType): TestMethodDescriptor[] {
 
         return meths.map((methodDescriptor: N4Method) => {
                 const desc = methodDescriptor.anyAnnotation("Description");
-                const details: Array<?> = desc ? desc.details : [];
+                const details: ?[] = desc ? desc.details : [];
                 const fixmeAnnotation = methodDescriptor.anyAnnotation("Fixme");
                 const ignoreAnnotation = this.classIgnoreAnnotation ? this.classIgnoreAnnotation : methodDescriptor
                     .anyAnnotation("Ignore");

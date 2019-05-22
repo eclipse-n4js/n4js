@@ -23,7 +23,7 @@ export external public interface ChildProcess extends IEventEmitter {
     public stderr: IReadableStream;
     public stdout: IReadableStream;
     public stdin: IWritableStream;
-    public stdio: Array<?>;
+    public stdio: ?[];
 }
 
 @Promisifiable
@@ -46,7 +46,7 @@ export external public function fork(modulePath: string, args: string[] =, optio
 export external public function spawn(command: string, args: string[] =, options: Object=): ChildProcess;
 export external public function spawnSync(command: string, args: string[] =, options: Object=): ~Object with {
     pid: int;
-    output: Array<?>;
+    output: ?[];
     stdout: union{Buffer, string};
     stderr: union{Buffer, string};
     status: int;

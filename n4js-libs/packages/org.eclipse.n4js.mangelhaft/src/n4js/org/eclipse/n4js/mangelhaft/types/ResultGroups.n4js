@@ -51,7 +51,7 @@ export public class ResultGroups {
         result = new ResultGroup(Array.from(trMap.values()), description);
         return result;
     }
-    private static accumulateResults(target:ResultGroups, results:Array<? extends ~~ResultGroup>): ResultGroups {
+    private static accumulateResults(target:ResultGroups, results:(? extends ~~ResultGroup)[]): ResultGroups {
         for (let result of results) {
             target.successes += result.successes;
             target.failures += result.failures;
@@ -76,6 +76,6 @@ export public class ResultGroups {
      * same as concat but takes a whole array
      */
     public static concatArray(resultGroupss: ResultGroups[]): ResultGroups {
-        return this.accumulateResults(new ResultGroups([]), (resultGroupss as Object) as Array<? extends ~~ResultGroup>); // joe TODO consider refactoring of ResultGroup and ResultGroups
+        return this.accumulateResults(new ResultGroups([]), (resultGroupss as Object) as (? extends ~~ResultGroup)[]); // joe TODO consider refactoring of ResultGroup and ResultGroups
     }
 }
