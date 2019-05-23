@@ -81,6 +81,7 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getExportedName() {
 		return exportedName;
 	}
@@ -90,6 +91,7 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExportedName(String newExportedName) {
 		String oldExportedName = exportedName;
 		exportedName = newExportedName;
@@ -102,6 +104,7 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExported() {
 		String _exportedName = this.getExportedName();
 		return (_exportedName != null);

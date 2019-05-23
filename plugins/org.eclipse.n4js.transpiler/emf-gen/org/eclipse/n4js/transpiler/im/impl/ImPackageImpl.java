@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -16,11 +16,8 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import org.eclipse.n4js.n4JS.N4JSPackage;
-
 import org.eclipse.n4js.transpiler.im.DelegatingGetterDeclaration;
 import org.eclipse.n4js.transpiler.im.DelegatingMember;
 import org.eclipse.n4js.transpiler.im.DelegatingMethodDeclaration;
@@ -45,182 +42,154 @@ import org.eclipse.n4js.transpiler.im.VersionedIdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM;
 import org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM;
-
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Package</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
  * @generated
  */
 public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass script_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass symbolTableEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass symbolTableEntryEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass symbolTableEntryOriginalEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass symbolTableEntryIMOnlyEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass symbolTableEntryInternalEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass referencingElement_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass referencingElementExpression_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass identifierRef_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass parameterizedPropertyAccessExpression_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass parameterizedTypeRef_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass parameterizedTypeRefStructural_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass snippetEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass delegatingMemberEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass delegatingGetterDeclarationEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass delegatingSetterDeclarationEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass delegatingMethodDeclarationEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass stringLiteralForSTEEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass versionedParameterizedTypeRef_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass versionedParameterizedTypeRefStructural_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass versionedIdentifierRef_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass versionedNamedImportSpecifier_IMEClass = null;
 
 	/**
-	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-	 * package URI value.
-	 * <p>Note: the correct way to create the package is via the static
-	 * factory method {@link #init init()}, which also performs
-	 * initialization of the package, or returns the registered package,
-	 * if one already exists.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
+	 * EPackage.Registry} by the package package URI value.
+	 * <p>
+	 * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also
+	 * performs initialization of the package, or returns the registered package, if one already exists. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.n4js.transpiler.im.ImPackage#eNS_URI
 	 * @see #init()
@@ -231,8 +200,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private static boolean isInited = false;
@@ -279,566 +247,565 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getScript_IM() {
 		return script_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getScript_IM_SymbolTable() {
 		return (EReference)script_IMEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSymbolTable() {
 		return symbolTableEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSymbolTable_Entries() {
 		return (EReference)symbolTableEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSymbolTableEntry() {
 		return symbolTableEntryEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSymbolTableEntry_Name() {
 		return (EAttribute)symbolTableEntryEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSymbolTableEntry_ElementsOfThisName() {
 		return (EReference)symbolTableEntryEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSymbolTableEntry_ReferencingElements() {
 		return (EReference)symbolTableEntryEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSymbolTableEntryOriginal() {
 		return symbolTableEntryOriginalEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSymbolTableEntryOriginal_OriginalTarget() {
 		return (EReference)symbolTableEntryOriginalEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSymbolTableEntryOriginal_ImportSpecifier() {
 		return (EReference)symbolTableEntryOriginalEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getSymbolTableEntryOriginal__ExportedName() {
+	@Override
+	public EOperation getSymbolTableEntryOriginal__GetExportedName() {
 		return symbolTableEntryOriginalEClass.getEOperations().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSymbolTableEntryIMOnly() {
 		return symbolTableEntryIMOnlyEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSymbolTableEntryInternal() {
 		return symbolTableEntryInternalEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReferencingElement_IM() {
 		return referencingElement_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReferencingElement_IM_RewiredTarget() {
 		return (EReference)referencingElement_IMEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getReferencingElement_IM__GetOriginalTargetOfRewiredTarget() {
 		return referencingElement_IMEClass.getEOperations().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReferencingElementExpression_IM() {
 		return referencingElementExpression_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIdentifierRef_IM() {
 		return identifierRef_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getIdentifierRef_IM__GetId_IM() {
 		return identifierRef_IMEClass.getEOperations().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getIdentifierRef_IM__SetId_IM__SymbolTableEntry() {
 		return identifierRef_IMEClass.getEOperations().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getIdentifierRef_IM__GetId() {
 		return identifierRef_IMEClass.getEOperations().get(2);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getIdentifierRef_IM__SetId__IdentifiableElement() {
 		return identifierRef_IMEClass.getEOperations().get(3);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameterizedPropertyAccessExpression_IM() {
 		return parameterizedPropertyAccessExpression_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameterizedPropertyAccessExpression_IM_AnyPlusAccess() {
 		return (EAttribute)parameterizedPropertyAccessExpression_IMEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameterizedPropertyAccessExpression_IM_NameOfAnyPlusProperty() {
 		return (EAttribute)parameterizedPropertyAccessExpression_IMEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression_IM__GetProperty_IM() {
 		return parameterizedPropertyAccessExpression_IMEClass.getEOperations().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression_IM__SetProperty_IM__SymbolTableEntry() {
 		return parameterizedPropertyAccessExpression_IMEClass.getEOperations().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression_IM__GetPropertyName() {
 		return parameterizedPropertyAccessExpression_IMEClass.getEOperations().get(2);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression_IM__GetProperty() {
 		return parameterizedPropertyAccessExpression_IMEClass.getEOperations().get(3);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression_IM__SetProperty__IdentifiableElement() {
 		return parameterizedPropertyAccessExpression_IMEClass.getEOperations().get(4);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameterizedTypeRef_IM() {
 		return parameterizedTypeRef_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRef_IM__GetDeclaredType_IM() {
 		return parameterizedTypeRef_IMEClass.getEOperations().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRef_IM__SetDeclaredType_IM__SymbolTableEntry() {
 		return parameterizedTypeRef_IMEClass.getEOperations().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRef_IM__GetDeclaredType() {
 		return parameterizedTypeRef_IMEClass.getEOperations().get(2);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRef_IM__SetDeclaredType__Type() {
 		return parameterizedTypeRef_IMEClass.getEOperations().get(3);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameterizedTypeRefStructural_IM() {
 		return parameterizedTypeRefStructural_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRefStructural_IM__GetDeclaredType_IM() {
 		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRefStructural_IM__SetDeclaredType_IM__SymbolTableEntry() {
 		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRefStructural_IM__GetDeclaredType() {
 		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(2);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedTypeRefStructural_IM__SetDeclaredType__Type() {
 		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(3);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSnippet() {
 		return snippetEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSnippet_Code() {
 		return (EAttribute)snippetEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDelegatingMember() {
 		return delegatingMemberEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDelegatingMember_DelegationBaseType() {
 		return (EReference)delegatingMemberEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDelegatingMember_DelegationSuperClassSteps() {
 		return (EAttribute)delegatingMemberEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDelegatingMember_DelegationTarget() {
 		return (EReference)delegatingMemberEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDelegatingMember_DelegationTargetIsAbstract() {
 		return (EAttribute)delegatingMemberEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDelegatingGetterDeclaration() {
 		return delegatingGetterDeclarationEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDelegatingSetterDeclaration() {
 		return delegatingSetterDeclarationEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDelegatingMethodDeclaration() {
 		return delegatingMethodDeclarationEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStringLiteralForSTE() {
 		return stringLiteralForSTEEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getStringLiteralForSTE_Entry() {
 		return (EReference)stringLiteralForSTEEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStringLiteralForSTE_UseExportedName() {
 		return (EAttribute)stringLiteralForSTEEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getStringLiteralForSTE__GetValueAsString() {
 		return stringLiteralForSTEEClass.getEOperations().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionedParameterizedTypeRef_IM() {
 		return versionedParameterizedTypeRef_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionedParameterizedTypeRefStructural_IM() {
 		return versionedParameterizedTypeRefStructural_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionedIdentifierRef_IM() {
 		return versionedIdentifierRef_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionedNamedImportSpecifier_IM() {
 		return versionedNamedImportSpecifier_IMEClass;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVersionedNamedImportSpecifier_IM_ImportedTypeVersions() {
 		return (EReference)versionedNamedImportSpecifier_IMEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getVersionedNamedImportSpecifier_IM_VersionedTypeImport() {
 		return (EAttribute)versionedNamedImportSpecifier_IMEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ImFactory getImFactory() {
 		return (ImFactory)getEFactoryInstance();
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isCreated = false;
@@ -846,8 +813,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	/**
 	 * Creates the meta-model objects for the package.  This method is
 	 * guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
@@ -869,7 +835,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		symbolTableEntryOriginalEClass = createEClass(SYMBOL_TABLE_ENTRY_ORIGINAL);
 		createEReference(symbolTableEntryOriginalEClass, SYMBOL_TABLE_ENTRY_ORIGINAL__ORIGINAL_TARGET);
 		createEReference(symbolTableEntryOriginalEClass, SYMBOL_TABLE_ENTRY_ORIGINAL__IMPORT_SPECIFIER);
-		createEOperation(symbolTableEntryOriginalEClass, SYMBOL_TABLE_ENTRY_ORIGINAL___EXPORTED_NAME);
+		createEOperation(symbolTableEntryOriginalEClass, SYMBOL_TABLE_ENTRY_ORIGINAL___GET_EXPORTED_NAME);
 
 		symbolTableEntryIMOnlyEClass = createEClass(SYMBOL_TABLE_ENTRY_IM_ONLY);
 
@@ -940,8 +906,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isInitialized = false;
@@ -949,8 +914,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	/**
 	 * Complete the initialization of the package and its meta-model.  This
 	 * method is guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
@@ -1021,7 +985,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		initEReference(getSymbolTableEntryOriginal_OriginalTarget(), theTypesPackage.getIdentifiableElement(), null, "originalTarget", null, 0, 1, SymbolTableEntryOriginal.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSymbolTableEntryOriginal_ImportSpecifier(), theN4JSPackage.getImportSpecifier(), null, "importSpecifier", null, 0, 1, SymbolTableEntryOriginal.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getSymbolTableEntryOriginal__ExportedName(), theEcorePackage.getEString(), "exportedName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getSymbolTableEntryOriginal__GetExportedName(), theEcorePackage.getEString(), "getExportedName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(symbolTableEntryIMOnlyEClass, SymbolTableEntryIMOnly.class, "SymbolTableEntryIMOnly", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -1121,4 +1085,4 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		createResource(eNS_URI);
 	}
 
-} //ImPackageImpl
+} // ImPackageImpl

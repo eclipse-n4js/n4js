@@ -113,10 +113,30 @@ public class BinariesLocatorHelper {
 	 * @return string with absolute path to the binary
 	 */
 	public Path findYarnPath() {
+		Path yarnPathCandidate = null;
 
-		Path yarnPathCandidate;
+		// 1. lookup by DEFAULT_YARN_PATH_VM_ARG
+		yarnPathCandidate = resolveFolderContaingBinary(
+				tryGetEnvOrSystemVariable(BinariesConstants.DEFAULT_YARN_PATH_VM_ARG));
+		if (yarnPathCandidate != null) {
+			info("User specified default Yarn path will be used: '" + yarnPathCandidate
+					+ ".' based on the '" + BinariesConstants.DEFAULT_YARN_PATH_VM_ARG + "' VM argument.");
+			return yarnPathCandidate;
+		}
+		debug("Could not resolve node path from '" + BinariesConstants.DEFAULT_NODE_PATH_VM_ARG
+				+ "' VM argument.");
 
-		// 1. lookup by PATH
+		// 2. lookup by YARN_PATH_ENV
+		yarnPathCandidate = resolveFolderContaingBinary(
+				tryGetEnvOrSystemVariable(BinariesConstants.YARN_PATH_ENV));
+		if (yarnPathCandidate != null) {
+			info("User specified default yarn path will be used: '" + yarnPathCandidate
+					+ ".' based on the '" + BinariesConstants.YARN_PATH_ENV + "' environment argument.");
+			return yarnPathCandidate;
+		}
+		debug("Could not resolve yarn path from '" + BinariesConstants.YARN_PATH_ENV);
+
+		// 3. lookup by PATH
 		yarnPathCandidate = resolveFolderContaingBinary(
 				ExecutableLookupUtil.findInPath(BinariesConstants.YARN_BINARY_NAME));
 		if (yarnPathCandidate != null) {
@@ -126,7 +146,7 @@ public class BinariesLocatorHelper {
 		}
 		debug("Could not resolve yarn path from OS PATH variable.");
 
-		// 2. lookup by OS query
+		// 4. lookup by OS query
 		yarnPathCandidate = resolveFolderContaingBinary(
 				lookForBinary(BinariesConstants.YARN_BINARY_NAME));
 		if (yarnPathCandidate != null) {
@@ -137,8 +157,11 @@ public class BinariesLocatorHelper {
 		}
 		debug("Could not resolve yarn path from OS dynamic lookup.");
 
-		debug("Falling back to node path ...");
-		return findNodePath();
+		// 5. use default, whether it is correct or not.
+		info("Could not resolve yarn path. Falling back to default path: " + yarnPathCandidate);
+		yarnPathCandidate = new File(BinariesConstants.BUILT_IN_DEFAULT_YARN_PATH).toPath();
+
+		return yarnPathCandidate;
 	}
 
 	private String lookForBinary(String binaryName) {

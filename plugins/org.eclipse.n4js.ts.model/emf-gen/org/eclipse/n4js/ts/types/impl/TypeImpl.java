@@ -93,6 +93,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TAnnotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.TYPE__ANNOTATIONS);
@@ -105,6 +106,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return true;
 	}
@@ -114,6 +116,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isPolyfill() {
 		return false;
 	}
@@ -123,6 +126,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStaticPolyfill() {
 		return false;
 	}
@@ -132,6 +136,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFinal() {
 		return true;
 	}
@@ -141,6 +146,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDynamizable() {
 		return false;
 	}
@@ -150,6 +156,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isArrayLike() {
 		TypeRef _elementType = this.getElementType();
 		return (_elementType != null);
@@ -160,6 +167,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getElementType() {
 		Object _elementType = ArrayLikes.getElementType(this);
 		return ((TypeRef) _elementType);
@@ -170,6 +178,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeAccessModifier getTypeAccessModifier() {
 		return TypeAccessModifier.PUBLIC;
 	}
@@ -179,6 +188,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGeneric() {
 		boolean _isEmpty = this.getTypeVars().isEmpty();
 		return (!_isEmpty);
@@ -189,6 +199,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeVariable> getTypeVars() {
 		return XcoreCollectionLiterals.<TypeVariable>emptyEList();
 	}
@@ -198,6 +209,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Variance getVarianceOfTypeVar(final int idx) {
 		Variance _xifexpression = null;
 		if (((idx >= 0) && (idx < this.getTypeVars().size()))) {
@@ -214,6 +226,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getRawTypeAsString() {
 		return this.getName();
 	}
@@ -223,6 +236,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeAsString() {
 		String _xifexpression = null;
 		boolean _isGeneric = this.isGeneric();
@@ -249,6 +263,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getVersion() {
 		return 0;
 	}

@@ -6,7 +6,6 @@
 		"vendorId": "MyVendorID",
 		"vendorName": "My Vendor Name",
 		"output": "src-gen",
-		"moduleLoader": "n4js",
 		"sources": {
 			
 		}

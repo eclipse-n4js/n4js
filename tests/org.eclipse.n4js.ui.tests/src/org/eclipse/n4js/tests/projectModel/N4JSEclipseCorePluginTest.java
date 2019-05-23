@@ -53,6 +53,16 @@ public class N4JSEclipseCorePluginTest extends AbstractN4JSCoreTest {
 	}
 
 	@Override
+	protected String[] getExpectedIssuesInInitialSetup(String projectName) {
+		if (projectName.equals(myProjectName)) {
+			return new String[] {
+					"line 6: Project depends on workspace project libProject which is missing in the node_modules folder. Either install project libProject or introduce a yarn workspace of both of the projects."
+			};
+		}
+		return new String[0];
+	}
+
+	@Override
 	public void setUp() {
 		internalWorkspace = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionLoader, cache);
 		N4JSEclipseModel model = new N4JSEclipseModel(internalWorkspace);

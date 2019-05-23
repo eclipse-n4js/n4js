@@ -29,7 +29,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getProjectName <em>Project Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVendorID <em>Vendor ID</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getModuleLoader <em>Module Loader</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isN4jsdModule <em>N4jsd Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isStaticPolyfillModule <em>Static Polyfill Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isStaticPolyfillAware <em>Static Polyfill Aware</em>}</li>
@@ -129,34 +128,6 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	void setVendorID(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Module Loader</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * The module loader supported by this module as defined in the containing project's package.json.
-	 * Value will be an EMF enum literal, i.e. something like <code>org.eclipse.n4js.projectDescription.ModuleLoader.COMMONJS.getLiteral()</code>.
-	 * See <code>PackageJsonUtils#parseModuleLoader()</code> for how to convert from String to values of enum ModuleLoader.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Module Loader</em>' attribute.
-	 * @see #setModuleLoader(String)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ModuleLoader()
-	 * @model unique="false"
-	 * @generated
-	 */
-	String getModuleLoader();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getModuleLoader <em>Module Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Module Loader</em>' attribute.
-	 * @see #getModuleLoader()
-	 * @generated
-	 */
-	void setModuleLoader(String value);
 
 	/**
 	 * Returns the value of the '<em><b>N4jsd Module</b></em>' attribute.

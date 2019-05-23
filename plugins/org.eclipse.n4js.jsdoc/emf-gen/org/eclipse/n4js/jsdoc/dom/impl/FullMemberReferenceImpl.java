@@ -105,6 +105,7 @@ public class FullMemberReferenceImpl extends FullTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getMemberName() {
 		return memberName;
 	}
@@ -114,6 +115,7 @@ public class FullMemberReferenceImpl extends FullTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMemberName(String newMemberName) {
 		String oldMemberName = memberName;
 		memberName = newMemberName;
@@ -126,6 +128,7 @@ public class FullMemberReferenceImpl extends FullTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStaticMember() {
 		return staticMember;
 	}
@@ -135,6 +138,7 @@ public class FullMemberReferenceImpl extends FullTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStaticMember(boolean newStaticMember) {
 		boolean oldStaticMember = staticMember;
 		staticMember = newStaticMember;
@@ -147,6 +151,7 @@ public class FullMemberReferenceImpl extends FullTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean memberNameSet() {
 		return ((this.getMemberName() != null) && (!this.getMemberName().isEmpty()));
 	}
@@ -156,6 +161,7 @@ public class FullMemberReferenceImpl extends FullTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		String _string = super.toString();
 		StringBuilder strb = new StringBuilder(_string);

@@ -81,7 +81,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * {@link #internalCheckTypeArguments(Type,List,EObject,EStructuralFeature)}
  * is called from N4JSTypeValidator and N4JSExpressionValidator).
  */
-public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4JSValidator { // AbstractDeclarativeValidator {
+public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4JSValidator { // AbstractDeclarativeValidator {
 
 	@Inject
 	protected extension N4JSElementKeywordProvider keywordProvider;

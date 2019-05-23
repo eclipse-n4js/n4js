@@ -35,10 +35,6 @@ public interface IdentifierRef extends PrimaryExpression, StrictModeRelevant, Ve
 	/**
 	 * Returns the value of the '<em><b>Id</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Id</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Id</em>' reference.
 	 * @see #setId(IdentifiableElement)
@@ -61,10 +57,6 @@ public interface IdentifierRef extends PrimaryExpression, StrictModeRelevant, Ve
 	/**
 	 * Returns the value of the '<em><b>Id As Text</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Id As Text</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Id As Text</em>' attribute.
 	 * @see #setIdAsText(String)

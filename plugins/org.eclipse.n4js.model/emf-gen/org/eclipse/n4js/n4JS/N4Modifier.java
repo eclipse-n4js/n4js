@@ -131,10 +131,6 @@ public enum N4Modifier implements Enumerator {
 	/**
 	 * The '<em><b>Undefined</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Undefined</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #UNDEFINED
 	 * @model name="undefined"
@@ -146,10 +142,6 @@ public enum N4Modifier implements Enumerator {
 	/**
 	 * The '<em><b>External</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>External</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #EXTERNAL
 	 * @model name="external"
@@ -161,10 +153,6 @@ public enum N4Modifier implements Enumerator {
 	/**
 	 * The '<em><b>Private</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Private</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PRIVATE
 	 * @model name="private"
@@ -176,10 +164,6 @@ public enum N4Modifier implements Enumerator {
 	/**
 	 * The '<em><b>Project</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Project</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PROJECT
 	 * @model name="project"
@@ -191,10 +175,6 @@ public enum N4Modifier implements Enumerator {
 	/**
 	 * The '<em><b>Protected</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Protected</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PROTECTED
 	 * @model name="protected"
@@ -206,10 +186,6 @@ public enum N4Modifier implements Enumerator {
 	/**
 	 * The '<em><b>Public</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Public</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #PUBLIC
 	 * @model name="public"
@@ -221,10 +197,6 @@ public enum N4Modifier implements Enumerator {
 	/**
 	 * The '<em><b>Abstract</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Abstract</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #ABSTRACT
 	 * @model name="abstract"
@@ -236,10 +208,6 @@ public enum N4Modifier implements Enumerator {
 	/**
 	 * The '<em><b>Static</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Static</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #STATIC
 	 * @model name="static"
@@ -251,10 +219,6 @@ public enum N4Modifier implements Enumerator {
 	/**
 	 * The '<em><b>Const</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Const</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #CONST
 	 * @model name="const"
@@ -387,6 +351,7 @@ public enum N4Modifier implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -396,6 +361,7 @@ public enum N4Modifier implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -405,6 +371,7 @@ public enum N4Modifier implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

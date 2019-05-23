@@ -37,6 +37,11 @@ public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTes
 	}
 
 	@Override
+	protected String[] getExpectedIssuesInInitialSetup(String projectName) {
+		return new String[0];
+	}
+
+	@Override
 	public void setUp() {
 		testMe = new FileBasedWorkspace(projectDescriptionLoader);
 		super.setUp();

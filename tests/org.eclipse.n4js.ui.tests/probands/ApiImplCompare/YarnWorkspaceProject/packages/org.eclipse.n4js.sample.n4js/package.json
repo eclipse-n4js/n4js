@@ -17,7 +17,6 @@
     "implementationId": "impl.n4js",
     "implementedProjects": [
       "org.eclipse.n4js.sample.api"
-    ],
-    "moduleLoader": "n4js"
+    ]
   }
 }

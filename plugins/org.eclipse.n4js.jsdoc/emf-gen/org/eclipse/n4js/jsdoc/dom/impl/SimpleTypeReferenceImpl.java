@@ -89,6 +89,7 @@ public class SimpleTypeReferenceImpl extends JSDocNodeImpl implements SimpleType
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Composite getOwner() {
 		if (eContainerFeatureID() != DomPackage.SIMPLE_TYPE_REFERENCE__OWNER) return null;
 		return (Composite)eContainer();
@@ -119,6 +120,7 @@ public class SimpleTypeReferenceImpl extends JSDocNodeImpl implements SimpleType
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOwner(Composite newOwner) {
 		if (newOwner != eInternalContainer() || (eContainerFeatureID() != DomPackage.SIMPLE_TYPE_REFERENCE__OWNER && newOwner != null)) {
 			if (EcoreUtil.isAncestor(this, newOwner))
@@ -140,6 +142,7 @@ public class SimpleTypeReferenceImpl extends JSDocNodeImpl implements SimpleType
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTypeName() {
 		return typeName;
 	}
@@ -149,6 +152,7 @@ public class SimpleTypeReferenceImpl extends JSDocNodeImpl implements SimpleType
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTypeName(String newTypeName) {
 		String oldTypeName = typeName;
 		typeName = newTypeName;
@@ -161,6 +165,7 @@ public class SimpleTypeReferenceImpl extends JSDocNodeImpl implements SimpleType
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean typeNameSet() {
 		return ((this.getTypeName() != null) && (!this.getTypeName().isEmpty()));
 	}
@@ -170,6 +175,7 @@ public class SimpleTypeReferenceImpl extends JSDocNodeImpl implements SimpleType
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		return this.getTypeName();
 	}

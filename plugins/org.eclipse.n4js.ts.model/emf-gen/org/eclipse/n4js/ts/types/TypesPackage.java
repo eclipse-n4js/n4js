@@ -208,22 +208,13 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__VENDOR_ID = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Module Loader</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__MODULE_LOADER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 4;
-
-	/**
 	 * The feature id for the '<em><b>N4jsd Module</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__N4JSD_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 5;
+	int TMODULE__N4JSD_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Static Polyfill Module</b></em>' attribute.
@@ -232,7 +223,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__STATIC_POLYFILL_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 6;
+	int TMODULE__STATIC_POLYFILL_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Static Polyfill Aware</b></em>' attribute.
@@ -241,7 +232,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__STATIC_POLYFILL_AWARE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 7;
+	int TMODULE__STATIC_POLYFILL_AWARE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Main Module</b></em>' attribute.
@@ -250,7 +241,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MAIN_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 8;
+	int TMODULE__MAIN_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Pre Linking Phase</b></em>' attribute.
@@ -259,7 +250,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__PRE_LINKING_PHASE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 9;
+	int TMODULE__PRE_LINKING_PHASE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Reconciled</b></em>' attribute.
@@ -268,7 +259,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__RECONCILED = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 10;
+	int TMODULE__RECONCILED = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
@@ -277,7 +268,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TOP_LEVEL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
+	int TMODULE__TOP_LEVEL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
@@ -286,7 +277,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__VARIABLES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
+	int TMODULE__VARIABLES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Internal Types</b></em>' containment reference list.
@@ -295,7 +286,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
+	int TMODULE__INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Exposed Internal Types</b></em>' containment reference list.
@@ -304,7 +295,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__EXPOSED_INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
+	int TMODULE__EXPOSED_INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Ast MD5</b></em>' attribute.
@@ -313,7 +304,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__AST_MD5 = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
+	int TMODULE__AST_MD5 = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Composed Member Caches</b></em>' containment reference list.
@@ -322,7 +313,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
+	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Temporary Types</b></em>' containment reference list.
@@ -331,7 +322,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TEMPORARY_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
+	int TMODULE__TEMPORARY_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
@@ -340,7 +331,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 18;
+	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
 
 	/**
 	 * The number of structural features of the '<em>TModule</em>' class.
@@ -349,7 +340,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 19;
+	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 18;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -1075,13 +1066,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE_VARIABLE__DECLARED_UPPER_BOUND = TYPE_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Defined Type Variable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE__DEFINED_TYPE_VARIABLE = TYPE_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Type Variable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_VARIABLE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 3;
+	int TYPE_VARIABLE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -1317,6 +1317,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int INFERENCE_VARIABLE__DECLARED_UPPER_BOUND = TYPE_VARIABLE__DECLARED_UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Defined Type Variable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE__DEFINED_TYPE_VARIABLE = TYPE_VARIABLE__DEFINED_TYPE_VARIABLE;
 
 	/**
 	 * The number of structural features of the '<em>Inference Variable</em>' class.
@@ -12613,6 +12622,16 @@ public interface TypesPackage extends EPackage {
 	int MEMBER_TYPE = 59;
 
 	/**
+	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.lang.Iterable
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
+	 * @generated
+	 */
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
+
+	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12620,7 +12639,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 60;
+	int ITERABLE_OF_TCLASSIFIER = 61;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12630,7 +12649,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 61;
+	int VARIANCE = 62;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12640,7 +12659,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 62;
+	int NAME_AND_ACCESS = 63;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12650,7 +12669,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 63;
+	int MEMBER_LIST = 64;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12660,7 +12679,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 64;
+	int TCLASSIFIER_ITERABLE = 65;
 
 
 	/**
@@ -12726,17 +12745,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTModule_VendorID();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getModuleLoader <em>Module Loader</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Module Loader</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getModuleLoader()
-	 * @see #getTModule()
-	 * @generated
-	 */
-	EAttribute getTModule_ModuleLoader();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#isN4jsdModule <em>N4jsd Module</em>}'.
@@ -13203,6 +13211,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTypeVariable_DeclaredUpperBound();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Defined Type Variable</em>'.
+	 * @see org.eclipse.n4js.ts.types.TypeVariable#getDefinedTypeVariable()
+	 * @see #getTypeVariable()
+	 * @generated
+	 */
+	EReference getTypeVariable_DefinedTypeVariable();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeVariable#getVariance() <em>Get Variance</em>}' operation.
@@ -15560,6 +15579,17 @@ public interface TypesPackage extends EPackage {
 	EEnum getMemberType();
 
 	/**
+	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Parameterized Type Ref Iterable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Parameterized Type Ref Iterable</em>'.
+	 * @see java.lang.Iterable
+	 * @model instanceClass="java.lang.Iterable&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;"
+	 * @generated
+	 */
+	EDataType getParameterizedTypeRefIterable();
+
+	/**
 	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Iterable Of TClassifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15688,14 +15718,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMODULE__VENDOR_ID = eINSTANCE.getTModule_VendorID();
-
-		/**
-		 * The meta object literal for the '<em><b>Module Loader</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TMODULE__MODULE_LOADER = eINSTANCE.getTModule_ModuleLoader();
 
 		/**
 		 * The meta object literal for the '<em><b>N4jsd Module</b></em>' attribute feature.
@@ -16070,6 +16092,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TYPE_VARIABLE__DECLARED_UPPER_BOUND = eINSTANCE.getTypeVariable_DeclaredUpperBound();
+
+		/**
+		 * The meta object literal for the '<em><b>Defined Type Variable</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TYPE_VARIABLE__DEFINED_TYPE_VARIABLE = eINSTANCE.getTypeVariable_DefinedTypeVariable();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Variance</b></em>' operation.
@@ -17988,6 +18018,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum MEMBER_TYPE = eINSTANCE.getMemberType();
+
+		/**
+		 * The meta object literal for the '<em>Parameterized Type Ref Iterable</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.lang.Iterable
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
+		 * @generated
+		 */
+		EDataType PARAMETERIZED_TYPE_REF_ITERABLE = eINSTANCE.getParameterizedTypeRefIterable();
 
 		/**
 		 * The meta object literal for the '<em>Iterable Of TClassifier</em>' data type.

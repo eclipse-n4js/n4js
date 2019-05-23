@@ -57,6 +57,7 @@ public abstract class AnnotationArgumentImpl extends ProxyResolvingEObjectImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject value() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -68,6 +69,7 @@ public abstract class AnnotationArgumentImpl extends ProxyResolvingEObjectImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValueAsString() {
 		final EObject value = this.value();
 		if ((value == null)) {

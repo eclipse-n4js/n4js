@@ -12,23 +12,28 @@ package org.eclipse.n4js.tester.nodejs;
 
 import static org.eclipse.n4js.runner.extension.RuntimeEnvironment.NODEJS_MANGELHAFT;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.concurrent.ExecutionException;
+
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.nodejs.NodeRunner;
 import org.eclipse.n4js.tester.ITester;
 import org.eclipse.n4js.tester.TestConfiguration;
-import org.eclipse.n4js.tester.TesterFileBasedShippedCodeConfigurationHelper;
 import org.eclipse.n4js.tester.extension.ITesterDescriptor;
 import org.eclipse.n4js.tester.extension.TesterDescriptorImpl;
 
+import com.google.common.base.Charsets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
  */
 public class NodeTester implements ITester {
-	@Inject
-	private TesterFileBasedShippedCodeConfigurationHelper shippedCodeConfigurationHelper;
 
 	/** ID of the Node.js tester as defined in the plugin.xml. */
 	public static final String ID = "org.eclipse.n4js.tester.nodejs.NODEJS_MANGELHAFT";
@@ -56,9 +61,7 @@ public class NodeTester implements ITester {
 
 	@Override
 	public void prepareConfiguration(TestConfiguration config) {
-		if (config.isUseCustomBootstrap()) {
-			shippedCodeConfigurationHelper.configureFromFileSystem(config);
-		}
+		// no special preparations required
 	}
 
 	@Override
@@ -67,7 +70,47 @@ public class NodeTester implements ITester {
 	}
 
 	@Override
-	public Process test(TestConfiguration config, IExecutor executor, RunnerFrontEnd runnerFrontEnd) {
+	public Process test(TestConfiguration config, IExecutor executor, RunnerFrontEnd runnerFrontEnd)
+			throws ExecutionException {
+
+		Path testCatalog = createTestCatalog(config);
+
+		Path fileToRun = findMangelhaftCliEntryPoint(config);
+		config.setFileToRun(fileToRun);
+
+		config.setRunOptions("--testCatalog " + testCatalog.toAbsolutePath() + " --quiet");
+
 		return runnerFrontEnd.run(config, executor);
+	}
+
+	private Path createTestCatalog(TestConfiguration config) {
+		try {
+			Path testCatalog = Files.createTempFile("n4js-testCatalog-", "");
+			testCatalog.toFile().deleteOnExit();
+			String testTreeAsJSON = config.getTestTreeAsJSON();
+			Files.write(testCatalog, Collections.singletonList(testTreeAsJSON), Charsets.UTF_8);
+			return testCatalog;
+		} catch (IOException e) {
+			throw new IllegalStateException("unable to write test catalog to temporary file", e);
+		}
+	}
+
+	private Path findMangelhaftCliEntryPoint(TestConfiguration config) {
+		Path workingDirectory = config.getWorkingDirectory();
+		if (workingDirectory == null) {
+			throw new IllegalArgumentException("test configuration does not specify a working directory");
+		}
+
+		Path base = workingDirectory;
+		while (base != null
+				&& !Files.isDirectory(base.resolve(N4JSGlobals.NODE_MODULES).resolve(N4JSGlobals.MANGELHAFT_CLI))) {
+			base = base.getParent();
+		}
+		if (base == null) {
+			throw new IllegalStateException("unable to find npm package '" + N4JSGlobals.MANGELHAFT_CLI + "'");
+		}
+
+		return base.resolve(N4JSGlobals.NODE_MODULES).resolve(N4JSGlobals.MANGELHAFT_CLI)
+				.resolve("bin/n4js-mangelhaft-cli.js");
 	}
 }

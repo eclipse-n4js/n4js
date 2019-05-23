@@ -14,8 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +30,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.RunnerHelper.ApiUsage;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
-import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 
 import com.google.common.base.Optional;
@@ -55,9 +53,6 @@ public class RunnerFrontEnd {
 
 	@Inject
 	private RunnerHelper runnerHelper;
-
-	@Inject
-	private RuntimeEnvironmentsHelper hRuntimeEnvironments;
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
@@ -103,29 +98,6 @@ public class RunnerFrontEnd {
 	 * @return the run configuration.
 	 */
 	public RunConfiguration createConfiguration(String runnerId, String implementationId, URI moduleToRun) {
-		return createConfiguration(runnerId, implementationId, null, moduleToRun);
-	}
-
-	/**
-	 * Create a new run configuration from scratch for running the given moduleToRun.
-	 *
-	 * @param runnerId
-	 *            identifier of the runner to use.
-	 * @param implementationId
-	 *            implementation ID to use or <code>null</code>. See {@link RunConfiguration#getImplementationId() here}
-	 *            for details.
-	 * @param systemLoader
-	 *            the application specific unique ID of the javascript system loader. For more details about the
-	 *            available options, check {@link SystemLoaderInfo}. If {@code null}, then the default System.js loader
-	 *            will be used.
-	 * @param moduleToRun
-	 *            the module to execute. When running in Eclipse, this will be a platform resource URI, in the headless
-	 *            case it will be a file URI.
-	 * @return the run configuration.
-	 */
-	public RunConfiguration createConfiguration(String runnerId, String implementationId, String systemLoader,
-			URI moduleToRun) {
-
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
 
@@ -135,9 +107,6 @@ public class RunnerFrontEnd {
 		config.setRuntimeEnvironment(runnerDesc.getEnvironment());
 		config.setImplementationId(implementationId);
 		config.setUserSelection(moduleToRun);
-		if (null != SystemLoaderInfo.fromString(systemLoader)) {
-			config.setSystemLoader(systemLoader);
-		}
 
 		computeDerivedValues(config);
 
@@ -147,10 +116,10 @@ public class RunnerFrontEnd {
 	/**
 	 * Allows for adding additional path if needed.
 	 */
-	public RunConfiguration createConfiguration(String runnerId, String implementationId, String systemLoader,
-			URI moduleToRun, String additionalPath) {
+	public RunConfiguration createConfiguration(String runnerId, String implementationId, URI moduleToRun,
+			String additionalPath) {
 
-		RunConfiguration runConfig = createConfiguration(runnerId, implementationId, systemLoader, moduleToRun);
+		RunConfiguration runConfig = createConfiguration(runnerId, implementationId, moduleToRun);
 		runConfig.addAdditionalPath(additionalPath);
 		return runConfig;
 	}
@@ -176,8 +145,8 @@ public class RunnerFrontEnd {
 	 * Create runner-config customized for this Xpect test. cf. org.eclipse.n4js.xpect.XpectN4JSES5TranspilerHelper
 	 */
 	public RunConfiguration createXpectOutputTestConfiguration(String runnerId,
-			String userSelectionNodePathResolvableTargetFileName, SystemLoaderInfo systemLoader,
-			Path additionalProjectPath, String additionalProjectName) {
+			String userSelectionNodePathResolvableTargetFileName, Path additionalProjectPath,
+			String additionalProjectName) {
 
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
@@ -187,17 +156,16 @@ public class RunnerFrontEnd {
 		config.setRuntimeEnvironment(runnerDesc.getEnvironment());
 		config.setImplementationId(null);
 		config.setRunnerId(runnerId);
-		config.setSystemLoader(systemLoader.getId());
-
-		config.setUseCustomBootstrap(true);
 
 		config.setCoreProjectPaths(ImmutableMap.of(additionalProjectPath, additionalProjectName));
 
+		config.setWorkingDirectory(additionalProjectPath);
+		config.setFileToRun(Paths.get(userSelectionNodePathResolvableTargetFileName));
+
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 				userSelectionNodePathResolvableTargetFileName);
-		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__INIT_MODULES, config.getInitModules());
 
-		IRunner preparedRunner = runnerRegistry.getRunner(config);
+		IRunner preparedRunner = runnerRegistry.getRunner(runnerId);
 		preparedRunner.prepareConfiguration(config);
 
 		return config;
@@ -220,11 +188,11 @@ public class RunnerFrontEnd {
 	 */
 	public void computeDerivedValues(RunConfiguration config, boolean delegateToRunnerCustomization) {
 
+		configureWorkingDirectory(config);
+
+		configureFileToRun(config);
+
 		configureDependenciesAndPaths(config);
-
-		configureRuntimeEnvironment(config);
-
-		configureNeedsCustomBootstrap(config);
 
 		configureExecutionData(config);
 
@@ -232,6 +200,40 @@ public class RunnerFrontEnd {
 			// delegate further computation to the specific runner implementation
 			IRunner runner = runnerRegistry.getRunner(config);
 			runner.prepareConfiguration(config);
+		}
+	}
+
+	/**
+	 * Configures the root folder of the user selection's containing N4JS project as working directory.
+	 */
+	private void configureWorkingDirectory(RunConfiguration config) {
+		final URI userSelection = config.getUserSelection();
+		if (userSelection != null) {
+			IN4JSProject containingProject = resolveProject(userSelection);
+			Path workingDirectory = containingProject.getLocationPath();
+			config.setWorkingDirectory(workingDirectory);
+		}
+	}
+
+	/**
+	 * Configures the file the user selection is pointing to as the file to run. If the user selection is not pointing
+	 * to a file (e.g. a folder) the file to run will be reset to <code>null</code>.
+	 */
+	private void configureFileToRun(RunConfiguration config) {
+		final URI userSelection = config.getUserSelection();
+		if (userSelection != null && hasValidFileExtension(userSelection.toString())) {
+			final String selectedFileDescriptor = resourceNameComputer.generateFileDescriptor(userSelection, null);
+			final Path selectedFilePath = new File(selectedFileDescriptor).toPath();
+			final IN4JSProject containingProject = resolveProject(userSelection);
+			final String outputPathStr = containingProject.getOutputPath();
+			final Path outputPath = Paths.get(outputPathStr.replace('/', File.separatorChar));
+			final Path fileToRun = outputPath.resolve(selectedFilePath);
+			config.setFileToRun(fileToRun);
+		} else {
+			// this can happen if the RunConfiguration 'config' is actually a TestConfiguration, because then the user
+			// selection is allowed to point to a project or folder (and method CompilerUtils#getModuleName() above
+			// would throw an exception)
+			config.setFileToRun(null);
 		}
 	}
 
@@ -275,7 +277,7 @@ public class RunnerFrontEnd {
 			final String userSelection_targetFileName = resourceNameComputer.generateFileDescriptor(userSelection,
 					null);
 			IN4JSProject project = resolveProject(userSelection);
-			String base = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
+			String base = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project, true);
 			config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 					base + "/" + userSelection_targetFileName);
 		} else {
@@ -284,7 +286,6 @@ public class RunnerFrontEnd {
 			// would throw an exception)
 			config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION, null);
 		}
-		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__INIT_MODULES, config.getInitModules());
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__PROJECT_NAME_MAPPING,
 				config.getApiImplProjectMapping());
 	}
@@ -301,20 +302,6 @@ public class RunnerFrontEnd {
 		return optionalProject.get();
 	}
 
-	/**
-	 * Computes value of the flag indicating if custom bootstrap is needed. If so, concrete runner will need to provide
-	 * more information for {@link RunConfiguration#getInitModules() init modules} and / or
-	 * {@link RunConfiguration#getExecModule() exec module}.
-	 *
-	 * @param config
-	 *            the run configuration which will have {@link RunConfiguration#isUseCustomBootstrap()} computed
-	 */
-	private void configureNeedsCustomBootstrap(RunConfiguration config) {
-		final boolean useDefaultBootstrap = config.getInitModules().isEmpty()
-				&& (config.getExecModule() == null || config.getExecModule().isEmpty());
-		config.setUseCustomBootstrap(useDefaultBootstrap);
-	}
-
 	private boolean hasValidFileExtension(String fileName) {
 		for (String fileExtension : fileExtensionsRegistry
 				.getFileExtensions(FileExtensionType.RUNNABLE_FILE_EXTENSION)) {
@@ -326,89 +313,18 @@ public class RunnerFrontEnd {
 	}
 
 	/**
-	 * Configures provided configuration based on the {@link RunConfiguration#getRuntimeEnvironment() runtime
-	 * environment} value it stores.
-	 *
-	 * Recomputes {@link RunConfiguration#getInitModules() init modules} and {@link RunConfiguration#getExecModule()
-	 * exec module} based on current state of the workspace.
-	 *
-	 * @param config
-	 *            the runtime configuration whose derived values are computed.
-	 */
-	private void configureRuntimeEnvironment(RunConfiguration config) {
-		configureRuntimeEnvironment(config, getAllWorkspaceProjects());
-	}
-
-	/**
-	 * Configures provided configuration based on the {@link RunConfiguration#getRuntimeEnvironment() runtime
-	 * environment} value it stores.
-	 *
-	 * Recomputes {@link RunConfiguration#getInitModules() init modules} and {@link RunConfiguration#getExecModule()
-	 * exec module} based on current state of the workspace.
-	 *
-	 * @param config
-	 *            the runtime configuration whose derived values are computed.
-	 */
-	public void configureRuntimeEnvironment(RunConfiguration config, Iterable<IN4JSProject> projects) {
-		RuntimeEnvironment runtimeEnvironment = config.getRuntimeEnvironment();
-
-		Optional<IN4JSProject> findRuntimeEnvironmentProject = hRuntimeEnvironments
-				.findRuntimeEnvironmentProject(runtimeEnvironment, projects);
-		if (findRuntimeEnvironmentProject.isPresent()) {
-			IN4JSProject runtimeEnvironmentProject = findRuntimeEnvironmentProject.get();
-			// 3) collect custom(!) init modules based on selected runtime environment
-			final List<String> initModulePaths = getInitModulesPathsFrom(runtimeEnvironmentProject);
-			config.setInitModules(initModulePaths);
-
-			// 4) find compiled .js file to be executed first (the "executionModule" of the runtime environment)
-			Optional<String> executionModule = getExecModulePathFrom(runtimeEnvironmentProject);
-			if (executionModule.isPresent()) {
-				config.setExecModule(executionModule.get());
-			}
-		}
-	}
-
-	private Iterable<IN4JSProject> getAllWorkspaceProjects() {
-		return in4jscore.findAllProjects();
-	}
-
-	/**
-	 * Collect init modules from given runtime environment (and environments it extends).
-	 */
-	private List<String> getInitModulesPathsFrom(IN4JSProject runtimeEnvironment) {
-		Set<IN4JSProject> environemntWithAncestors = hRuntimeEnvironments
-				.getRuntimeEnvironmentAndAllExtendedEnvironments(runtimeEnvironment);
-		return runnerHelper.getInitModulePaths(new ArrayList<>(environemntWithAncestors));
-	}
-
-	/**
-	 * Find exec module from given runtime environment.
-	 */
-	private Optional<String> getExecModulePathFrom(IN4JSProject runtimeEnvironment) {
-		return runnerHelper.getExecModuleURI(Arrays.asList(runtimeEnvironment));
-	}
-
-	/**
 	 * Convenience method. Creates a run configuration with {@link #createConfiguration(String, String, URI)} and
 	 * immediately passes it to {@link #run(RunConfiguration)} in order to launch the moduleToRun.
 	 */
-	public Process run(String runnerId, String implementationId, URI moduleToRun) {
+	public Process run(String runnerId, String implementationId, URI moduleToRun) throws ExecutionException {
 		return run(createConfiguration(runnerId, implementationId, moduleToRun));
-	}
-
-	/**
-	 * Convenience method. Creates a run configuration with {@link #createConfiguration(String, String, String, URI)}
-	 * and immediately passes it to {@link #run(RunConfiguration)} in order to launch the moduleToRun.
-	 */
-	public Process run(String runnerId, String implementationId, String systemLoader, URI moduleToRun) {
-		return run(createConfiguration(runnerId, implementationId, systemLoader, moduleToRun));
 	}
 
 	/**
 	 * Convenience method. Same as {@link #run(RunConfiguration, IExecutor)}, but uses the default executor returned my
 	 * method {@link #createDefaultExecutor()} that will delegate to {@link Runtime#exec(String[], String[], File)}.
 	 */
-	public Process run(RunConfiguration config) {
+	public Process run(RunConfiguration config) throws ExecutionException {
 		return run(config, createDefaultExecutor());
 	}
 
@@ -416,7 +332,7 @@ public class RunnerFrontEnd {
 	 * Launches the given run configuration. The specific runner to use is defined by the runnerId in the given run
 	 * configuration and the given executor will be used for launching any external tools.
 	 */
-	public Process run(RunConfiguration config, IExecutor executor) {
+	public Process run(RunConfiguration config, IExecutor executor) throws ExecutionException {
 		return runnerRegistry.getRunner(config).run(config, executor);
 	}
 

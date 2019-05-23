@@ -99,6 +99,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Block getBody() {
 		return body;
 	}
@@ -123,6 +124,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBody(Block newBody) {
 		if (newBody != body) {
 			NotificationChain msgs = null;
@@ -142,6 +144,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LocalArgumentsVariable get_lok() {
 		return _lok;
 	}
@@ -166,6 +169,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void set_lok(LocalArgumentsVariable new_lok) {
 		if (new_lok != _lok) {
 			NotificationChain msgs = null;
@@ -185,6 +189,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -196,6 +201,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LocalArgumentsVariable getLocalArgumentsVariable() {
 		LocalArgumentsVariable __lok = this.get_lok();
 		boolean _tripleEquals = (__lok == null);
@@ -217,6 +223,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReturnValueOptional() {
 		return false;
 	}
@@ -226,6 +233,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAsync() {
 		return false;
 	}
@@ -235,6 +243,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getDefinedFunctionOrAccessor() {
 		final FunctionOrFieldAccessor _this = this;
 		EObject _switchResult = null;
@@ -257,6 +266,7 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return false;
 	}

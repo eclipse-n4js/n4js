@@ -1,9 +1,0 @@
-@@Global @@ProvidedByRuntime
-
-export external public class TextEncoder {
-     public constructor();
-     
-     public get encoding(): string;
-     
-     public encode(str: string): Uint8Array; 
-}

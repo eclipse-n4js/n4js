@@ -34,10 +34,6 @@ public interface AccessibleTypeElement extends EObject {
 	 * Returns the value of the '<em><b>Declared Type Access Modifier</b></em>' attribute.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.ts.types.TypeAccessModifier}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Type Access Modifier</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Type Access Modifier</em>' attribute.
 	 * @see org.eclipse.n4js.ts.types.TypeAccessModifier
@@ -62,10 +58,6 @@ public interface AccessibleTypeElement extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Declared Provided By Runtime</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Provided By Runtime</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Provided By Runtime</em>' attribute.
 	 * @see #setDeclaredProvidedByRuntime(boolean)

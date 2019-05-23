@@ -126,6 +126,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AnnotationList getAnnotationList() {
 		return annotationList;
 	}
@@ -150,6 +151,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAnnotationList(AnnotationList newAnnotationList) {
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
@@ -169,6 +171,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<N4Modifier> getDeclaredModifiers() {
 		if (declaredModifiers == null) {
 			declaredModifiers = new EDataTypeEList<N4Modifier>(N4Modifier.class, this, N4JSPackage.N4_TYPE_DECLARATION__DECLARED_MODIFIERS);
@@ -181,6 +184,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -190,6 +194,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -202,6 +207,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExternal() {
 		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
 	}
@@ -211,6 +217,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
@@ -221,6 +228,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExportedAsDefault() {
 		return (this.isExported() && ((ExportDeclaration) this.eContainer()).isDefaultExport());
 	}
@@ -230,6 +238,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getExportedName() {
 		boolean _isExported = this.isExported();
 		if (_isExported) {
@@ -262,6 +271,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isToplevel() {
 		EObject _eContainer = this.eContainer();
 		if ((_eContainer instanceof ExportDeclaration)) {
@@ -277,6 +287,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		AnnotationList _annotationList = this.getAnnotationList();

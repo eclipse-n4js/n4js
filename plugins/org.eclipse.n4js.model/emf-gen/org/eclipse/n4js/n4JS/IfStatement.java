@@ -33,10 +33,6 @@ public interface IfStatement extends Statement {
 	/**
 	 * Returns the value of the '<em><b>Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Expression</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Expression</em>' containment reference.
 	 * @see #setExpression(Expression)
@@ -59,10 +55,6 @@ public interface IfStatement extends Statement {
 	/**
 	 * Returns the value of the '<em><b>If Stmt</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>If Stmt</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>If Stmt</em>' containment reference.
 	 * @see #setIfStmt(Statement)
@@ -85,10 +77,6 @@ public interface IfStatement extends Statement {
 	/**
 	 * Returns the value of the '<em><b>Else Stmt</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Else Stmt</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Else Stmt</em>' containment reference.
 	 * @see #setElseStmt(Statement)

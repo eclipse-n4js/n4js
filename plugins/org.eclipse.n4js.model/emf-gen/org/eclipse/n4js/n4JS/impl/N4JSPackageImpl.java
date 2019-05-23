@@ -100,11 +100,13 @@ import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.IterationStatement;
+import org.eclipse.n4js.n4JS.JSXAbstractElement;
 import org.eclipse.n4js.n4JS.JSXAttribute;
 import org.eclipse.n4js.n4JS.JSXChild;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXElementName;
 import org.eclipse.n4js.n4JS.JSXExpression;
+import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.JSXText;
@@ -1403,7 +1405,21 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass jsxAbstractElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass jsxElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxFragmentEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1616,6 +1632,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNamedElement() {
 		return namedElementEClass;
 	}
@@ -1625,6 +1642,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getNamedElement__GetName() {
 		return namedElementEClass.getEOperations().get(0);
 	}
@@ -1634,6 +1652,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getControlFlowElement() {
 		return controlFlowElementEClass;
 	}
@@ -1643,6 +1662,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getScript() {
 		return scriptEClass;
 	}
@@ -1652,6 +1672,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getScript_Annotations() {
 		return (EReference)scriptEClass.getEStructuralFeatures().get(0);
 	}
@@ -1661,6 +1682,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getScript_ScriptElements() {
 		return (EReference)scriptEClass.getEStructuralFeatures().get(1);
 	}
@@ -1670,6 +1692,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getScript_Module() {
 		return (EReference)scriptEClass.getEStructuralFeatures().get(2);
 	}
@@ -1679,6 +1702,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getScript_FlaggedUsageMarkingFinished() {
 		return (EAttribute)scriptEClass.getEStructuralFeatures().get(3);
 	}
@@ -1688,6 +1712,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getScriptElement() {
 		return scriptElementEClass;
 	}
@@ -1697,6 +1722,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getExportDeclaration() {
 		return exportDeclarationEClass;
 	}
@@ -1706,6 +1732,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getExportDeclaration_ExportedElement() {
 		return (EReference)exportDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -1715,6 +1742,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getExportDeclaration_DefaultExportedExpression() {
 		return (EReference)exportDeclarationEClass.getEStructuralFeatures().get(1);
 	}
@@ -1724,6 +1752,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getExportDeclaration_NamedExports() {
 		return (EReference)exportDeclarationEClass.getEStructuralFeatures().get(2);
 	}
@@ -1733,6 +1762,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExportDeclaration_WildcardExport() {
 		return (EAttribute)exportDeclarationEClass.getEStructuralFeatures().get(3);
 	}
@@ -1742,6 +1772,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExportDeclaration_DefaultExport() {
 		return (EAttribute)exportDeclarationEClass.getEStructuralFeatures().get(4);
 	}
@@ -1751,6 +1782,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getExportDeclaration_ReexportedFrom() {
 		return (EReference)exportDeclarationEClass.getEStructuralFeatures().get(5);
 	}
@@ -1760,6 +1792,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getExportSpecifier() {
 		return exportSpecifierEClass;
 	}
@@ -1769,6 +1802,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getExportSpecifier_Element() {
 		return (EReference)exportSpecifierEClass.getEStructuralFeatures().get(0);
 	}
@@ -1778,6 +1812,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getExportSpecifier_Alias() {
 		return (EAttribute)exportSpecifierEClass.getEStructuralFeatures().get(1);
 	}
@@ -1787,6 +1822,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getExportableElement() {
 		return exportableElementEClass;
 	}
@@ -1796,6 +1832,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getExportableElement__IsExported() {
 		return exportableElementEClass.getEOperations().get(0);
 	}
@@ -1805,6 +1842,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getExportableElement__IsExportedAsDefault() {
 		return exportableElementEClass.getEOperations().get(1);
 	}
@@ -1814,6 +1852,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getExportableElement__GetExportedName() {
 		return exportableElementEClass.getEOperations().get(2);
 	}
@@ -1823,6 +1862,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getExportableElement__IsToplevel() {
 		return exportableElementEClass.getEOperations().get(3);
 	}
@@ -1832,6 +1872,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getImportDeclaration() {
 		return importDeclarationEClass;
 	}
@@ -1841,6 +1882,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getImportDeclaration_ImportSpecifiers() {
 		return (EReference)importDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -1850,6 +1892,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getImportDeclaration_ImportFrom() {
 		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(1);
 	}
@@ -1859,6 +1902,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getImportDeclaration_Module() {
 		return (EReference)importDeclarationEClass.getEStructuralFeatures().get(2);
 	}
@@ -1868,6 +1912,17 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EAttribute getImportDeclaration_ModuleSpecifierAsText() {
+		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getImportSpecifier() {
 		return importSpecifierEClass;
 	}
@@ -1877,6 +1932,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getImportSpecifier_FlaggedUsedInCode() {
 		return (EAttribute)importSpecifierEClass.getEStructuralFeatures().get(0);
 	}
@@ -1886,6 +1942,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNamedImportSpecifier() {
 		return namedImportSpecifierEClass;
 	}
@@ -1895,6 +1952,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getNamedImportSpecifier_ImportedElement() {
 		return (EReference)namedImportSpecifierEClass.getEStructuralFeatures().get(0);
 	}
@@ -1904,6 +1962,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getNamedImportSpecifier_ImportedElementAsText() {
 		return (EAttribute)namedImportSpecifierEClass.getEStructuralFeatures().get(1);
 	}
@@ -1913,6 +1972,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getNamedImportSpecifier_Alias() {
 		return (EAttribute)namedImportSpecifierEClass.getEStructuralFeatures().get(2);
 	}
@@ -1922,6 +1982,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getNamedImportSpecifier__IsDefaultImport() {
 		return namedImportSpecifierEClass.getEOperations().get(0);
 	}
@@ -1931,6 +1992,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDefaultImportSpecifier() {
 		return defaultImportSpecifierEClass;
 	}
@@ -1940,6 +2002,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getDefaultImportSpecifier__GetAlias() {
 		return defaultImportSpecifierEClass.getEOperations().get(0);
 	}
@@ -1949,6 +2012,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getDefaultImportSpecifier__IsDefaultImport() {
 		return defaultImportSpecifierEClass.getEOperations().get(1);
 	}
@@ -1958,6 +2022,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNamespaceImportSpecifier() {
 		return namespaceImportSpecifierEClass;
 	}
@@ -1967,6 +2032,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getNamespaceImportSpecifier_DeclaredDynamic() {
 		return (EAttribute)namespaceImportSpecifierEClass.getEStructuralFeatures().get(0);
 	}
@@ -1976,6 +2042,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getNamespaceImportSpecifier_Alias() {
 		return (EAttribute)namespaceImportSpecifierEClass.getEStructuralFeatures().get(1);
 	}
@@ -1985,6 +2052,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTypeProvidingElement() {
 		return typeProvidingElementEClass;
 	}
@@ -1994,6 +2062,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getTypeProvidingElement__GetDeclaredTypeRef() {
 		return typeProvidingElementEClass.getEOperations().get(0);
 	}
@@ -2003,6 +2072,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTypedElement() {
 		return typedElementEClass;
 	}
@@ -2012,6 +2082,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTypedElement_DeclaredTypeRef() {
 		return (EReference)typedElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -2021,6 +2092,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTypedElement_BogusTypeRef() {
 		return (EReference)typedElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -2030,6 +2102,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVariableEnvironmentElement() {
 		return variableEnvironmentElementEClass;
 	}
@@ -2039,6 +2112,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVariableEnvironmentElement__AppliesOnlyToBlockScopedElements() {
 		return variableEnvironmentElementEClass.getEOperations().get(0);
 	}
@@ -2048,6 +2122,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getThisTarget() {
 		return thisTargetEClass;
 	}
@@ -2057,6 +2132,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getThisArgProvider() {
 		return thisArgProviderEClass;
 	}
@@ -2066,6 +2142,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVariable() {
 		return variableEClass;
 	}
@@ -2075,6 +2152,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVariable__IsConst() {
 		return variableEClass.getEOperations().get(0);
 	}
@@ -2084,6 +2162,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAnnotableElement() {
 		return annotableElementEClass;
 	}
@@ -2093,6 +2172,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAnnotableElement__GetAnnotations() {
 		return annotableElementEClass.getEOperations().get(0);
 	}
@@ -2102,6 +2182,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAnnotableElement__GetAllAnnotations() {
 		return annotableElementEClass.getEOperations().get(1);
 	}
@@ -2111,6 +2192,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAnnotableScriptElement() {
 		return annotableScriptElementEClass;
 	}
@@ -2120,6 +2202,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAnnotableScriptElement_AnnotationList() {
 		return (EReference)annotableScriptElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -2129,6 +2212,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAnnotableScriptElement__GetAnnotations() {
 		return annotableScriptElementEClass.getEOperations().get(0);
 	}
@@ -2138,6 +2222,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAnnotableExpression() {
 		return annotableExpressionEClass;
 	}
@@ -2147,6 +2232,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAnnotableExpression_AnnotationList() {
 		return (EReference)annotableExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -2156,6 +2242,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAnnotableExpression__GetAnnotations() {
 		return annotableExpressionEClass.getEOperations().get(0);
 	}
@@ -2165,6 +2252,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractAnnotationList() {
 		return abstractAnnotationListEClass;
 	}
@@ -2174,6 +2262,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractAnnotationList_Annotations() {
 		return (EReference)abstractAnnotationListEClass.getEStructuralFeatures().get(0);
 	}
@@ -2183,6 +2272,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAnnotationList() {
 		return annotationListEClass;
 	}
@@ -2192,6 +2282,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getExpressionAnnotationList() {
 		return expressionAnnotationListEClass;
 	}
@@ -2201,6 +2292,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAnnotation() {
 		return annotationEClass;
 	}
@@ -2210,6 +2302,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAnnotation_Name() {
 		return (EAttribute)annotationEClass.getEStructuralFeatures().get(0);
 	}
@@ -2219,6 +2312,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAnnotation_Args() {
 		return (EReference)annotationEClass.getEStructuralFeatures().get(1);
 	}
@@ -2228,6 +2322,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAnnotation__GetAnnotatedElement() {
 		return annotationEClass.getEOperations().get(0);
 	}
@@ -2237,6 +2332,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAnnotationArgument() {
 		return annotationArgumentEClass;
 	}
@@ -2246,6 +2342,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAnnotationArgument__Value() {
 		return annotationArgumentEClass.getEOperations().get(0);
 	}
@@ -2255,6 +2352,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAnnotationArgument__GetValueAsString() {
 		return annotationArgumentEClass.getEOperations().get(1);
 	}
@@ -2264,6 +2362,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLiteralAnnotationArgument() {
 		return literalAnnotationArgumentEClass;
 	}
@@ -2273,6 +2372,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getLiteralAnnotationArgument_Literal() {
 		return (EReference)literalAnnotationArgumentEClass.getEStructuralFeatures().get(0);
 	}
@@ -2282,6 +2382,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getLiteralAnnotationArgument__Value() {
 		return literalAnnotationArgumentEClass.getEOperations().get(0);
 	}
@@ -2291,6 +2392,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTypeRefAnnotationArgument() {
 		return typeRefAnnotationArgumentEClass;
 	}
@@ -2300,6 +2402,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTypeRefAnnotationArgument_TypeRef() {
 		return (EReference)typeRefAnnotationArgumentEClass.getEStructuralFeatures().get(0);
 	}
@@ -2309,6 +2412,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getTypeRefAnnotationArgument__Value() {
 		return typeRefAnnotationArgumentEClass.getEOperations().get(0);
 	}
@@ -2318,6 +2422,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFunctionOrFieldAccessor() {
 		return functionOrFieldAccessorEClass;
 	}
@@ -2327,6 +2432,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFunctionOrFieldAccessor_Body() {
 		return (EReference)functionOrFieldAccessorEClass.getEStructuralFeatures().get(0);
 	}
@@ -2336,6 +2442,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFunctionOrFieldAccessor__lok() {
 		return (EReference)functionOrFieldAccessorEClass.getEStructuralFeatures().get(1);
 	}
@@ -2345,6 +2452,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionOrFieldAccessor__GetName() {
 		return functionOrFieldAccessorEClass.getEOperations().get(0);
 	}
@@ -2354,6 +2462,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionOrFieldAccessor__GetLocalArgumentsVariable() {
 		return functionOrFieldAccessorEClass.getEOperations().get(1);
 	}
@@ -2363,6 +2472,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionOrFieldAccessor__IsReturnValueOptional() {
 		return functionOrFieldAccessorEClass.getEOperations().get(2);
 	}
@@ -2372,6 +2482,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionOrFieldAccessor__IsAsync() {
 		return functionOrFieldAccessorEClass.getEOperations().get(3);
 	}
@@ -2381,6 +2492,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionOrFieldAccessor__GetDefinedFunctionOrAccessor() {
 		return functionOrFieldAccessorEClass.getEOperations().get(4);
 	}
@@ -2390,6 +2502,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFunctionDefinition() {
 		return functionDefinitionEClass;
 	}
@@ -2399,6 +2512,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFunctionDefinition_Fpars() {
 		return (EReference)functionDefinitionEClass.getEStructuralFeatures().get(0);
 	}
@@ -2408,6 +2522,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFunctionDefinition_ReturnTypeRef() {
 		return (EReference)functionDefinitionEClass.getEStructuralFeatures().get(1);
 	}
@@ -2417,6 +2532,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFunctionDefinition_Generator() {
 		return (EAttribute)functionDefinitionEClass.getEStructuralFeatures().get(2);
 	}
@@ -2426,6 +2542,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFunctionDefinition_DeclaredAsync() {
 		return (EAttribute)functionDefinitionEClass.getEStructuralFeatures().get(3);
 	}
@@ -2435,6 +2552,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionDefinition__IsReturnValueOptional() {
 		return functionDefinitionEClass.getEOperations().get(0);
 	}
@@ -2444,6 +2562,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionDefinition__IsAsync() {
 		return functionDefinitionEClass.getEOperations().get(1);
 	}
@@ -2453,6 +2572,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionDefinition__GetDefinedFunction() {
 		return functionDefinitionEClass.getEOperations().get(2);
 	}
@@ -2462,6 +2582,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFieldAccessor() {
 		return fieldAccessorEClass;
 	}
@@ -2471,6 +2592,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFieldAccessor_DeclaredOptional() {
 		return (EAttribute)fieldAccessorEClass.getEStructuralFeatures().get(0);
 	}
@@ -2480,6 +2602,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFieldAccessor__GetDeclaredTypeRef() {
 		return fieldAccessorEClass.getEOperations().get(0);
 	}
@@ -2489,6 +2612,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFieldAccessor__GetDefinedAccessor() {
 		return fieldAccessorEClass.getEOperations().get(1);
 	}
@@ -2498,6 +2622,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFieldAccessor__IsOptional() {
 		return fieldAccessorEClass.getEOperations().get(2);
 	}
@@ -2507,6 +2632,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFunctionDeclaration() {
 		return functionDeclarationEClass;
 	}
@@ -2516,6 +2642,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFunctionDeclaration_Name() {
 		return (EAttribute)functionDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -2525,6 +2652,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFunctionDeclaration__migrationContext() {
 		return (EReference)functionDeclarationEClass.getEStructuralFeatures().get(1);
 	}
@@ -2534,6 +2662,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionDeclaration__IsExternal() {
 		return functionDeclarationEClass.getEOperations().get(0);
 	}
@@ -2543,6 +2672,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionDeclaration__GetMigrationContextVariable() {
 		return functionDeclarationEClass.getEOperations().get(1);
 	}
@@ -2552,6 +2682,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFunctionExpression() {
 		return functionExpressionEClass;
 	}
@@ -2561,6 +2692,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFunctionExpression_Name() {
 		return (EAttribute)functionExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -2570,6 +2702,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getFunctionExpression__IsArrowFunction() {
 		return functionExpressionEClass.getEOperations().get(0);
 	}
@@ -2579,6 +2712,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getArrowFunction() {
 		return arrowFunctionEClass;
 	}
@@ -2588,6 +2722,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getArrowFunction_HasBracesAroundBody() {
 		return (EAttribute)arrowFunctionEClass.getEStructuralFeatures().get(0);
 	}
@@ -2597,6 +2732,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getArrowFunction__IsArrowFunction() {
 		return arrowFunctionEClass.getEOperations().get(0);
 	}
@@ -2606,6 +2742,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getArrowFunction__IsSingleExprImplicitReturn() {
 		return arrowFunctionEClass.getEOperations().get(1);
 	}
@@ -2615,6 +2752,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getArrowFunction__GetSingleExpression() {
 		return arrowFunctionEClass.getEOperations().get(2);
 	}
@@ -2624,6 +2762,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getArrowFunction__ImplicitReturnExpr() {
 		return arrowFunctionEClass.getEOperations().get(3);
 	}
@@ -2633,6 +2772,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLocalArgumentsVariable() {
 		return localArgumentsVariableEClass;
 	}
@@ -2642,6 +2782,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getLocalArgumentsVariable__GetName() {
 		return localArgumentsVariableEClass.getEOperations().get(0);
 	}
@@ -2651,6 +2792,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFormalParameter() {
 		return formalParameterEClass;
 	}
@@ -2660,6 +2802,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFormalParameter_Annotations() {
 		return (EReference)formalParameterEClass.getEStructuralFeatures().get(0);
 	}
@@ -2669,6 +2812,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFormalParameter_Variadic() {
 		return (EAttribute)formalParameterEClass.getEStructuralFeatures().get(1);
 	}
@@ -2678,6 +2822,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFormalParameter_DefinedTypeElement() {
 		return (EReference)formalParameterEClass.getEStructuralFeatures().get(2);
 	}
@@ -2687,6 +2832,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFormalParameter_HasInitializerAssignment() {
 		return (EAttribute)formalParameterEClass.getEStructuralFeatures().get(3);
 	}
@@ -2696,6 +2842,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFormalParameter_Initializer() {
 		return (EReference)formalParameterEClass.getEStructuralFeatures().get(4);
 	}
@@ -2705,6 +2852,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFormalParameter_BindingPattern() {
 		return (EReference)formalParameterEClass.getEStructuralFeatures().get(5);
 	}
@@ -2714,6 +2862,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBlock() {
 		return blockEClass;
 	}
@@ -2723,6 +2872,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getBlock_Statements() {
 		return (EReference)blockEClass.getEStructuralFeatures().get(0);
 	}
@@ -2732,6 +2882,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__AppliesOnlyToBlockScopedElements() {
 		return blockEClass.getEOperations().get(0);
 	}
@@ -2741,6 +2892,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__GetAllExpressions() {
 		return blockEClass.getEOperations().get(1);
 	}
@@ -2750,6 +2902,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__GetAllYieldExpressions() {
 		return blockEClass.getEOperations().get(2);
 	}
@@ -2759,6 +2912,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__GetAllVoidYieldExpressions() {
 		return blockEClass.getEOperations().get(3);
 	}
@@ -2768,6 +2922,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__GetAllNonVoidYieldExpressions() {
 		return blockEClass.getEOperations().get(4);
 	}
@@ -2777,6 +2932,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__HasNonVoidYield() {
 		return blockEClass.getEOperations().get(5);
 	}
@@ -2786,6 +2942,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__GetAllStatements() {
 		return blockEClass.getEOperations().get(6);
 	}
@@ -2795,6 +2952,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__GetAllReturnStatements() {
 		return blockEClass.getEOperations().get(7);
 	}
@@ -2804,6 +2962,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__GetAllNonVoidReturnStatements() {
 		return blockEClass.getEOperations().get(8);
 	}
@@ -2813,6 +2972,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__GetAllVoidReturnStatements() {
 		return blockEClass.getEOperations().get(9);
 	}
@@ -2822,6 +2982,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBlock__HasNonVoidReturn() {
 		return blockEClass.getEOperations().get(10);
 	}
@@ -2831,6 +2992,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStatement() {
 		return statementEClass;
 	}
@@ -2840,6 +3002,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVariableDeclarationContainer() {
 		return variableDeclarationContainerEClass;
 	}
@@ -2849,6 +3012,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVariableDeclarationContainer_VarDeclsOrBindings() {
 		return (EReference)variableDeclarationContainerEClass.getEStructuralFeatures().get(0);
 	}
@@ -2858,6 +3022,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getVariableDeclarationContainer_VarStmtKeyword() {
 		return (EAttribute)variableDeclarationContainerEClass.getEStructuralFeatures().get(1);
 	}
@@ -2867,6 +3032,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVariableDeclarationContainer__GetVarDecl() {
 		return variableDeclarationContainerEClass.getEOperations().get(0);
 	}
@@ -2876,6 +3042,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVariableDeclarationContainer__IsBlockScoped() {
 		return variableDeclarationContainerEClass.getEOperations().get(1);
 	}
@@ -2885,6 +3052,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVariableStatement() {
 		return variableStatementEClass;
 	}
@@ -2894,6 +3062,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getExportedVariableStatement() {
 		return exportedVariableStatementEClass;
 	}
@@ -2903,6 +3072,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getExportedVariableStatement__IsExternal() {
 		return exportedVariableStatementEClass.getEOperations().get(0);
 	}
@@ -2912,6 +3082,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVariableDeclarationOrBinding() {
 		return variableDeclarationOrBindingEClass;
 	}
@@ -2921,6 +3092,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVariableDeclarationOrBinding__GetVariableDeclarations() {
 		return variableDeclarationOrBindingEClass.getEOperations().get(0);
 	}
@@ -2930,6 +3102,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVariableDeclarationOrBinding__GetExpression() {
 		return variableDeclarationOrBindingEClass.getEOperations().get(1);
 	}
@@ -2939,6 +3112,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVariableBinding() {
 		return variableBindingEClass;
 	}
@@ -2948,6 +3122,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVariableBinding_Pattern() {
 		return (EReference)variableBindingEClass.getEStructuralFeatures().get(0);
 	}
@@ -2957,6 +3132,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVariableBinding_Expression() {
 		return (EReference)variableBindingEClass.getEStructuralFeatures().get(1);
 	}
@@ -2966,6 +3142,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getExportedVariableBinding() {
 		return exportedVariableBindingEClass;
 	}
@@ -2975,6 +3152,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getExportedVariableBinding_DefinedVariable() {
 		return (EReference)exportedVariableBindingEClass.getEStructuralFeatures().get(0);
 	}
@@ -2984,6 +3162,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVariableDeclaration() {
 		return variableDeclarationEClass;
 	}
@@ -2993,6 +3172,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVariableDeclaration_Annotations() {
 		return (EReference)variableDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -3002,6 +3182,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVariableDeclaration_Expression() {
 		return (EReference)variableDeclarationEClass.getEStructuralFeatures().get(1);
 	}
@@ -3011,6 +3192,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVariableDeclaration__IsConst() {
 		return variableDeclarationEClass.getEOperations().get(0);
 	}
@@ -3020,6 +3202,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getExportedVariableDeclaration() {
 		return exportedVariableDeclarationEClass;
 	}
@@ -3029,6 +3212,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getExportedVariableDeclaration_DefinedVariable() {
 		return (EReference)exportedVariableDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -3038,6 +3222,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getEmptyStatement() {
 		return emptyStatementEClass;
 	}
@@ -3047,6 +3232,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getExpressionStatement() {
 		return expressionStatementEClass;
 	}
@@ -3056,6 +3242,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getExpressionStatement_Expression() {
 		return (EReference)expressionStatementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3065,6 +3252,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIfStatement() {
 		return ifStatementEClass;
 	}
@@ -3074,6 +3262,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIfStatement_Expression() {
 		return (EReference)ifStatementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3083,6 +3272,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIfStatement_IfStmt() {
 		return (EReference)ifStatementEClass.getEStructuralFeatures().get(1);
 	}
@@ -3092,6 +3282,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIfStatement_ElseStmt() {
 		return (EReference)ifStatementEClass.getEStructuralFeatures().get(2);
 	}
@@ -3101,6 +3292,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIterationStatement() {
 		return iterationStatementEClass;
 	}
@@ -3110,6 +3302,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIterationStatement_Statement() {
 		return (EReference)iterationStatementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3119,6 +3312,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIterationStatement_Expression() {
 		return (EReference)iterationStatementEClass.getEStructuralFeatures().get(1);
 	}
@@ -3128,6 +3322,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDoStatement() {
 		return doStatementEClass;
 	}
@@ -3137,6 +3332,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getWhileStatement() {
 		return whileStatementEClass;
 	}
@@ -3146,6 +3342,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getForStatement() {
 		return forStatementEClass;
 	}
@@ -3155,6 +3352,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getForStatement_InitExpr() {
 		return (EReference)forStatementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3164,6 +3362,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getForStatement_UpdateExpr() {
 		return (EReference)forStatementEClass.getEStructuralFeatures().get(1);
 	}
@@ -3173,6 +3372,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getForStatement_ForIn() {
 		return (EAttribute)forStatementEClass.getEStructuralFeatures().get(2);
 	}
@@ -3182,6 +3382,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getForStatement_ForOf() {
 		return (EAttribute)forStatementEClass.getEStructuralFeatures().get(3);
 	}
@@ -3191,6 +3392,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getForStatement__IsForPlain() {
 		return forStatementEClass.getEOperations().get(0);
 	}
@@ -3200,6 +3402,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getForStatement__AppliesOnlyToBlockScopedElements() {
 		return forStatementEClass.getEOperations().get(1);
 	}
@@ -3209,6 +3412,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLabelRef() {
 		return labelRefEClass;
 	}
@@ -3218,6 +3422,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getLabelRef_Label() {
 		return (EReference)labelRefEClass.getEStructuralFeatures().get(0);
 	}
@@ -3227,6 +3432,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getLabelRef_LabelAsText() {
 		return (EAttribute)labelRefEClass.getEStructuralFeatures().get(1);
 	}
@@ -3236,6 +3442,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getContinueStatement() {
 		return continueStatementEClass;
 	}
@@ -3245,6 +3452,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBreakStatement() {
 		return breakStatementEClass;
 	}
@@ -3254,6 +3462,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReturnStatement() {
 		return returnStatementEClass;
 	}
@@ -3263,6 +3472,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReturnStatement_Expression() {
 		return (EReference)returnStatementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3272,6 +3482,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getWithStatement() {
 		return withStatementEClass;
 	}
@@ -3281,6 +3492,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getWithStatement_Expression() {
 		return (EReference)withStatementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3290,6 +3502,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getWithStatement_Statement() {
 		return (EReference)withStatementEClass.getEStructuralFeatures().get(1);
 	}
@@ -3299,6 +3512,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSwitchStatement() {
 		return switchStatementEClass;
 	}
@@ -3308,6 +3522,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSwitchStatement_Expression() {
 		return (EReference)switchStatementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3317,6 +3532,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSwitchStatement_Cases() {
 		return (EReference)switchStatementEClass.getEStructuralFeatures().get(1);
 	}
@@ -3326,6 +3542,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSwitchStatement__AppliesOnlyToBlockScopedElements() {
 		return switchStatementEClass.getEOperations().get(0);
 	}
@@ -3335,6 +3552,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSwitchStatement__GetDefaultClause() {
 		return switchStatementEClass.getEOperations().get(1);
 	}
@@ -3344,6 +3562,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSwitchStatement__GetCaseClauses() {
 		return switchStatementEClass.getEOperations().get(2);
 	}
@@ -3353,6 +3572,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractCaseClause() {
 		return abstractCaseClauseEClass;
 	}
@@ -3362,6 +3582,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractCaseClause_Statements() {
 		return (EReference)abstractCaseClauseEClass.getEStructuralFeatures().get(0);
 	}
@@ -3371,6 +3592,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCaseClause() {
 		return caseClauseEClass;
 	}
@@ -3380,6 +3602,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCaseClause_Expression() {
 		return (EReference)caseClauseEClass.getEStructuralFeatures().get(0);
 	}
@@ -3389,6 +3612,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDefaultClause() {
 		return defaultClauseEClass;
 	}
@@ -3398,6 +3622,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLabelledStatement() {
 		return labelledStatementEClass;
 	}
@@ -3407,6 +3632,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getLabelledStatement_Name() {
 		return (EAttribute)labelledStatementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3416,6 +3642,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getLabelledStatement_Statement() {
 		return (EReference)labelledStatementEClass.getEStructuralFeatures().get(1);
 	}
@@ -3425,6 +3652,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getThrowStatement() {
 		return throwStatementEClass;
 	}
@@ -3434,6 +3662,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getThrowStatement_Expression() {
 		return (EReference)throwStatementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3443,6 +3672,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTryStatement() {
 		return tryStatementEClass;
 	}
@@ -3452,6 +3682,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTryStatement_Block() {
 		return (EReference)tryStatementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3461,6 +3692,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTryStatement_Catch() {
 		return (EReference)tryStatementEClass.getEStructuralFeatures().get(1);
 	}
@@ -3470,6 +3702,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTryStatement_Finally() {
 		return (EReference)tryStatementEClass.getEStructuralFeatures().get(2);
 	}
@@ -3479,6 +3712,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractCatchBlock() {
 		return abstractCatchBlockEClass;
 	}
@@ -3488,6 +3722,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAbstractCatchBlock_Block() {
 		return (EReference)abstractCatchBlockEClass.getEStructuralFeatures().get(0);
 	}
@@ -3497,6 +3732,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCatchBlock() {
 		return catchBlockEClass;
 	}
@@ -3506,6 +3742,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCatchBlock_CatchVariable() {
 		return (EReference)catchBlockEClass.getEStructuralFeatures().get(0);
 	}
@@ -3515,6 +3752,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCatchVariable() {
 		return catchVariableEClass;
 	}
@@ -3524,6 +3762,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCatchVariable_BindingPattern() {
 		return (EReference)catchVariableEClass.getEStructuralFeatures().get(0);
 	}
@@ -3533,6 +3772,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFinallyBlock() {
 		return finallyBlockEClass;
 	}
@@ -3542,6 +3782,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDebuggerStatement() {
 		return debuggerStatementEClass;
 	}
@@ -3551,6 +3792,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPrimaryExpression() {
 		return primaryExpressionEClass;
 	}
@@ -3560,6 +3802,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParenExpression() {
 		return parenExpressionEClass;
 	}
@@ -3569,6 +3812,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getParenExpression_Expression() {
 		return (EReference)parenExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -3578,6 +3822,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParenExpression__IsValidSimpleAssignmentTarget() {
 		return parenExpressionEClass.getEOperations().get(0);
 	}
@@ -3587,6 +3832,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIdentifierRef() {
 		return identifierRefEClass;
 	}
@@ -3596,6 +3842,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIdentifierRef_Id() {
 		return (EReference)identifierRefEClass.getEStructuralFeatures().get(0);
 	}
@@ -3605,6 +3852,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIdentifierRef_IdAsText() {
 		return (EAttribute)identifierRefEClass.getEStructuralFeatures().get(1);
 	}
@@ -3614,6 +3862,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getIdentifierRef__IsValidSimpleAssignmentTarget() {
 		return identifierRefEClass.getEOperations().get(0);
 	}
@@ -3623,6 +3872,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStrictModeRelevant() {
 		return strictModeRelevantEClass;
 	}
@@ -3632,6 +3882,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStrictModeRelevant_StrictMode() {
 		return (EAttribute)strictModeRelevantEClass.getEStructuralFeatures().get(0);
 	}
@@ -3641,6 +3892,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSuperLiteral() {
 		return superLiteralEClass;
 	}
@@ -3650,6 +3902,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSuperLiteral__IsSuperConstructorAccess() {
 		return superLiteralEClass.getEOperations().get(0);
 	}
@@ -3659,6 +3912,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSuperLiteral__IsSuperMemberAccess() {
 		return superLiteralEClass.getEOperations().get(1);
 	}
@@ -3668,6 +3922,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getThisLiteral() {
 		return thisLiteralEClass;
 	}
@@ -3677,6 +3932,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getArrayLiteral() {
 		return arrayLiteralEClass;
 	}
@@ -3686,6 +3942,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getArrayLiteral_Elements() {
 		return (EReference)arrayLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -3695,6 +3952,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getArrayLiteral_TrailingComma() {
 		return (EAttribute)arrayLiteralEClass.getEStructuralFeatures().get(1);
 	}
@@ -3704,6 +3962,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getArrayElement() {
 		return arrayElementEClass;
 	}
@@ -3713,6 +3972,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getArrayElement_Spread() {
 		return (EAttribute)arrayElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -3722,6 +3982,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getArrayElement_Expression() {
 		return (EReference)arrayElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -3731,6 +3992,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getArrayPadding() {
 		return arrayPaddingEClass;
 	}
@@ -3740,6 +4002,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getObjectLiteral() {
 		return objectLiteralEClass;
 	}
@@ -3749,6 +4012,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getObjectLiteral_PropertyAssignments() {
 		return (EReference)objectLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -3758,6 +4022,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPropertyAssignment() {
 		return propertyAssignmentEClass;
 	}
@@ -3767,6 +4032,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyAssignment__GetDefinedMember() {
 		return propertyAssignmentEClass.getEOperations().get(0);
 	}
@@ -3776,6 +4042,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyAssignment__IsValidName() {
 		return propertyAssignmentEClass.getEOperations().get(1);
 	}
@@ -3785,6 +4052,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPropertyNameOwner() {
 		return propertyNameOwnerEClass;
 	}
@@ -3794,6 +4062,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getPropertyNameOwner_DeclaredName() {
 		return (EReference)propertyNameOwnerEClass.getEStructuralFeatures().get(0);
 	}
@@ -3803,6 +4072,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyNameOwner__GetName() {
 		return propertyNameOwnerEClass.getEOperations().get(0);
 	}
@@ -3812,6 +4082,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyNameOwner__HasComputedPropertyName() {
 		return propertyNameOwnerEClass.getEOperations().get(1);
 	}
@@ -3821,6 +4092,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyNameOwner__IsValidName() {
 		return propertyNameOwnerEClass.getEOperations().get(2);
 	}
@@ -3830,6 +4102,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLiteralOrComputedPropertyName() {
 		return literalOrComputedPropertyNameEClass;
 	}
@@ -3839,6 +4112,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getLiteralOrComputedPropertyName_Kind() {
 		return (EAttribute)literalOrComputedPropertyNameEClass.getEStructuralFeatures().get(0);
 	}
@@ -3848,6 +4122,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getLiteralOrComputedPropertyName_LiteralName() {
 		return (EAttribute)literalOrComputedPropertyNameEClass.getEStructuralFeatures().get(1);
 	}
@@ -3857,6 +4132,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getLiteralOrComputedPropertyName_ComputedName() {
 		return (EAttribute)literalOrComputedPropertyNameEClass.getEStructuralFeatures().get(2);
 	}
@@ -3866,6 +4142,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getLiteralOrComputedPropertyName_Expression() {
 		return (EReference)literalOrComputedPropertyNameEClass.getEStructuralFeatures().get(3);
 	}
@@ -3875,6 +4152,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getLiteralOrComputedPropertyName__HasComputedPropertyName() {
 		return literalOrComputedPropertyNameEClass.getEOperations().get(0);
 	}
@@ -3884,6 +4162,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getLiteralOrComputedPropertyName__GetName() {
 		return literalOrComputedPropertyNameEClass.getEOperations().get(1);
 	}
@@ -3893,6 +4172,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAnnotablePropertyAssignment() {
 		return annotablePropertyAssignmentEClass;
 	}
@@ -3902,6 +4182,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAnnotablePropertyAssignment_AnnotationList() {
 		return (EReference)annotablePropertyAssignmentEClass.getEStructuralFeatures().get(0);
 	}
@@ -3911,6 +4192,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAnnotablePropertyAssignment__GetAnnotations() {
 		return annotablePropertyAssignmentEClass.getEOperations().get(0);
 	}
@@ -3920,6 +4202,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPropertyAssignmentAnnotationList() {
 		return propertyAssignmentAnnotationListEClass;
 	}
@@ -3929,6 +4212,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyAssignmentAnnotationList__GetDefinedMember() {
 		return propertyAssignmentAnnotationListEClass.getEOperations().get(0);
 	}
@@ -3938,6 +4222,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPropertyNameValuePair() {
 		return propertyNameValuePairEClass;
 	}
@@ -3947,6 +4232,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getPropertyNameValuePair_DefinedField() {
 		return (EReference)propertyNameValuePairEClass.getEStructuralFeatures().get(0);
 	}
@@ -3956,6 +4242,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getPropertyNameValuePair_DeclaredOptional() {
 		return (EAttribute)propertyNameValuePairEClass.getEStructuralFeatures().get(1);
 	}
@@ -3965,6 +4252,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getPropertyNameValuePair_Expression() {
 		return (EReference)propertyNameValuePairEClass.getEStructuralFeatures().get(2);
 	}
@@ -3974,6 +4262,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyNameValuePair__GetDefinedMember() {
 		return propertyNameValuePairEClass.getEOperations().get(0);
 	}
@@ -3983,6 +4272,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyNameValuePair__IsValidName() {
 		return propertyNameValuePairEClass.getEOperations().get(1);
 	}
@@ -3992,6 +4282,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPropertyNameValuePairSingleName() {
 		return propertyNameValuePairSingleNameEClass;
 	}
@@ -4001,6 +4292,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getPropertyNameValuePairSingleName_IdentifierRef() {
 		return (EReference)propertyNameValuePairSingleNameEClass.getEStructuralFeatures().get(0);
 	}
@@ -4010,6 +4302,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyNameValuePairSingleName__GetName() {
 		return propertyNameValuePairSingleNameEClass.getEOperations().get(0);
 	}
@@ -4019,6 +4312,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPropertyMethodDeclaration() {
 		return propertyMethodDeclarationEClass;
 	}
@@ -4028,6 +4322,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyMethodDeclaration__GetDefinedMember() {
 		return propertyMethodDeclarationEClass.getEOperations().get(0);
 	}
@@ -4037,6 +4332,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getGetterDeclaration() {
 		return getterDeclarationEClass;
 	}
@@ -4046,6 +4342,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getGetterDeclaration_DefinedGetter() {
 		return (EReference)getterDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -4055,6 +4352,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getGetterDeclaration__GetDefinedAccessor() {
 		return getterDeclarationEClass.getEOperations().get(0);
 	}
@@ -4064,6 +4362,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSetterDeclaration() {
 		return setterDeclarationEClass;
 	}
@@ -4073,6 +4372,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSetterDeclaration_DefinedSetter() {
 		return (EReference)setterDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -4082,6 +4382,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSetterDeclaration_Fpar() {
 		return (EReference)setterDeclarationEClass.getEStructuralFeatures().get(1);
 	}
@@ -4091,6 +4392,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSetterDeclaration__GetDefinedAccessor() {
 		return setterDeclarationEClass.getEOperations().get(0);
 	}
@@ -4100,6 +4402,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSetterDeclaration__GetDeclaredTypeRef() {
 		return setterDeclarationEClass.getEOperations().get(1);
 	}
@@ -4109,6 +4412,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPropertyGetterDeclaration() {
 		return propertyGetterDeclarationEClass;
 	}
@@ -4118,6 +4422,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyGetterDeclaration__GetDefinedGetter() {
 		return propertyGetterDeclarationEClass.getEOperations().get(0);
 	}
@@ -4127,6 +4432,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyGetterDeclaration__GetDefinedMember() {
 		return propertyGetterDeclarationEClass.getEOperations().get(1);
 	}
@@ -4136,6 +4442,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertyGetterDeclaration__IsValidName() {
 		return propertyGetterDeclarationEClass.getEOperations().get(2);
 	}
@@ -4145,6 +4452,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPropertySetterDeclaration() {
 		return propertySetterDeclarationEClass;
 	}
@@ -4154,6 +4462,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertySetterDeclaration__GetDefinedSetter() {
 		return propertySetterDeclarationEClass.getEOperations().get(0);
 	}
@@ -4163,6 +4472,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertySetterDeclaration__GetDefinedMember() {
 		return propertySetterDeclarationEClass.getEOperations().get(1);
 	}
@@ -4172,6 +4482,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getPropertySetterDeclaration__IsValidName() {
 		return propertySetterDeclarationEClass.getEOperations().get(2);
 	}
@@ -4181,6 +4492,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getExpression() {
 		return expressionEClass;
 	}
@@ -4190,6 +4502,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getExpression__IsValidSimpleAssignmentTarget() {
 		return expressionEClass.getEOperations().get(0);
 	}
@@ -4199,6 +4512,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNewTarget() {
 		return newTargetEClass;
 	}
@@ -4208,6 +4522,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNewExpression() {
 		return newExpressionEClass;
 	}
@@ -4217,6 +4532,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getNewExpression_Callee() {
 		return (EReference)newExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4226,6 +4542,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getNewExpression_Arguments() {
 		return (EReference)newExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -4235,6 +4552,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getNewExpression_WithArgs() {
 		return (EAttribute)newExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -4244,6 +4562,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameterizedAccess() {
 		return parameterizedAccessEClass;
 	}
@@ -4253,6 +4572,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getParameterizedAccess_TypeArgs() {
 		return (EReference)parameterizedAccessEClass.getEStructuralFeatures().get(0);
 	}
@@ -4262,6 +4582,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedAccess__IsParameterized() {
 		return parameterizedAccessEClass.getEOperations().get(0);
 	}
@@ -4271,6 +4592,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameterizedCallExpression() {
 		return parameterizedCallExpressionEClass;
 	}
@@ -4280,6 +4602,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getParameterizedCallExpression_Target() {
 		return (EReference)parameterizedCallExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4289,6 +4612,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getParameterizedCallExpression_Arguments() {
 		return (EReference)parameterizedCallExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -4298,6 +4622,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedCallExpression__GetReceiver() {
 		return parameterizedCallExpressionEClass.getEOperations().get(0);
 	}
@@ -4307,6 +4632,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getArgument() {
 		return argumentEClass;
 	}
@@ -4316,6 +4642,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getArgument_Spread() {
 		return (EAttribute)argumentEClass.getEStructuralFeatures().get(0);
 	}
@@ -4325,6 +4652,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getArgument_Expression() {
 		return (EReference)argumentEClass.getEStructuralFeatures().get(1);
 	}
@@ -4334,6 +4662,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIndexedAccessExpression() {
 		return indexedAccessExpressionEClass;
 	}
@@ -4343,6 +4672,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIndexedAccessExpression_Target() {
 		return (EReference)indexedAccessExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4352,6 +4682,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIndexedAccessExpression_Index() {
 		return (EReference)indexedAccessExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -4361,6 +4692,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getIndexedAccessExpression__IsValidSimpleAssignmentTarget() {
 		return indexedAccessExpressionEClass.getEOperations().get(0);
 	}
@@ -4370,6 +4702,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTaggedTemplateString() {
 		return taggedTemplateStringEClass;
 	}
@@ -4379,6 +4712,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTaggedTemplateString_Target() {
 		return (EReference)taggedTemplateStringEClass.getEStructuralFeatures().get(0);
 	}
@@ -4388,6 +4722,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTaggedTemplateString_Template() {
 		return (EReference)taggedTemplateStringEClass.getEStructuralFeatures().get(1);
 	}
@@ -4397,6 +4732,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMemberAccess() {
 		return memberAccessEClass;
 	}
@@ -4406,6 +4742,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMemberAccess_ComposedMemberCache() {
 		return (EReference)memberAccessEClass.getEStructuralFeatures().get(0);
 	}
@@ -4415,6 +4752,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getParameterizedPropertyAccessExpression() {
 		return parameterizedPropertyAccessExpressionEClass;
 	}
@@ -4424,6 +4762,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getParameterizedPropertyAccessExpression_Target() {
 		return (EReference)parameterizedPropertyAccessExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4433,6 +4772,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getParameterizedPropertyAccessExpression_Property() {
 		return (EReference)parameterizedPropertyAccessExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -4442,6 +4782,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getParameterizedPropertyAccessExpression_PropertyAsText() {
 		return (EAttribute)parameterizedPropertyAccessExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -4451,6 +4792,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getParameterizedPropertyAccessExpression__IsValidSimpleAssignmentTarget() {
 		return parameterizedPropertyAccessExpressionEClass.getEOperations().get(0);
 	}
@@ -4460,6 +4802,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAwaitExpression() {
 		return awaitExpressionEClass;
 	}
@@ -4469,6 +4812,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAwaitExpression_Expression() {
 		return (EReference)awaitExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4478,6 +4822,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPromisifyExpression() {
 		return promisifyExpressionEClass;
 	}
@@ -4487,6 +4832,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getPromisifyExpression_Expression() {
 		return (EReference)promisifyExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4496,6 +4842,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getYieldExpression() {
 		return yieldExpressionEClass;
 	}
@@ -4505,6 +4852,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getYieldExpression_Expression() {
 		return (EReference)yieldExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4514,6 +4862,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getYieldExpression_Many() {
 		return (EAttribute)yieldExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -4523,6 +4872,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLiteral() {
 		return literalEClass;
 	}
@@ -4532,6 +4882,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getLiteral__GetValueAsString() {
 		return literalEClass.getEOperations().get(0);
 	}
@@ -4541,6 +4892,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNullLiteral() {
 		return nullLiteralEClass;
 	}
@@ -4550,6 +4902,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getNullLiteral__GetValueAsString() {
 		return nullLiteralEClass.getEOperations().get(0);
 	}
@@ -4559,6 +4912,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBooleanLiteral() {
 		return booleanLiteralEClass;
 	}
@@ -4568,6 +4922,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getBooleanLiteral_True() {
 		return (EAttribute)booleanLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -4577,6 +4932,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBooleanLiteral__GetValueAsString() {
 		return booleanLiteralEClass.getEOperations().get(0);
 	}
@@ -4586,6 +4942,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStringLiteral() {
 		return stringLiteralEClass;
 	}
@@ -4595,6 +4952,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStringLiteral_Value() {
 		return (EAttribute)stringLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -4604,6 +4962,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStringLiteral_RawValue() {
 		return (EAttribute)stringLiteralEClass.getEStructuralFeatures().get(1);
 	}
@@ -4613,6 +4972,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getStringLiteral__GetValueAsString() {
 		return stringLiteralEClass.getEOperations().get(0);
 	}
@@ -4622,6 +4982,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTemplateLiteral() {
 		return templateLiteralEClass;
 	}
@@ -4631,6 +4992,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTemplateLiteral_Segments() {
 		return (EReference)templateLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -4640,6 +5002,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getTemplateLiteral__GetValueAsString() {
 		return templateLiteralEClass.getEOperations().get(0);
 	}
@@ -4649,6 +5012,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTemplateSegment() {
 		return templateSegmentEClass;
 	}
@@ -4658,6 +5022,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTemplateSegment_Value() {
 		return (EAttribute)templateSegmentEClass.getEStructuralFeatures().get(0);
 	}
@@ -4667,6 +5032,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTemplateSegment_RawValue() {
 		return (EAttribute)templateSegmentEClass.getEStructuralFeatures().get(1);
 	}
@@ -4676,6 +5042,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getTemplateSegment__GetValueAsString() {
 		return templateSegmentEClass.getEOperations().get(0);
 	}
@@ -4685,6 +5052,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNumericLiteral() {
 		return numericLiteralEClass;
 	}
@@ -4694,6 +5062,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getNumericLiteral_Value() {
 		return (EAttribute)numericLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -4703,6 +5072,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getNumericLiteral__GetValueAsString() {
 		return numericLiteralEClass.getEOperations().get(0);
 	}
@@ -4712,6 +5082,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDoubleLiteral() {
 		return doubleLiteralEClass;
 	}
@@ -4721,6 +5092,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getDoubleLiteral__ToDouble() {
 		return doubleLiteralEClass.getEOperations().get(0);
 	}
@@ -4730,6 +5102,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getDoubleLiteral__GetValueAsString() {
 		return doubleLiteralEClass.getEOperations().get(1);
 	}
@@ -4739,6 +5112,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAbstractIntLiteral() {
 		return abstractIntLiteralEClass;
 	}
@@ -4748,6 +5122,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAbstractIntLiteral__ToInt() {
 		return abstractIntLiteralEClass.getEOperations().get(0);
 	}
@@ -4757,6 +5132,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAbstractIntLiteral__ToLong() {
 		return abstractIntLiteralEClass.getEOperations().get(1);
 	}
@@ -4766,6 +5142,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAbstractIntLiteral__ToBigInteger() {
 		return abstractIntLiteralEClass.getEOperations().get(2);
 	}
@@ -4775,6 +5152,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIntLiteral() {
 		return intLiteralEClass;
 	}
@@ -4784,6 +5162,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBinaryIntLiteral() {
 		return binaryIntLiteralEClass;
 	}
@@ -4793,6 +5172,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getOctalIntLiteral() {
 		return octalIntLiteralEClass;
 	}
@@ -4802,6 +5182,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLegacyOctalIntLiteral() {
 		return legacyOctalIntLiteralEClass;
 	}
@@ -4811,6 +5192,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getHexIntLiteral() {
 		return hexIntLiteralEClass;
 	}
@@ -4820,6 +5202,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getScientificIntLiteral() {
 		return scientificIntLiteralEClass;
 	}
@@ -4829,6 +5212,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getRegularExpressionLiteral() {
 		return regularExpressionLiteralEClass;
 	}
@@ -4838,6 +5222,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getRegularExpressionLiteral_Value() {
 		return (EAttribute)regularExpressionLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -4847,6 +5232,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getRegularExpressionLiteral__GetValueAsString() {
 		return regularExpressionLiteralEClass.getEOperations().get(0);
 	}
@@ -4856,6 +5242,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPostfixExpression() {
 		return postfixExpressionEClass;
 	}
@@ -4865,6 +5252,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getPostfixExpression_Expression() {
 		return (EReference)postfixExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4874,6 +5262,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getPostfixExpression_Op() {
 		return (EAttribute)postfixExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -4883,6 +5272,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getUnaryExpression() {
 		return unaryExpressionEClass;
 	}
@@ -4892,6 +5282,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getUnaryExpression_Op() {
 		return (EAttribute)unaryExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4901,6 +5292,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getUnaryExpression_Expression() {
 		return (EReference)unaryExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -4910,6 +5302,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCastExpression() {
 		return castExpressionEClass;
 	}
@@ -4919,6 +5312,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCastExpression_Expression() {
 		return (EReference)castExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4928,6 +5322,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCastExpression_TargetTypeRef() {
 		return (EReference)castExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -4937,6 +5332,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMultiplicativeExpression() {
 		return multiplicativeExpressionEClass;
 	}
@@ -4946,6 +5342,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMultiplicativeExpression_Lhs() {
 		return (EReference)multiplicativeExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4955,6 +5352,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMultiplicativeExpression_Op() {
 		return (EAttribute)multiplicativeExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -4964,6 +5362,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMultiplicativeExpression_Rhs() {
 		return (EReference)multiplicativeExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -4973,6 +5372,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAdditiveExpression() {
 		return additiveExpressionEClass;
 	}
@@ -4982,6 +5382,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAdditiveExpression_Lhs() {
 		return (EReference)additiveExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -4991,6 +5392,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAdditiveExpression_Op() {
 		return (EAttribute)additiveExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -5000,6 +5402,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAdditiveExpression_Rhs() {
 		return (EReference)additiveExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -5009,6 +5412,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getShiftExpression() {
 		return shiftExpressionEClass;
 	}
@@ -5018,6 +5422,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getShiftExpression_Lhs() {
 		return (EReference)shiftExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5027,6 +5432,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getShiftExpression_Op() {
 		return (EAttribute)shiftExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -5036,6 +5442,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getShiftExpression_Rhs() {
 		return (EReference)shiftExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -5045,6 +5452,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getRelationalExpression() {
 		return relationalExpressionEClass;
 	}
@@ -5054,6 +5462,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRelationalExpression_Lhs() {
 		return (EReference)relationalExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5063,6 +5472,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getRelationalExpression_Op() {
 		return (EAttribute)relationalExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -5072,6 +5482,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRelationalExpression_Rhs() {
 		return (EReference)relationalExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -5081,6 +5492,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getEqualityExpression() {
 		return equalityExpressionEClass;
 	}
@@ -5090,6 +5502,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getEqualityExpression_Lhs() {
 		return (EReference)equalityExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5099,6 +5512,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getEqualityExpression_Op() {
 		return (EAttribute)equalityExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -5108,6 +5522,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getEqualityExpression_Rhs() {
 		return (EReference)equalityExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -5117,6 +5532,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBinaryBitwiseExpression() {
 		return binaryBitwiseExpressionEClass;
 	}
@@ -5126,6 +5542,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getBinaryBitwiseExpression_Lhs() {
 		return (EReference)binaryBitwiseExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5135,6 +5552,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getBinaryBitwiseExpression_Op() {
 		return (EAttribute)binaryBitwiseExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -5144,6 +5562,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getBinaryBitwiseExpression_Rhs() {
 		return (EReference)binaryBitwiseExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -5153,6 +5572,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBinaryLogicalExpression() {
 		return binaryLogicalExpressionEClass;
 	}
@@ -5162,6 +5582,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getBinaryLogicalExpression_Lhs() {
 		return (EReference)binaryLogicalExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5171,6 +5592,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getBinaryLogicalExpression_Op() {
 		return (EAttribute)binaryLogicalExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -5180,6 +5602,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getBinaryLogicalExpression_Rhs() {
 		return (EReference)binaryLogicalExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -5189,6 +5612,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getConditionalExpression() {
 		return conditionalExpressionEClass;
 	}
@@ -5198,6 +5622,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConditionalExpression_Expression() {
 		return (EReference)conditionalExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5207,6 +5632,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConditionalExpression_TrueExpression() {
 		return (EReference)conditionalExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -5216,6 +5642,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConditionalExpression_FalseExpression() {
 		return (EReference)conditionalExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -5225,6 +5652,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAssignmentExpression() {
 		return assignmentExpressionEClass;
 	}
@@ -5234,6 +5662,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAssignmentExpression_Lhs() {
 		return (EReference)assignmentExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5243,6 +5672,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAssignmentExpression_Op() {
 		return (EAttribute)assignmentExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -5252,6 +5682,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAssignmentExpression_Rhs() {
 		return (EReference)assignmentExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -5261,6 +5692,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCommaExpression() {
 		return commaExpressionEClass;
 	}
@@ -5270,6 +5702,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCommaExpression_Exprs() {
 		return (EReference)commaExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5279,6 +5712,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTypeDefiningElement() {
 		return typeDefiningElementEClass;
 	}
@@ -5288,6 +5722,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTypeDefiningElement_DefinedType() {
 		return (EReference)typeDefiningElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -5297,6 +5732,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getGenericDeclaration() {
 		return genericDeclarationEClass;
 	}
@@ -5306,6 +5742,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getGenericDeclaration_TypeVars() {
 		return (EReference)genericDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -5315,6 +5752,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getGenericDeclaration__IsGeneric() {
 		return genericDeclarationEClass.getEOperations().get(0);
 	}
@@ -5324,6 +5762,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4TypeDefinition() {
 		return n4TypeDefinitionEClass;
 	}
@@ -5333,6 +5772,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4TypeDefinition__IsExternal() {
 		return n4TypeDefinitionEClass.getEOperations().get(0);
 	}
@@ -5342,6 +5782,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4TypeDeclaration() {
 		return n4TypeDeclarationEClass;
 	}
@@ -5351,6 +5792,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getN4TypeDeclaration_Name() {
 		return (EAttribute)n4TypeDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -5360,6 +5802,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4TypeDeclaration__IsExternal() {
 		return n4TypeDeclarationEClass.getEOperations().get(0);
 	}
@@ -5369,6 +5812,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4ClassifierDeclaration() {
 		return n4ClassifierDeclarationEClass;
 	}
@@ -5378,6 +5822,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getN4ClassifierDeclaration_TypingStrategy() {
 		return (EAttribute)n4ClassifierDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -5387,6 +5832,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4ClassifierDefinition() {
 		return n4ClassifierDefinitionEClass;
 	}
@@ -5396,6 +5842,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getN4ClassifierDefinition_OwnedMembersRaw() {
 		return (EReference)n4ClassifierDefinitionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5405,6 +5852,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassifierDefinition__GetOwnedMembers() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(0);
 	}
@@ -5414,6 +5862,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassifierDefinition__GetOwnedCtor() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(1);
 	}
@@ -5423,6 +5872,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassifierDefinition__GetOwnedCallableCtor() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(2);
 	}
@@ -5432,6 +5882,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassifierDefinition__GetOwnedMethods() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(3);
 	}
@@ -5441,6 +5892,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassifierDefinition__GetOwnedFields() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(4);
 	}
@@ -5450,6 +5902,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassifierDefinition__GetOwnedGetters() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(5);
 	}
@@ -5459,6 +5912,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassifierDefinition__GetOwnedSetters() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(6);
 	}
@@ -5468,6 +5922,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassifierDefinition__GetSuperClassifierRefs() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(7);
 	}
@@ -5477,6 +5932,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassifierDefinition__GetImplementedOrExtendedInterfaceRefs() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(8);
 	}
@@ -5486,6 +5942,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4ClassDefinition() {
 		return n4ClassDefinitionEClass;
 	}
@@ -5495,6 +5952,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getN4ClassDefinition_SuperClassRef() {
 		return (EReference)n4ClassDefinitionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5504,6 +5962,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getN4ClassDefinition_SuperClassExpression() {
 		return (EReference)n4ClassDefinitionEClass.getEStructuralFeatures().get(1);
 	}
@@ -5513,6 +5972,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getN4ClassDefinition_ImplementedInterfaceRefs() {
 		return (EReference)n4ClassDefinitionEClass.getEStructuralFeatures().get(2);
 	}
@@ -5522,6 +5982,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassDefinition__GetDefinedTypeAsClass() {
 		return n4ClassDefinitionEClass.getEOperations().get(0);
 	}
@@ -5531,6 +5992,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassDefinition__GetSuperClassifierRefs() {
 		return n4ClassDefinitionEClass.getEOperations().get(1);
 	}
@@ -5540,6 +6002,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassDefinition__GetImplementedOrExtendedInterfaceRefs() {
 		return n4ClassDefinitionEClass.getEOperations().get(2);
 	}
@@ -5549,6 +6012,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4ClassDeclaration() {
 		return n4ClassDeclarationEClass;
 	}
@@ -5558,6 +6022,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassDeclaration__IsAbstract() {
 		return n4ClassDeclarationEClass.getEOperations().get(0);
 	}
@@ -5567,6 +6032,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4ClassDeclaration__GetVersion() {
 		return n4ClassDeclarationEClass.getEOperations().get(1);
 	}
@@ -5576,6 +6042,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4ClassExpression() {
 		return n4ClassExpressionEClass;
 	}
@@ -5585,6 +6052,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getN4ClassExpression_Name() {
 		return (EAttribute)n4ClassExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -5594,6 +6062,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4InterfaceDeclaration() {
 		return n4InterfaceDeclarationEClass;
 	}
@@ -5603,6 +6072,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getN4InterfaceDeclaration_SuperInterfaceRefs() {
 		return (EReference)n4InterfaceDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -5612,6 +6082,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4InterfaceDeclaration__GetDefinedTypeAsInterface() {
 		return n4InterfaceDeclarationEClass.getEOperations().get(0);
 	}
@@ -5621,6 +6092,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4InterfaceDeclaration__GetSuperClassifierRefs() {
 		return n4InterfaceDeclarationEClass.getEOperations().get(1);
 	}
@@ -5630,6 +6102,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs() {
 		return n4InterfaceDeclarationEClass.getEOperations().get(2);
 	}
@@ -5639,6 +6112,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4InterfaceDeclaration__GetVersion() {
 		return n4InterfaceDeclarationEClass.getEOperations().get(3);
 	}
@@ -5648,6 +6122,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4EnumDeclaration() {
 		return n4EnumDeclarationEClass;
 	}
@@ -5657,6 +6132,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getN4EnumDeclaration_Literals() {
 		return (EReference)n4EnumDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -5666,6 +6142,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4EnumDeclaration__GetDefinedTypeAsEnum() {
 		return n4EnumDeclarationEClass.getEOperations().get(0);
 	}
@@ -5675,6 +6152,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4EnumDeclaration__GetVersion() {
 		return n4EnumDeclarationEClass.getEOperations().get(1);
 	}
@@ -5684,6 +6162,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4EnumLiteral() {
 		return n4EnumLiteralEClass;
 	}
@@ -5693,6 +6172,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getN4EnumLiteral_Name() {
 		return (EAttribute)n4EnumLiteralEClass.getEStructuralFeatures().get(0);
 	}
@@ -5702,6 +6182,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getN4EnumLiteral_Value() {
 		return (EAttribute)n4EnumLiteralEClass.getEStructuralFeatures().get(1);
 	}
@@ -5711,6 +6192,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getN4EnumLiteral_DefinedLiteral() {
 		return (EReference)n4EnumLiteralEClass.getEStructuralFeatures().get(2);
 	}
@@ -5720,6 +6202,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getModifiableElement() {
 		return modifiableElementEClass;
 	}
@@ -5729,6 +6212,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getModifiableElement_DeclaredModifiers() {
 		return (EAttribute)modifiableElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -5738,6 +6222,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4MemberDeclaration() {
 		return n4MemberDeclarationEClass;
 	}
@@ -5747,6 +6232,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getN4MemberDeclaration_Owner() {
 		return (EReference)n4MemberDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -5756,6 +6242,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MemberDeclaration__GetDefinedTypeElement() {
 		return n4MemberDeclarationEClass.getEOperations().get(0);
 	}
@@ -5765,6 +6252,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MemberDeclaration__IsDeclaredStatic() {
 		return n4MemberDeclarationEClass.getEOperations().get(1);
 	}
@@ -5774,6 +6262,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MemberDeclaration__IsStatic() {
 		return n4MemberDeclarationEClass.getEOperations().get(2);
 	}
@@ -5783,6 +6272,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MemberDeclaration__IsDeclaredFinal() {
 		return n4MemberDeclarationEClass.getEOperations().get(3);
 	}
@@ -5792,6 +6282,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MemberDeclaration__IsFinal() {
 		return n4MemberDeclarationEClass.getEOperations().get(4);
 	}
@@ -5801,6 +6292,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MemberDeclaration__IsConstructor() {
 		return n4MemberDeclarationEClass.getEOperations().get(5);
 	}
@@ -5810,6 +6302,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MemberDeclaration__IsCallableConstructor() {
 		return n4MemberDeclarationEClass.getEOperations().get(6);
 	}
@@ -5819,6 +6312,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAnnotableN4MemberDeclaration() {
 		return annotableN4MemberDeclarationEClass;
 	}
@@ -5828,6 +6322,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAnnotableN4MemberDeclaration_AnnotationList() {
 		return (EReference)annotableN4MemberDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -5837,6 +6332,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getAnnotableN4MemberDeclaration__GetAnnotations() {
 		return annotableN4MemberDeclarationEClass.getEOperations().get(0);
 	}
@@ -5846,6 +6342,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4MemberAnnotationList() {
 		return n4MemberAnnotationListEClass;
 	}
@@ -5855,6 +6352,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MemberAnnotationList__GetDefinedTypeElement() {
 		return n4MemberAnnotationListEClass.getEOperations().get(0);
 	}
@@ -5864,6 +6362,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MemberAnnotationList__GetDeclaredTypeRef() {
 		return n4MemberAnnotationListEClass.getEOperations().get(1);
 	}
@@ -5873,6 +6372,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MemberAnnotationList__GetName() {
 		return n4MemberAnnotationListEClass.getEOperations().get(2);
 	}
@@ -5882,6 +6382,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4FieldDeclaration() {
 		return n4FieldDeclarationEClass;
 	}
@@ -5891,6 +6392,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getN4FieldDeclaration_DefinedField() {
 		return (EReference)n4FieldDeclarationEClass.getEStructuralFeatures().get(0);
 	}
@@ -5900,6 +6402,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getN4FieldDeclaration_DeclaredOptional() {
 		return (EAttribute)n4FieldDeclarationEClass.getEStructuralFeatures().get(1);
 	}
@@ -5909,6 +6412,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getN4FieldDeclaration_Expression() {
 		return (EReference)n4FieldDeclarationEClass.getEStructuralFeatures().get(2);
 	}
@@ -5918,6 +6422,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4FieldDeclaration__GetDefinedTypeElement() {
 		return n4FieldDeclarationEClass.getEOperations().get(0);
 	}
@@ -5927,6 +6432,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4FieldDeclaration__IsConst() {
 		return n4FieldDeclarationEClass.getEOperations().get(1);
 	}
@@ -5936,6 +6442,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4FieldDeclaration__IsStatic() {
 		return n4FieldDeclarationEClass.getEOperations().get(2);
 	}
@@ -5945,6 +6452,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4FieldDeclaration__IsValid() {
 		return n4FieldDeclarationEClass.getEOperations().get(3);
 	}
@@ -5954,6 +6462,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4FieldDeclaration__IsValidName() {
 		return n4FieldDeclarationEClass.getEOperations().get(4);
 	}
@@ -5963,6 +6472,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMethodDeclaration() {
 		return methodDeclarationEClass;
 	}
@@ -5972,6 +6482,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getMethodDeclaration__ExistsExplicitSuperCall() {
 		return methodDeclarationEClass.getEOperations().get(0);
 	}
@@ -5981,6 +6492,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getMethodDeclaration__GetDefinedTypeElement() {
 		return methodDeclarationEClass.getEOperations().get(1);
 	}
@@ -5990,6 +6502,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getMethodDeclaration__IsStatic() {
 		return methodDeclarationEClass.getEOperations().get(2);
 	}
@@ -5999,6 +6512,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4MethodDeclaration() {
 		return n4MethodDeclarationEClass;
 	}
@@ -6008,6 +6522,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MethodDeclaration__IsAbstract() {
 		return n4MethodDeclarationEClass.getEOperations().get(0);
 	}
@@ -6017,6 +6532,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MethodDeclaration__IsConstructor() {
 		return n4MethodDeclarationEClass.getEOperations().get(1);
 	}
@@ -6026,6 +6542,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MethodDeclaration__IsCallableConstructor() {
 		return n4MethodDeclarationEClass.getEOperations().get(2);
 	}
@@ -6035,6 +6552,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MethodDeclaration__IsStatic() {
 		return n4MethodDeclarationEClass.getEOperations().get(3);
 	}
@@ -6044,6 +6562,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4MethodDeclaration__IsValidName() {
 		return n4MethodDeclarationEClass.getEOperations().get(4);
 	}
@@ -6053,6 +6572,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4FieldAccessor() {
 		return n4FieldAccessorEClass;
 	}
@@ -6062,6 +6582,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4FieldAccessor__IsAbstract() {
 		return n4FieldAccessorEClass.getEOperations().get(0);
 	}
@@ -6071,6 +6592,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4FieldAccessor__IsValidName() {
 		return n4FieldAccessorEClass.getEOperations().get(1);
 	}
@@ -6080,6 +6602,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4GetterDeclaration() {
 		return n4GetterDeclarationEClass;
 	}
@@ -6089,6 +6612,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4GetterDeclaration__GetDefinedTypeElement() {
 		return n4GetterDeclarationEClass.getEOperations().get(0);
 	}
@@ -6098,6 +6622,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getN4SetterDeclaration() {
 		return n4SetterDeclarationEClass;
 	}
@@ -6107,6 +6632,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getN4SetterDeclaration__GetDefinedTypeElement() {
 		return n4SetterDeclarationEClass.getEOperations().get(0);
 	}
@@ -6116,6 +6642,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBindingPattern() {
 		return bindingPatternEClass;
 	}
@@ -6125,6 +6652,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getObjectBindingPattern() {
 		return objectBindingPatternEClass;
 	}
@@ -6134,6 +6662,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getObjectBindingPattern_Properties() {
 		return (EReference)objectBindingPatternEClass.getEStructuralFeatures().get(0);
 	}
@@ -6143,6 +6672,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getArrayBindingPattern() {
 		return arrayBindingPatternEClass;
 	}
@@ -6152,6 +6682,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getArrayBindingPattern_Elements() {
 		return (EReference)arrayBindingPatternEClass.getEStructuralFeatures().get(0);
 	}
@@ -6161,6 +6692,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBindingProperty() {
 		return bindingPropertyEClass;
 	}
@@ -6170,6 +6702,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getBindingProperty_Value() {
 		return (EReference)bindingPropertyEClass.getEStructuralFeatures().get(0);
 	}
@@ -6179,6 +6712,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBindingProperty__GetName() {
 		return bindingPropertyEClass.getEOperations().get(0);
 	}
@@ -6188,6 +6722,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBindingProperty__IsValidName() {
 		return bindingPropertyEClass.getEOperations().get(1);
 	}
@@ -6197,6 +6732,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getBindingElement() {
 		return bindingElementEClass;
 	}
@@ -6206,6 +6742,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getBindingElement_Rest() {
 		return (EAttribute)bindingElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -6215,6 +6752,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getBindingElement_VarDecl() {
 		return (EReference)bindingElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -6224,6 +6762,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getBindingElement_NestedPattern() {
 		return (EReference)bindingElementEClass.getEStructuralFeatures().get(2);
 	}
@@ -6233,6 +6772,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getBindingElement_Expression() {
 		return (EReference)bindingElementEClass.getEStructuralFeatures().get(3);
 	}
@@ -6242,6 +6782,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getBindingElement__IsElision() {
 		return bindingElementEClass.getEOperations().get(0);
 	}
@@ -6251,6 +6792,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSXChild() {
 		return jsxChildEClass;
 	}
@@ -6260,6 +6802,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSXElementName() {
 		return jsxElementNameEClass;
 	}
@@ -6269,6 +6812,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSXElementName_Expression() {
 		return (EReference)jsxElementNameEClass.getEStructuralFeatures().get(0);
 	}
@@ -6278,6 +6822,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSXText() {
 		return jsxTextEClass;
 	}
@@ -6287,6 +6832,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSXExpression() {
 		return jsxExpressionEClass;
 	}
@@ -6296,6 +6842,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSXExpression_Expression() {
 		return (EReference)jsxExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -6305,6 +6852,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSXAttribute() {
 		return jsxAttributeEClass;
 	}
@@ -6314,6 +6862,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSXPropertyAttribute() {
 		return jsxPropertyAttributeEClass;
 	}
@@ -6323,6 +6872,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSXPropertyAttribute_Property() {
 		return (EReference)jsxPropertyAttributeEClass.getEStructuralFeatures().get(0);
 	}
@@ -6332,6 +6882,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getJSXPropertyAttribute_PropertyAsText() {
 		return (EAttribute)jsxPropertyAttributeEClass.getEStructuralFeatures().get(1);
 	}
@@ -6341,6 +6892,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSXPropertyAttribute_JsxAttributeValue() {
 		return (EReference)jsxPropertyAttributeEClass.getEStructuralFeatures().get(2);
 	}
@@ -6350,6 +6902,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getJSXSpreadAttribute() {
 		return jsxSpreadAttributeEClass;
 	}
@@ -6359,6 +6912,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSXSpreadAttribute_Expression() {
 		return (EReference)jsxSpreadAttributeEClass.getEStructuralFeatures().get(0);
 	}
@@ -6368,6 +6922,27 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EClass getJSXAbstractElement() {
+		return jsxAbstractElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getJSXAbstractElement_JsxChildren() {
+		return (EReference)jsxAbstractElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getJSXElement() {
 		return jsxElementEClass;
 	}
@@ -6377,6 +6952,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSXElement_JsxElementName() {
 		return (EReference)jsxElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -6386,6 +6962,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getJSXElement_JsxAttributes() {
 		return (EReference)jsxElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -6395,7 +6972,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getJSXElement_JsxChildren() {
+	@Override
+	public EReference getJSXElement_JsxClosingName() {
 		return (EReference)jsxElementEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -6404,8 +6982,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getJSXElement_JsxClosingName() {
-		return (EReference)jsxElementEClass.getEStructuralFeatures().get(3);
+	@Override
+	public EClass getJSXFragment() {
+		return jsxFragmentEClass;
 	}
 
 	/**
@@ -6413,6 +6992,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionedElement() {
 		return versionedElementEClass;
 	}
@@ -6422,6 +7002,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getVersionedElement_DeclaredVersion() {
 		return (EAttribute)versionedElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -6431,6 +7012,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionedElement__HasDeclaredVersion() {
 		return versionedElementEClass.getEOperations().get(0);
 	}
@@ -6440,6 +7022,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionedElement__GetDeclaredVersionOrZero() {
 		return versionedElementEClass.getEOperations().get(1);
 	}
@@ -6449,6 +7032,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionedIdentifierRef() {
 		return versionedIdentifierRefEClass;
 	}
@@ -6458,6 +7042,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionedIdentifierRef__GetVersion() {
 		return versionedIdentifierRefEClass.getEOperations().get(0);
 	}
@@ -6467,6 +7052,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMigrationContextVariable() {
 		return migrationContextVariableEClass;
 	}
@@ -6476,6 +7062,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getMigrationContextVariable__GetName() {
 		return migrationContextVariableEClass.getEOperations().get(0);
 	}
@@ -6485,6 +7072,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getVariableStatementKeyword() {
 		return variableStatementKeywordEEnum;
 	}
@@ -6494,6 +7082,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getPropertyNameKind() {
 		return propertyNameKindEEnum;
 	}
@@ -6503,6 +7092,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getPostfixOperator() {
 		return postfixOperatorEEnum;
 	}
@@ -6512,6 +7102,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getUnaryOperator() {
 		return unaryOperatorEEnum;
 	}
@@ -6521,6 +7112,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getMultiplicativeOperator() {
 		return multiplicativeOperatorEEnum;
 	}
@@ -6530,6 +7122,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getAdditiveOperator() {
 		return additiveOperatorEEnum;
 	}
@@ -6539,6 +7132,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getRelationalOperator() {
 		return relationalOperatorEEnum;
 	}
@@ -6548,6 +7142,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getEqualityOperator() {
 		return equalityOperatorEEnum;
 	}
@@ -6557,6 +7152,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getBinaryBitwiseOperator() {
 		return binaryBitwiseOperatorEEnum;
 	}
@@ -6566,6 +7162,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getBinaryLogicalOperator() {
 		return binaryLogicalOperatorEEnum;
 	}
@@ -6575,6 +7172,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getShiftOperator() {
 		return shiftOperatorEEnum;
 	}
@@ -6584,6 +7182,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getAssignmentOperator() {
 		return assignmentOperatorEEnum;
 	}
@@ -6593,6 +7192,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getN4Modifier() {
 		return n4ModifierEEnum;
 	}
@@ -6602,6 +7202,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getIteratorOfExpression() {
 		return iteratorOfExpressionEDataType;
 	}
@@ -6611,6 +7212,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getIteratorOfYieldExpression() {
 		return iteratorOfYieldExpressionEDataType;
 	}
@@ -6620,6 +7222,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getIteratorOfStatement() {
 		return iteratorOfStatementEDataType;
 	}
@@ -6629,6 +7232,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getIteratorOfReturnStatement() {
 		return iteratorOfReturnStatementEDataType;
 	}
@@ -6638,6 +7242,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public N4JSFactory getN4JSFactory() {
 		return (N4JSFactory)getEFactoryInstance();
 	}
@@ -6696,6 +7301,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(importDeclarationEClass, IMPORT_DECLARATION__IMPORT_SPECIFIERS);
 		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__IMPORT_FROM);
 		createEReference(importDeclarationEClass, IMPORT_DECLARATION__MODULE);
+		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT);
 
 		importSpecifierEClass = createEClass(IMPORT_SPECIFIER);
 		createEAttribute(importSpecifierEClass, IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE);
@@ -7357,11 +7963,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxSpreadAttributeEClass = createEClass(JSX_SPREAD_ATTRIBUTE);
 		createEReference(jsxSpreadAttributeEClass, JSX_SPREAD_ATTRIBUTE__EXPRESSION);
 
+		jsxAbstractElementEClass = createEClass(JSX_ABSTRACT_ELEMENT);
+		createEReference(jsxAbstractElementEClass, JSX_ABSTRACT_ELEMENT__JSX_CHILDREN);
+
 		jsxElementEClass = createEClass(JSX_ELEMENT);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_ELEMENT_NAME);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_ATTRIBUTES);
-		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CHILDREN);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CLOSING_NAME);
+
+		jsxFragmentEClass = createEClass(JSX_FRAGMENT);
 
 		versionedElementEClass = createEClass(VERSIONED_ELEMENT);
 		createEAttribute(versionedElementEClass, VERSIONED_ELEMENT__DECLARED_VERSION);
@@ -7676,8 +8286,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxPropertyAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
 		jsxPropertyAttributeEClass.getESuperTypes().add(this.getMemberAccess());
 		jsxSpreadAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
+		jsxAbstractElementEClass.getESuperTypes().add(this.getExpression());
 		jsxElementEClass.getESuperTypes().add(this.getExpression());
 		jsxElementEClass.getESuperTypes().add(this.getJSXChild());
+		jsxElementEClass.getESuperTypes().add(this.getJSXAbstractElement());
+		jsxFragmentEClass.getESuperTypes().add(this.getJSXChild());
+		jsxFragmentEClass.getESuperTypes().add(this.getJSXAbstractElement());
 		versionedIdentifierRefEClass.getESuperTypes().add(this.getIdentifierRef());
 		versionedIdentifierRefEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedReference());
 		migrationContextVariableEClass.getESuperTypes().add(this.getVariable());
@@ -7723,6 +8337,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getImportDeclaration_ImportSpecifiers(), this.getImportSpecifier(), null, "importSpecifiers", null, 0, -1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportDeclaration_ImportFrom(), theEcorePackage.getEBoolean(), "importFrom", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getImportDeclaration_Module(), theTypesPackage.getTModule(), null, "module", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportDeclaration_ModuleSpecifierAsText(), theEcorePackage.getEString(), "moduleSpecifierAsText", null, 0, 1, ImportDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(importSpecifierEClass, ImportSpecifier.class, "ImportSpecifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getImportSpecifier_FlaggedUsedInCode(), theEcorePackage.getEBoolean(), "flaggedUsedInCode", null, 0, 1, ImportSpecifier.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -8366,9 +8981,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4ClassifierDefinition__GetOwnedSetters(), this.getN4SetterDeclaration(), "getOwnedSetters", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassifierDefinition__GetSuperClassifierRefs(), theTypeRefsPackage.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassifierDefinition__GetSuperClassifierRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassifierDefinition__GetImplementedOrExtendedInterfaceRefs(), theTypeRefsPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassifierDefinition__GetImplementedOrExtendedInterfaceRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4ClassDefinitionEClass, N4ClassDefinition.class, "N4ClassDefinition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getN4ClassDefinition_SuperClassRef(), theTypeRefsPackage.getParameterizedTypeRef(), null, "superClassRef", null, 0, 1, N4ClassDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -8377,9 +8992,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4ClassDefinition__GetDefinedTypeAsClass(), theTypesPackage.getTClass(), "getDefinedTypeAsClass", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassDefinition__GetSuperClassifierRefs(), theTypeRefsPackage.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassDefinition__GetSuperClassifierRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassDefinition__GetImplementedOrExtendedInterfaceRefs(), theTypeRefsPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassDefinition__GetImplementedOrExtendedInterfaceRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4ClassDeclarationEClass, N4ClassDeclaration.class, "N4ClassDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -8395,9 +9010,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4InterfaceDeclaration__GetDefinedTypeAsInterface(), theTypesPackage.getTInterface(), "getDefinedTypeAsInterface", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4InterfaceDeclaration__GetSuperClassifierRefs(), theTypeRefsPackage.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4InterfaceDeclaration__GetSuperClassifierRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs(), theTypeRefsPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4InterfaceDeclaration__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -8538,11 +9153,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(jsxSpreadAttributeEClass, JSXSpreadAttribute.class, "JSXSpreadAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJSXSpreadAttribute_Expression(), this.getExpression(), null, "expression", null, 0, 1, JSXSpreadAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(jsxAbstractElementEClass, JSXAbstractElement.class, "JSXAbstractElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSXAbstractElement_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXAbstractElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(jsxElementEClass, JSXElement.class, "JSXElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJSXElement_JsxElementName(), this.getJSXElementName(), null, "jsxElementName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getJSXElement_JsxAttributes(), this.getJSXAttribute(), null, "jsxAttributes", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getJSXElement_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getJSXElement_JsxClosingName(), this.getJSXElementName(), null, "jsxClosingName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsxFragmentEClass, JSXFragment.class, "JSXFragment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(versionedElementEClass, VersionedElement.class, "VersionedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getVersionedElement_DeclaredVersion(), theEcorePackage.getEBigDecimal(), "declaredVersion", null, 0, 1, VersionedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

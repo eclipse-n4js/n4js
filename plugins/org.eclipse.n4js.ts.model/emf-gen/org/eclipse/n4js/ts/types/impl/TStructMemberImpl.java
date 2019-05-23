@@ -74,6 +74,7 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TStructMember getDefinedMember() {
 		if (definedMember != null && definedMember.eIsProxy()) {
 			InternalEObject oldDefinedMember = (InternalEObject)definedMember;
@@ -100,6 +101,7 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedMember(TStructMember newDefinedMember) {
 		TStructMember oldDefinedMember = definedMember;
 		definedMember = newDefinedMember;
@@ -112,6 +114,7 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberAccessModifier getDefaultMemberAccessModifier() {
 		return MemberAccessModifier.PUBLIC;
 	}
@@ -121,6 +124,7 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStatic() {
 		return false;
 	}
@@ -130,6 +134,7 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberAccessModifier getMemberAccessModifier() {
 		return MemberAccessModifier.PUBLIC;
 	}

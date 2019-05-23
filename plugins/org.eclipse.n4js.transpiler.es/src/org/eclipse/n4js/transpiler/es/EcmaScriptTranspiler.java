@@ -15,7 +15,6 @@ import java.io.Writer;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.generator.GeneratorOption;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
@@ -31,7 +30,6 @@ import org.eclipse.n4js.transpiler.es.transform.DestructuringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.EnumAccessTransformation;
 import org.eclipse.n4js.transpiler.es.transform.EnumDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ExpressionTransformation;
-import org.eclipse.n4js.transpiler.es.transform.FunctionDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.JSXTransformation;
 import org.eclipse.n4js.transpiler.es.transform.MemberPatchingTransformation;
@@ -82,8 +80,6 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<EnumDeclarationTransformation> enumDeclarationTransformationProvider;
 	@Inject
-	private Provider<FunctionDeclarationTransformation> functionDeclarationTransformationProvider;
-	@Inject
 	private Provider<TrimTransformation> trimTransformation;
 	@Inject
 	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformationProvider;
@@ -101,9 +97,6 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	private Provider<ArrowFunction_Part2_Transformation> arrowFunction_Part2_TransformationProvider;
 	@Inject
 	private Provider<JSXTransformation> jsxTransformationProvider;
-
-	@Inject
-	private IN4JSCore n4jsCore;
 
 	@Override
 	protected Optional<String> getPreamble() {
@@ -135,7 +128,6 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				classDeclarationTransformationProvider.get(),
 				interfaceDeclarationTransformationProvider.get(),
 				enumDeclarationTransformationProvider.get(),
-				functionDeclarationTransformationProvider.get(),
 				arrowFunction_Part1_TransformationProvider.get(),
 				blockTransformationProvider.get(),
 				asyncAwaitTransformationProvider.get(),
@@ -153,34 +145,30 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Override
 	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
 			Optional<SourceMapInfo> optSourceMapInfo) {
-		if (onlyWrapping(resource)) {
-			doWrapAndWrite(resource, outCode);
+		if (!requiresTranspilation(resource)) {
+			copyWithoutTranspilation(resource, outCode);
 		} else {
 			super.transpile(resource, options, outCode, optSourceMapInfo);
 		}
 	}
 
 	/**
-	 * Take the content of resource
+	 * Take the content of resource and copy it over to the output folder without any transformation.
 	 *
 	 * @param resource
 	 *            JS-code snippet which will be treated as text.
 	 * @param outCode
 	 *            writer to output to.
 	 */
-	private void doWrapAndWrite(N4JSResource resource, Writer outCode) {
-		// check if wrapping really applies.
-		boolean moduleWrapping = !n4jsCore.isNoModuleWrapping(resource.getURI());
-
+	private void copyWithoutTranspilation(N4JSResource resource, Writer outCode) {
 		// get script
 		EObject script = resource.getContents().get(0);
 
 		// obtain text
 		CharSequence scriptAsText = NodeModelUtils.getNode(script).getRootNode().getText();
 
-		// wrap and write
-		String decorated = (moduleWrapping ? ModuleWrappingTransformation.wrapPlainJSCode(scriptAsText)
-				: scriptAsText).toString();
+		// write
+		String decorated = scriptAsText.toString();
 		try {
 
 			outCode.write(decorated);
@@ -191,15 +179,16 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	}
 
 	/**
-	 * Depending on the File-Extension determines if there should be any transformation.
+	 * Depending on the file-extension, determines if the given resource requires actual transpilation as opposed to
+	 * simply copying the source file to the output folder.
 	 *
 	 * @param eResource
-	 *            N4JS-Resource to check.
-	 * @return true if the code should only be wrapped.
+	 *            N4JS resource to check.
+	 * @return true if the code requires transpilation.
 	 */
-	private boolean onlyWrapping(N4JSResource eResource) {
+	private boolean requiresTranspilation(N4JSResource eResource) {
 		ResourceType resourceType = ResourceType.getResourceType(eResource);
-		return resourceType.equals(ResourceType.JS) || resourceType.equals(ResourceType.JSX);
+		return !(resourceType.equals(ResourceType.JS) || resourceType.equals(ResourceType.JSX));
 	}
 
 }

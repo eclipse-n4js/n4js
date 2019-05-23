@@ -75,11 +75,6 @@
 			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 46)." at ""noValidate""
 			"noValidate": [
 				"p/A"
-			],
-			"noModuleWrap": [
-				"p/O",
-				// XPECT errors --> "Module filters of type noModuleWrap must not match N4JS modules/files." at "\"other/*\""
-				"other/*"
 			]
 		}
 	}

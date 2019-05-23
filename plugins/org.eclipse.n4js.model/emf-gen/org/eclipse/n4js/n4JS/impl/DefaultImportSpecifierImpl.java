@@ -52,6 +52,7 @@ public class DefaultImportSpecifierImpl extends NamedImportSpecifierImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getAlias() {
 		return this.getImportedElementAsText();
 	}
@@ -61,6 +62,7 @@ public class DefaultImportSpecifierImpl extends NamedImportSpecifierImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDefaultImport() {
 		return true;
 	}

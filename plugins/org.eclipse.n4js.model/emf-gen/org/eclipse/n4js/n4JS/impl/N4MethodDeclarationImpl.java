@@ -280,6 +280,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Block getBody() {
 		return body;
 	}
@@ -304,6 +305,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBody(Block newBody) {
 		if (newBody != body) {
 			NotificationChain msgs = null;
@@ -323,6 +325,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LocalArgumentsVariable get_lok() {
 		return _lok;
 	}
@@ -347,6 +350,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void set_lok(LocalArgumentsVariable new_lok) {
 		if (new_lok != _lok) {
 			NotificationChain msgs = null;
@@ -366,6 +370,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Type getDefinedType() {
 		if (definedType != null && definedType.eIsProxy()) {
 			InternalEObject oldDefinedType = (InternalEObject)definedType;
@@ -392,6 +397,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedType(Type newDefinedType) {
 		Type oldDefinedType = definedType;
 		definedType = newDefinedType;
@@ -404,6 +410,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BigDecimal getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -413,6 +420,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
 		BigDecimal oldDeclaredVersion = declaredVersion;
 		declaredVersion = newDeclaredVersion;
@@ -425,6 +433,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<FormalParameter> getFpars() {
 		if (fpars == null) {
 			fpars = new EObjectContainmentEList<FormalParameter>(FormalParameter.class, this, N4JSPackage.N4_METHOD_DECLARATION__FPARS);
@@ -437,6 +446,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getReturnTypeRef() {
 		return returnTypeRef;
 	}
@@ -461,6 +471,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReturnTypeRef(TypeRef newReturnTypeRef) {
 		if (newReturnTypeRef != returnTypeRef) {
 			NotificationChain msgs = null;
@@ -480,6 +491,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGenerator() {
 		return generator;
 	}
@@ -489,6 +501,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setGenerator(boolean newGenerator) {
 		boolean oldGenerator = generator;
 		generator = newGenerator;
@@ -501,6 +514,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredAsync() {
 		return declaredAsync;
 	}
@@ -510,6 +524,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredAsync(boolean newDeclaredAsync) {
 		boolean oldDeclaredAsync = declaredAsync;
 		declaredAsync = newDeclaredAsync;
@@ -522,6 +537,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeVariable> getTypeVars() {
 		if (typeVars == null) {
 			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.N4_METHOD_DECLARATION__TYPE_VARS);
@@ -534,6 +550,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return declaredTypeRef;
 	}
@@ -558,6 +575,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
 		if (newDeclaredTypeRef != declaredTypeRef) {
 			NotificationChain msgs = null;
@@ -577,6 +595,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getBogusTypeRef() {
 		return bogusTypeRef;
 	}
@@ -601,6 +620,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBogusTypeRef(TypeRef newBogusTypeRef) {
 		if (newBogusTypeRef != bogusTypeRef) {
 			NotificationChain msgs = null;
@@ -620,6 +640,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LiteralOrComputedPropertyName getDeclaredName() {
 		return declaredName;
 	}
@@ -644,6 +665,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredName(LiteralOrComputedPropertyName newDeclaredName) {
 		if (newDeclaredName != declaredName) {
 			NotificationChain msgs = null;
@@ -663,6 +685,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAbstract() {
 		return ((((this.eContainer() instanceof N4InterfaceDeclaration) && (this.getBody() == null)) && 
 			(!IterableExtensions.<Annotation>exists(this.getAnnotations(), new Function1<Annotation, Boolean>() {
@@ -678,6 +701,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isConstructor() {
 		return (Objects.equal(this.getName(), "constructor") && (!this.isStatic()));
 	}
@@ -687,6 +711,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isCallableConstructor() {
 		LiteralOrComputedPropertyName _declaredName = this.getDeclaredName();
 		return (_declaredName == null);
@@ -697,6 +722,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStatic() {
 		return this.getDeclaredModifiers().contains(N4Modifier.STATIC);
 	}
@@ -706,6 +732,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidName() {
 		String _name = this.getName();
 		boolean _equals = Objects.equal("prototype", _name);
@@ -735,6 +762,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean existsExplicitSuperCall() {
 		final Function1<ExpressionStatement, Expression> _function = new Function1<ExpressionStatement, Expression>() {
 			public Expression apply(final ExpressionStatement it) {
@@ -756,6 +784,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TMember getDefinedTypeElement() {
 		TMember _xifexpression = null;
 		Type _definedType = this.getDefinedType();
@@ -784,6 +813,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		LiteralOrComputedPropertyName _declaredName = this.getDeclaredName();
 		String _name = null;
@@ -798,6 +828,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasComputedPropertyName() {
 		final LiteralOrComputedPropertyName declName = this.getDeclaredName();
 		return ((declName != null) && declName.hasComputedPropertyName());
@@ -808,6 +839,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGeneric() {
 		boolean _isEmpty = this.getTypeVars().isEmpty();
 		return (!_isEmpty);
@@ -818,6 +850,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReturnValueOptional() {
 		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark()));
 	}
@@ -827,6 +860,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAsync() {
 		return this.isDeclaredAsync();
 	}
@@ -836,6 +870,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TFunction getDefinedFunction() {
 		final Type defType = this.getDefinedType();
 		TFunction _xifexpression = null;
@@ -850,6 +885,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasDeclaredVersion() {
 		BigDecimal _declaredVersion = this.getDeclaredVersion();
 		return (_declaredVersion != null);
@@ -860,6 +896,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getDeclaredVersionOrZero() {
 		int _xifexpression = (int) 0;
 		boolean _hasDeclaredVersion = this.hasDeclaredVersion();
@@ -877,6 +914,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LocalArgumentsVariable getLocalArgumentsVariable() {
 		LocalArgumentsVariable __lok = this.get_lok();
 		boolean _tripleEquals = (__lok == null);
@@ -898,6 +936,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifiableElement getDefinedFunctionOrAccessor() {
 		final FunctionOrFieldAccessor _this = this;
 		EObject _switchResult = null;
@@ -920,6 +959,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return false;
 	}

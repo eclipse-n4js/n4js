@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.n4js.n4JS.JSXAbstractElement;
 import org.eclipse.n4js.n4JS.JSXAttribute;
 import org.eclipse.n4js.n4JS.JSXChild;
 import org.eclipse.n4js.n4JS.JSXElement;
@@ -39,15 +40,25 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.JSXElementImpl#getJsxChildren <em>Jsx Children</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.JSXElementImpl#getJsxElementName <em>Jsx Element Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.JSXElementImpl#getJsxAttributes <em>Jsx Attributes</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.JSXElementImpl#getJsxChildren <em>Jsx Children</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.JSXElementImpl#getJsxClosingName <em>Jsx Closing Name</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class JSXElementImpl extends ExpressionImpl implements JSXElement {
+	/**
+	 * The cached value of the '{@link #getJsxChildren() <em>Jsx Children</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getJsxChildren()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<JSXChild> jsxChildren;
+
 	/**
 	 * The cached value of the '{@link #getJsxElementName() <em>Jsx Element Name</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -67,16 +78,6 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * @ordered
 	 */
 	protected EList<JSXAttribute> jsxAttributes;
-
-	/**
-	 * The cached value of the '{@link #getJsxChildren() <em>Jsx Children</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getJsxChildren()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<JSXChild> jsxChildren;
 
 	/**
 	 * The cached value of the '{@link #getJsxClosingName() <em>Jsx Closing Name</em>}' containment reference.
@@ -112,6 +113,20 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EList<JSXChild> getJsxChildren() {
+		if (jsxChildren == null) {
+			jsxChildren = new EObjectContainmentEList<JSXChild>(JSXChild.class, this, N4JSPackage.JSX_ELEMENT__JSX_CHILDREN);
+		}
+		return jsxChildren;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public JSXElementName getJsxElementName() {
 		return jsxElementName;
 	}
@@ -136,6 +151,7 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setJsxElementName(JSXElementName newJsxElementName) {
 		if (newJsxElementName != jsxElementName) {
 			NotificationChain msgs = null;
@@ -155,6 +171,7 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<JSXAttribute> getJsxAttributes() {
 		if (jsxAttributes == null) {
 			jsxAttributes = new EObjectContainmentEList<JSXAttribute>(JSXAttribute.class, this, N4JSPackage.JSX_ELEMENT__JSX_ATTRIBUTES);
@@ -167,18 +184,7 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<JSXChild> getJsxChildren() {
-		if (jsxChildren == null) {
-			jsxChildren = new EObjectContainmentEList<JSXChild>(JSXChild.class, this, N4JSPackage.JSX_ELEMENT__JSX_CHILDREN);
-		}
-		return jsxChildren;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@Override
 	public JSXElementName getJsxClosingName() {
 		return jsxClosingName;
 	}
@@ -203,6 +209,7 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setJsxClosingName(JSXElementName newJsxClosingName) {
 		if (newJsxClosingName != jsxClosingName) {
 			NotificationChain msgs = null;
@@ -225,12 +232,12 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN:
+				return ((InternalEList<?>)getJsxChildren()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.JSX_ELEMENT__JSX_ELEMENT_NAME:
 				return basicSetJsxElementName(null, msgs);
 			case N4JSPackage.JSX_ELEMENT__JSX_ATTRIBUTES:
 				return ((InternalEList<?>)getJsxAttributes()).basicRemove(otherEnd, msgs);
-			case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN:
-				return ((InternalEList<?>)getJsxChildren()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.JSX_ELEMENT__JSX_CLOSING_NAME:
 				return basicSetJsxClosingName(null, msgs);
 		}
@@ -245,12 +252,12 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN:
+				return getJsxChildren();
 			case N4JSPackage.JSX_ELEMENT__JSX_ELEMENT_NAME:
 				return getJsxElementName();
 			case N4JSPackage.JSX_ELEMENT__JSX_ATTRIBUTES:
 				return getJsxAttributes();
-			case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN:
-				return getJsxChildren();
 			case N4JSPackage.JSX_ELEMENT__JSX_CLOSING_NAME:
 				return getJsxClosingName();
 		}
@@ -266,16 +273,16 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN:
+				getJsxChildren().clear();
+				getJsxChildren().addAll((Collection<? extends JSXChild>)newValue);
+				return;
 			case N4JSPackage.JSX_ELEMENT__JSX_ELEMENT_NAME:
 				setJsxElementName((JSXElementName)newValue);
 				return;
 			case N4JSPackage.JSX_ELEMENT__JSX_ATTRIBUTES:
 				getJsxAttributes().clear();
 				getJsxAttributes().addAll((Collection<? extends JSXAttribute>)newValue);
-				return;
-			case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN:
-				getJsxChildren().clear();
-				getJsxChildren().addAll((Collection<? extends JSXChild>)newValue);
 				return;
 			case N4JSPackage.JSX_ELEMENT__JSX_CLOSING_NAME:
 				setJsxClosingName((JSXElementName)newValue);
@@ -292,14 +299,14 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN:
+				getJsxChildren().clear();
+				return;
 			case N4JSPackage.JSX_ELEMENT__JSX_ELEMENT_NAME:
 				setJsxElementName((JSXElementName)null);
 				return;
 			case N4JSPackage.JSX_ELEMENT__JSX_ATTRIBUTES:
 				getJsxAttributes().clear();
-				return;
-			case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN:
-				getJsxChildren().clear();
 				return;
 			case N4JSPackage.JSX_ELEMENT__JSX_CLOSING_NAME:
 				setJsxClosingName((JSXElementName)null);
@@ -316,16 +323,58 @@ public class JSXElementImpl extends ExpressionImpl implements JSXElement {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN:
+				return jsxChildren != null && !jsxChildren.isEmpty();
 			case N4JSPackage.JSX_ELEMENT__JSX_ELEMENT_NAME:
 				return jsxElementName != null;
 			case N4JSPackage.JSX_ELEMENT__JSX_ATTRIBUTES:
 				return jsxAttributes != null && !jsxAttributes.isEmpty();
-			case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN:
-				return jsxChildren != null && !jsxChildren.isEmpty();
 			case N4JSPackage.JSX_ELEMENT__JSX_CLOSING_NAME:
 				return jsxClosingName != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == JSXChild.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == JSXAbstractElement.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.JSX_ELEMENT__JSX_CHILDREN: return N4JSPackage.JSX_ABSTRACT_ELEMENT__JSX_CHILDREN;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == JSXChild.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == JSXAbstractElement.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.JSX_ABSTRACT_ELEMENT__JSX_CHILDREN: return N4JSPackage.JSX_ELEMENT__JSX_CHILDREN;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 } //JSXElementImpl

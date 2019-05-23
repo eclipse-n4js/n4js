@@ -13,8 +13,6 @@ package org.eclipse.n4js.preferences;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.requiresInfrastructureForLibraryManager;
 
 import java.io.File;
 import java.net.URI;
@@ -24,9 +22,8 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
+import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
@@ -62,19 +59,10 @@ public class ExternalLibraryPreferenceModel {
 	}
 
 	/**
-	 * Creates and returns with a new external library preference model that points to the built-in external N4JS
-	 * libraries if the {@link Platform platform} is {@link Platform#isRunning() running} and the underlying
-	 * {@link IProduct product} is the N4JS IDE product. Otherwise returns with a model instance that does not have any
-	 * external library folder locations.
+	 * Creates a default ExternalLibraryPreferenceModel intended for use within the N4JS IDE product.
 	 * <p>
-	 * When the N4JS product is running and it has the property {@code includesBuiltInLibraries} with {@code true}
-	 * value, then the built-in libraries will be considered to be included; For more details about the product specific
-	 * property check the N4JS IDE application configuration in the {@code org.eclipse.n4js.product} bundle.
-	 * <p>
-	 * When the platform is running either in {@link Platform#inDebugMode() debug mode} or in
-	 * {@link Platform#inDevelopmentMode() development mode}, one has to explicitly configure the
-	 * {@code -Dorg.eclipse.n4js.includesBuiltInLibraries=true} VM argument to include the built-ins, otherwise those
-	 * will be omitted.
+	 * NOTE: this method used to include the n4js-libs bundled as "shipped code" in the IDE; however, shipped code was
+	 * removed from the IDE, so this method always returns an empty preference model, for the time being.
 	 * <p>
 	 * This factory method requires a running {@link Platform platform}, otherwise a {@link IllegalStateException} will
 	 * be thrown.
@@ -83,10 +71,6 @@ public class ExternalLibraryPreferenceModel {
 	 */
 	public static ExternalLibraryPreferenceModel createDefaultForN4Product() {
 		checkState(Platform.isRunning(), "Expected running platform.");
-		if (requiresInfrastructureForLibraryManager()) {
-			final List<URI> rootLocations = newArrayList(EXTERNAL_LIBRARIES_SUPPLIER.get().keySet());
-			return new ExternalLibraryPreferenceModel(rootLocations);
-		}
 		return new ExternalLibraryPreferenceModel();
 	}
 
@@ -248,7 +232,7 @@ public class ExternalLibraryPreferenceModel {
 			for (String pathStr : externalLibraryLocations) {
 				locations.add(new File(pathStr).toURI());
 			}
-			locations = ExternalLibrariesActivator.sortByShadowing(locations);
+			locations = ExternalLibraryHelper.sortByShadowing(locations);
 			externalLibraryLocationURIs.clear();
 			externalLibraryLocationURIs.addAll(locations);
 
@@ -268,9 +252,9 @@ public class ExternalLibraryPreferenceModel {
 	static public boolean isNodeModulesLocation(URI location) {
 		String locStr = location.toString();
 		if (locStr.endsWith("/")) {
-			return locStr.endsWith(ExternalLibrariesActivator.NPM_CATEGORY + "/");
+			return locStr.endsWith(ExternalLibraryHelper.NPM_CATEGORY + "/");
 		} else {
-			return locStr.endsWith(ExternalLibrariesActivator.NPM_CATEGORY);
+			return locStr.endsWith(ExternalLibraryHelper.NPM_CATEGORY);
 		}
 	}
 

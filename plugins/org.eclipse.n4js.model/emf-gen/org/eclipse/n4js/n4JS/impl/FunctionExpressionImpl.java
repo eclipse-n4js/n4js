@@ -122,6 +122,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExpressionAnnotationList getAnnotationList() {
 		return annotationList;
 	}
@@ -146,6 +147,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAnnotationList(ExpressionAnnotationList newAnnotationList) {
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
@@ -165,6 +167,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeVariable> getTypeVars() {
 		if (typeVars == null) {
 			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.FUNCTION_EXPRESSION__TYPE_VARS);
@@ -177,6 +180,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -186,6 +190,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -198,6 +203,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isArrowFunction() {
 		return false;
 	}
@@ -207,6 +213,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGeneric() {
 		boolean _isEmpty = this.getTypeVars().isEmpty();
 		return (!_isEmpty);
@@ -217,6 +224,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		ExpressionAnnotationList _annotationList = this.getAnnotationList();
@@ -238,6 +246,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidSimpleAssignmentTarget() {
 		return false;
 	}

@@ -107,6 +107,7 @@ public class DeclaredTypeWithAccessModifierImpl extends TypeImpl implements Decl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeAccessModifier getDeclaredTypeAccessModifier() {
 		return declaredTypeAccessModifier;
 	}
@@ -116,6 +117,7 @@ public class DeclaredTypeWithAccessModifierImpl extends TypeImpl implements Decl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredTypeAccessModifier(TypeAccessModifier newDeclaredTypeAccessModifier) {
 		TypeAccessModifier oldDeclaredTypeAccessModifier = declaredTypeAccessModifier;
 		declaredTypeAccessModifier = newDeclaredTypeAccessModifier == null ? DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT : newDeclaredTypeAccessModifier;
@@ -128,6 +130,7 @@ public class DeclaredTypeWithAccessModifierImpl extends TypeImpl implements Decl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredProvidedByRuntime() {
 		return declaredProvidedByRuntime;
 	}
@@ -137,6 +140,7 @@ public class DeclaredTypeWithAccessModifierImpl extends TypeImpl implements Decl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredProvidedByRuntime(boolean newDeclaredProvidedByRuntime) {
 		boolean oldDeclaredProvidedByRuntime = declaredProvidedByRuntime;
 		declaredProvidedByRuntime = newDeclaredProvidedByRuntime;
@@ -149,6 +153,7 @@ public class DeclaredTypeWithAccessModifierImpl extends TypeImpl implements Decl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -158,6 +163,7 @@ public class DeclaredTypeWithAccessModifierImpl extends TypeImpl implements Decl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeAccessModifier getTypeAccessModifier() {
 		TypeAccessModifier _declaredTypeAccessModifier = this.getDeclaredTypeAccessModifier();
 		boolean _equals = Objects.equal(_declaredTypeAccessModifier, TypeAccessModifier.UNDEFINED);

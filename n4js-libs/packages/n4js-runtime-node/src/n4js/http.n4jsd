@@ -83,8 +83,6 @@ export external public class IncomingMessage implements events.IEventEmitter, st
     @Override public wrap(oldStream: stream.IReadableStream): stream.IReadableStream;
 }
 
-export external public class ClientResponse extends IncomingMessage { }
-
 interface ~AgentOptions {
     public keepAlive?: boolean;
     public keepAliveMsecs?: number;

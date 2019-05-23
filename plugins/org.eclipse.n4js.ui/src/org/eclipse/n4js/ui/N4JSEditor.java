@@ -94,10 +94,9 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 	}
 
 	@Override
-	protected void setTitleImage(Image titleImage) {
-		titleImage = getImageN4JSVariantOrGiven(titleImage);
-
-		super.setTitleImage(titleImage);
+	public Image getDefaultImage() {
+		Image defaultImage = getImageN4JSVariantOrGiven(super.getDefaultImage());
+		return defaultImage;
 	}
 
 	/** This will show the icon variant according to the file extension: n4js, n4jsx, n4jsd, js, jsx */
@@ -259,5 +258,4 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 	public String[] getShowInTargetIds() {
 		return new String[] { IPageLayout.ID_PROJECT_EXPLORER };
 	}
-
 }

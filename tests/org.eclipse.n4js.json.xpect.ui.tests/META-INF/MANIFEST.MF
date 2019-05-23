@@ -3,9 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.json.xpect.ui.tests
 Bundle-Version: 0.0.1.qualifier
-Fragment-Host: org.eclipse.n4js.json;bundle-version="0.0.1"
+Fragment-Host: org.eclipse.n4js.json
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.xpect.xtext.lib;bundle-version="0.2.0",
+Require-Bundle: org.eclipse.xpect.xtext.lib,
  org.eclipse.n4js.json.tests.helper,
  org.eclipse.n4js.xpect,
  org.eclipse.n4js.json.ui,

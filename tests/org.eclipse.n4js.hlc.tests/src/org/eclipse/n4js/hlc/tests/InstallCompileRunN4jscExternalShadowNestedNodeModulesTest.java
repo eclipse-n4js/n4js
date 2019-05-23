@@ -13,6 +13,7 @@ package org.eclipse.n4js.hlc.tests;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
@@ -50,6 +51,9 @@ public class InstallCompileRunN4jscExternalShadowNestedNodeModulesTest extends A
 	public void setupWorkspace() throws IOException, ExitCodeException {
 		workspace = setupWorkspace("external_shadowNestedNodeModules", Predicates.alwaysFalse(),
 				false); // false because test data already contains a fully configured yarn workspace!
+
+		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
+				N4JSGlobals.N4JS_RUNTIME);
 
 		// Additional Preparation Step
 		//

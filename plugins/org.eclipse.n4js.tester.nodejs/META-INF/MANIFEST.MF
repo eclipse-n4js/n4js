@@ -9,6 +9,7 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.runner,
  org.eclipse.n4js.runner.nodejs,
  org.eclipse.n4js.tester,
+ org.eclipse.n4js.utils,
  org.eclipse.emf.ecore
 Export-Package: org.eclipse.n4js.tester.nodejs
 Automatic-Module-Name: org.eclipse.n4js.tester.nodejs

@@ -73,7 +73,7 @@ public abstract class IDERunnerDelegate implements ILaunchConfigurationDelegate 
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while trying to execute module.", e);
 			if (e instanceof CoreException) {
-				throw e;
+				throw (CoreException) e;
 			}
 			throw new CoreException(statusHelper.createError(e));
 		}

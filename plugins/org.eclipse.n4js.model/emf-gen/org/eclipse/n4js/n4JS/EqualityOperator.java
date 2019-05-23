@@ -69,10 +69,6 @@ public enum EqualityOperator implements Enumerator {
 	/**
 	 * The '<em><b>Same</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Same</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SAME
 	 * @model name="same" literal="==="
@@ -84,10 +80,6 @@ public enum EqualityOperator implements Enumerator {
 	/**
 	 * The '<em><b>Nsame</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Nsame</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #NSAME
 	 * @model name="nsame" literal="!=="
@@ -99,10 +91,6 @@ public enum EqualityOperator implements Enumerator {
 	/**
 	 * The '<em><b>Eq</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Eq</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #EQ
 	 * @model name="eq" literal="=="
@@ -114,10 +102,6 @@ public enum EqualityOperator implements Enumerator {
 	/**
 	 * The '<em><b>Neq</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Neq</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #NEQ
 	 * @model name="neq" literal="!="
@@ -240,6 +224,7 @@ public enum EqualityOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -249,6 +234,7 @@ public enum EqualityOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -258,6 +244,7 @@ public enum EqualityOperator implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

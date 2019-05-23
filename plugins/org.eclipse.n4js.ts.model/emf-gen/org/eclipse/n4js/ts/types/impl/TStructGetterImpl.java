@@ -76,6 +76,7 @@ public class TStructGetterImpl extends TGetterImpl implements TStructGetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TStructMember getDefinedMember() {
 		if (definedMember != null && definedMember.eIsProxy()) {
 			InternalEObject oldDefinedMember = (InternalEObject)definedMember;
@@ -102,6 +103,7 @@ public class TStructGetterImpl extends TGetterImpl implements TStructGetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedMember(TStructMember newDefinedMember) {
 		TStructMember oldDefinedMember = definedMember;
 		definedMember = newDefinedMember;
@@ -114,6 +116,7 @@ public class TStructGetterImpl extends TGetterImpl implements TStructGetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberAccessModifier getDefaultMemberAccessModifier() {
 		return MemberAccessModifier.PUBLIC;
 	}
@@ -123,6 +126,7 @@ public class TStructGetterImpl extends TGetterImpl implements TStructGetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStatic() {
 		return false;
 	}
@@ -132,6 +136,7 @@ public class TStructGetterImpl extends TGetterImpl implements TStructGetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberAccessModifier getMemberAccessModifier() {
 		return MemberAccessModifier.PUBLIC;
 	}

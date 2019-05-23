@@ -24,6 +24,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.tester.nodejs.ui.NodejsTesterLaunchShortcut;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
@@ -35,6 +36,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
 /**
@@ -50,13 +52,14 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	private static final String[] EMPTY_ARRAY = new String[0];
 
 	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
-	@Override
 	protected ProjectImporter getProjectImporter() {
-		return new ProjectImporter(new File(new File("probands/" + PROJECT_NAME + "/").getAbsolutePath()));
+		return new ProjectImporter(
+				new File(new File("probands/" + PROJECT_NAME + "/").getAbsolutePath()),
+				Lists.newArrayList(
+						N4JSGlobals.N4JS_RUNTIME,
+						N4JSGlobals.MANGELHAFT,
+						N4JSGlobals.MANGELHAFT_ASSERT,
+						N4JSGlobals.MANGELHAFT_CLI));
 	}
 
 	/**

@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.ui.preferences.external;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARY_NAMES;
-
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
@@ -47,11 +44,6 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 	}
 
 	private StyledString getCategoryText(final URI location) {
-		final String externalLibId = ExternalLibraryPreferencePage.BUILT_IN_LIBS.get(location);
-		if (!isNullOrEmpty(externalLibId)) {
-			return new StyledString(EXTERNAL_LIBRARY_NAMES.get(externalLibId));
-		}
-
 		File file = new File(location);
 		if (ExternalLibraryPreferenceModel.isNodeModulesLocation(location)) {
 			Path path = file.toPath();

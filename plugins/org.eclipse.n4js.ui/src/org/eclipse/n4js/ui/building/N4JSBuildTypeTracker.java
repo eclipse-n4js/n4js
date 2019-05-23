@@ -24,6 +24,11 @@ public class N4JSBuildTypeTracker {
 
 	/**
 	 * Store the build type for the given project.
+	 * 
+	 * @param project
+	 *            the built project. May not be null.
+	 * @param type
+	 *            the build type. May not be null.
 	 */
 	public static void setBuildType(IProject project, BuildType type) {
 		buildTypes.put(project, type);
@@ -31,6 +36,9 @@ public class N4JSBuildTypeTracker {
 
 	/**
 	 * Obtain the build type for the given project.
+	 *
+	 * @param project
+	 *            the built project. May not be null.
 	 */
 	public static BuildType getBuildType(IProject project) {
 		return buildTypes.get(project);
@@ -38,6 +46,9 @@ public class N4JSBuildTypeTracker {
 
 	/**
 	 * Remove the project from the build type cache.
+	 *
+	 * @param project
+	 *            the built project. May not be null.
 	 */
 	public static void clearBuildType(IProject project) {
 		buildTypes.remove(project);

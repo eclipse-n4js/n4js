@@ -27,9 +27,7 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.n4js.projectDescription.BootstrapModule;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
-import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionPackage;
@@ -59,13 +57,10 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getProjectDependencies <em>Project Dependencies</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getImplementationId <em>Implementation Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getImplementedProjects <em>Implemented Projects</em>}</li>
- *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getInitModules <em>Init Modules</em>}</li>
- *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getExecModule <em>Exec Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getOutputPath <em>Output Path</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getSourceContainers <em>Source Containers</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getTestedProjects <em>Tested Projects</em>}</li>
- *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getModuleLoader <em>Module Loader</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#getDefinesPackage <em>Defines Package</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.impl.ProjectDescriptionImpl#isHasN4JSNature <em>Has N4JS Nature</em>}</li>
@@ -257,26 +252,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	protected EList<ProjectReference> implementedProjects;
 
 	/**
-	 * The cached value of the '{@link #getInitModules() <em>Init Modules</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getInitModules()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<BootstrapModule> initModules;
-
-	/**
-	 * The cached value of the '{@link #getExecModule() <em>Exec Module</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getExecModule()
-	 * @generated
-	 * @ordered
-	 */
-	protected BootstrapModule execModule;
-
-	/**
 	 * The default value of the '{@link #getOutputPath() <em>Output Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -325,26 +300,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected EList<ProjectReference> testedProjects;
-
-	/**
-	 * The default value of the '{@link #getModuleLoader() <em>Module Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getModuleLoader()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final ModuleLoader MODULE_LOADER_EDEFAULT = ModuleLoader.N4JS;
-
-	/**
-	 * The cached value of the '{@link #getModuleLoader() <em>Module Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getModuleLoader()
-	 * @generated
-	 * @ordered
-	 */
-	protected ModuleLoader moduleLoader = MODULE_LOADER_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getDefinesPackage() <em>Defines Package</em>}' attribute.
@@ -460,6 +415,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getProjectName() {
 		return projectName;
 	}
@@ -469,6 +425,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProjectName(String newProjectName) {
 		String oldProjectName = projectName;
 		projectName = newProjectName;
@@ -481,6 +438,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVendorId() {
 		return vendorId;
 	}
@@ -490,6 +448,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVendorId(String newVendorId) {
 		String oldVendorId = vendorId;
 		vendorId = newVendorId;
@@ -502,6 +461,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVendorName() {
 		return vendorName;
 	}
@@ -511,6 +471,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVendorName(String newVendorName) {
 		String oldVendorName = vendorName;
 		vendorName = newVendorName;
@@ -523,6 +484,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionNumber getProjectVersion() {
 		return projectVersion;
 	}
@@ -547,6 +509,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProjectVersion(VersionNumber newProjectVersion) {
 		if (newProjectVersion != projectVersion) {
 			NotificationChain msgs = null;
@@ -566,6 +529,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProjectType getProjectType() {
 		return projectType;
 	}
@@ -575,6 +539,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProjectType(ProjectType newProjectType) {
 		ProjectType oldProjectType = projectType;
 		projectType = newProjectType == null ? PROJECT_TYPE_EDEFAULT : newProjectType;
@@ -587,6 +552,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getMainModule() {
 		return mainModule;
 	}
@@ -596,6 +562,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMainModule(String newMainModule) {
 		String oldMainModule = mainModule;
 		mainModule = newMainModule;
@@ -608,6 +575,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProjectReference getExtendedRuntimeEnvironment() {
 		return extendedRuntimeEnvironment;
 	}
@@ -632,6 +600,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setExtendedRuntimeEnvironment(ProjectReference newExtendedRuntimeEnvironment) {
 		if (newExtendedRuntimeEnvironment != extendedRuntimeEnvironment) {
 			NotificationChain msgs = null;
@@ -651,6 +620,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ProjectReference> getProvidedRuntimeLibraries() {
 		if (providedRuntimeLibraries == null) {
 			providedRuntimeLibraries = new EObjectContainmentEList<ProjectReference>(ProjectReference.class, this, ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROVIDED_RUNTIME_LIBRARIES);
@@ -663,6 +633,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ProjectReference> getRequiredRuntimeLibraries() {
 		if (requiredRuntimeLibraries == null) {
 			requiredRuntimeLibraries = new EObjectContainmentEList<ProjectReference>(ProjectReference.class, this, ProjectDescriptionPackage.PROJECT_DESCRIPTION__REQUIRED_RUNTIME_LIBRARIES);
@@ -675,6 +646,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ProjectDependency> getProjectDependencies() {
 		if (projectDependencies == null) {
 			projectDependencies = new EObjectContainmentEList<ProjectDependency>(ProjectDependency.class, this, ProjectDescriptionPackage.PROJECT_DESCRIPTION__PROJECT_DEPENDENCIES);
@@ -687,6 +659,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getImplementationId() {
 		return implementationId;
 	}
@@ -696,6 +669,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setImplementationId(String newImplementationId) {
 		String oldImplementationId = implementationId;
 		implementationId = newImplementationId;
@@ -708,6 +682,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ProjectReference> getImplementedProjects() {
 		if (implementedProjects == null) {
 			implementedProjects = new EObjectContainmentEList<ProjectReference>(ProjectReference.class, this, ProjectDescriptionPackage.PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS);
@@ -720,61 +695,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<BootstrapModule> getInitModules() {
-		if (initModules == null) {
-			initModules = new EObjectContainmentEList<BootstrapModule>(BootstrapModule.class, this, ProjectDescriptionPackage.PROJECT_DESCRIPTION__INIT_MODULES);
-		}
-		return initModules;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public BootstrapModule getExecModule() {
-		return execModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetExecModule(BootstrapModule newExecModule, NotificationChain msgs) {
-		BootstrapModule oldExecModule = execModule;
-		execModule = newExecModule;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProjectDescriptionPackage.PROJECT_DESCRIPTION__EXEC_MODULE, oldExecModule, newExecModule);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setExecModule(BootstrapModule newExecModule) {
-		if (newExecModule != execModule) {
-			NotificationChain msgs = null;
-			if (execModule != null)
-				msgs = ((InternalEObject)execModule).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProjectDescriptionPackage.PROJECT_DESCRIPTION__EXEC_MODULE, null, msgs);
-			if (newExecModule != null)
-				msgs = ((InternalEObject)newExecModule).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProjectDescriptionPackage.PROJECT_DESCRIPTION__EXEC_MODULE, null, msgs);
-			msgs = basicSetExecModule(newExecModule, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProjectDescriptionPackage.PROJECT_DESCRIPTION__EXEC_MODULE, newExecModule, newExecModule));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@Override
 	public String getOutputPath() {
 		return outputPath;
 	}
@@ -784,6 +705,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOutputPath(String newOutputPath) {
 		String oldOutputPath = outputPath;
 		outputPath = newOutputPath;
@@ -796,6 +718,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<SourceContainerDescription> getSourceContainers() {
 		if (sourceContainers == null) {
 			sourceContainers = new EObjectContainmentEList<SourceContainerDescription>(SourceContainerDescription.class, this, ProjectDescriptionPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS);
@@ -808,6 +731,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ModuleFilter> getModuleFilters() {
 		if (moduleFilters == null) {
 			moduleFilters = new EObjectContainmentEList<ModuleFilter>(ModuleFilter.class, this, ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_FILTERS);
@@ -820,6 +744,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ProjectReference> getTestedProjects() {
 		if (testedProjects == null) {
 			testedProjects = new EObjectContainmentEList<ProjectReference>(ProjectReference.class, this, ProjectDescriptionPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS);
@@ -832,27 +757,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ModuleLoader getModuleLoader() {
-		return moduleLoader;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setModuleLoader(ModuleLoader newModuleLoader) {
-		ModuleLoader oldModuleLoader = moduleLoader;
-		moduleLoader = newModuleLoader == null ? MODULE_LOADER_EDEFAULT : newModuleLoader;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_LOADER, oldModuleLoader, moduleLoader));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@Override
 	public String getDefinesPackage() {
 		return definesPackage;
 	}
@@ -862,6 +767,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinesPackage(String newDefinesPackage) {
 		String oldDefinesPackage = definesPackage;
 		definesPackage = newDefinesPackage;
@@ -874,6 +780,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isHasNestedNodeModulesFolder() {
 		return hasNestedNodeModulesFolder;
 	}
@@ -883,6 +790,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHasNestedNodeModulesFolder(boolean newHasNestedNodeModulesFolder) {
 		boolean oldHasNestedNodeModulesFolder = hasNestedNodeModulesFolder;
 		hasNestedNodeModulesFolder = newHasNestedNodeModulesFolder;
@@ -895,6 +803,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isHasN4JSNature() {
 		return hasN4JSNature;
 	}
@@ -904,6 +813,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHasN4JSNature(boolean newHasN4JSNature) {
 		boolean oldHasN4JSNature = hasN4JSNature;
 		hasN4JSNature = newHasN4JSNature;
@@ -916,6 +826,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isYarnWorkspaceRoot() {
 		return yarnWorkspaceRoot;
 	}
@@ -925,6 +836,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setYarnWorkspaceRoot(boolean newYarnWorkspaceRoot) {
 		boolean oldYarnWorkspaceRoot = yarnWorkspaceRoot;
 		yarnWorkspaceRoot = newYarnWorkspaceRoot;
@@ -937,6 +849,7 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getWorkspaces() {
 		if (workspaces == null) {
 			workspaces = new EDataTypeEList<String>(String.class, this, ProjectDescriptionPackage.PROJECT_DESCRIPTION__WORKSPACES);
@@ -964,10 +877,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return ((InternalEList<?>)getProjectDependencies()).basicRemove(otherEnd, msgs);
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS:
 				return ((InternalEList<?>)getImplementedProjects()).basicRemove(otherEnd, msgs);
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__INIT_MODULES:
-				return ((InternalEList<?>)getInitModules()).basicRemove(otherEnd, msgs);
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
-				return basicSetExecModule(null, msgs);
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
 				return ((InternalEList<?>)getSourceContainers()).basicRemove(otherEnd, msgs);
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_FILTERS:
@@ -1010,10 +919,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return getImplementationId();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS:
 				return getImplementedProjects();
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__INIT_MODULES:
-				return getInitModules();
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
-				return getExecModule();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
 				return getOutputPath();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
@@ -1022,8 +927,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return getModuleFilters();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS:
 				return getTestedProjects();
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
-				return getModuleLoader();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__DEFINES_PACKAGE:
 				return getDefinesPackage();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
@@ -1087,13 +990,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				getImplementedProjects().clear();
 				getImplementedProjects().addAll((Collection<? extends ProjectReference>)newValue);
 				return;
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__INIT_MODULES:
-				getInitModules().clear();
-				getInitModules().addAll((Collection<? extends BootstrapModule>)newValue);
-				return;
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
-				setExecModule((BootstrapModule)newValue);
-				return;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
 				setOutputPath((String)newValue);
 				return;
@@ -1108,9 +1004,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS:
 				getTestedProjects().clear();
 				getTestedProjects().addAll((Collection<? extends ProjectReference>)newValue);
-				return;
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
-				setModuleLoader((ModuleLoader)newValue);
 				return;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__DEFINES_PACKAGE:
 				setDefinesPackage((String)newValue);
@@ -1176,12 +1069,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS:
 				getImplementedProjects().clear();
 				return;
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__INIT_MODULES:
-				getInitModules().clear();
-				return;
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
-				setExecModule((BootstrapModule)null);
-				return;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
 				setOutputPath(OUTPUT_PATH_EDEFAULT);
 				return;
@@ -1193,9 +1080,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS:
 				getTestedProjects().clear();
-				return;
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
-				setModuleLoader(MODULE_LOADER_EDEFAULT);
 				return;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__DEFINES_PACKAGE:
 				setDefinesPackage(DEFINES_PACKAGE_EDEFAULT);
@@ -1248,10 +1132,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return IMPLEMENTATION_ID_EDEFAULT == null ? implementationId != null : !IMPLEMENTATION_ID_EDEFAULT.equals(implementationId);
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS:
 				return implementedProjects != null && !implementedProjects.isEmpty();
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__INIT_MODULES:
-				return initModules != null && !initModules.isEmpty();
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__EXEC_MODULE:
-				return execModule != null;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__OUTPUT_PATH:
 				return OUTPUT_PATH_EDEFAULT == null ? outputPath != null : !OUTPUT_PATH_EDEFAULT.equals(outputPath);
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__SOURCE_CONTAINERS:
@@ -1260,8 +1140,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 				return moduleFilters != null && !moduleFilters.isEmpty();
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__TESTED_PROJECTS:
 				return testedProjects != null && !testedProjects.isEmpty();
-			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__MODULE_LOADER:
-				return moduleLoader != MODULE_LOADER_EDEFAULT;
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__DEFINES_PACKAGE:
 				return DEFINES_PACKAGE_EDEFAULT == null ? definesPackage != null : !DEFINES_PACKAGE_EDEFAULT.equals(definesPackage);
 			case ProjectDescriptionPackage.PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER:
@@ -1300,8 +1178,6 @@ public class ProjectDescriptionImpl extends MinimalEObjectImpl.Container impleme
 		result.append(implementationId);
 		result.append(", outputPath: ");
 		result.append(outputPath);
-		result.append(", moduleLoader: ");
-		result.append(moduleLoader);
 		result.append(", definesPackage: ");
 		result.append(definesPackage);
 		result.append(", hasNestedNodeModulesFolder: ");

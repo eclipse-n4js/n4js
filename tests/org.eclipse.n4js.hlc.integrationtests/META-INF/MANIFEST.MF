@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.n4js,
  org.slf4j.api;bundle-version="1.7.2",
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.runner,
- org.eclipse.xtext.testing
+ org.eclipse.xtext.testing,
+ org.eclipse.n4js.json
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.n4js.hlc.integrationtests

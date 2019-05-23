@@ -1,8 +1,0 @@
-{
-	"version": 3,
-	"file": "TestStatus.js",
-	"sourceRoot": "",
-	"sources": ["../../../../../../src/n4js/org/eclipse/n4js/mangelhaft/types/TestStatus.n4js"],
-	"names": [],
-	"mappings": ";;;;;MAoBI;EAYJ,uDAAsC,aAAyB,aAAqC;GAChG,OAAO,qBAAqB,eAAe,qBAAqB,eAAe,cAAc;;;;;;IAbjG,mBAAuB,IAAI,IAUzB;KATE;MAAC;MAAmB;;KACpB;MAAC;MAAiC;;KAClC;MAAC;MAA2B;;KAC5B;MAAC;MAAoB;;KACrB;MAAC;MAAoC;;KACrC;MAAC;MAA0B;;KAC3B;MAAC;MAAmB;;KACpB;MAAC;MAAkB"
-}

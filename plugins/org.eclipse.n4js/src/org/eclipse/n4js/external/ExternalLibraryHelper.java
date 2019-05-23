@@ -11,14 +11,29 @@
 package org.eclipse.n4js.external;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Utilities and core rules for external libraries.
  */
 public final class ExternalLibraryHelper {
+
+	/** Unique name of the {@code npm} category. */
+	public static final String NPM_CATEGORY = "node_modules";
+
+	/** List of all categories. Latter entries shadow former entries. */
+	public static final List<String> CATEGORY_SHADOWING_ORDER = ImmutableList.<String> builder()
+			.add(NPM_CATEGORY)
+			.build();
 
 	/**
 	 * Returns {@code true} iff the given {@link File} represents a project directory in the workspace that is available
@@ -44,5 +59,39 @@ public final class ExternalLibraryHelper {
 		final String name = scopeDirectory.getName();
 		return name.startsWith(ProjectDescriptionUtils.NPM_SCOPE_PREFIX) &&
 				ProjectDescriptionUtils.isValidScopeName(name);
+	}
+
+	/** Sorts given set of locations and returns sorted list */
+	public static List<java.net.URI> sortByShadowing(Collection<java.net.URI> locations) {
+		Map<String, java.net.URI> knownLocations = new HashMap<>();
+		List<java.net.URI> unknownLocations = new LinkedList<>();
+
+		for (java.net.URI location : locations) {
+			String locStr = location.toString();
+			locStr = locStr.endsWith("/") ? locStr.substring(0, locStr.length() - 1) : locStr;
+
+			boolean locationFound = false;
+			for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
+				if (locStr.endsWith(knownLocation) && !knownLocations.containsKey(knownLocation)) {
+					knownLocations.put(knownLocation, location);
+					locationFound = true;
+				}
+			}
+
+			if (!locationFound) {
+				unknownLocations.add(location);
+			}
+		}
+
+		List<java.net.URI> sortedLocations = new LinkedList<>();
+		for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
+			java.net.URI location = knownLocations.get(knownLocation);
+			if (location != null) {
+				sortedLocations.add(location);
+			}
+		}
+		sortedLocations.addAll(unknownLocations);
+
+		return sortedLocations;
 	}
 }

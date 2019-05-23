@@ -1,0 +1,52 @@
+{
+  "name": "n4js-runtime",
+  "version": "0.1.0",
+  "author": {
+    "name": "NumberFour AG",
+    "email": "npm@numberfour.eu"
+  },
+  "license": "EPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipse/n4js"
+  },
+  "description": "N4JS runtime environment.",
+  "engines": {
+    "node": ">= 8.0.0"
+  },
+  "main": "./src-gen/rt.js",
+  "files": [
+    "src",
+    "src-gen"
+  ],
+  "dependencies": {
+    "esm": "3.2.22",
+    "n4js-runtime-es2015": "^0.1.0"
+  },
+  "keywords": [
+    "n4js",
+    "es6",
+    "es2015",
+    "transpiler",
+    "ide",
+    "n4jside",
+    "n4js-ide"
+  ],
+  "n4js": {
+    "projectType": "library",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src/n4js"
+      ],
+      "external": [
+        "src/js"
+      ]
+    },
+    "requiredRuntimeLibraries": [
+      "n4js-runtime-es2015"
+    ]
+  }
+}

@@ -11,7 +11,9 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.transpiler.Transformation
@@ -54,32 +56,36 @@ class EnumDeclarationTransformation extends Transformation {
 		if(enumDecl.isStringBased) {
 			// declarations of string-based enums are simply removed
 			// (they do not have a representation in the output code)
-			remove(enumDecl);
+			val root = enumDecl.orContainingExportDeclaration;
+			remove(root);
 		} else {
-			val varDecl = createVarDecl(enumDecl);
+			val EObject varOrFunDecl = createFunDecl(enumDecl);
 			val makeEnumCall = bootstrapCallAssistant.createMakeEnumCall(enumDecl);
 			state.tracer.copyTrace(enumDecl, makeEnumCall);
 
-			replace(enumDecl, varDecl);
-			val root = varDecl.eContainer.orContainingExportDeclaration;
+			var EObject root;
+			if (varOrFunDecl instanceof VariableDeclaration) {
+				replace(enumDecl, varOrFunDecl);
+				state.info.markAsToHoist(varOrFunDecl);
+				root = varOrFunDecl.eContainer.orContainingExportDeclaration;
+			} else if (varOrFunDecl instanceof FunctionDeclaration) {
+				replace(enumDecl, varOrFunDecl);
+				root = varOrFunDecl.orContainingExportDeclaration;
+			}
 			insertAfter(root, makeEnumCall);
-
-			state.info.markAsToHoist(varDecl);
 		}
  	}
 
 	/**
-	 * Creates declaration of the variable that will represent the enumeration.
+	 * Creates a function declaration that will represent the enumeration.
 	 */
-	def private VariableDeclaration createVarDecl(N4EnumDeclaration enumDecl) {
-		return _VariableDeclaration(enumDecl.name)=>[
-			expression = _FunExpr(false, enumDecl.name, #[ _Fpar("name"), _Fpar("value") ],
-				_SnippetAsStmnt('''
-					this.name = name;
-					this.value = value;
-				''')
-			);
-		];
+	def private FunctionDeclaration createFunDecl(N4EnumDeclaration enumDecl) {
+		return _FunDecl(enumDecl.name, #[ _Fpar("name"), _Fpar("value") ],
+			_SnippetAsStmnt('''
+				this.name = name;
+				this.value = value;
+			''')
+		);
 	}
 
 	def private boolean isStringBased(N4EnumDeclaration enumDecl) {

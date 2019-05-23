@@ -18,7 +18,7 @@ import org.eclipse.xtext.ui.editor.contentassist.IContentProposalPriorities
 /**
  * Additional assertions for checking the order of proposals during content assist.
  */
-class AbstractN4JSContentAssistWithOrderingPluginUITest extends AbstractN4JSContentAssistPluginUITest {
+abstract class AbstractN4JSContentAssistWithOrderingPluginUITest extends AbstractN4JSContentAssistPluginUITest {
 
 	@Inject
 	private IContentProposalPriorities contentProposalPriorities;

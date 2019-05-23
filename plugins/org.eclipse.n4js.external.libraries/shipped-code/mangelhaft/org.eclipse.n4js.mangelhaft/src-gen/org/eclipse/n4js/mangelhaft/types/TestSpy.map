@@ -1,8 +1,0 @@
-{
-	"version": 3,
-	"file": "TestSpy.js",
-	"sourceRoot": "",
-	"sources": ["../../../../../../src/n4js/org/eclipse/n4js/mangelhaft/types/TestSpy.n4js"],
-	"names": [],
-	"mappings": ";;;;;EAWA;;MAAQ;EAMR;yBAE4B,IAAI;qCACQ,IAAI;sCACH,IAAI;uBAEnB,IAAI;sBACL,IAAI;uBAEH,IAAI;wBACH,IAAI;0BACF,IAAI;;;;;;;KAjBzB;;;;IAOY;;mCAcK;OACA,IAAb,OACA,KACA,OAAe;OACnB;OACA,IAAK,SAAS;QACV,IAAI,oBAAoB;SACpB,MAAM,KAAK;SACX;;;OAGR,OAAO"
-}

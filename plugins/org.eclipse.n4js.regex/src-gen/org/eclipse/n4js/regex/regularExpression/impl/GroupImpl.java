@@ -95,6 +95,7 @@ public class GroupImpl extends PatternImpl implements Group
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public boolean isNonCapturing()
   {
     return nonCapturing;
@@ -105,6 +106,7 @@ public class GroupImpl extends PatternImpl implements Group
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setNonCapturing(boolean newNonCapturing)
   {
     boolean oldNonCapturing = nonCapturing;
@@ -118,6 +120,7 @@ public class GroupImpl extends PatternImpl implements Group
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Pattern getPattern()
   {
     return pattern;
@@ -145,6 +148,7 @@ public class GroupImpl extends PatternImpl implements Group
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPattern(Pattern newPattern)
   {
     if (newPattern != pattern)

@@ -104,6 +104,7 @@ public class VersionPartImpl extends SemverToStringableImpl implements VersionPa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isWildcard() {
 		return wildcard;
 	}
@@ -113,6 +114,7 @@ public class VersionPartImpl extends SemverToStringableImpl implements VersionPa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWildcard(boolean newWildcard) {
 		boolean oldWildcard = wildcard;
 		wildcard = newWildcard;
@@ -125,6 +127,7 @@ public class VersionPartImpl extends SemverToStringableImpl implements VersionPa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Integer getNumberRaw() {
 		return numberRaw;
 	}
@@ -134,6 +137,7 @@ public class VersionPartImpl extends SemverToStringableImpl implements VersionPa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNumberRaw(Integer newNumberRaw) {
 		Integer oldNumberRaw = numberRaw;
 		numberRaw = newNumberRaw;
@@ -146,6 +150,7 @@ public class VersionPartImpl extends SemverToStringableImpl implements VersionPa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Integer getNumber() {
 		boolean _isWildcard = this.isWildcard();
 		if (_isWildcard) {
@@ -159,6 +164,7 @@ public class VersionPartImpl extends SemverToStringableImpl implements VersionPa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if ((!(obj instanceof VersionPart))) {
 			return false;

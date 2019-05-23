@@ -8,64 +8,39 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import NodeTestCLI from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
+
+import debug from "deps/debug";
+import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
-import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
+import {createTempDir} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util/npm";
+import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import * as child_process from "child_process";
 import * as lib_fs from "fs";
 import * as glob+ from "glob";
 import * as n4js_cli from "n4js-cli";
-import * as os from "os";
 import * as lib_path from "path";
+import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
 
-const isHTTP_re = /^https?:\/\//i;
-const n4jsFileExt_re = /\.n4js[xd]?$/;
-
-export public const PACKAGE_JSON = "package.json";
-
-/**
- * TODO define as part of n4js-runtime-node
- */
-export public const FsConstants = {
-    F_OK: 0,
-    R_OK: 4,
-    W_OK: 2,
-    X_OK: 1
-};
-
-/**
- * Safe check in access of a path.
- */
-export public function fsSafeAccessSync(path: string, mode = FsConstants.R_OK): boolean {
-    try {
-        lib_fs.accessSync(path, mode);
-        return true;
-    } catch (exc) {
-        return false;
-    }
-}
-
-export public async function createTempDir(): string {
-    const prefix = lib_path.join(os.tmpdir(), "n4js-mangelhaft-");
-    return await lib_fs.mkdtemp(prefix);
-}
+const log = debug("n4js-mangelhaft");
+const rlog = debug("n4js-mangelhaft-test-run");
 
 export default public class NodeTestAPI {
     /**
      * Executes a test run (might include compilation) with the given set of test options.
      */
     public static async exec(options: NodeTestOptions): void {
-        const pathToPackageJson = new Map<string, Object>();
+        log("options: %O", options);
+
+        const pathToPackageJson = new Map<string, Object+>();
 
         function addProject(dir: string): void {
-            const content = String(lib_fs.readFileSync(lib_path.join(dir, PACKAGE_JSON), { encoding: "UTF-8" }));
-            const packageJson = JSON.parse(content) as Object;
-            pathToPackageJson.set(dir, packageJson);
+            pathToPackageJson.set(dir, readJsonFile(lib_path.join(dir, PACKAGE_JSON)));
         }
 
-        for (const dir of (options.projects || [])) {
-            addProject(dir);
-        }
+        (options.projects || []).forEach(addProject);
 
         for (const dir of (options.scan || [])) {
             for (const p of await lib_fs.readdir(dir)) {
@@ -79,9 +54,7 @@ export default public class NodeTestAPI {
 
         const projectDirs = Array.from(pathToPackageJson.keys());
 
-        if (options.debug) {
-            console.log("projects:", projectDirs);
-        }
+        log("projects:", projectDirs);
 
         if (options.compile) { // call n4jsc
             const n4jscTempDir = await createTempDir();
@@ -100,46 +73,49 @@ export default public class NodeTestAPI {
                 installMissingDependencies: options.installMissingDependencies,
                 clean: options.cleanCompile,
                 keepCompiling: options.keepCompiling,
-                verbose: options.debug,
-                debug: options.debug
+                verbose: log.enabled,
+                debug: log.enabled
             }, projectDirs);
 
-            if (options.debug) {
-                console.log("generated test catalog:", options.testCatalog);
-            }
+            log("generated test catalog:", options.testCatalog);
 
-            const testCatalog = options.emitProjectTestCatalogs ? JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as Array<TestInfo> : null;
+            const testCatalog: TestInfos = options.emitProjectTestCatalogs ? JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as TestInfos : null;
 
             for (const [dir, packageJson] of pathToPackageJson) {
-                if (options.generatedModulesGlob) {
-                    // walk all generated code modules:
-                    const bundleGen = [];
-                    const files = /*await dbo TODO */ glob.sync(options.generatedModulesGlob, { cwd: dir }) as Array<string>;
-                    for (const path of files) {
-                        const rpath = path
-                            .replace(n4jsFileExt_re, ".js")
-                            .split(lib_path.sep)
-                            .join("/");
-                        bundleGen.push(`require("./${rpath}");\n`);
-                    }
-                    if (bundleGen.length) {
-                        const file = lib_path.join(dir, "__bundle-gen.js");
-                        if (options.debug) {
-                            console.log("writing:", file);
-                        }
-                        lib_fs.writeFileSync(file, `/** Generated */\n${bundleGen.join("")}`, { encoding: "UTF-8" });
+                if (testCatalog && options.emitProjectTestCatalogs) {
+                    const tests = testCatalog.testDescriptors.filter(test => test.origin === packageJson["name"] as string);
+                    if (tests.length) {
+                        const file = lib_path.join(dir, options.emitProjectTestCatalogs);
+                        log("writing:", file);
+                        lib_fs.writeFileSync(file, JSON.stringify({
+                            testDescriptors: tests
+                        }, null, 2), { encoding: "UTF-8" });
                     }
                 }
 
-                if (options.emitProjectTestCatalogs) {
-                    const tests = testCatalog.filter(test => test.origin === packageJson["name"] as string);
-                    if (tests.length) {
-                        const file = lib_path.join(dir, options.emitProjectTestCatalogs);
-                        if (options.debug) {
-                            console.log("writing:", file);
+                // HACK until we have proper support for top-level import():
+                switch (packageJson["name"]) {
+                    case "n4js-runtime":
+                    case "n4js-mangelhaft-cli":
+                        break;
+                    default:
+                        if (!packageJson.n4js) {
+                            break;
                         }
-                        lib_fs.writeFileSync(file, JSON.stringify(tests, null, 2), { encoding: "UTF-8" });
-                    }
+                        const transpiledFiles = glob.sync("**/*.js", {
+                            cwd: lib_path.join(dir, (packageJson.n4js as Object)["output"] as string),
+                            absolute: true
+                        }) as Array<string>;
+                        for (const file of transpiledFiles) {
+                            const content = lib_fs.readFileSync(file, { encoding: "UTF-8" });
+                            let newContent = content.replace(/_n4jsImport/mg, "import");
+                            newContent = newContent.replace(/_nodeRequire/mg, "require");
+                            if (newContent !== content) {
+                                log("patching:", file);
+                                lib_fs.writeFileSync(file, newContent, { encoding: "UTF-8" });
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -151,83 +127,45 @@ export default public class NodeTestAPI {
                 options.testCatalog = file;
             } else { // try to resolve via NPM
                 try {
-                    options.testCatalog = System._nodeRequire.resolve(options.testCatalog);
+                    options.testCatalog = require.resolve(options.testCatalog);
                 } catch (exc) {
                     throw new Error(`Cannot resolve test catalog: ${options.testCatalog}`);
                 }
             }
         }
 
-        if (options.debug) {
-            console.log("testing with test catalog:", options.testCatalog);
-        }
-
-        // fork test runner process, set parent of all projects on NODE_PATH:
-        let nodePath: Array<string> = [];
-        for (const dir of projectDirs) {
-            nodePath.push(lib_path.dirname(dir));
-        }
-        
-        nodePath = Array.from(new Set<string>(nodePath)); // uniq
-
-        if (process.env.NODE_PATH) { // append existing
-            nodePath.push(process.env.NODE_PATH as string);
-        }
-
-        const env: Object+ = Object.assign({}, process.env, {
-            NODE_PATH: nodePath.join(lib_path.delimiter)
-        });
-
-        const n4type = this.n4type;
-        // build NodeTestRunner module path to give for n4js command line (per main, i.e. "<module>:<export>" notation),
-        // leaving off export will pick default export:
-        const consoleTestRunner = n4type.fqn.split(".");
-        consoleTestRunner.pop();
-        consoleTestRunner.pop();
-        consoleTestRunner.unshift("src-gen");
-        consoleTestRunner.unshift(n4type.origin);
-        consoleTestRunner.push("NodeTestRunner:");
-
-        const args = NodeTestCLI.toCommandLine(options);
-        args.unshift(consoleTestRunner.join("/"));
-
-        env.N4JS_RT_keep_eventloop = "1";
-
-        (options.define || []).forEach(kv => {
-            const [k, v] = kv.split("=");
-            env[`N4JS_RT_${k.replace(/-/g, "_")}`] = (v || "");
-        });
-        if (options.debug) {
-            env.N4JS_RT_debug = "1";
-        }
-        if (options.noDebugLog) {
-            // giving the command line option noLog overrides the DEBUG environment value to disable all logging (if the logger is configured.)
-            env.DEBUG = "-*";
-        }
+        log("testing with test catalog:", options.testCatalog);
 
         await new Promise<any, any>((resolve, reject) => {
+            rlog("execPath:", process.execPath);
+            const modulePath = lib_path.join(__dirname, "NodeTestRunner.js");
+            rlog("modulePath:", modulePath);
+
             const execArgv = process.execArgv.slice();
+            const execArgvOptions = execArgv.join(" ");
+            const nodeOptions = process.env.NODE_OPTIONS as string || "";
+            const checkOption = (str: string, opt: string): boolean => str.endsWith(opt) || str.indexOf(`${opt} `) >= 0;
+            const hasOption = (opt: string): boolean => checkOption(execArgvOptions, opt) || checkOption(nodeOptions, opt);
+            
+            if (!["-r esm", "--require=esm", "--experimental-modules"].some(hasOption)) {
+                const esm = require.resolve("esm"); // use "own" esm version
+                execArgv.push("-r", esm);
+            }
             if (options.inspectBrk) {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);
             }
+            rlog("execArgv:", execArgv);
+            const args = NodeTestCLI.toCommandLine(options); // fodder in same args
+            rlog("args:", args);
 
-            const n4jsRun = System._nodeRequire.resolve("n4js-node/src-gen/n4js-cli");
+            //rlog("env:", process.env);
 
-            if (options.debug) {
-                console.log("TestRun fork:", n4jsRun);
-                console.log("args:", args);
-                console.log("execArgv:", execArgv);
-                console.log("env:", env);
-            }
-
-            child_process.fork(n4jsRun, args, {
+            child_process.fork(modulePath, args, {
                 stdio: "inherit",
                 execArgv: execArgv,
-                env: env
+                env: process.env
             }).on("close", code => {
-                if (options.debug) {
-                    console.log(`TestRun exit code: ${code}`);
-                }
+                rlog("exit code:", code);
                 if (code === 0) {
                     resolve(code);
                 } else {

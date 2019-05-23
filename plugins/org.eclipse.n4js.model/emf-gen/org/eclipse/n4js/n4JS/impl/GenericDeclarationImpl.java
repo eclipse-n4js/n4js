@@ -77,6 +77,7 @@ public abstract class GenericDeclarationImpl extends TypeDefiningElementImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TypeVariable> getTypeVars() {
 		if (typeVars == null) {
 			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.GENERIC_DECLARATION__TYPE_VARS);
@@ -89,6 +90,7 @@ public abstract class GenericDeclarationImpl extends TypeDefiningElementImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGeneric() {
 		boolean _isEmpty = this.getTypeVars().isEmpty();
 		return (!_isEmpty);

@@ -27,7 +27,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * A test extension class for N4IDL-related tests, which allows to create valid
  * {@link TypeRef} instances from a given (N4IDL compliant) type-expression string.
  */
-class AbstractN4IDLTypeSwitchTest extends Assert {
+abstract class AbstractN4IDLTypeSwitchTest extends Assert {
 	
 	@Inject protected MigrationSwitchComputer switchComputer;
 	@Inject protected N4JSTypeSystem typeSystem;

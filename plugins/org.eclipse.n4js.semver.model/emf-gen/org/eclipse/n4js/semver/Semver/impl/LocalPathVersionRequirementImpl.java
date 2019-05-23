@@ -77,6 +77,7 @@ public class LocalPathVersionRequirementImpl extends NPMVersionRequirementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLocalPath() {
 		return localPath;
 	}
@@ -86,6 +87,7 @@ public class LocalPathVersionRequirementImpl extends NPMVersionRequirementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLocalPath(String newLocalPath) {
 		String oldLocalPath = localPath;
 		localPath = newLocalPath;

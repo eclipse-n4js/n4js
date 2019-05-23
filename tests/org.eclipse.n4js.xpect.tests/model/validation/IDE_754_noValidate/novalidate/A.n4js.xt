@@ -19,19 +19,19 @@ interface R {
 	}
 }
 
-// no error (produced by N4JSValidator) for non-implemented method as manifest file marks this file as noValidate XPECT errors --> "Couldn't resolve reference to Type 'B'." at "B"
+// no error (produced by N4JSValidator) for non-implemented method as package.json marks this file as noValidate XPECT noerrors --> "Couldn't resolve reference to Type 'B'." at "B"
 export class A extends B implements R {
 
 	method() {
 		var a : number = 5;
 		var b : string = "5";
-// no type error (produced by N4JSValidator) as manifest file marks this file as noValidate XPECT noerrors
+// no type error (produced by N4JSValidator) as package.json marks this file as noValidate XPECT noerrors
 		var c = a - b;
-// no error (produced by ErrorAwareLinkingService) for accessing getter as setter as manifest file marks this file as noValidate XPECT noerrors
+// no error (produced by ErrorAwareLinkingService) for accessing getter as setter as package.json marks this file as noValidate XPECT noerrors
 		this.varToGet = "test"
 	}
 }
-// no error (produced by ASTStructureValidator) for return without enclosing function as manifest file marks this file as noValidate XPECT noerrors
+// no error (produced by ASTStructureValidator) for return without enclosing function as package.json marks this file as noValidate XPECT noerrors
 return null;
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'Nonsense'." at "Nonsense"
+// no error for unresolved reference as package.json marks this file as noValidate XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'Nonsense'." at "Nonsense"
 Nonsense

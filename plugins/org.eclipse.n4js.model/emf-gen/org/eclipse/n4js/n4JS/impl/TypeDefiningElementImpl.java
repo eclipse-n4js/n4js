@@ -72,6 +72,7 @@ public abstract class TypeDefiningElementImpl extends ProxyResolvingEObjectImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Type getDefinedType() {
 		if (definedType != null && definedType.eIsProxy()) {
 			InternalEObject oldDefinedType = (InternalEObject)definedType;
@@ -98,6 +99,7 @@ public abstract class TypeDefiningElementImpl extends ProxyResolvingEObjectImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDefinedType(Type newDefinedType) {
 		Type oldDefinedType = definedType;
 		definedType = newDefinedType;

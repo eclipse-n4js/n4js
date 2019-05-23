@@ -3,7 +3,6 @@
 
 <product name="N4JS Headless" uid="org.eclipse.n4js.headless.product.product" id="org.eclipse.n4js.headless.product" application="org.eclipse.n4js.hlc.base.application" version="0.0.1.qualifier" useFeatures="false" includeLaunchers="false">
 
-
    <configIni use="default">
    </configIni>
 
@@ -16,13 +15,11 @@
 
    <windowImages/>
 
-
    <launcher name="n4jsc">
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
@@ -93,7 +90,6 @@
       <plugin id="org.eclipse.jsch.core"/>
       <plugin id="org.eclipse.n4js"/>
       <plugin id="org.eclipse.n4js.common.unicode"/>
-      <plugin id="org.eclipse.n4js.external.libraries"/>
       <plugin id="org.eclipse.n4js.flowgraphs"/>
       <plugin id="org.eclipse.n4js.generator.headless"/>
       <plugin id="org.eclipse.n4js.hlc.base"/>

@@ -45,4 +45,12 @@ public class JSONStandaloneSetup extends JSONStandaloneSetupGenerated {
 		register(injector);
 		return injector;
 	}
+
+	/**
+	 * Tells whether the JSON Xtext language has already been set up. This implements a heuristic only in that it simply
+	 * checks EMF's EPackage registry, but not any other aspects of a proper Xtext language setup.
+	 */
+	public static boolean isSetUp() {
+		return EPackage.Registry.INSTANCE.containsKey(JSONPackage.eNS_URI);
+	}
 }

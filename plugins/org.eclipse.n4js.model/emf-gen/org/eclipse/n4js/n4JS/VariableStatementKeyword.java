@@ -59,10 +59,6 @@ public enum VariableStatementKeyword implements Enumerator {
 	/**
 	 * The '<em><b>Var</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Var</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #VAR
 	 * @model name="var"
@@ -74,10 +70,6 @@ public enum VariableStatementKeyword implements Enumerator {
 	/**
 	 * The '<em><b>Const</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Const</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #CONST
 	 * @model name="const"
@@ -89,10 +81,6 @@ public enum VariableStatementKeyword implements Enumerator {
 	/**
 	 * The '<em><b>Let</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Let</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #LET
 	 * @model name="let"
@@ -211,6 +199,7 @@ public enum VariableStatementKeyword implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -220,6 +209,7 @@ public enum VariableStatementKeyword implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -229,6 +219,7 @@ public enum VariableStatementKeyword implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

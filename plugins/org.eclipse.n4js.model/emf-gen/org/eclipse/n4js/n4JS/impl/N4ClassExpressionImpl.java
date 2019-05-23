@@ -104,6 +104,7 @@ public class N4ClassExpressionImpl extends N4ClassDefinitionImpl implements N4Cl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ExpressionAnnotationList getAnnotationList() {
 		return annotationList;
 	}
@@ -128,6 +129,7 @@ public class N4ClassExpressionImpl extends N4ClassDefinitionImpl implements N4Cl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAnnotationList(ExpressionAnnotationList newAnnotationList) {
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
@@ -147,6 +149,7 @@ public class N4ClassExpressionImpl extends N4ClassDefinitionImpl implements N4Cl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -156,6 +159,7 @@ public class N4ClassExpressionImpl extends N4ClassDefinitionImpl implements N4Cl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -168,6 +172,7 @@ public class N4ClassExpressionImpl extends N4ClassDefinitionImpl implements N4Cl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Annotation> getAnnotations() {
 		EList<Annotation> _elvis = null;
 		ExpressionAnnotationList _annotationList = this.getAnnotationList();
@@ -189,6 +194,7 @@ public class N4ClassExpressionImpl extends N4ClassDefinitionImpl implements N4Cl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidSimpleAssignmentTarget() {
 		return false;
 	}

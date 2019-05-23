@@ -81,6 +81,7 @@ public class JSONBooleanLiteralImpl extends JSONValueImpl implements JSONBoolean
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isBooleanValue() {
 		return booleanValue;
 	}
@@ -90,6 +91,7 @@ public class JSONBooleanLiteralImpl extends JSONValueImpl implements JSONBoolean
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBooleanValue(boolean newBooleanValue) {
 		boolean oldBooleanValue = booleanValue;
 		booleanValue = newBooleanValue;
@@ -102,6 +104,7 @@ public class JSONBooleanLiteralImpl extends JSONValueImpl implements JSONBoolean
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		boolean _isBooleanValue = this.isBooleanValue();
 		String _plus = ("JSONBooleanLiteral(" + Boolean.valueOf(_isBooleanValue));

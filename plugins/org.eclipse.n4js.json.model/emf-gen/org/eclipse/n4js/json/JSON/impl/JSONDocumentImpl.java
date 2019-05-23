@@ -75,6 +75,7 @@ public class JSONDocumentImpl extends MinimalEObjectImpl.Container implements JS
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONValue getContent() {
 		return content;
 	}
@@ -99,6 +100,7 @@ public class JSONDocumentImpl extends MinimalEObjectImpl.Container implements JS
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setContent(JSONValue newContent) {
 		if (newContent != content) {
 			NotificationChain msgs = null;
@@ -118,6 +120,7 @@ public class JSONDocumentImpl extends MinimalEObjectImpl.Container implements JS
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		String _string = this.getContent().toString();
 		return ("JSONDocument " + _string);

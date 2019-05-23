@@ -176,13 +176,16 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 		@Override
 		public TypeArgument caseTypeTypeRef(TypeTypeRef typeRef) {
-			// Substitute in Parameterized Typeref.
-			TypeArgument tResult = substTypeVariables(G, typeRef.getTypeArg());
-			if (tResult != typeRef.getTypeArg()) {
-				// changed
-				TypeTypeRef result = TypeUtils.copyIfContained(typeRef);
-				result.setTypeArg(TypeUtils.copyIfContained(tResult));
-				return result;
+			TypeArgument typeArg = typeRef.getTypeArg();
+			if (typeArg != null) {
+				// substitute in type argument
+				TypeArgument tResult = substTypeVariables(G, typeArg);
+				if (tResult != typeRef.getTypeArg()) {
+					// changed
+					TypeTypeRef result = TypeUtils.copyIfContained(typeRef);
+					result.setTypeArg(TypeUtils.copyIfContained(tResult));
+					return result;
+				}
 			}
 			// nothing changed
 			return typeRef;

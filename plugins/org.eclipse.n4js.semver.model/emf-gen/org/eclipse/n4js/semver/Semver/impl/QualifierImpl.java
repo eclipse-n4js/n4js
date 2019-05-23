@@ -85,6 +85,7 @@ public class QualifierImpl extends SemverToStringableImpl implements Qualifier {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public QualifierTag getPreRelease() {
 		return preRelease;
 	}
@@ -109,6 +110,7 @@ public class QualifierImpl extends SemverToStringableImpl implements Qualifier {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPreRelease(QualifierTag newPreRelease) {
 		if (newPreRelease != preRelease) {
 			NotificationChain msgs = null;
@@ -128,6 +130,7 @@ public class QualifierImpl extends SemverToStringableImpl implements Qualifier {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public QualifierTag getBuildMetadata() {
 		return buildMetadata;
 	}
@@ -152,6 +155,7 @@ public class QualifierImpl extends SemverToStringableImpl implements Qualifier {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBuildMetadata(QualifierTag newBuildMetadata) {
 		if (newBuildMetadata != buildMetadata) {
 			NotificationChain msgs = null;
@@ -171,6 +175,7 @@ public class QualifierImpl extends SemverToStringableImpl implements Qualifier {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if ((!(obj instanceof Qualifier))) {
 			return false;

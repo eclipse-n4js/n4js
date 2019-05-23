@@ -251,6 +251,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSemverToStringable() {
 		return semverToStringableEClass;
 	}
@@ -260,6 +261,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSemverToStringable__ToString() {
 		return semverToStringableEClass.getEOperations().get(0);
 	}
@@ -269,6 +271,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNPMVersionRequirement() {
 		return npmVersionRequirementEClass;
 	}
@@ -278,6 +281,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getURLVersionRequirement() {
 		return urlVersionRequirementEClass;
 	}
@@ -287,6 +291,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getURLVersionRequirement_VersionSpecifier() {
 		return (EReference)urlVersionRequirementEClass.getEStructuralFeatures().get(0);
 	}
@@ -296,6 +301,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getURLVersionRequirement_Protocol() {
 		return (EAttribute)urlVersionRequirementEClass.getEStructuralFeatures().get(1);
 	}
@@ -305,6 +311,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getURLVersionRequirement_Url() {
 		return (EAttribute)urlVersionRequirementEClass.getEStructuralFeatures().get(2);
 	}
@@ -314,6 +321,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getURLVersionRequirement__HasSimpleVersion() {
 		return urlVersionRequirementEClass.getEOperations().get(0);
 	}
@@ -323,6 +331,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getURLVersionRequirement__GetSimpleVersion() {
 		return urlVersionRequirementEClass.getEOperations().get(1);
 	}
@@ -332,6 +341,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getURLVersionSpecifier() {
 		return urlVersionSpecifierEClass;
 	}
@@ -341,6 +351,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getURLSemver() {
 		return urlSemverEClass;
 	}
@@ -350,6 +361,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getURLSemver_SimpleVersion() {
 		return (EReference)urlSemverEClass.getEStructuralFeatures().get(0);
 	}
@@ -359,6 +371,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getURLSemver_WithSemverTag() {
 		return (EAttribute)urlSemverEClass.getEStructuralFeatures().get(1);
 	}
@@ -368,6 +381,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getURLCommitISH() {
 		return urlCommitISHEClass;
 	}
@@ -377,6 +391,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getURLCommitISH_CommitISH() {
 		return (EAttribute)urlCommitISHEClass.getEStructuralFeatures().get(0);
 	}
@@ -386,6 +401,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getGitHubVersionRequirement() {
 		return gitHubVersionRequirementEClass;
 	}
@@ -395,6 +411,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getGitHubVersionRequirement_GithubUrl() {
 		return (EAttribute)gitHubVersionRequirementEClass.getEStructuralFeatures().get(0);
 	}
@@ -404,6 +421,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getGitHubVersionRequirement_CommitISH() {
 		return (EAttribute)gitHubVersionRequirementEClass.getEStructuralFeatures().get(1);
 	}
@@ -413,6 +431,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLocalPathVersionRequirement() {
 		return localPathVersionRequirementEClass;
 	}
@@ -422,6 +441,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getLocalPathVersionRequirement_LocalPath() {
 		return (EAttribute)localPathVersionRequirementEClass.getEStructuralFeatures().get(0);
 	}
@@ -431,6 +451,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTagVersionRequirement() {
 		return tagVersionRequirementEClass;
 	}
@@ -440,6 +461,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTagVersionRequirement_TagName() {
 		return (EAttribute)tagVersionRequirementEClass.getEStructuralFeatures().get(0);
 	}
@@ -449,6 +471,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionRangeSetRequirement() {
 		return versionRangeSetRequirementEClass;
 	}
@@ -458,6 +481,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVersionRangeSetRequirement_Ranges() {
 		return (EReference)versionRangeSetRequirementEClass.getEStructuralFeatures().get(0);
 	}
@@ -467,6 +491,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionRange() {
 		return versionRangeEClass;
 	}
@@ -476,6 +501,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getHyphenVersionRange() {
 		return hyphenVersionRangeEClass;
 	}
@@ -485,6 +511,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getHyphenVersionRange_From() {
 		return (EReference)hyphenVersionRangeEClass.getEStructuralFeatures().get(0);
 	}
@@ -494,6 +521,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getHyphenVersionRange_To() {
 		return (EReference)hyphenVersionRangeEClass.getEStructuralFeatures().get(1);
 	}
@@ -503,6 +531,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionRangeConstraint() {
 		return versionRangeConstraintEClass;
 	}
@@ -512,6 +541,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVersionRangeConstraint_VersionConstraints() {
 		return (EReference)versionRangeConstraintEClass.getEStructuralFeatures().get(0);
 	}
@@ -521,6 +551,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimpleVersion() {
 		return simpleVersionEClass;
 	}
@@ -530,6 +561,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSimpleVersion_Number() {
 		return (EReference)simpleVersionEClass.getEStructuralFeatures().get(0);
 	}
@@ -539,6 +571,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimpleVersion_WithLetterV() {
 		return (EAttribute)simpleVersionEClass.getEStructuralFeatures().get(1);
 	}
@@ -548,6 +581,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSimpleVersion_Comparators() {
 		return (EAttribute)simpleVersionEClass.getEStructuralFeatures().get(2);
 	}
@@ -557,6 +591,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSimpleVersion__IsWildcard() {
 		return simpleVersionEClass.getEOperations().get(0);
 	}
@@ -566,6 +601,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSimpleVersion__IsSpecific() {
 		return simpleVersionEClass.getEOperations().get(1);
 	}
@@ -575,6 +611,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSimpleVersion__IsCaret() {
 		return simpleVersionEClass.getEOperations().get(2);
 	}
@@ -584,6 +621,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSimpleVersion__IsTilde() {
 		return simpleVersionEClass.getEOperations().get(3);
 	}
@@ -593,6 +631,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSimpleVersion__IsGreater() {
 		return simpleVersionEClass.getEOperations().get(4);
 	}
@@ -602,6 +641,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSimpleVersion__IsGreaterEquals() {
 		return simpleVersionEClass.getEOperations().get(5);
 	}
@@ -611,6 +651,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSimpleVersion__IsSmaller() {
 		return simpleVersionEClass.getEOperations().get(6);
 	}
@@ -620,6 +661,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getSimpleVersion__IsSmallerEquals() {
 		return simpleVersionEClass.getEOperations().get(7);
 	}
@@ -629,6 +671,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionNumber() {
 		return versionNumberEClass;
 	}
@@ -638,6 +681,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVersionNumber_Major() {
 		return (EReference)versionNumberEClass.getEStructuralFeatures().get(0);
 	}
@@ -647,6 +691,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVersionNumber_Minor() {
 		return (EReference)versionNumberEClass.getEStructuralFeatures().get(1);
 	}
@@ -656,6 +701,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVersionNumber_Patch() {
 		return (EReference)versionNumberEClass.getEStructuralFeatures().get(2);
 	}
@@ -665,6 +711,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVersionNumber_Extended() {
 		return (EReference)versionNumberEClass.getEStructuralFeatures().get(3);
 	}
@@ -674,6 +721,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVersionNumber_Qualifier() {
 		return (EReference)versionNumberEClass.getEStructuralFeatures().get(4);
 	}
@@ -683,6 +731,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionNumber__IsWildcard() {
 		return versionNumberEClass.getEOperations().get(0);
 	}
@@ -692,6 +741,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionNumber__GetPreReleaseTag() {
 		return versionNumberEClass.getEOperations().get(1);
 	}
@@ -701,6 +751,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionNumber__HasPreReleaseTag() {
 		return versionNumberEClass.getEOperations().get(2);
 	}
@@ -710,6 +761,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionNumber__Length() {
 		return versionNumberEClass.getEOperations().get(3);
 	}
@@ -719,6 +771,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionNumber__GetPart__int() {
 		return versionNumberEClass.getEOperations().get(4);
 	}
@@ -728,6 +781,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionNumber__Equals__Object() {
 		return versionNumberEClass.getEOperations().get(5);
 	}
@@ -737,6 +791,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVersionPart() {
 		return versionPartEClass;
 	}
@@ -746,6 +801,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getVersionPart_Wildcard() {
 		return (EAttribute)versionPartEClass.getEStructuralFeatures().get(0);
 	}
@@ -755,6 +811,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getVersionPart_NumberRaw() {
 		return (EAttribute)versionPartEClass.getEStructuralFeatures().get(1);
 	}
@@ -764,6 +821,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionPart__GetNumber() {
 		return versionPartEClass.getEOperations().get(0);
 	}
@@ -773,6 +831,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getVersionPart__Equals__Object() {
 		return versionPartEClass.getEOperations().get(1);
 	}
@@ -782,6 +841,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getQualifier() {
 		return qualifierEClass;
 	}
@@ -791,6 +851,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getQualifier_PreRelease() {
 		return (EReference)qualifierEClass.getEStructuralFeatures().get(0);
 	}
@@ -800,6 +861,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getQualifier_BuildMetadata() {
 		return (EReference)qualifierEClass.getEStructuralFeatures().get(1);
 	}
@@ -809,6 +871,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getQualifier__Equals__Object() {
 		return qualifierEClass.getEOperations().get(0);
 	}
@@ -818,6 +881,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getQualifierTag() {
 		return qualifierTagEClass;
 	}
@@ -827,6 +891,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getQualifierTag_Parts() {
 		return (EAttribute)qualifierTagEClass.getEStructuralFeatures().get(0);
 	}
@@ -836,6 +901,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getQualifierTag__Equals__Object() {
 		return qualifierTagEClass.getEOperations().get(0);
 	}
@@ -845,6 +911,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getVersionComparator() {
 		return versionComparatorEEnum;
 	}
@@ -854,6 +921,7 @@ public class SemverPackageImpl extends EPackageImpl implements SemverPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SemverFactory getSemverFactory() {
 		return (SemverFactory)getEFactoryInstance();
 	}

@@ -45,7 +45,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getQualifiedName <em>Qualified Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getProjectName <em>Project Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVendorID <em>Vendor ID</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getModuleLoader <em>Module Loader</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isN4jsdModule <em>N4jsd Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isStaticPolyfillModule <em>Static Polyfill Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isStaticPolyfillAware <em>Static Polyfill Aware</em>}</li>
@@ -134,26 +133,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @ordered
 	 */
 	protected String vendorID = VENDOR_ID_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getModuleLoader() <em>Module Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getModuleLoader()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String MODULE_LOADER_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getModuleLoader() <em>Module Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getModuleLoader()
-	 * @generated
-	 * @ordered
-	 */
-	protected String moduleLoader = MODULE_LOADER_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isN4jsdModule() <em>N4jsd Module</em>}' attribute.
@@ -389,6 +368,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TAnnotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.TMODULE__ANNOTATIONS);
@@ -401,6 +381,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getQualifiedName() {
 		return qualifiedName;
 	}
@@ -410,6 +391,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setQualifiedName(String newQualifiedName) {
 		String oldQualifiedName = qualifiedName;
 		qualifiedName = newQualifiedName;
@@ -422,6 +404,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getProjectName() {
 		return projectName;
 	}
@@ -431,6 +414,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProjectName(String newProjectName) {
 		String oldProjectName = projectName;
 		projectName = newProjectName;
@@ -443,6 +427,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVendorID() {
 		return vendorID;
 	}
@@ -452,6 +437,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVendorID(String newVendorID) {
 		String oldVendorID = vendorID;
 		vendorID = newVendorID;
@@ -464,27 +450,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getModuleLoader() {
-		return moduleLoader;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setModuleLoader(String newModuleLoader) {
-		String oldModuleLoader = moduleLoader;
-		moduleLoader = newModuleLoader;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__MODULE_LOADER, oldModuleLoader, moduleLoader));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@Override
 	public boolean isN4jsdModule() {
 		return n4jsdModule;
 	}
@@ -494,6 +460,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setN4jsdModule(boolean newN4jsdModule) {
 		boolean oldN4jsdModule = n4jsdModule;
 		n4jsdModule = newN4jsdModule;
@@ -506,6 +473,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStaticPolyfillModule() {
 		return staticPolyfillModule;
 	}
@@ -515,6 +483,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStaticPolyfillModule(boolean newStaticPolyfillModule) {
 		boolean oldStaticPolyfillModule = staticPolyfillModule;
 		staticPolyfillModule = newStaticPolyfillModule;
@@ -527,6 +496,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isStaticPolyfillAware() {
 		return staticPolyfillAware;
 	}
@@ -536,6 +506,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStaticPolyfillAware(boolean newStaticPolyfillAware) {
 		boolean oldStaticPolyfillAware = staticPolyfillAware;
 		staticPolyfillAware = newStaticPolyfillAware;
@@ -548,6 +519,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isMainModule() {
 		return mainModule;
 	}
@@ -557,6 +529,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMainModule(boolean newMainModule) {
 		boolean oldMainModule = mainModule;
 		mainModule = newMainModule;
@@ -569,6 +542,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isPreLinkingPhase() {
 		return preLinkingPhase;
 	}
@@ -578,6 +552,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPreLinkingPhase(boolean newPreLinkingPhase) {
 		boolean oldPreLinkingPhase = preLinkingPhase;
 		preLinkingPhase = newPreLinkingPhase;
@@ -590,6 +565,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReconciled() {
 		return reconciled;
 	}
@@ -599,6 +575,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setReconciled(boolean newReconciled) {
 		boolean oldReconciled = reconciled;
 		reconciled = newReconciled;
@@ -611,6 +588,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Type> getTopLevelTypes() {
 		if (topLevelTypes == null) {
 			topLevelTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__TOP_LEVEL_TYPES);
@@ -623,6 +601,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TVariable> getVariables() {
 		if (variables == null) {
 			variables = new EObjectContainmentEList<TVariable>(TVariable.class, this, TypesPackage.TMODULE__VARIABLES);
@@ -635,6 +614,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Type> getInternalTypes() {
 		if (internalTypes == null) {
 			internalTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__INTERNAL_TYPES);
@@ -647,6 +627,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Type> getExposedInternalTypes() {
 		if (exposedInternalTypes == null) {
 			exposedInternalTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES);
@@ -659,6 +640,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getAstMD5() {
 		return astMD5;
 	}
@@ -668,6 +650,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAstMD5(String newAstMD5) {
 		String oldAstMD5 = astMD5;
 		astMD5 = newAstMD5;
@@ -680,6 +663,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ComposedMemberCache> getComposedMemberCaches() {
 		if (composedMemberCaches == null) {
 			composedMemberCaches = new EObjectContainmentEList<ComposedMemberCache>(ComposedMemberCache.class, this, TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES);
@@ -692,6 +676,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Type> getTemporaryTypes() {
 		if (temporaryTypes == null) {
 			temporaryTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__TEMPORARY_TYPES);
@@ -704,6 +689,7 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getModuleSpecifier() {
 		return this.getQualifiedName();
 	}
@@ -750,8 +736,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return getProjectName();
 			case TypesPackage.TMODULE__VENDOR_ID:
 				return getVendorID();
-			case TypesPackage.TMODULE__MODULE_LOADER:
-				return getModuleLoader();
 			case TypesPackage.TMODULE__N4JSD_MODULE:
 				return isN4jsdModule();
 			case TypesPackage.TMODULE__STATIC_POLYFILL_MODULE:
@@ -805,9 +789,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return;
 			case TypesPackage.TMODULE__VENDOR_ID:
 				setVendorID((String)newValue);
-				return;
-			case TypesPackage.TMODULE__MODULE_LOADER:
-				setModuleLoader((String)newValue);
 				return;
 			case TypesPackage.TMODULE__N4JSD_MODULE:
 				setN4jsdModule((Boolean)newValue);
@@ -878,9 +859,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__VENDOR_ID:
 				setVendorID(VENDOR_ID_EDEFAULT);
 				return;
-			case TypesPackage.TMODULE__MODULE_LOADER:
-				setModuleLoader(MODULE_LOADER_EDEFAULT);
-				return;
 			case TypesPackage.TMODULE__N4JSD_MODULE:
 				setN4jsdModule(N4JSD_MODULE_EDEFAULT);
 				return;
@@ -940,8 +918,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return PROJECT_NAME_EDEFAULT == null ? projectName != null : !PROJECT_NAME_EDEFAULT.equals(projectName);
 			case TypesPackage.TMODULE__VENDOR_ID:
 				return VENDOR_ID_EDEFAULT == null ? vendorID != null : !VENDOR_ID_EDEFAULT.equals(vendorID);
-			case TypesPackage.TMODULE__MODULE_LOADER:
-				return MODULE_LOADER_EDEFAULT == null ? moduleLoader != null : !MODULE_LOADER_EDEFAULT.equals(moduleLoader);
 			case TypesPackage.TMODULE__N4JSD_MODULE:
 				return n4jsdModule != N4JSD_MODULE_EDEFAULT;
 			case TypesPackage.TMODULE__STATIC_POLYFILL_MODULE:
@@ -1022,8 +998,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 		result.append(projectName);
 		result.append(", vendorID: ");
 		result.append(vendorID);
-		result.append(", moduleLoader: ");
-		result.append(moduleLoader);
 		result.append(", n4jsdModule: ");
 		result.append(n4jsdModule);
 		result.append(", staticPolyfillModule: ");

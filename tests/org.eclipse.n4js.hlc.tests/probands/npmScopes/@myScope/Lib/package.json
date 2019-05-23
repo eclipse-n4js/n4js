@@ -1,6 +1,7 @@
 {
 	"name": "@myScope/Lib",
 	"version": "0.0.1",
+	"main": "src-gen/D.js",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

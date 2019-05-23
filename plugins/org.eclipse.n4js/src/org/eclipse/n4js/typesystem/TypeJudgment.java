@@ -78,6 +78,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
@@ -1213,6 +1214,15 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseJSXElement(JSXElement jsxElem) {
 			final TClassifier classifierReactElement = reactHelper.lookUpReactElement(jsxElem);
+			if (classifierReactElement == null) {
+				return unknown();
+			}
+			return ref(classifierReactElement);
+		}
+
+		@Override
+		public TypeRef caseJSXFragment(JSXFragment jsxFragment) {
+			final TClassifier classifierReactElement = reactHelper.lookUpReactElement(jsxFragment);
 			if (classifierReactElement == null) {
 				return unknown();
 			}

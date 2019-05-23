@@ -122,6 +122,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Doclet createDoclet() {
 		DocletImpl doclet = new DocletImpl();
 		return doclet;
@@ -132,6 +133,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TagValue createTagValue() {
 		TagValueImpl tagValue = new TagValueImpl();
 		return tagValue;
@@ -142,6 +144,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TagTitle createTagTitle() {
 		TagTitleImpl tagTitle = new TagTitleImpl();
 		return tagTitle;
@@ -152,6 +155,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LineTag createLineTag() {
 		LineTagImpl lineTag = new LineTagImpl();
 		return lineTag;
@@ -162,6 +166,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public InlineTag createInlineTag() {
 		InlineTagImpl inlineTag = new InlineTagImpl();
 		return inlineTag;
@@ -172,6 +177,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Text createText() {
 		TextImpl text = new TextImpl();
 		return text;
@@ -182,6 +188,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SimpleTypeReference createSimpleTypeReference() {
 		SimpleTypeReferenceImpl simpleTypeReference = new SimpleTypeReferenceImpl();
 		return simpleTypeReference;
@@ -192,6 +199,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FullTypeReference createFullTypeReference() {
 		FullTypeReferenceImpl fullTypeReference = new FullTypeReferenceImpl();
 		return fullTypeReference;
@@ -202,6 +210,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FullMemberReference createFullMemberReference() {
 		FullMemberReferenceImpl fullMemberReference = new FullMemberReferenceImpl();
 		return fullMemberReference;
@@ -212,6 +221,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VariableReference createVariableReference() {
 		VariableReferenceImpl variableReference = new VariableReferenceImpl();
 		return variableReference;
@@ -222,6 +232,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public GenericReference createGenericReference() {
 		GenericReferenceImpl genericReference = new GenericReferenceImpl();
 		return genericReference;
@@ -232,6 +243,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Literal createLiteral() {
 		LiteralImpl literal = new LiteralImpl();
 		return literal;
@@ -242,6 +254,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Marker createMarker() {
 		MarkerImpl marker = new MarkerImpl();
 		return marker;
@@ -252,6 +265,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ComposedContent createComposedContent() {
 		ComposedContentImpl composedContent = new ComposedContentImpl();
 		return composedContent;
@@ -262,6 +276,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StructuredText createStructuredText() {
 		StructuredTextImpl structuredText = new StructuredTextImpl();
 		return structuredText;
@@ -290,6 +305,7 @@ public class DomFactoryImpl extends EFactoryImpl implements DomFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DomPackage getDomPackage() {
 		return (DomPackage)getEPackage();
 	}

@@ -77,8 +77,18 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	private String modelFolderName = SRC_ROOT;
 	private final List<String> allFolders = new ArrayList<>(SRC_FOLDER_LIST);
 
+	private IProject createdProject = null; // set in #createProject()
+
 	@Inject
 	private Provider<ProjectFactory> projectFactoryProvider;
+
+	/**
+	 * Returns the project created by this creator or <code>null</code> if not created yet (i.e. before
+	 * {@link #createProject(IProgressMonitor)} is invoked).
+	 */
+	public IProject getCreatedProject() {
+		return createdProject;
+	}
 
 	@Override
 	protected ProjectFactory createProjectFactory() {
@@ -88,6 +98,7 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	@Override
 	protected IProject createProject(IProgressMonitor monitor) {
 		IProject project = super.createProject(monitor);
+		createdProject = project;
 
 		// Throw an exception if project is <code>null</code>.
 		// A null-project indicates that something went wrong while creating the plain
@@ -222,9 +233,15 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 		}
 
 		// Gather default project dependencies
+		if (N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(pi.getProjectType())) {
+			List<String> projectDependencies = pi.getProjectDependencies();
+			projectDependencies.add(N4JSGlobals.N4JS_RUNTIME);
+		}
 		if (ProjectType.TEST.equals(pi.getProjectType())) {
 			List<String> projectDependencies = pi.getProjectDependencies();
 			projectDependencies.addAll(MANGELHAFT_DEPENDENCIES);
+			List<String> projectDevDependencies = pi.getProjectDevDependencies();
+			projectDevDependencies.add(N4JSGlobals.MANGELHAFT_CLI);
 		}
 
 		// Generate package.json content

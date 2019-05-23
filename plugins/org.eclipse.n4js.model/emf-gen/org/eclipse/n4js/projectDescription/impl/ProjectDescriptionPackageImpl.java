@@ -19,12 +19,10 @@ import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
-import org.eclipse.n4js.projectDescription.BootstrapModule;
 import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
-import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
@@ -90,13 +88,6 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass bootstrapModuleEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EEnum projectTypeEEnum = null;
 
 	/**
@@ -112,13 +103,6 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * @generated
 	 */
 	private EEnum moduleFilterTypeEEnum = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EEnum moduleLoaderEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -197,6 +181,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProjectDescription() {
 		return projectDescriptionEClass;
 	}
@@ -206,6 +191,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProjectDescription_ProjectName() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(0);
 	}
@@ -215,6 +201,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProjectDescription_VendorId() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(1);
 	}
@@ -224,6 +211,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProjectDescription_VendorName() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(2);
 	}
@@ -233,6 +221,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProjectDescription_ProjectVersion() {
 		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(3);
 	}
@@ -242,6 +231,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProjectDescription_ProjectType() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(4);
 	}
@@ -251,6 +241,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProjectDescription_MainModule() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(5);
 	}
@@ -260,6 +251,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProjectDescription_ExtendedRuntimeEnvironment() {
 		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(6);
 	}
@@ -269,6 +261,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProjectDescription_ProvidedRuntimeLibraries() {
 		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(7);
 	}
@@ -278,6 +271,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProjectDescription_RequiredRuntimeLibraries() {
 		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(8);
 	}
@@ -287,6 +281,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProjectDescription_ProjectDependencies() {
 		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(9);
 	}
@@ -296,6 +291,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProjectDescription_ImplementationId() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(10);
 	}
@@ -305,6 +301,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProjectDescription_ImplementedProjects() {
 		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(11);
 	}
@@ -314,8 +311,9 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProjectDescription_InitModules() {
-		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(12);
+	@Override
+	public EAttribute getProjectDescription_OutputPath() {
+		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
@@ -323,7 +321,8 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProjectDescription_ExecModule() {
+	@Override
+	public EReference getProjectDescription_SourceContainers() {
 		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -332,8 +331,9 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_OutputPath() {
-		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(14);
+	@Override
+	public EReference getProjectDescription_ModuleFilters() {
+		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(14);
 	}
 
 	/**
@@ -341,7 +341,8 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProjectDescription_SourceContainers() {
+	@Override
+	public EReference getProjectDescription_TestedProjects() {
 		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(15);
 	}
 
@@ -350,8 +351,9 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProjectDescription_ModuleFilters() {
-		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(16);
+	@Override
+	public EAttribute getProjectDescription_DefinesPackage() {
+		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(16);
 	}
 
 	/**
@@ -359,8 +361,9 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProjectDescription_TestedProjects() {
-		return (EReference)projectDescriptionEClass.getEStructuralFeatures().get(17);
+	@Override
+	public EAttribute getProjectDescription_HasNestedNodeModulesFolder() {
+		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(17);
 	}
 
 	/**
@@ -368,7 +371,8 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_ModuleLoader() {
+	@Override
+	public EAttribute getProjectDescription_HasN4JSNature() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(18);
 	}
 
@@ -377,7 +381,8 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_DefinesPackage() {
+	@Override
+	public EAttribute getProjectDescription_YarnWorkspaceRoot() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(19);
 	}
 
@@ -386,7 +391,8 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_HasNestedNodeModulesFolder() {
+	@Override
+	public EAttribute getProjectDescription_Workspaces() {
 		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(20);
 	}
 
@@ -395,33 +401,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProjectDescription_HasN4JSNature() {
-		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(21);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getProjectDescription_YarnWorkspaceRoot() {
-		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(22);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getProjectDescription_Workspaces() {
-		return (EAttribute)projectDescriptionEClass.getEStructuralFeatures().get(23);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@Override
 	public EClass getSourceContainerDescription() {
 		return sourceContainerDescriptionEClass;
 	}
@@ -431,6 +411,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSourceContainerDescription_SourceContainerType() {
 		return (EAttribute)sourceContainerDescriptionEClass.getEStructuralFeatures().get(0);
 	}
@@ -440,6 +421,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSourceContainerDescription_Paths() {
 		return (EAttribute)sourceContainerDescriptionEClass.getEStructuralFeatures().get(1);
 	}
@@ -449,6 +431,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProjectReference() {
 		return projectReferenceEClass;
 	}
@@ -458,6 +441,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProjectReference_ProjectName() {
 		return (EAttribute)projectReferenceEClass.getEStructuralFeatures().get(0);
 	}
@@ -467,6 +451,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProjectDependency() {
 		return projectDependencyEClass;
 	}
@@ -476,6 +461,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProjectDependency_Type() {
 		return (EAttribute)projectDependencyEClass.getEStructuralFeatures().get(0);
 	}
@@ -485,6 +471,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProjectDependency_VersionRequirementString() {
 		return (EAttribute)projectDependencyEClass.getEStructuralFeatures().get(1);
 	}
@@ -494,6 +481,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProjectDependency_VersionRequirement() {
 		return (EReference)projectDependencyEClass.getEStructuralFeatures().get(2);
 	}
@@ -503,6 +491,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getModuleFilter() {
 		return moduleFilterEClass;
 	}
@@ -512,6 +501,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getModuleFilter_ModuleFilterType() {
 		return (EAttribute)moduleFilterEClass.getEStructuralFeatures().get(0);
 	}
@@ -521,6 +511,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getModuleFilter_ModuleSpecifiers() {
 		return (EReference)moduleFilterEClass.getEStructuralFeatures().get(1);
 	}
@@ -530,6 +521,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getModuleFilterSpecifier() {
 		return moduleFilterSpecifierEClass;
 	}
@@ -539,6 +531,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getModuleFilterSpecifier_ModuleSpecifierWithWildcard() {
 		return (EAttribute)moduleFilterSpecifierEClass.getEStructuralFeatures().get(0);
 	}
@@ -548,6 +541,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getModuleFilterSpecifier_SourcePath() {
 		return (EAttribute)moduleFilterSpecifierEClass.getEStructuralFeatures().get(1);
 	}
@@ -557,24 +551,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getBootstrapModule() {
-		return bootstrapModuleEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getBootstrapModule_ModuleSpecifier() {
-		return (EAttribute)bootstrapModuleEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@Override
 	public EEnum getProjectType() {
 		return projectTypeEEnum;
 	}
@@ -584,6 +561,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getSourceContainerType() {
 		return sourceContainerTypeEEnum;
 	}
@@ -593,6 +571,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getModuleFilterType() {
 		return moduleFilterTypeEEnum;
 	}
@@ -602,15 +581,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EEnum getModuleLoader() {
-		return moduleLoaderEEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@Override
 	public EEnum getDependencyType() {
 		return dependencyTypeEEnum;
 	}
@@ -620,6 +591,7 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProjectDescriptionFactory getProjectDescriptionFactory() {
 		return (ProjectDescriptionFactory)getEFactoryInstance();
 	}
@@ -656,13 +628,10 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__PROJECT_DEPENDENCIES);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__IMPLEMENTATION_ID);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS);
-		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__INIT_MODULES);
-		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__EXEC_MODULE);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__OUTPUT_PATH);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__SOURCE_CONTAINERS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_FILTERS);
 		createEReference(projectDescriptionEClass, PROJECT_DESCRIPTION__TESTED_PROJECTS);
-		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__MODULE_LOADER);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__DEFINES_PACKAGE);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER);
 		createEAttribute(projectDescriptionEClass, PROJECT_DESCRIPTION__HAS_N4JS_NATURE);
@@ -689,14 +658,10 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		createEAttribute(moduleFilterSpecifierEClass, MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD);
 		createEAttribute(moduleFilterSpecifierEClass, MODULE_FILTER_SPECIFIER__SOURCE_PATH);
 
-		bootstrapModuleEClass = createEClass(BOOTSTRAP_MODULE);
-		createEAttribute(bootstrapModuleEClass, BOOTSTRAP_MODULE__MODULE_SPECIFIER);
-
 		// Create enums
 		projectTypeEEnum = createEEnum(PROJECT_TYPE);
 		sourceContainerTypeEEnum = createEEnum(SOURCE_CONTAINER_TYPE);
 		moduleFilterTypeEEnum = createEEnum(MODULE_FILTER_TYPE);
-		moduleLoaderEEnum = createEEnum(MODULE_LOADER);
 		dependencyTypeEEnum = createEEnum(DEPENDENCY_TYPE);
 	}
 
@@ -748,13 +713,10 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		initEReference(getProjectDescription_ProjectDependencies(), this.getProjectDependency(), null, "projectDependencies", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_ImplementationId(), theEcorePackage.getEString(), "implementationId", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ImplementedProjects(), this.getProjectReference(), null, "implementedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProjectDescription_InitModules(), this.getBootstrapModule(), null, "initModules", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProjectDescription_ExecModule(), this.getBootstrapModule(), null, "execModule", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_OutputPath(), theEcorePackage.getEString(), "outputPath", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_SourceContainers(), this.getSourceContainerDescription(), null, "sourceContainers", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_ModuleFilters(), this.getModuleFilter(), null, "moduleFilters", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProjectDescription_TestedProjects(), this.getProjectReference(), null, "testedProjects", null, 0, -1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProjectDescription_ModuleLoader(), this.getModuleLoader(), "moduleLoader", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_DefinesPackage(), theEcorePackage.getEString(), "definesPackage", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_HasNestedNodeModulesFolder(), theEcorePackage.getEBoolean(), "hasNestedNodeModulesFolder", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProjectDescription_HasN4JSNature(), theEcorePackage.getEBoolean(), "hasN4JSNature", null, 0, 1, ProjectDescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -781,9 +743,6 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 		initEAttribute(getModuleFilterSpecifier_ModuleSpecifierWithWildcard(), theEcorePackage.getEString(), "moduleSpecifierWithWildcard", null, 0, 1, ModuleFilterSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModuleFilterSpecifier_SourcePath(), theEcorePackage.getEString(), "sourcePath", null, 0, 1, ModuleFilterSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(bootstrapModuleEClass, BootstrapModule.class, "BootstrapModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getBootstrapModule_ModuleSpecifier(), theEcorePackage.getEString(), "moduleSpecifier", null, 0, 1, BootstrapModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		// Initialize enums and add enum literals
 		initEEnum(projectTypeEEnum, ProjectType.class, "ProjectType");
 		addEEnumLiteral(projectTypeEEnum, ProjectType.PLAINJS);
@@ -804,12 +763,6 @@ public class ProjectDescriptionPackageImpl extends EPackageImpl implements Proje
 
 		initEEnum(moduleFilterTypeEEnum, ModuleFilterType.class, "ModuleFilterType");
 		addEEnumLiteral(moduleFilterTypeEEnum, ModuleFilterType.NO_VALIDATE);
-		addEEnumLiteral(moduleFilterTypeEEnum, ModuleFilterType.NO_MODULE_WRAP);
-
-		initEEnum(moduleLoaderEEnum, ModuleLoader.class, "ModuleLoader");
-		addEEnumLiteral(moduleLoaderEEnum, ModuleLoader.N4JS);
-		addEEnumLiteral(moduleLoaderEEnum, ModuleLoader.COMMONJS);
-		addEEnumLiteral(moduleLoaderEEnum, ModuleLoader.NODE_BUILTIN);
 
 		initEEnum(dependencyTypeEEnum, DependencyType.class, "DependencyType");
 		addEEnumLiteral(dependencyTypeEEnum, DependencyType.RUNTIME);

@@ -68,7 +68,7 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	@Test
 	public void testGetLocation_01() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
-		ProjectDependency dependency = description.getProjectDependencies().get(0);
+		ProjectDependency dependency = description.getProjectDependencies().get(1);
 		URI resolvedLocation = getWorkspace().getLocation(myProjectURI, dependency);
 		assertEquals(libProjectURI, resolvedLocation);
 	}

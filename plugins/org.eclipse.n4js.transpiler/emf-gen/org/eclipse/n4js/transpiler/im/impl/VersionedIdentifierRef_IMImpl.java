@@ -84,6 +84,7 @@ public class VersionedIdentifierRef_IMImpl extends IdentifierRef_IMImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public BigDecimal getRequestedVersion() {
 		return requestedVersion;
 	}
@@ -93,6 +94,7 @@ public class VersionedIdentifierRef_IMImpl extends IdentifierRef_IMImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRequestedVersion(BigDecimal newRequestedVersion) {
 		BigDecimal oldRequestedVersion = requestedVersion;
 		requestedVersion = newRequestedVersion;
@@ -105,6 +107,7 @@ public class VersionedIdentifierRef_IMImpl extends IdentifierRef_IMImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getVersion() {
 		return this.getRequestedVersionOrZero();
 	}
@@ -114,6 +117,7 @@ public class VersionedIdentifierRef_IMImpl extends IdentifierRef_IMImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasRequestedVersion() {
 		BigDecimal _requestedVersion = this.getRequestedVersion();
 		return (_requestedVersion != null);
@@ -124,6 +128,7 @@ public class VersionedIdentifierRef_IMImpl extends IdentifierRef_IMImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getRequestedVersionOrZero() {
 		int _xifexpression = (int) 0;
 		boolean _hasRequestedVersion = this.hasRequestedVersion();

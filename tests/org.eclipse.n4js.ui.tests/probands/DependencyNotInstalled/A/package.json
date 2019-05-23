@@ -11,6 +11,6 @@
 		"output": "src-gen"
 	},
 	"dependencies": {
-		"n4js.lang": ""
+		"lodash": ""
 	}
 }

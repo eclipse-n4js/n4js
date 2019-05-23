@@ -36,10 +36,6 @@ public interface ProjectReference extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Project Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Project Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Project Name</em>' attribute.
 	 * @see #setProjectName(String)

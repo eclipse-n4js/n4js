@@ -55,6 +55,7 @@ public abstract class SemverToStringableImpl extends MinimalEObjectImpl.Containe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		return SemverSerializer.serialize(this);
 	}

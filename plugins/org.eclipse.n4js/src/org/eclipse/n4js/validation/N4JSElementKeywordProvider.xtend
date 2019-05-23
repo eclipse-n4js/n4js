@@ -11,7 +11,9 @@
 package org.eclipse.n4js.validation
 
 import com.google.inject.Singleton
+import org.eclipse.n4js.n4JS.BreakStatement
 import org.eclipse.n4js.n4JS.CatchVariable
+import org.eclipse.n4js.n4JS.ContinueStatement
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -26,20 +28,18 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
+import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
+import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.ThisLiteral
+import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.ts.validation.TypesKeywordProvider
-import org.eclipse.n4js.n4JS.ParameterizedCallExpression
-import org.eclipse.n4js.n4JS.BreakStatement
-import org.eclipse.n4js.n4JS.ContinueStatement
-import org.eclipse.n4js.n4JS.ThrowStatement
-import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.projectDescription.ModuleFilterType
+import org.eclipse.n4js.ts.validation.TypesKeywordProvider
 
 /**
  * Helper returning the keyword of a given AST or type element, e.g., "class" for a class declaration.
@@ -163,8 +163,6 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 		switch (moduleFilterType) {
 			case NO_VALIDATE:
 				"noValidate"
-			case NO_MODULE_WRAP:
-				"noModuleWrap"
 			default: {
 				"unknown filter type"
 			}

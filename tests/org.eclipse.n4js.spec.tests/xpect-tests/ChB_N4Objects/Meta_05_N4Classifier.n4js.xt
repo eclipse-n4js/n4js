@@ -53,7 +53,7 @@ stdout:
  = inspect test as N4NamedElement
   - test.name is a string N4Classifier
  = inspect test as N4Element
-  - test.origin is a string n4js-es5
+  - test.origin is a string n4js-runtime
   - test.annotations is empty
   - test.allAnnotations is a function allAnnotations
   - test.anyAnnotation is a function allAnnotations

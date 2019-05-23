@@ -1,8 +1,0 @@
-{
-	"version": 3,
-	"file": "Precondition.js",
-	"sourceRoot": "",
-	"sources": ["../../../../../../src/n4js/org/eclipse/n4js/mangelhaft/precondition/Precondition.n4js"],
-	"names": [],
-	"mappings": ";;;;;EAYA;EACA;;MADQ,QACA;EACR;;;;;;;;KAFQ;;;;KACA;;;;IACY;;iCAEI,QAAa,UAAe,SAAkB,UAAmB,oBAA+B;OAChH,IAAI,QAAQ,IAAI,mBAAmB;OACnC,MAAM"
-}

@@ -59,10 +59,6 @@ public enum SourceContainerType implements Enumerator {
 	/**
 	 * The '<em><b>SOURCE</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>SOURCE</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SOURCE
 	 * @model
@@ -74,10 +70,6 @@ public enum SourceContainerType implements Enumerator {
 	/**
 	 * The '<em><b>TEST</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>TEST</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #TEST
 	 * @model
@@ -89,10 +81,6 @@ public enum SourceContainerType implements Enumerator {
 	/**
 	 * The '<em><b>EXTERNAL</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>EXTERNAL</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #EXTERNAL
 	 * @model
@@ -213,6 +201,7 @@ public enum SourceContainerType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -222,6 +211,7 @@ public enum SourceContainerType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -231,6 +221,7 @@ public enum SourceContainerType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

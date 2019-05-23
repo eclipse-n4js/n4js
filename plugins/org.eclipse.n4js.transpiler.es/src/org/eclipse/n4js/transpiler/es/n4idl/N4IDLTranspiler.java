@@ -9,7 +9,6 @@ import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.es.EcmaScriptTranspiler;
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation;
-import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -21,8 +20,6 @@ import com.google.inject.Provider;
  * N4IDL.
  */
 public class N4IDLTranspiler extends EcmaScriptTranspiler {
-	@Inject
-	private Provider<N4IDLModuleWrappingTransformation> moduleWrappingTransformationProvider;
 
 	@Inject
 	private Provider<N4IDLVersionedImportsTransformation> versionedImportsTransformationProvider;
@@ -55,10 +52,6 @@ public class N4IDLTranspiler extends EcmaScriptTranspiler {
 
 		// replace some N4JS transformations with N4IDL-specific transformations
 		transformations.replaceAll(t -> {
-			if (t instanceof ModuleWrappingTransformation) {
-				return moduleWrappingTransformationProvider.get();
-			}
-
 			if (t instanceof ClassDeclarationTransformation) {
 				return classDeclarationTransformation.get();
 			}

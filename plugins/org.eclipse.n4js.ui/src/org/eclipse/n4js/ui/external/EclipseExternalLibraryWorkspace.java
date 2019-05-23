@@ -44,8 +44,6 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -58,6 +56,8 @@ import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.resources.IExternalResource;
+import org.eclipse.xtext.builder.impl.BuilderStateDiscarder;
+import org.eclipse.xtext.builder.impl.IBuildFlag;
 import org.eclipse.xtext.util.Pair;
 
 import com.google.common.collect.Iterables;
@@ -69,6 +69,7 @@ import com.google.inject.Singleton;
  * The Eclipse based implementation of the external library workspace. This class assumes a running {@link Platform
  * platform}.
  */
+@SuppressWarnings("restriction")
 @Singleton
 public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace implements StoreUpdatedListener {
 	private static Logger logger = Logger.getLogger(EclipseExternalLibraryWorkspace.class);
@@ -83,7 +84,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 	private ExternalProjectsCollector collector;
 
 	@Inject
-	private RebuildWorkspaceProjectsScheduler scheduler;
+	private BuilderStateDiscarder builderStateDiscarder;
 
 	@Inject
 	private ExternalProjectProvider projectProvider;
@@ -262,10 +263,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	private RegisterResult deregisterProjectsInternal(IProgressMonitor monitor, Set<URI> toBeDeleted,
 			Set<URI> toBeWiped) {
-		if (!ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
-			logger.warn("Built-in libraries and NPM support are disabled.");
-		}
-
 		SubMonitor subMonitor = convert(monitor, 1);
 
 		// Clean projects.
@@ -314,11 +311,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	private RegisterResult registerProjectsInternal(IProgressMonitor monitor, Set<URI> toBeUpdated) {
 		Collection<IProject> extPrjBuilt = new LinkedList<>();
-
-		if (!ExternalLibrariesActivator.requiresInfrastructureForLibraryManager()) {
-			logger.warn("Built-in libraries and NPM support are disabled.");
-		}
-
 		SubMonitor subMonitor = convert(monitor, 1);
 
 		// Rebuild whole external workspace. Filter out projects that are present in the Eclipse workspace.
@@ -351,7 +343,9 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 				scheduledProjects.add(n4EclProject.getProject());
 			}
 		}
-		scheduler.scheduleBuildIfNecessary(scheduledProjects);
+		Map<String, String> args = new HashMap<>();
+		IBuildFlag.FORGET_BUILD_STATE_ONLY.addToMap(args);
+		builderStateDiscarder.forgetLastBuildState(scheduledProjects, args);
 	}
 
 	private Collection<N4JSExternalProject> getExternalProjects(Set<URI> toBeUpdated) {

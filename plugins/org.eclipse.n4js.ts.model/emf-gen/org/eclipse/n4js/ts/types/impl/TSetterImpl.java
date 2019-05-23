@@ -79,6 +79,7 @@ public class TSetterImpl extends FieldAccessorImpl implements TSetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TFormalParameter getFpar() {
 		return fpar;
 	}
@@ -103,6 +104,7 @@ public class TSetterImpl extends FieldAccessorImpl implements TSetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFpar(TFormalParameter newFpar) {
 		if (newFpar != fpar) {
 			NotificationChain msgs = null;
@@ -122,6 +124,7 @@ public class TSetterImpl extends FieldAccessorImpl implements TSetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredTypeRef() {
 		TFormalParameter _fpar = this.getFpar();
 		TypeRef _typeRef = null;
@@ -136,6 +139,7 @@ public class TSetterImpl extends FieldAccessorImpl implements TSetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isReadable() {
 		return false;
 	}
@@ -145,6 +149,7 @@ public class TSetterImpl extends FieldAccessorImpl implements TSetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isWriteable() {
 		return true;
 	}
@@ -154,6 +159,7 @@ public class TSetterImpl extends FieldAccessorImpl implements TSetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberType getMemberType() {
 		return MemberType.SETTER;
 	}
@@ -163,6 +169,7 @@ public class TSetterImpl extends FieldAccessorImpl implements TSetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getMemberAsString() {
 		String _name = this.getName();
 		String _plus = ("set " + _name);

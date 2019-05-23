@@ -119,6 +119,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public URLVersionRequirement createURLVersionRequirement() {
 		URLVersionRequirementImpl urlVersionRequirement = new URLVersionRequirementImpl();
 		return urlVersionRequirement;
@@ -129,6 +130,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public URLSemver createURLSemver() {
 		URLSemverImpl urlSemver = new URLSemverImpl();
 		return urlSemver;
@@ -139,6 +141,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public URLCommitISH createURLCommitISH() {
 		URLCommitISHImpl urlCommitISH = new URLCommitISHImpl();
 		return urlCommitISH;
@@ -149,6 +152,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public GitHubVersionRequirement createGitHubVersionRequirement() {
 		GitHubVersionRequirementImpl gitHubVersionRequirement = new GitHubVersionRequirementImpl();
 		return gitHubVersionRequirement;
@@ -159,6 +163,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LocalPathVersionRequirement createLocalPathVersionRequirement() {
 		LocalPathVersionRequirementImpl localPathVersionRequirement = new LocalPathVersionRequirementImpl();
 		return localPathVersionRequirement;
@@ -169,6 +174,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TagVersionRequirement createTagVersionRequirement() {
 		TagVersionRequirementImpl tagVersionRequirement = new TagVersionRequirementImpl();
 		return tagVersionRequirement;
@@ -179,6 +185,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionRangeSetRequirement createVersionRangeSetRequirement() {
 		VersionRangeSetRequirementImpl versionRangeSetRequirement = new VersionRangeSetRequirementImpl();
 		return versionRangeSetRequirement;
@@ -189,6 +196,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public HyphenVersionRange createHyphenVersionRange() {
 		HyphenVersionRangeImpl hyphenVersionRange = new HyphenVersionRangeImpl();
 		return hyphenVersionRange;
@@ -199,6 +207,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionRangeConstraint createVersionRangeConstraint() {
 		VersionRangeConstraintImpl versionRangeConstraint = new VersionRangeConstraintImpl();
 		return versionRangeConstraint;
@@ -209,6 +218,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SimpleVersion createSimpleVersion() {
 		SimpleVersionImpl simpleVersion = new SimpleVersionImpl();
 		return simpleVersion;
@@ -219,6 +229,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionNumber createVersionNumber() {
 		VersionNumberImpl versionNumber = new VersionNumberImpl();
 		return versionNumber;
@@ -229,6 +240,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionPart createVersionPart() {
 		VersionPartImpl versionPart = new VersionPartImpl();
 		return versionPart;
@@ -239,6 +251,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Qualifier createQualifier() {
 		QualifierImpl qualifier = new QualifierImpl();
 		return qualifier;
@@ -249,6 +262,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public QualifierTag createQualifierTag() {
 		QualifierTagImpl qualifierTag = new QualifierTagImpl();
 		return qualifierTag;
@@ -279,6 +293,7 @@ public class SemverFactoryImpl extends EFactoryImpl implements SemverFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SemverPackage getSemverPackage() {
 		return (SemverPackage)getEPackage();
 	}

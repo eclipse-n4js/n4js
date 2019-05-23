@@ -7,7 +7,7 @@ Bundle-SymbolicName: org.eclipse.n4js.regex;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.xtext.generator;resolution:=optional,
- org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional,
+ org.apache.commons.logging;resolution:=optional,
  org.eclipse.emf.codegen.ecore;resolution:=optional,
  org.eclipse.emf.mwe.utils;resolution:=optional,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.emf.mwe2.lib,
  org.antlr.runtime,
  org.eclipse.n4js.releng.utils;resolution:=optional,
- org.objectweb.asm;bundle-version="[6.2.1,6.2.2)";resolution:=optional,
+ org.objectweb.asm;bundle-version="[7.0.0,7.0.1)";resolution:=optional,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.equinox.common;resolution:=optional,
  org.apache.log4j

@@ -1,8 +1,0 @@
-{
-	"version": 3,
-	"file": "PreconditionNotMet.js",
-	"sourceRoot": "",
-	"sources": ["../../../../../../src/n4js/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet.n4js"],
-	"names": [],
-	"mappings": ";;;;;;EAUA;;;;;eAEkB;;;;;;IAFE"
-}

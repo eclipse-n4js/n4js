@@ -124,6 +124,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionPart getMajor() {
 		return major;
 	}
@@ -148,6 +149,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMajor(VersionPart newMajor) {
 		if (newMajor != major) {
 			NotificationChain msgs = null;
@@ -167,6 +169,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionPart getMinor() {
 		return minor;
 	}
@@ -191,6 +194,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMinor(VersionPart newMinor) {
 		if (newMinor != minor) {
 			NotificationChain msgs = null;
@@ -210,6 +214,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionPart getPatch() {
 		return patch;
 	}
@@ -234,6 +239,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPatch(VersionPart newPatch) {
 		if (newPatch != patch) {
 			NotificationChain msgs = null;
@@ -253,6 +259,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<VersionPart> getExtended() {
 		if (extended == null) {
 			extended = new EObjectContainmentEList<VersionPart>(VersionPart.class, this, SemverPackage.VERSION_NUMBER__EXTENDED);
@@ -265,6 +272,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Qualifier getQualifier() {
 		return qualifier;
 	}
@@ -289,6 +297,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setQualifier(Qualifier newQualifier) {
 		if (newQualifier != qualifier) {
 			NotificationChain msgs = null;
@@ -308,6 +317,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isWildcard() {
 		boolean _xifexpression = false;
 		VersionPart _major = this.getMajor();
@@ -326,6 +336,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getPreReleaseTag() {
 		EList<String> _xifexpression = null;
 		if (((this.getQualifier() != null) && (this.getQualifier().getPreRelease() != null))) {
@@ -342,6 +353,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasPreReleaseTag() {
 		return ((this.getPreReleaseTag() != null) && (!this.getPreReleaseTag().isEmpty()));
 	}
@@ -351,6 +363,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int length() {
 		int length = 0;
 		VersionPart _major = this.getMajor();
@@ -379,6 +392,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionPart getPart(final int idx) {
 		switch (idx) {
 			case 0:
@@ -397,6 +411,7 @@ public class VersionNumberImpl extends SemverToStringableImpl implements Version
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if ((!(obj instanceof VersionNumber))) {
 			return false;

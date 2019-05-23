@@ -337,13 +337,13 @@ public interface ImPackage extends EPackage {
 	int SYMBOL_TABLE_ENTRY_ORIGINAL_FEATURE_COUNT = SYMBOL_TABLE_ENTRY_FEATURE_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SYMBOL_TABLE_ENTRY_ORIGINAL___EXPORTED_NAME = SYMBOL_TABLE_ENTRY_OPERATION_COUNT + 0;
+	int SYMBOL_TABLE_ENTRY_ORIGINAL___GET_EXPORTED_NAME = SYMBOL_TABLE_ENTRY_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Symbol Table Entry Original</em>' class.
@@ -4235,14 +4235,14 @@ public interface ImPackage extends EPackage {
 	EReference getSymbolTableEntryOriginal_ImportSpecifier();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal#exportedName() <em>Exported Name</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal#getExportedName() <em>Get Exported Name</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Exported Name</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal#exportedName()
+	 * @return the meta object for the '<em>Get Exported Name</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal#getExportedName()
 	 * @generated
 	 */
-	EOperation getSymbolTableEntryOriginal__ExportedName();
+	EOperation getSymbolTableEntryOriginal__GetExportedName();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly <em>Symbol Table Entry IM Only</em>}'.
@@ -4866,12 +4866,12 @@ public interface ImPackage extends EPackage {
 		EReference SYMBOL_TABLE_ENTRY_ORIGINAL__IMPORT_SPECIFIER = eINSTANCE.getSymbolTableEntryOriginal_ImportSpecifier();
 
 		/**
-		 * The meta object literal for the '<em><b>Exported Name</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Exported Name</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation SYMBOL_TABLE_ENTRY_ORIGINAL___EXPORTED_NAME = eINSTANCE.getSymbolTableEntryOriginal__ExportedName();
+		EOperation SYMBOL_TABLE_ENTRY_ORIGINAL___GET_EXPORTED_NAME = eINSTANCE.getSymbolTableEntryOriginal__GetExportedName();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.SymbolTableEntryIMOnlyImpl <em>Symbol Table Entry IM Only</em>}' class.

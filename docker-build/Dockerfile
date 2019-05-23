@@ -98,7 +98,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" && \
 #
 # Yarn install
 #
-ENV YARN_VERSION 1.13.0
+ENV YARN_VERSION 1.15.2
 
 RUN set -ex && \
     for key in \

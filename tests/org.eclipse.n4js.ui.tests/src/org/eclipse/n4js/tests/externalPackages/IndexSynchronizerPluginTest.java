@@ -15,9 +15,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.function.Consumer;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -28,7 +30,6 @@ import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
-import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -56,19 +57,13 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		assertTrue("Expected running platform. Run the tests as JUnit Plug-in Tests.", Platform.isRunning());
 	}
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/** Install an NPM, delete folder of NPM on disk, run IndexSynchronizer, check if NPM was removed from index */
 	@Test
 	public void testCleanRemovedNpm() throws Exception {
 
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		testedWorkspace.fullBuild();
 
 		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
 		libraryManager.installNPM(NPM_SNAFU, URIUtils.toFileUri(project), new NullProgressMonitor());
@@ -90,18 +85,66 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 
 	/***/
 	@Test
-	public void testInstallDeregisterAndReregisterNpm() throws Exception {
+	public void testInstallDeregisterAndReregisterNpmCleanBuild() throws Exception {
+		installDeregisterAndReregisterNpm((p) -> {
+			refreshProject(p);
+			testedWorkspace.cleanBuild();
+			testedWorkspace.fullBuild();
+		});
+	}
+
+	/***/
+	@Test
+	public void testInstallDeregisterAndReregisterNpmIncrementalBuild() throws Exception {
+		installDeregisterAndReregisterNpm((p) -> {
+			refreshProject(p);
+			testedWorkspace.build();
+		});
+	}
+
+	/***/
+	@Test
+	public void testInstallDeregisterAndReregisterNpmIncrementalBuild2() throws Exception {
+		installDeregisterAndReregisterNpm((p) -> {
+			refreshProject(p);
+			waitForAutoBuild();
+		});
+	}
+
+	private void refreshProject(IProject p) {
+		try {
+			p.refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/***/
+	@Test
+	public void testInstallDeregisterAndReregisterNpmFullBuild() throws Exception {
+		installDeregisterAndReregisterNpm((p) -> {
+			refreshProject(p);
+			testedWorkspace.fullBuild();
+		});
+	}
+
+	/***/
+	private void installDeregisterAndReregisterNpm(Consumer<IProject> build) throws Exception {
 
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		IResource packagejson = project.findMember("package.json");
 		IResource abc = project.findMember("src/ABC.n4js");
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		build.accept(project);
+
+		assertIssues(packagejson, "line 6: Project does not exist with project ID: snafu.");
+		assertIssues(abc,
+				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules");
 
 		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
 		libraryManager.installNPM(NPM_SNAFU, URIUtils.toFileUri(project), new NullProgressMonitor());
-		waitForAutoBuild();
+		// waitForAutoBuild();
 		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
 
 		assertIssues(packagejson);
@@ -120,23 +163,27 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		}
 		Files.move(file.toPath(), oldCopy.toPath());
 		assertFalse(file.exists());
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		build.accept(project);
 
-		assertIssues(packagejson, "line 5: Project does not exist with project ID: snafu.");
+		assertIssues(packagejson, "line 6: Project does not exist with project ID: snafu.");
 		assertIssues(abc,
-				"line 12: Cannot resolve import target :: resolving project import : found no matching modules");
+				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules");
+
+		build.accept(project);
+		assertIssues(packagejson, "line 6: Project does not exist with project ID: snafu.");
+		assertIssues(abc,
+				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules");
 
 		Files.move(oldCopy.toPath(), file.toPath());
 		assertTrue(file.exists());
-		IResourcesSetupUtil.fullBuild();
-		waitForAutoBuild();
+		build.accept(project);
 
-		assertIssues(packagejson, "line 5: Project snafu is not registered.");
+		assertIssues(packagejson, "line 6: Project snafu is not registered.");
 		assertIssues(abc,
 				"line 12: Cannot resolve import target :: resolving project import : found no matching modules");
 
-		syncExtAndBuild();
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		build.accept(project);
 
 		assertIssues(packagejson);
 		assertIssues(abc);

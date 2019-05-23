@@ -313,7 +313,7 @@ function getExecutingFunction(instrumentedTest: IInstrumentedTest): (TestMethodD
         const pr = Promise.resolve(testMethodDescriptor.value.call(instrumentedTest.testObject));
         
         let timeoutId: int;
-        if (!n4.runtimeOptions["mangelhaft-timeout-disabled"]) {
+        if (!process.env.N4JS_RT_mangelhaft_timeout_disabled) {
             timeoutId = setTimeout(() => reject(new Error(`Test object ${testMethodDescriptor.name} timed out after ${testMethodDescriptor.timeout} milliseconds`)), testMethodDescriptor.timeout);
         }
 

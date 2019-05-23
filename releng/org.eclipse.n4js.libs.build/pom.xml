@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2019 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>org.eclipse.n4js.libs.build</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
+	<parent>
+		<groupId>org.eclipse.n4js</groupId>
+		<artifactId>org.eclipse.n4js.releng</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<properties>
+		<skip.mwe2>false</skip.mwe2>
+		<mwe2-file-location>/src/org/eclipse/n4js/libs/build/BuildN4jsLibs.mwe2</mwe2-file-location>
+		<!-- fornax: -->
+		<mwe2descriptor>org.eclipse.n4js.BuildN4jsLibs</mwe2descriptor>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+			</plugin>
+			<!-- Execute UpdateShippedCode MWE workflow -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${codehaus-exec-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>mwe2-launcher</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<includeProjectDependencies>true</includeProjectDependencies>
+							<includePluginDependencies>true</includePluginDependencies>
+							<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
+							<arguments>
+								<argument>file://${project.basedir}${mwe2-file-location}</argument>
+								<argument>-p</argument>
+								<argument>rootPath=/${project.basedir}/../</argument>
+							</arguments>
+							<classpathScope>compile</classpathScope>
+							<!-- Following switch:
+								 do not try to kill the daemons of MWE, default timed out after 15s and gave Exceptions to build
+								 -->
+							<cleanupDaemonThreads>false</cleanupDaemonThreads>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

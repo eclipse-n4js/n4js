@@ -31,12 +31,12 @@ import java.util.Iterator
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.typeRefs.VersionedReference
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
@@ -176,6 +176,7 @@ class ImportDeclaration extends AnnotableScriptElement {
 	contains ImportSpecifier[] importSpecifiers
 	boolean importFrom
 	refers TModule module
+	transient String moduleSpecifierAsText
 }
 
 abstract class ImportSpecifier {
@@ -2283,13 +2284,19 @@ class JSXSpreadAttribute extends JSXAttribute {
 	contains Expression expression
 }
 
-class JSXElement extends Expression, JSXChild {
+/** Common abstract class of JSXElement and JSXFragment */
+abstract class JSXAbstractElement extends Expression {
+	contains JSXChild[] jsxChildren
+}
+
+class JSXElement extends Expression, JSXChild, JSXAbstractElement {
 	contains JSXElementName jsxElementName
 	contains JSXAttribute[] jsxAttributes
-	contains JSXChild[] jsxChildren
 	contains JSXElementName jsxClosingName
 }
 
+class JSXFragment extends JSXChild, JSXAbstractElement {
+}
 
 // ****************************************************************************************************
 // N4IDL related model elements

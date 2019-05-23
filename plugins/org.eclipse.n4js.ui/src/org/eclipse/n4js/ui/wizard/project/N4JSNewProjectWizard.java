@@ -10,11 +10,16 @@
  */
 package org.eclipse.n4js.ui.wizard.project;
 
+import java.util.Collections;
+
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.wizard.utils.WizardHelper;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.ui.wizard.IProjectCreator;
@@ -41,6 +46,9 @@ public class N4JSNewProjectWizard extends XtextNewProjectWizard {
 
 	@Inject
 	private IResourceDescriptions resourceDescriptions;
+
+	@Inject
+	private WizardHelper wizardHelper;
 
 	private N4JSNewProjectWizardCreationPage newProjectWizardCreationPage;
 
@@ -94,7 +102,19 @@ public class N4JSNewProjectWizard extends XtextNewProjectWizard {
 		// Save the value for the create greeter file checkbox and the vendor id
 		this.getDialogSettings().put(CREATE_GREETER_SETTINGS_KEY, projectInfo.getCreateGreeterFile());
 		this.getDialogSettings().put(VENDOR_ID_SETTINGS_KEY, projectInfo.getVendorId());
-		return super.performFinish();
+
+		if (super.performFinish()) {
+			boolean requiresNpmInstall = N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME
+					.contains(projectInfo.getProjectType());
+			if (requiresNpmInstall) {
+				IProject project = ((N4JSProjectCreator) getCreator()).getCreatedProject();
+				if (project != null) {
+					wizardHelper.runNpmInstallInWizard(getContainer(), Collections.singletonList(project));
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	@Override

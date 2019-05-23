@@ -83,6 +83,7 @@ public class FullTypeReferenceImpl extends SimpleTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getModuleName() {
 		return moduleName;
 	}
@@ -92,6 +93,7 @@ public class FullTypeReferenceImpl extends SimpleTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setModuleName(String newModuleName) {
 		String oldModuleName = moduleName;
 		moduleName = newModuleName;
@@ -104,6 +106,7 @@ public class FullTypeReferenceImpl extends SimpleTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean moduleNameSet() {
 		return ((this.getModuleName() != null) && (!this.getModuleName().isEmpty()));
 	}
@@ -113,6 +116,7 @@ public class FullTypeReferenceImpl extends SimpleTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		StringBuilder strb = new StringBuilder();
 		boolean _moduleNameSet = this.moduleNameSet();
@@ -136,6 +140,7 @@ public class FullTypeReferenceImpl extends SimpleTypeReferenceImpl implements Fu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String fullTypeName() {
 		StringBuilder strb = new StringBuilder();
 		boolean _moduleNameSet = this.moduleNameSet();

@@ -55,6 +55,7 @@ public abstract class ReferencingElementExpression_IMImpl extends ReferencingEle
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidSimpleAssignmentTarget() {
 		return false;
 	}

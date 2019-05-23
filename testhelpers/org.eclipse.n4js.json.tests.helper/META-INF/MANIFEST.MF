@@ -5,14 +5,15 @@ Bundle-SymbolicName: org.eclipse.n4js.json.tests.helper
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.n4js.json,
+Require-Bundle: org.eclipse.n4js,
+ org.eclipse.n4js.json,
  org.eclipse.core.runtime,
  org.eclipse.xtext.testing,
  org.eclipse.emf.codegen.ecore,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.json.model,
- org.eclipse.xpect;bundle-version="0.2.0",
- org.eclipse.xpect.xtext.lib;bundle-version="0.2.0",
+ org.eclipse.xpect,
+ org.eclipse.xpect.xtext.lib,
  com.google.guava,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.lib,

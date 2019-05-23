@@ -11,7 +11,6 @@
         "src/n4js",
         "src/n4js-gen"
       ]
-    },
-    "moduleLoader": "n4js"
+    }
   }
 }

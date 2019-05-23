@@ -77,6 +77,7 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredTypeRef() {
 		return declaredTypeRef;
 	}
@@ -101,6 +102,7 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
 		if (newDeclaredTypeRef != declaredTypeRef) {
 			NotificationChain msgs = null;
@@ -120,6 +122,7 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberType getMemberType() {
 		return MemberType.GETTER;
 	}
@@ -129,6 +132,7 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getMemberAsString() {
 		final StringBuilder strb = new StringBuilder("get ");
 		strb.append(this.getName());

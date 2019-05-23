@@ -121,6 +121,7 @@ public class ValidationPackageImpl extends EPackageImpl implements ValidationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getValidationMarker() {
 		return validationMarkerEClass;
 	}
@@ -130,6 +131,7 @@ public class ValidationPackageImpl extends EPackageImpl implements ValidationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getValidationMarker_DelegateResource() {
 		return (EAttribute)validationMarkerEClass.getEStructuralFeatures().get(0);
 	}
@@ -139,6 +141,7 @@ public class ValidationPackageImpl extends EPackageImpl implements ValidationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EOperation getValidationMarker__EResource() {
 		return validationMarkerEClass.getEOperations().get(0);
 	}
@@ -148,6 +151,7 @@ public class ValidationPackageImpl extends EPackageImpl implements ValidationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPreValidation() {
 		return preValidationEClass;
 	}
@@ -157,6 +161,7 @@ public class ValidationPackageImpl extends EPackageImpl implements ValidationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPostValidation() {
 		return postValidationEClass;
 	}
@@ -166,6 +171,7 @@ public class ValidationPackageImpl extends EPackageImpl implements ValidationPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ValidationFactory getValidationFactory() {
 		return (ValidationFactory)getEFactoryInstance();
 	}

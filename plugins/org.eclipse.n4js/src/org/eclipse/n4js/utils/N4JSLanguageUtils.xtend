@@ -82,13 +82,14 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -221,6 +222,7 @@ public class N4JSLanguageUtils {
 			FormalParameter: astNode.definedTypeElement
 			TStructMember case astNode.isASTNode: astNode.definedMember // note: a TStructMember may be an AST node or types model element!
 			N4EnumLiteral: astNode.definedLiteral
+			TypeVariable case astNode.isASTNode: astNode.definedTypeVariable // TypeVariable may be both AST node or type model node!
 		}
 	}
 

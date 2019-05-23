@@ -59,6 +59,7 @@ public abstract class ExportableElementImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
@@ -69,6 +70,7 @@ public abstract class ExportableElementImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isExportedAsDefault() {
 		return (this.isExported() && ((ExportDeclaration) this.eContainer()).isDefaultExport());
 	}
@@ -78,6 +80,7 @@ public abstract class ExportableElementImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getExportedName() {
 		boolean _isExported = this.isExported();
 		if (_isExported) {
@@ -110,6 +113,7 @@ public abstract class ExportableElementImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isToplevel() {
 		EObject _eContainer = this.eContainer();
 		if ((_eContainer instanceof ExportDeclaration)) {

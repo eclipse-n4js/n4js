@@ -92,6 +92,7 @@ public class ComposedMemberCacheImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TMember> getCachedComposedMembers() {
 		if (cachedComposedMembers == null) {
 			cachedComposedMembers = new EObjectContainmentEList<TMember>(TMember.class, this, TypesPackage.COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS);
@@ -104,6 +105,7 @@ public class ComposedMemberCacheImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getComposedTypeRef() {
 		return composedTypeRef;
 	}
@@ -128,6 +130,7 @@ public class ComposedMemberCacheImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setComposedTypeRef(TypeRef newComposedTypeRef) {
 		if (newComposedTypeRef != composedTypeRef) {
 			NotificationChain msgs = null;

@@ -36,10 +36,6 @@ public interface TGetter extends FieldAccessor, TMemberWithAccessModifier {
 	/**
 	 * Returns the value of the '<em><b>Declared Type Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Type Ref</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Type Ref</em>' containment reference.
 	 * @see #setDeclaredTypeRef(TypeRef)

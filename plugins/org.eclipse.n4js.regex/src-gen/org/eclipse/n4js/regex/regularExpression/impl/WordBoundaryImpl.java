@@ -81,6 +81,7 @@ public class WordBoundaryImpl extends AssertionImpl implements WordBoundary
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public boolean isNot()
   {
     return not;
@@ -91,6 +92,7 @@ public class WordBoundaryImpl extends AssertionImpl implements WordBoundary
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setNot(boolean newNot)
   {
     boolean oldNot = not;

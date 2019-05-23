@@ -21,7 +21,7 @@ a.constructor.n4type:
     "name": "A",
     "fqn": "classes.AT_634_ClassMeta.A",
     "n4superType": {
-        "origin": "n4js-es5",
+        "origin": "n4js-runtime",
         "annotations": [],
         "name": "N4Object",
         "fqn": "N4BuiltInClasses.N4Object",
@@ -71,10 +71,10 @@ a.constructor.n4type:
 
 A: 
 function A() {
-			this.field1 = undefined;
-			this.field2 = undefined;
-			this.field3 = undefined;
-		}
+	this.field1 = undefined;
+	this.field2 = undefined;
+	this.field3 = undefined;
+}
 
 
 A.n4type: 
@@ -84,7 +84,7 @@ A.n4type:
     "name": "A",
     "fqn": "classes.AT_634_ClassMeta.A",
     "n4superType": {
-        "origin": "n4js-es5",
+        "origin": "n4js-runtime",
         "annotations": [],
         "name": "N4Object",
         "fqn": "N4BuiltInClasses.N4Object",

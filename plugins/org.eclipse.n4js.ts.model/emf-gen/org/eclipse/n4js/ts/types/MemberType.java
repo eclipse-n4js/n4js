@@ -73,10 +73,6 @@ public enum MemberType implements Enumerator {
 	/**
 	 * The '<em><b>GETTER</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>GETTER</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #GETTER
 	 * @model
@@ -88,10 +84,6 @@ public enum MemberType implements Enumerator {
 	/**
 	 * The '<em><b>SETTER</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>SETTER</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SETTER
 	 * @model
@@ -103,10 +95,6 @@ public enum MemberType implements Enumerator {
 	/**
 	 * The '<em><b>FIELD</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>FIELD</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #FIELD
 	 * @model
@@ -118,10 +106,6 @@ public enum MemberType implements Enumerator {
 	/**
 	 * The '<em><b>METHOD</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>METHOD</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #METHOD
 	 * @model
@@ -244,6 +228,7 @@ public enum MemberType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -253,6 +238,7 @@ public enum MemberType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -262,6 +248,7 @@ public enum MemberType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

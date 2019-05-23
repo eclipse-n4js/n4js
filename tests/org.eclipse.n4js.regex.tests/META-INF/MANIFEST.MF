@@ -4,14 +4,14 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.regex.tests;singleton:=true
-Fragment-Host: org.eclipse.n4js.regex;bundle-version="0.0.1"
+Fragment-Host: org.eclipse.n4js.regex
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtext.testing,
  org.eclipse.n4js.regex.tests.helper,
  org.eclipse.n4js.regex.ui,
  org.junit,
  org.eclipse.ui.workbench;resolution:=optional,
- org.objectweb.asm;bundle-version="[6.2.1,6.2.2)";resolution:=optional
+ org.objectweb.asm;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.regex.tests,
  org.eclipse.n4js.regex

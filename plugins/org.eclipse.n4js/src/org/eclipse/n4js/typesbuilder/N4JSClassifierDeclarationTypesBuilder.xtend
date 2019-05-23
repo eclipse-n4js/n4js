@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TypeVariable
 
 /**
  * Abstract base class for N4JSClassDeclarationTypesBuilder and N4JSInterfaceDeclarationTypesBuilder
@@ -60,7 +61,13 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 	}
 
 	def protected void addTypeParameters(TClassifier classifier, GenericDeclaration decl, boolean preLinkingPhase) {
-		addCopyOfReferences(classifier.typeVars, decl.typeVars)
+		addCopyOfReferences(classifier.typeVars, decl.typeVars);
+		// Link AST TypeVariable to TModule TypeVariable
+		for (var i = 0; i < classifier.typeVars.length; i++) {
+			var TypeVariable typeVar = decl.typeVars.get(i);
+			var TypeVariable definedTypeVar = classifier.typeVars.get(i);
+			typeVar.definedTypeVariable = definedTypeVar;
+		}
 	}
 
 	def package void relinkClassifierAndMembers(TClassifier classifier, N4ClassifierDeclaration declaration, boolean preLinkingPhase) {

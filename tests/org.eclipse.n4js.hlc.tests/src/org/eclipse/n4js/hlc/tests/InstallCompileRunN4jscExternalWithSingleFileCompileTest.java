@@ -10,11 +10,10 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
-
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
@@ -22,8 +21,6 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.base.Predicates;
 
 /**
  * Downloads, installs, compiles and runs 'express'.
@@ -34,7 +31,7 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_singleProjectOrFileCompile", Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace("external_singleProjectOrFileCompile", true, N4JSGlobals.N4JS_RUNTIME);
 	}
 
 	/** Delete workspace. */
@@ -55,7 +52,6 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 		final String fileToRun = fileToCompile;
 
 		final String[] args = {
-				"--systemLoader", COMMON_JS.getId(),
 				"--installMissingDependencies",
 				"--runWith", "nodejs",
 				"--run", fileToRun,

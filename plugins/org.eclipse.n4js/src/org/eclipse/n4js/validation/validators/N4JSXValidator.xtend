@@ -15,6 +15,7 @@ import com.google.inject.Inject
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.JSXAbstractElement
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute
@@ -96,9 +97,9 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		if (!(ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType))
 			return;
 
-		val firstJSXElement = script.eAllContents.findFirst[it instanceof JSXElement]
-		if (firstJSXElement !== null && reactHelper.getJsxBackendModule(script.eResource) === null)
-			addIssue(getMessageForJSX_REACT_NOT_RESOLVED(), firstJSXElement, JSX_REACT_NOT_RESOLVED);
+		val firstJSXAbstractElement = script.eAllContents.findFirst[it instanceof JSXAbstractElement]
+		if (firstJSXAbstractElement !== null && reactHelper.getJsxBackendModule(script.eResource) === null)
+			addIssue(getMessageForJSX_REACT_NOT_RESOLVED(), firstJSXAbstractElement, JSX_REACT_NOT_RESOLVED);
 	}
 
 	/** Make sure the namespace to react module is React. */

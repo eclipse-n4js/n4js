@@ -166,6 +166,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeAccessModifier getDeclaredTypeAccessModifier() {
 		return declaredTypeAccessModifier;
 	}
@@ -175,6 +176,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredTypeAccessModifier(TypeAccessModifier newDeclaredTypeAccessModifier) {
 		TypeAccessModifier oldDeclaredTypeAccessModifier = declaredTypeAccessModifier;
 		declaredTypeAccessModifier = newDeclaredTypeAccessModifier == null ? DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT : newDeclaredTypeAccessModifier;
@@ -187,6 +189,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredProvidedByRuntime() {
 		return declaredProvidedByRuntime;
 	}
@@ -196,6 +199,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredProvidedByRuntime(boolean newDeclaredProvidedByRuntime) {
 		boolean oldDeclaredProvidedByRuntime = declaredProvidedByRuntime;
 		declaredProvidedByRuntime = newDeclaredProvidedByRuntime;
@@ -208,6 +212,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredElementType() {
 		return declaredElementType;
 	}
@@ -232,6 +237,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredElementType(TypeRef newDeclaredElementType) {
 		if (newDeclaredElementType != declaredElementType) {
 			NotificationChain msgs = null;
@@ -251,6 +257,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterizedTypeRef getSuperType() {
 		return superType;
 	}
@@ -275,6 +282,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSuperType(ParameterizedTypeRef newSuperType) {
 		if (newSuperType != superType) {
 			NotificationChain msgs = null;
@@ -294,6 +302,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredFinal() {
 		return declaredFinal;
 	}
@@ -303,6 +312,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredFinal(boolean newDeclaredFinal) {
 		boolean oldDeclaredFinal = declaredFinal;
 		declaredFinal = newDeclaredFinal;
@@ -315,6 +325,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TMethod getOwnedCtor() {
 		final Function1<TMethod, Boolean> _function = new Function1<TMethod, Boolean>() {
 			public Boolean apply(final TMethod it) {
@@ -329,6 +340,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isFinal() {
 		return this.isDeclaredFinal();
 	}
@@ -338,6 +350,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -347,6 +360,7 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeAccessModifier getTypeAccessModifier() {
 		TypeAccessModifier _declaredTypeAccessModifier = this.getDeclaredTypeAccessModifier();
 		boolean _equals = Objects.equal(_declaredTypeAccessModifier, TypeAccessModifier.UNDEFINED);

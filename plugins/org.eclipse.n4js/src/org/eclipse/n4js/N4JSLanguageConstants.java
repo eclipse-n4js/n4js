@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
-import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.validation.IssueCodes;
 
 import com.google.common.collect.ImmutableMap;
@@ -137,19 +136,6 @@ public abstract class N4JSLanguageConstants {
 	 * Property holding DI information used by N4JS dependency injection (in runtime).
 	 */
 	public static final String DI_PROP_NAME = "$di";
-
-	/**
-	 * The default module loader.
-	 */
-	public static final ModuleLoader MODULE_LOADER_DEFAULT = ModuleLoader.N4JS;
-
-	/**
-	 * Maps literals of {@link ModuleLoader} to prefixes that the transpiler should prepend to module specifiers. If
-	 * this map does not contain an entry for a module loader type, then no prefix should be prepended.
-	 */
-	public static final Map<ModuleLoader, ModuleSpecifierAdjustment> MODULE_LOADER_PREFIXES = ImmutableMap.of(
-			ModuleLoader.COMMONJS, new ModuleSpecifierAdjustment("@@cjs", false),
-			ModuleLoader.NODE_BUILTIN, new ModuleSpecifierAdjustment("@node", true));
 
 	/** The default project output folder that contains the generated output files of the transpiler. */
 	public static final String DEFAULT_PROJECT_OUTPUT = "src-gen";

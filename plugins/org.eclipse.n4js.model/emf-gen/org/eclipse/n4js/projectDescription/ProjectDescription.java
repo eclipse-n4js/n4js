@@ -42,13 +42,10 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getProjectDependencies <em>Project Dependencies</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getImplementationId <em>Implementation Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getImplementedProjects <em>Implemented Projects</em>}</li>
- *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getInitModules <em>Init Modules</em>}</li>
- *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getExecModule <em>Exec Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getOutputPath <em>Output Path</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getSourceContainers <em>Source Containers</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getModuleFilters <em>Module Filters</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getTestedProjects <em>Tested Projects</em>}</li>
- *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getModuleLoader <em>Module Loader</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#getDefinesPackage <em>Defines Package</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#isHasNestedNodeModulesFolder <em>Has Nested Node Modules Folder</em>}</li>
  *   <li>{@link org.eclipse.n4js.projectDescription.ProjectDescription#isHasN4JSNature <em>Has N4JS Nature</em>}</li>
@@ -90,10 +87,6 @@ public interface ProjectDescription extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Vendor Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Vendor Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Vendor Id</em>' attribute.
 	 * @see #setVendorId(String)
@@ -116,10 +109,6 @@ public interface ProjectDescription extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Vendor Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Vendor Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Vendor Name</em>' attribute.
 	 * @see #setVendorName(String)
@@ -142,10 +131,6 @@ public interface ProjectDescription extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Project Version</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Project Version</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Project Version</em>' containment reference.
 	 * @see #setProjectVersion(VersionNumber)
@@ -169,10 +154,6 @@ public interface ProjectDescription extends EObject {
 	 * Returns the value of the '<em><b>Project Type</b></em>' attribute.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.projectDescription.ProjectType}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Project Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Project Type</em>' attribute.
 	 * @see org.eclipse.n4js.projectDescription.ProjectType
@@ -197,10 +178,6 @@ public interface ProjectDescription extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Main Module</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Main Module</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Main Module</em>' attribute.
 	 * @see #setMainModule(String)
@@ -223,10 +200,6 @@ public interface ProjectDescription extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Extended Runtime Environment</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Extended Runtime Environment</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Extended Runtime Environment</em>' containment reference.
 	 * @see #setExtendedRuntimeEnvironment(ProjectReference)
@@ -250,10 +223,6 @@ public interface ProjectDescription extends EObject {
 	 * Returns the value of the '<em><b>Provided Runtime Libraries</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.projectDescription.ProjectReference}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Provided Runtime Libraries</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Provided Runtime Libraries</em>' containment reference list.
 	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_ProvidedRuntimeLibraries()
@@ -266,10 +235,6 @@ public interface ProjectDescription extends EObject {
 	 * Returns the value of the '<em><b>Required Runtime Libraries</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.projectDescription.ProjectReference}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Required Runtime Libraries</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Required Runtime Libraries</em>' containment reference list.
 	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_RequiredRuntimeLibraries()
@@ -282,10 +247,6 @@ public interface ProjectDescription extends EObject {
 	 * Returns the value of the '<em><b>Project Dependencies</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.projectDescription.ProjectDependency}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Project Dependencies</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Project Dependencies</em>' containment reference list.
 	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_ProjectDependencies()
@@ -297,10 +258,6 @@ public interface ProjectDescription extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Implementation Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Implementation Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Implementation Id</em>' attribute.
 	 * @see #setImplementationId(String)
@@ -324,10 +281,6 @@ public interface ProjectDescription extends EObject {
 	 * Returns the value of the '<em><b>Implemented Projects</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.projectDescription.ProjectReference}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Implemented Projects</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Implemented Projects</em>' containment reference list.
 	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_ImplementedProjects()
@@ -337,54 +290,8 @@ public interface ProjectDescription extends EObject {
 	EList<ProjectReference> getImplementedProjects();
 
 	/**
-	 * Returns the value of the '<em><b>Init Modules</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.projectDescription.BootstrapModule}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Init Modules</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Init Modules</em>' containment reference list.
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_InitModules()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<BootstrapModule> getInitModules();
-
-	/**
-	 * Returns the value of the '<em><b>Exec Module</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Exec Module</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Exec Module</em>' containment reference.
-	 * @see #setExecModule(BootstrapModule)
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_ExecModule()
-	 * @model containment="true"
-	 * @generated
-	 */
-	BootstrapModule getExecModule();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getExecModule <em>Exec Module</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Exec Module</em>' containment reference.
-	 * @see #getExecModule()
-	 * @generated
-	 */
-	void setExecModule(BootstrapModule value);
-
-	/**
 	 * Returns the value of the '<em><b>Output Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Output Path</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Output Path</em>' attribute.
 	 * @see #setOutputPath(String)
@@ -408,10 +315,6 @@ public interface ProjectDescription extends EObject {
 	 * Returns the value of the '<em><b>Source Containers</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.projectDescription.SourceContainerDescription}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Source Containers</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Source Containers</em>' containment reference list.
 	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_SourceContainers()
@@ -424,10 +327,6 @@ public interface ProjectDescription extends EObject {
 	 * Returns the value of the '<em><b>Module Filters</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.projectDescription.ModuleFilter}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Module Filters</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module Filters</em>' containment reference list.
 	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_ModuleFilters()
@@ -440,10 +339,6 @@ public interface ProjectDescription extends EObject {
 	 * Returns the value of the '<em><b>Tested Projects</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.projectDescription.ProjectReference}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Tested Projects</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Tested Projects</em>' containment reference list.
 	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_TestedProjects()
@@ -451,35 +346,6 @@ public interface ProjectDescription extends EObject {
 	 * @generated
 	 */
 	EList<ProjectReference> getTestedProjects();
-
-	/**
-	 * Returns the value of the '<em><b>Module Loader</b></em>' attribute.
-	 * The literals are from the enumeration {@link org.eclipse.n4js.projectDescription.ModuleLoader}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Module Loader</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Module Loader</em>' attribute.
-	 * @see org.eclipse.n4js.projectDescription.ModuleLoader
-	 * @see #setModuleLoader(ModuleLoader)
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getProjectDescription_ModuleLoader()
-	 * @model unique="false"
-	 * @generated
-	 */
-	ModuleLoader getModuleLoader();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getModuleLoader <em>Module Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Module Loader</em>' attribute.
-	 * @see org.eclipse.n4js.projectDescription.ModuleLoader
-	 * @see #getModuleLoader()
-	 * @generated
-	 */
-	void setModuleLoader(ModuleLoader value);
 
 	/**
 	 * Returns the value of the '<em><b>Defines Package</b></em>' attribute.

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.smith.ui.tests
-Fragment-Host: org.eclipse.n4js.smith.ui;bundle-version="0.0.1"
+Fragment-Host: org.eclipse.n4js.smith.ui
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ui.building;
 
+import org.eclipse.n4js.ui.external.OutdatedPackageJsonQueue;
+import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.xtext.builder.impl.ProjectOpenedOrClosedListener;
 import org.eclipse.xtext.ui.shared.contribution.IEagerContribution;
 import org.eclipse.xtext.ui.shared.contribution.SharedStateContribution;
@@ -34,13 +36,11 @@ public class DefaultSharedContributionOverridingRegistry extends SharedStateCont
 	/**
 	 * This module is used to override the binding for the {@link ProjectOpenedOrClosedListener}.
 	 */
-	private static class ProjectOpenOrClosedListenerModule implements Module {
+	private static class ProjectStateChangeListenerModule implements Module {
 		@Override
 		public void configure(Binder binder) {
-			binder.bind(ProjectOpenedOrClosedListener.class)
-					.to(CloseProjectTaskScheduler.class);
-			binder.bind(ClosedProjectQueue.class);
-			binder.bind(CloseProjectTaskScheduler.class);
+			binder.bind(ProjectOpenedOrClosedListener.class).to(ProjectStateChangeListener.class);
+			binder.bind(OutdatedPackageJsonQueue.class);
 			binder.bind(IEagerContribution.class).to(ListenerRegistrarWithoutRecoveryBuild.class);
 		}
 	}
@@ -58,7 +58,7 @@ public class DefaultSharedContributionOverridingRegistry extends SharedStateCont
 
 	/**
 	 * Here we override the childModule if it is a {@link DefaultSharedContribution}. In that case, we enhance it with
-	 * the {@link ProjectOpenOrClosedListenerModule}.
+	 * the {@link ProjectStateChangeListenerModule}.
 	 *
 	 * @param childModule
 	 *            the module that shall be used to configure the contribution.
@@ -66,7 +66,7 @@ public class DefaultSharedContributionOverridingRegistry extends SharedStateCont
 	@Override
 	public SharedStateContribution createContribution(Module childModule) {
 		if (childModule.getClass().equals(DefaultSharedContribution.class)) {
-			childModule = Modules.override(childModule).with(new ProjectOpenOrClosedListenerModule());
+			childModule = Modules.override(childModule).with(new ProjectStateChangeListenerModule());
 		}
 		return super.createContribution(childModule);
 	}

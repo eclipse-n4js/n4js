@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.json.model.utils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,6 +34,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONFactory;
 import org.eclipse.n4js.json.JSON.JSONObject;
@@ -53,16 +58,19 @@ public class JSONModelUtils {
 	public static final String FILE_EXTENSION = "json";
 
 	/**
+	 * If the given JSON value is a {@link JSONBooleanLiteral} with a value of <code>true</code>, returns
+	 * <code>true</code>, otherwise <code>false</code>.
+	 */
+	public static boolean asBooleanOrFalse(JSONValue jsonValue) {
+		return jsonValue instanceof JSONBooleanLiteral ? ((JSONBooleanLiteral) jsonValue).isBooleanValue() : false;
+	}
+
+	/**
 	 * If given JSON value is a {@link JSONStringLiteral}, returns its value (possibly the empty string), otherwise
 	 * <code>null</code>.
 	 */
 	public static String asStringOrNull(JSONValue jsonValue) {
-		final String strValue = jsonValue instanceof JSONStringLiteral ? ((JSONStringLiteral) jsonValue).getValue()
-				: null;
-		if (strValue == null) {
-			return null;
-		}
-		return strValue;
+		return jsonValue instanceof JSONStringLiteral ? ((JSONStringLiteral) jsonValue).getValue() : null;
 	}
 
 	/**
@@ -440,6 +448,15 @@ public class JSONModelUtils {
 	}
 
 	/**
+	 * Creates a new {@link JSONBooleanLiteral} with the given boolean {@code value}.
+	 */
+	public static JSONBooleanLiteral createBooleanLiteral(boolean value) {
+		final JSONBooleanLiteral literal = JSONFactory.eINSTANCE.createJSONBooleanLiteral();
+		literal.setBooleanValue(value);
+		return literal;
+	}
+
+	/**
 	 * Creates a new {@link JSONStringLiteral} with the given string {@code value}.
 	 */
 	public static JSONStringLiteral createStringLiteral(String value) {
@@ -512,6 +529,17 @@ public class JSONModelUtils {
 		JSONDocument result = JSONFactory.eINSTANCE.createJSONDocument();
 		result.setContent(content);
 		return result;
+	}
+
+	/**
+	 * Same as {@link #parseJSON(String)}, but reads the source from a file on disk at the given path.
+	 */
+	public static JSONDocument loadJSON(Path path, Charset cs) throws IOException {
+		try (BufferedReader in = Files.newBufferedReader(path, cs)) {
+			ParseResult<JSONDocument> result = N4LanguageUtils.parseXtextLanguage(FILE_EXTENSION, null,
+					JSONDocument.class, in);
+			return result.errors.isEmpty() ? result.ast : null;
+		}
 	}
 
 	/**

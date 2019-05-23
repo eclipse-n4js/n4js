@@ -1,6 +1,9 @@
 {
   "name": "GHOLD-129",
   "version": "0.0.1",
+  "dependencies": {
+    "n4js-runtime": "0.0.1-dummy"
+  },
   "n4js": {
     "projectType": "library",
     "vendorId": "org.eclipse.n4js",
@@ -10,7 +13,6 @@
       "source": [
         "src"
       ]
-    },
-    "moduleLoader": "n4js"
+    }
   }
 }

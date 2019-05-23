@@ -15,13 +15,13 @@
 		Project "N4JSXSpecTest" {
 			Folder "src" {
 				ThisFile {}
+				File "replacer.n4js" { from = "replacer.n4js" }
 			}
 			File "package.json" { from="../../package.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "../react/index.n4jsd" }
 			File "index.js" { from = "../react/index.js" }
-			File "replacer.n4js" { from = "../react/replacer.n4js" }
 			File "package.json" { from = "../react/package.json" }
 		}
 	}
@@ -46,7 +46,7 @@ stderr:
 --- */
 
 import * as React from "react"
-import { replacer } from "react/replacer";
+import { replacer } from "replacer";
 
 class MyProps implements React.ComponentProps  {
 	public a: int;
@@ -57,8 +57,7 @@ class MyProps implements React.ComponentProps  {
 
 const MyReactFuncComponent = function(props: ~MyProps): React.Element {
 	return (
-		<div>{props.x}</div>,
-		<div>{props.y}</div>
+		<div>{props.x}</div>
 	);
 }
 
@@ -67,4 +66,7 @@ var obj = {
 	x: 2,
 	y: "Hi"
 }
-console.log(JSON.stringify(<MyReactFuncComponent {...obj}/>, replacer, 4));
+const mc = <MyReactFuncComponent {...obj}/>;
+
+console.log(JSON.stringify(mc, replacer, 4));
+
