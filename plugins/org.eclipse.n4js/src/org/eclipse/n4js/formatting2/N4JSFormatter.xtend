@@ -1316,7 +1316,12 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 
 		// Union / Intersection
 		ptr.regionFor.keywords("&","|").forEach[ surround[oneSpace;newLines=0].append[autowrap;highPriority]];
-		// ArrayTypeRef
+		// Short-Hand Syntax for Arrays
+		if( ptr.isArrayTypeExpression ) {
+			ptr.regionFor.keyword("[").append[noSpace];
+			ptr.regionFor.keyword("]").append[noSpace];
+		}
+		// Short-Hand Syntax for IterableN
 		if( ptr.isIterableTypeExpression ) {
 			ptr.regionFor.keyword("[").append[noSpace];
 			ptr.regionFor.keyword("]").append[noSpace];

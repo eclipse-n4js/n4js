@@ -141,7 +141,7 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 	// FIXME GH-1299 remove the following
 	@Check
 	def void checkOldShortHandSyntaxForArrayType(ParameterizedTypeRef typeRef) {
-		if (typeRef.isIterableTypeExpression) {
+		if (typeRef.isIterableTypeExpression && typeRef.typeArgs.size === 1) {
 			addIssue(
 				IssueCodes.messageForTEMP_DEPRECATED_OLD_ARRAY_SYNTAX,
 				typeRef,
