@@ -150,14 +150,6 @@ public interface JavaScriptVariantHelper {
 	public boolean constantHasInitializer(EObject eobj);
 
 	/**
-	 * Return true if it should be check that no N4JS in runtime environment or lib.
-	 *
-	 * @param eobj
-	 *            The EObject providing the context for the check.
-	 */
-	public boolean requirecheckNoN4jsInRuntimeEnvOrLib(EObject eobj);
-
-	/**
 	 * Return true if wrong read/write should be allowed.
 	 *
 	 * @param eobj

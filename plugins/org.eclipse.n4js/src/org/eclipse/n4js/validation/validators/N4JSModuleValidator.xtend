@@ -19,13 +19,13 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.validation.N4JSResourceValidator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
@@ -38,14 +38,13 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.utils.ResourceType
 
 /**
  * Contains module-level validations, i.e. validations that need to be checked once per module / file.
  * For example: unique module names.
  * <p>
- * It contains a helper method to conveniently add issues that do not relate to a particular statement, expression, etc.
- * but instead relate to the entire file. See {@link N4JSModuleValidator#addIssue(String,Script,String)}
+ * In addition to this class, some module-level validations are also implemented in method
+ * {@link N4JSResourceValidator#validate(Resource,CheckMode,CancelIndicator)}.
  */
 class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 
@@ -58,9 +57,6 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject IQualifiedNameConverter qualifiedNameConverter
 
 	@Inject IN4JSCore n4jscore;
-
-	@Inject
-	private JavaScriptVariantHelper jsVariantHelper;
 
 	/**
 	 * NEEDED
@@ -101,22 +97,6 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 			// add the issue to the very beginning of the file with length 0
 			addIssue(IssueCodes.getMessageForMOD_NAME_MUST_NOT_CONTAIN_DOTS(locationSubjectDescription, script.module.qualifiedName),
 				script, 0, 0, IssueCodes.MOD_NAME_MUST_NOT_CONTAIN_DOTS);
-		}
-	}
-
-	/**
-	 * Make sure .n4js files are not located in runtime environments or runtime libraries.
-	 */
-	@Check
-	def void checkNoN4jsInRuntimeEnvOrLib(Script script) {
-		if(jsVariantHelper.requirecheckNoN4jsInRuntimeEnvOrLib(script)) {
-			val n4jsProject = n4jscore.findProject(script.eResource.URI).orNull;
-			if(n4jsProject!==null) {
-				val projectType = n4jsProject.projectType;
-				if (projectType===ProjectType.RUNTIME_ENVIRONMENT || projectType===ProjectType.RUNTIME_LIBRARY) {
-					addIssue(IssueCodes.messageForNO_N4JS_IN_RUNTIME_COMPONENT, script, IssueCodes.NO_N4JS_IN_RUNTIME_COMPONENT);
-				}
-			}
 		}
 	}
 

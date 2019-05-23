@@ -51,7 +51,6 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 
 	private final static Pattern EXPECTED_TEST_CATALOG = Pattern.compile("" +
 			Pattern.quote("{") +
-			Pattern.quote("\"endpoint\":\"http://localhost:") + "\\d+" + Pattern.quote("\",") +
 			Pattern.quote("\"sessionId\":\"") + "(\\w|-)+" + Pattern.quote("\",") +
 			Pattern.quote("\"testDescriptors\":") + Pattern.quote(EXPECTED_TEST_DESCRIPTORS) +
 			Pattern.quote("}"));

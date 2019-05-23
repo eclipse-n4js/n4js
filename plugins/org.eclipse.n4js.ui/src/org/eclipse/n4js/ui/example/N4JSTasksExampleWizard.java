@@ -11,7 +11,8 @@
 package org.eclipse.n4js.ui.example;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -20,15 +21,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.ui.statushandlers.StatusManager;
+import org.eclipse.n4js.ui.wizard.utils.WizardHelper;
 
 import com.google.inject.Inject;
 
@@ -43,12 +37,15 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 	public static final String ID = N4JSTasksExampleWizard.class.getName();
 
 	@Inject
-	private LibraryManager libManager;
+	private WizardHelper wizardHelper;
 
 	@Override
 	public boolean performFinish() {
 		if (super.performFinish()) {
-			runNpmInstall();
+			List<IProject> projects = getProjectDescriptors().stream()
+					.map(ProjectDescriptor::getProject)
+					.collect(Collectors.toList());
+			wizardHelper.runNpmInstallInWizard(getContainer(), projects);
 			return true;
 		}
 		return false;
@@ -70,36 +67,6 @@ public class N4JSTasksExampleWizard extends ExampleInstallerWizard {
 			for (File memberProject : packagesFolder.listFiles(File::isDirectory)) {
 				importProject(workspace, memberProject, progressMonitor);
 			}
-		}
-	}
-
-	private void runNpmInstall() {
-		try {
-			getContainer().run(true, false, new IRunnableWithProgress() {
-				@Override
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						monitor.subTask("Installing dependencies");
-						for (ProjectDescriptor pd : getProjectDescriptors()) {
-							IProject project = pd.getProject();
-							URI projectFolderURI = URI.createFileURI(project.getLocation().toFile().getAbsolutePath());
-							IStatus status = libManager.runNpmYarnInstall(projectFolderURI, monitor);
-							if (status.matches(IStatus.ERROR)) {
-								throw status.getException();
-							}
-						}
-					} catch (Throwable e) {
-						throw new InvocationTargetException(e,
-								"An error occurred while installing dependencies");
-					}
-				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			String pluginId = N4JSActivator.getInstance().getBundle().getSymbolicName();
-			IStatus status = new Status(IStatus.ERROR, pluginId, e.getCause().getMessage(), e.getCause());
-
-			ErrorDialog.openError(getShell(), "Error", e.getMessage(), status);
-			StatusManager.getManager().handle(status);
 		}
 	}
 

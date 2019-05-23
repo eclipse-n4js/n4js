@@ -77,8 +77,18 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	private String modelFolderName = SRC_ROOT;
 	private final List<String> allFolders = new ArrayList<>(SRC_FOLDER_LIST);
 
+	private IProject createdProject = null; // set in #createProject()
+
 	@Inject
 	private Provider<ProjectFactory> projectFactoryProvider;
+
+	/**
+	 * Returns the project created by this creator or <code>null</code> if not created yet (i.e. before
+	 * {@link #createProject(IProgressMonitor)} is invoked).
+	 */
+	public IProject getCreatedProject() {
+		return createdProject;
+	}
 
 	@Override
 	protected ProjectFactory createProjectFactory() {
@@ -88,6 +98,7 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	@Override
 	protected IProject createProject(IProgressMonitor monitor) {
 		IProject project = super.createProject(monitor);
+		createdProject = project;
 
 		// Throw an exception if project is <code>null</code>.
 		// A null-project indicates that something went wrong while creating the plain
