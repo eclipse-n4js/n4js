@@ -45,8 +45,10 @@ import org.eclipse.n4js.projectDescription.ProjectDependency
 import org.eclipse.n4js.projectDescription.ProjectReference
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
 import org.eclipse.n4js.semver.SemverUtils
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClassifier
@@ -722,7 +724,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 		acceptor.accept(issue, 'Install npm package to workspace', 'Download and install missing dependency from npm.', null, modification);
 	}
-	
+
 	/**
 	 * N4IDL-related quick-fix which adds a "@VersionAware" annotation to 
 	 * classes which do not declare an explicit type version.
@@ -736,7 +738,8 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		]
 	}
 
-	@Fix(IssueCodes.TEMP_CONVERT_TO_NEW_ARRAY_SYNTAX)
+	// FIXME GH-1299 remove this
+	@Fix(IssueCodes.TEMP_DEPRECATED_OLD_ARRAY_SYNTAX)
 	def convertToNewArraySyntax(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue,
 			'Convert to new array syntax',
@@ -744,12 +747,31 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			ImageNames.REORDER) [ context, marker, offset, length, element |
 			val old = context.xtextDocument.get(offset, length).trim();
 			if (old.startsWith('[') && old.endsWith(']')) {
-				val _new = old.substring(1, old.length - 1).trim() + "[]";
+				var _new = old.substring(1, old.length - 1).trim();
+				if (needsParentheses(element)) {
+					_new = '(' + _new + ')';
+				}
+				_new += "[]";
 				return #[
 					replace(context.xtextDocument, offset, length, _new)
 				];
 			}
 			return #[];
 		]
+	}
+
+	def private boolean needsParentheses(EObject element) {
+		if(element instanceof ParameterizedTypeRef) {
+			val typeArg = element.typeArgs.head;
+			if (typeArg instanceof ComposedTypeRef) {
+				return true;
+			}
+			if (typeArg instanceof Wildcard) {
+				if(typeArg.declaredLowerBound!==null || typeArg.declaredUpperBound!==null) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

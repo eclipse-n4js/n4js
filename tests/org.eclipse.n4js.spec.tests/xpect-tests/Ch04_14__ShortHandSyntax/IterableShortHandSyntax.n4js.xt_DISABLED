@@ -31,4 +31,4 @@ let t05: [string, number, string, number, string, number, string, number, string
 let t06: [[string], string[]];
 
 
-// FIXME GH-1299 enable this test file once GH-1299 is finalized
+// FIXME GH-1299 enable this test file
