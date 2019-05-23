@@ -38,6 +38,7 @@ import org.eclipse.n4js.libs.build.BuildN4jsLibs;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileCopier;
+import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.Assert;
 
 import com.google.common.base.Charsets;
@@ -230,7 +231,7 @@ public class N4jsLibsAccess {
 				Files.createDirectories(targetProjectPath);
 				FileCopier.copy(projectPath, targetProjectPath);
 				if (deleteOnExit) {
-					Files.walk(targetProjectPath).forEach(path -> path.toFile().deleteOnExit());
+					FileDeleter.deleteOnExit(targetProjectPath);
 				}
 			}
 		}

@@ -13,8 +13,7 @@
 		},
 		"moduleFilters": {
 			"noValidate": [
-				"validation/IDE_754_noValidate/novalidate/*",
-				"validation/IDE_754_noValidate/nowrap/*"
+				"validation/IDE_754_noValidate/novalidate/*"
 			]
 		}
 	}

@@ -1152,11 +1152,10 @@ There are no constraints defined for that annotation at the moment.
 [.language-n4js]
 == Polyfill Definitions
 
-
 In plain JavaScript, so called _polyfill_ (or sometimes called __shim__) libraries are provided in order to modify existing classes which are only prototypes in plain JavaScript.
 In N4JS, this can be defined for declarations via the annotation `@Polyfill` or `@StaticPolyfill`.
 One of these annotations can be added to class declarations which do not look that much different from normal classes.
-In the case of polyfill classes, the extended class is modified (or filled) instead of being subclassed.
+In the case of polyfill classes, the extended class is modified (or filled) instead of being subclassed. It is therefore valid to polyfill a class even if it is declared `@Final`.
 
 We distinguish two flavours of polyfill classes: runtime and static.
 
