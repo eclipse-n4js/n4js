@@ -21,10 +21,6 @@
 END_SETUP */
 
 
-// XPECT errors --> "An n4js file may not be contained in a runtime component (i.e. runtime environment or runtime library)." at "'first statement for module-level errors';"
-'first statement for module-level errors';
-
-
 var f = new F();
 // XPECT noerrors --> "bind to original def"
 f.initialMethod();

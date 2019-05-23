@@ -84,7 +84,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformationProvider;
 	@Inject
-	private Provider<ModuleWrappingTransformation> moduleWrappingTransformationProviderNEW;
+	private Provider<ModuleWrappingTransformation> moduleWrappingTransformationProvider;
 	@Inject
 	private Provider<BlockTransformation> blockTransformationProvider;
 	@Inject
@@ -135,7 +135,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				arrowFunction_Part2_TransformationProvider.get(),
 				trimTransformation.get(),
 				sanitizeImportsTransformationProvider.get(),
-				moduleWrappingTransformationProviderNEW.get()
+				moduleWrappingTransformationProvider.get()
 		};
 	}
 

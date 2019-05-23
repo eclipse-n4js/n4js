@@ -67,16 +67,18 @@ class SrcIsProjectNoValidationPluginTest extends AbstractBuilderParticipantTest 
 		addPathsToNoValidate("P/D", "P/Q/*")
 		assertMarkers("project description file (package.json) should have 2 marker", projectDescriptionFile, 2);
 		assertMarkers("file D should have no markers", fileD, 0);
-		assertMarkers("file E should have 2 markers", fileE, 2); // Xtext markers still shown
-		assertMarkers("file F should have 3 markers", fileF, 3); // Xtext markers still shown
+		assertIssues("file E should have no markers created by validation (just one from failed transpilation)", fileE,
+			"line 1: unable to transpile file E.n4js due to an unresolved reference in line 9 at column 7");
+		assertIssues("file F should have no markers created by validation (just one from failed transpilation)", fileF,
+			"line 1: unable to transpile file F.n4js due to an unresolved reference in line 5 at column 11");
 	}
-	
+
 	def void addPathsToNoValidate(String... filterSpecifiers) {
 		val packageJSON = getPackageJSONContent
-		
+
 		PackageJSONTestUtils.setModuleFilters(packageJSON, ModuleFilterType.NO_VALIDATE, 
 			filterSpecifiers);
-		
+
 		packageJSON.eResource.save(null)
 		waitForAutoBuild();
 	}

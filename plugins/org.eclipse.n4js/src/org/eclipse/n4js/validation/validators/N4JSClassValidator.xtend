@@ -267,8 +267,8 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 			} else if (superType instanceof TClass) {
 				// (got a super class; now validate it ...)
 
-				// super class must not be final
-				if (superType.final) {
+				// super class must not be final (except in case of polyfills)
+				if (superType.final && !(n4Class.isPolyfill || n4Class.isStaticPolyfill)) {
 					val message = getMessageForCLF_EXTEND_FINAL(superType.name);
 
 					val superTypeAstElement = superType.eGet(TypesPackage.eINSTANCE.syntaxRelatedTElement_AstElement,

@@ -880,7 +880,7 @@ public class N4jscBase implements IApplication {
 	/** writes test catalog based on {@link #testCatalogFile} */
 	private void writeTestCatalog() throws ExitCodeException {
 		if (null != testCatalogFile) {
-			final String catalog = testCatalogSupplier.get();
+			final String catalog = testCatalogSupplier.get(true); // do not include "endpoint" property here
 			try (final FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
 				fos.write(catalog.getBytes());
 				fos.flush();

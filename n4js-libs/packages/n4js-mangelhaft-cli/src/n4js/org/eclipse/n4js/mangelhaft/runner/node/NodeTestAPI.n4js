@@ -148,7 +148,8 @@ export default public class NodeTestAPI {
             const hasOption = (opt: string): boolean => checkOption(execArgvOptions, opt) || checkOption(nodeOptions, opt);
             
             if (!["-r esm", "--require=esm", "--experimental-modules"].some(hasOption)) {
-                execArgv.push("-r", "esm");
+                const esm = require.resolve("esm"); // use "own" esm version
+                execArgv.push("-r", esm);
             }
             if (options.inspectBrk) {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);

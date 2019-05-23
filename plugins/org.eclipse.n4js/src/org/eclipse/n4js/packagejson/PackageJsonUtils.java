@@ -261,6 +261,20 @@ public class PackageJsonUtils {
 	}
 
 	/**
+	 * Returns the string representation of the given {@link ProjectType}.
+	 */
+	public static String getProjectTypeStringRepresentation(ProjectType projectType) {
+		switch (projectType) {
+		case RUNTIME_ENVIRONMENT:
+			return "runtimeEnvironment";
+		case RUNTIME_LIBRARY:
+			return "runtimeLibrary";
+		default:
+			return projectType.getName();
+		}
+	}
+
+	/**
 	 * Parses a {@link SourceContainerType} from the given string representation.
 	 *
 	 * Returns {@code null} if {@code sourceContainerTypeStr} is not a valid source container type string

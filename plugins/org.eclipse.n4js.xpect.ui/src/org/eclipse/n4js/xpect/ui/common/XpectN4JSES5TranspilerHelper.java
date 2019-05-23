@@ -50,6 +50,7 @@ import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.utils.io.FileCopier;
+import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
 import org.eclipse.xtext.resource.FileExtensionProvider;
@@ -117,6 +118,26 @@ public class XpectN4JSES5TranspilerHelper {
 			FileSetupContext fileSetupContext, boolean decorateStdStreams, ResourceTweaker resourceTweaker,
 			GeneratorOption[] options) throws IOException {
 
+		Path temporaryRoot = Files.createTempDirectory("n4jsXpectOutputTest");
+		try {
+			return doCompileAndExecute(resource, init, fileSetupContext, decorateStdStreams, resourceTweaker, options,
+					temporaryRoot);
+		} finally {
+			FileDeleter.deleteOnExit(temporaryRoot);
+		}
+	}
+
+	/**
+	 *
+	 * @param root
+	 *            location where all temporary files should be placed.
+	 */
+	private String doCompileAndExecute(final XtextResource resource,
+			org.eclipse.xpect.setup.ISetupInitializer<Object> init,
+			FileSetupContext fileSetupContext, boolean decorateStdStreams, ResourceTweaker resourceTweaker,
+			GeneratorOption[] options,
+			Path root) throws IOException {
+
 		// Apply some modification to the resource here.
 		if (resourceTweaker != null) {
 			resourceTweaker.tweak(resource);
@@ -124,15 +145,13 @@ public class XpectN4JSES5TranspilerHelper {
 
 		loadXpectConfiguration(init, fileSetupContext);
 
-		Path artificialRoot = Files.createTempDirectory("n4jsXpectOutputTest");
-
 		RunConfiguration runConfig;
 		// if Xpect configured workspace is null, this has been triggered directly in the IDE
 		if (Platform.isRunning()) {
 			// If we are in the IDE, execute the test the same as for "Run in Node.js" and this way avoid
 			// the effort of calculating dependencies etc.
 
-			Path packagesPath = createTemporaryYarnWorkspace(artificialRoot);
+			Path packagesPath = createTemporaryYarnWorkspace(root);
 
 			boolean replaceQuotes = false;
 			// We have to generate JS code for the resource. Because if Xpect test is quickfixAndRun the resource
@@ -160,10 +179,10 @@ public class XpectN4JSES5TranspilerHelper {
 			// replace n4jsd resource with provided js resource
 			for (final Resource dep : from(dependencies).filter(r -> !r.getURI().equals(resource.getURI()))) {
 				if ("n4jsd".equalsIgnoreCase(dep.getURI().fileExtension())) {
-					compileImplementationOfN4JSDFile(artificialRoot, errorResult, dep, options, replaceQuotes);
+					compileImplementationOfN4JSDFile(root, errorResult, dep, options, replaceQuotes);
 				} else if (xpectGenerator.isCompilable(dep, errorResult)) {
 					final Script script = (Script) dep.getContents().get(0);
-					createTempJsFileWithScript(artificialRoot, script, options, replaceQuotes);
+					createTempJsFileWithScript(root, script, options, replaceQuotes);
 				}
 			}
 
@@ -173,7 +192,7 @@ public class XpectN4JSES5TranspilerHelper {
 
 			// No error so far
 			// determine module to run
-			createTempJsFileWithScript(artificialRoot, testScript, options, replaceQuotes);
+			createTempJsFileWithScript(root, testScript, options, replaceQuotes);
 			String fileToRun = jsModulePathToRun(testScript);
 
 			// Not in UI case, hence manually set up the resources
@@ -181,13 +200,13 @@ public class XpectN4JSES5TranspilerHelper {
 
 			// provide n4js-runtime in the version of the current build
 			N4jsLibsAccess.installN4jsLibs(
-					artificialRoot.resolve(artificialProjectName).resolve(N4JSGlobals.NODE_MODULES),
-					true, false, true,
+					root.resolve(artificialProjectName).resolve(N4JSGlobals.NODE_MODULES),
+					true, false, false,
 					N4JSGlobals.N4JS_RUNTIME);
 
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
-					artificialRoot.resolve(artificialProjectName),
+					root.resolve(artificialProjectName),
 					artificialProjectName);
 		}
 
@@ -227,7 +246,7 @@ public class XpectN4JSES5TranspilerHelper {
 		// provide n4js-runtime in the version of the current build
 		N4jsLibsAccess.installN4jsLibs(
 				nodeModulesPath,
-				true, false, true,
+				true, false, false,
 				N4JSGlobals.N4JS_RUNTIME);
 
 		return packagesPath;
@@ -322,7 +341,6 @@ public class XpectN4JSES5TranspilerHelper {
 			}
 		}
 
-		file.deleteOnExit();
 		try (final PrintWriter pw = new PrintWriter(file)) {
 			pw.print(content); // Make sure not to append but override content.
 		}
