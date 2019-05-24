@@ -14,7 +14,7 @@ Contributors:
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>org.eclipse.n4js.sdk</artifactId>
+	<artifactId>org.eclipse.n4js.jre.sdk</artifactId>
 	<packaging>eclipse-feature</packaging>
 
 	<parent>
@@ -25,7 +25,6 @@ Contributors:
 	</parent>
 
 
-	<!-- Exclude sources from JRE plugin since there are no sources. -->
 	<build>
 		<plugins>
 			<plugin>
@@ -33,7 +32,6 @@ Contributors:
 				<artifactId>tycho-source-feature-plugin</artifactId>
 				<configuration>
 					<excludes>
-					  <feature id="org.eclipse.n4js.jre.sdk"/>
 					  <plugin id="org.eclipse.n4js.jre.linux.gtk.x86_64"/>
 					  <plugin id="org.eclipse.n4js.jre.macosx.cocoa.x86_64"/>
 					  <plugin id="org.eclipse.n4js.jre.win32.win32.x86_64"/>

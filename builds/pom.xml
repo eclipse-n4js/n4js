@@ -26,6 +26,124 @@ Contributors:
 	<modules>
 		<module>org.eclipse.n4js.product.build</module>
 		<module>org.eclipse.n4js.headless.product.build</module>
+		<!-- Optional and platform specific bundles that provide the JRE -->
+		<module>org.eclipse.n4js.jre.linux.gtk.x86_64</module>
+		<module>org.eclipse.n4js.jre.macosx.cocoa.x86_64</module>
+		<module>org.eclipse.n4js.jre.win32.win32.x86_64</module>
 	</modules>
 
+
+	<properties>
+		<!-- When updating the JRE: Refer to n4js/builds/README.adoc -->
+		<download.url.base>https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/</download.url.base>
+		<!-- Override the following properties in the poms of the platform specific bundles -->
+		<download.url.path>somePath/</download.url.path>
+		<download.url.file>someFile.zip-</download.url.file>
+		<download.unzippedFolder>${download.url.file}</download.unzippedFolder>
+		<download.type>tar.gz</download.type>
+	</properties>
+
+
+    <!--
+    	The following will do:
+    	(1) Download the JRE
+    	(2) Uncompress the downloaded files
+    	(3) Package the platform specific bundle including the downloaded JRE
+    	Note:
+    	Step (3) does neither preserve file permissions nor symbolic links.
+    	Hence, touchpoint actions are used and specified in the p2.inf files.
+    	These restore file permissions and symbolic links where necessary.  
+    -->
+	<profiles>
+		<profile>
+			<id>buildProduct</id>
+			<build>
+				<plugins>
+                    <plugin>
+                        <groupId>org.eclipse.tycho</groupId>
+                        <artifactId>tycho-packaging-plugin</artifactId>
+                        <version>${tycho-version}</version>
+			            <configuration>
+			                <strictVersions>false</strictVersions>
+			            </configuration>
+                    </plugin>
+				</plugins>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.eclipse.tycho</groupId>
+							<artifactId>target-platform-configuration</artifactId>
+							<version>${tycho-version}</version>
+							<configuration>
+								<resolver>p2</resolver>
+								<pomDependencies>consider</pomDependencies>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>exec-maven-plugin</artifactId>
+							<executions>
+								<execution>
+									<id>Download JRE: ${download.url.file}</id>
+									<phase>process-resources</phase>
+									<goals>
+										<goal>exec</goal>
+									</goals>
+									<configuration>
+										<executable>curl</executable>
+										<arguments>
+											<argument>-L</argument>
+											<argument>-#</argument>
+											<argument>--create-dirs</argument>
+											<argument>--output</argument>
+											<argument>${project.build.directory}/downloads/${download.url.file}</argument>
+											<argument>${download.url.base}${download.url.path}${download.url.file}</argument>
+										</arguments>
+									</configuration>
+								</execution>
+								<execution>
+									<id>Unpack ${download.url.file}</id>
+									<phase>process-resources</phase>
+									<goals>
+										<goal>exec</goal>
+									</goals>
+									<configuration>
+										<executable>tar</executable>
+										<arguments>
+											<argument>-xf</argument>
+											<argument>${project.build.directory}/downloads/${download.url.file}</argument>
+											<argument>-C</argument>
+											<argument>${project.build.directory}/downloads/</argument>
+										</arguments>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+						<plugin>
+							<groupId>org.eclipse.tycho</groupId>
+							<artifactId>tycho-packaging-plugin</artifactId>
+							<configuration>
+								<additionalFileSets>
+									<!-- include jre -->
+									<fileSet>
+										<directory>${project.build.directory}/downloads/${download.unzippedFolder}/</directory>
+										<includes>
+											<include>**/*</include>
+										</includes>
+									</fileSet>
+									<!-- filter p2.inf w/ correct version info -->
+									<fileSet>
+										<directory>${project.build.directory}/</directory>
+										<includes>
+											<include>${project.build.directory}/META-INF/p2.inf</include>
+										</includes>
+									</fileSet>
+								</additionalFileSets>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 </project>
