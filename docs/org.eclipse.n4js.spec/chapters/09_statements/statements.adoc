@@ -816,10 +816,13 @@ var a2_correct: C;// A2/A2 is accessible via alias C
 
 ====
 
+
+[[Dynamic_Imports]]
 ==== Dynamic Imports
 
 N4JS extends the ES6 module import in order that modules without a `n4jsd` or `n4js` file (plain `js` modules) can be imported.
-This is done by adding `+` to the name of the named import.
+This is done by adding `+` to the name of the named import. This form of compile-time import without type information is not
+to be confused with import calls as described in <<Import_Calls>>, which are sometimes referred to as "dynamic import" as well.
 
 .Dynamic Import
 [req,id=IDE-136,version=1]

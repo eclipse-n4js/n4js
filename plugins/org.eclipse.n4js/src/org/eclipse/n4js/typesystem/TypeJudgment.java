@@ -38,6 +38,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullTy
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.objectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.promiseType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.promiseTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.regexpTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringTypeRef;
@@ -75,6 +76,7 @@ import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.JSXElement;
@@ -991,6 +993,11 @@ import com.google.inject.Inject;
 			} else {
 				return unknown();
 			}
+		}
+
+		@Override
+		public TypeRef caseImportCallExpression(ImportCallExpression object) {
+			return promiseTypeRef(G, anyTypeRefDynamic(G), TypeUtils.createWildcard());
 		}
 
 		@Override

@@ -91,14 +91,15 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		// * The top level elements in a script are type declarations, exports, imports or statements
 		// */ ScriptElement:
 		//	AnnotatedScriptElement
-		//	| N4ClassDeclaration<Yield=false> | N4InterfaceDeclaration<Yield=false> | N4EnumDeclaration<Yield=false> |
-		//	ImportDeclaration
+		//	| N4ClassDeclaration<Yield=false> | N4InterfaceDeclaration<Yield=false> | N4EnumDeclaration<Yield=false> | =>
+		//	ImportDeclaration // syntactic predicate required due to RootStatement > ExpressionStatement > ... > ImportCallExpression
 		//	| ExportDeclaration
 		//	| RootStatement<Yield=false>;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//AnnotatedScriptElement | N4ClassDeclaration<Yield=false> | N4InterfaceDeclaration<Yield=false> |
-		//N4EnumDeclaration<Yield=false> | ImportDeclaration | ExportDeclaration | RootStatement<Yield=false>
+		//N4EnumDeclaration<Yield=false> | => ImportDeclaration // syntactic predicate required due to RootStatement > ExpressionStatement > ... > ImportCallExpression
+		//| ExportDeclaration | RootStatement<Yield=false>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//AnnotatedScriptElement
@@ -113,7 +114,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//N4EnumDeclaration<Yield=false>
 		public RuleCall getN4EnumDeclarationParserRuleCall_3() { return cN4EnumDeclarationParserRuleCall_3; }
 		
-		//ImportDeclaration
+		//=> ImportDeclaration
 		public RuleCall getImportDeclarationParserRuleCall_4() { return cImportDeclarationParserRuleCall_4; }
 		
 		//ExportDeclaration
@@ -3932,16 +3933,17 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cIdentifierRefParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cJSXFragmentParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cJSXElementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cParameterizedCallExpressionParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cLiteralParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cArrayLiteralParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
-		private final RuleCall cObjectLiteralParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
-		private final RuleCall cParenExpressionParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
-		private final RuleCall cAnnotatedExpressionParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
-		private final RuleCall cFunctionExpressionParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
-		private final RuleCall cAsyncFunctionExpressionParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
-		private final RuleCall cN4ClassExpressionParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
-		private final RuleCall cTemplateLiteralParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
+		private final RuleCall cImportCallExpressionParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cParameterizedCallExpressionParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cLiteralParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cArrayLiteralParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cObjectLiteralParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cParenExpressionParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
+		private final RuleCall cAnnotatedExpressionParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
+		private final RuleCall cFunctionExpressionParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
+		private final RuleCall cAsyncFunctionExpressionParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
+		private final RuleCall cN4ClassExpressionParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
+		private final RuleCall cTemplateLiteralParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
 		
 		//// ****************************************************************************************************
 		//// [ECM11] A.3 Expressions (p. 218)
@@ -3952,7 +3954,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//	| SuperLiteral
 		//	| IdentifierRef<Yield> | JSXFragment /* see JSX  */
 		//	| JSXElement /* see JSX  */
-		//	| ParameterizedCallExpression<Yield> | Literal
+		//	| ImportCallExpression<Yield> | ParameterizedCallExpression<Yield> | Literal
 		//	| ArrayLiteral<Yield> | ObjectLiteral<Yield> | ParenExpression<Yield> | AnnotatedExpression<Yield> |
 		//	FunctionExpression
 		//	| AsyncFunctionExpression
@@ -3960,9 +3962,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		@Override public ParserRule getRule() { return rule; }
 		
 		//ThisLiteral | SuperLiteral | IdentifierRef<Yield> | JSXFragment /* see JSX  */ | JSXElement /* see JSX  */ |
-		//ParameterizedCallExpression<Yield> | Literal | ArrayLiteral<Yield> | ObjectLiteral<Yield> | ParenExpression<Yield> |
-		//AnnotatedExpression<Yield> | FunctionExpression | AsyncFunctionExpression | N4ClassExpression<Yield> |
-		//TemplateLiteral<Yield>
+		//ImportCallExpression<Yield> | ParameterizedCallExpression<Yield> | Literal | ArrayLiteral<Yield> | ObjectLiteral<Yield>
+		//| ParenExpression<Yield> | AnnotatedExpression<Yield> | FunctionExpression | AsyncFunctionExpression |
+		//N4ClassExpression<Yield> | TemplateLiteral<Yield>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//ThisLiteral
@@ -3980,35 +3982,38 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//JSXElement
 		public RuleCall getJSXElementParserRuleCall_4() { return cJSXElementParserRuleCall_4; }
 		
+		//ImportCallExpression<Yield>
+		public RuleCall getImportCallExpressionParserRuleCall_5() { return cImportCallExpressionParserRuleCall_5; }
+		
 		//ParameterizedCallExpression<Yield>
-		public RuleCall getParameterizedCallExpressionParserRuleCall_5() { return cParameterizedCallExpressionParserRuleCall_5; }
+		public RuleCall getParameterizedCallExpressionParserRuleCall_6() { return cParameterizedCallExpressionParserRuleCall_6; }
 		
 		//Literal
-		public RuleCall getLiteralParserRuleCall_6() { return cLiteralParserRuleCall_6; }
+		public RuleCall getLiteralParserRuleCall_7() { return cLiteralParserRuleCall_7; }
 		
 		//ArrayLiteral<Yield>
-		public RuleCall getArrayLiteralParserRuleCall_7() { return cArrayLiteralParserRuleCall_7; }
+		public RuleCall getArrayLiteralParserRuleCall_8() { return cArrayLiteralParserRuleCall_8; }
 		
 		//ObjectLiteral<Yield>
-		public RuleCall getObjectLiteralParserRuleCall_8() { return cObjectLiteralParserRuleCall_8; }
+		public RuleCall getObjectLiteralParserRuleCall_9() { return cObjectLiteralParserRuleCall_9; }
 		
 		//ParenExpression<Yield>
-		public RuleCall getParenExpressionParserRuleCall_9() { return cParenExpressionParserRuleCall_9; }
+		public RuleCall getParenExpressionParserRuleCall_10() { return cParenExpressionParserRuleCall_10; }
 		
 		//AnnotatedExpression<Yield>
-		public RuleCall getAnnotatedExpressionParserRuleCall_10() { return cAnnotatedExpressionParserRuleCall_10; }
+		public RuleCall getAnnotatedExpressionParserRuleCall_11() { return cAnnotatedExpressionParserRuleCall_11; }
 		
 		//FunctionExpression
-		public RuleCall getFunctionExpressionParserRuleCall_11() { return cFunctionExpressionParserRuleCall_11; }
+		public RuleCall getFunctionExpressionParserRuleCall_12() { return cFunctionExpressionParserRuleCall_12; }
 		
 		//AsyncFunctionExpression
-		public RuleCall getAsyncFunctionExpressionParserRuleCall_12() { return cAsyncFunctionExpressionParserRuleCall_12; }
+		public RuleCall getAsyncFunctionExpressionParserRuleCall_13() { return cAsyncFunctionExpressionParserRuleCall_13; }
 		
 		//N4ClassExpression<Yield>
-		public RuleCall getN4ClassExpressionParserRuleCall_13() { return cN4ClassExpressionParserRuleCall_13; }
+		public RuleCall getN4ClassExpressionParserRuleCall_14() { return cN4ClassExpressionParserRuleCall_14; }
 		
 		//TemplateLiteral<Yield>
-		public RuleCall getTemplateLiteralParserRuleCall_14() { return cTemplateLiteralParserRuleCall_14; }
+		public RuleCall getTemplateLiteralParserRuleCall_15() { return cTemplateLiteralParserRuleCall_15; }
 	}
 	public class ParenExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ParenExpression");
@@ -5075,6 +5080,25 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//'>'
 		public Keyword getGreaterThanSignKeyword_3() { return cGreaterThanSignKeyword_3; }
+	}
+	public class ImportCallExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ImportCallExpression");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cImportKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final RuleCall cArgumentsWithParenthesesParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		
+		//ImportCallExpression <Yield>:
+		//	'import' ArgumentsWithParentheses<Yield>;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'import' ArgumentsWithParentheses<Yield>
+		public Group getGroup() { return cGroup; }
+		
+		//'import'
+		public Keyword getImportKeyword_0() { return cImportKeyword_0; }
+		
+		//ArgumentsWithParentheses<Yield>
+		public RuleCall getArgumentsWithParenthesesParserRuleCall_1() { return cArgumentsWithParenthesesParserRuleCall_1; }
 	}
 	public class LeftHandSideExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.LeftHandSideExpression");
@@ -10182,6 +10206,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final PropertySetterDeclarationElements pPropertySetterDeclaration;
 	private final ParameterizedCallExpressionElements pParameterizedCallExpression;
 	private final ConcreteTypeArgumentsElements pConcreteTypeArguments;
+	private final ImportCallExpressionElements pImportCallExpression;
 	private final LeftHandSideExpressionElements pLeftHandSideExpression;
 	private final ArgumentsWithParenthesesElements pArgumentsWithParentheses;
 	private final ArgumentsElements pArguments;
@@ -10438,6 +10463,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pPropertySetterDeclaration = new PropertySetterDeclarationElements();
 		this.pParameterizedCallExpression = new ParameterizedCallExpressionElements();
 		this.pConcreteTypeArguments = new ConcreteTypeArgumentsElements();
+		this.pImportCallExpression = new ImportCallExpressionElements();
 		this.pLeftHandSideExpression = new LeftHandSideExpressionElements();
 		this.pArgumentsWithParentheses = new ArgumentsWithParenthesesElements();
 		this.pArguments = new ArgumentsElements();
@@ -10641,8 +10667,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	// * The top level elements in a script are type declarations, exports, imports or statements
 	// */ ScriptElement:
 	//	AnnotatedScriptElement
-	//	| N4ClassDeclaration<Yield=false> | N4InterfaceDeclaration<Yield=false> | N4EnumDeclaration<Yield=false> |
-	//	ImportDeclaration
+	//	| N4ClassDeclaration<Yield=false> | N4InterfaceDeclaration<Yield=false> | N4EnumDeclaration<Yield=false> | =>
+	//	ImportDeclaration // syntactic predicate required due to RootStatement > ExpressionStatement > ... > ImportCallExpression
 	//	| ExportDeclaration
 	//	| RootStatement<Yield=false>;
 	public ScriptElementElements getScriptElementAccess() {
@@ -11530,7 +11556,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	| SuperLiteral
 	//	| IdentifierRef<Yield> | JSXFragment /* see JSX  */
 	//	| JSXElement /* see JSX  */
-	//	| ParameterizedCallExpression<Yield> | Literal
+	//	| ImportCallExpression<Yield> | ParameterizedCallExpression<Yield> | Literal
 	//	| ArrayLiteral<Yield> | ObjectLiteral<Yield> | ParenExpression<Yield> | AnnotatedExpression<Yield> |
 	//	FunctionExpression
 	//	| AsyncFunctionExpression
@@ -11765,6 +11791,16 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getConcreteTypeArgumentsRule() {
 		return getConcreteTypeArgumentsAccess().getRule();
+	}
+	
+	//ImportCallExpression <Yield>:
+	//	'import' ArgumentsWithParentheses<Yield>;
+	public ImportCallExpressionElements getImportCallExpressionAccess() {
+		return pImportCallExpression;
+	}
+	
+	public ParserRule getImportCallExpressionRule() {
+		return getImportCallExpressionAccess().getRule();
 	}
 	
 	//LeftHandSideExpression <Yield Expression:

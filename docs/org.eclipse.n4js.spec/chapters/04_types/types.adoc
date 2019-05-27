@@ -1406,8 +1406,9 @@ Type modifiers can not be used in type arguments.
 The general type modifiers $nullable$, $nonnull$ and $dynamic$ can be used for variables, attributes, method parameters and method types.
 Optional and variadic modifiers can only be applied for formal parameters.
 
-=== Dynamic
 
+[[Type_Modifiers_Dynamic]]
+=== Dynamic
 
 The dynamic type modifier marks a type as being dynamic.
 A dynamic type behaves like a normal JavaScript object, so you can read/write any property and call any method on it.
