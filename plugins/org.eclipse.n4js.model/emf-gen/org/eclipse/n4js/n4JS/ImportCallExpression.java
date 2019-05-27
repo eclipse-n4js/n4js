@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -20,7 +21,7 @@ package org.eclipse.n4js.n4JS;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.ImportCallExpression#getArgument <em>Argument</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ImportCallExpression#getArguments <em>Arguments</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportCallExpression()
@@ -29,25 +30,27 @@ package org.eclipse.n4js.n4JS;
  */
 public interface ImportCallExpression extends Expression {
 	/**
-	 * Returns the value of the '<em><b>Argument</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Arguments</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.n4JS.Argument}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Argument</em>' containment reference.
-	 * @see #setArgument(Argument)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportCallExpression_Argument()
+	 * @return the value of the '<em>Arguments</em>' containment reference list.
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportCallExpression_Arguments()
 	 * @model containment="true"
 	 * @generated
 	 */
-	Argument getArgument();
+	EList<Argument> getArguments();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ImportCallExpression#getArgument <em>Argument</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Argument</em>' containment reference.
-	 * @see #getArgument()
+	 * <!-- begin-model-doc -->
+	 * Import call expressions must have exactly one argument. This argument is returned by
+	 * this method (or <code>null</code> in case of invalid source code).
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	void setArgument(Argument value);
+	Argument getArgument();
 
 } // ImportCallExpression

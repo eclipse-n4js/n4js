@@ -263,7 +263,13 @@ import com.google.inject.Inject;
 				}
 				// ############################################################################################################
 			} else if (exprPlain instanceof ImportCallExpression) {
-				return stringTypeRef(G);
+				final ImportCallExpression expr = (ImportCallExpression) exprPlain;
+				final int argIdx = expr.getArguments().indexOf(argument);
+				if (argIdx == 0) {
+					return stringTypeRef(G);
+				} else {
+					return unknown();
+				}
 			} else {
 				return unknown();
 			}

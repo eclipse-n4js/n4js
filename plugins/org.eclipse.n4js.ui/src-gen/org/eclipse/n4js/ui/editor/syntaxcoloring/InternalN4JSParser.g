@@ -9721,21 +9721,7 @@ ruleImportCallExpression
 	 {
 		announce($ImportKeyword_0, grammarAccess.getImportCallExpressionAccess().getImportKeyword_0());
 	}
-	LeftParenthesisKeyword_1=LeftParenthesis
-	 {
-		announce($LeftParenthesisKeyword_1, grammarAccess.getImportCallExpressionAccess().getLeftParenthesisKeyword_1());
-	}
-	(
-		(
-			ArgumentArgumentParserRuleCall_2_0=ruleArgument{
-				announce($ArgumentArgumentParserRuleCall_2_0.start, $ArgumentArgumentParserRuleCall_2_0.stop, grammarAccess.getImportCallExpressionAccess().getArgumentAssignment_2());
-			}
-		)
-	)
-	RightParenthesisKeyword_3=RightParenthesis
-	 {
-		announce($RightParenthesisKeyword_3, grammarAccess.getImportCallExpressionAccess().getRightParenthesisKeyword_3());
-	}
+	ArgumentsWithParenthesesParserRuleCall_1=ruleArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1.start, $ArgumentsWithParenthesesParserRuleCall_1.stop, grammarAccess.getImportCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1()); }
 )
 ;
 
@@ -9749,21 +9735,7 @@ norm1_ImportCallExpression
 	 {
 		announce($ImportKeyword_0, grammarAccess.getImportCallExpressionAccess().getImportKeyword_0());
 	}
-	LeftParenthesisKeyword_1=LeftParenthesis
-	 {
-		announce($LeftParenthesisKeyword_1, grammarAccess.getImportCallExpressionAccess().getLeftParenthesisKeyword_1());
-	}
-	(
-		(
-			ArgumentArgumentParserRuleCall_2_0=norm1_Argument{
-				announce($ArgumentArgumentParserRuleCall_2_0.start, $ArgumentArgumentParserRuleCall_2_0.stop, grammarAccess.getImportCallExpressionAccess().getArgumentAssignment_2());
-			}
-		)
-	)
-	RightParenthesisKeyword_3=RightParenthesis
-	 {
-		announce($RightParenthesisKeyword_3, grammarAccess.getImportCallExpressionAccess().getRightParenthesisKeyword_3());
-	}
+	ArgumentsWithParenthesesParserRuleCall_1=norm1_ArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1.start, $ArgumentsWithParenthesesParserRuleCall_1.stop, grammarAccess.getImportCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1()); }
 )
 ;
 

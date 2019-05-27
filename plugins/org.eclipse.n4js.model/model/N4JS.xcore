@@ -1415,7 +1415,15 @@ class ParameterizedCallExpression extends Expression, ParameterizedAccess {
 }
 
 class ImportCallExpression extends Expression {
-	contains Argument argument
+	contains Argument[] arguments
+
+	/*
+	 * Import call expressions must have exactly one argument. This argument is returned by
+	 * this method (or <code>null</code> in case of invalid source code).
+	 */
+	op Argument getArgument() {
+		return arguments.head;
+	}
 }
 
 /* Argument in a new or call expression. */

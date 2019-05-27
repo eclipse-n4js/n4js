@@ -8126,13 +8126,13 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_CALL_EXPRESSION = 97;
 
 	/**
-	 * The feature id for the '<em><b>Argument</b></em>' containment reference.
+	 * The feature id for the '<em><b>Arguments</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_CALL_EXPRESSION__ARGUMENT = EXPRESSION_FEATURE_COUNT + 0;
+	int IMPORT_CALL_EXPRESSION__ARGUMENTS = EXPRESSION_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Import Call Expression</em>' class.
@@ -8153,13 +8153,22 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_CALL_EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET = EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET;
 
 	/**
+	 * The operation id for the '<em>Get Argument</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_CALL_EXPRESSION___GET_ARGUMENT = EXPRESSION_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>Import Call Expression</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_CALL_EXPRESSION_OPERATION_COUNT = EXPRESSION_OPERATION_COUNT + 0;
+	int IMPORT_CALL_EXPRESSION_OPERATION_COUNT = EXPRESSION_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ArgumentImpl <em>Argument</em>}' class.
@@ -18931,15 +18940,25 @@ public interface N4JSPackage extends EPackage {
 	EClass getImportCallExpression();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.ImportCallExpression#getArgument <em>Argument</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.ImportCallExpression#getArguments <em>Arguments</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Argument</em>'.
-	 * @see org.eclipse.n4js.n4JS.ImportCallExpression#getArgument()
+	 * @return the meta object for the containment reference list '<em>Arguments</em>'.
+	 * @see org.eclipse.n4js.n4JS.ImportCallExpression#getArguments()
 	 * @see #getImportCallExpression()
 	 * @generated
 	 */
-	EReference getImportCallExpression_Argument();
+	EReference getImportCallExpression_Arguments();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ImportCallExpression#getArgument() <em>Get Argument</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Argument</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ImportCallExpression#getArgument()
+	 * @generated
+	 */
+	EOperation getImportCallExpression__GetArgument();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.Argument <em>Argument</em>}'.
@@ -24267,12 +24286,20 @@ public interface N4JSPackage extends EPackage {
 		EClass IMPORT_CALL_EXPRESSION = eINSTANCE.getImportCallExpression();
 
 		/**
-		 * The meta object literal for the '<em><b>Argument</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Arguments</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference IMPORT_CALL_EXPRESSION__ARGUMENT = eINSTANCE.getImportCallExpression_Argument();
+		EReference IMPORT_CALL_EXPRESSION__ARGUMENTS = eINSTANCE.getImportCallExpression_Arguments();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Argument</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation IMPORT_CALL_EXPRESSION___GET_ARGUMENT = eINSTANCE.getImportCallExpression__GetArgument();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ArgumentImpl <em>Argument</em>}' class.

@@ -17594,32 +17594,16 @@ ruleImportCallExpression returns [EObject current=null]
 		{
 			newLeafNode(otherlv_0, grammarAccess.getImportCallExpressionAccess().getImportKeyword_0());
 		}
-		otherlv_1=LeftParenthesis
 		{
-			newLeafNode(otherlv_1, grammarAccess.getImportCallExpressionAccess().getLeftParenthesisKeyword_1());
+			if ($current==null) {
+				$current = createModelElement(grammarAccess.getImportCallExpressionRule());
+			}
+			newCompositeNode(grammarAccess.getImportCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1());
 		}
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getImportCallExpressionAccess().getArgumentArgumentParserRuleCall_2_0());
-				}
-				lv_argument_2_0=ruleArgument
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getImportCallExpressionRule());
-					}
-					set(
-						$current,
-						"argument",
-						lv_argument_2_0,
-						"org.eclipse.n4js.N4JS.Argument");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-		otherlv_3=RightParenthesis
+		this_ArgumentsWithParentheses_1=ruleArgumentsWithParentheses[$current]
 		{
-			newLeafNode(otherlv_3, grammarAccess.getImportCallExpressionAccess().getRightParenthesisKeyword_3());
+			$current = $this_ArgumentsWithParentheses_1.current;
+			afterParserOrEnumRuleCall();
 		}
 	)
 ;
@@ -17638,32 +17622,16 @@ norm1_ImportCallExpression returns [EObject current=null]
 		{
 			newLeafNode(otherlv_0, grammarAccess.getImportCallExpressionAccess().getImportKeyword_0());
 		}
-		otherlv_1=LeftParenthesis
 		{
-			newLeafNode(otherlv_1, grammarAccess.getImportCallExpressionAccess().getLeftParenthesisKeyword_1());
+			if ($current==null) {
+				$current = createModelElement(grammarAccess.getImportCallExpressionRule());
+			}
+			newCompositeNode(grammarAccess.getImportCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1());
 		}
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getImportCallExpressionAccess().getArgumentArgumentParserRuleCall_2_0());
-				}
-				lv_argument_2_0=norm1_Argument
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getImportCallExpressionRule());
-					}
-					set(
-						$current,
-						"argument",
-						lv_argument_2_0,
-						"org.eclipse.n4js.N4JS.Argument");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-		otherlv_3=RightParenthesis
+		this_ArgumentsWithParentheses_1=norm1_ArgumentsWithParentheses[$current]
 		{
-			newLeafNode(otherlv_3, grammarAccess.getImportCallExpressionAccess().getRightParenthesisKeyword_3());
+			$current = $this_ArgumentsWithParentheses_1.current;
+			afterParserOrEnumRuleCall();
 		}
 	)
 ;

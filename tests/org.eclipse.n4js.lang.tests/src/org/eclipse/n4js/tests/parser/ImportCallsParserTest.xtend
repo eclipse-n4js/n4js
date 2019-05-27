@@ -85,7 +85,7 @@ class ImportCallsParserTest extends AbstractParserTest {
 				expression: ParameterizedCallExpression {
 					target: ParameterizedPropertyAccessExpression {
 						target: ImportCallExpression {
-							argument: Argument {
+							arguments: Argument {
 								expression: StringLiteral
 							}
 						}
@@ -99,7 +99,7 @@ class ImportCallsParserTest extends AbstractParserTest {
 				expression: ParameterizedCallExpression {
 					target: IndexedAccessExpression {
 						target: ImportCallExpression {
-							argument: Argument {
+							arguments: Argument {
 								expression: StringLiteral
 							}
 						},
@@ -113,7 +113,7 @@ class ImportCallsParserTest extends AbstractParserTest {
 			AwaitExpression {
 				expression: ParameterizedCallExpression {
 					target: ImportCallExpression {
-						argument: Argument {
+						arguments: Argument {
 							expression: StringLiteral
 						}
 					},

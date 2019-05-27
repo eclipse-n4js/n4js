@@ -5085,32 +5085,20 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ImportCallExpression");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cImportKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Keyword cLeftParenthesisKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cArgumentAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cArgumentArgumentParserRuleCall_2_0 = (RuleCall)cArgumentAssignment_2.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final RuleCall cArgumentsWithParenthesesParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		
 		//ImportCallExpression <Yield>:
-		//	'import' '(' argument=Argument<Yield> ')';
+		//	'import' ArgumentsWithParentheses<Yield>;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'import' '(' argument=Argument<Yield> ')'
+		//'import' ArgumentsWithParentheses<Yield>
 		public Group getGroup() { return cGroup; }
 		
 		//'import'
 		public Keyword getImportKeyword_0() { return cImportKeyword_0; }
 		
-		//'('
-		public Keyword getLeftParenthesisKeyword_1() { return cLeftParenthesisKeyword_1; }
-		
-		//argument=Argument<Yield>
-		public Assignment getArgumentAssignment_2() { return cArgumentAssignment_2; }
-		
-		//Argument<Yield>
-		public RuleCall getArgumentArgumentParserRuleCall_2_0() { return cArgumentArgumentParserRuleCall_2_0; }
-		
-		//')'
-		public Keyword getRightParenthesisKeyword_3() { return cRightParenthesisKeyword_3; }
+		//ArgumentsWithParentheses<Yield>
+		public RuleCall getArgumentsWithParenthesesParserRuleCall_1() { return cArgumentsWithParenthesesParserRuleCall_1; }
 	}
 	public class LeftHandSideExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.LeftHandSideExpression");
@@ -11806,7 +11794,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ImportCallExpression <Yield>:
-	//	'import' '(' argument=Argument<Yield> ')';
+	//	'import' ArgumentsWithParentheses<Yield>;
 	public ImportCallExpressionElements getImportCallExpressionAccess() {
 		return pImportCallExpression;
 	}

@@ -4156,17 +4156,13 @@ ruleConcreteTypeArguments:
 // Rule ImportCallExpression
 ruleImportCallExpression:
 	'import'
-	'('
-	ruleArgument
-	')'
+	ruleArgumentsWithParentheses
 ;
 
 // Rule ImportCallExpression
 norm1_ImportCallExpression:
 	'import'
-	'('
-	norm1_Argument
-	')'
+	norm1_ArgumentsWithParentheses
 ;
 
 // Rule LeftHandSideExpression

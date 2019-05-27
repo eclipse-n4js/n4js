@@ -4651,8 +4651,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getImportCallExpression_Argument() {
+	public EReference getImportCallExpression_Arguments() {
 		return (EReference)importCallExpressionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getImportCallExpression__GetArgument() {
+		return importCallExpressionEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -7682,7 +7692,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(parameterizedCallExpressionEClass, PARAMETERIZED_CALL_EXPRESSION___GET_RECEIVER);
 
 		importCallExpressionEClass = createEClass(IMPORT_CALL_EXPRESSION);
-		createEReference(importCallExpressionEClass, IMPORT_CALL_EXPRESSION__ARGUMENT);
+		createEReference(importCallExpressionEClass, IMPORT_CALL_EXPRESSION__ARGUMENTS);
+		createEOperation(importCallExpressionEClass, IMPORT_CALL_EXPRESSION___GET_ARGUMENT);
 
 		argumentEClass = createEClass(ARGUMENT);
 		createEAttribute(argumentEClass, ARGUMENT__SPREAD);
@@ -8806,7 +8817,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getParameterizedCallExpression__GetReceiver(), this.getExpression(), "getReceiver", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(importCallExpressionEClass, ImportCallExpression.class, "ImportCallExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getImportCallExpression_Argument(), this.getArgument(), null, "argument", null, 0, 1, ImportCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getImportCallExpression_Arguments(), this.getArgument(), null, "arguments", null, 0, -1, ImportCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getImportCallExpression__GetArgument(), this.getArgument(), "getArgument", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(argumentEClass, Argument.class, "Argument", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getArgument_Spread(), theEcorePackage.getEBoolean(), "spread", null, 0, 1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

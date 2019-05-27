@@ -740,7 +740,7 @@ fragment ConcreteTypeArguments*:
 ;
 
 ImportCallExpression<Yield>:
-	'import' '(' argument=Argument<Yield> ')'
+	'import' ArgumentsWithParentheses<Yield> // import calls must have exactly one argument (allowing more flexibility here for better error messages)
 ;
 
 LeftHandSideExpression <Yield> returns Expression:

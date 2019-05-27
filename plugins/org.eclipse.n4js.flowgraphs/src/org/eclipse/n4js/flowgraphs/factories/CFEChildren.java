@@ -329,7 +329,9 @@ final class CFEChildren {
 		public List<Node> caseImportCallExpression(ImportCallExpression ice) {
 			List<Node> cfc = new LinkedList<>();
 			Argument arg = ice.getArgument();
-			addDelegatingNode(cfc, "arg_0", ice, arg.getExpression());
+			if (arg != null) {
+				addDelegatingNode(cfc, "arg_0", ice, arg.getExpression());
+			}
 			return cfc;
 		}
 
