@@ -12,6 +12,7 @@ package org.eclipse.n4js.tests.naming
 import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.io.File
+import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.external.LibraryManager
@@ -24,11 +25,12 @@ import static org.junit.Assert.*
 /**
  * Testing module and folder names containing dots.
  */
-class ModuleAndFolderNamesWithDotsPluginTest extends AbstractBuilderParticipantTest {
+class ModuleAndFolderNamesWithDotsAcrossProjectsPluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";
-	private static final String SUBFOLDER = "ModuleAndFolderNamesWithDots";
-	private static final String PROJECT_NAME = "ModuleAndFolderNamesWithDots";
+	private static final String SUBFOLDER = "ModuleAndFolderNamesWithDotsAcrossProjects";
+	private static final String YARN_WORKSPACE_PROJECT = "YarnWorkspaceProject";
+	private static final String PROJECT_NAME = "Main";
 
 	@Inject
 	private LibraryManager libraryManager;
@@ -36,8 +38,9 @@ class ModuleAndFolderNamesWithDotsPluginTest extends AbstractBuilderParticipantT
 	@Test
 	def void testModuleAndFolderNamesWithDots() {
 		val root = new File(getResourceUri(PROBANDS, SUBFOLDER));
-		val project = ProjectTestsUtils.importProject(root, PROJECT_NAME, Lists.newArrayList(
-			N4JSGlobals.N4JS_RUNTIME));
+		ProjectTestsUtils.importYarnWorkspace(libraryManager, root, YARN_WORKSPACE_PROJECT,
+			Lists.newArrayList(N4JSGlobals.N4JS_RUNTIME));
+		val project = ResourcesPlugin.workspace.root.getProject(PROJECT_NAME);
 
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		testedWorkspace.fullBuild;
