@@ -24,6 +24,7 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
+	<!-- When updating the JRE: Refer to n4js/docs/org.eclipse.n4js.design/chapters/03_releng/releng.adoc: "Update of the embedded JRE" -->
 	<properties>
 		<download.url.path>jdk-11.0.3%2B7/</download.url.path>
 		<download.url.file>OpenJDK11U-jre_x64_windows_hotspot_11.0.3_7.zip</download.url.file>

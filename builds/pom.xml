@@ -33,8 +33,8 @@ Contributors:
 	</modules>
 
 
+	<!-- When updating the JRE: Refer to n4js/docs/org.eclipse.n4js.design/chapters/03_releng/releng.adoc: "Update of the embedded JRE" -->
 	<properties>
-		<!-- When updating the JRE: Refer to n4js/builds/README.adoc -->
 		<download.url.base>https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/</download.url.base>
 		<!-- Override the following properties in the poms of the platform specific bundles -->
 		<download.url.path>somePath/</download.url.path>
