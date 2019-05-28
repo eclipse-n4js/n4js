@@ -8147,7 +8147,10 @@ ruleJSXElement:
 		'>'
 		ruleJSXChild
 		*
-		ruleJSXClosingElement
+		'<'
+		'/'
+		ruleJSXElementName
+		'>'
 		    |
 		'/'
 		'>'
@@ -8156,26 +8159,12 @@ ruleJSXElement:
 
 // Rule JSXFragment
 ruleJSXFragment:
-	(
-		'<'
-		'>'
-		ruleJSXChild
-		*
-		'<'
-		'/'
-		'>'
-		    |
-		'<'
-		'/'
-		'>'
-	)
-;
-
-// Rule JSXClosingElement
-ruleJSXClosingElement:
+	'<'
+	'>'
+	ruleJSXChild
+	*
 	'<'
 	'/'
-	ruleJSXElementName
 	'>'
 ;
 
@@ -8183,6 +8172,8 @@ ruleJSXClosingElement:
 ruleJSXChild:
 	(
 		ruleJSXElement
+		    |
+		ruleJSXFragment
 		    |
 		ruleJSXExpression
 	)

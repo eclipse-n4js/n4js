@@ -29,35 +29,53 @@
  */
 
 
+console.log('====================================');
+
 console.log(
 	<>
 		<div/>
 	</>
 );
 
-// TODO GH-1329 support nested JSX fragments
-//console.log(
-//	<div>
-//		<></>
-//	</div>
-//);
+console.log('====================================');
 
-// TODO GH-1329 support nested JSX fragments
-//console.log(
-//	<div>
-//		<>
-//			<div/>
-//		</>
-//	</div>
-//);
+console.log(
+	<div>
+		<></>
+	</div>
+);
+
+console.log('====================================');
+
+let elem: any+ =
+	<div>
+		<>
+			<div/>
+		</>
+	</div>;
+console.log(elem);
+console.log(elem.children[0].children);
+
+console.log('====================================');
 
 
 /* XPECT output ---
 <==
 stdout:
+====================================
 { type: undefined,
   props: null,
   children: [ { type: 'div', props: null, children: [] } ] }
+====================================
+{ type: 'div',
+  props: null,
+  children: [ { type: undefined, props: null, children: [] } ] }
+====================================
+{ type: 'div',
+  props: null,
+  children: [ { type: undefined, props: null, children: [Array] } ] }
+[ { type: 'div', props: null, children: [] } ]
+====================================
 stderr:
 ==>
 --- */
