@@ -158,8 +158,9 @@ class JSXTransformation extends Transformation {
 
 	def private ParameterizedCallExpression convertJSXAbstractElement(JSXAbstractElement elem) {
 		val firstParams = if (elem instanceof JSXElement) {
-			#[ elem.tagNameFromElement,
-			   convertJSXAttributes(elem.jsxAttributes)
+			#[
+				elem.tagNameFromElement,
+				convertJSXAttributes(elem.jsxAttributes)
 			]
 		} else {
 			#[
