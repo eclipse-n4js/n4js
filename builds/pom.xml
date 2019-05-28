@@ -44,6 +44,20 @@ Contributors:
 	</properties>
 
 
+	<!-- Ignore error due to specific versions for JRE -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<strictVersions>false</strictVersions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
     <!--
     	The following will do:
     	(1) Download the JRE
@@ -54,20 +68,11 @@ Contributors:
     	Hence, touchpoint actions are used and specified in the p2.inf files.
     	These restore file permissions and symbolic links where necessary.  
     -->
+	<!-- Disabled when maven is called with '-DexcludeJRE' -->
 	<profiles>
 		<profile>
 			<id>buildProduct</id>
 			<build>
-				<plugins>
-                    <plugin>
-                        <groupId>org.eclipse.tycho</groupId>
-                        <artifactId>tycho-packaging-plugin</artifactId>
-                        <version>${tycho-version}</version>
-			            <configuration>
-			                <strictVersions>false</strictVersions>
-			            </configuration>
-                    </plugin>
-				</plugins>
 				<pluginManagement>
 					<plugins>
 						<plugin>
@@ -75,13 +80,21 @@ Contributors:
 							<artifactId>target-platform-configuration</artifactId>
 							<version>${tycho-version}</version>
 							<configuration>
+								<!-- Disabled when maven is called with '-DexcludeJRE' -->
+								<skip>${excludeJRE}</skip>
 								<resolver>p2</resolver>
 								<pomDependencies>consider</pomDependencies>
 							</configuration>
 						</plugin>
+
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>exec-maven-plugin</artifactId>
+							<version>${codehaus-exec-maven-plugin.version}</version>
+							<configuration>
+								<!-- Disabled when maven is called with '-DexcludeJRE' -->
+								<skip>${excludeJRE}</skip>
+							</configuration>
 							<executions>
 								<execution>
 									<id>Download JRE: ${download.url.file}</id>
@@ -119,10 +132,75 @@ Contributors:
 								</execution>
 							</executions>
 						</plugin>
+
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-resources-plugin</artifactId>
+							<version>${maven-resources-plugin.version}</version>
+							<configuration>
+								<!-- Disabled when maven is called with '-DexcludeJRE' -->
+								<skip>${excludeJRE}</skip>
+							</configuration>
+							<executions>
+								<execution>
+									<id>Copy p2.inf file to META-INF dir</id>
+									<phase>process-resources</phase>
+									<goals>
+										<goal>copy-resources</goal>
+									</goals>
+									<configuration>
+										<outputDirectory>${project.build.directory}/META-INF</outputDirectory>
+										<overwrite>true</overwrite>
+										<resources>
+											<resource>
+												<directory>${project.basedir}</directory>
+												<includes>
+													<include>p2.inf</include>
+												</includes>
+												<filtering>true</filtering>
+											</resource>
+										</resources>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>maven-resources-plugin</artifactId>
+							<version>${maven-resources-plugin.version}</version>
+							<configuration>
+								<!-- Disabled when maven is called with '-DexcludeJRE' -->
+								<skip>${excludeJRE}</skip>
+							</configuration>
+							<executions>
+								<execution>
+									<id>Copy p2.inf file to META-INF dir</id>
+									<phase>process-resources</phase>
+									<goals>
+										<goal>copy-resources</goal>
+									</goals>
+									<configuration>
+										<outputDirectory>${project.build.directory}/META-INF</outputDirectory>
+										<resources>
+											<resource>
+												<directory>${project.build.directory}</directory>
+												<includes>
+													<include>p2.inf</include>
+												</includes>
+											</resource>
+										</resources>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+
 						<plugin>
 							<groupId>org.eclipse.tycho</groupId>
 							<artifactId>tycho-packaging-plugin</artifactId>
 							<configuration>
+								<!-- Disabled when maven is called with '-DexcludeJRE' -->
+								<skip>${excludeJRE}</skip>
 								<additionalFileSets>
 									<!-- include jre -->
 									<fileSet>
@@ -135,7 +213,7 @@ Contributors:
 									<fileSet>
 										<directory>${project.build.directory}/</directory>
 										<includes>
-											<include>${project.build.directory}/META-INF/p2.inf</include>
+											<include>META-INF/p2.inf</include>
 										</includes>
 									</fileSet>
 								</additionalFileSets>
