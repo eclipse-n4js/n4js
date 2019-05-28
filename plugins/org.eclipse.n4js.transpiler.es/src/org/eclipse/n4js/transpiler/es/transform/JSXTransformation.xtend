@@ -163,7 +163,8 @@ class JSXTransformation extends Transformation {
 			]
 		} else {
 			#[
-				_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendFragmentComponent)
+				_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendFragmentComponent),
+				_NULL
 			]
 		};
 		return _CallExpr(
@@ -187,12 +188,11 @@ class JSXTransformation extends Transformation {
 	// Generate Object.assign({}, {foo, bar: "Hi"}, spr)
 	def private Expression convertJSXAttributes(List<JSXAttribute> attrs) {
 		if(attrs.isEmpty) {
-			_NULL
+			return _NULL;
 		} else if (attrs.size == 1 && attrs.get(0) instanceof JSXSpreadAttribute) {
 			// Special case: if only a single spread operator is passed, we pass it directly, e.g. spr instead of cloning with Object.assign.
-			(attrs.get(0) as JSXSpreadAttribute).expression
-		}
-		else {
+			return (attrs.get(0) as JSXSpreadAttribute).expression;
+		} else {
 			val spreadIndices = IntStream.range(0, attrs.size)
 							.filter[i | attrs.get(i) instanceof JSXSpreadAttribute].toArray;
 			// GHOLD-413: We have to make sure that the only properties locating next to each other are combined.
@@ -230,7 +230,7 @@ class JSXTransformation extends Transformation {
 				}
 			}
 
-			_CallExpr(_PropertyAccessExpr(steFor_Object,steFor_assign), parameters)
+			return _CallExpr(_PropertyAccessExpr(steFor_Object,steFor_assign), parameters);
 		}
 	}
 
@@ -240,18 +240,15 @@ class JSXTransformation extends Transformation {
 			attr.valueExpressionFromPropertyAttribute)
 	}
 
-	def private Expression getTagNameFromElement(JSXAbstractElement elem) {
-		if (elem instanceof JSXElement) {
-			val nameExpr = elem.jsxElementName.expression;
-			if(nameExpr instanceof IdentifierRef_IM) {
-				val id = nameExpr.id_IM;
-				if(id===null) {
-					return _StringLiteral(nameExpr.idAsText);
-				}
+	def private Expression getTagNameFromElement(JSXElement elem) {
+		val nameExpr = elem.jsxElementName.expression;
+		if(nameExpr instanceof IdentifierRef_IM) {
+			val id = nameExpr.id_IM;
+			if(id===null) {
+				return _StringLiteral(nameExpr.idAsText);
 			}
-			return nameExpr;			
 		}
-		return null;
+		return nameExpr;
 	}
 
 	def private String getNameFromPropertyAttribute(JSXPropertyAttribute attr) {
