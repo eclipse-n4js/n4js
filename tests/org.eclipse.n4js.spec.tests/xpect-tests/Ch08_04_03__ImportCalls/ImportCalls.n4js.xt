@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// NOTE: parser tests and runtime test are included elsewhere!
+
+
+function foo(): string {
+	return "./M";
+}
+
+// XPECT noerrors -->
+import("./M");
+// XPECT errors --> "int is not a subtype of string." at "42"
+import(42);
+// XPECT errors --> "An import call must have exactly one argument." at "import()"
+import();
+// XPECT errors ---
+// "An import call must have exactly one argument." at "import(41,42,43)"
+// "int is not a subtype of string." at "41"
+// ---
+import(41,42,43);
+// XPECT errors ---
+// "The spread operator is not allowed in import calls." at "... "./M""
+// "Unsupported feature: spread operator in new and call expressions (only allowed in array destructuring patterns)." at "..."
+// ---
+import(... "./M");
+
+
+// XPECT expectedType at 'foo()' --> string
+let result = import(foo());
+
+// XPECT type of 'result' --> Promise<any+,?>
+result;

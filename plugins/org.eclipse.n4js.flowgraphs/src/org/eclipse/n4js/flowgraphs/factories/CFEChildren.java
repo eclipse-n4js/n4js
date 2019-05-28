@@ -38,6 +38,7 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.JSXAbstractElement;
 import org.eclipse.n4js.n4JS.JSXAttribute;
@@ -320,6 +321,16 @@ final class CFEChildren {
 			for (int i = 0; i < pce.getArguments().size(); i++) {
 				Argument arg = pce.getArguments().get(i);
 				addDelegatingNode(cfc, "arg_" + i, pce, arg.getExpression());
+			}
+			return cfc;
+		}
+
+		@Override
+		public List<Node> caseImportCallExpression(ImportCallExpression ice) {
+			List<Node> cfc = new LinkedList<>();
+			Argument arg = ice.getArgument();
+			if (arg != null) {
+				addDelegatingNode(cfc, "arg_0", ice, arg.getExpression());
 			}
 			return cfc;
 		}

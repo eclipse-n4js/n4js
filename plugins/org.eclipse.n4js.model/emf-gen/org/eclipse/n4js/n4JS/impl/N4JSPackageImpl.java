@@ -95,6 +95,7 @@ import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.HexIntLiteral;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IfStatement;
+import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
@@ -902,6 +903,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass parameterizedCallExpressionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass importCallExpressionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -4633,6 +4641,36 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getImportCallExpression() {
+		return importCallExpressionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getImportCallExpression_Arguments() {
+		return (EReference)importCallExpressionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getImportCallExpression__GetArgument() {
+		return importCallExpressionEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getArgument() {
 		return argumentEClass;
 	}
@@ -7653,6 +7691,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(parameterizedCallExpressionEClass, PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS);
 		createEOperation(parameterizedCallExpressionEClass, PARAMETERIZED_CALL_EXPRESSION___GET_RECEIVER);
 
+		importCallExpressionEClass = createEClass(IMPORT_CALL_EXPRESSION);
+		createEReference(importCallExpressionEClass, IMPORT_CALL_EXPRESSION__ARGUMENTS);
+		createEOperation(importCallExpressionEClass, IMPORT_CALL_EXPRESSION___GET_ARGUMENT);
+
 		argumentEClass = createEClass(ARGUMENT);
 		createEAttribute(argumentEClass, ARGUMENT__SPREAD);
 		createEReference(argumentEClass, ARGUMENT__EXPRESSION);
@@ -8169,6 +8211,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		newExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
 		parameterizedCallExpressionEClass.getESuperTypes().add(this.getExpression());
 		parameterizedCallExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
+		importCallExpressionEClass.getESuperTypes().add(this.getExpression());
 		argumentEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		indexedAccessExpressionEClass.getESuperTypes().add(this.getExpression());
 		indexedAccessExpressionEClass.getESuperTypes().add(this.getMemberAccess());
@@ -8772,6 +8815,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getParameterizedCallExpression_Arguments(), this.getArgument(), null, "arguments", null, 0, -1, ParameterizedCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getParameterizedCallExpression__GetReceiver(), this.getExpression(), "getReceiver", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(importCallExpressionEClass, ImportCallExpression.class, "ImportCallExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getImportCallExpression_Arguments(), this.getArgument(), null, "arguments", null, 0, -1, ImportCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getImportCallExpression__GetArgument(), this.getArgument(), "getArgument", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(argumentEClass, Argument.class, "Argument", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getArgument_Spread(), theEcorePackage.getEBoolean(), "spread", null, 0, 1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
