@@ -42,9 +42,9 @@ infrastructure, e.g. https://wiki.eclipse.org/CBI and https://wiki.eclipse.org/J
 
 Ensure you have
 
-- Java 8
+- Java 11
 - Maven 3.2.x and
-- Node.js 6
+- Node.js 8
 
 installed on your system.
 
