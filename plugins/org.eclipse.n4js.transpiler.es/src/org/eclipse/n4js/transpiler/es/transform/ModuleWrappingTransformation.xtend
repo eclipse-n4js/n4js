@@ -187,7 +187,7 @@ class ModuleWrappingTransformation extends Transformation {
 		if (project !== null && project.projectType === ProjectType.DEFINITION) {
 			val definedPackageName = project.definesPackageName;
 			if (definedPackageName !== null) {
-				val definedProject = n4jsCore.findAllProjectMappings.get(definedPackageName); // FIXME just search in dependencies of state.project?
+				val definedProject = n4jsCore.findAllProjectMappings.get(definedPackageName);
 				if (definedProject !== null) {
 					return definedProject;
 				}
