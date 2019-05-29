@@ -122,7 +122,7 @@ class ModuleWrappingTransformation extends Transformation {
 			// module specifiers are always absolute in N4JS, but Javascript requires relative module
 			// specifiers when importing from a module within the same npm package
 			// --> need to create a relative module specifier here:
-			return createRelativeModuleSpecifier(targetProjectResolved, targetModule);
+			return createRelativeModuleSpecifier(targetModule);
 		}
 
 		val moduleSpecifierForm = importDeclIM.moduleSpecifierForm;
@@ -137,7 +137,7 @@ class ModuleWrappingTransformation extends Transformation {
 		return createAbsoluteModuleSpecifier(targetProjectResolved, targetModule);
 	}
 
-	def private String createRelativeModuleSpecifier(IN4JSProject targetProjectResolved, TModule targetModule) {
+	def private String createRelativeModuleSpecifier(TModule targetModule) {
 		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(targetModule);
 		val targetSegments = targetModuleSpecifier.split("/", -1);
 		val l = Math.min(targetSegments.length, localModuleSpecifierSegments.length);
