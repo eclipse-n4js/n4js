@@ -1,0 +1,12 @@
+instructions.configure = \
+  org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:../Eclipse/plugins/org.eclipse.n4js.jre.macosx.cocoa.x86_64_11.0.3.7/Contents/Home/lib/server/libjvm.dylib);
+
+instructions.unconfigure = \
+  org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:null);
+
+instructions.install = \
+  org.eclipse.equinox.p2.touchpoint.eclipse.chmod(targetDir:${installFolder}/plugins/org.eclipse.n4js.jre.macosx.cocoa.x86_64_11.0.3.7/Contents/Home/,targetFile:bin,permissions:755,options:-R);\
+  org.eclipse.equinox.p2.touchpoint.eclipse.chmod(targetDir:${installFolder}/plugins/org.eclipse.n4js.jre.macosx.cocoa.x86_64_11.0.3.7/Contents/Home/lib,targetFile:jspawnhelper,permissions:755);\
+  org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/plugins/org.eclipse.n4js.jre.macosx.cocoa.x86_64_11.0.3.7/Contents/MacOS);\
+  org.eclipse.equinox.p2.touchpoint.natives.ln(linkTarget:../Home/lib/jli/libjli.dylib,targetDir:${installFolder}/plugins/org.eclipse.n4js.jre.macosx.cocoa.x86_64_11.0.3.7/Contents/MacOS,linkName:libjli.dylib,force:true);
+ 

@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.n4js.packagejson.xpect.ui.tests
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: org.eclipse.n4js
 Automatic-Module-Name: org.eclipse.n4js.packagejson.xpect.ui.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.xpect,
  org.eclipse.xpect.xtext.lib,
  org.eclipse.n4js.xpect,

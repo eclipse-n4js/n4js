@@ -163,7 +163,7 @@ class DocumentImportsOrganizer {
 	 */
 	private IUnitOfWork<List<IChange>, XtextResource> prepareImportsChanges(final IXtextDocument document,
 			final Interaction interaction) {
-		return new IUnitOfWork<List<IChange>, XtextResource>() {
+		return new IUnitOfWork<>() {
 
 			@Override
 			public List<IChange> exec(XtextResource xtextResource) throws Exception {
@@ -260,8 +260,8 @@ class DocumentImportsOrganizer {
 				InternalSemicolonInjectingParser.SEMICOLON_INSERTED)
 				// ASI overlapping something
 				&& (leafNodeAtBeginOfLine.getTotalOffset() < lineRegion.getOffset()
-		// this ASI something starts before the beginning of the line
-		)) {
+				// this ASI something starts before the beginning of the line
+				)) {
 			// CASE B)
 			int insertOffset = insertionPoint.offset; // concrete
 														// position

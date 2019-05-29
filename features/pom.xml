@@ -38,7 +38,9 @@ Contributors:
 		<module>org.eclipse.n4js.runner.sdk</module>
 		<module>org.eclipse.n4js.xpect.sdk</module>
 		<module>org.eclipse.n4js.tester.sdk</module>
-		<!-- additional feature only required for testing external plugin-development, not part of the product -->
+		<!-- features required for embedded JRE -->
+		<module>org.eclipse.n4js.jre.sdk</module>
+		<!-- additional features only required for testing external plugin-development, not part of the product -->
 		<module>org.eclipse.n4js.tests.helper.sdk</module>
 		<module>org.eclipse.n4js.jsdoc2spec.sdk</module>
 		<module>org.eclipse.n4js.smith.sdk</module>

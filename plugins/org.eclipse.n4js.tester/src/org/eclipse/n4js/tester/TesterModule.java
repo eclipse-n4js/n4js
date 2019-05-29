@@ -158,7 +158,7 @@ public class TesterModule implements Module {
 	 * would be a problem.
 	 */
 	private void bindListenerForN4jsSingletons(Binder binder) {
-		Matcher<TypeLiteral<?>> m = new AbstractMatcher<TypeLiteral<?>>() {
+		Matcher<TypeLiteral<?>> m = new AbstractMatcher<>() {
 			@Override
 			public boolean matches(TypeLiteral<?> t) {
 				checkAndThrowMissingBindingException(t);

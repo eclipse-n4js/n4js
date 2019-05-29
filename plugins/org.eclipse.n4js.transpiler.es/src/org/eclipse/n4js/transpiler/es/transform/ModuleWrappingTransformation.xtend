@@ -32,7 +32,6 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension com.google.common.base.Strings.repeat
 
 /**
  * This transformation will prepare the output code for module loading. Since dropping support for commonjs and SystemJS

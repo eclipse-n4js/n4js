@@ -49,7 +49,7 @@ Require-Bundle: org.eclipse.xtext.ui,
  org.eclipse.n4js.semver.model,
  org.eclipse.n4js.transpiler,
  org.eclipse.core.filesystem;bundle-version="1.7.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.ui,
  org.eclipse.n4js.ui.building,
  org.eclipse.n4js.ui.building.instructions,

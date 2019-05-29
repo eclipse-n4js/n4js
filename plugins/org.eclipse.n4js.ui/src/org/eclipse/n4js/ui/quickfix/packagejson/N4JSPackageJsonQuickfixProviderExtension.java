@@ -100,7 +100,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			public Collection<? extends IChange> computeChanges(IModificationContext context, final IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
-				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
 						final URI uri = issue.getUriToProblem();
@@ -147,7 +147,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
-				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
 						return libraryManager.runNpmYarnInstall(issue.getUriToProblem(), monitor);
@@ -184,7 +184,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
-				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
 						return libraryManager.runNpmYarnInstallOnAllProjects(monitor);
@@ -219,7 +219,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
-				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
 						indexSynchronizer.synchronizeNpms(monitor);

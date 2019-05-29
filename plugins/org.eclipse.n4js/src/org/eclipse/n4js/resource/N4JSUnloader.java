@@ -179,7 +179,7 @@ public class N4JSUnloader implements IReferableElementsUnloader {
 	private static Iterator<ObjectToFragment> getAllProperContents(ObjectToFragment eObject,
 			final StringBuilder result) {
 		// we inherit from the AbstractTreeIterator which will help us getting a proper pre-order traversal
-		return new AbstractTreeIterator<ObjectToFragment>(eObject, false /* don't resolve containment proxies */) {
+		return new AbstractTreeIterator<>(eObject, false /* don't resolve containment proxies */) {
 
 			@Override
 			public Iterator<ObjectToFragment> getChildren(Object parent) {
@@ -201,7 +201,7 @@ public class N4JSUnloader implements IReferableElementsUnloader {
 			 */
 			private Iterator<Iterator<ObjectToFragment>> getFeatureIterators(EObject current,
 					EStructuralFeature[] containments) {
-				return new AbstractIterator<Iterator<ObjectToFragment>>() {
+				return new AbstractIterator<>() {
 					/**
 					 * The length of the string builder before something was added by this traversing iterator.
 					 */
@@ -255,7 +255,7 @@ public class N4JSUnloader implements IReferableElementsUnloader {
 					 * Traverse the list of values and return the feature indexes along with the values.
 					 */
 					private AbstractIterator<ObjectToFragment> newManyValueIterator(final List<?> values) {
-						return new AbstractIterator<ObjectToFragment>() {
+						return new AbstractIterator<>() {
 
 							/**
 							 * The length of the string builder before something was added by this traversing iterator.
