@@ -9384,7 +9384,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cGreaterThanSignKeyword_3_0_0 = (Keyword)cGroup_3_0.eContents().get(0);
 		private final Assignment cJsxChildrenAssignment_3_0_1 = (Assignment)cGroup_3_0.eContents().get(1);
 		private final RuleCall cJsxChildrenJSXChildParserRuleCall_3_0_1_0 = (RuleCall)cJsxChildrenAssignment_3_0_1.eContents().get(0);
-		private final RuleCall cJSXClosingElementParserRuleCall_3_0_2 = (RuleCall)cGroup_3_0.eContents().get(2);
+		private final Keyword cLessThanSignKeyword_3_0_2 = (Keyword)cGroup_3_0.eContents().get(2);
+		private final Keyword cSolidusKeyword_3_0_3 = (Keyword)cGroup_3_0.eContents().get(3);
+		private final Assignment cJsxClosingNameAssignment_3_0_4 = (Assignment)cGroup_3_0.eContents().get(4);
+		private final RuleCall cJsxClosingNameJSXElementNameParserRuleCall_3_0_4_0 = (RuleCall)cJsxClosingNameAssignment_3_0_4.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_3_0_5 = (Keyword)cGroup_3_0.eContents().get(5);
 		private final Group cGroup_3_1 = (Group)cAlternatives_3.eContents().get(1);
 		private final Keyword cSolidusKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_3_1_1 = (Keyword)cGroup_3_1.eContents().get(1);
@@ -9393,10 +9397,12 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//// see https://facebook.github.io/jsx/
 		//// ****************************************************************************************************
 		//JSXElement:
-		//	'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* JSXClosingElement | '/' '>');
+		//	'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
+		//	| '/' '>');
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* JSXClosingElement | '/' '>')
+		//'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>' |
+		//'/' '>')
 		public Group getGroup() { return cGroup; }
 		
 		//'<'
@@ -9411,10 +9417,10 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//JSXAttributes
 		public RuleCall getJSXAttributesParserRuleCall_2() { return cJSXAttributesParserRuleCall_2; }
 		
-		//'>' jsxChildren+=JSXChild* JSXClosingElement | '/' '>'
+		//'>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>' | '/' '>'
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 		
-		//'>' jsxChildren+=JSXChild* JSXClosingElement
+		//'>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
 		public Group getGroup_3_0() { return cGroup_3_0; }
 		
 		//'>'
@@ -9426,8 +9432,20 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//JSXChild
 		public RuleCall getJsxChildrenJSXChildParserRuleCall_3_0_1_0() { return cJsxChildrenJSXChildParserRuleCall_3_0_1_0; }
 		
-		//JSXClosingElement
-		public RuleCall getJSXClosingElementParserRuleCall_3_0_2() { return cJSXClosingElementParserRuleCall_3_0_2; }
+		//'<'
+		public Keyword getLessThanSignKeyword_3_0_2() { return cLessThanSignKeyword_3_0_2; }
+		
+		//'/'
+		public Keyword getSolidusKeyword_3_0_3() { return cSolidusKeyword_3_0_3; }
+		
+		//jsxClosingName=JSXElementName
+		public Assignment getJsxClosingNameAssignment_3_0_4() { return cJsxClosingNameAssignment_3_0_4; }
+		
+		//JSXElementName
+		public RuleCall getJsxClosingNameJSXElementNameParserRuleCall_3_0_4_0() { return cJsxClosingNameJSXElementNameParserRuleCall_3_0_4_0; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_3_0_5() { return cGreaterThanSignKeyword_3_0_5; }
 		
 		//'/' '>'
 		public Group getGroup_3_1() { return cGroup_3_1; }
@@ -9440,130 +9458,73 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class JSXFragmentElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXFragment");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
-		private final Action cJSXFragmentAction_0_0 = (Action)cGroup_0.eContents().get(0);
-		private final Group cGroup_0_1 = (Group)cGroup_0.eContents().get(1);
-		private final Keyword cLessThanSignKeyword_0_1_0 = (Keyword)cGroup_0_1.eContents().get(0);
-		private final Keyword cGreaterThanSignKeyword_0_1_1 = (Keyword)cGroup_0_1.eContents().get(1);
-		private final Assignment cJsxChildrenAssignment_0_1_2 = (Assignment)cGroup_0_1.eContents().get(2);
-		private final RuleCall cJsxChildrenJSXChildParserRuleCall_0_1_2_0 = (RuleCall)cJsxChildrenAssignment_0_1_2.eContents().get(0);
-		private final Keyword cLessThanSignKeyword_0_1_3 = (Keyword)cGroup_0_1.eContents().get(3);
-		private final Keyword cSolidusKeyword_0_1_4 = (Keyword)cGroup_0_1.eContents().get(4);
-		private final Keyword cGreaterThanSignKeyword_0_1_5 = (Keyword)cGroup_0_1.eContents().get(5);
-		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
-		private final Action cJSXFragmentAction_1_0 = (Action)cGroup_1.eContents().get(0);
-		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
-		private final Keyword cLessThanSignKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
-		private final Keyword cSolidusKeyword_1_1_1 = (Keyword)cGroup_1_1.eContents().get(1);
-		private final Keyword cGreaterThanSignKeyword_1_1_2 = (Keyword)cGroup_1_1.eContents().get(2);
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cJSXFragmentAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cLessThanSignKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Keyword cGreaterThanSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cJsxChildrenAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cJsxChildrenJSXChildParserRuleCall_3_0 = (RuleCall)cJsxChildrenAssignment_3.eContents().get(0);
+		private final Keyword cLessThanSignKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Keyword cSolidusKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		private final Keyword cGreaterThanSignKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
 		//JSXFragment:
-		//	{JSXFragment} ('<' '>' jsxChildren+=JSXChild* '<' '/' '>') | {JSXFragment} ('<' '/' '>');
+		//	{JSXFragment} '<' '>' jsxChildren+=JSXChild* '<' '/' '>';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{JSXFragment} ('<' '>' jsxChildren+=JSXChild* '<' '/' '>') | {JSXFragment} ('<' '/' '>')
-		public Alternatives getAlternatives() { return cAlternatives; }
-		
-		//{JSXFragment} ('<' '>' jsxChildren+=JSXChild* '<' '/' '>')
-		public Group getGroup_0() { return cGroup_0; }
-		
-		//{JSXFragment}
-		public Action getJSXFragmentAction_0_0() { return cJSXFragmentAction_0_0; }
-		
-		//'<' '>' jsxChildren+=JSXChild* '<' '/' '>'
-		public Group getGroup_0_1() { return cGroup_0_1; }
-		
-		//'<'
-		public Keyword getLessThanSignKeyword_0_1_0() { return cLessThanSignKeyword_0_1_0; }
-		
-		//'>'
-		public Keyword getGreaterThanSignKeyword_0_1_1() { return cGreaterThanSignKeyword_0_1_1; }
-		
-		//jsxChildren+=JSXChild*
-		public Assignment getJsxChildrenAssignment_0_1_2() { return cJsxChildrenAssignment_0_1_2; }
-		
-		//JSXChild
-		public RuleCall getJsxChildrenJSXChildParserRuleCall_0_1_2_0() { return cJsxChildrenJSXChildParserRuleCall_0_1_2_0; }
-		
-		//'<'
-		public Keyword getLessThanSignKeyword_0_1_3() { return cLessThanSignKeyword_0_1_3; }
-		
-		//'/'
-		public Keyword getSolidusKeyword_0_1_4() { return cSolidusKeyword_0_1_4; }
-		
-		//'>'
-		public Keyword getGreaterThanSignKeyword_0_1_5() { return cGreaterThanSignKeyword_0_1_5; }
-		
-		//{JSXFragment} ('<' '/' '>')
-		public Group getGroup_1() { return cGroup_1; }
-		
-		//{JSXFragment}
-		public Action getJSXFragmentAction_1_0() { return cJSXFragmentAction_1_0; }
-		
-		//'<' '/' '>'
-		public Group getGroup_1_1() { return cGroup_1_1; }
-		
-		//'<'
-		public Keyword getLessThanSignKeyword_1_1_0() { return cLessThanSignKeyword_1_1_0; }
-		
-		//'/'
-		public Keyword getSolidusKeyword_1_1_1() { return cSolidusKeyword_1_1_1; }
-		
-		//'>'
-		public Keyword getGreaterThanSignKeyword_1_1_2() { return cGreaterThanSignKeyword_1_1_2; }
-	}
-	public class JSXClosingElementElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXClosingElement");
-		private final Group cGroup = (Group)rule.eContents().get(0);
-		private final Keyword cLessThanSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Keyword cSolidusKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cJsxClosingNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cJsxClosingNameJSXElementNameParserRuleCall_2_0 = (RuleCall)cJsxClosingNameAssignment_2.eContents().get(0);
-		private final Keyword cGreaterThanSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		
-		//fragment JSXClosingElement *:
-		//	'<' '/' jsxClosingName=JSXElementName '>';
-		@Override public ParserRule getRule() { return rule; }
-		
-		//'<' '/' jsxClosingName=JSXElementName '>'
+		//{JSXFragment} '<' '>' jsxChildren+=JSXChild* '<' '/' '>'
 		public Group getGroup() { return cGroup; }
 		
+		//{JSXFragment}
+		public Action getJSXFragmentAction_0() { return cJSXFragmentAction_0; }
+		
 		//'<'
-		public Keyword getLessThanSignKeyword_0() { return cLessThanSignKeyword_0; }
-		
-		//'/'
-		public Keyword getSolidusKeyword_1() { return cSolidusKeyword_1; }
-		
-		//jsxClosingName=JSXElementName
-		public Assignment getJsxClosingNameAssignment_2() { return cJsxClosingNameAssignment_2; }
-		
-		//JSXElementName
-		public RuleCall getJsxClosingNameJSXElementNameParserRuleCall_2_0() { return cJsxClosingNameJSXElementNameParserRuleCall_2_0; }
+		public Keyword getLessThanSignKeyword_1() { return cLessThanSignKeyword_1; }
 		
 		//'>'
-		public Keyword getGreaterThanSignKeyword_3() { return cGreaterThanSignKeyword_3; }
+		public Keyword getGreaterThanSignKeyword_2() { return cGreaterThanSignKeyword_2; }
+		
+		//jsxChildren+=JSXChild*
+		public Assignment getJsxChildrenAssignment_3() { return cJsxChildrenAssignment_3; }
+		
+		//JSXChild
+		public RuleCall getJsxChildrenJSXChildParserRuleCall_3_0() { return cJsxChildrenJSXChildParserRuleCall_3_0; }
+		
+		//'<'
+		public Keyword getLessThanSignKeyword_4() { return cLessThanSignKeyword_4; }
+		
+		//'/'
+		public Keyword getSolidusKeyword_5() { return cSolidusKeyword_5; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_6() { return cGreaterThanSignKeyword_6; }
 	}
 	public class JSXChildElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXChild");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cJSXElementParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cJSXExpressionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cJSXFragmentParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cJSXExpressionParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//JSXChild:
-		//	JSXElement | JSXExpression
+		//	JSXElement
+		//	| JSXFragment
+		//	| JSXExpression
 		//	//	| JSXText -- not supported yet, cf. IDE-2414
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//JSXElement | JSXExpression
+		//JSXElement | JSXFragment | JSXExpression
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//JSXElement
 		public RuleCall getJSXElementParserRuleCall_0() { return cJSXElementParserRuleCall_0; }
 		
+		//JSXFragment
+		public RuleCall getJSXFragmentParserRuleCall_1() { return cJSXFragmentParserRuleCall_1; }
+		
 		//JSXExpression
-		public RuleCall getJSXExpressionParserRuleCall_1() { return cJSXExpressionParserRuleCall_1; }
+		public RuleCall getJSXExpressionParserRuleCall_2() { return cJSXExpressionParserRuleCall_2; }
 	}
 	public class JSXExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXExpression");
@@ -10347,7 +10308,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final TerminalRule tINCOMPLETE_ASYNC_ARROW;
 	private final JSXElementElements pJSXElement;
 	private final JSXFragmentElements pJSXFragment;
-	private final JSXClosingElementElements pJSXClosingElement;
 	private final JSXChildElements pJSXChild;
 	private final JSXExpressionElements pJSXExpression;
 	private final JSXElementNameElements pJSXElementName;
@@ -10604,7 +10564,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.tINCOMPLETE_ASYNC_ARROW = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.INCOMPLETE_ASYNC_ARROW");
 		this.pJSXElement = new JSXElementElements();
 		this.pJSXFragment = new JSXFragmentElements();
-		this.pJSXClosingElement = new JSXClosingElementElements();
 		this.pJSXChild = new JSXChildElements();
 		this.pJSXExpression = new JSXExpressionElements();
 		this.pJSXElementName = new JSXElementNameElements();
@@ -13276,7 +13235,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//// see https://facebook.github.io/jsx/
 	//// ****************************************************************************************************
 	//JSXElement:
-	//	'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* JSXClosingElement | '/' '>');
+	//	'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
+	//	| '/' '>');
 	public JSXElementElements getJSXElementAccess() {
 		return pJSXElement;
 	}
@@ -13286,7 +13246,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//JSXFragment:
-	//	{JSXFragment} ('<' '>' jsxChildren+=JSXChild* '<' '/' '>') | {JSXFragment} ('<' '/' '>');
+	//	{JSXFragment} '<' '>' jsxChildren+=JSXChild* '<' '/' '>';
 	public JSXFragmentElements getJSXFragmentAccess() {
 		return pJSXFragment;
 	}
@@ -13295,18 +13255,10 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getJSXFragmentAccess().getRule();
 	}
 	
-	//fragment JSXClosingElement *:
-	//	'<' '/' jsxClosingName=JSXElementName '>';
-	public JSXClosingElementElements getJSXClosingElementAccess() {
-		return pJSXClosingElement;
-	}
-	
-	public ParserRule getJSXClosingElementRule() {
-		return getJSXClosingElementAccess().getRule();
-	}
-	
 	//JSXChild:
-	//	JSXElement | JSXExpression
+	//	JSXElement
+	//	| JSXFragment
+	//	| JSXExpression
 	//	//	| JSXText -- not supported yet, cf. IDE-2414
 	//;
 	public JSXChildElements getJSXChildAccess() {
