@@ -106,17 +106,16 @@ class ModuleWrappingTransformation extends Transformation {
 	def private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
 		val targetModule = state.info.getImportedModule(importDeclIM);
 
-		val targetProjectRaw = n4jsCore.findProject(targetModule.eResource.URI).orNull;
-		val targetProjectResolved = resolveDefinitionProject(targetProjectRaw);
+		val targetProject = n4jsCore.findProject(targetModule.eResource.URI).orNull;
 
-		if (targetProjectResolved.projectType === ProjectType.RUNTIME_LIBRARY) {
+		if (targetProject.projectType === ProjectType.RUNTIME_LIBRARY) {
 			// SPECIAL CASE #1
 			// pointing to a module in a runtime library
 			// --> always use plain module specifier
 			return targetModule.moduleSpecifier;
 		}
 
-		val importingFromModuleInSameProject = targetProjectResolved.location == state.project.location;
+		val importingFromModuleInSameProject = targetProject.location == state.project.location;
 		if (importingFromModuleInSameProject) {
 			// SPECIAL CASE #2
 			// module specifiers are always absolute in N4JS, but Javascript requires relative module
@@ -131,10 +130,10 @@ class ModuleWrappingTransformation extends Transformation {
 			// SPECIAL CASE #3
 			// in case of project imports (a.k.a. bare imports) we simply use
 			// the target project's name as module specifier:
-			return targetProjectResolved.projectName;
+			return getActualProjectName(targetProject);
 		}
 
-		return createAbsoluteModuleSpecifier(targetProjectResolved, targetModule);
+		return createAbsoluteModuleSpecifier(targetProject, targetModule);
 	}
 
 	def private String createRelativeModuleSpecifier(TModule targetModule) {
@@ -151,17 +150,17 @@ class ModuleWrappingTransformation extends Transformation {
 		return result;
 	}
 
-	def private String createAbsoluteModuleSpecifier(IN4JSProject targetProjectResolved, TModule targetModule) {
+	def private String createAbsoluteModuleSpecifier(IN4JSProject targetProject, TModule targetModule) {
 		val sb = new StringBuilder();
 		
 		// first segment is the project name
-		val targetProjectName = targetProjectResolved.projectName;
+		val targetProjectName = getActualProjectName(targetProject);
 		if (!targetProjectName.isNullOrEmpty) {
 			sb.append(targetProjectName);
 		}
 
 		// followed by the path to the output folder
-		var outputPath = targetProjectResolved.outputPath;
+		var outputPath = targetProject.outputPath;
 		if (!outputPath.isNullOrEmpty) {
 			if (!outputPath.startsWith('/')) {
 				sb.append('/');
@@ -183,17 +182,14 @@ class ModuleWrappingTransformation extends Transformation {
 		return sb.toString();
 	}
 
-	def private IN4JSProject resolveDefinitionProject(IN4JSProject project) {
-		if (project !== null && project.projectType === ProjectType.DEFINITION) {
-			val definedPackageName = project.definesPackageName;
-			if (definedPackageName !== null) {
-				val definedProject = n4jsCore.findAllProjectMappings.get(definedPackageName);
-				if (definedProject !== null) {
-					return definedProject;
-				}
+	def private String getActualProjectName(IN4JSProject project) {
+		if (project.projectType === ProjectType.DEFINITION) {
+			val definedProjectName = project.definesPackageName;
+			if (!definedProjectName.isNullOrEmpty) {
+				return definedProjectName;
 			}
 		}
-		return project;
+		return project.projectName;
 	}
 
 	/**
