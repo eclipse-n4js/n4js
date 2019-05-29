@@ -129,9 +129,9 @@ class ModuleWrappingTransformation extends Transformation {
 		if (moduleSpecifierForm === ModuleSpecifierForm.PROJECT
 			|| moduleSpecifierForm === ModuleSpecifierForm.PROJECT_NO_MAIN) {
 			// SPECIAL CASE #3
-			// in case of project imports (a.k.a. bare imports) we can simply
-			// use the module specifier from the N4JS source code
-			return importDeclIM.moduleSpecifierAsText;
+			// in case of project imports (a.k.a. bare imports) we simply use
+			// the target project's name as module specifier:
+			return targetProjectResolved.projectName;
 		}
 
 		return createAbsoluteModuleSpecifier(targetProjectResolved, targetModule);
