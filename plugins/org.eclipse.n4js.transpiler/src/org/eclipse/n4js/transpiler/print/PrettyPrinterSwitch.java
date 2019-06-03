@@ -733,6 +733,15 @@ import org.eclipse.xtext.EcoreUtil2;
 	}
 
 	@Override
+	public Boolean caseImportCallExpression(ImportCallExpression original) {
+		write("import");
+		write('(');
+		process(original.getArgument());
+		write(')');
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseArgument(Argument original) {
 		if (original.isSpread()) {
 			write("... ");

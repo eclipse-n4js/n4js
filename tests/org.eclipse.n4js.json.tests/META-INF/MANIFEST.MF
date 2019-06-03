@@ -11,5 +11,5 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.n4js.json.tests.helper,
  org.eclipse.n4js.json.model,
  org.eclipse.n4js.common.unicode
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.json.tests

@@ -309,7 +309,7 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	@Override
 	public Provider<InternalN4JSLexer> provideInternalN4JSLexer() {
-		return new Provider<InternalN4JSLexer>() {
+		return new Provider<>() {
 			@Override
 			public InternalN4JSLexer get() {
 				return new RegExLiteralAwareLexer();
@@ -330,7 +330,7 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 * @see ImportedNamesAdapter
 	 */
 	public Provider<ImportedNamesAdapter> provideImportedNamesAdapter() {
-		return new Provider<ImportedNamesAdapter>() {
+		return new Provider<>() {
 			@Override
 			public ImportedNamesAdapter get() {
 				return new N4JSImportedNamesAdapter();

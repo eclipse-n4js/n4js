@@ -376,7 +376,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Override
 	public EList<Adapter> eAdapters() {
 		if (eAdapters == null) {
-			eAdapters = new EAdapterList<Adapter>(this) {
+			eAdapters = new EAdapterList<>(this) {
 				@Override
 				protected void didRemove(int index, Adapter oldObject) {
 					boolean wasRemoving = removingAdapters;

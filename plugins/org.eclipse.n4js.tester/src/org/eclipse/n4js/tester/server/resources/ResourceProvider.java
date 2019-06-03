@@ -34,7 +34,7 @@ public class ResourceProvider {
 	 */
 	public BaseResource createResource(final Class<? extends BaseResource> clazz) {
 		try {
-			BaseResource resource = clazz.newInstance();
+			BaseResource resource = clazz.getConstructor().newInstance();
 			Injector injector = injectedInjector;
 			injector.injectMembers(resource);
 			return resource;

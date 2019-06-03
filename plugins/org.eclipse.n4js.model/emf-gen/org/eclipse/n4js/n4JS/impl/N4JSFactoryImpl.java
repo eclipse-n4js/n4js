@@ -132,6 +132,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.NEW_TARGET: return createNewTarget();
 			case N4JSPackage.NEW_EXPRESSION: return createNewExpression();
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION: return createParameterizedCallExpression();
+			case N4JSPackage.IMPORT_CALL_EXPRESSION: return createImportCallExpression();
 			case N4JSPackage.ARGUMENT: return createArgument();
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION: return createIndexedAccessExpression();
 			case N4JSPackage.TAGGED_TEMPLATE_STRING: return createTaggedTemplateString();
@@ -1003,6 +1004,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public ParameterizedCallExpression createParameterizedCallExpression() {
 		ParameterizedCallExpressionImpl parameterizedCallExpression = new ParameterizedCallExpressionImpl();
 		return parameterizedCallExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ImportCallExpression createImportCallExpression() {
+		ImportCallExpressionImpl importCallExpression = new ImportCallExpressionImpl();
+		return importCallExpression;
 	}
 
 	/**

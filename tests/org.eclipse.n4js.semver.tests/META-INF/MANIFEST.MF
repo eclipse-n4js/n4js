@@ -11,5 +11,5 @@ Require-Bundle: org.eclipse.n4js.semver,
  org.eclipse.n4js.semver.tests.helper,
  org.eclipse.n4js.semver.model,
  org.eclipse.n4js.common.unicode
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.semver.tests

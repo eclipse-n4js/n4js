@@ -56,7 +56,7 @@ ScriptElement:
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
 	| N4EnumDeclaration<Yield=false>
-	| ImportDeclaration
+	| => ImportDeclaration // syntactic predicate required due to RootStatement > ExpressionStatement > ... > ImportCallExpression
 	| ExportDeclaration
 	| RootStatement<Yield=false>
 ;
@@ -576,6 +576,7 @@ PrimaryExpression <Yield> returns Expression:
 	| IdentifierRef<Yield>
 	| JSXFragment /* see JSX  */
 	| JSXElement /* see JSX  */
+	| ImportCallExpression<Yield>
 	| ParameterizedCallExpression<Yield>
 	| Literal
 	| ArrayLiteral<Yield>
@@ -736,6 +737,10 @@ ParameterizedCallExpression <Yield>:
 
 fragment ConcreteTypeArguments*:
 	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>'
+;
+
+ImportCallExpression<Yield>:
+	'import' ArgumentsWithParentheses<Yield> // import calls must have exactly one argument (allowing more flexibility here for better error messages)
 ;
 
 LeftHandSideExpression <Yield> returns Expression:
@@ -1495,18 +1500,19 @@ terminal INCOMPLETE_ASYNC_ARROW:
 
 JSXElement:
 	'<' jsxElementName=JSXElementName JSXAttributes
-	(('>' jsxChildren+=JSXChild* JSXClosingElement) | ('/' '>'));
+	(
+		  '>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
+		| '/' '>'
+	);
 
 JSXFragment:
-	{JSXFragment} ('<' '>' jsxChildren+=JSXChild* '<' '/' '>') | {JSXFragment} ('<' '/' '>')	
-;
-	
-fragment JSXClosingElement *:
-	'<' '/' jsxClosingName=JSXElementName '>';
+	{JSXFragment} '<' '>' jsxChildren+=JSXChild* '<' '/' '>';
 
 JSXChild:
-	JSXElement | JSXExpression
-	//	| JSXText -- not supported yet, cf. IDE-2414
+	  JSXElement
+	| JSXFragment
+	| JSXExpression
+//	| JSXText -- not supported yet, cf. IDE-2414
 ;
 
 // terminal JSX_TEXT: !('{'|'<'|'>'|'}'); needs to be refactored similar to template text, cf. IDE-2414
@@ -1514,13 +1520,12 @@ JSXChild:
 JSXExpression: '{' expression=AssignmentExpression<false,false> '}';
 
 JSXElementName:
-	expression=JSXElementNameExpression
-	;
+	expression=JSXElementNameExpression;
 
 JSXElementNameExpression returns Expression:
 	IdentifierRef<false>
 	({ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<false>)*
-	//	| JSXNamedspacedName not supported
+//	| JSXNamedspacedName not supported
 ;
 
 //JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
@@ -1530,9 +1535,8 @@ fragment JSXAttributes *:
 	jsxAttributes+=JSXAttribute*;
 
 JSXAttribute:
-	JSXSpreadAttribute
-	|
-	JSXPropertyAttribute;
+	  JSXSpreadAttribute
+	| JSXPropertyAttribute;
 
 JSXSpreadAttribute:
 	'{' '...' expression=AssignmentExpression<In=false, Yield=false> '}';

@@ -2497,8 +2497,8 @@ See <<Classes>>.
 
 The inferred type of a class expression simply is the class type as described in <<_constructor-and-classifier-type>>.
 
-=== Cast (As) Expression
 
+=== Cast (As) Expression
 
 [discrete]
 ==== Syntax [[cast-as-expression-syntax]]
@@ -2517,7 +2517,7 @@ TypeRefForCast returns StaticBaseTypeRef:
     | IntersectionTypeExpression
 ----
 
-=== Semantics and Type Inference [[cast-as-expression-semantics-type-inference]]
+==== Semantics and Type Inference [[cast-as-expression-semantics-type-inference]]
 
 The inferred type of the type cast expression is the target type:
 
@@ -2533,6 +2533,28 @@ Type casts are simply removed during compilation so there will be no exceptions 
 
 An error is issued if the cast is either unnecessary or cannot succeed.
 See further details in <<_type-cast>>.
+
+
+[[Import_Calls]]
+=== Import Calls
+
+Import calls as specified by the corresponding https://github.com/tc39/proposal-dynamic-import[ECMA TC39 proposal] are
+available in N4JS. Such an import call has the form
+
+[source,n4js]
+----
+import(moduleSpecifier)
+----
+
+and may appear in the source code wherever an expression may appear. It's argument need not be a string literal, as is
+the case with module specifiers of ordinary imports; instead, any expression that evaluates to a string at runtime is
+accepted. Hence, it can be used to import from a target module that is not yet known at compile time.
+
+A note on terminology: import calls covered in this section are sometimes referred to as "dynamic import". In N4JS
+that term is already used for imports of the form `import * as N+ from "..."`, i.e. compile-time imports that do not
+require type information of the module imported from, see <<Dynamic_Imports>>, and stems from the term "dynamic type"
+(see <<Type_Modifiers_Dynamic>>). To avoid confusion, we will usually avoid referring to import calls as a "dynamic
+import".
 
 
 

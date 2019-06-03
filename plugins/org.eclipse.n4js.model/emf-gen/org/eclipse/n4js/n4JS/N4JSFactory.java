@@ -615,6 +615,15 @@ public interface N4JSFactory extends EFactory {
 	ParameterizedCallExpression createParameterizedCallExpression();
 
 	/**
+	 * Returns a new object of class '<em>Import Call Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Import Call Expression</em>'.
+	 * @generated
+	 */
+	ImportCallExpression createImportCallExpression();
+
+	/**
 	 * Returns a new object of class '<em>Argument</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

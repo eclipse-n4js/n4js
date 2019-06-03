@@ -34,6 +34,7 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	 * create the toc.
 	 */
 	public static void main(String[] args) {
+
 		if (args.length % 2 != 1) {
 			printHelp();
 			System.exit(1);

@@ -84,6 +84,10 @@ Contributors:
          id="org.eclipse.n4js.semver.sdk"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.n4js.jre.sdk"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.n4js.dependencies.sdk"/>
       <import feature="org.eclipse.n4js.dependencies.ui.sdk"/>

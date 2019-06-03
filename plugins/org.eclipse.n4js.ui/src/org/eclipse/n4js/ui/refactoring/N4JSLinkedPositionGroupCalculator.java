@@ -233,7 +233,7 @@ public class N4JSLinkedPositionGroupCalculator extends DefaultLinkedPositionGrou
 
 		@SuppressWarnings("null") // renameStrategy2 cannot be null at this point
 		final String originalName = renameStrategy2.getOriginalName();
-		return new Provider<LinkedPositionGroup>() {
+		return new Provider<>() {
 
 			@Override
 			public LinkedPositionGroup get() {

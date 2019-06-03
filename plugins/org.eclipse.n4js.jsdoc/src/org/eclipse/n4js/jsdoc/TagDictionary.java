@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class TagDictionary<T extends ITagDefinition> {
 
-	private final static TagDictionary<?> EMPTY_DICT = new TagDictionary<ITagDefinition>() {
+	private final static TagDictionary<?> EMPTY_DICT = new TagDictionary<>() {
 		@Override
 		void addTagDefinition(ITagDefinition tagDefinition) {
 			throw new IllegalStateException();

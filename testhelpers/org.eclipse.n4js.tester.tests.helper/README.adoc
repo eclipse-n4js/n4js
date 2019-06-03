@@ -10,4 +10,6 @@ Contributors:
 ////
 
 
-This plugin provides additional binary dependencies to test the testers.
+This plugin provides additional binary dependencies (esp. groovy) and their transitive dependencies to test the testers.
+This is done by putting the jars on the class path and exporting all packages from the jars.
+The client of this bundle then just uses the "Require-Bundle" section to use groovy and others.
