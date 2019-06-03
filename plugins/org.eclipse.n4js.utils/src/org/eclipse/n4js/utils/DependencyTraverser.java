@@ -227,7 +227,7 @@ public class DependencyTraverser<T> {
 	 * Instantiates a new No-Op-{@link DependencyVisitor} for the given generic type.
 	 */
 	private static <T> DependencyVisitor<T> nopVisitor() {
-		return new DependencyVisitor<T>() {
+		return new DependencyVisitor<>() {
 			@Override
 			public void accept(T node) {
 				// nop

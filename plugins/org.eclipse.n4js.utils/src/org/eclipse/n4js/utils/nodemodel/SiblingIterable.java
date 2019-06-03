@@ -32,7 +32,7 @@ public class SiblingIterable implements Iterable<INode> {
 
 	@Override
 	public Iterator<INode> iterator() {
-		return new Iterator<INode>() {
+		return new Iterator<>() {
 			private INode currNode = skipHidden(firstSibling);
 
 			@Override

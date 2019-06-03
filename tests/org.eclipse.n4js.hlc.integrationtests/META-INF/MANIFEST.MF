@@ -17,5 +17,5 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.runner,
  org.eclipse.xtext.testing,
  org.eclipse.n4js.json
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.hlc.integrationtests

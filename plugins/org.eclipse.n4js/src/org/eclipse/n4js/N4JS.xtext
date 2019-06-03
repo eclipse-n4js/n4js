@@ -1489,18 +1489,19 @@ terminal INCOMPLETE_ASYNC_ARROW:
 
 JSXElement:
 	'<' jsxElementName=JSXElementName JSXAttributes
-	(('>' jsxChildren+=JSXChild* JSXClosingElement) | ('/' '>'));
+	(
+		  '>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
+		| '/' '>'
+	);
 
 JSXFragment:
-	{JSXFragment} ('<' '>' jsxChildren+=JSXChild* '<' '/' '>') | {JSXFragment} ('<' '/' '>')	
-;
-	
-fragment JSXClosingElement *:
-	'<' '/' jsxClosingName=JSXElementName '>';
+	{JSXFragment} '<' '>' jsxChildren+=JSXChild* '<' '/' '>';
 
 JSXChild:
-	JSXElement | JSXExpression
-	//	| JSXText -- not supported yet, cf. IDE-2414
+	  JSXElement
+	| JSXFragment
+	| JSXExpression
+//	| JSXText -- not supported yet, cf. IDE-2414
 ;
 
 // terminal JSX_TEXT: !('{'|'<'|'>'|'}'); needs to be refactored similar to template text, cf. IDE-2414
@@ -1508,13 +1509,12 @@ JSXChild:
 JSXExpression: '{' expression=AssignmentExpression<false,false> '}';
 
 JSXElementName:
-	expression=JSXElementNameExpression
-	;
+	expression=JSXElementNameExpression;
 
 JSXElementNameExpression returns Expression:
 	IdentifierRef<false>
 	({ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<false>)*
-	//	| JSXNamedspacedName not supported
+//	| JSXNamedspacedName not supported
 ;
 
 //JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
@@ -1524,9 +1524,8 @@ fragment JSXAttributes *:
 	jsxAttributes+=JSXAttribute*;
 
 JSXAttribute:
-	JSXSpreadAttribute
-	|
-	JSXPropertyAttribute;
+	  JSXSpreadAttribute
+	| JSXPropertyAttribute;
 
 JSXSpreadAttribute:
 	'{' '...' expression=AssignmentExpression<In=false, Yield=false> '}';

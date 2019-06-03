@@ -48,7 +48,7 @@ public class N4JSImportedNamesAdapter extends ImportedNamesAdapter {
 
 		@Override
 		public Iterable<IEObjectDescription> getElements(final QualifiedName name) {
-			return new Iterable<IEObjectDescription>() {
+			return new Iterable<>() {
 				@Override
 				public Iterator<IEObjectDescription> iterator() {
 					getImportedNames().add(name);

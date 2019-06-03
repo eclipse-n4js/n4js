@@ -44,7 +44,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
  * <!-- end-model-doc -->
  * @see org.eclipse.n4js.transpiler.im.ImFactory
  * @model kind="package"
- *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4js_im' modelDirectory='/org.eclipse.n4js.transpiler/emf-gen' forceOverwrite='true' updateClasspath='false' literalsInterface='true' loadInitialization='false' complianceLevel='8.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.transpiler'"
+ *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4js_im' modelDirectory='/org.eclipse.n4js.transpiler/emf-gen' forceOverwrite='true' updateClasspath='false' literalsInterface='true' loadInitialization='false' complianceLevel='11.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.transpiler'"
  * @generated
  */
 public interface ImPackage extends EPackage {
