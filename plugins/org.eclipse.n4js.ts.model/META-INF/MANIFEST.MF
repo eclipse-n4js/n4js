@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
  org.eclipse.n4js.utils,
  org.objectweb.asm,
  org.apache.commons.logging
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.ts.typeRefs,
  org.eclipse.n4js.ts.typeRefs.impl,
  org.eclipse.n4js.ts.typeRefs.util,

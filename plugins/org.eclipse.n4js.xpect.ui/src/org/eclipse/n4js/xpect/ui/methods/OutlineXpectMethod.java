@@ -26,14 +26,14 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
 import org.eclipse.n4js.tests.outline.AbstractOutlineWorkbenchTest;
+import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xpect.xtext.lib.setup.ThisResource;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.SyntheticCompositeNode;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.util.ReplaceRegion;
-import org.eclipse.xpect.runner.Xpect;
-import org.eclipse.xpect.xtext.lib.setup.ThisResource;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Provider;
@@ -150,7 +150,7 @@ public class OutlineXpectMethod extends AbstractOutlineWorkbenchTest {
 		}
 	}
 
-	private final Provider<? extends Lexer> lexerProvider = new Provider<Lexer>() {
+	private final Provider<? extends Lexer> lexerProvider = new Provider<>() {
 		@Override
 		public Lexer get() {
 			return new InternalN4JSLexer(null);

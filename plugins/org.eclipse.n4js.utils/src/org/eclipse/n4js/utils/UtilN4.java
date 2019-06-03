@@ -52,7 +52,7 @@ public class UtilN4 {
 			.add(pair(">", "&gt;"))
 			.build();
 
-	private static final Function<String, String> ESCAPE_FUNC = new Function<String, String>() {
+	private static final Function<String, String> ESCAPE_FUNC = new Function<>() {
 
 		@Override
 		public String apply(final String t) {
@@ -62,7 +62,7 @@ public class UtilN4 {
 		}
 	};
 
-	private static final Function<String, String> UNESCAPE_FUNC = new Function<String, String>() {
+	private static final Function<String, String> UNESCAPE_FUNC = new Function<>() {
 
 		@Override
 		public String apply(final String t) {

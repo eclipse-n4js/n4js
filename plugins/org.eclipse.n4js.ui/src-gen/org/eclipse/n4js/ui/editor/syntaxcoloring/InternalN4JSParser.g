@@ -18978,7 +18978,25 @@ ruleJSXElement
 					}
 				)
 			)*
-			JSXClosingElementParserRuleCall_3_0_2=ruleJSXClosingElement{ announce($JSXClosingElementParserRuleCall_3_0_2.start, $JSXClosingElementParserRuleCall_3_0_2.stop, grammarAccess.getJSXElementAccess().getJSXClosingElementParserRuleCall_3_0_2()); }
+			LessThanSignKeyword_3_0_2=LessThanSign
+			 {
+				announce($LessThanSignKeyword_3_0_2, grammarAccess.getJSXElementAccess().getLessThanSignKeyword_3_0_2());
+			}
+			SolidusKeyword_3_0_3=Solidus
+			 {
+				announce($SolidusKeyword_3_0_3, grammarAccess.getJSXElementAccess().getSolidusKeyword_3_0_3());
+			}
+			(
+				(
+					JsxClosingNameJSXElementNameParserRuleCall_3_0_4_0=ruleJSXElementName{
+						announce($JsxClosingNameJSXElementNameParserRuleCall_3_0_4_0.start, $JsxClosingNameJSXElementNameParserRuleCall_3_0_4_0.stop, grammarAccess.getJSXElementAccess().getJsxClosingNameAssignment_3_0_4());
+					}
+				)
+			)
+			GreaterThanSignKeyword_3_0_5=GreaterThanSign
+			 {
+				announce($GreaterThanSignKeyword_3_0_5, grammarAccess.getJSXElementAccess().getGreaterThanSignKeyword_3_0_5());
+			}
 		)
 		    |
 		(
@@ -19006,81 +19024,32 @@ ruleJSXFragment
 @init {
 }:
 (
-	(
-		(
-			LessThanSignKeyword_0_1_0=LessThanSign
-			 {
-				announce($LessThanSignKeyword_0_1_0, grammarAccess.getJSXFragmentAccess().getLessThanSignKeyword_0_1_0());
-			}
-			GreaterThanSignKeyword_0_1_1=GreaterThanSign
-			 {
-				announce($GreaterThanSignKeyword_0_1_1, grammarAccess.getJSXFragmentAccess().getGreaterThanSignKeyword_0_1_1());
-			}
-			(
-				(
-					JsxChildrenJSXChildParserRuleCall_0_1_2_0=ruleJSXChild{
-						announce($JsxChildrenJSXChildParserRuleCall_0_1_2_0.start, $JsxChildrenJSXChildParserRuleCall_0_1_2_0.stop, grammarAccess.getJSXFragmentAccess().getJsxChildrenAssignment_0_1_2());
-					}
-				)
-			)*
-			LessThanSignKeyword_0_1_3=LessThanSign
-			 {
-				announce($LessThanSignKeyword_0_1_3, grammarAccess.getJSXFragmentAccess().getLessThanSignKeyword_0_1_3());
-			}
-			SolidusKeyword_0_1_4=Solidus
-			 {
-				announce($SolidusKeyword_0_1_4, grammarAccess.getJSXFragmentAccess().getSolidusKeyword_0_1_4());
-			}
-			GreaterThanSignKeyword_0_1_5=GreaterThanSign
-			 {
-				announce($GreaterThanSignKeyword_0_1_5, grammarAccess.getJSXFragmentAccess().getGreaterThanSignKeyword_0_1_5());
-			}
-		)
-	)
-	    |
-	(
-		(
-			LessThanSignKeyword_1_1_0=LessThanSign
-			 {
-				announce($LessThanSignKeyword_1_1_0, grammarAccess.getJSXFragmentAccess().getLessThanSignKeyword_1_1_0());
-			}
-			SolidusKeyword_1_1_1=Solidus
-			 {
-				announce($SolidusKeyword_1_1_1, grammarAccess.getJSXFragmentAccess().getSolidusKeyword_1_1_1());
-			}
-			GreaterThanSignKeyword_1_1_2=GreaterThanSign
-			 {
-				announce($GreaterThanSignKeyword_1_1_2, grammarAccess.getJSXFragmentAccess().getGreaterThanSignKeyword_1_1_2());
-			}
-		)
-	)
-)
-;
-
-
-// Rule JSXClosingElement
-ruleJSXClosingElement
-@init {
-}:
-(
-	LessThanSignKeyword_0=LessThanSign
+	LessThanSignKeyword_1=LessThanSign
 	 {
-		announce($LessThanSignKeyword_0, grammarAccess.getJSXClosingElementAccess().getLessThanSignKeyword_0());
+		announce($LessThanSignKeyword_1, grammarAccess.getJSXFragmentAccess().getLessThanSignKeyword_1());
 	}
-	SolidusKeyword_1=Solidus
+	GreaterThanSignKeyword_2=GreaterThanSign
 	 {
-		announce($SolidusKeyword_1, grammarAccess.getJSXClosingElementAccess().getSolidusKeyword_1());
+		announce($GreaterThanSignKeyword_2, grammarAccess.getJSXFragmentAccess().getGreaterThanSignKeyword_2());
 	}
 	(
 		(
-			JsxClosingNameJSXElementNameParserRuleCall_2_0=ruleJSXElementName{
-				announce($JsxClosingNameJSXElementNameParserRuleCall_2_0.start, $JsxClosingNameJSXElementNameParserRuleCall_2_0.stop, grammarAccess.getJSXClosingElementAccess().getJsxClosingNameAssignment_2());
+			JsxChildrenJSXChildParserRuleCall_3_0=ruleJSXChild{
+				announce($JsxChildrenJSXChildParserRuleCall_3_0.start, $JsxChildrenJSXChildParserRuleCall_3_0.stop, grammarAccess.getJSXFragmentAccess().getJsxChildrenAssignment_3());
 			}
 		)
-	)
-	GreaterThanSignKeyword_3=GreaterThanSign
+	)*
+	LessThanSignKeyword_4=LessThanSign
 	 {
-		announce($GreaterThanSignKeyword_3, grammarAccess.getJSXClosingElementAccess().getGreaterThanSignKeyword_3());
+		announce($LessThanSignKeyword_4, grammarAccess.getJSXFragmentAccess().getLessThanSignKeyword_4());
+	}
+	SolidusKeyword_5=Solidus
+	 {
+		announce($SolidusKeyword_5, grammarAccess.getJSXFragmentAccess().getSolidusKeyword_5());
+	}
+	GreaterThanSignKeyword_6=GreaterThanSign
+	 {
+		announce($GreaterThanSignKeyword_6, grammarAccess.getJSXFragmentAccess().getGreaterThanSignKeyword_6());
 	}
 )
 ;
@@ -19098,7 +19067,9 @@ ruleJSXChild
 (
 	JSXElementParserRuleCall_0=ruleJSXElement{ announce($JSXElementParserRuleCall_0.start, $JSXElementParserRuleCall_0.stop, grammarAccess.getJSXChildAccess().getJSXElementParserRuleCall_0()); }
 	    |
-	JSXExpressionParserRuleCall_1=ruleJSXExpression{ announce($JSXExpressionParserRuleCall_1.start, $JSXExpressionParserRuleCall_1.stop, grammarAccess.getJSXChildAccess().getJSXExpressionParserRuleCall_1()); }
+	JSXFragmentParserRuleCall_1=ruleJSXFragment{ announce($JSXFragmentParserRuleCall_1.start, $JSXFragmentParserRuleCall_1.stop, grammarAccess.getJSXChildAccess().getJSXFragmentParserRuleCall_1()); }
+	    |
+	JSXExpressionParserRuleCall_2=ruleJSXExpression{ announce($JSXExpressionParserRuleCall_2.start, $JSXExpressionParserRuleCall_2.stop, grammarAccess.getJSXChildAccess().getJSXExpressionParserRuleCall_2()); }
 )
 ;
 

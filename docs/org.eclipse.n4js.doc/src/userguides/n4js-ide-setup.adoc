@@ -37,9 +37,10 @@ For all available options for downloads and installation steps using the Eclipse
 
 === Requirements
 
-*Java 8*
+*Java 11*
 
-In order to run the N4JS IDE, Java 8 is required. Installer packages can be downloaded from
+In order to run the N4JS IDE, Java 11 is required. Note that there exists a version of the IDE which
+includes an embedded JRE-11. Java installer packages can be downloaded from
 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html[Oracle's Java pages].
 For Mac OS X users: Always install the *JDK* - the JRE is installed
 and only used in web browsers, not applications.

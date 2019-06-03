@@ -80,9 +80,9 @@ https://github.com/eclipse/n4js/blob/master/releng/org.eclipse.n4js.targetplatfo
 
 Ensure you have
 
-- Java 8
+- Java 11
 - Maven 3.2.x and
-- Node.js 6
+- Node.js 8
 
 installed on your system.
 

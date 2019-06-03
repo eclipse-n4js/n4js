@@ -33454,27 +33454,47 @@ ruleJSXElement returns [EObject current=null]
 						}
 					)
 				)*
+				otherlv_5=LessThanSign
 				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getJSXElementRule());
-					}
-					newCompositeNode(grammarAccess.getJSXElementAccess().getJSXClosingElementParserRuleCall_3_0_2());
+					newLeafNode(otherlv_5, grammarAccess.getJSXElementAccess().getLessThanSignKeyword_3_0_2());
 				}
-				this_JSXClosingElement_5=ruleJSXClosingElement[$current]
+				otherlv_6=Solidus
 				{
-					$current = $this_JSXClosingElement_5.current;
-					afterParserOrEnumRuleCall();
+					newLeafNode(otherlv_6, grammarAccess.getJSXElementAccess().getSolidusKeyword_3_0_3());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getJSXElementAccess().getJsxClosingNameJSXElementNameParserRuleCall_3_0_4_0());
+						}
+						lv_jsxClosingName_7_0=ruleJSXElementName
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getJSXElementRule());
+							}
+							set(
+								$current,
+								"jsxClosingName",
+								lv_jsxClosingName_7_0,
+								"org.eclipse.n4js.N4JS.JSXElementName");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				otherlv_8=GreaterThanSign
+				{
+					newLeafNode(otherlv_8, grammarAccess.getJSXElementAccess().getGreaterThanSignKeyword_3_0_5());
 				}
 			)
 			    |
 			(
-				otherlv_6=Solidus
+				otherlv_9=Solidus
 				{
-					newLeafNode(otherlv_6, grammarAccess.getJSXElementAccess().getSolidusKeyword_3_1_0());
+					newLeafNode(otherlv_9, grammarAccess.getJSXElementAccess().getSolidusKeyword_3_1_0());
 				}
-				otherlv_7=GreaterThanSign
+				otherlv_10=GreaterThanSign
 				{
-					newLeafNode(otherlv_7, grammarAccess.getJSXElementAccess().getGreaterThanSignKeyword_3_1_1());
+					newLeafNode(otherlv_10, grammarAccess.getJSXElementAccess().getGreaterThanSignKeyword_3_1_1());
 				}
 			)
 		)
@@ -33498,122 +33518,50 @@ ruleJSXFragment returns [EObject current=null]
 }:
 	(
 		(
-			(
-				{
-					$current = forceCreateModelElement(
-						grammarAccess.getJSXFragmentAccess().getJSXFragmentAction_0_0(),
-						$current);
-				}
-			)
-			(
-				otherlv_1=LessThanSign
-				{
-					newLeafNode(otherlv_1, grammarAccess.getJSXFragmentAccess().getLessThanSignKeyword_0_1_0());
-				}
-				otherlv_2=GreaterThanSign
-				{
-					newLeafNode(otherlv_2, grammarAccess.getJSXFragmentAccess().getGreaterThanSignKeyword_0_1_1());
-				}
-				(
-					(
-						{
-							newCompositeNode(grammarAccess.getJSXFragmentAccess().getJsxChildrenJSXChildParserRuleCall_0_1_2_0());
-						}
-						lv_jsxChildren_3_0=ruleJSXChild
-						{
-							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getJSXFragmentRule());
-							}
-							add(
-								$current,
-								"jsxChildren",
-								lv_jsxChildren_3_0,
-								"org.eclipse.n4js.N4JS.JSXChild");
-							afterParserOrEnumRuleCall();
-						}
-					)
-				)*
-				otherlv_4=LessThanSign
-				{
-					newLeafNode(otherlv_4, grammarAccess.getJSXFragmentAccess().getLessThanSignKeyword_0_1_3());
-				}
-				otherlv_5=Solidus
-				{
-					newLeafNode(otherlv_5, grammarAccess.getJSXFragmentAccess().getSolidusKeyword_0_1_4());
-				}
-				otherlv_6=GreaterThanSign
-				{
-					newLeafNode(otherlv_6, grammarAccess.getJSXFragmentAccess().getGreaterThanSignKeyword_0_1_5());
-				}
-			)
+			{
+				$current = forceCreateModelElement(
+					grammarAccess.getJSXFragmentAccess().getJSXFragmentAction_0(),
+					$current);
+			}
 		)
-		    |
-		(
-			(
-				{
-					$current = forceCreateModelElement(
-						grammarAccess.getJSXFragmentAccess().getJSXFragmentAction_1_0(),
-						$current);
-				}
-			)
-			(
-				otherlv_8=LessThanSign
-				{
-					newLeafNode(otherlv_8, grammarAccess.getJSXFragmentAccess().getLessThanSignKeyword_1_1_0());
-				}
-				otherlv_9=Solidus
-				{
-					newLeafNode(otherlv_9, grammarAccess.getJSXFragmentAccess().getSolidusKeyword_1_1_1());
-				}
-				otherlv_10=GreaterThanSign
-				{
-					newLeafNode(otherlv_10, grammarAccess.getJSXFragmentAccess().getGreaterThanSignKeyword_1_1_2());
-				}
-			)
-		)
-	)
-;
-
-
-// Rule JSXClosingElement
-ruleJSXClosingElement[EObject in_current]  returns [EObject current=in_current]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		otherlv_0=LessThanSign
+		otherlv_1=LessThanSign
 		{
-			newLeafNode(otherlv_0, grammarAccess.getJSXClosingElementAccess().getLessThanSignKeyword_0());
+			newLeafNode(otherlv_1, grammarAccess.getJSXFragmentAccess().getLessThanSignKeyword_1());
 		}
-		otherlv_1=Solidus
+		otherlv_2=GreaterThanSign
 		{
-			newLeafNode(otherlv_1, grammarAccess.getJSXClosingElementAccess().getSolidusKeyword_1());
+			newLeafNode(otherlv_2, grammarAccess.getJSXFragmentAccess().getGreaterThanSignKeyword_2());
 		}
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getJSXClosingElementAccess().getJsxClosingNameJSXElementNameParserRuleCall_2_0());
+					newCompositeNode(grammarAccess.getJSXFragmentAccess().getJsxChildrenJSXChildParserRuleCall_3_0());
 				}
-				lv_jsxClosingName_2_0=ruleJSXElementName
+				lv_jsxChildren_3_0=ruleJSXChild
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getJSXClosingElementRule());
+						$current = createModelElementForParent(grammarAccess.getJSXFragmentRule());
 					}
-					set(
+					add(
 						$current,
-						"jsxClosingName",
-						lv_jsxClosingName_2_0,
-						"org.eclipse.n4js.N4JS.JSXElementName");
+						"jsxChildren",
+						lv_jsxChildren_3_0,
+						"org.eclipse.n4js.N4JS.JSXChild");
 					afterParserOrEnumRuleCall();
 				}
 			)
-		)
-		otherlv_3=GreaterThanSign
+		)*
+		otherlv_4=LessThanSign
 		{
-			newLeafNode(otherlv_3, grammarAccess.getJSXClosingElementAccess().getGreaterThanSignKeyword_3());
+			newLeafNode(otherlv_4, grammarAccess.getJSXFragmentAccess().getLessThanSignKeyword_4());
+		}
+		otherlv_5=Solidus
+		{
+			newLeafNode(otherlv_5, grammarAccess.getJSXFragmentAccess().getSolidusKeyword_5());
+		}
+		otherlv_6=GreaterThanSign
+		{
+			newLeafNode(otherlv_6, grammarAccess.getJSXFragmentAccess().getGreaterThanSignKeyword_6());
 		}
 	)
 ;
@@ -33644,11 +33592,20 @@ ruleJSXChild returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getJSXChildAccess().getJSXExpressionParserRuleCall_1());
+			newCompositeNode(grammarAccess.getJSXChildAccess().getJSXFragmentParserRuleCall_1());
 		}
-		this_JSXExpression_1=ruleJSXExpression
+		this_JSXFragment_1=ruleJSXFragment
 		{
-			$current = $this_JSXExpression_1.current;
+			$current = $this_JSXFragment_1.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getJSXChildAccess().getJSXExpressionParserRuleCall_2());
+		}
+		this_JSXExpression_2=ruleJSXExpression
+		{
+			$current = $this_JSXExpression_2.current;
 			afterParserOrEnumRuleCall();
 		}
 	)

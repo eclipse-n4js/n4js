@@ -32,6 +32,7 @@ Contributors:
 				<configuration>
 					<source>${jdk-version}</source>
 					<target>${jdk-version}</target>
+					<release>${jdk-version}</release>
 				</configuration>
 			</plugin>
 			<plugin>

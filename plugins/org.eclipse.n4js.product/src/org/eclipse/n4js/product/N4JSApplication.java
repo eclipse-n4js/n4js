@@ -97,13 +97,13 @@ public class N4JSApplication implements IApplication {
 	/**
 	 * A special return code that will be recognized by the launcher and used to restart the workbench.
 	 */
-	private static final Integer EXIT_RELAUNCH = new Integer(24);
+	private static final Integer EXIT_RELAUNCH = Integer.valueOf(24);
 
 	/**
 	 * A special return code that will be recognized by the PDE launcher and used to show an error dialog if the
 	 * workspace is locked.
 	 */
-	private static final Integer EXIT_WORKSPACE_LOCKED = new Integer(15);
+	private static final Integer EXIT_WORKSPACE_LOCKED = Integer.valueOf(15);
 
 	/**
 	 * The ID of the application plug-in

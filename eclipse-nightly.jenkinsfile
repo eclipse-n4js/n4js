@@ -53,6 +53,7 @@ pipeline {
                                 '-Dtycho.localArtifacts=ignore',
                                 '-Dmaven.test.failure.ignore',
                                 '-DWORKSPACE=' + env.WORKSPACE
+                                '-DexcludeJRE'
                             ].join(' ')
                             def profiles = [
                                 'buildProduct',

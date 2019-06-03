@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Iterators;
-
 import org.eclipse.n4js.ts.types.NameAndAccess;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.TransformedIterator2;
+
+import com.google.common.collect.Iterators;
 
 /**
  * Rather than copying everything into a "big" hash map, a list traversal is faster for small number of entries.
@@ -43,7 +43,7 @@ public class MemberByNameAndAccessMap extends AbstractMap<NameAndAccess, TMember
 
 	@Override
 	public Set<Map.Entry<NameAndAccess, TMember>> entrySet() {
-		return new AbstractSet<Map.Entry<NameAndAccess, TMember>>() {
+		return new AbstractSet<>() {
 			@Override
 			public Iterator<Map.Entry<NameAndAccess, TMember>> iterator() {
 				return Iterators.unmodifiableIterator(
@@ -52,7 +52,8 @@ public class MemberByNameAndAccessMap extends AbstractMap<NameAndAccess, TMember
 							protected Map.Entry<NameAndAccess, TMember> transform(TMember input) {
 								final NameAndAccess[] nameAndAccess = NameAndAccess.of(input);
 								if (nameAndAccess.length > 1) {
-									setAdditionalElement(new AbstractMap.SimpleImmutableEntry<>(nameAndAccess[1], input));
+									setAdditionalElement(
+											new AbstractMap.SimpleImmutableEntry<>(nameAndAccess[1], input));
 								}
 								return new AbstractMap.SimpleImmutableEntry<>(nameAndAccess[0], input);
 							}

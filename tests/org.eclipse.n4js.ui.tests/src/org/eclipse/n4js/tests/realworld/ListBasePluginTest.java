@@ -58,7 +58,7 @@ public class ListBasePluginTest extends AbstractBuilderParticipantTest {
 	 * identifier recommendations) constraint from the specification.
 	 */
 	private static final Predicate<IMarker> EXPECTED_VALIDATION_PREDICATE = //
-			new Predicate<IMarker>() {
+			new Predicate<>() {
 
 				private final List<String> EXPECTED_ERROR_CODES = Arrays.asList(
 						IssueCodes.CFG_LOCAL_VAR_UNUSED,
