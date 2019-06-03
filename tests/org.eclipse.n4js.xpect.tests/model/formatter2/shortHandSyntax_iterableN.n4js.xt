@@ -47,5 +47,3 @@ let a :
                                                                             Annos>
                                         ]>
                     ]>
-
-// FIXME GH-1299 enable this test once IterableN syntax is in place (and extend the test for iterables with several element types)
