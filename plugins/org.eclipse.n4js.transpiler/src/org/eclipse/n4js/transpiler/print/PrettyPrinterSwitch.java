@@ -712,6 +712,13 @@ import org.eclipse.xtext.EcoreUtil2;
 	}
 
 	@Override
+	public Boolean casePropertySpread(PropertySpread original) {
+		write("...");
+		process(original.getExpression());
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseNewExpression(NewExpression original) {
 		write("new ");
 		process(original.getCallee());

@@ -129,6 +129,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION: return createPropertyMethodDeclaration();
 			case N4JSPackage.PROPERTY_GETTER_DECLARATION: return createPropertyGetterDeclaration();
 			case N4JSPackage.PROPERTY_SETTER_DECLARATION: return createPropertySetterDeclaration();
+			case N4JSPackage.PROPERTY_SPREAD: return createPropertySpread();
 			case N4JSPackage.NEW_TARGET: return createNewTarget();
 			case N4JSPackage.NEW_EXPRESSION: return createNewExpression();
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION: return createParameterizedCallExpression();
@@ -975,6 +976,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public PropertySetterDeclaration createPropertySetterDeclaration() {
 		PropertySetterDeclarationImpl propertySetterDeclaration = new PropertySetterDeclarationImpl();
 		return propertySetterDeclaration;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public PropertySpread createPropertySpread() {
+		PropertySpreadImpl propertySpread = new PropertySpreadImpl();
+		return propertySpread;
 	}
 
 	/**

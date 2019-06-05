@@ -7900,14 +7900,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 int LA81_2 = input.LA(2);
 
-                if ( (LA81_2==EqualsSignGreaterThanSign) ) {
-                    alt81=3;
-                }
-                else if ( (LA81_2==RULE_NO_LINE_TERMINATOR) && (synpred37_InternalN4JSParser())) {
+                if ( (LA81_2==RULE_NO_LINE_TERMINATOR) && (synpred37_InternalN4JSParser())) {
                     alt81=2;
                 }
                 else if ( (LA81_2==LeftParenthesis) && (synpred37_InternalN4JSParser())) {
                     alt81=2;
+                }
+                else if ( (LA81_2==EqualsSignGreaterThanSign) ) {
+                    alt81=3;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return current;}
@@ -8356,14 +8356,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 {
                 int LA85_2 = input.LA(2);
 
-                if ( (LA85_2==EqualsSignGreaterThanSign) ) {
-                    alt85=3;
-                }
-                else if ( (LA85_2==RULE_NO_LINE_TERMINATOR) && (synpred43_InternalN4JSParser())) {
+                if ( (LA85_2==RULE_NO_LINE_TERMINATOR) && (synpred43_InternalN4JSParser())) {
                     alt85=2;
                 }
                 else if ( (LA85_2==LeftParenthesis) && (synpred43_InternalN4JSParser())) {
                     alt85=2;
+                }
+                else if ( (LA85_2==EqualsSignGreaterThanSign) ) {
+                    alt85=3;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return current;}
@@ -29581,7 +29581,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             int alt251=2;
             int LA251_0 = input.LA(1);
 
-            if ( ((LA251_0>=Intersection && LA251_0<=With)||(LA251_0>=For && LA251_0<=Var)||(LA251_0>=As && LA251_0<=Of)||LA251_0==LeftParenthesis||LA251_0==Asterisk||LA251_0==LessThanSign||(LA251_0>=QuestionMark && LA251_0<=LeftSquareBracket)||LA251_0==LeftCurlyBracket||LA251_0==Tilde||LA251_0==RULE_DOUBLE||LA251_0==RULE_HEX_INT||LA251_0==RULE_OCTAL_INT||LA251_0==RULE_SCIENTIFIC_INT||LA251_0==RULE_IDENTIFIER||LA251_0==RULE_STRING||LA251_0==RULE_INT) ) {
+            if ( ((LA251_0>=Intersection && LA251_0<=With)||LA251_0==FullStopFullStopFullStop||(LA251_0>=For && LA251_0<=Var)||(LA251_0>=As && LA251_0<=Of)||LA251_0==LeftParenthesis||LA251_0==Asterisk||LA251_0==LessThanSign||(LA251_0>=QuestionMark && LA251_0<=LeftSquareBracket)||LA251_0==LeftCurlyBracket||LA251_0==Tilde||LA251_0==RULE_DOUBLE||LA251_0==RULE_HEX_INT||LA251_0==RULE_OCTAL_INT||LA251_0==RULE_SCIENTIFIC_INT||LA251_0==RULE_IDENTIFIER||LA251_0==RULE_STRING||LA251_0==RULE_INT) ) {
                 alt251=1;
             }
             switch (alt251) {
@@ -29625,7 +29625,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         if ( (LA249_0==Comma) ) {
                             int LA249_1 = input.LA(2);
 
-                            if ( ((LA249_1>=Intersection && LA249_1<=With)||(LA249_1>=For && LA249_1<=Var)||(LA249_1>=As && LA249_1<=Of)||LA249_1==LeftParenthesis||LA249_1==Asterisk||LA249_1==LessThanSign||(LA249_1>=QuestionMark && LA249_1<=LeftSquareBracket)||LA249_1==LeftCurlyBracket||LA249_1==Tilde||LA249_1==RULE_DOUBLE||LA249_1==RULE_HEX_INT||LA249_1==RULE_OCTAL_INT||LA249_1==RULE_SCIENTIFIC_INT||LA249_1==RULE_IDENTIFIER||LA249_1==RULE_STRING||LA249_1==RULE_INT) ) {
+                            if ( ((LA249_1>=Intersection && LA249_1<=With)||LA249_1==FullStopFullStopFullStop||(LA249_1>=For && LA249_1<=Var)||(LA249_1>=As && LA249_1<=Of)||LA249_1==LeftParenthesis||LA249_1==Asterisk||LA249_1==LessThanSign||(LA249_1>=QuestionMark && LA249_1<=LeftSquareBracket)||LA249_1==LeftCurlyBracket||LA249_1==Tilde||LA249_1==RULE_DOUBLE||LA249_1==RULE_HEX_INT||LA249_1==RULE_OCTAL_INT||LA249_1==RULE_SCIENTIFIC_INT||LA249_1==RULE_IDENTIFIER||LA249_1==RULE_STRING||LA249_1==RULE_INT) ) {
                                 alt249=1;
                             }
 
@@ -29773,7 +29773,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             int alt254=2;
             int LA254_0 = input.LA(1);
 
-            if ( ((LA254_0>=Intersection && LA254_0<=With)||(LA254_0>=For && LA254_0<=Var)||(LA254_0>=As && LA254_0<=Of)||LA254_0==LeftParenthesis||LA254_0==Asterisk||LA254_0==LessThanSign||(LA254_0>=QuestionMark && LA254_0<=LeftSquareBracket)||LA254_0==LeftCurlyBracket||LA254_0==Tilde||LA254_0==RULE_DOUBLE||LA254_0==RULE_HEX_INT||LA254_0==RULE_OCTAL_INT||LA254_0==RULE_SCIENTIFIC_INT||LA254_0==RULE_IDENTIFIER||LA254_0==RULE_STRING||LA254_0==RULE_INT) ) {
+            if ( ((LA254_0>=Intersection && LA254_0<=With)||LA254_0==FullStopFullStopFullStop||(LA254_0>=For && LA254_0<=Var)||(LA254_0>=As && LA254_0<=Of)||LA254_0==LeftParenthesis||LA254_0==Asterisk||LA254_0==LessThanSign||(LA254_0>=QuestionMark && LA254_0<=LeftSquareBracket)||LA254_0==LeftCurlyBracket||LA254_0==Tilde||LA254_0==RULE_DOUBLE||LA254_0==RULE_HEX_INT||LA254_0==RULE_OCTAL_INT||LA254_0==RULE_SCIENTIFIC_INT||LA254_0==RULE_IDENTIFIER||LA254_0==RULE_STRING||LA254_0==RULE_INT) ) {
                 alt254=1;
             }
             switch (alt254) {
@@ -29817,7 +29817,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         if ( (LA252_0==Comma) ) {
                             int LA252_1 = input.LA(2);
 
-                            if ( ((LA252_1>=Intersection && LA252_1<=With)||(LA252_1>=For && LA252_1<=Var)||(LA252_1>=As && LA252_1<=Of)||LA252_1==LeftParenthesis||LA252_1==Asterisk||LA252_1==LessThanSign||(LA252_1>=QuestionMark && LA252_1<=LeftSquareBracket)||LA252_1==LeftCurlyBracket||LA252_1==Tilde||LA252_1==RULE_DOUBLE||LA252_1==RULE_HEX_INT||LA252_1==RULE_OCTAL_INT||LA252_1==RULE_SCIENTIFIC_INT||LA252_1==RULE_IDENTIFIER||LA252_1==RULE_STRING||LA252_1==RULE_INT) ) {
+                            if ( ((LA252_1>=Intersection && LA252_1<=With)||LA252_1==FullStopFullStopFullStop||(LA252_1>=For && LA252_1<=Var)||(LA252_1>=As && LA252_1<=Of)||LA252_1==LeftParenthesis||LA252_1==Asterisk||LA252_1==LessThanSign||(LA252_1>=QuestionMark && LA252_1<=LeftSquareBracket)||LA252_1==LeftCurlyBracket||LA252_1==Tilde||LA252_1==RULE_DOUBLE||LA252_1==RULE_HEX_INT||LA252_1==RULE_OCTAL_INT||LA252_1==RULE_SCIENTIFIC_INT||LA252_1==RULE_IDENTIFIER||LA252_1==RULE_STRING||LA252_1==RULE_INT) ) {
                                 alt252=1;
                             }
 
@@ -29967,13 +29967,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
         EObject this_PropertyNameValuePair_1 = null;
 
-        EObject this_PropertyGetterDeclaration_2 = null;
+        EObject this_PropertyNameValuePairSingleName_2 = null;
 
-        EObject this_PropertySetterDeclaration_3 = null;
+        EObject this_PropertyGetterDeclaration_3 = null;
 
-        EObject this_PropertyMethodDeclaration_4 = null;
+        EObject this_PropertySetterDeclaration_4 = null;
 
-        EObject this_PropertyNameValuePairSingleName_5 = null;
+        EObject this_PropertyMethodDeclaration_5 = null;
+
+        EObject this_PropertySpread_6 = null;
 
 
 
@@ -29981,7 +29983,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
         try {
             {
-            int alt255=6;
+            int alt255=7;
             alt255 = dfa255.predict(input);
             switch (alt255) {
                 case 1 :
@@ -30032,26 +30034,22 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     break;
                 case 3 :
                     {
-                    {
                     if ( state.backtracking==0 ) {
 
-                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_2());
-                      			
+                      			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_2());
+                      		
                     }
                     pushFollow(FOLLOW_2);
-                    this_PropertyGetterDeclaration_2=rulePropertyGetterDeclaration();
+                    this_PropertyNameValuePairSingleName_2=rulePropertyNameValuePairSingleName();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = this_PropertyGetterDeclaration_2;
-                      				afterParserOrEnumRuleCall();
-                      			
+                      			current = this_PropertyNameValuePairSingleName_2;
+                      			afterParserOrEnumRuleCall();
+                      		
                     }
-
-                    }
-
 
                     }
                     break;
@@ -30060,17 +30058,17 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     if ( state.backtracking==0 ) {
 
-                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_3());
+                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_3());
                       			
                     }
                     pushFollow(FOLLOW_2);
-                    this_PropertySetterDeclaration_3=rulePropertySetterDeclaration();
+                    this_PropertyGetterDeclaration_3=rulePropertyGetterDeclaration();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = this_PropertySetterDeclaration_3;
+                      				current = this_PropertyGetterDeclaration_3;
                       				afterParserOrEnumRuleCall();
                       			
                     }
@@ -30085,17 +30083,17 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     if ( state.backtracking==0 ) {
 
-                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_4());
+                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_4());
                       			
                     }
                     pushFollow(FOLLOW_2);
-                    this_PropertyMethodDeclaration_4=rulePropertyMethodDeclaration();
+                    this_PropertySetterDeclaration_4=rulePropertySetterDeclaration();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = this_PropertyMethodDeclaration_4;
+                      				current = this_PropertySetterDeclaration_4;
                       				afterParserOrEnumRuleCall();
                       			
                     }
@@ -30107,19 +30105,44 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     break;
                 case 6 :
                     {
+                    {
                     if ( state.backtracking==0 ) {
 
-                      			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_5());
-                      		
+                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_5());
+                      			
                     }
                     pushFollow(FOLLOW_2);
-                    this_PropertyNameValuePairSingleName_5=rulePropertyNameValuePairSingleName();
+                    this_PropertyMethodDeclaration_5=rulePropertyMethodDeclaration();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      			current = this_PropertyNameValuePairSingleName_5;
+                      				current = this_PropertyMethodDeclaration_5;
+                      				afterParserOrEnumRuleCall();
+                      			
+                    }
+
+                    }
+
+
+                    }
+                    break;
+                case 7 :
+                    {
+                    if ( state.backtracking==0 ) {
+
+                      			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySpreadParserRuleCall_6());
+                      		
+                    }
+                    pushFollow(FOLLOW_2);
+                    this_PropertySpread_6=rulePropertySpread();
+
+                    state._fsp--;
+                    if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      			current = this_PropertySpread_6;
                       			afterParserOrEnumRuleCall();
                       		
                     }
@@ -30154,13 +30177,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
         EObject this_PropertyNameValuePair_1 = null;
 
-        EObject this_PropertyGetterDeclaration_2 = null;
+        EObject this_PropertyNameValuePairSingleName_2 = null;
 
-        EObject this_PropertySetterDeclaration_3 = null;
+        EObject this_PropertyGetterDeclaration_3 = null;
 
-        EObject this_PropertyMethodDeclaration_4 = null;
+        EObject this_PropertySetterDeclaration_4 = null;
 
-        EObject this_PropertyNameValuePairSingleName_5 = null;
+        EObject this_PropertyMethodDeclaration_5 = null;
+
+        EObject this_PropertySpread_6 = null;
 
 
 
@@ -30168,7 +30193,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
         try {
             {
-            int alt256=6;
+            int alt256=7;
             alt256 = dfa256.predict(input);
             switch (alt256) {
                 case 1 :
@@ -30219,26 +30244,22 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     break;
                 case 3 :
                     {
-                    {
                     if ( state.backtracking==0 ) {
 
-                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_2());
-                      			
+                      			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_2());
+                      		
                     }
                     pushFollow(FOLLOW_2);
-                    this_PropertyGetterDeclaration_2=norm1_PropertyGetterDeclaration();
+                    this_PropertyNameValuePairSingleName_2=norm1_PropertyNameValuePairSingleName();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = this_PropertyGetterDeclaration_2;
-                      				afterParserOrEnumRuleCall();
-                      			
+                      			current = this_PropertyNameValuePairSingleName_2;
+                      			afterParserOrEnumRuleCall();
+                      		
                     }
-
-                    }
-
 
                     }
                     break;
@@ -30247,17 +30268,17 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     if ( state.backtracking==0 ) {
 
-                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_3());
+                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_3());
                       			
                     }
                     pushFollow(FOLLOW_2);
-                    this_PropertySetterDeclaration_3=norm1_PropertySetterDeclaration();
+                    this_PropertyGetterDeclaration_3=norm1_PropertyGetterDeclaration();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = this_PropertySetterDeclaration_3;
+                      				current = this_PropertyGetterDeclaration_3;
                       				afterParserOrEnumRuleCall();
                       			
                     }
@@ -30272,17 +30293,17 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     if ( state.backtracking==0 ) {
 
-                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_4());
+                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_4());
                       			
                     }
                     pushFollow(FOLLOW_2);
-                    this_PropertyMethodDeclaration_4=norm1_PropertyMethodDeclaration();
+                    this_PropertySetterDeclaration_4=norm1_PropertySetterDeclaration();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      				current = this_PropertyMethodDeclaration_4;
+                      				current = this_PropertySetterDeclaration_4;
                       				afterParserOrEnumRuleCall();
                       			
                     }
@@ -30294,19 +30315,44 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     break;
                 case 6 :
                     {
+                    {
                     if ( state.backtracking==0 ) {
 
-                      			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_5());
-                      		
+                      				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_5());
+                      			
                     }
                     pushFollow(FOLLOW_2);
-                    this_PropertyNameValuePairSingleName_5=norm1_PropertyNameValuePairSingleName();
+                    this_PropertyMethodDeclaration_5=norm1_PropertyMethodDeclaration();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      			current = this_PropertyNameValuePairSingleName_5;
+                      				current = this_PropertyMethodDeclaration_5;
+                      				afterParserOrEnumRuleCall();
+                      			
+                    }
+
+                    }
+
+
+                    }
+                    break;
+                case 7 :
+                    {
+                    if ( state.backtracking==0 ) {
+
+                      			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySpreadParserRuleCall_6());
+                      		
+                    }
+                    pushFollow(FOLLOW_2);
+                    this_PropertySpread_6=norm1_PropertySpread();
+
+                    state._fsp--;
+                    if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      			current = this_PropertySpread_6;
                       			afterParserOrEnumRuleCall();
                       		
                     }
@@ -34242,6 +34288,181 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						"body",
               						lv_body_7_0,
               						"org.eclipse.n4js.N4JS.Block");
+              					afterParserOrEnumRuleCall();
+              				
+            }
+
+            }
+
+
+            }
+
+
+            }
+
+
+            }
+
+            if ( state.backtracking==0 ) {
+
+              	leaveRule();
+
+            }
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    public final EObject entryRulePropertySpread() throws RecognitionException {
+        EObject current = null;
+
+        EObject iv_rulePropertySpread = null;
+
+
+        try {
+            {
+            if ( state.backtracking==0 ) {
+               newCompositeNode(grammarAccess.getPropertySpreadRule()); 
+            }
+            pushFollow(FOLLOW_1);
+            iv_rulePropertySpread=rulePropertySpread();
+
+            state._fsp--;
+            if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+               current =iv_rulePropertySpread; 
+            }
+            match(input,EOF,FOLLOW_2); if (state.failed) return current;
+
+            }
+
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    public final EObject rulePropertySpread() throws RecognitionException {
+        EObject current = null;
+
+        Token otherlv_0=null;
+        EObject lv_expression_1_0 = null;
+
+
+
+        	enterRule();
+
+        try {
+            {
+            {
+            otherlv_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_49); if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+
+              			newLeafNode(otherlv_0, grammarAccess.getPropertySpreadAccess().getFullStopFullStopFullStopKeyword_0());
+              		
+            }
+            {
+            {
+            if ( state.backtracking==0 ) {
+
+              					newCompositeNode(grammarAccess.getPropertySpreadAccess().getExpressionAssignmentExpressionParserRuleCall_1_0());
+              				
+            }
+            pushFollow(FOLLOW_2);
+            lv_expression_1_0=norm1_AssignmentExpression();
+
+            state._fsp--;
+            if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+
+              					if (current==null) {
+              						current = createModelElementForParent(grammarAccess.getPropertySpreadRule());
+              					}
+              					set(
+              						current,
+              						"expression",
+              						lv_expression_1_0,
+              						"org.eclipse.n4js.N4JS.AssignmentExpression");
+              					afterParserOrEnumRuleCall();
+              				
+            }
+
+            }
+
+
+            }
+
+
+            }
+
+
+            }
+
+            if ( state.backtracking==0 ) {
+
+              	leaveRule();
+
+            }
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+    public final EObject norm1_PropertySpread() throws RecognitionException {
+        EObject current = null;
+
+        Token otherlv_0=null;
+        EObject lv_expression_1_0 = null;
+
+
+
+        	enterRule();
+
+        try {
+            {
+            {
+            otherlv_0=(Token)match(input,FullStopFullStopFullStop,FOLLOW_70); if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+
+              			newLeafNode(otherlv_0, grammarAccess.getPropertySpreadAccess().getFullStopFullStopFullStopKeyword_0());
+              		
+            }
+            {
+            {
+            if ( state.backtracking==0 ) {
+
+              					newCompositeNode(grammarAccess.getPropertySpreadAccess().getExpressionAssignmentExpressionParserRuleCall_1_0());
+              				
+            }
+            pushFollow(FOLLOW_2);
+            lv_expression_1_0=norm3_AssignmentExpression();
+
+            state._fsp--;
+            if (state.failed) return current;
+            if ( state.backtracking==0 ) {
+
+              					if (current==null) {
+              						current = createModelElementForParent(grammarAccess.getPropertySpreadRule());
+              					}
+              					set(
+              						current,
+              						"expression",
+              						lv_expression_1_0,
+              						"org.eclipse.n4js.N4JS.AssignmentExpression");
               					afterParserOrEnumRuleCall();
               				
             }
@@ -67816,6 +68037,30 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     }
                     }
                     break;
+                case Out:
+                    {
+                    int LA574_5 = input.LA(3);
+
+                    if ( ((LA574_5>=Intersection && LA574_5<=Constructor)||LA574_5==Promisify||LA574_5==Default||LA574_5==Target||LA574_5==Await||LA574_5==Union||LA574_5==This||LA574_5==This_1||(LA574_5>=Type && LA574_5<=Void)||LA574_5==LeftParenthesis||LA574_5==QuestionMark||LA574_5==LeftSquareBracket||LA574_5==LeftCurlyBracket||LA574_5==Tilde||LA574_5==RULE_IDENTIFIER) ) {
+                        alt574=2;
+                    }
+                    else if ( (LA574_5==Colon) ) {
+                        alt574=3;
+                    }
+                    else {
+                        if (state.backtracking>0) {state.failed=true; return current;}
+                        NoViableAltException nvae =
+                            new NoViableAltException("", 574, 5, input);
+
+                        throw nvae;
+                    }
+                    }
+                    break;
+                case In:
+                    {
+                    alt574=2;
+                    }
+                    break;
                 case Intersection:
                 case Constructor:
                 case Implements:
@@ -67853,30 +68098,6 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case RULE_IDENTIFIER:
                     {
                     alt574=3;
-                    }
-                    break;
-                case Out:
-                    {
-                    int LA574_5 = input.LA(3);
-
-                    if ( ((LA574_5>=Intersection && LA574_5<=Constructor)||LA574_5==Promisify||LA574_5==Default||LA574_5==Target||LA574_5==Await||LA574_5==Union||LA574_5==This||LA574_5==This_1||(LA574_5>=Type && LA574_5<=Void)||LA574_5==LeftParenthesis||LA574_5==QuestionMark||LA574_5==LeftSquareBracket||LA574_5==LeftCurlyBracket||LA574_5==Tilde||LA574_5==RULE_IDENTIFIER) ) {
-                        alt574=2;
-                    }
-                    else if ( (LA574_5==Colon) ) {
-                        alt574=3;
-                    }
-                    else {
-                        if (state.backtracking>0) {state.failed=true; return current;}
-                        NoViableAltException nvae =
-                            new NoViableAltException("", 574, 5, input);
-
-                        throw nvae;
-                    }
-                    }
-                    break;
-                case In:
-                    {
-                    alt574=2;
                     }
                     break;
                 default:
@@ -82169,14 +82390,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             int LA718_2 = input.LA(2);
 
-            if ( (LA718_2==EqualsSignGreaterThanSign) ) {
-                alt718=3;
-            }
-            else if ( (LA718_2==RULE_NO_LINE_TERMINATOR) && (synpred242_InternalN4JSParser())) {
+            if ( (LA718_2==RULE_NO_LINE_TERMINATOR) && (synpred242_InternalN4JSParser())) {
                 alt718=2;
             }
             else if ( (LA718_2==LeftParenthesis) && (synpred242_InternalN4JSParser())) {
                 alt718=2;
+            }
+            else if ( (LA718_2==EqualsSignGreaterThanSign) ) {
+                alt718=3;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return ;}
@@ -88109,10 +88330,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     }
     static final String dfa_25s = "\72\uffff";
     static final String dfa_26s = "\20\uffff\11\17\41\uffff";
-    static final String dfa_27s = "\1\11\1\uffff\7\11\1\4\6\uffff\7\11\1\17\1\4\41\uffff";
+    static final String dfa_27s = "\1\11\1\uffff\7\11\1\4\6\uffff\1\17\7\11\1\4\41\uffff";
     static final String dfa_28s = "\1\151\1\uffff\7\100\1\175\6\uffff\10\u0098\1\u00a4\41\uffff";
     static final String dfa_29s = "\1\uffff\1\1\10\uffff\1\2\1\3\1\4\2\5\1\6\11\uffff\1\5\40\3";
-    static final String dfa_30s = "\1\7\1\uffff\1\16\1\14\1\1\1\17\1\6\1\4\1\11\1\15\6\uffff\1\5\1\21\1\2\1\20\1\13\1\0\1\12\1\3\1\10\41\uffff}>";
+    static final String dfa_30s = "\1\4\1\uffff\1\13\1\7\1\17\1\15\1\1\1\12\1\10\1\20\6\uffff\1\11\1\6\1\2\1\16\1\0\1\21\1\14\1\3\1\5\41\uffff}>";
     static final String[] dfa_31s = {
             "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\50\uffff\1\1",
             "",
@@ -88123,21 +88344,21 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17",
             "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17",
             "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17",
-            "\3\17\1\uffff\1\17\1\30\1\22\1\25\2\uffff\1\24\1\16\3\uffff\1\20\1\21\3\uffff\1\23\1\uffff\1\26\1\uffff\1\17\1\uffff\1\27\1\17\2\uffff\1\12\1\11\3\uffff\1\17\1\uffff\2\17\2\uffff\1\14\1\17\3\uffff\1\17\7\uffff\2\17\1\uffff\2\17\1\uffff\1\17\20\uffff\1\17\3\uffff\1\17\23\uffff\2\17\2\uffff\1\17\17\uffff\1\17",
+            "\3\17\1\uffff\1\17\1\30\1\23\1\26\2\uffff\1\25\1\16\3\uffff\1\21\1\22\3\uffff\1\24\1\uffff\1\27\1\uffff\1\17\1\uffff\1\20\1\17\2\uffff\1\12\1\11\3\uffff\1\17\1\uffff\2\17\2\uffff\1\14\1\17\3\uffff\1\17\7\uffff\2\17\1\uffff\2\17\1\uffff\1\17\20\uffff\1\17\3\uffff\1\17\23\uffff\2\17\2\uffff\1\17\17\uffff\1\17",
             "",
             "",
             "",
             "",
             "",
             "",
-            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
-            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
-            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
-            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
-            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
-            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
-            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
             "\1\16\117\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\40\uffff\1\31\5\uffff\1\17\1\uffff\1\17",
+            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
+            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
+            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
+            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
+            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
+            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
+            "\1\13\1\4\1\7\2\uffff\1\6\1\16\3\uffff\1\2\1\3\3\uffff\1\5\1\uffff\1\10\3\uffff\1\15\3\uffff\1\12\1\11\11\uffff\1\14\15\uffff\1\17\4\uffff\1\17\36\uffff\1\17\3\uffff\2\17\1\uffff\1\17\10\uffff\1\17\46\uffff\1\17\1\uffff\1\17",
             "\1\53\1\46\1\60\1\uffff\1\55\1\61\1\63\1\42\2\uffff\1\41\2\uffff\1\70\1\uffff\1\62\1\40\3\uffff\1\64\1\uffff\1\43\1\uffff\1\50\1\uffff\1\57\1\56\7\uffff\1\52\1\uffff\1\34\1\54\3\uffff\1\45\3\uffff\1\51\7\uffff\1\35\1\37\1\uffff\1\65\1\36\22\uffff\1\44\3\uffff\1\47\11\uffff\1\17\3\uffff\2\17\1\67\1\17\6\uffff\1\71\1\uffff\1\17\1\32\14\uffff\1\33\30\uffff\1\17\1\uffff\1\17\13\uffff\1\66",
             "",
             "",
@@ -88203,225 +88424,54 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA26_21 = input.LA(1);
+                        int LA26_20 = input.LA(1);
 
                          
-                        int index26_21 = input.index();
+                        int index26_20 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA26_21==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+                        if ( (LA26_20==EOF||LA26_20==Let||LA26_20==Var||LA26_20==Comma||(LA26_20>=Colon && LA26_20<=Semicolon)||LA26_20==EqualsSign||LA26_20==RightCurlyBracket||LA26_20==RULE_ML_COMMENT||LA26_20==RULE_EOL) ) {s = 15;}
 
-                        else if ( (LA26_21==Private) ) {s = 2;}
+                        else if ( (LA26_20==Const) ) {s = 9;}
 
-                        else if ( (LA26_21==Project) ) {s = 3;}
+                        else if ( (LA26_20==Private) ) {s = 2;}
 
-                        else if ( (LA26_21==Protected) ) {s = 4;}
+                        else if ( (LA26_20==Project) ) {s = 3;}
 
-                        else if ( (LA26_21==Public) ) {s = 5;}
+                        else if ( (LA26_20==Protected) ) {s = 4;}
 
-                        else if ( (LA26_21==External) ) {s = 6;}
+                        else if ( (LA26_20==Public) ) {s = 5;}
 
-                        else if ( (LA26_21==Abstract) ) {s = 7;}
+                        else if ( (LA26_20==External) ) {s = 6;}
 
-                        else if ( (LA26_21==Static) ) {s = 8;}
+                        else if ( (LA26_20==Abstract) ) {s = 7;}
 
-                        else if ( (LA26_21==Const) ) {s = 9;}
+                        else if ( (LA26_20==Static) ) {s = 8;}
 
-                        else if ( (LA26_21==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+                        else if ( (LA26_20==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
 
-                        else if ( (LA26_21==EOF||LA26_21==Let||LA26_21==Var||LA26_21==Comma||(LA26_21>=Colon && LA26_21<=Semicolon)||LA26_21==EqualsSign||LA26_21==RightCurlyBracket||LA26_21==RULE_ML_COMMENT||LA26_21==RULE_EOL) ) {s = 15;}
+                        else if ( (LA26_20==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
 
-                        else if ( (LA26_21==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+                        else if ( (LA26_20==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
 
-                        else if ( (LA26_21==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+                        else if ( (LA26_20==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
 
-                        else if ( (LA26_21==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+                        else if ( (LA26_20==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
 
                          
-                        input.seek(index26_21);
+                        input.seek(index26_20);
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
-                        int LA26_4 = input.LA(1);
-
-                         
-                        int index26_4 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_4==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_4==Private) ) {s = 2;}
-
-                        else if ( (LA26_4==Project) ) {s = 3;}
-
-                        else if ( (LA26_4==Protected) ) {s = 4;}
-
-                        else if ( (LA26_4==Public) ) {s = 5;}
-
-                        else if ( (LA26_4==External) ) {s = 6;}
-
-                        else if ( (LA26_4==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_4==Static) ) {s = 8;}
-
-                        else if ( (LA26_4==Const) ) {s = 9;}
-
-                        else if ( (LA26_4==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                        else if ( (LA26_4==Let||LA26_4==Var) ) {s = 15;}
-
-                        else if ( (LA26_4==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_4==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_4==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                         
-                        input.seek(index26_4);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA26_18 = input.LA(1);
-
-                         
-                        int index26_18 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_18==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_18==Private) ) {s = 2;}
-
-                        else if ( (LA26_18==Project) ) {s = 3;}
-
-                        else if ( (LA26_18==Protected) ) {s = 4;}
-
-                        else if ( (LA26_18==Public) ) {s = 5;}
-
-                        else if ( (LA26_18==External) ) {s = 6;}
-
-                        else if ( (LA26_18==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_18==Static) ) {s = 8;}
-
-                        else if ( (LA26_18==Const) ) {s = 9;}
-
-                        else if ( (LA26_18==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                        else if ( (LA26_18==EOF||LA26_18==Let||LA26_18==Var||LA26_18==Comma||(LA26_18>=Colon && LA26_18<=Semicolon)||LA26_18==EqualsSign||LA26_18==RightCurlyBracket||LA26_18==RULE_ML_COMMENT||LA26_18==RULE_EOL) ) {s = 15;}
-
-                        else if ( (LA26_18==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_18==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_18==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                         
-                        input.seek(index26_18);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA26_23 = input.LA(1);
-
-                         
-                        int index26_23 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_23==RULE_NO_LINE_TERMINATOR) && (synpred15_InternalN4JSParser())) {s = 25;}
-
-                        else if ( (LA26_23==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                        else if ( (LA26_23==EOF||LA26_23==Comma||(LA26_23>=Colon && LA26_23<=Semicolon)||LA26_23==EqualsSign||LA26_23==RightCurlyBracket||LA26_23==RULE_ML_COMMENT||LA26_23==RULE_EOL) ) {s = 15;}
-
-                         
-                        input.seek(index26_23);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA26_7 = input.LA(1);
-
-                         
-                        int index26_7 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_7==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_7==Private) ) {s = 2;}
-
-                        else if ( (LA26_7==Project) ) {s = 3;}
-
-                        else if ( (LA26_7==Protected) ) {s = 4;}
-
-                        else if ( (LA26_7==Public) ) {s = 5;}
-
-                        else if ( (LA26_7==External) ) {s = 6;}
-
-                        else if ( (LA26_7==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_7==Static) ) {s = 8;}
-
-                        else if ( (LA26_7==Const) ) {s = 9;}
-
-                        else if ( (LA26_7==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                        else if ( (LA26_7==Let||LA26_7==Var) ) {s = 15;}
-
-                        else if ( (LA26_7==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_7==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_7==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                         
-                        input.seek(index26_7);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
-                        int LA26_16 = input.LA(1);
-
-                         
-                        int index26_16 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_16==EOF||LA26_16==Let||LA26_16==Var||LA26_16==Comma||(LA26_16>=Colon && LA26_16<=Semicolon)||LA26_16==EqualsSign||LA26_16==RightCurlyBracket||LA26_16==RULE_ML_COMMENT||LA26_16==RULE_EOL) ) {s = 15;}
-
-                        else if ( (LA26_16==Const) ) {s = 9;}
-
-                        else if ( (LA26_16==Private) ) {s = 2;}
-
-                        else if ( (LA26_16==Project) ) {s = 3;}
-
-                        else if ( (LA26_16==Protected) ) {s = 4;}
-
-                        else if ( (LA26_16==Public) ) {s = 5;}
-
-                        else if ( (LA26_16==External) ) {s = 6;}
-
-                        else if ( (LA26_16==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_16==Static) ) {s = 8;}
-
-                        else if ( (LA26_16==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_16==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_16==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                        else if ( (LA26_16==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_16==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                         
-                        input.seek(index26_16);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 6 : 
                         int LA26_6 = input.LA(1);
 
                          
                         int index26_6 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA26_6==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+                        if ( (LA26_6==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_6==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
 
                         else if ( (LA26_6==Private) ) {s = 2;}
 
@@ -88439,21 +88489,97 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                         else if ( (LA26_6==Const) ) {s = 9;}
 
-                        else if ( (LA26_6==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+                        else if ( (LA26_6==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
 
                         else if ( (LA26_6==Let||LA26_6==Var) ) {s = 15;}
 
-                        else if ( (LA26_6==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+                        else if ( (LA26_6==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
 
-                        else if ( (LA26_6==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_6==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+                        else if ( (LA26_6==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
 
                          
                         input.seek(index26_6);
                         if ( s>=0 ) return s;
                         break;
-                    case 7 : 
+                    case 2 : 
+                        int LA26_18 = input.LA(1);
+
+                         
+                        int index26_18 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_18==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_18==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_18==Private) ) {s = 2;}
+
+                        else if ( (LA26_18==Project) ) {s = 3;}
+
+                        else if ( (LA26_18==Protected) ) {s = 4;}
+
+                        else if ( (LA26_18==Public) ) {s = 5;}
+
+                        else if ( (LA26_18==External) ) {s = 6;}
+
+                        else if ( (LA26_18==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_18==Static) ) {s = 8;}
+
+                        else if ( (LA26_18==Const) ) {s = 9;}
+
+                        else if ( (LA26_18==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                        else if ( (LA26_18==EOF||LA26_18==Let||LA26_18==Var||LA26_18==Comma||(LA26_18>=Colon && LA26_18<=Semicolon)||LA26_18==EqualsSign||LA26_18==RightCurlyBracket||LA26_18==RULE_ML_COMMENT||LA26_18==RULE_EOL) ) {s = 15;}
+
+                        else if ( (LA26_18==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_18==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                         
+                        input.seek(index26_18);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 3 : 
+                        int LA26_23 = input.LA(1);
+
+                         
+                        int index26_23 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_23==EOF||LA26_23==Let||LA26_23==Var||LA26_23==Comma||(LA26_23>=Colon && LA26_23<=Semicolon)||LA26_23==EqualsSign||LA26_23==RightCurlyBracket||LA26_23==RULE_ML_COMMENT||LA26_23==RULE_EOL) ) {s = 15;}
+
+                        else if ( (LA26_23==Const) ) {s = 9;}
+
+                        else if ( (LA26_23==Private) ) {s = 2;}
+
+                        else if ( (LA26_23==Project) ) {s = 3;}
+
+                        else if ( (LA26_23==Protected) ) {s = 4;}
+
+                        else if ( (LA26_23==Public) ) {s = 5;}
+
+                        else if ( (LA26_23==External) ) {s = 6;}
+
+                        else if ( (LA26_23==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_23==Static) ) {s = 8;}
+
+                        else if ( (LA26_23==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_23==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                        else if ( (LA26_23==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_23==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_23==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                         
+                        input.seek(index26_23);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
                         int LA26_0 = input.LA(1);
 
                          
@@ -88494,7 +88620,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index26_0);
                         if ( s>=0 ) return s;
                         break;
-                    case 8 : 
+                    case 5 : 
                         int LA26_24 = input.LA(1);
 
                          
@@ -88508,328 +88634,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index26_24);
                         if ( s>=0 ) return s;
                         break;
-                    case 9 : 
-                        int LA26_8 = input.LA(1);
-
-                         
-                        int index26_8 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_8==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_8==Private) ) {s = 2;}
-
-                        else if ( (LA26_8==Project) ) {s = 3;}
-
-                        else if ( (LA26_8==Protected) ) {s = 4;}
-
-                        else if ( (LA26_8==Public) ) {s = 5;}
-
-                        else if ( (LA26_8==External) ) {s = 6;}
-
-                        else if ( (LA26_8==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_8==Static) ) {s = 8;}
-
-                        else if ( (LA26_8==Const) ) {s = 9;}
-
-                        else if ( (LA26_8==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_8==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                        else if ( (LA26_8==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_8==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                        else if ( (LA26_8==Let||LA26_8==Var) ) {s = 15;}
-
-                         
-                        input.seek(index26_8);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 10 : 
-                        int LA26_22 = input.LA(1);
-
-                         
-                        int index26_22 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_22==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_22==Private) ) {s = 2;}
-
-                        else if ( (LA26_22==Project) ) {s = 3;}
-
-                        else if ( (LA26_22==Protected) ) {s = 4;}
-
-                        else if ( (LA26_22==Public) ) {s = 5;}
-
-                        else if ( (LA26_22==External) ) {s = 6;}
-
-                        else if ( (LA26_22==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_22==Static) ) {s = 8;}
-
-                        else if ( (LA26_22==Const) ) {s = 9;}
-
-                        else if ( (LA26_22==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_22==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                        else if ( (LA26_22==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_22==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                        else if ( (LA26_22==EOF||LA26_22==Let||LA26_22==Var||LA26_22==Comma||(LA26_22>=Colon && LA26_22<=Semicolon)||LA26_22==EqualsSign||LA26_22==RightCurlyBracket||LA26_22==RULE_ML_COMMENT||LA26_22==RULE_EOL) ) {s = 15;}
-
-                         
-                        input.seek(index26_22);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 11 : 
-                        int LA26_20 = input.LA(1);
-
-                         
-                        int index26_20 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_20==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_20==Private) ) {s = 2;}
-
-                        else if ( (LA26_20==Project) ) {s = 3;}
-
-                        else if ( (LA26_20==Protected) ) {s = 4;}
-
-                        else if ( (LA26_20==Public) ) {s = 5;}
-
-                        else if ( (LA26_20==External) ) {s = 6;}
-
-                        else if ( (LA26_20==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_20==Static) ) {s = 8;}
-
-                        else if ( (LA26_20==Const) ) {s = 9;}
-
-                        else if ( (LA26_20==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                        else if ( (LA26_20==EOF||LA26_20==Let||LA26_20==Var||LA26_20==Comma||(LA26_20>=Colon && LA26_20<=Semicolon)||LA26_20==EqualsSign||LA26_20==RightCurlyBracket||LA26_20==RULE_ML_COMMENT||LA26_20==RULE_EOL) ) {s = 15;}
-
-                        else if ( (LA26_20==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_20==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_20==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                         
-                        input.seek(index26_20);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 12 : 
-                        int LA26_3 = input.LA(1);
-
-                         
-                        int index26_3 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_3==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_3==Private) ) {s = 2;}
-
-                        else if ( (LA26_3==Project) ) {s = 3;}
-
-                        else if ( (LA26_3==Protected) ) {s = 4;}
-
-                        else if ( (LA26_3==Public) ) {s = 5;}
-
-                        else if ( (LA26_3==External) ) {s = 6;}
-
-                        else if ( (LA26_3==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_3==Static) ) {s = 8;}
-
-                        else if ( (LA26_3==Const) ) {s = 9;}
-
-                        else if ( (LA26_3==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                        else if ( (LA26_3==Let||LA26_3==Var) ) {s = 15;}
-
-                        else if ( (LA26_3==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_3==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_3==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                         
-                        input.seek(index26_3);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 13 : 
-                        int LA26_9 = input.LA(1);
-
-                         
-                        int index26_9 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( ((LA26_9>=Intersection && LA26_9<=Implements)||LA26_9==Promisify||LA26_9==Target||LA26_9==Await||LA26_9==Union||(LA26_9>=Yield && LA26_9<=This)||LA26_9==From||LA26_9==Type||(LA26_9>=Get && LA26_9<=Let)||(LA26_9>=Out && LA26_9<=Set)||LA26_9==Var||LA26_9==As||LA26_9==Of||(LA26_9>=CommercialAt && LA26_9<=LeftSquareBracket)||LA26_9==LeftCurlyBracket||LA26_9==RULE_IDENTIFIER) ) {s = 15;}
-
-                        else if ( (LA26_9==Const) ) {s = 9;}
-
-                        else if ( (LA26_9==Private) ) {s = 16;}
-
-                        else if ( (LA26_9==Project) ) {s = 17;}
-
-                        else if ( (LA26_9==Protected) ) {s = 18;}
-
-                        else if ( (LA26_9==Public) ) {s = 19;}
-
-                        else if ( (LA26_9==External) ) {s = 20;}
-
-                        else if ( (LA26_9==Abstract) ) {s = 21;}
-
-                        else if ( (LA26_9==Static) ) {s = 22;}
-
-                        else if ( (LA26_9==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_9==Async) ) {s = 23;}
-
-                        else if ( (LA26_9==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                        else if ( (LA26_9==Interface) ) {s = 24;}
-
-                        else if ( (LA26_9==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                         
-                        input.seek(index26_9);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 14 : 
-                        int LA26_2 = input.LA(1);
-
-                         
-                        int index26_2 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_2==Let||LA26_2==Var) ) {s = 15;}
-
-                        else if ( (LA26_2==Const) ) {s = 9;}
-
-                        else if ( (LA26_2==Private) ) {s = 2;}
-
-                        else if ( (LA26_2==Project) ) {s = 3;}
-
-                        else if ( (LA26_2==Protected) ) {s = 4;}
-
-                        else if ( (LA26_2==Public) ) {s = 5;}
-
-                        else if ( (LA26_2==External) ) {s = 6;}
-
-                        else if ( (LA26_2==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_2==Static) ) {s = 8;}
-
-                        else if ( (LA26_2==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_2==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_2==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                        else if ( (LA26_2==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_2==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                         
-                        input.seek(index26_2);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 15 : 
-                        int LA26_5 = input.LA(1);
-
-                         
-                        int index26_5 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_5==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_5==Private) ) {s = 2;}
-
-                        else if ( (LA26_5==Project) ) {s = 3;}
-
-                        else if ( (LA26_5==Protected) ) {s = 4;}
-
-                        else if ( (LA26_5==Public) ) {s = 5;}
-
-                        else if ( (LA26_5==External) ) {s = 6;}
-
-                        else if ( (LA26_5==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_5==Static) ) {s = 8;}
-
-                        else if ( (LA26_5==Const) ) {s = 9;}
-
-                        else if ( (LA26_5==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_5==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                        else if ( (LA26_5==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_5==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                        else if ( (LA26_5==Let||LA26_5==Var) ) {s = 15;}
-
-                         
-                        input.seek(index26_5);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 16 : 
-                        int LA26_19 = input.LA(1);
-
-                         
-                        int index26_19 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA26_19==EOF||LA26_19==Let||LA26_19==Var||LA26_19==Comma||(LA26_19>=Colon && LA26_19<=Semicolon)||LA26_19==EqualsSign||LA26_19==RightCurlyBracket||LA26_19==RULE_ML_COMMENT||LA26_19==RULE_EOL) ) {s = 15;}
-
-                        else if ( (LA26_19==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
-
-                        else if ( (LA26_19==Private) ) {s = 2;}
-
-                        else if ( (LA26_19==Project) ) {s = 3;}
-
-                        else if ( (LA26_19==Protected) ) {s = 4;}
-
-                        else if ( (LA26_19==Public) ) {s = 5;}
-
-                        else if ( (LA26_19==External) ) {s = 6;}
-
-                        else if ( (LA26_19==Abstract) ) {s = 7;}
-
-                        else if ( (LA26_19==Static) ) {s = 8;}
-
-                        else if ( (LA26_19==Const) ) {s = 9;}
-
-                        else if ( (LA26_19==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
-
-                        else if ( (LA26_19==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
-
-                        else if ( (LA26_19==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
-
-                        else if ( (LA26_19==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
-
-                         
-                        input.seek(index26_19);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 17 : 
+                    case 6 : 
                         int LA26_17 = input.LA(1);
 
                          
                         int index26_17 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA26_17==EOF||LA26_17==Let||LA26_17==Var||LA26_17==Comma||(LA26_17>=Colon && LA26_17<=Semicolon)||LA26_17==EqualsSign||LA26_17==RightCurlyBracket||LA26_17==RULE_ML_COMMENT||LA26_17==RULE_EOL) ) {s = 15;}
-
-                        else if ( (LA26_17==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+                        if ( (LA26_17==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
 
                         else if ( (LA26_17==Private) ) {s = 2;}
 
@@ -88847,9 +88659,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                         else if ( (LA26_17==Const) ) {s = 9;}
 
-                        else if ( (LA26_17==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+                        else if ( (LA26_17==EOF||LA26_17==Let||LA26_17==Var||LA26_17==Comma||(LA26_17>=Colon && LA26_17<=Semicolon)||LA26_17==EqualsSign||LA26_17==RightCurlyBracket||LA26_17==RULE_ML_COMMENT||LA26_17==RULE_EOL) ) {s = 15;}
 
-                        else if ( (LA26_17==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+                        else if ( (LA26_17==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_17==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
 
                         else if ( (LA26_17==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
 
@@ -88857,6 +88671,413 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                          
                         input.seek(index26_17);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 7 : 
+                        int LA26_3 = input.LA(1);
+
+                         
+                        int index26_3 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_3==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_3==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_3==Private) ) {s = 2;}
+
+                        else if ( (LA26_3==Project) ) {s = 3;}
+
+                        else if ( (LA26_3==Protected) ) {s = 4;}
+
+                        else if ( (LA26_3==Public) ) {s = 5;}
+
+                        else if ( (LA26_3==External) ) {s = 6;}
+
+                        else if ( (LA26_3==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_3==Static) ) {s = 8;}
+
+                        else if ( (LA26_3==Const) ) {s = 9;}
+
+                        else if ( (LA26_3==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                        else if ( (LA26_3==Let||LA26_3==Var) ) {s = 15;}
+
+                        else if ( (LA26_3==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_3==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                         
+                        input.seek(index26_3);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 8 : 
+                        int LA26_8 = input.LA(1);
+
+                         
+                        int index26_8 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_8==Let||LA26_8==Var) ) {s = 15;}
+
+                        else if ( (LA26_8==Const) ) {s = 9;}
+
+                        else if ( (LA26_8==Private) ) {s = 2;}
+
+                        else if ( (LA26_8==Project) ) {s = 3;}
+
+                        else if ( (LA26_8==Protected) ) {s = 4;}
+
+                        else if ( (LA26_8==Public) ) {s = 5;}
+
+                        else if ( (LA26_8==External) ) {s = 6;}
+
+                        else if ( (LA26_8==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_8==Static) ) {s = 8;}
+
+                        else if ( (LA26_8==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_8==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                        else if ( (LA26_8==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_8==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_8==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                         
+                        input.seek(index26_8);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 9 : 
+                        int LA26_16 = input.LA(1);
+
+                         
+                        int index26_16 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_16==EOF||LA26_16==Comma||(LA26_16>=Colon && LA26_16<=Semicolon)||LA26_16==EqualsSign||LA26_16==RightCurlyBracket||LA26_16==RULE_ML_COMMENT||LA26_16==RULE_EOL) ) {s = 15;}
+
+                        else if ( (LA26_16==RULE_NO_LINE_TERMINATOR) && (synpred15_InternalN4JSParser())) {s = 25;}
+
+                        else if ( (LA26_16==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                         
+                        input.seek(index26_16);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 10 : 
+                        int LA26_7 = input.LA(1);
+
+                         
+                        int index26_7 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_7==Let||LA26_7==Var) ) {s = 15;}
+
+                        else if ( (LA26_7==Const) ) {s = 9;}
+
+                        else if ( (LA26_7==Private) ) {s = 2;}
+
+                        else if ( (LA26_7==Project) ) {s = 3;}
+
+                        else if ( (LA26_7==Protected) ) {s = 4;}
+
+                        else if ( (LA26_7==Public) ) {s = 5;}
+
+                        else if ( (LA26_7==External) ) {s = 6;}
+
+                        else if ( (LA26_7==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_7==Static) ) {s = 8;}
+
+                        else if ( (LA26_7==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_7==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                        else if ( (LA26_7==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_7==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_7==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                         
+                        input.seek(index26_7);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 11 : 
+                        int LA26_2 = input.LA(1);
+
+                         
+                        int index26_2 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_2==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                        else if ( (LA26_2==Private) ) {s = 2;}
+
+                        else if ( (LA26_2==Project) ) {s = 3;}
+
+                        else if ( (LA26_2==Protected) ) {s = 4;}
+
+                        else if ( (LA26_2==Public) ) {s = 5;}
+
+                        else if ( (LA26_2==External) ) {s = 6;}
+
+                        else if ( (LA26_2==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_2==Static) ) {s = 8;}
+
+                        else if ( (LA26_2==Const) ) {s = 9;}
+
+                        else if ( (LA26_2==Let||LA26_2==Var) ) {s = 15;}
+
+                        else if ( (LA26_2==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_2==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                        else if ( (LA26_2==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_2==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                         
+                        input.seek(index26_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 12 : 
+                        int LA26_22 = input.LA(1);
+
+                         
+                        int index26_22 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_22==EOF||LA26_22==Let||LA26_22==Var||LA26_22==Comma||(LA26_22>=Colon && LA26_22<=Semicolon)||LA26_22==EqualsSign||LA26_22==RightCurlyBracket||LA26_22==RULE_ML_COMMENT||LA26_22==RULE_EOL) ) {s = 15;}
+
+                        else if ( (LA26_22==Const) ) {s = 9;}
+
+                        else if ( (LA26_22==Private) ) {s = 2;}
+
+                        else if ( (LA26_22==Project) ) {s = 3;}
+
+                        else if ( (LA26_22==Protected) ) {s = 4;}
+
+                        else if ( (LA26_22==Public) ) {s = 5;}
+
+                        else if ( (LA26_22==External) ) {s = 6;}
+
+                        else if ( (LA26_22==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_22==Static) ) {s = 8;}
+
+                        else if ( (LA26_22==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_22==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                        else if ( (LA26_22==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_22==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_22==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                         
+                        input.seek(index26_22);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 13 : 
+                        int LA26_5 = input.LA(1);
+
+                         
+                        int index26_5 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_5==Let||LA26_5==Var) ) {s = 15;}
+
+                        else if ( (LA26_5==Const) ) {s = 9;}
+
+                        else if ( (LA26_5==Private) ) {s = 2;}
+
+                        else if ( (LA26_5==Project) ) {s = 3;}
+
+                        else if ( (LA26_5==Protected) ) {s = 4;}
+
+                        else if ( (LA26_5==Public) ) {s = 5;}
+
+                        else if ( (LA26_5==External) ) {s = 6;}
+
+                        else if ( (LA26_5==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_5==Static) ) {s = 8;}
+
+                        else if ( (LA26_5==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_5==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                        else if ( (LA26_5==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_5==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_5==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                         
+                        input.seek(index26_5);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 14 : 
+                        int LA26_19 = input.LA(1);
+
+                         
+                        int index26_19 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_19==EOF||LA26_19==Let||LA26_19==Var||LA26_19==Comma||(LA26_19>=Colon && LA26_19<=Semicolon)||LA26_19==EqualsSign||LA26_19==RightCurlyBracket||LA26_19==RULE_ML_COMMENT||LA26_19==RULE_EOL) ) {s = 15;}
+
+                        else if ( (LA26_19==Const) ) {s = 9;}
+
+                        else if ( (LA26_19==Private) ) {s = 2;}
+
+                        else if ( (LA26_19==Project) ) {s = 3;}
+
+                        else if ( (LA26_19==Protected) ) {s = 4;}
+
+                        else if ( (LA26_19==Public) ) {s = 5;}
+
+                        else if ( (LA26_19==External) ) {s = 6;}
+
+                        else if ( (LA26_19==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_19==Static) ) {s = 8;}
+
+                        else if ( (LA26_19==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_19==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                        else if ( (LA26_19==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_19==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_19==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                         
+                        input.seek(index26_19);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 15 : 
+                        int LA26_4 = input.LA(1);
+
+                         
+                        int index26_4 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_4==Let||LA26_4==Var) ) {s = 15;}
+
+                        else if ( (LA26_4==Const) ) {s = 9;}
+
+                        else if ( (LA26_4==Private) ) {s = 2;}
+
+                        else if ( (LA26_4==Project) ) {s = 3;}
+
+                        else if ( (LA26_4==Protected) ) {s = 4;}
+
+                        else if ( (LA26_4==Public) ) {s = 5;}
+
+                        else if ( (LA26_4==External) ) {s = 6;}
+
+                        else if ( (LA26_4==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_4==Static) ) {s = 8;}
+
+                        else if ( (LA26_4==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_4==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                        else if ( (LA26_4==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_4==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_4==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                         
+                        input.seek(index26_4);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 16 : 
+                        int LA26_9 = input.LA(1);
+
+                         
+                        int index26_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_9==Async) ) {s = 16;}
+
+                        else if ( (LA26_9==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_9==Private) ) {s = 17;}
+
+                        else if ( (LA26_9==Project) ) {s = 18;}
+
+                        else if ( (LA26_9==Protected) ) {s = 19;}
+
+                        else if ( (LA26_9==Public) ) {s = 20;}
+
+                        else if ( (LA26_9==External) ) {s = 21;}
+
+                        else if ( (LA26_9==Abstract) ) {s = 22;}
+
+                        else if ( (LA26_9==Static) ) {s = 23;}
+
+                        else if ( (LA26_9==Const) ) {s = 9;}
+
+                        else if ( (LA26_9==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                        else if ( ((LA26_9>=Intersection && LA26_9<=Implements)||LA26_9==Promisify||LA26_9==Target||LA26_9==Await||LA26_9==Union||(LA26_9>=Yield && LA26_9<=This)||LA26_9==From||LA26_9==Type||(LA26_9>=Get && LA26_9<=Let)||(LA26_9>=Out && LA26_9<=Set)||LA26_9==Var||LA26_9==As||LA26_9==Of||(LA26_9>=CommercialAt && LA26_9<=LeftSquareBracket)||LA26_9==LeftCurlyBracket||LA26_9==RULE_IDENTIFIER) ) {s = 15;}
+
+                        else if ( (LA26_9==Interface) ) {s = 24;}
+
+                        else if ( (LA26_9==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                         
+                        input.seek(index26_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 17 : 
+                        int LA26_21 = input.LA(1);
+
+                         
+                        int index26_21 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA26_21==Async) && (synpred15_InternalN4JSParser())) {s = 13;}
+
+                        else if ( (LA26_21==Function) && (synpred15_InternalN4JSParser())) {s = 14;}
+
+                        else if ( (LA26_21==Private) ) {s = 2;}
+
+                        else if ( (LA26_21==Project) ) {s = 3;}
+
+                        else if ( (LA26_21==Protected) ) {s = 4;}
+
+                        else if ( (LA26_21==Public) ) {s = 5;}
+
+                        else if ( (LA26_21==External) ) {s = 6;}
+
+                        else if ( (LA26_21==Abstract) ) {s = 7;}
+
+                        else if ( (LA26_21==Static) ) {s = 8;}
+
+                        else if ( (LA26_21==Const) ) {s = 9;}
+
+                        else if ( (LA26_21==Class) && (synpred12_InternalN4JSParser())) {s = 10;}
+
+                        else if ( (LA26_21==EOF||LA26_21==Let||LA26_21==Var||LA26_21==Comma||(LA26_21>=Colon && LA26_21<=Semicolon)||LA26_21==EqualsSign||LA26_21==RightCurlyBracket||LA26_21==RULE_ML_COMMENT||LA26_21==RULE_EOL) ) {s = 15;}
+
+                        else if ( (LA26_21==Interface) && (synpred13_InternalN4JSParser())) {s = 11;}
+
+                        else if ( (LA26_21==Enum) && (synpred14_InternalN4JSParser())) {s = 12;}
+
+                         
+                        input.seek(index26_21);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -89056,7 +89277,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     static final String dfa_55s = "\1\4\1\0\1\4\1\0\2\uffff\1\0\125\uffff";
     static final String dfa_56s = "\1\u0098\1\0\1\u0094\1\0\2\uffff\1\0\125\uffff";
     static final String dfa_57s = "\4\uffff\1\1\1\2\1\uffff\125\1";
-    static final String dfa_58s = "\1\0\1\1\1\3\1\2\2\uffff\1\4\125\uffff}>";
+    static final String dfa_58s = "\1\1\1\2\1\0\1\4\2\uffff\1\3\125\uffff}>";
     static final String[] dfa_59s = {
             "\3\5\1\uffff\11\5\2\uffff\16\5\1\uffff\23\5\4\uffff\10\5\5\uffff\1\5\1\uffff\1\5\1\uffff\1\5\4\uffff\1\5\1\uffff\3\5\1\uffff\1\5\2\uffff\1\5\2\uffff\1\5\2\uffff\1\5\1\uffff\1\5\1\uffff\1\5\1\uffff\1\1\1\5\3\uffff\2\5\2\uffff\1\5\1\uffff\1\3\1\5\3\uffff\1\5\1\uffff\4\5\1\uffff\1\5\1\uffff\1\5\2\uffff\1\5\11\uffff\2\5\10\uffff\1\5\1\uffff\1\4\1\uffff\1\4",
             "\1\uffff",
@@ -89181,6 +89402,20 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
+                        int LA52_2 = input.LA(1);
+
+                         
+                        int index52_2 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA52_2==EOF) ) {s = 6;}
+
+                        
+                        else if ((LA52_2>=-1 && LA52_2<=148 && (s=T2S.M_2[LA52_2-(-1)])>=0) && (synpred19_InternalN4JSParser())) { /* 85 cases */ }
+                        input.seek(index52_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
                         int LA52_0 = input.LA(1);
 
                          
@@ -89201,7 +89436,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index52_0);
                         if ( s>=0 ) return s;
                         break;
-                    case 1 : 
+                    case 2 : 
                         int LA52_1 = input.LA(1);
 
                          
@@ -89216,7 +89451,20 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index52_1);
                         if ( s>=0 ) return s;
                         break;
-                    case 2 : 
+                    case 3 : 
+                        int LA52_6 = input.LA(1);
+
+                         
+                        int index52_6 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA52_6==EOF) && (synpred19_InternalN4JSParser())) {s = 91;}
+
+                         
+                        input.seek(index52_6);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
                         int LA52_3 = input.LA(1);
 
                          
@@ -89229,33 +89477,6 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                          
                         input.seek(index52_3);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA52_2 = input.LA(1);
-
-                         
-                        int index52_2 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA52_2==EOF) ) {s = 6;}
-
-                        
-                        else if ((LA52_2>=-1 && LA52_2<=148 && (s=T2S.M_2[LA52_2-(-1)])>=0) && (synpred19_InternalN4JSParser())) { /* 85 cases */ }
-                        input.seek(index52_2);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA52_6 = input.LA(1);
-
-                         
-                        int index52_6 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA52_6==EOF) && (synpred19_InternalN4JSParser())) {s = 91;}
-
-                         
-                        input.seek(index52_6);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -91892,7 +92113,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_121s = "\1\1\1\0\1\4\1\2\2\uffff\1\3\125\uffff}>";
+    static final String dfa_121s = "\1\2\1\1\1\3\1\0\2\uffff\1\4\125\uffff}>";
     static final short[] dfa_121 = DFA.unpackEncodedString(dfa_121s);
 
     class DFA169 extends DFA {
@@ -91916,6 +92137,21 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
+                        int LA169_3 = input.LA(1);
+
+                         
+                        int index169_3 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred102_InternalN4JSParser()) ) {s = 90;}
+
+                        else if ( (true) ) {s = 5;}
+
+                         
+                        input.seek(index169_3);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
                         int LA169_1 = input.LA(1);
 
                          
@@ -91930,7 +92166,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index169_1);
                         if ( s>=0 ) return s;
                         break;
-                    case 1 : 
+                    case 2 : 
                         int LA169_0 = input.LA(1);
 
                          
@@ -91951,35 +92187,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index169_0);
                         if ( s>=0 ) return s;
                         break;
-                    case 2 : 
-                        int LA169_3 = input.LA(1);
-
-                         
-                        int index169_3 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred102_InternalN4JSParser()) ) {s = 90;}
-
-                        else if ( (true) ) {s = 5;}
-
-                         
-                        input.seek(index169_3);
-                        if ( s>=0 ) return s;
-                        break;
                     case 3 : 
-                        int LA169_6 = input.LA(1);
-
-                         
-                        int index169_6 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA169_6==EOF) && (synpred102_InternalN4JSParser())) {s = 91;}
-
-                         
-                        input.seek(index169_6);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
                         int LA169_2 = input.LA(1);
 
                          
@@ -91991,6 +92199,19 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         
                         else if ((LA169_2>=-1 && LA169_2<=148 && (s=T2S.M_2[LA169_2-(-1)])>=0) && (synpred102_InternalN4JSParser())) { /* 85 cases */ }
                         input.seek(index169_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
+                        int LA169_6 = input.LA(1);
+
+                         
+                        int index169_6 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA169_6==EOF) && (synpred102_InternalN4JSParser())) {s = 91;}
+
+                         
+                        input.seek(index169_6);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -92604,7 +92825,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     static final String dfa_145s = "\1\4\32\124\1\uffff\2\0\1\uffff";
     static final String dfa_146s = "\1\175\32\146\1\uffff\2\0\1\uffff";
     static final String dfa_147s = "\33\uffff\1\2\2\uffff\1\1";
-    static final String dfa_148s = "\34\uffff\1\1\1\0\1\uffff}>";
+    static final String dfa_148s = "\34\uffff\1\0\1\1\1\uffff}>";
     static final String[] dfa_149s = {
             "\1\20\1\13\1\25\1\uffff\1\22\1\26\1\30\1\7\2\uffff\1\6\4\uffff\1\27\1\5\3\uffff\1\31\1\uffff\1\10\1\uffff\1\15\1\uffff\1\24\1\23\7\uffff\1\17\2\uffff\1\21\3\uffff\1\12\3\uffff\1\16\7\uffff\1\2\1\4\1\uffff\1\32\1\3\22\uffff\1\11\3\uffff\1\14\23\uffff\2\33\2\uffff\1\33\17\uffff\1\1",
             "\1\34\1\35\11\uffff\1\33\3\uffff\2\33\1\uffff\1\33",
@@ -92667,21 +92888,6 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA197_29 = input.LA(1);
-
-                         
-                        int index197_29 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred110_InternalN4JSParser()) ) {s = 30;}
-
-                        else if ( (true) ) {s = 27;}
-
-                         
-                        input.seek(index197_29);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
                         int LA197_28 = input.LA(1);
 
                          
@@ -92694,6 +92900,21 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                          
                         input.seek(index197_28);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
+                        int LA197_29 = input.LA(1);
+
+                         
+                        int index197_29 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred110_InternalN4JSParser()) ) {s = 30;}
+
+                        else if ( (true) ) {s = 27;}
+
+                         
+                        input.seek(index197_29);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -93920,19 +94141,19 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             "",
             "",
-            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\1\36\1\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34\46\uffff\1\35",
-            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\1\36\1\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34\46\uffff\1\35",
-            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\1\36\1\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34\46\uffff\1\35",
-            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\1\36\1\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34\46\uffff\1\35",
-            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\1\36\1\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34\46\uffff\1\35",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\1\35\1\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34\46\uffff\1\36",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\1\35\1\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34\46\uffff\1\36",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\1\35\1\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34\46\uffff\1\36",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\1\35\1\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34\46\uffff\1\36",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\1\35\1\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34\46\uffff\1\36",
             "\61\34\4\uffff\10\34\20\uffff\5\34\13\uffff\2\34\4\uffff\1\34\5\uffff\1\40\17\uffff\1\34\46\uffff\1\34",
             "\61\34\4\uffff\10\34\20\uffff\5\34\13\uffff\2\34\4\uffff\1\34\5\uffff\1\40\17\uffff\1\34\46\uffff\1\34",
             "\61\34\4\uffff\10\34\20\uffff\5\34\13\uffff\2\34\4\uffff\1\34\5\uffff\1\41\17\uffff\1\34\46\uffff\1\34",
             "\61\34\4\uffff\10\34\20\uffff\5\34\13\uffff\2\34\4\uffff\1\34\5\uffff\1\42\17\uffff\1\34\46\uffff\1\34",
             "",
             "",
+            "\4\34\1\46\7\34\1\50\13\34\1\47\2\34\1\45\12\34\1\44\10\34\1\43\1\34\4\uffff\10\34\20\uffff\5\34\17\uffff\1\34\27\uffff\1\51",
             "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\21\3\uffff\2\21\1\uffff\2\34\2\uffff\1\21\1\uffff\1\37\1\21\1\uffff\1\21\2\uffff\1\34\1\21\16\uffff\1\34",
-            "\4\34\1\50\7\34\1\44\13\34\1\46\2\34\1\51\12\34\1\47\10\34\1\45\1\34\4\uffff\10\34\20\uffff\5\34\17\uffff\1\34\27\uffff\1\43",
             "\3\21\1\uffff\4\21\2\uffff\1\21\4\uffff\2\21\3\uffff\1\21\1\uffff\1\21\1\uffff\1\21\1\uffff\2\21\7\uffff\1\21\1\uffff\2\21\3\uffff\1\21\3\uffff\1\21\7\uffff\2\21\1\uffff\2\21\22\uffff\1\21\3\uffff\1\21\17\uffff\1\34\7\uffff\1\34\17\uffff\1\21",
             "\1\21\7\uffff\1\21\13\uffff\1\21\2\uffff\1\21\12\uffff\1\21\5\uffff\1\21\2\uffff\1\21\2\uffff\1\34\61\uffff\1\21\24\uffff\1\21",
             "\2\21\2\uffff\1\21\7\uffff\1\21\13\uffff\1\21\2\uffff\1\21\7\uffff\1\21\2\uffff\1\21\5\uffff\1\21\1\uffff\2\21\2\uffff\1\34\44\uffff\1\21\14\uffff\1\21\1\uffff\1\21\2\uffff\1\21\2\uffff\1\21\14\uffff\1\21",
@@ -93981,11 +94202,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index231_4 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA231_4==EOF||(LA231_4>=Implements && LA231_4<=Instanceof)||LA231_4==ExclamationMarkEqualsSignEqualsSign||(LA231_4>=LessThanSignLessThanSignEqualsSign && LA231_4<=EqualsSignEqualsSignEqualsSign)||(LA231_4>=ExclamationMarkEqualsSign && LA231_4<=EqualsSignEqualsSign)||(LA231_4>=CircumflexAccentEqualsSign && LA231_4<=As)||(LA231_4>=In && LA231_4<=VerticalLineVerticalLine)||(LA231_4>=PercentSign && LA231_4<=QuestionMark)||(LA231_4>=LeftSquareBracket && LA231_4<=RightCurlyBracket)||(LA231_4>=RULE_TEMPLATE_HEAD && LA231_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA231_4==RULE_ML_COMMENT||LA231_4==RULE_EOL||LA231_4==RULE_VERSION) ) {s = 3;}
-
-                        else if ( (LA231_4==RULE_NO_LINE_TERMINATOR) && (synpred126_InternalN4JSParser())) {s = 15;}
+                        if ( (LA231_4==RULE_NO_LINE_TERMINATOR) && (synpred126_InternalN4JSParser())) {s = 15;}
 
                         else if ( (LA231_4==Function) && (synpred126_InternalN4JSParser())) {s = 16;}
+
+                        else if ( (LA231_4==EOF||(LA231_4>=Implements && LA231_4<=Instanceof)||LA231_4==ExclamationMarkEqualsSignEqualsSign||(LA231_4>=LessThanSignLessThanSignEqualsSign && LA231_4<=EqualsSignEqualsSignEqualsSign)||(LA231_4>=ExclamationMarkEqualsSign && LA231_4<=EqualsSignEqualsSign)||(LA231_4>=CircumflexAccentEqualsSign && LA231_4<=As)||(LA231_4>=In && LA231_4<=VerticalLineVerticalLine)||(LA231_4>=PercentSign && LA231_4<=QuestionMark)||(LA231_4>=LeftSquareBracket && LA231_4<=RightCurlyBracket)||(LA231_4>=RULE_TEMPLATE_HEAD && LA231_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA231_4==RULE_ML_COMMENT||LA231_4==RULE_EOL||LA231_4==RULE_VERSION) ) {s = 3;}
 
                          
                         input.seek(index231_4);
@@ -93999,16 +94220,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_171s = "\1\4\3\uffff\1\6\1\4\14\uffff\1\4\1\uffff\10\4\1\uffff\3\4\1\10\11\4";
-    static final String dfa_172s = "\1\u0094\3\uffff\1\u00a4\1\175\14\uffff\1\u00a4\1\uffff\10\u00a4\1\uffff\6\175\7\u00a4";
-    static final String dfa_173s = "\1\uffff\1\1\1\2\1\3\2\uffff\1\6\1\10\1\11\1\12\1\13\1\14\1\15\1\17\1\20\2\16\1\4\1\uffff\1\5\10\uffff\1\7\15\uffff";
+    static final String dfa_171s = "\1\4\3\uffff\1\6\1\4\15\uffff\11\4\1\uffff\3\4\1\10\11\4";
+    static final String dfa_172s = "\1\u0094\3\uffff\1\u00a4\1\175\15\uffff\11\u00a4\1\uffff\6\175\7\u00a4";
+    static final String dfa_173s = "\1\uffff\1\1\1\2\1\3\2\uffff\1\6\1\10\1\11\1\12\1\13\1\14\1\15\1\17\1\20\2\16\1\4\1\7\11\uffff\1\5\15\uffff";
     static final String[] dfa_174s = {
             "\3\3\1\uffff\4\3\2\uffff\1\3\1\14\3\uffff\2\3\2\uffff\1\6\1\3\1\uffff\1\3\1\uffff\1\3\1\uffff\1\4\1\3\2\uffff\1\15\1\uffff\1\7\1\2\1\uffff\1\3\2\uffff\1\3\3\uffff\1\3\1\7\1\1\1\7\1\3\7\uffff\2\3\1\uffff\2\3\13\uffff\1\7\6\uffff\1\3\3\uffff\1\3\5\uffff\1\12\6\uffff\1\7\2\uffff\1\5\3\uffff\1\13\1\10\2\uffff\1\11\6\uffff\1\7\1\uffff\4\7\1\uffff\1\7\1\uffff\1\3\2\uffff\1\7\11\uffff\2\16\10\uffff\1\7",
             "",
             "",
             "",
             "\2\3\7\uffff\1\20\45\uffff\1\3\1\uffff\2\3\10\uffff\15\3\2\uffff\2\3\2\uffff\4\3\1\uffff\20\3\1\uffff\6\3\32\uffff\2\3\4\uffff\1\17\5\uffff\1\3\1\uffff\1\3\13\uffff\1\3",
-            "\1\30\1\24\1\23\1\uffff\1\32\3\23\2\uffff\1\23\1\uffff\1\34\2\uffff\2\23\3\uffff\1\23\1\uffff\1\23\1\uffff\1\25\1\uffff\1\23\1\33\7\uffff\1\27\1\uffff\1\23\1\31\3\uffff\1\23\1\uffff\1\34\1\uffff\1\26\1\34\6\uffff\2\23\1\uffff\2\23\22\uffff\1\23\3\uffff\1\23\5\uffff\1\34\13\uffff\1\21\1\34\1\uffff\1\34\2\uffff\1\34\2\uffff\1\34\14\uffff\1\22",
+            "\1\33\1\31\1\34\1\uffff\1\25\3\34\2\uffff\1\34\1\uffff\1\22\2\uffff\2\34\3\uffff\1\34\1\uffff\1\34\1\uffff\1\26\1\uffff\1\34\1\24\7\uffff\1\32\1\uffff\1\34\1\23\3\uffff\1\34\1\uffff\1\22\1\uffff\1\30\1\22\6\uffff\2\34\1\uffff\2\34\22\uffff\1\34\3\uffff\1\34\5\uffff\1\22\13\uffff\1\21\1\22\1\uffff\1\22\2\uffff\1\22\2\uffff\1\22\14\uffff\1\27",
             "",
             "",
             "",
@@ -94021,30 +94242,30 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             "",
             "",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\1\36\1\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\35",
             "",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\13\uffff\2\23\4\uffff\1\23\5\uffff\1\40\17\uffff\1\23\46\uffff\1\23",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\1\36\1\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\35",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\13\uffff\2\23\4\uffff\1\23\5\uffff\1\40\17\uffff\1\23\46\uffff\1\23",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\13\uffff\2\23\4\uffff\1\23\5\uffff\1\41\17\uffff\1\23\46\uffff\1\23",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\13\uffff\2\23\4\uffff\1\23\5\uffff\1\42\17\uffff\1\23\46\uffff\1\23",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\1\36\1\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\35",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\1\36\1\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\35",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\1\36\1\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\35",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\1\36\1\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\35",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\1\36\1\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\35",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\1\36\1\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\35",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\1\36\1\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\35",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\1\36\1\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\35",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\13\uffff\2\34\4\uffff\1\34\5\uffff\1\40\17\uffff\1\34\46\uffff\1\34",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\13\uffff\2\34\4\uffff\1\34\5\uffff\1\40\17\uffff\1\34\46\uffff\1\34",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\13\uffff\2\34\4\uffff\1\34\5\uffff\1\41\17\uffff\1\34\46\uffff\1\34",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\13\uffff\2\34\4\uffff\1\34\5\uffff\1\42\17\uffff\1\34\46\uffff\1\34",
             "",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\2\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23",
-            "\4\23\1\46\7\23\1\50\13\23\1\47\2\23\1\45\12\23\1\44\10\23\1\43\1\23\4\uffff\10\23\20\uffff\5\23\17\uffff\1\23\27\uffff\1\51",
-            "\3\34\1\uffff\4\34\2\uffff\1\34\4\uffff\2\34\3\uffff\1\34\1\uffff\1\34\1\uffff\1\34\1\uffff\2\34\7\uffff\1\34\2\uffff\1\34\3\uffff\1\34\3\uffff\1\34\7\uffff\2\34\1\uffff\2\34\22\uffff\1\34\3\uffff\1\34\17\uffff\1\23\7\uffff\1\23\17\uffff\1\34",
-            "\1\34\7\uffff\1\34\13\uffff\1\34\2\uffff\1\34\12\uffff\1\34\5\uffff\1\34\2\uffff\1\34\2\uffff\1\23\61\uffff\1\34\24\uffff\1\34",
-            "\2\34\2\uffff\1\34\7\uffff\1\34\13\uffff\1\34\2\uffff\1\34\7\uffff\1\34\2\uffff\1\34\5\uffff\1\34\1\uffff\2\34\2\uffff\1\23\44\uffff\1\34\14\uffff\1\34\1\uffff\1\34\2\uffff\1\34\2\uffff\1\34\14\uffff\1\34",
-            "\2\34\2\uffff\1\34\7\uffff\1\34\13\uffff\1\34\2\uffff\1\34\7\uffff\1\34\2\uffff\1\34\5\uffff\1\34\1\uffff\2\34\2\uffff\1\23\44\uffff\1\34\14\uffff\1\34\1\uffff\1\34\2\uffff\1\34\2\uffff\1\34\14\uffff\1\34",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\2\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\34",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\2\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\34",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\2\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\34",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\2\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\34",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\2\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\34",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\2\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\34",
-            "\61\23\4\uffff\10\23\20\uffff\5\23\4\uffff\1\34\3\uffff\2\34\1\uffff\2\23\2\uffff\1\34\1\uffff\1\37\1\34\1\uffff\1\34\2\uffff\1\23\1\34\16\uffff\1\23\46\uffff\1\34"
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\2\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34",
+            "\4\34\1\46\7\34\1\50\13\34\1\47\2\34\1\45\12\34\1\44\10\34\1\43\1\34\4\uffff\10\34\20\uffff\5\34\17\uffff\1\34\27\uffff\1\51",
+            "\3\22\1\uffff\4\22\2\uffff\1\22\4\uffff\2\22\3\uffff\1\22\1\uffff\1\22\1\uffff\1\22\1\uffff\2\22\7\uffff\1\22\2\uffff\1\22\3\uffff\1\22\3\uffff\1\22\7\uffff\2\22\1\uffff\2\22\22\uffff\1\22\3\uffff\1\22\17\uffff\1\34\7\uffff\1\34\17\uffff\1\22",
+            "\1\22\7\uffff\1\22\13\uffff\1\22\2\uffff\1\22\12\uffff\1\22\5\uffff\1\22\2\uffff\1\22\2\uffff\1\34\61\uffff\1\22\24\uffff\1\22",
+            "\2\22\2\uffff\1\22\7\uffff\1\22\13\uffff\1\22\2\uffff\1\22\7\uffff\1\22\2\uffff\1\22\5\uffff\1\22\1\uffff\2\22\2\uffff\1\34\44\uffff\1\22\14\uffff\1\22\1\uffff\1\22\2\uffff\1\22\2\uffff\1\22\14\uffff\1\22",
+            "\2\22\2\uffff\1\22\7\uffff\1\22\13\uffff\1\22\2\uffff\1\22\7\uffff\1\22\2\uffff\1\22\5\uffff\1\22\1\uffff\2\22\2\uffff\1\34\44\uffff\1\22\14\uffff\1\22\1\uffff\1\22\2\uffff\1\22\2\uffff\1\22\14\uffff\1\22",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\2\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\22",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\2\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\22",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\2\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\22",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\2\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\22",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\2\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\22",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\2\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\22",
+            "\61\34\4\uffff\10\34\20\uffff\5\34\4\uffff\1\22\3\uffff\2\22\1\uffff\2\34\2\uffff\1\22\1\uffff\1\37\1\22\1\uffff\1\22\2\uffff\1\34\1\22\16\uffff\1\34\46\uffff\1\22"
     };
     static final char[] dfa_171 = DFA.unpackEncodedStringToUnsignedChars(dfa_171s);
     static final char[] dfa_172 = DFA.unpackEncodedStringToUnsignedChars(dfa_172s);
@@ -94078,11 +94299,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index232_4 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA232_4==RULE_NO_LINE_TERMINATOR) && (synpred127_InternalN4JSParser())) {s = 15;}
+                        if ( (LA232_4==EOF||(LA232_4>=Implements && LA232_4<=Instanceof)||LA232_4==ExclamationMarkEqualsSignEqualsSign||(LA232_4>=LessThanSignLessThanSignEqualsSign && LA232_4<=EqualsSignEqualsSignEqualsSign)||(LA232_4>=ExclamationMarkEqualsSign && LA232_4<=EqualsSignEqualsSign)||(LA232_4>=CircumflexAccentEqualsSign && LA232_4<=As)||(LA232_4>=In && LA232_4<=VerticalLineVerticalLine)||(LA232_4>=PercentSign && LA232_4<=QuestionMark)||(LA232_4>=LeftSquareBracket && LA232_4<=RightCurlyBracket)||(LA232_4>=RULE_TEMPLATE_HEAD && LA232_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA232_4==RULE_ML_COMMENT||LA232_4==RULE_EOL||LA232_4==RULE_VERSION) ) {s = 3;}
+
+                        else if ( (LA232_4==RULE_NO_LINE_TERMINATOR) && (synpred127_InternalN4JSParser())) {s = 15;}
 
                         else if ( (LA232_4==Function) && (synpred127_InternalN4JSParser())) {s = 16;}
-
-                        else if ( (LA232_4==EOF||(LA232_4>=Implements && LA232_4<=Instanceof)||LA232_4==ExclamationMarkEqualsSignEqualsSign||(LA232_4>=LessThanSignLessThanSignEqualsSign && LA232_4<=EqualsSignEqualsSignEqualsSign)||(LA232_4>=ExclamationMarkEqualsSign && LA232_4<=EqualsSignEqualsSign)||(LA232_4>=CircumflexAccentEqualsSign && LA232_4<=As)||(LA232_4>=In && LA232_4<=VerticalLineVerticalLine)||(LA232_4>=PercentSign && LA232_4<=QuestionMark)||(LA232_4>=LeftSquareBracket && LA232_4<=RightCurlyBracket)||(LA232_4>=RULE_TEMPLATE_HEAD && LA232_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA232_4==RULE_ML_COMMENT||LA232_4==RULE_EOL||LA232_4==RULE_VERSION) ) {s = 3;}
 
                          
                         input.seek(index232_4);
@@ -94266,12 +94487,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             return "()* loopback of 13635:4: (otherlv_4= Comma ( (lv_elements_5_0= ruleArrayPadding ) )* ( (lv_elements_6_0= norm1_ArrayElement ) ) )*";
         }
     }
-    static final String dfa_190s = "\1\4\1\uffff\110\0\7\uffff";
-    static final String dfa_191s = "\1\u0094\1\uffff\110\0\7\uffff";
-    static final String dfa_192s = "\1\uffff\1\1\110\uffff\2\5\1\6\1\uffff\1\2\1\3\1\4";
-    static final String dfa_193s = "\1\0\1\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\57\1\60\1\61\1\62\1\63\1\64\1\65\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\102\1\103\1\104\1\105\1\106\1\107\1\110\7\uffff}>";
-    static final String[] dfa_194s = {
-            "\1\17\1\14\1\75\1\42\1\5\1\76\1\100\1\67\1\25\1\26\1\66\1\36\1\7\1\33\1\34\1\77\1\65\1\27\1\32\1\40\1\101\1\44\1\70\1\46\1\6\1\51\1\74\1\4\1\20\1\22\1\23\1\24\1\60\1\45\1\47\1\16\1\53\1\55\1\3\1\21\1\31\1\61\1\72\1\56\1\12\1\57\1\13\1\2\1\54\4\uffff\1\35\1\62\1\64\1\43\1\102\1\63\1\50\1\52\20\uffff\1\71\1\30\1\37\1\41\1\73\5\uffff\1\114\1\uffff\1\113\7\uffff\1\112\2\uffff\1\114\1\1\1\111\2\uffff\1\15\2\uffff\1\11\3\uffff\1\104\1\uffff\1\107\1\uffff\1\106\2\uffff\1\110\1\uffff\1\10\2\uffff\1\103\23\uffff\1\105",
+    static final String dfa_190s = "\122\uffff";
+    static final String dfa_191s = "\1\4\1\uffff\110\0\10\uffff";
+    static final String dfa_192s = "\1\u0094\1\uffff\110\0\10\uffff";
+    static final String dfa_193s = "\1\uffff\1\1\110\uffff\1\3\1\uffff\2\6\1\7\1\2\1\4\1\5";
+    static final String dfa_194s = "\1\0\1\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\57\1\60\1\61\1\62\1\63\1\64\1\65\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\102\1\103\1\104\1\105\1\106\1\107\1\110\10\uffff}>";
+    static final String[] dfa_195s = {
+            "\1\17\1\14\1\75\1\42\1\5\1\76\1\100\1\67\1\25\1\26\1\66\1\36\1\7\1\33\1\34\1\77\1\65\1\27\1\32\1\40\1\101\1\44\1\70\1\46\1\6\1\51\1\74\1\4\1\20\1\22\1\23\1\24\1\60\1\45\1\47\1\16\1\53\1\55\1\3\1\21\1\31\1\61\1\72\1\56\1\12\1\57\1\13\1\2\1\54\1\uffff\1\116\2\uffff\1\35\1\62\1\64\1\43\1\102\1\63\1\50\1\52\20\uffff\1\71\1\30\1\37\1\41\1\73\5\uffff\1\112\1\uffff\1\115\7\uffff\1\114\2\uffff\1\112\1\1\1\111\2\uffff\1\15\2\uffff\1\11\3\uffff\1\104\1\uffff\1\107\1\uffff\1\106\2\uffff\1\110\1\uffff\1\10\2\uffff\1\103\23\uffff\1\105",
             "",
             "\1\uffff",
             "\1\uffff",
@@ -94345,6 +94567,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
+            "",
             "",
             "",
             "",
@@ -94353,27 +94576,29 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_190 = DFA.unpackEncodedStringToUnsignedChars(dfa_190s);
+
+    static final short[] dfa_190 = DFA.unpackEncodedString(dfa_190s);
     static final char[] dfa_191 = DFA.unpackEncodedStringToUnsignedChars(dfa_191s);
-    static final short[] dfa_192 = DFA.unpackEncodedString(dfa_192s);
+    static final char[] dfa_192 = DFA.unpackEncodedStringToUnsignedChars(dfa_192s);
     static final short[] dfa_193 = DFA.unpackEncodedString(dfa_193s);
-    static final short[][] dfa_194 = unpackEncodedStringArray(dfa_194s);
+    static final short[] dfa_194 = DFA.unpackEncodedString(dfa_194s);
+    static final short[][] dfa_195 = unpackEncodedStringArray(dfa_195s);
 
     class DFA255 extends DFA {
 
         public DFA255(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 255;
-            this.eot = dfa_91;
-            this.eof = dfa_91;
-            this.min = dfa_190;
-            this.max = dfa_191;
-            this.accept = dfa_192;
-            this.special = dfa_193;
-            this.transition = dfa_194;
+            this.eot = dfa_190;
+            this.eof = dfa_190;
+            this.min = dfa_191;
+            this.max = dfa_192;
+            this.accept = dfa_193;
+            this.special = dfa_194;
+            this.transition = dfa_195;
         }
         public String getDescription() {
-            return "14045:2: (this_AnnotatedPropertyAssignment_0= ruleAnnotatedPropertyAssignment | ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( ruleLiteralOrComputedPropertyName ) ) ( ( QuestionMark ) )? Colon ) )=>this_PropertyNameValuePair_1= rulePropertyNameValuePair ) | ( ( ( () ruleGetterHeader[null] ) )=>this_PropertyGetterDeclaration_2= rulePropertyGetterDeclaration ) | ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_PropertySetterDeclaration_3= rulePropertySetterDeclaration ) | ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_PropertyMethodDeclaration_4= rulePropertyMethodDeclaration ) | this_PropertyNameValuePairSingleName_5= rulePropertyNameValuePairSingleName )";
+            return "14045:2: (this_AnnotatedPropertyAssignment_0= ruleAnnotatedPropertyAssignment | ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( ruleLiteralOrComputedPropertyName ) ) ( ( QuestionMark ) )? Colon ) )=>this_PropertyNameValuePair_1= rulePropertyNameValuePair ) | this_PropertyNameValuePairSingleName_2= rulePropertyNameValuePairSingleName | ( ( ( () ruleGetterHeader[null] ) )=>this_PropertyGetterDeclaration_3= rulePropertyGetterDeclaration ) | ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_PropertySetterDeclaration_4= rulePropertySetterDeclaration ) | ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_PropertyMethodDeclaration_5= rulePropertyMethodDeclaration ) | this_PropertySpread_6= rulePropertySpread )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -94387,11 +94612,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.rewind();
                         s = -1;
                         if ((LA255_0>=4 && LA255_0<=148 && (s=T2S.M_20[LA255_0-(4)])>=0)) { /* 73 cases */ }
-                        else if ( (LA255_0==LessThanSign) && (synpred131_InternalN4JSParser())) {s = 74;}
+                        else if ( (LA255_0==LeftParenthesis||LA255_0==QuestionMark) ) {s = 74;}
 
-                        else if ( (LA255_0==Asterisk) && (synpred131_InternalN4JSParser())) {s = 75;}
+                        else if ( (LA255_0==LessThanSign) && (synpred131_InternalN4JSParser())) {s = 76;}
 
-                        else if ( (LA255_0==LeftParenthesis||LA255_0==QuestionMark) ) {s = 76;}
+                        else if ( (LA255_0==Asterisk) && (synpred131_InternalN4JSParser())) {s = 77;}
+
+                        else if ( (LA255_0==FullStopFullStopFullStop) ) {s = 78;}
 
                          
                         input.seek(index255_0);
@@ -94404,13 +94631,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_2 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_2);
@@ -94423,13 +94650,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_3 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_3);
@@ -94442,13 +94669,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_4 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_4);
@@ -94461,13 +94688,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_5 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_5);
@@ -94480,13 +94707,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_6 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_6);
@@ -94499,13 +94726,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_7 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_7);
@@ -94518,13 +94745,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_8 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_8);
@@ -94537,13 +94764,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_9 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_9);
@@ -94556,13 +94783,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_10 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_10);
@@ -94575,13 +94802,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_11 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_11);
@@ -94594,13 +94821,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_12 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_12);
@@ -94613,13 +94840,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_13 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_13);
@@ -94632,13 +94859,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_14 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_14);
@@ -94651,13 +94878,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_15 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_15);
@@ -94670,9 +94897,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_16 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_16);
@@ -94685,9 +94912,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_17 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_17);
@@ -94700,9 +94927,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_18 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_18);
@@ -94715,9 +94942,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_19 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_19);
@@ -94730,9 +94957,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_20 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_20);
@@ -94745,9 +94972,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_21 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_21);
@@ -94760,9 +94987,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_22 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_22);
@@ -94775,9 +95002,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_23 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_23);
@@ -94790,9 +95017,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_24 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_24);
@@ -94805,9 +95032,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_25 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_25);
@@ -94820,9 +95047,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_26 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_26);
@@ -94835,9 +95062,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_27 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_27);
@@ -94850,9 +95077,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_28 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_28);
@@ -94865,9 +95092,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_29 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_29);
@@ -94880,9 +95107,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_30 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_30);
@@ -94895,9 +95122,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_31 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_31);
@@ -94910,9 +95137,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_32 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_32);
@@ -94925,9 +95152,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_33 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_33);
@@ -94940,9 +95167,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_34 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_34);
@@ -94955,9 +95182,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_35 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_35);
@@ -94970,9 +95197,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_36 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_36);
@@ -94985,9 +95212,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_37 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_37);
@@ -95000,9 +95227,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_38 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_38);
@@ -95015,9 +95242,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_39 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_39);
@@ -95030,9 +95257,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_40 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_40);
@@ -95045,9 +95272,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_41 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_41);
@@ -95060,9 +95287,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_42 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_42);
@@ -95075,9 +95302,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_43 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_43);
@@ -95090,9 +95317,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_44 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_44);
@@ -95105,11 +95332,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_45 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_45);
@@ -95122,9 +95349,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_46 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_46);
@@ -95137,9 +95364,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_47 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_47);
@@ -95152,9 +95379,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_48 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_48);
@@ -95167,9 +95394,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_49 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_49);
@@ -95182,13 +95409,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_50 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred129_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred129_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_50);
@@ -95201,13 +95428,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_51 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred130_InternalN4JSParser()) ) {s = 80;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred130_InternalN4JSParser()) ) {s = 81;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_51);
@@ -95220,11 +95447,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_52 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_52);
@@ -95237,11 +95464,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_53 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_53);
@@ -95254,11 +95481,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_54 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_54);
@@ -95271,11 +95498,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_55 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_55);
@@ -95288,11 +95515,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_56 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_56);
@@ -95305,11 +95532,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_57 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_57);
@@ -95322,11 +95549,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_58 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_58);
@@ -95339,11 +95566,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_59 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_59);
@@ -95356,11 +95583,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_60 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_60);
@@ -95373,11 +95600,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_61 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_61);
@@ -95390,11 +95617,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_62 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_62);
@@ -95407,11 +95634,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_63 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_63);
@@ -95424,11 +95651,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_64 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_64);
@@ -95441,11 +95668,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_65 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_65);
@@ -95458,11 +95685,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_66 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_66);
@@ -95475,9 +95702,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_67 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_67);
@@ -95490,9 +95717,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_68 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_68);
@@ -95505,9 +95732,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_69 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_69);
@@ -95520,9 +95747,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_70 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_70);
@@ -95535,9 +95762,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_71 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_71);
@@ -95550,9 +95777,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_72 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_72);
@@ -95565,11 +95792,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index255_73 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred128_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred128_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred131_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred131_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index255_73);
@@ -95589,16 +95816,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA256(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 256;
-            this.eot = dfa_91;
-            this.eof = dfa_91;
-            this.min = dfa_190;
-            this.max = dfa_191;
-            this.accept = dfa_192;
-            this.special = dfa_193;
-            this.transition = dfa_194;
+            this.eot = dfa_190;
+            this.eof = dfa_190;
+            this.min = dfa_191;
+            this.max = dfa_192;
+            this.accept = dfa_193;
+            this.special = dfa_194;
+            this.transition = dfa_195;
         }
         public String getDescription() {
-            return "14330:2: (this_AnnotatedPropertyAssignment_0= norm1_AnnotatedPropertyAssignment | ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( norm1_LiteralOrComputedPropertyName ) ) ( ( QuestionMark ) )? Colon ) )=>this_PropertyNameValuePair_1= norm1_PropertyNameValuePair ) | ( ( ( () norm1_GetterHeader[null] ) )=>this_PropertyGetterDeclaration_2= norm1_PropertyGetterDeclaration ) | ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_PropertySetterDeclaration_3= norm1_PropertySetterDeclaration ) | ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_PropertyMethodDeclaration_4= norm1_PropertyMethodDeclaration ) | this_PropertyNameValuePairSingleName_5= norm1_PropertyNameValuePairSingleName )";
+            return "14339:2: (this_AnnotatedPropertyAssignment_0= norm1_AnnotatedPropertyAssignment | ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( norm1_LiteralOrComputedPropertyName ) ) ( ( QuestionMark ) )? Colon ) )=>this_PropertyNameValuePair_1= norm1_PropertyNameValuePair ) | this_PropertyNameValuePairSingleName_2= norm1_PropertyNameValuePairSingleName | ( ( ( () norm1_GetterHeader[null] ) )=>this_PropertyGetterDeclaration_3= norm1_PropertyGetterDeclaration ) | ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_PropertySetterDeclaration_4= norm1_PropertySetterDeclaration ) | ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_PropertyMethodDeclaration_5= norm1_PropertyMethodDeclaration ) | this_PropertySpread_6= norm1_PropertySpread )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -95612,11 +95839,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.rewind();
                         s = -1;
                         if ((LA256_0>=4 && LA256_0<=148 && (s=T2S.M_20[LA256_0-(4)])>=0)) { /* 73 cases */ }
-                        else if ( (LA256_0==LessThanSign) && (synpred135_InternalN4JSParser())) {s = 74;}
+                        else if ( (LA256_0==LeftParenthesis||LA256_0==QuestionMark) ) {s = 74;}
 
-                        else if ( (LA256_0==Asterisk) && (synpred135_InternalN4JSParser())) {s = 75;}
+                        else if ( (LA256_0==LessThanSign) && (synpred135_InternalN4JSParser())) {s = 76;}
 
-                        else if ( (LA256_0==LeftParenthesis||LA256_0==QuestionMark) ) {s = 76;}
+                        else if ( (LA256_0==Asterisk) && (synpred135_InternalN4JSParser())) {s = 77;}
+
+                        else if ( (LA256_0==FullStopFullStopFullStop) ) {s = 78;}
 
                          
                         input.seek(index256_0);
@@ -95629,13 +95858,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_2 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_2);
@@ -95648,13 +95877,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_3 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_3);
@@ -95667,13 +95896,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_4 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_4);
@@ -95686,13 +95915,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_5 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_5);
@@ -95705,13 +95934,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_6 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_6);
@@ -95724,13 +95953,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_7 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_7);
@@ -95743,13 +95972,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_8 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_8);
@@ -95762,13 +95991,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_9 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_9);
@@ -95781,13 +96010,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_10 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_10);
@@ -95800,13 +96029,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_11 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_11);
@@ -95819,13 +96048,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_12 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_12);
@@ -95838,13 +96067,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_13 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_13);
@@ -95857,13 +96086,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_14 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_14);
@@ -95876,13 +96105,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_15 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_15);
@@ -95895,9 +96124,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_16 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_16);
@@ -95910,9 +96139,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_17 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_17);
@@ -95925,9 +96154,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_18 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_18);
@@ -95940,9 +96169,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_19 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_19);
@@ -95955,9 +96184,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_20 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_20);
@@ -95970,9 +96199,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_21 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_21);
@@ -95985,9 +96214,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_22 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_22);
@@ -96000,9 +96229,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_23 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_23);
@@ -96015,9 +96244,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_24 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_24);
@@ -96030,9 +96259,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_25 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_25);
@@ -96045,9 +96274,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_26 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_26);
@@ -96060,9 +96289,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_27 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_27);
@@ -96075,9 +96304,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_28 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_28);
@@ -96090,9 +96319,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_29 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_29);
@@ -96105,9 +96334,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_30 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_30);
@@ -96120,9 +96349,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_31 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_31);
@@ -96135,9 +96364,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_32 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_32);
@@ -96150,9 +96379,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_33 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_33);
@@ -96165,9 +96394,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_34 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_34);
@@ -96180,9 +96409,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_35 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_35);
@@ -96195,9 +96424,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_36 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_36);
@@ -96210,9 +96439,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_37 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_37);
@@ -96225,9 +96454,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_38 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_38);
@@ -96240,9 +96469,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_39 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_39);
@@ -96255,9 +96484,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_40 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_40);
@@ -96270,9 +96499,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_41 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_41);
@@ -96285,9 +96514,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_42 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_42);
@@ -96300,9 +96529,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_43 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_43);
@@ -96315,9 +96544,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_44 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_44);
@@ -96330,9 +96559,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_45 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_45);
@@ -96345,9 +96574,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_46 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_46);
@@ -96360,9 +96589,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_47 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_47);
@@ -96375,9 +96604,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_48 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_48);
@@ -96390,9 +96619,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_49 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_49);
@@ -96405,13 +96634,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_50 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred133_InternalN4JSParser()) ) {s = 79;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred133_InternalN4JSParser()) ) {s = 80;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_50);
@@ -96424,13 +96653,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_51 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred134_InternalN4JSParser()) ) {s = 80;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred134_InternalN4JSParser()) ) {s = 81;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_51);
@@ -96443,11 +96672,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_52 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_52);
@@ -96460,11 +96689,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_53 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_53);
@@ -96477,11 +96706,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_54 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_54);
@@ -96494,11 +96723,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_55 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_55);
@@ -96511,11 +96740,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_56 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_56);
@@ -96528,11 +96757,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_57 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_57);
@@ -96545,11 +96774,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_58 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_58);
@@ -96562,11 +96791,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_59 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_59);
@@ -96579,11 +96808,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_60 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_60);
@@ -96596,11 +96825,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_61 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_61);
@@ -96613,11 +96842,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_62 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_62);
@@ -96630,11 +96859,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_63 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_63);
@@ -96647,11 +96876,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_64 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_64);
@@ -96664,11 +96893,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_65 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_65);
@@ -96681,11 +96910,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_66 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_66);
@@ -96698,9 +96927,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_67 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_67);
@@ -96713,9 +96942,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_68 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_68);
@@ -96728,9 +96957,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_69 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_69);
@@ -96743,9 +96972,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_70 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_70);
@@ -96758,9 +96987,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_71 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_71);
@@ -96773,9 +97002,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_72 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_72);
@@ -96788,11 +97017,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index256_73 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred132_InternalN4JSParser()) ) {s = 78;}
+                        if ( (synpred132_InternalN4JSParser()) ) {s = 79;}
 
-                        else if ( (synpred135_InternalN4JSParser()) ) {s = 75;}
+                        else if ( (true) ) {s = 74;}
 
-                        else if ( (true) ) {s = 76;}
+                        else if ( (synpred135_InternalN4JSParser()) ) {s = 77;}
 
                          
                         input.seek(index256_73);
@@ -96806,12 +97035,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_195s = "\120\uffff";
-    static final String dfa_196s = "\1\4\110\0\7\uffff";
-    static final String dfa_197s = "\1\u0094\110\0\7\uffff";
-    static final String dfa_198s = "\111\uffff\2\4\1\5\1\uffff\1\1\1\2\1\3";
-    static final String dfa_199s = "\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\57\1\60\1\61\1\62\1\63\1\64\1\65\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\102\1\103\1\104\1\105\1\106\1\107\1\110\7\uffff}>";
-    static final String[] dfa_200s = {
+    static final String dfa_196s = "\120\uffff";
+    static final String dfa_197s = "\1\4\110\0\7\uffff";
+    static final String dfa_198s = "\1\u0094\110\0\7\uffff";
+    static final String dfa_199s = "\111\uffff\2\4\1\5\1\uffff\1\1\1\2\1\3";
+    static final String dfa_200s = "\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\57\1\60\1\61\1\62\1\63\1\64\1\65\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\102\1\103\1\104\1\105\1\106\1\107\1\110\7\uffff}>";
+    static final String[] dfa_201s = {
             "\1\16\1\13\1\74\1\41\1\4\1\75\1\77\1\66\1\24\1\25\1\65\1\35\1\6\1\32\1\33\1\76\1\64\1\26\1\31\1\37\1\100\1\43\1\67\1\45\1\5\1\50\1\73\1\3\1\17\1\21\1\22\1\23\1\57\1\44\1\46\1\15\1\52\1\54\1\2\1\20\1\30\1\60\1\71\1\55\1\11\1\56\1\12\1\1\1\53\4\uffff\1\34\1\61\1\63\1\42\1\101\1\62\1\47\1\51\20\uffff\1\70\1\27\1\36\1\40\1\72\5\uffff\1\113\1\uffff\1\112\7\uffff\1\111\2\uffff\1\113\1\uffff\1\110\2\uffff\1\14\2\uffff\1\10\3\uffff\1\103\1\uffff\1\106\1\uffff\1\105\2\uffff\1\107\1\uffff\1\7\2\uffff\1\102\23\uffff\1\104",
             "\1\uffff",
             "\1\uffff",
@@ -96894,28 +97123,28 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_195 = DFA.unpackEncodedString(dfa_195s);
-    static final char[] dfa_196 = DFA.unpackEncodedStringToUnsignedChars(dfa_196s);
+    static final short[] dfa_196 = DFA.unpackEncodedString(dfa_196s);
     static final char[] dfa_197 = DFA.unpackEncodedStringToUnsignedChars(dfa_197s);
-    static final short[] dfa_198 = DFA.unpackEncodedString(dfa_198s);
+    static final char[] dfa_198 = DFA.unpackEncodedStringToUnsignedChars(dfa_198s);
     static final short[] dfa_199 = DFA.unpackEncodedString(dfa_199s);
-    static final short[][] dfa_200 = unpackEncodedStringArray(dfa_200s);
+    static final short[] dfa_200 = DFA.unpackEncodedString(dfa_200s);
+    static final short[][] dfa_201 = unpackEncodedStringArray(dfa_201s);
 
     class DFA265 extends DFA {
 
         public DFA265(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 265;
-            this.eot = dfa_195;
-            this.eof = dfa_195;
-            this.min = dfa_196;
-            this.max = dfa_197;
-            this.accept = dfa_198;
-            this.special = dfa_199;
-            this.transition = dfa_200;
+            this.eot = dfa_196;
+            this.eof = dfa_196;
+            this.min = dfa_197;
+            this.max = dfa_198;
+            this.accept = dfa_199;
+            this.special = dfa_200;
+            this.transition = dfa_201;
         }
         public String getDescription() {
-            return "14630:3: ( ( ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( ruleLiteralOrComputedPropertyName ) ) Colon ) )=> ( () ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )? ( (lv_declaredName_3_0= ruleLiteralOrComputedPropertyName ) ) otherlv_4= Colon ) ) ( (lv_expression_5_0= norm1_AssignmentExpression ) ) ) | ( ( ( ( () ruleGetterHeader[null] ) )=> ( () this_GetterHeader_7= ruleGetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= ruleBlock ) ) ) | ( ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () otherlv_10= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_11_0= ruleLiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_12_0= QuestionMark ) )? otherlv_13= LeftParenthesis ( (lv_fpar_14_0= ruleFormalParameter ) ) otherlv_15= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_16_0= ruleBlock ) ) ) | ( ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () (this_TypeVariables_18= ruleTypeVariables[$current] )? ( (lv_returnTypeRef_19_0= ruleTypeRefWithModifiers ) )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_22= norm1_MethodParamsAndBody[$current] ) ) | ( ( (lv_declaredName_23_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_24= ruleMethodParamsAndBody[$current] ) ) ) ) ) (otherlv_25= Semicolon )? ) | ( () ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )? ( (lv_identifierRef_28_0= ruleIdentifierRef ) ) (otherlv_29= EqualsSign ( (lv_expression_30_0= norm1_AssignmentExpression ) ) )? ) )";
+            return "14648:3: ( ( ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( ruleLiteralOrComputedPropertyName ) ) Colon ) )=> ( () ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )? ( (lv_declaredName_3_0= ruleLiteralOrComputedPropertyName ) ) otherlv_4= Colon ) ) ( (lv_expression_5_0= norm1_AssignmentExpression ) ) ) | ( ( ( ( () ruleGetterHeader[null] ) )=> ( () this_GetterHeader_7= ruleGetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= ruleBlock ) ) ) | ( ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () otherlv_10= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_11_0= ruleLiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_12_0= QuestionMark ) )? otherlv_13= LeftParenthesis ( (lv_fpar_14_0= ruleFormalParameter ) ) otherlv_15= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_16_0= ruleBlock ) ) ) | ( ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () (this_TypeVariables_18= ruleTypeVariables[$current] )? ( (lv_returnTypeRef_19_0= ruleTypeRefWithModifiers ) )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_22= norm1_MethodParamsAndBody[$current] ) ) | ( ( (lv_declaredName_23_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_24= ruleMethodParamsAndBody[$current] ) ) ) ) ) (otherlv_25= Semicolon )? ) | ( () ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )? ( (lv_identifierRef_28_0= ruleIdentifierRef ) ) (otherlv_29= EqualsSign ( (lv_expression_30_0= norm1_AssignmentExpression ) ) )? ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -98125,12 +98354,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_201s = "\17\uffff";
-    static final String dfa_202s = "\10\4\1\uffff\1\4\4\143\1\uffff";
-    static final String dfa_203s = "\1\u0094\7\u00a4\1\uffff\1\u0094\4\155\1\uffff";
-    static final String dfa_204s = "\10\uffff\1\1\5\uffff\1\2";
-    static final String dfa_205s = "\17\uffff}>";
-    static final String[] dfa_206s = {
+    static final String dfa_202s = "\17\uffff";
+    static final String dfa_203s = "\10\4\1\uffff\1\4\4\143\1\uffff";
+    static final String dfa_204s = "\1\u0094\7\u00a4\1\uffff\1\u0094\4\155\1\uffff";
+    static final String dfa_205s = "\10\uffff\1\1\5\uffff\1\2";
+    static final String dfa_206s = "\17\uffff}>";
+    static final String[] dfa_207s = {
             "\1\15\1\13\2\16\1\4\7\16\1\6\13\16\1\5\2\16\1\3\7\16\1\14\2\16\1\2\5\16\1\11\1\16\1\12\1\1\1\16\4\uffff\10\16\20\uffff\5\16\24\uffff\1\16\2\uffff\1\10\2\uffff\1\10\3\uffff\1\16\1\uffff\1\16\1\uffff\1\16\2\uffff\1\16\1\uffff\1\7\2\uffff\1\16\23\uffff\1\16",
             "\61\10\4\uffff\10\10\20\uffff\5\10\10\uffff\1\10\2\uffff\1\10\1\uffff\1\16\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\11\uffff\1\10\1\uffff\1\10\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\2\uffff\1\10\23\uffff\1\10\17\uffff\1\10",
             "\61\10\4\uffff\10\10\20\uffff\5\10\10\uffff\1\10\2\uffff\1\10\1\uffff\1\16\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\11\uffff\1\10\1\uffff\1\10\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\2\uffff\1\10\23\uffff\1\10\17\uffff\1\10",
@@ -98148,32 +98377,32 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_201 = DFA.unpackEncodedString(dfa_201s);
-    static final char[] dfa_202 = DFA.unpackEncodedStringToUnsignedChars(dfa_202s);
+    static final short[] dfa_202 = DFA.unpackEncodedString(dfa_202s);
     static final char[] dfa_203 = DFA.unpackEncodedStringToUnsignedChars(dfa_203s);
-    static final short[] dfa_204 = DFA.unpackEncodedString(dfa_204s);
+    static final char[] dfa_204 = DFA.unpackEncodedStringToUnsignedChars(dfa_204s);
     static final short[] dfa_205 = DFA.unpackEncodedString(dfa_205s);
-    static final short[][] dfa_206 = unpackEncodedStringArray(dfa_206s);
+    static final short[] dfa_206 = DFA.unpackEncodedString(dfa_206s);
+    static final short[][] dfa_207 = unpackEncodedStringArray(dfa_207s);
 
     class DFA257 extends DFA {
 
         public DFA257(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 257;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_202;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_206;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_203;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_207;
         }
         public String getDescription() {
-            return "14657:7: ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )?";
+            return "14675:7: ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )?";
         }
     }
-    static final String dfa_207s = "\10\4\1\uffff\1\4\4\133\1\uffff";
-    static final String[] dfa_208s = {
+    static final String dfa_208s = "\10\4\1\uffff\1\4\4\133\1\uffff";
+    static final String[] dfa_209s = {
             "\1\15\1\13\2\16\1\4\7\16\1\6\13\16\1\5\2\16\1\3\7\16\1\14\2\16\1\2\5\16\1\11\1\16\1\12\1\1\1\16\4\uffff\10\16\20\uffff\5\16\7\uffff\1\16\14\uffff\1\16\2\uffff\1\10\2\uffff\1\10\3\uffff\1\16\1\uffff\1\16\1\uffff\1\16\2\uffff\1\16\1\uffff\1\7\2\uffff\1\16\23\uffff\1\16",
             "\61\10\4\uffff\10\10\20\uffff\5\10\5\uffff\1\16\1\uffff\2\10\2\uffff\1\10\3\uffff\1\10\2\uffff\1\10\1\uffff\1\10\11\uffff\1\10\1\uffff\1\10\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\2\uffff\1\10\23\uffff\1\10\17\uffff\1\10",
             "\61\10\4\uffff\10\10\20\uffff\5\10\5\uffff\1\16\1\uffff\2\10\2\uffff\1\10\3\uffff\1\10\2\uffff\1\10\1\uffff\1\10\11\uffff\1\10\1\uffff\1\10\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\2\uffff\1\10\23\uffff\1\10\17\uffff\1\10",
@@ -98190,33 +98419,33 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "\1\16\21\uffff\1\10",
             ""
     };
-    static final char[] dfa_207 = DFA.unpackEncodedStringToUnsignedChars(dfa_207s);
-    static final short[][] dfa_208 = unpackEncodedStringArray(dfa_208s);
+    static final char[] dfa_208 = DFA.unpackEncodedStringToUnsignedChars(dfa_208s);
+    static final short[][] dfa_209 = unpackEncodedStringArray(dfa_209s);
 
     class DFA260 extends DFA {
 
         public DFA260(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 260;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "15089:7: ( (lv_returnTypeRef_19_0= ruleTypeRefWithModifiers ) )?";
+            return "15107:7: ( (lv_returnTypeRef_19_0= ruleTypeRefWithModifiers ) )?";
         }
     }
-    static final String dfa_209s = "\15\uffff";
-    static final String dfa_210s = "\2\uffff\11\13\1\uffff\1\13";
-    static final String dfa_211s = "\1\4\1\uffff\5\4\4\137\1\uffff\1\4";
-    static final String dfa_212s = "\1\175\1\uffff\11\u00a4\1\uffff\1\175";
-    static final String dfa_213s = "\1\uffff\1\1\11\uffff\1\2\1\uffff";
-    static final String dfa_214s = "\15\uffff}>";
-    static final String[] dfa_215s = {
+    static final String dfa_210s = "\15\uffff";
+    static final String dfa_211s = "\2\uffff\11\13\1\uffff\1\13";
+    static final String dfa_212s = "\1\4\1\uffff\5\4\4\137\1\uffff\1\4";
+    static final String dfa_213s = "\1\175\1\uffff\11\u00a4\1\uffff\1\175";
+    static final String dfa_214s = "\1\uffff\1\1\11\uffff\1\2\1\uffff";
+    static final String dfa_215s = "\15\uffff}>";
+    static final String[] dfa_216s = {
             "\1\12\1\10\1\13\1\uffff\1\4\3\13\2\uffff\1\13\1\uffff\1\1\2\uffff\2\13\3\uffff\1\13\1\uffff\1\13\1\uffff\1\5\1\uffff\1\13\1\3\7\uffff\1\11\1\uffff\1\13\1\2\3\uffff\1\13\1\uffff\1\1\1\uffff\1\7\1\1\6\uffff\2\13\1\uffff\2\13\22\uffff\1\13\3\uffff\1\13\5\uffff\1\1\14\uffff\1\1\1\uffff\1\1\2\uffff\1\1\2\uffff\1\1\14\uffff\1\6",
             "",
             "\3\1\1\uffff\4\1\2\uffff\1\1\4\uffff\2\1\3\uffff\1\1\1\uffff\1\1\1\uffff\1\1\1\uffff\2\1\7\uffff\1\1\1\uffff\2\1\3\uffff\1\1\3\uffff\1\1\7\uffff\2\1\1\uffff\2\1\22\uffff\1\1\3\uffff\1\1\4\uffff\1\1\3\uffff\1\1\1\13\1\uffff\1\1\3\uffff\1\1\1\13\1\uffff\1\1\1\uffff\1\1\3\uffff\1\1\1\13\15\uffff\1\1\46\uffff\1\14",
@@ -98232,29 +98461,29 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "\3\1\1\uffff\4\1\2\uffff\1\1\4\uffff\2\1\3\uffff\1\1\1\uffff\1\1\1\uffff\1\1\1\uffff\2\1\7\uffff\1\1\1\uffff\2\1\3\uffff\1\1\3\uffff\1\1\7\uffff\2\1\1\uffff\2\1\22\uffff\1\1\3\uffff\1\1\4\uffff\1\1\3\uffff\1\1\1\13\5\uffff\1\1\1\13\1\uffff\1\1\1\uffff\1\1\3\uffff\1\1\1\13\15\uffff\1\1"
     };
 
-    static final short[] dfa_209 = DFA.unpackEncodedString(dfa_209s);
     static final short[] dfa_210 = DFA.unpackEncodedString(dfa_210s);
-    static final char[] dfa_211 = DFA.unpackEncodedStringToUnsignedChars(dfa_211s);
+    static final short[] dfa_211 = DFA.unpackEncodedString(dfa_211s);
     static final char[] dfa_212 = DFA.unpackEncodedStringToUnsignedChars(dfa_212s);
-    static final short[] dfa_213 = DFA.unpackEncodedString(dfa_213s);
+    static final char[] dfa_213 = DFA.unpackEncodedStringToUnsignedChars(dfa_213s);
     static final short[] dfa_214 = DFA.unpackEncodedString(dfa_214s);
-    static final short[][] dfa_215 = unpackEncodedStringArray(dfa_215s);
+    static final short[] dfa_215 = DFA.unpackEncodedString(dfa_215s);
+    static final short[][] dfa_216 = unpackEncodedStringArray(dfa_216s);
 
     class DFA263 extends DFA {
 
         public DFA263(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 263;
-            this.eot = dfa_209;
-            this.eof = dfa_210;
-            this.min = dfa_211;
-            this.max = dfa_212;
-            this.accept = dfa_213;
-            this.special = dfa_214;
-            this.transition = dfa_215;
+            this.eot = dfa_210;
+            this.eof = dfa_211;
+            this.min = dfa_212;
+            this.max = dfa_213;
+            this.accept = dfa_214;
+            this.special = dfa_215;
+            this.transition = dfa_216;
         }
         public String getDescription() {
-            return "15213:5: ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )?";
+            return "15231:5: ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )?";
         }
     }
 
@@ -98263,16 +98492,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA274(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 274;
-            this.eot = dfa_195;
-            this.eof = dfa_195;
-            this.min = dfa_196;
-            this.max = dfa_197;
-            this.accept = dfa_198;
-            this.special = dfa_199;
-            this.transition = dfa_200;
+            this.eot = dfa_196;
+            this.eof = dfa_196;
+            this.min = dfa_197;
+            this.max = dfa_198;
+            this.accept = dfa_199;
+            this.special = dfa_200;
+            this.transition = dfa_201;
         }
         public String getDescription() {
-            return "15299:3: ( ( ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( norm1_LiteralOrComputedPropertyName ) ) Colon ) )=> ( () ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )? ( (lv_declaredName_3_0= norm1_LiteralOrComputedPropertyName ) ) otherlv_4= Colon ) ) ( (lv_expression_5_0= norm3_AssignmentExpression ) ) ) | ( ( ( ( () norm1_GetterHeader[null] ) )=> ( () this_GetterHeader_7= norm1_GetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= ruleBlock ) ) ) | ( ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () otherlv_10= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_11_0= norm1_LiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_12_0= QuestionMark ) )? otherlv_13= LeftParenthesis ( (lv_fpar_14_0= norm1_FormalParameter ) ) otherlv_15= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_16_0= ruleBlock ) ) ) | ( ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () (this_TypeVariables_18= ruleTypeVariables[$current] )? ( (lv_returnTypeRef_19_0= ruleTypeRefWithModifiers ) )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_22= norm1_MethodParamsAndBody[$current] ) ) | ( ( (lv_declaredName_23_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_24= ruleMethodParamsAndBody[$current] ) ) ) ) ) (otherlv_25= Semicolon )? ) | ( () ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )? ( (lv_identifierRef_28_0= norm1_IdentifierRef ) ) (otherlv_29= EqualsSign ( (lv_expression_30_0= norm3_AssignmentExpression ) ) )? ) )";
+            return "15317:3: ( ( ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( norm1_LiteralOrComputedPropertyName ) ) Colon ) )=> ( () ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )? ( (lv_declaredName_3_0= norm1_LiteralOrComputedPropertyName ) ) otherlv_4= Colon ) ) ( (lv_expression_5_0= norm3_AssignmentExpression ) ) ) | ( ( ( ( () norm1_GetterHeader[null] ) )=> ( () this_GetterHeader_7= norm1_GetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= ruleBlock ) ) ) | ( ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () otherlv_10= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_11_0= norm1_LiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_12_0= QuestionMark ) )? otherlv_13= LeftParenthesis ( (lv_fpar_14_0= norm1_FormalParameter ) ) otherlv_15= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_16_0= ruleBlock ) ) ) | ( ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () (this_TypeVariables_18= ruleTypeVariables[$current] )? ( (lv_returnTypeRef_19_0= ruleTypeRefWithModifiers ) )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_22= norm1_MethodParamsAndBody[$current] ) ) | ( ( (lv_declaredName_23_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_24= ruleMethodParamsAndBody[$current] ) ) ) ) ) (otherlv_25= Semicolon )? ) | ( () ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )? ( (lv_identifierRef_28_0= norm1_IdentifierRef ) ) (otherlv_29= EqualsSign ( (lv_expression_30_0= norm3_AssignmentExpression ) ) )? ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -99486,16 +99715,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA266(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 266;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_202;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_206;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_203;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_207;
         }
         public String getDescription() {
-            return "15326:7: ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )?";
+            return "15344:7: ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -99504,19 +99733,19 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA269(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 269;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "15758:7: ( (lv_returnTypeRef_19_0= ruleTypeRefWithModifiers ) )?";
+            return "15776:7: ( (lv_returnTypeRef_19_0= ruleTypeRefWithModifiers ) )?";
         }
     }
-    static final String[] dfa_216s = {
+    static final String[] dfa_217s = {
             "\1\12\1\10\1\13\1\uffff\1\4\3\13\2\uffff\1\13\1\uffff\1\1\2\uffff\2\13\3\uffff\1\13\1\uffff\1\13\1\uffff\1\5\1\uffff\1\13\1\3\7\uffff\1\11\2\uffff\1\2\3\uffff\1\13\1\uffff\1\1\1\uffff\1\7\1\1\6\uffff\2\13\1\uffff\2\13\22\uffff\1\13\3\uffff\1\13\5\uffff\1\1\14\uffff\1\1\1\uffff\1\1\2\uffff\1\1\2\uffff\1\1\14\uffff\1\6",
             "",
             "\3\1\1\uffff\4\1\2\uffff\1\1\4\uffff\2\1\3\uffff\1\1\1\uffff\1\1\1\uffff\1\1\1\uffff\2\1\7\uffff\1\1\2\uffff\1\1\3\uffff\1\1\3\uffff\1\1\7\uffff\2\1\1\uffff\2\1\22\uffff\1\1\3\uffff\1\1\4\uffff\1\1\3\uffff\1\1\1\13\1\uffff\1\1\3\uffff\1\1\1\13\1\uffff\1\1\1\uffff\1\1\3\uffff\1\1\1\13\15\uffff\1\1\46\uffff\1\14",
@@ -99531,23 +99760,23 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             "\3\1\1\uffff\4\1\2\uffff\1\1\4\uffff\2\1\3\uffff\1\1\1\uffff\1\1\1\uffff\1\1\1\uffff\2\1\7\uffff\1\1\2\uffff\1\1\3\uffff\1\1\3\uffff\1\1\7\uffff\2\1\1\uffff\2\1\22\uffff\1\1\3\uffff\1\1\4\uffff\1\1\3\uffff\1\1\1\13\5\uffff\1\1\1\13\1\uffff\1\1\1\uffff\1\1\3\uffff\1\1\1\13\15\uffff\1\1"
     };
-    static final short[][] dfa_216 = unpackEncodedStringArray(dfa_216s);
+    static final short[][] dfa_217 = unpackEncodedStringArray(dfa_217s);
 
     class DFA272 extends DFA {
 
         public DFA272(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 272;
-            this.eot = dfa_209;
-            this.eof = dfa_209;
-            this.min = dfa_211;
-            this.max = dfa_212;
-            this.accept = dfa_213;
-            this.special = dfa_214;
-            this.transition = dfa_216;
+            this.eot = dfa_210;
+            this.eof = dfa_210;
+            this.min = dfa_212;
+            this.max = dfa_213;
+            this.accept = dfa_214;
+            this.special = dfa_215;
+            this.transition = dfa_217;
         }
         public String getDescription() {
-            return "15882:5: ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )?";
+            return "15900:5: ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )?";
         }
     }
 
@@ -99556,16 +99785,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA276(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 276;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "16025:5: ( (lv_returnTypeRef_2_0= ruleTypeRefWithModifiers ) )?";
+            return "16043:5: ( (lv_returnTypeRef_2_0= ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -99574,24 +99803,24 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA280(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 280;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "16211:5: ( (lv_returnTypeRef_2_0= ruleTypeRefWithModifiers ) )?";
+            return "16229:5: ( (lv_returnTypeRef_2_0= ruleTypeRefWithModifiers ) )?";
         }
     }
-    static final String dfa_217s = "\20\uffff";
-    static final String dfa_218s = "\10\4\1\uffff\1\4\4\143\1\uffff\1\4";
-    static final String dfa_219s = "\1\u0094\7\u00a4\1\uffff\1\u0094\4\155\1\uffff\1\u0094";
-    static final String dfa_220s = "\10\uffff\1\1\5\uffff\1\2\1\uffff";
-    static final String dfa_221s = "\20\uffff}>";
-    static final String[] dfa_222s = {
+    static final String dfa_218s = "\20\uffff";
+    static final String dfa_219s = "\10\4\1\uffff\1\4\4\143\1\uffff\1\4";
+    static final String dfa_220s = "\1\u0094\7\u00a4\1\uffff\1\u0094\4\155\1\uffff\1\u0094";
+    static final String dfa_221s = "\10\uffff\1\1\5\uffff\1\2\1\uffff";
+    static final String dfa_222s = "\20\uffff}>";
+    static final String[] dfa_223s = {
             "\1\15\1\13\2\16\1\4\7\16\1\6\13\16\1\5\2\16\1\3\7\16\1\14\2\16\1\2\5\16\1\11\1\16\1\12\1\1\1\16\4\uffff\10\16\20\uffff\5\16\24\uffff\1\16\2\uffff\1\10\2\uffff\1\10\3\uffff\1\16\1\uffff\1\16\1\uffff\1\16\2\uffff\1\16\1\uffff\1\7\2\uffff\1\16\23\uffff\1\16",
             "\61\10\4\uffff\10\10\20\uffff\5\10\10\uffff\1\10\2\uffff\1\10\1\uffff\1\16\1\uffff\1\10\2\uffff\1\17\1\uffff\1\10\11\uffff\1\10\1\uffff\1\10\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\2\uffff\1\10\23\uffff\1\10\17\uffff\1\10",
             "\61\10\4\uffff\10\10\20\uffff\5\10\10\uffff\1\10\2\uffff\1\10\1\uffff\1\16\1\uffff\1\10\2\uffff\1\17\1\uffff\1\10\11\uffff\1\10\1\uffff\1\10\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\2\uffff\1\10\23\uffff\1\10\17\uffff\1\10",
@@ -99610,28 +99839,28 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "\61\10\4\uffff\10\10\20\uffff\5\10\15\uffff\1\16\6\uffff\1\10\11\uffff\1\10\1\uffff\1\10\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\2\uffff\1\10\23\uffff\1\10"
     };
 
-    static final short[] dfa_217 = DFA.unpackEncodedString(dfa_217s);
-    static final char[] dfa_218 = DFA.unpackEncodedStringToUnsignedChars(dfa_218s);
+    static final short[] dfa_218 = DFA.unpackEncodedString(dfa_218s);
     static final char[] dfa_219 = DFA.unpackEncodedStringToUnsignedChars(dfa_219s);
-    static final short[] dfa_220 = DFA.unpackEncodedString(dfa_220s);
+    static final char[] dfa_220 = DFA.unpackEncodedStringToUnsignedChars(dfa_220s);
     static final short[] dfa_221 = DFA.unpackEncodedString(dfa_221s);
-    static final short[][] dfa_222 = unpackEncodedStringArray(dfa_222s);
+    static final short[] dfa_222 = DFA.unpackEncodedString(dfa_222s);
+    static final short[][] dfa_223 = unpackEncodedStringArray(dfa_223s);
 
     class DFA283 extends DFA {
 
         public DFA283(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 283;
-            this.eot = dfa_217;
-            this.eof = dfa_217;
-            this.min = dfa_218;
-            this.max = dfa_219;
-            this.accept = dfa_220;
-            this.special = dfa_221;
-            this.transition = dfa_222;
+            this.eot = dfa_218;
+            this.eof = dfa_218;
+            this.min = dfa_219;
+            this.max = dfa_220;
+            this.accept = dfa_221;
+            this.special = dfa_222;
+            this.transition = dfa_223;
         }
         public String getDescription() {
-            return "16374:5: ( (lv_declaredTypeRef_1_0= ruleTypeRefWithModifiers ) )?";
+            return "16392:5: ( (lv_declaredTypeRef_1_0= ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -99640,16 +99869,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA285(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 285;
-            this.eot = dfa_217;
-            this.eof = dfa_217;
-            this.min = dfa_218;
-            this.max = dfa_219;
-            this.accept = dfa_220;
-            this.special = dfa_221;
-            this.transition = dfa_222;
+            this.eot = dfa_218;
+            this.eof = dfa_218;
+            this.min = dfa_219;
+            this.max = dfa_220;
+            this.accept = dfa_221;
+            this.special = dfa_222;
+            this.transition = dfa_223;
         }
         public String getDescription() {
-            return "16494:5: ( (lv_declaredTypeRef_1_0= ruleTypeRefWithModifiers ) )?";
+            return "16512:5: ( (lv_declaredTypeRef_1_0= ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -99658,16 +99887,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA287(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 287;
-            this.eot = dfa_209;
-            this.eof = dfa_210;
-            this.min = dfa_211;
-            this.max = dfa_212;
-            this.accept = dfa_213;
-            this.special = dfa_214;
-            this.transition = dfa_215;
+            this.eot = dfa_210;
+            this.eof = dfa_211;
+            this.min = dfa_212;
+            this.max = dfa_213;
+            this.accept = dfa_214;
+            this.special = dfa_215;
+            this.transition = dfa_216;
         }
         public String getDescription() {
-            return "16590:3: ( (lv_declaredTypeRef_0_0= ruleTypeRef ) )?";
+            return "16608:3: ( (lv_declaredTypeRef_0_0= ruleTypeRef ) )?";
         }
     }
 
@@ -99676,24 +99905,24 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA289(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 289;
-            this.eot = dfa_209;
-            this.eof = dfa_209;
-            this.min = dfa_211;
-            this.max = dfa_212;
-            this.accept = dfa_213;
-            this.special = dfa_214;
-            this.transition = dfa_216;
+            this.eot = dfa_210;
+            this.eof = dfa_210;
+            this.min = dfa_212;
+            this.max = dfa_213;
+            this.accept = dfa_214;
+            this.special = dfa_215;
+            this.transition = dfa_217;
         }
         public String getDescription() {
-            return "16666:3: ( (lv_declaredTypeRef_0_0= ruleTypeRef ) )?";
+            return "16684:3: ( (lv_declaredTypeRef_0_0= ruleTypeRef ) )?";
         }
     }
-    static final String dfa_223s = "\71\uffff";
-    static final String dfa_224s = "\2\4\67\uffff";
-    static final String dfa_225s = "\2\u0094\67\uffff";
-    static final String dfa_226s = "\2\uffff\1\3\1\1\65\2";
-    static final String dfa_227s = "\1\uffff\1\0\67\uffff}>";
-    static final String[] dfa_228s = {
+    static final String dfa_224s = "\71\uffff";
+    static final String dfa_225s = "\2\4\67\uffff";
+    static final String dfa_226s = "\2\u0094\67\uffff";
+    static final String dfa_227s = "\2\uffff\1\3\1\1\65\2";
+    static final String dfa_228s = "\1\uffff\1\0\67\uffff}>";
+    static final String[] dfa_229s = {
             "\3\2\1\uffff\4\2\2\uffff\2\2\3\uffff\2\2\2\uffff\2\2\1\uffff\1\2\1\uffff\1\2\1\uffff\2\2\2\uffff\1\2\1\uffff\2\2\1\uffff\1\2\1\uffff\2\2\3\uffff\5\2\7\uffff\2\2\1\1\2\2\13\uffff\1\2\6\uffff\1\2\3\uffff\1\2\5\uffff\1\2\6\uffff\1\2\2\uffff\1\2\3\uffff\2\2\2\uffff\1\2\6\uffff\1\2\1\uffff\4\2\1\uffff\1\2\1\uffff\1\2\2\uffff\1\2\11\uffff\2\2\10\uffff\1\2",
             "\1\27\1\22\1\34\1\uffff\1\31\1\35\1\37\1\16\2\uffff\1\15\1\65\3\uffff\1\36\1\14\2\uffff\1\43\1\40\1\uffff\1\17\1\uffff\1\24\1\uffff\1\33\1\32\2\uffff\1\66\1\uffff\1\54\1\6\1\uffff\1\26\1\uffff\1\10\1\30\3\uffff\1\21\1\56\1\5\1\53\1\25\7\uffff\1\11\1\13\1\4\1\41\1\12\13\uffff\1\60\6\uffff\1\20\3\uffff\1\23\5\uffff\1\63\5\uffff\1\3\1\57\2\uffff\1\42\3\uffff\1\64\1\61\2\uffff\1\62\6\uffff\1\44\1\uffff\1\51\1\46\1\47\1\50\1\uffff\1\52\1\uffff\1\7\2\uffff\1\55\11\uffff\1\70\1\67\10\uffff\1\45",
             "",
@@ -99753,28 +99982,28 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_223 = DFA.unpackEncodedString(dfa_223s);
-    static final char[] dfa_224 = DFA.unpackEncodedStringToUnsignedChars(dfa_224s);
+    static final short[] dfa_224 = DFA.unpackEncodedString(dfa_224s);
     static final char[] dfa_225 = DFA.unpackEncodedStringToUnsignedChars(dfa_225s);
-    static final short[] dfa_226 = DFA.unpackEncodedString(dfa_226s);
+    static final char[] dfa_226 = DFA.unpackEncodedStringToUnsignedChars(dfa_226s);
     static final short[] dfa_227 = DFA.unpackEncodedString(dfa_227s);
-    static final short[][] dfa_228 = unpackEncodedStringArray(dfa_228s);
+    static final short[] dfa_228 = DFA.unpackEncodedString(dfa_228s);
+    static final short[][] dfa_229 = unpackEncodedStringArray(dfa_229s);
 
     class DFA309 extends DFA {
 
         public DFA309(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 309;
-            this.eot = dfa_223;
-            this.eof = dfa_223;
-            this.min = dfa_224;
-            this.max = dfa_225;
-            this.accept = dfa_226;
-            this.special = dfa_227;
-            this.transition = dfa_228;
+            this.eot = dfa_224;
+            this.eof = dfa_224;
+            this.min = dfa_225;
+            this.max = dfa_226;
+            this.accept = dfa_227;
+            this.special = dfa_228;
+            this.transition = dfa_229;
         }
         public String getDescription() {
-            return "18214:2: ( ( ( ( ( () New FullStop ) )=> ( () otherlv_1= New otherlv_2= FullStop ) ) otherlv_3= Target ) | ( ( ( ( () New ) )=> ( () otherlv_5= New ) ) ( (lv_callee_6_0= ruleMemberExpression ) ) ( ( LessThanSign )=>this_ConcreteTypeArguments_7= ruleConcreteTypeArguments[$current] )? ( ( ( ( LeftParenthesis ) )=> (lv_withArgs_8_0= LeftParenthesis ) ) (this_Arguments_9= ruleArguments[$current] )? otherlv_10= RightParenthesis ( ( () this_IndexedAccessExpressionTail_12= ruleIndexedAccessExpressionTail[$current] ) | ( () this_ParameterizedPropertyAccessExpressionTail_14= ruleParameterizedPropertyAccessExpressionTail[$current] ) | ( () ( (lv_template_16_0= ruleTemplateLiteral ) ) ) )* )? ) | (this_PrimaryExpression_17= rulePrimaryExpression ( ( () this_IndexedAccessExpressionTail_19= ruleIndexedAccessExpressionTail[$current] ) | ( () this_ParameterizedPropertyAccessExpressionTail_21= ruleParameterizedPropertyAccessExpressionTail[$current] ) | ( () ( (lv_template_23_0= ruleTemplateLiteral ) ) ) )* ) )";
+            return "18310:2: ( ( ( ( ( () New FullStop ) )=> ( () otherlv_1= New otherlv_2= FullStop ) ) otherlv_3= Target ) | ( ( ( ( () New ) )=> ( () otherlv_5= New ) ) ( (lv_callee_6_0= ruleMemberExpression ) ) ( ( LessThanSign )=>this_ConcreteTypeArguments_7= ruleConcreteTypeArguments[$current] )? ( ( ( ( LeftParenthesis ) )=> (lv_withArgs_8_0= LeftParenthesis ) ) (this_Arguments_9= ruleArguments[$current] )? otherlv_10= RightParenthesis ( ( () this_IndexedAccessExpressionTail_12= ruleIndexedAccessExpressionTail[$current] ) | ( () this_ParameterizedPropertyAccessExpressionTail_14= ruleParameterizedPropertyAccessExpressionTail[$current] ) | ( () ( (lv_template_16_0= ruleTemplateLiteral ) ) ) )* )? ) | (this_PrimaryExpression_17= rulePrimaryExpression ( ( () this_IndexedAccessExpressionTail_19= ruleIndexedAccessExpressionTail[$current] ) | ( () this_ParameterizedPropertyAccessExpressionTail_21= ruleParameterizedPropertyAccessExpressionTail[$current] ) | ( () ( (lv_template_23_0= ruleTemplateLiteral ) ) ) )* ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -99802,12 +100031,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_229s = "\70\uffff";
-    static final String dfa_230s = "\2\4\66\uffff";
-    static final String dfa_231s = "\2\u0094\66\uffff";
-    static final String dfa_232s = "\2\uffff\1\3\1\1\64\2";
-    static final String dfa_233s = "\1\uffff\1\0\66\uffff}>";
-    static final String[] dfa_234s = {
+    static final String dfa_230s = "\70\uffff";
+    static final String dfa_231s = "\2\4\66\uffff";
+    static final String dfa_232s = "\2\u0094\66\uffff";
+    static final String dfa_233s = "\2\uffff\1\3\1\1\64\2";
+    static final String dfa_234s = "\1\uffff\1\0\66\uffff}>";
+    static final String[] dfa_235s = {
             "\3\2\1\uffff\4\2\2\uffff\2\2\3\uffff\2\2\2\uffff\2\2\1\uffff\1\2\1\uffff\1\2\1\uffff\2\2\2\uffff\1\2\1\uffff\2\2\1\uffff\1\2\2\uffff\1\2\3\uffff\5\2\7\uffff\2\2\1\1\2\2\13\uffff\1\2\6\uffff\1\2\3\uffff\1\2\5\uffff\1\2\6\uffff\1\2\2\uffff\1\2\3\uffff\2\2\2\uffff\1\2\6\uffff\1\2\1\uffff\4\2\1\uffff\1\2\1\uffff\1\2\2\uffff\1\2\11\uffff\2\2\10\uffff\1\2",
             "\1\26\1\21\1\33\1\uffff\1\30\1\34\1\36\1\15\2\uffff\1\14\1\64\3\uffff\1\35\1\13\2\uffff\1\42\1\37\1\uffff\1\16\1\uffff\1\23\1\uffff\1\32\1\31\2\uffff\1\65\1\uffff\1\53\1\6\1\uffff\1\25\2\uffff\1\27\3\uffff\1\20\1\55\1\5\1\52\1\24\7\uffff\1\10\1\12\1\4\1\40\1\11\13\uffff\1\57\6\uffff\1\17\3\uffff\1\22\5\uffff\1\62\5\uffff\1\3\1\56\2\uffff\1\41\3\uffff\1\63\1\60\2\uffff\1\61\6\uffff\1\43\1\uffff\1\50\1\45\1\46\1\47\1\uffff\1\51\1\uffff\1\7\2\uffff\1\54\11\uffff\1\67\1\66\10\uffff\1\44",
             "",
@@ -99866,28 +100095,28 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_229 = DFA.unpackEncodedString(dfa_229s);
-    static final char[] dfa_230 = DFA.unpackEncodedStringToUnsignedChars(dfa_230s);
+    static final short[] dfa_230 = DFA.unpackEncodedString(dfa_230s);
     static final char[] dfa_231 = DFA.unpackEncodedStringToUnsignedChars(dfa_231s);
-    static final short[] dfa_232 = DFA.unpackEncodedString(dfa_232s);
+    static final char[] dfa_232 = DFA.unpackEncodedStringToUnsignedChars(dfa_232s);
     static final short[] dfa_233 = DFA.unpackEncodedString(dfa_233s);
-    static final short[][] dfa_234 = unpackEncodedStringArray(dfa_234s);
+    static final short[] dfa_234 = DFA.unpackEncodedString(dfa_234s);
+    static final short[][] dfa_235 = unpackEncodedStringArray(dfa_235s);
 
     class DFA315 extends DFA {
 
         public DFA315(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 315;
-            this.eot = dfa_229;
-            this.eof = dfa_229;
-            this.min = dfa_230;
-            this.max = dfa_231;
-            this.accept = dfa_232;
-            this.special = dfa_233;
-            this.transition = dfa_234;
+            this.eot = dfa_230;
+            this.eof = dfa_230;
+            this.min = dfa_231;
+            this.max = dfa_232;
+            this.accept = dfa_233;
+            this.special = dfa_234;
+            this.transition = dfa_235;
         }
         public String getDescription() {
-            return "18508:2: ( ( ( ( ( () New FullStop ) )=> ( () otherlv_1= New otherlv_2= FullStop ) ) otherlv_3= Target ) | ( ( ( ( () New ) )=> ( () otherlv_5= New ) ) ( (lv_callee_6_0= norm1_MemberExpression ) ) ( ( LessThanSign )=>this_ConcreteTypeArguments_7= ruleConcreteTypeArguments[$current] )? ( ( ( ( LeftParenthesis ) )=> (lv_withArgs_8_0= LeftParenthesis ) ) (this_Arguments_9= norm1_Arguments[$current] )? otherlv_10= RightParenthesis ( ( () this_IndexedAccessExpressionTail_12= norm1_IndexedAccessExpressionTail[$current] ) | ( () this_ParameterizedPropertyAccessExpressionTail_14= norm1_ParameterizedPropertyAccessExpressionTail[$current] ) | ( () ( (lv_template_16_0= norm1_TemplateLiteral ) ) ) )* )? ) | (this_PrimaryExpression_17= norm1_PrimaryExpression ( ( () this_IndexedAccessExpressionTail_19= norm1_IndexedAccessExpressionTail[$current] ) | ( () this_ParameterizedPropertyAccessExpressionTail_21= norm1_ParameterizedPropertyAccessExpressionTail[$current] ) | ( () ( (lv_template_23_0= norm1_TemplateLiteral ) ) ) )* ) )";
+            return "18604:2: ( ( ( ( ( () New FullStop ) )=> ( () otherlv_1= New otherlv_2= FullStop ) ) otherlv_3= Target ) | ( ( ( ( () New ) )=> ( () otherlv_5= New ) ) ( (lv_callee_6_0= norm1_MemberExpression ) ) ( ( LessThanSign )=>this_ConcreteTypeArguments_7= ruleConcreteTypeArguments[$current] )? ( ( ( ( LeftParenthesis ) )=> (lv_withArgs_8_0= LeftParenthesis ) ) (this_Arguments_9= norm1_Arguments[$current] )? otherlv_10= RightParenthesis ( ( () this_IndexedAccessExpressionTail_12= norm1_IndexedAccessExpressionTail[$current] ) | ( () this_ParameterizedPropertyAccessExpressionTail_14= norm1_ParameterizedPropertyAccessExpressionTail[$current] ) | ( () ( (lv_template_16_0= norm1_TemplateLiteral ) ) ) )* )? ) | (this_PrimaryExpression_17= norm1_PrimaryExpression ( ( () this_IndexedAccessExpressionTail_19= norm1_IndexedAccessExpressionTail[$current] ) | ( () this_ParameterizedPropertyAccessExpressionTail_21= norm1_ParameterizedPropertyAccessExpressionTail[$current] ) | ( () ( (lv_template_23_0= norm1_TemplateLiteral ) ) ) )* ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -99915,13 +100144,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_235s = "\104\uffff";
-    static final String dfa_236s = "\1\1\103\uffff";
-    static final String dfa_237s = "\1\7\1\uffff\1\4\1\uffff\2\4\76\uffff";
-    static final String dfa_238s = "\1\u0098\1\uffff\1\u0094\1\uffff\2\u0094\76\uffff";
-    static final String dfa_239s = "\1\uffff\1\2\1\uffff\1\1\2\uffff\76\1";
-    static final String dfa_240s = "\1\2\3\uffff\1\1\1\0\76\uffff}>";
-    static final String[] dfa_241s = {
+    static final String dfa_236s = "\104\uffff";
+    static final String dfa_237s = "\1\1\103\uffff";
+    static final String dfa_238s = "\1\7\1\uffff\1\4\1\uffff\2\4\76\uffff";
+    static final String dfa_239s = "\1\u0098\1\uffff\1\u0094\1\uffff\2\u0094\76\uffff";
+    static final String dfa_240s = "\1\uffff\1\2\1\uffff\1\1\2\uffff\76\1";
+    static final String dfa_241s = "\1\1\3\uffff\1\0\1\2\76\uffff}>";
+    static final String[] dfa_242s = {
             "\1\1\55\uffff\1\1\1\uffff\2\1\10\uffff\5\1\1\uffff\1\1\1\uffff\2\1\1\3\2\1\2\uffff\1\1\3\uffff\4\1\2\uffff\1\1\1\uffff\1\1\2\uffff\1\1\3\uffff\4\1\1\2\1\1\2\uffff\2\1\1\uffff\2\1\46\uffff\1\1\1\uffff\1\1",
             "",
             "\3\1\1\uffff\4\1\2\uffff\2\1\3\uffff\3\1\1\uffff\2\1\1\uffff\1\1\1\uffff\4\1\2\uffff\1\1\1\uffff\2\1\1\uffff\1\1\1\uffff\2\1\3\uffff\6\1\6\uffff\5\1\7\uffff\1\1\1\uffff\1\1\1\uffff\1\1\6\uffff\1\1\3\uffff\1\1\2\uffff\1\1\2\uffff\1\1\2\uffff\1\1\1\uffff\1\1\1\uffff\1\1\2\uffff\2\1\1\4\1\uffff\2\1\2\uffff\1\1\2\uffff\1\1\3\uffff\1\1\1\uffff\4\1\1\uffff\1\1\1\uffff\1\1\2\uffff\1\1\11\uffff\2\1\10\uffff\1\1",
@@ -99992,49 +100221,35 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_235 = DFA.unpackEncodedString(dfa_235s);
     static final short[] dfa_236 = DFA.unpackEncodedString(dfa_236s);
-    static final char[] dfa_237 = DFA.unpackEncodedStringToUnsignedChars(dfa_237s);
+    static final short[] dfa_237 = DFA.unpackEncodedString(dfa_237s);
     static final char[] dfa_238 = DFA.unpackEncodedStringToUnsignedChars(dfa_238s);
-    static final short[] dfa_239 = DFA.unpackEncodedString(dfa_239s);
+    static final char[] dfa_239 = DFA.unpackEncodedStringToUnsignedChars(dfa_239s);
     static final short[] dfa_240 = DFA.unpackEncodedString(dfa_240s);
-    static final short[][] dfa_241 = unpackEncodedStringArray(dfa_241s);
+    static final short[] dfa_241 = DFA.unpackEncodedString(dfa_241s);
+    static final short[][] dfa_242 = unpackEncodedStringArray(dfa_242s);
 
     class DFA328 extends DFA {
 
         public DFA328(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 328;
-            this.eot = dfa_235;
-            this.eof = dfa_236;
-            this.min = dfa_237;
-            this.max = dfa_238;
-            this.accept = dfa_239;
-            this.special = dfa_240;
-            this.transition = dfa_241;
+            this.eot = dfa_236;
+            this.eof = dfa_237;
+            this.min = dfa_238;
+            this.max = dfa_239;
+            this.accept = dfa_240;
+            this.special = dfa_241;
+            this.transition = dfa_242;
         }
         public String getDescription() {
-            return "()* loopback of 19733:3: ( ( ( () ( ( ruleShiftOperator ) ) ( ( ruleAdditiveExpression ) ) ) )=> ( () ( (lv_op_2_0= ruleShiftOperator ) ) ( (lv_rhs_3_0= ruleAdditiveExpression ) ) ) )*";
+            return "()* loopback of 19829:3: ( ( ( () ( ( ruleShiftOperator ) ) ( ( ruleAdditiveExpression ) ) ) )=> ( () ( (lv_op_2_0= ruleShiftOperator ) ) ( (lv_rhs_3_0= ruleAdditiveExpression ) ) ) )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA328_5 = input.LA(1);
-
-                         
-                        int index328_5 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA328_5==EqualsSign) ) {s = 1;}
-
-                        
-                        else if ((LA328_5>=4 && LA328_5<=148 && (s=T2S.M_26[LA328_5-(4)])>=0) && (synpred190_InternalN4JSParser())) { /* 63 cases */ }
-                        input.seek(index328_5);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
                         int LA328_4 = input.LA(1);
 
                          
@@ -100046,11 +100261,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         else if ( (LA328_4==EqualsSign) ) {s = 1;}
 
                         
-                        else if ((LA328_4>=4 && LA328_4<=148 && (s=T2S.M_27[LA328_4-(4)])>=0) && (synpred190_InternalN4JSParser())) { /* 62 cases */ }
+                        else if ((LA328_4>=4 && LA328_4<=148 && (s=T2S.M_26[LA328_4-(4)])>=0) && (synpred190_InternalN4JSParser())) { /* 62 cases */ }
                         input.seek(index328_4);
                         if ( s>=0 ) return s;
                         break;
-                    case 2 : 
+                    case 1 : 
                         int LA328_0 = input.LA(1);
 
                          
@@ -100067,6 +100282,20 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index328_0);
                         if ( s>=0 ) return s;
                         break;
+                    case 2 : 
+                        int LA328_5 = input.LA(1);
+
+                         
+                        int index328_5 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ((LA328_5>=4 && LA328_5<=148 && (s=T2S.M_26[LA328_5-(4)])>=0) && (synpred190_InternalN4JSParser())) { /* 62 cases */ }
+                        else if ( (LA328_5==EqualsSign) ) {s = 1;}
+
+                         
+                        input.seek(index328_5);
+                        if ( s>=0 ) return s;
+                        break;
             }
             if (state.backtracking>0) {state.failed=true; return -1;}
             NoViableAltException nvae =
@@ -100075,12 +100304,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_242s = "\1\1\102\uffff";
-    static final String dfa_243s = "\1\7\1\uffff\1\4\1\uffff\2\4\75\uffff";
-    static final String dfa_244s = "\1\u0098\1\uffff\1\u0094\1\uffff\2\u0094\75\uffff";
-    static final String dfa_245s = "\1\uffff\1\2\1\uffff\1\1\2\uffff\75\1";
-    static final String dfa_246s = "\1\1\3\uffff\1\0\1\2\75\uffff}>";
-    static final String[] dfa_247s = {
+    static final String dfa_243s = "\1\1\102\uffff";
+    static final String dfa_244s = "\1\7\1\uffff\1\4\1\uffff\2\4\75\uffff";
+    static final String dfa_245s = "\1\u0098\1\uffff\1\u0094\1\uffff\2\u0094\75\uffff";
+    static final String dfa_246s = "\1\uffff\1\2\1\uffff\1\1\2\uffff\75\1";
+    static final String dfa_247s = "\1\1\3\uffff\1\0\1\2\75\uffff}>";
+    static final String[] dfa_248s = {
             "\1\1\55\uffff\1\1\1\uffff\2\1\10\uffff\5\1\1\uffff\1\1\1\uffff\2\1\1\3\2\1\2\uffff\1\1\3\uffff\4\1\2\uffff\1\1\1\uffff\1\1\2\uffff\1\1\3\uffff\4\1\1\2\1\1\2\uffff\2\1\1\uffff\2\1\46\uffff\1\1\1\uffff\1\1",
             "",
             "\3\1\1\uffff\4\1\2\uffff\2\1\3\uffff\3\1\1\uffff\2\1\1\uffff\1\1\1\uffff\4\1\2\uffff\1\1\1\uffff\2\1\1\uffff\1\1\2\uffff\1\1\3\uffff\6\1\6\uffff\5\1\7\uffff\1\1\1\uffff\1\1\1\uffff\1\1\6\uffff\1\1\3\uffff\1\1\2\uffff\1\1\2\uffff\1\1\2\uffff\1\1\1\uffff\1\1\1\uffff\1\1\2\uffff\2\1\1\4\1\uffff\2\1\2\uffff\1\1\2\uffff\1\1\3\uffff\1\1\1\uffff\4\1\1\uffff\1\1\1\uffff\1\1\2\uffff\1\1\11\uffff\2\1\10\uffff\1\1",
@@ -100149,12 +100378,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final short[] dfa_242 = DFA.unpackEncodedString(dfa_242s);
-    static final char[] dfa_243 = DFA.unpackEncodedStringToUnsignedChars(dfa_243s);
+    static final short[] dfa_243 = DFA.unpackEncodedString(dfa_243s);
     static final char[] dfa_244 = DFA.unpackEncodedStringToUnsignedChars(dfa_244s);
-    static final short[] dfa_245 = DFA.unpackEncodedString(dfa_245s);
+    static final char[] dfa_245 = DFA.unpackEncodedStringToUnsignedChars(dfa_245s);
     static final short[] dfa_246 = DFA.unpackEncodedString(dfa_246s);
-    static final short[][] dfa_247 = unpackEncodedStringArray(dfa_247s);
+    static final short[] dfa_247 = DFA.unpackEncodedString(dfa_247s);
+    static final short[][] dfa_248 = unpackEncodedStringArray(dfa_248s);
 
     class DFA329 extends DFA {
 
@@ -100162,15 +100391,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 329;
             this.eot = dfa_122;
-            this.eof = dfa_242;
-            this.min = dfa_243;
-            this.max = dfa_244;
-            this.accept = dfa_245;
-            this.special = dfa_246;
-            this.transition = dfa_247;
+            this.eof = dfa_243;
+            this.min = dfa_244;
+            this.max = dfa_245;
+            this.accept = dfa_246;
+            this.special = dfa_247;
+            this.transition = dfa_248;
         }
         public String getDescription() {
-            return "()* loopback of 19818:3: ( ( ( () ( ( ruleShiftOperator ) ) ( ( norm1_AdditiveExpression ) ) ) )=> ( () ( (lv_op_2_0= ruleShiftOperator ) ) ( (lv_rhs_3_0= norm1_AdditiveExpression ) ) ) )*";
+            return "()* loopback of 19914:3: ( ( ( () ( ( ruleShiftOperator ) ) ( ( norm1_AdditiveExpression ) ) ) )=> ( () ( (lv_op_2_0= ruleShiftOperator ) ) ( (lv_rhs_3_0= norm1_AdditiveExpression ) ) ) )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -100185,10 +100414,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         s = -1;
                         if ( (LA329_4==GreaterThanSign) ) {s = 5;}
 
+                        
+                        else if ((LA329_4>=4 && LA329_4<=148 && (s=T2S.M_28[LA329_4-(4)])>=0) && (synpred191_InternalN4JSParser())) { /* 62 cases */ }
                         else if ( (LA329_4==EqualsSign) ) {s = 1;}
 
-                        
-                        else if ((LA329_4>=4 && LA329_4<=148 && (s=T2S.M_28[LA329_4-(4)])>=0) && (synpred191_InternalN4JSParser())) { /* 61 cases */ }
+                         
                         input.seek(index329_4);
                         if ( s>=0 ) return s;
                         break;
@@ -100231,13 +100461,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_248s = "\105\uffff";
-    static final String dfa_249s = "\1\1\104\uffff";
-    static final String dfa_250s = "\1\7\1\uffff\1\4\102\uffff";
-    static final String dfa_251s = "\1\157\1\uffff\1\u0094\102\uffff";
-    static final String dfa_252s = "\1\uffff\1\2\1\uffff\102\1";
-    static final String dfa_253s = "\1\0\1\uffff\1\1\102\uffff}>";
-    static final String[] dfa_254s = {
+    static final String dfa_249s = "\105\uffff";
+    static final String dfa_250s = "\1\1\104\uffff";
+    static final String dfa_251s = "\1\7\1\uffff\1\4\102\uffff";
+    static final String dfa_252s = "\1\157\1\uffff\1\u0094\102\uffff";
+    static final String dfa_253s = "\1\uffff\1\2\1\uffff\102\1";
+    static final String dfa_254s = "\1\0\1\uffff\1\1\102\uffff}>";
+    static final String[] dfa_255s = {
             "\1\5\55\uffff\1\1\1\uffff\2\1\10\uffff\5\1\1\uffff\1\1\1\uffff\2\1\1\uffff\1\4\1\1\2\uffff\1\1\3\uffff\4\1\2\uffff\1\1\4\uffff\1\1\4\uffff\1\1\1\3\1\1\1\2\1\1\3\uffff\1\1\1\uffff\2\1",
             "",
             "\1\32\1\25\1\37\1\uffff\1\34\1\40\1\42\1\21\2\uffff\1\20\1\70\3\uffff\1\41\1\17\1\74\1\uffff\1\46\1\43\1\uffff\1\22\1\uffff\1\27\1\76\1\36\1\35\2\uffff\1\71\1\uffff\1\57\1\11\1\uffff\1\31\1\uffff\1\13\1\33\3\uffff\1\24\1\61\1\10\1\56\1\30\1\75\6\uffff\1\14\1\16\1\7\1\44\1\15\7\uffff\1\77\1\uffff\1\100\1\uffff\1\63\6\uffff\1\23\3\uffff\1\26\2\uffff\1\104\2\uffff\1\66\2\uffff\1\101\1\uffff\1\102\1\uffff\1\62\2\uffff\1\45\1\6\1\1\1\uffff\1\67\1\64\2\uffff\1\65\2\uffff\1\103\3\uffff\1\47\1\uffff\1\54\1\51\1\52\1\53\1\uffff\1\55\1\uffff\1\12\2\uffff\1\60\11\uffff\1\73\1\72\10\uffff\1\50",
@@ -100309,29 +100539,29 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_248 = DFA.unpackEncodedString(dfa_248s);
     static final short[] dfa_249 = DFA.unpackEncodedString(dfa_249s);
-    static final char[] dfa_250 = DFA.unpackEncodedStringToUnsignedChars(dfa_250s);
+    static final short[] dfa_250 = DFA.unpackEncodedString(dfa_250s);
     static final char[] dfa_251 = DFA.unpackEncodedStringToUnsignedChars(dfa_251s);
-    static final short[] dfa_252 = DFA.unpackEncodedString(dfa_252s);
+    static final char[] dfa_252 = DFA.unpackEncodedStringToUnsignedChars(dfa_252s);
     static final short[] dfa_253 = DFA.unpackEncodedString(dfa_253s);
-    static final short[][] dfa_254 = unpackEncodedStringArray(dfa_254s);
+    static final short[] dfa_254 = DFA.unpackEncodedString(dfa_254s);
+    static final short[][] dfa_255 = unpackEncodedStringArray(dfa_255s);
 
     class DFA332 extends DFA {
 
         public DFA332(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 332;
-            this.eot = dfa_248;
-            this.eof = dfa_249;
-            this.min = dfa_250;
-            this.max = dfa_251;
-            this.accept = dfa_252;
-            this.special = dfa_253;
-            this.transition = dfa_254;
+            this.eot = dfa_249;
+            this.eof = dfa_250;
+            this.min = dfa_251;
+            this.max = dfa_252;
+            this.accept = dfa_253;
+            this.special = dfa_254;
+            this.transition = dfa_255;
         }
         public String getDescription() {
-            return "()* loopback of 19953:3: ( ( ( () ( ( ruleRelationalOperator ) ) ( New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD ) ) )=> ( () ( (lv_op_2_0= ruleRelationalOperator ) ) ( ( New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_rhs_3_0= ruleShiftExpression ) ) ) )*";
+            return "()* loopback of 20049:3: ( ( ( () ( ( ruleRelationalOperator ) ) ( New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD ) ) )=> ( () ( (lv_op_2_0= ruleRelationalOperator ) ) ( ( New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_rhs_3_0= ruleShiftExpression ) ) ) )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -100380,13 +100610,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_255s = "\106\uffff";
-    static final String dfa_256s = "\1\1\105\uffff";
-    static final String dfa_257s = "\1\7\1\uffff\1\4\103\uffff";
-    static final String dfa_258s = "\1\u0098\1\uffff\1\u0094\103\uffff";
-    static final String dfa_259s = "\1\uffff\1\2\1\uffff\103\1";
-    static final String dfa_260s = "\1\0\1\uffff\1\1\103\uffff}>";
-    static final String[] dfa_261s = {
+    static final String dfa_256s = "\106\uffff";
+    static final String dfa_257s = "\1\1\105\uffff";
+    static final String dfa_258s = "\1\7\1\uffff\1\4\103\uffff";
+    static final String dfa_259s = "\1\u0098\1\uffff\1\u0094\103\uffff";
+    static final String dfa_260s = "\1\uffff\1\2\1\uffff\103\1";
+    static final String dfa_261s = "\1\0\1\uffff\1\1\103\uffff}>";
+    static final String[] dfa_262s = {
             "\1\5\55\uffff\1\1\1\uffff\2\1\10\uffff\5\1\1\uffff\1\1\1\uffff\2\1\1\uffff\1\4\1\1\2\uffff\1\1\3\uffff\1\6\1\uffff\2\1\2\uffff\1\1\1\uffff\1\1\2\uffff\1\1\3\uffff\2\1\1\3\1\1\1\2\1\1\2\uffff\2\1\1\uffff\2\1\46\uffff\1\1\1\uffff\1\1",
             "",
             "\1\33\1\26\1\40\1\uffff\1\35\1\41\1\43\1\22\2\uffff\1\21\1\71\3\uffff\1\42\1\20\1\75\1\uffff\1\47\1\44\1\uffff\1\23\1\uffff\1\30\1\77\1\37\1\36\2\uffff\1\72\1\uffff\1\60\1\12\1\uffff\1\32\1\uffff\1\14\1\34\3\uffff\1\25\1\62\1\11\1\57\1\31\1\76\6\uffff\1\15\1\17\1\10\1\45\1\16\7\uffff\1\100\1\uffff\1\101\1\uffff\1\64\6\uffff\1\24\3\uffff\1\27\2\uffff\1\105\2\uffff\1\67\2\uffff\1\102\1\uffff\1\103\1\uffff\1\63\2\uffff\1\46\1\7\1\1\1\uffff\1\70\1\65\2\uffff\1\66\2\uffff\1\104\3\uffff\1\50\1\uffff\1\55\1\52\1\53\1\54\1\uffff\1\56\1\uffff\1\13\2\uffff\1\61\11\uffff\1\74\1\73\10\uffff\1\51",
@@ -100459,29 +100689,29 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_255 = DFA.unpackEncodedString(dfa_255s);
     static final short[] dfa_256 = DFA.unpackEncodedString(dfa_256s);
-    static final char[] dfa_257 = DFA.unpackEncodedStringToUnsignedChars(dfa_257s);
+    static final short[] dfa_257 = DFA.unpackEncodedString(dfa_257s);
     static final char[] dfa_258 = DFA.unpackEncodedStringToUnsignedChars(dfa_258s);
-    static final short[] dfa_259 = DFA.unpackEncodedString(dfa_259s);
+    static final char[] dfa_259 = DFA.unpackEncodedStringToUnsignedChars(dfa_259s);
     static final short[] dfa_260 = DFA.unpackEncodedString(dfa_260s);
-    static final short[][] dfa_261 = unpackEncodedStringArray(dfa_261s);
+    static final short[] dfa_261 = DFA.unpackEncodedString(dfa_261s);
+    static final short[][] dfa_262 = unpackEncodedStringArray(dfa_262s);
 
     class DFA333 extends DFA {
 
         public DFA333(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 333;
-            this.eot = dfa_255;
-            this.eof = dfa_256;
-            this.min = dfa_257;
-            this.max = dfa_258;
-            this.accept = dfa_259;
-            this.special = dfa_260;
-            this.transition = dfa_261;
+            this.eot = dfa_256;
+            this.eof = dfa_257;
+            this.min = dfa_258;
+            this.max = dfa_259;
+            this.accept = dfa_260;
+            this.special = dfa_261;
+            this.transition = dfa_262;
         }
         public String getDescription() {
-            return "()* loopback of 20159:3: ( ( ( () ( ( norm1_RelationalOperator ) ) ( New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD ) ) )=> ( () ( (lv_op_2_0= norm1_RelationalOperator ) ) ( ( New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_rhs_3_0= ruleShiftExpression ) ) ) )*";
+            return "()* loopback of 20255:3: ( ( ( () ( ( norm1_RelationalOperator ) ) ( New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD ) ) )=> ( () ( (lv_op_2_0= norm1_RelationalOperator ) ) ( ( New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_rhs_3_0= ruleShiftExpression ) ) ) )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -100517,10 +100747,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index333_2 = input.index();
                         input.rewind();
                         s = -1;
-                        if ((LA333_2>=4 && LA333_2<=148 && (s=T2S.M_31[LA333_2-(4)])>=0) && (synpred194_InternalN4JSParser())) { /* 63 cases */ }
-                        else if ( (LA333_2==GreaterThanSign) ) {s = 1;}
+                        if ( (LA333_2==GreaterThanSign) ) {s = 1;}
 
-                         
+                        
+                        else if ((LA333_2>=4 && LA333_2<=148 && (s=T2S.M_31[LA333_2-(4)])>=0) && (synpred194_InternalN4JSParser())) { /* 64 cases */ }
                         input.seek(index333_2);
                         if ( s>=0 ) return s;
                         break;
@@ -100532,11 +100762,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_262s = "\1\7\1\uffff\1\4\101\uffff";
-    static final String dfa_263s = "\1\156\1\uffff\1\u0094\101\uffff";
-    static final String dfa_264s = "\1\uffff\1\2\1\uffff\101\1";
-    static final String dfa_265s = "\1\0\1\uffff\1\1\101\uffff}>";
-    static final String[] dfa_266s = {
+    static final String dfa_263s = "\1\7\1\uffff\1\4\101\uffff";
+    static final String dfa_264s = "\1\156\1\uffff\1\u0094\101\uffff";
+    static final String dfa_265s = "\1\uffff\1\2\1\uffff\101\1";
+    static final String dfa_266s = "\1\1\1\uffff\1\0\101\uffff}>";
+    static final String[] dfa_267s = {
             "\1\5\55\uffff\1\1\1\uffff\2\1\10\uffff\5\1\1\uffff\1\1\1\uffff\2\1\1\uffff\1\4\1\1\2\uffff\1\1\3\uffff\4\1\2\uffff\1\1\4\uffff\1\1\4\uffff\1\1\1\3\1\1\1\2\1\1\3\uffff\1\1\1\uffff\1\1",
             "",
             "\1\31\1\24\1\36\1\uffff\1\33\1\37\1\41\1\20\2\uffff\1\17\1\67\3\uffff\1\40\1\16\1\73\1\uffff\1\45\1\42\1\uffff\1\21\1\uffff\1\26\1\75\1\35\1\34\2\uffff\1\70\1\uffff\1\56\1\11\1\uffff\1\30\2\uffff\1\32\3\uffff\1\23\1\60\1\10\1\55\1\27\1\74\6\uffff\1\13\1\15\1\7\1\43\1\14\7\uffff\1\76\1\uffff\1\77\1\uffff\1\62\6\uffff\1\22\3\uffff\1\25\2\uffff\1\103\2\uffff\1\65\2\uffff\1\100\1\uffff\1\101\1\uffff\1\61\2\uffff\1\44\1\6\1\1\1\uffff\1\66\1\63\2\uffff\1\64\2\uffff\1\102\3\uffff\1\46\1\uffff\1\53\1\50\1\51\1\52\1\uffff\1\54\1\uffff\1\12\2\uffff\1\57\11\uffff\1\72\1\71\10\uffff\1\47",
@@ -100606,33 +100836,47 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_262 = DFA.unpackEncodedStringToUnsignedChars(dfa_262s);
     static final char[] dfa_263 = DFA.unpackEncodedStringToUnsignedChars(dfa_263s);
-    static final short[] dfa_264 = DFA.unpackEncodedString(dfa_264s);
+    static final char[] dfa_264 = DFA.unpackEncodedStringToUnsignedChars(dfa_264s);
     static final short[] dfa_265 = DFA.unpackEncodedString(dfa_265s);
-    static final short[][] dfa_266 = unpackEncodedStringArray(dfa_266s);
+    static final short[] dfa_266 = DFA.unpackEncodedString(dfa_266s);
+    static final short[][] dfa_267 = unpackEncodedStringArray(dfa_267s);
 
     class DFA334 extends DFA {
 
         public DFA334(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 334;
-            this.eot = dfa_235;
-            this.eof = dfa_236;
-            this.min = dfa_262;
-            this.max = dfa_263;
-            this.accept = dfa_264;
-            this.special = dfa_265;
-            this.transition = dfa_266;
+            this.eot = dfa_236;
+            this.eof = dfa_237;
+            this.min = dfa_263;
+            this.max = dfa_264;
+            this.accept = dfa_265;
+            this.special = dfa_266;
+            this.transition = dfa_267;
         }
         public String getDescription() {
-            return "()* loopback of 20365:3: ( ( ( () ( ( ruleRelationalOperator ) ) ( New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD ) ) )=> ( () ( (lv_op_2_0= ruleRelationalOperator ) ) ( ( New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_rhs_3_0= norm1_ShiftExpression ) ) ) )*";
+            return "()* loopback of 20461:3: ( ( ( () ( ( ruleRelationalOperator ) ) ( New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD ) ) )=> ( () ( (lv_op_2_0= ruleRelationalOperator ) ) ( ( New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_rhs_3_0= norm1_ShiftExpression ) ) ) )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
+                        int LA334_2 = input.LA(1);
+
+                         
+                        int index334_2 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA334_2==GreaterThanSign) ) {s = 1;}
+
+                        
+                        else if ((LA334_2>=4 && LA334_2<=148 && (s=T2S.M_32[LA334_2-(4)])>=0) && (synpred196_InternalN4JSParser())) { /* 63 cases */ }
+                        input.seek(index334_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
                         int LA334_0 = input.LA(1);
 
                          
@@ -100653,20 +100897,6 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index334_0);
                         if ( s>=0 ) return s;
                         break;
-                    case 1 : 
-                        int LA334_2 = input.LA(1);
-
-                         
-                        int index334_2 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ((LA334_2>=4 && LA334_2<=148 && (s=T2S.M_32[LA334_2-(4)])>=0) && (synpred196_InternalN4JSParser())) { /* 62 cases */ }
-                        else if ( (LA334_2==GreaterThanSign) ) {s = 1;}
-
-                         
-                        input.seek(index334_2);
-                        if ( s>=0 ) return s;
-                        break;
             }
             if (state.backtracking>0) {state.failed=true; return -1;}
             NoViableAltException nvae =
@@ -100675,8 +100905,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_267s = "\1\u0098\1\uffff\1\u0094\102\uffff";
-    static final String[] dfa_268s = {
+    static final String dfa_268s = "\1\u0098\1\uffff\1\u0094\102\uffff";
+    static final String dfa_269s = "\1\1\1\uffff\1\0\102\uffff}>";
+    static final String[] dfa_270s = {
             "\1\5\55\uffff\1\1\1\uffff\2\1\10\uffff\5\1\1\uffff\1\1\1\uffff\2\1\1\uffff\1\4\1\1\2\uffff\1\1\3\uffff\1\6\1\uffff\2\1\2\uffff\1\1\1\uffff\1\1\2\uffff\1\1\3\uffff\2\1\1\3\1\1\1\2\1\1\2\uffff\2\1\1\uffff\2\1\46\uffff\1\1\1\uffff\1\1",
             "",
             "\1\32\1\25\1\37\1\uffff\1\34\1\40\1\42\1\21\2\uffff\1\20\1\70\3\uffff\1\41\1\17\1\74\1\uffff\1\46\1\43\1\uffff\1\22\1\uffff\1\27\1\76\1\36\1\35\2\uffff\1\71\1\uffff\1\57\1\12\1\uffff\1\31\2\uffff\1\33\3\uffff\1\24\1\61\1\11\1\56\1\30\1\75\6\uffff\1\14\1\16\1\10\1\44\1\15\7\uffff\1\77\1\uffff\1\100\1\uffff\1\63\6\uffff\1\23\3\uffff\1\26\2\uffff\1\104\2\uffff\1\66\2\uffff\1\101\1\uffff\1\102\1\uffff\1\62\2\uffff\1\45\1\7\1\1\1\uffff\1\67\1\64\2\uffff\1\65\2\uffff\1\103\3\uffff\1\47\1\uffff\1\54\1\51\1\52\1\53\1\uffff\1\55\1\uffff\1\13\2\uffff\1\60\11\uffff\1\73\1\72\10\uffff\1\50",
@@ -100747,30 +100978,45 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_267 = DFA.unpackEncodedStringToUnsignedChars(dfa_267s);
-    static final short[][] dfa_268 = unpackEncodedStringArray(dfa_268s);
+    static final char[] dfa_268 = DFA.unpackEncodedStringToUnsignedChars(dfa_268s);
+    static final short[] dfa_269 = DFA.unpackEncodedString(dfa_269s);
+    static final short[][] dfa_270 = unpackEncodedStringArray(dfa_270s);
 
     class DFA335 extends DFA {
 
         public DFA335(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 335;
-            this.eot = dfa_248;
-            this.eof = dfa_249;
-            this.min = dfa_250;
-            this.max = dfa_267;
-            this.accept = dfa_252;
-            this.special = dfa_253;
-            this.transition = dfa_268;
+            this.eot = dfa_249;
+            this.eof = dfa_250;
+            this.min = dfa_251;
+            this.max = dfa_268;
+            this.accept = dfa_253;
+            this.special = dfa_269;
+            this.transition = dfa_270;
         }
         public String getDescription() {
-            return "()* loopback of 20569:3: ( ( ( () ( ( norm1_RelationalOperator ) ) ( New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD ) ) )=> ( () ( (lv_op_2_0= norm1_RelationalOperator ) ) ( ( New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_rhs_3_0= norm1_ShiftExpression ) ) ) )*";
+            return "()* loopback of 20665:3: ( ( ( () ( ( norm1_RelationalOperator ) ) ( New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD ) ) )=> ( () ( (lv_op_2_0= norm1_RelationalOperator ) ) ( ( New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_rhs_3_0= norm1_ShiftExpression ) ) ) )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
+                        int LA335_2 = input.LA(1);
+
+                         
+                        int index335_2 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ((LA335_2>=4 && LA335_2<=148 && (s=T2S.M_33[LA335_2-(4)])>=0) && (synpred198_InternalN4JSParser())) { /* 62 cases */ }
+                        else if ( (LA335_2==GreaterThanSign) ) {s = 1;}
+
+                         
+                        input.seek(index335_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
                         int LA335_0 = input.LA(1);
 
                          
@@ -100793,20 +101039,6 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index335_0);
                         if ( s>=0 ) return s;
                         break;
-                    case 1 : 
-                        int LA335_2 = input.LA(1);
-
-                         
-                        int index335_2 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA335_2==GreaterThanSign) ) {s = 1;}
-
-                        
-                        else if ((LA335_2>=4 && LA335_2<=148 && (s=T2S.M_33[LA335_2-(4)])>=0) && (synpred198_InternalN4JSParser())) { /* 63 cases */ }
-                        input.seek(index335_2);
-                        if ( s>=0 ) return s;
-                        break;
             }
             if (state.backtracking>0) {state.failed=true; return -1;}
             NoViableAltException nvae =
@@ -100815,11 +101047,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_269s = "\1\4\35\0\44\uffff";
-    static final String dfa_270s = "\1\u0094\35\0\44\uffff";
-    static final String dfa_271s = "\36\uffff\1\4\40\uffff\1\1\1\3\1\2";
-    static final String dfa_272s = "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33\1\34\44\uffff}>";
-    static final String[] dfa_273s = {
+    static final String dfa_271s = "\1\4\35\0\44\uffff";
+    static final String dfa_272s = "\1\u0094\35\0\44\uffff";
+    static final String dfa_273s = "\36\uffff\1\4\40\uffff\1\1\1\3\1\2";
+    static final String dfa_274s = "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33\1\34\44\uffff}>";
+    static final String[] dfa_275s = {
             "\1\25\1\20\1\30\1\uffff\1\27\1\31\1\33\1\14\2\uffff\1\13\1\36\3\uffff\1\32\1\12\1\36\1\uffff\1\36\1\34\1\uffff\1\15\1\uffff\1\22\1\36\1\4\1\1\2\uffff\1\36\1\uffff\2\36\1\uffff\1\24\1\uffff\1\6\1\26\3\uffff\1\17\3\36\1\23\1\36\6\uffff\1\7\1\11\1\36\1\35\1\10\7\uffff\1\36\1\uffff\1\36\1\uffff\1\36\6\uffff\1\16\3\uffff\1\21\2\uffff\1\36\2\uffff\1\3\2\uffff\1\36\1\uffff\1\36\1\uffff\1\36\2\uffff\1\36\3\uffff\1\2\1\36\2\uffff\1\36\2\uffff\1\36\3\uffff\1\36\1\uffff\4\36\1\uffff\1\36\1\uffff\1\5\2\uffff\1\36\11\uffff\2\36\10\uffff\1\36",
             "\1\uffff",
             "\1\uffff",
@@ -100887,11 +101119,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_269 = DFA.unpackEncodedStringToUnsignedChars(dfa_269s);
-    static final char[] dfa_270 = DFA.unpackEncodedStringToUnsignedChars(dfa_270s);
-    static final short[] dfa_271 = DFA.unpackEncodedString(dfa_271s);
-    static final short[] dfa_272 = DFA.unpackEncodedString(dfa_272s);
-    static final short[][] dfa_273 = unpackEncodedStringArray(dfa_273s);
+    static final char[] dfa_271 = DFA.unpackEncodedStringToUnsignedChars(dfa_271s);
+    static final char[] dfa_272 = DFA.unpackEncodedStringToUnsignedChars(dfa_272s);
+    static final short[] dfa_273 = DFA.unpackEncodedString(dfa_273s);
+    static final short[] dfa_274 = DFA.unpackEncodedString(dfa_274s);
+    static final short[][] dfa_275 = unpackEncodedStringArray(dfa_275s);
 
     class DFA369 extends DFA {
 
@@ -100900,14 +101132,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 369;
             this.eot = dfa_19;
             this.eof = dfa_19;
-            this.min = dfa_269;
-            this.max = dfa_270;
-            this.accept = dfa_271;
-            this.special = dfa_272;
-            this.transition = dfa_273;
+            this.min = dfa_271;
+            this.max = dfa_272;
+            this.accept = dfa_273;
+            this.special = dfa_274;
+            this.transition = dfa_275;
         }
         public String getDescription() {
-            return "23336:2: ( ( ( ( () Await ) )=>this_AwaitExpression_0= ruleAwaitExpression ) | ( ( ( () CommercialAt Promisify ) )=>this_PromisifyExpression_1= rulePromisifyExpression ) | ( ( ( ( ( ruleStrictFormalParameters[null] ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ( ( ( ( Async ) ) ruleNoLineTerminator[null] LeftParenthesis ) )=> ( ( ( Async ) ) ruleNoLineTerminator[null] ( ( LeftParenthesis )=> ruleStrictFormalParameters[null] ) ) ) ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ruleBindingIdentifierAsFormalParameter ) ) ) EqualsSignGreaterThanSign ) )=>this_ArrowExpression_2= ruleArrowExpression ) | (this_ConditionalExpression_3= ruleConditionalExpression ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_5_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_6_0= ruleAssignmentExpression ) ) )? ) )";
+            return "23432:2: ( ( ( ( () Await ) )=>this_AwaitExpression_0= ruleAwaitExpression ) | ( ( ( () CommercialAt Promisify ) )=>this_PromisifyExpression_1= rulePromisifyExpression ) | ( ( ( ( ( ruleStrictFormalParameters[null] ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ( ( ( ( Async ) ) ruleNoLineTerminator[null] LeftParenthesis ) )=> ( ( ( Async ) ) ruleNoLineTerminator[null] ( ( LeftParenthesis )=> ruleStrictFormalParameters[null] ) ) ) ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ruleBindingIdentifierAsFormalParameter ) ) ) EqualsSignGreaterThanSign ) )=>this_ArrowExpression_2= ruleArrowExpression ) | (this_ConditionalExpression_3= ruleConditionalExpression ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_5_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_6_0= ruleAssignmentExpression ) ) )? ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -101358,12 +101590,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_274s = "\1\14\15\uffff";
-    static final String dfa_275s = "\1\67\13\0\2\uffff";
-    static final String dfa_276s = "\1\157\13\0\2\uffff";
-    static final String dfa_277s = "\14\uffff\1\2\1\1";
-    static final String dfa_278s = "\1\uffff\1\0\1\10\1\5\1\4\1\1\1\11\1\6\1\3\1\2\1\12\1\7\2\uffff}>";
-    static final String[] dfa_279s = {
+    static final String dfa_276s = "\1\14\15\uffff";
+    static final String dfa_277s = "\1\67\13\0\2\uffff";
+    static final String dfa_278s = "\1\157\13\0\2\uffff";
+    static final String dfa_279s = "\14\uffff\1\2\1\1";
+    static final String dfa_280s = "\1\uffff\1\3\1\0\1\10\1\6\1\4\1\1\1\11\1\7\1\5\1\2\1\12\2\uffff}>";
+    static final String[] dfa_281s = {
             "\1\7\12\uffff\1\4\1\uffff\1\11\1\2\1\uffff\1\5\1\uffff\1\6\1\3\5\uffff\1\12\3\uffff\2\14\1\13\10\uffff\1\14\4\uffff\1\14\1\uffff\1\1\1\10\7\uffff\1\14",
             "\1\uffff",
             "\1\uffff",
@@ -101379,12 +101611,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final short[] dfa_274 = DFA.unpackEncodedString(dfa_274s);
-    static final char[] dfa_275 = DFA.unpackEncodedStringToUnsignedChars(dfa_275s);
-    static final char[] dfa_276 = DFA.unpackEncodedStringToUnsignedChars(dfa_276s);
-    static final short[] dfa_277 = DFA.unpackEncodedString(dfa_277s);
-    static final short[] dfa_278 = DFA.unpackEncodedString(dfa_278s);
-    static final short[][] dfa_279 = unpackEncodedStringArray(dfa_279s);
+    static final short[] dfa_276 = DFA.unpackEncodedString(dfa_276s);
+    static final char[] dfa_277 = DFA.unpackEncodedStringToUnsignedChars(dfa_277s);
+    static final char[] dfa_278 = DFA.unpackEncodedStringToUnsignedChars(dfa_278s);
+    static final short[] dfa_279 = DFA.unpackEncodedString(dfa_279s);
+    static final short[] dfa_280 = DFA.unpackEncodedString(dfa_280s);
+    static final short[][] dfa_281 = unpackEncodedStringArray(dfa_281s);
 
     class DFA368 extends DFA {
 
@@ -101392,141 +101624,21 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 368;
             this.eot = dfa_7;
-            this.eof = dfa_274;
-            this.min = dfa_275;
-            this.max = dfa_276;
-            this.accept = dfa_277;
-            this.special = dfa_278;
-            this.transition = dfa_279;
+            this.eof = dfa_276;
+            this.min = dfa_277;
+            this.max = dfa_278;
+            this.accept = dfa_279;
+            this.special = dfa_280;
+            this.transition = dfa_281;
         }
         public String getDescription() {
-            return "23440:4: ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_5_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_6_0= ruleAssignmentExpression ) ) )?";
+            return "23536:4: ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_5_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_6_0= ruleAssignmentExpression ) ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA368_1 = input.LA(1);
-
-                         
-                        int index368_1 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index368_1);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA368_5 = input.LA(1);
-
-                         
-                        int index368_5 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index368_5);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA368_9 = input.LA(1);
-
-                         
-                        int index368_9 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index368_9);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA368_8 = input.LA(1);
-
-                         
-                        int index368_8 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index368_8);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA368_4 = input.LA(1);
-
-                         
-                        int index368_4 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index368_4);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
-                        int LA368_3 = input.LA(1);
-
-                         
-                        int index368_3 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index368_3);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 6 : 
-                        int LA368_7 = input.LA(1);
-
-                         
-                        int index368_7 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index368_7);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 7 : 
-                        int LA368_11 = input.LA(1);
-
-                         
-                        int index368_11 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index368_11);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 8 : 
                         int LA368_2 = input.LA(1);
 
                          
@@ -101541,7 +101653,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index368_2);
                         if ( s>=0 ) return s;
                         break;
-                    case 9 : 
+                    case 1 : 
                         int LA368_6 = input.LA(1);
 
                          
@@ -101556,7 +101668,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index368_6);
                         if ( s>=0 ) return s;
                         break;
-                    case 10 : 
+                    case 2 : 
                         int LA368_10 = input.LA(1);
 
                          
@@ -101569,6 +101681,126 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                          
                         input.seek(index368_10);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 3 : 
+                        int LA368_1 = input.LA(1);
+
+                         
+                        int index368_1 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index368_1);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
+                        int LA368_5 = input.LA(1);
+
+                         
+                        int index368_5 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index368_5);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 5 : 
+                        int LA368_9 = input.LA(1);
+
+                         
+                        int index368_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index368_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
+                        int LA368_4 = input.LA(1);
+
+                         
+                        int index368_4 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index368_4);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 7 : 
+                        int LA368_8 = input.LA(1);
+
+                         
+                        int index368_8 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index368_8);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 8 : 
+                        int LA368_3 = input.LA(1);
+
+                         
+                        int index368_3 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index368_3);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 9 : 
+                        int LA368_7 = input.LA(1);
+
+                         
+                        int index368_7 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index368_7);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 10 : 
+                        int LA368_11 = input.LA(1);
+
+                         
+                        int index368_11 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred233_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index368_11);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -101587,14 +101819,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 371;
             this.eot = dfa_19;
             this.eof = dfa_19;
-            this.min = dfa_269;
-            this.max = dfa_270;
-            this.accept = dfa_271;
-            this.special = dfa_272;
-            this.transition = dfa_273;
+            this.min = dfa_271;
+            this.max = dfa_272;
+            this.accept = dfa_273;
+            this.special = dfa_274;
+            this.transition = dfa_275;
         }
         public String getDescription() {
-            return "23514:2: ( ( ( ( () Await ) )=>this_AwaitExpression_0= norm1_AwaitExpression ) | ( ( ( () CommercialAt Promisify ) )=>this_PromisifyExpression_1= norm1_PromisifyExpression ) | ( ( ( ( ( ruleStrictFormalParameters[null] ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ( ( ( ( Async ) ) ruleNoLineTerminator[null] LeftParenthesis ) )=> ( ( ( Async ) ) ruleNoLineTerminator[null] ( ( LeftParenthesis )=> ruleStrictFormalParameters[null] ) ) ) ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ruleBindingIdentifierAsFormalParameter ) ) ) EqualsSignGreaterThanSign ) )=>this_ArrowExpression_2= norm1_ArrowExpression ) | (this_ConditionalExpression_3= norm1_ConditionalExpression ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_5_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_6_0= norm1_AssignmentExpression ) ) )? ) )";
+            return "23610:2: ( ( ( ( () Await ) )=>this_AwaitExpression_0= norm1_AwaitExpression ) | ( ( ( () CommercialAt Promisify ) )=>this_PromisifyExpression_1= norm1_PromisifyExpression ) | ( ( ( ( ( ruleStrictFormalParameters[null] ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ( ( ( ( Async ) ) ruleNoLineTerminator[null] LeftParenthesis ) )=> ( ( ( Async ) ) ruleNoLineTerminator[null] ( ( LeftParenthesis )=> ruleStrictFormalParameters[null] ) ) ) ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ruleBindingIdentifierAsFormalParameter ) ) ) EqualsSignGreaterThanSign ) )=>this_ArrowExpression_2= norm1_ArrowExpression ) | (this_ConditionalExpression_3= norm1_ConditionalExpression ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_5_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_6_0= norm1_AssignmentExpression ) ) )? ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -102045,8 +102277,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_280s = "\1\u0098\13\0\2\uffff";
-    static final String[] dfa_281s = {
+    static final String dfa_282s = "\1\u0098\13\0\2\uffff";
+    static final String[] dfa_283s = {
             "\1\7\12\uffff\1\4\1\uffff\1\11\1\2\1\uffff\1\5\1\uffff\1\6\1\3\5\uffff\1\12\5\uffff\1\13\5\uffff\1\14\2\uffff\1\14\3\uffff\2\14\1\uffff\1\1\1\10\3\uffff\1\14\3\uffff\1\14\46\uffff\1\14\1\uffff\1\14",
             "\1\uffff",
             "\1\uffff",
@@ -102062,8 +102294,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_280 = DFA.unpackEncodedStringToUnsignedChars(dfa_280s);
-    static final short[][] dfa_281 = unpackEncodedStringArray(dfa_281s);
+    static final char[] dfa_282 = DFA.unpackEncodedStringToUnsignedChars(dfa_282s);
+    static final short[][] dfa_283 = unpackEncodedStringArray(dfa_283s);
 
     class DFA370 extends DFA {
 
@@ -102071,141 +102303,21 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 370;
             this.eot = dfa_7;
-            this.eof = dfa_274;
-            this.min = dfa_275;
-            this.max = dfa_280;
-            this.accept = dfa_277;
-            this.special = dfa_278;
-            this.transition = dfa_281;
+            this.eof = dfa_276;
+            this.min = dfa_277;
+            this.max = dfa_282;
+            this.accept = dfa_279;
+            this.special = dfa_280;
+            this.transition = dfa_283;
         }
         public String getDescription() {
-            return "23618:4: ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_5_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_6_0= norm1_AssignmentExpression ) ) )?";
+            return "23714:4: ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_5_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_6_0= norm1_AssignmentExpression ) ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA370_1 = input.LA(1);
-
-                         
-                        int index370_1 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index370_1);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA370_5 = input.LA(1);
-
-                         
-                        int index370_5 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index370_5);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA370_9 = input.LA(1);
-
-                         
-                        int index370_9 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index370_9);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA370_8 = input.LA(1);
-
-                         
-                        int index370_8 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index370_8);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA370_4 = input.LA(1);
-
-                         
-                        int index370_4 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index370_4);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
-                        int LA370_3 = input.LA(1);
-
-                         
-                        int index370_3 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index370_3);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 6 : 
-                        int LA370_7 = input.LA(1);
-
-                         
-                        int index370_7 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index370_7);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 7 : 
-                        int LA370_11 = input.LA(1);
-
-                         
-                        int index370_11 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index370_11);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 8 : 
                         int LA370_2 = input.LA(1);
 
                          
@@ -102220,7 +102332,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index370_2);
                         if ( s>=0 ) return s;
                         break;
-                    case 9 : 
+                    case 1 : 
                         int LA370_6 = input.LA(1);
 
                          
@@ -102235,7 +102347,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index370_6);
                         if ( s>=0 ) return s;
                         break;
-                    case 10 : 
+                    case 2 : 
                         int LA370_10 = input.LA(1);
 
                          
@@ -102250,6 +102362,126 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index370_10);
                         if ( s>=0 ) return s;
                         break;
+                    case 3 : 
+                        int LA370_1 = input.LA(1);
+
+                         
+                        int index370_1 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index370_1);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
+                        int LA370_5 = input.LA(1);
+
+                         
+                        int index370_5 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index370_5);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 5 : 
+                        int LA370_9 = input.LA(1);
+
+                         
+                        int index370_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index370_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
+                        int LA370_4 = input.LA(1);
+
+                         
+                        int index370_4 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index370_4);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 7 : 
+                        int LA370_8 = input.LA(1);
+
+                         
+                        int index370_8 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index370_8);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 8 : 
+                        int LA370_3 = input.LA(1);
+
+                         
+                        int index370_3 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index370_3);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 9 : 
+                        int LA370_7 = input.LA(1);
+
+                         
+                        int index370_7 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index370_7);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 10 : 
+                        int LA370_11 = input.LA(1);
+
+                         
+                        int index370_11 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred239_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index370_11);
+                        if ( s>=0 ) return s;
+                        break;
             }
             if (state.backtracking>0) {state.failed=true; return -1;}
             NoViableAltException nvae =
@@ -102258,11 +102490,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_282s = "\1\4\34\0\45\uffff";
-    static final String dfa_283s = "\1\u0094\34\0\45\uffff";
-    static final String dfa_284s = "\35\uffff\1\4\1\5\40\uffff\1\1\1\3\1\2";
-    static final String dfa_285s = "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33\45\uffff}>";
-    static final String[] dfa_286s = {
+    static final String dfa_284s = "\1\4\34\0\45\uffff";
+    static final String dfa_285s = "\1\u0094\34\0\45\uffff";
+    static final String dfa_286s = "\35\uffff\1\4\1\5\40\uffff\1\1\1\3\1\2";
+    static final String dfa_287s = "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33\45\uffff}>";
+    static final String[] dfa_288s = {
             "\1\24\1\17\1\27\1\uffff\1\26\1\30\1\32\1\13\2\uffff\1\12\1\36\3\uffff\1\31\1\11\1\36\1\uffff\1\36\1\33\1\uffff\1\14\1\uffff\1\21\1\36\1\4\1\1\2\uffff\1\36\1\uffff\2\36\1\uffff\1\23\1\uffff\1\35\1\25\3\uffff\1\16\3\36\1\22\1\36\6\uffff\1\6\1\10\1\36\1\34\1\7\7\uffff\1\36\1\uffff\1\36\1\uffff\1\36\6\uffff\1\15\3\uffff\1\20\2\uffff\1\36\2\uffff\1\3\2\uffff\1\36\1\uffff\1\36\1\uffff\1\36\2\uffff\1\36\3\uffff\1\2\1\36\2\uffff\1\36\2\uffff\1\36\3\uffff\1\36\1\uffff\4\36\1\uffff\1\36\1\uffff\1\5\2\uffff\1\36\11\uffff\2\36\10\uffff\1\36",
             "\1\uffff",
             "\1\uffff",
@@ -102330,11 +102562,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_282 = DFA.unpackEncodedStringToUnsignedChars(dfa_282s);
-    static final char[] dfa_283 = DFA.unpackEncodedStringToUnsignedChars(dfa_283s);
-    static final short[] dfa_284 = DFA.unpackEncodedString(dfa_284s);
-    static final short[] dfa_285 = DFA.unpackEncodedString(dfa_285s);
-    static final short[][] dfa_286 = unpackEncodedStringArray(dfa_286s);
+    static final char[] dfa_284 = DFA.unpackEncodedStringToUnsignedChars(dfa_284s);
+    static final char[] dfa_285 = DFA.unpackEncodedStringToUnsignedChars(dfa_285s);
+    static final short[] dfa_286 = DFA.unpackEncodedString(dfa_286s);
+    static final short[] dfa_287 = DFA.unpackEncodedString(dfa_287s);
+    static final short[][] dfa_288 = unpackEncodedStringArray(dfa_288s);
 
     class DFA373 extends DFA {
 
@@ -102343,14 +102575,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 373;
             this.eot = dfa_19;
             this.eof = dfa_19;
-            this.min = dfa_282;
-            this.max = dfa_283;
-            this.accept = dfa_284;
-            this.special = dfa_285;
-            this.transition = dfa_286;
+            this.min = dfa_284;
+            this.max = dfa_285;
+            this.accept = dfa_286;
+            this.special = dfa_287;
+            this.transition = dfa_288;
         }
         public String getDescription() {
-            return "23692:2: ( ( ( ( () Await ) )=>this_AwaitExpression_0= norm2_AwaitExpression ) | ( ( ( () CommercialAt Promisify ) )=>this_PromisifyExpression_1= norm2_PromisifyExpression ) | ( ( ( ( ( norm1_StrictFormalParameters[null] ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ( ( ( ( Async ) ) ruleNoLineTerminator[null] LeftParenthesis ) )=> ( ( ( Async ) ) ruleNoLineTerminator[null] ( ( LeftParenthesis )=> norm1_StrictFormalParameters[null] ) ) ) ( ruleColonSepReturnTypeRef[null] )? ) | ( ( norm1_BindingIdentifierAsFormalParameter ) ) ) EqualsSignGreaterThanSign ) )=>this_ArrowExpression_2= norm2_ArrowExpression ) | this_YieldExpression_3= ruleYieldExpression | (this_ConditionalExpression_4= norm2_ConditionalExpression ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_6_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_7_0= norm2_AssignmentExpression ) ) )? ) )";
+            return "23788:2: ( ( ( ( () Await ) )=>this_AwaitExpression_0= norm2_AwaitExpression ) | ( ( ( () CommercialAt Promisify ) )=>this_PromisifyExpression_1= norm2_PromisifyExpression ) | ( ( ( ( ( norm1_StrictFormalParameters[null] ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ( ( ( ( Async ) ) ruleNoLineTerminator[null] LeftParenthesis ) )=> ( ( ( Async ) ) ruleNoLineTerminator[null] ( ( LeftParenthesis )=> norm1_StrictFormalParameters[null] ) ) ) ( ruleColonSepReturnTypeRef[null] )? ) | ( ( norm1_BindingIdentifierAsFormalParameter ) ) ) EqualsSignGreaterThanSign ) )=>this_ArrowExpression_2= norm2_ArrowExpression ) | this_YieldExpression_3= ruleYieldExpression | (this_ConditionalExpression_4= norm2_ConditionalExpression ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_6_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_7_0= norm2_AssignmentExpression ) ) )? ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -102786,9 +103018,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_287s = "\1\147\13\0\2\uffff";
-    static final String dfa_288s = "\1\uffff\1\0\1\6\1\1\1\7\1\2\1\10\1\3\1\11\1\4\1\12\1\5\2\uffff}>";
-    static final String[] dfa_289s = {
+    static final String dfa_289s = "\1\147\13\0\2\uffff";
+    static final String dfa_290s = "\1\uffff\1\5\1\0\1\6\1\1\1\7\1\2\1\10\1\3\1\11\1\4\1\12\2\uffff}>";
+    static final String[] dfa_291s = {
             "\1\7\12\uffff\1\4\1\uffff\1\11\1\2\1\uffff\1\5\1\uffff\1\6\1\3\5\uffff\1\12\3\uffff\2\14\1\13\10\uffff\1\14\4\uffff\1\14\1\uffff\1\1\1\10",
             "\1\uffff",
             "\1\uffff",
@@ -102804,9 +103036,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_287 = DFA.unpackEncodedStringToUnsignedChars(dfa_287s);
-    static final short[] dfa_288 = DFA.unpackEncodedString(dfa_288s);
-    static final short[][] dfa_289 = unpackEncodedStringArray(dfa_289s);
+    static final char[] dfa_289 = DFA.unpackEncodedStringToUnsignedChars(dfa_289s);
+    static final short[] dfa_290 = DFA.unpackEncodedString(dfa_290s);
+    static final short[][] dfa_291 = unpackEncodedStringArray(dfa_291s);
 
     class DFA372 extends DFA {
 
@@ -102814,111 +103046,21 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 372;
             this.eot = dfa_7;
-            this.eof = dfa_274;
-            this.min = dfa_275;
-            this.max = dfa_287;
-            this.accept = dfa_277;
-            this.special = dfa_288;
-            this.transition = dfa_289;
+            this.eof = dfa_276;
+            this.min = dfa_277;
+            this.max = dfa_289;
+            this.accept = dfa_279;
+            this.special = dfa_290;
+            this.transition = dfa_291;
         }
         public String getDescription() {
-            return "23805:4: ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_6_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_7_0= norm2_AssignmentExpression ) ) )?";
+            return "23901:4: ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_6_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_7_0= norm2_AssignmentExpression ) ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA372_1 = input.LA(1);
-
-                         
-                        int index372_1 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index372_1);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA372_3 = input.LA(1);
-
-                         
-                        int index372_3 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index372_3);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA372_5 = input.LA(1);
-
-                         
-                        int index372_5 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index372_5);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA372_7 = input.LA(1);
-
-                         
-                        int index372_7 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index372_7);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA372_9 = input.LA(1);
-
-                         
-                        int index372_9 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index372_9);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
-                        int LA372_11 = input.LA(1);
-
-                         
-                        int index372_11 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index372_11);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 6 : 
                         int LA372_2 = input.LA(1);
 
                          
@@ -102933,7 +103075,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index372_2);
                         if ( s>=0 ) return s;
                         break;
-                    case 7 : 
+                    case 1 : 
                         int LA372_4 = input.LA(1);
 
                          
@@ -102948,7 +103090,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index372_4);
                         if ( s>=0 ) return s;
                         break;
-                    case 8 : 
+                    case 2 : 
                         int LA372_6 = input.LA(1);
 
                          
@@ -102963,7 +103105,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index372_6);
                         if ( s>=0 ) return s;
                         break;
-                    case 9 : 
+                    case 3 : 
                         int LA372_8 = input.LA(1);
 
                          
@@ -102978,7 +103120,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index372_8);
                         if ( s>=0 ) return s;
                         break;
-                    case 10 : 
+                    case 4 : 
                         int LA372_10 = input.LA(1);
 
                          
@@ -102991,6 +103133,96 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                          
                         input.seek(index372_10);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 5 : 
+                        int LA372_1 = input.LA(1);
+
+                         
+                        int index372_1 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index372_1);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
+                        int LA372_3 = input.LA(1);
+
+                         
+                        int index372_3 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index372_3);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 7 : 
+                        int LA372_5 = input.LA(1);
+
+                         
+                        int index372_5 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index372_5);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 8 : 
+                        int LA372_7 = input.LA(1);
+
+                         
+                        int index372_7 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index372_7);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 9 : 
+                        int LA372_9 = input.LA(1);
+
+                         
+                        int index372_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index372_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 10 : 
+                        int LA372_11 = input.LA(1);
+
+                         
+                        int index372_11 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred245_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index372_11);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -103009,14 +103241,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 375;
             this.eot = dfa_19;
             this.eof = dfa_19;
-            this.min = dfa_282;
-            this.max = dfa_283;
-            this.accept = dfa_284;
-            this.special = dfa_285;
-            this.transition = dfa_286;
+            this.min = dfa_284;
+            this.max = dfa_285;
+            this.accept = dfa_286;
+            this.special = dfa_287;
+            this.transition = dfa_288;
         }
         public String getDescription() {
-            return "23879:2: ( ( ( ( () Await ) )=>this_AwaitExpression_0= norm3_AwaitExpression ) | ( ( ( () CommercialAt Promisify ) )=>this_PromisifyExpression_1= norm3_PromisifyExpression ) | ( ( ( ( ( norm1_StrictFormalParameters[null] ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ( ( ( ( Async ) ) ruleNoLineTerminator[null] LeftParenthesis ) )=> ( ( ( Async ) ) ruleNoLineTerminator[null] ( ( LeftParenthesis )=> norm1_StrictFormalParameters[null] ) ) ) ( ruleColonSepReturnTypeRef[null] )? ) | ( ( norm1_BindingIdentifierAsFormalParameter ) ) ) EqualsSignGreaterThanSign ) )=>this_ArrowExpression_2= norm3_ArrowExpression ) | this_YieldExpression_3= norm1_YieldExpression | (this_ConditionalExpression_4= norm3_ConditionalExpression ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_6_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_7_0= norm3_AssignmentExpression ) ) )? ) )";
+            return "23975:2: ( ( ( ( () Await ) )=>this_AwaitExpression_0= norm3_AwaitExpression ) | ( ( ( () CommercialAt Promisify ) )=>this_PromisifyExpression_1= norm3_PromisifyExpression ) | ( ( ( ( ( norm1_StrictFormalParameters[null] ( ruleColonSepReturnTypeRef[null] )? ) | ( ( ( ( ( ( Async ) ) ruleNoLineTerminator[null] LeftParenthesis ) )=> ( ( ( Async ) ) ruleNoLineTerminator[null] ( ( LeftParenthesis )=> norm1_StrictFormalParameters[null] ) ) ) ( ruleColonSepReturnTypeRef[null] )? ) | ( ( norm1_BindingIdentifierAsFormalParameter ) ) ) EqualsSignGreaterThanSign ) )=>this_ArrowExpression_2= norm3_ArrowExpression ) | this_YieldExpression_3= norm1_YieldExpression | (this_ConditionalExpression_4= norm3_ConditionalExpression ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_6_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_7_0= norm3_AssignmentExpression ) ) )? ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -103452,8 +103684,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_290s = "\1\uffff\1\0\1\6\1\1\1\7\1\2\1\10\1\3\1\12\1\4\1\11\1\5\2\uffff}>";
-    static final short[] dfa_290 = DFA.unpackEncodedString(dfa_290s);
+    static final String dfa_292s = "\1\uffff\1\5\1\0\1\6\1\1\1\7\1\2\1\10\1\4\1\11\1\3\1\12\2\uffff}>";
+    static final short[] dfa_292 = DFA.unpackEncodedString(dfa_292s);
 
     class DFA374 extends DFA {
 
@@ -103461,111 +103693,21 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 374;
             this.eot = dfa_7;
-            this.eof = dfa_274;
-            this.min = dfa_275;
-            this.max = dfa_280;
-            this.accept = dfa_277;
-            this.special = dfa_290;
-            this.transition = dfa_281;
+            this.eof = dfa_276;
+            this.min = dfa_277;
+            this.max = dfa_282;
+            this.accept = dfa_279;
+            this.special = dfa_292;
+            this.transition = dfa_283;
         }
         public String getDescription() {
-            return "23992:4: ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_6_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_7_0= norm3_AssignmentExpression ) ) )?";
+            return "24088:4: ( ( ( ( () ( ( ruleAssignmentOperator ) ) ) )=> ( () ( (lv_op_6_0= ruleAssignmentOperator ) ) ) ) ( (lv_rhs_7_0= norm3_AssignmentExpression ) ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA374_1 = input.LA(1);
-
-                         
-                        int index374_1 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index374_1);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA374_3 = input.LA(1);
-
-                         
-                        int index374_3 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index374_3);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA374_5 = input.LA(1);
-
-                         
-                        int index374_5 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index374_5);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA374_7 = input.LA(1);
-
-                         
-                        int index374_7 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index374_7);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA374_9 = input.LA(1);
-
-                         
-                        int index374_9 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index374_9);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
-                        int LA374_11 = input.LA(1);
-
-                         
-                        int index374_11 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
-
-                        else if ( (true) ) {s = 12;}
-
-                         
-                        input.seek(index374_11);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 6 : 
                         int LA374_2 = input.LA(1);
 
                          
@@ -103580,7 +103722,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index374_2);
                         if ( s>=0 ) return s;
                         break;
-                    case 7 : 
+                    case 1 : 
                         int LA374_4 = input.LA(1);
 
                          
@@ -103595,7 +103737,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index374_4);
                         if ( s>=0 ) return s;
                         break;
-                    case 8 : 
+                    case 2 : 
                         int LA374_6 = input.LA(1);
 
                          
@@ -103610,7 +103752,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index374_6);
                         if ( s>=0 ) return s;
                         break;
-                    case 9 : 
+                    case 3 : 
                         int LA374_10 = input.LA(1);
 
                          
@@ -103625,7 +103767,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index374_10);
                         if ( s>=0 ) return s;
                         break;
-                    case 10 : 
+                    case 4 : 
                         int LA374_8 = input.LA(1);
 
                          
@@ -103640,6 +103782,96 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index374_8);
                         if ( s>=0 ) return s;
                         break;
+                    case 5 : 
+                        int LA374_1 = input.LA(1);
+
+                         
+                        int index374_1 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index374_1);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
+                        int LA374_3 = input.LA(1);
+
+                         
+                        int index374_3 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index374_3);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 7 : 
+                        int LA374_5 = input.LA(1);
+
+                         
+                        int index374_5 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index374_5);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 8 : 
+                        int LA374_7 = input.LA(1);
+
+                         
+                        int index374_7 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index374_7);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 9 : 
+                        int LA374_9 = input.LA(1);
+
+                         
+                        int index374_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index374_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 10 : 
+                        int LA374_11 = input.LA(1);
+
+                         
+                        int index374_11 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred251_InternalN4JSParser()) ) {s = 13;}
+
+                        else if ( (true) ) {s = 12;}
+
+                         
+                        input.seek(index374_11);
+                        if ( s>=0 ) return s;
+                        break;
             }
             if (state.backtracking>0) {state.failed=true; return -1;}
             NoViableAltException nvae =
@@ -103648,13 +103880,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_291s = "\115\uffff";
-    static final String dfa_292s = "\1\77\114\uffff";
-    static final String dfa_293s = "\1\4\17\uffff\1\0\36\uffff\1\0\35\uffff";
-    static final String dfa_294s = "\1\u0094\17\uffff\1\0\36\uffff\1\0\35\uffff";
-    static final String dfa_295s = "\1\uffff\17\1\1\uffff\36\1\1\uffff\17\1\1\2\15\uffff";
-    static final String dfa_296s = "\1\0\17\uffff\1\1\36\uffff\1\2\35\uffff}>";
-    static final String[] dfa_297s = {
+    static final String dfa_293s = "\115\uffff";
+    static final String dfa_294s = "\1\77\114\uffff";
+    static final String dfa_295s = "\1\4\17\uffff\1\0\36\uffff\1\0\35\uffff";
+    static final String dfa_296s = "\1\u0094\17\uffff\1\0\36\uffff\1\0\35\uffff";
+    static final String dfa_297s = "\1\uffff\17\1\1\uffff\36\1\1\uffff\17\1\1\2\15\uffff";
+    static final String dfa_298s = "\1\0\17\uffff\1\1\36\uffff\1\2\35\uffff}>";
+    static final String[] dfa_299s = {
             "\1\24\1\17\1\27\1\uffff\1\26\1\30\1\32\1\13\2\uffff\1\12\1\62\3\uffff\1\31\1\11\1\66\1\uffff\1\42\1\33\1\uffff\1\14\1\uffff\1\21\1\70\1\4\1\1\2\uffff\1\63\1\uffff\1\53\1\40\1\uffff\1\23\1\uffff\1\35\1\25\3\uffff\1\16\1\55\1\37\1\52\1\22\1\67\3\uffff\1\77\2\uffff\1\6\1\10\1\36\1\34\1\7\3\uffff\1\77\1\uffff\2\77\1\71\1\77\1\72\1\77\1\57\5\uffff\1\77\1\15\2\uffff\1\77\1\20\1\77\1\uffff\1\76\2\uffff\1\3\2\uffff\1\73\1\77\1\74\1\uffff\1\56\1\uffff\1\77\1\41\2\77\1\uffff\1\2\1\60\2\uffff\1\61\2\uffff\1\75\3\uffff\1\43\1\uffff\1\50\1\45\1\46\1\47\1\uffff\1\51\1\uffff\1\5\2\uffff\1\54\11\uffff\1\65\1\64\10\uffff\1\44",
             "",
             "",
@@ -103734,29 +103966,29 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_291 = DFA.unpackEncodedString(dfa_291s);
-    static final short[] dfa_292 = DFA.unpackEncodedString(dfa_292s);
-    static final char[] dfa_293 = DFA.unpackEncodedStringToUnsignedChars(dfa_293s);
-    static final char[] dfa_294 = DFA.unpackEncodedStringToUnsignedChars(dfa_294s);
-    static final short[] dfa_295 = DFA.unpackEncodedString(dfa_295s);
-    static final short[] dfa_296 = DFA.unpackEncodedString(dfa_296s);
-    static final short[][] dfa_297 = unpackEncodedStringArray(dfa_297s);
+    static final short[] dfa_293 = DFA.unpackEncodedString(dfa_293s);
+    static final short[] dfa_294 = DFA.unpackEncodedString(dfa_294s);
+    static final char[] dfa_295 = DFA.unpackEncodedStringToUnsignedChars(dfa_295s);
+    static final char[] dfa_296 = DFA.unpackEncodedStringToUnsignedChars(dfa_296s);
+    static final short[] dfa_297 = DFA.unpackEncodedString(dfa_297s);
+    static final short[] dfa_298 = DFA.unpackEncodedString(dfa_298s);
+    static final short[][] dfa_299 = unpackEncodedStringArray(dfa_299s);
 
     class DFA377 extends DFA {
 
         public DFA377(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 377;
-            this.eot = dfa_291;
-            this.eof = dfa_292;
-            this.min = dfa_293;
-            this.max = dfa_294;
-            this.accept = dfa_295;
-            this.special = dfa_296;
-            this.transition = dfa_297;
+            this.eot = dfa_293;
+            this.eof = dfa_294;
+            this.min = dfa_295;
+            this.max = dfa_296;
+            this.accept = dfa_297;
+            this.special = dfa_298;
+            this.transition = dfa_299;
         }
         public String getDescription() {
-            return "24102:3: ( ( Await | CommercialAt | LeftParenthesis | Async | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Yield | New | This_1 | Super | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_expression_3_0= norm2_AssignmentExpression ) )?";
+            return "24198:3: ( ( Await | CommercialAt | LeftParenthesis | Async | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Yield | New | This_1 | Super | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_expression_3_0= norm2_AssignmentExpression ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -103822,12 +104054,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_298s = "\1\77\120\uffff";
-    static final String dfa_299s = "\1\4\56\uffff\1\0\41\uffff";
-    static final String dfa_300s = "\1\u0098\56\uffff\1\0\41\uffff";
-    static final String dfa_301s = "\1\uffff\56\1\1\uffff\17\1\1\2\21\uffff";
-    static final String dfa_302s = "\1\0\56\uffff\1\1\41\uffff}>";
-    static final String[] dfa_303s = {
+    static final String dfa_300s = "\1\77\120\uffff";
+    static final String dfa_301s = "\1\4\56\uffff\1\0\41\uffff";
+    static final String dfa_302s = "\1\u0098\56\uffff\1\0\41\uffff";
+    static final String dfa_303s = "\1\uffff\56\1\1\uffff\17\1\1\2\21\uffff";
+    static final String dfa_304s = "\1\0\56\uffff\1\1\41\uffff}>";
+    static final String[] dfa_305s = {
             "\1\24\1\17\1\27\1\uffff\1\26\1\30\1\32\1\13\2\uffff\1\12\1\62\3\uffff\1\31\1\11\1\66\1\uffff\1\42\1\33\1\uffff\1\14\1\uffff\1\21\1\70\1\4\1\1\2\uffff\1\63\1\uffff\1\53\1\40\1\uffff\1\23\1\uffff\1\35\1\25\3\uffff\1\16\1\55\1\37\1\52\1\22\1\67\3\uffff\1\77\2\uffff\1\6\1\10\1\36\1\34\1\7\3\uffff\1\77\1\uffff\2\77\1\71\1\77\1\72\1\77\1\57\5\uffff\1\77\1\15\3\uffff\1\20\1\77\1\uffff\1\76\2\uffff\1\3\1\77\1\uffff\1\73\1\77\1\74\1\uffff\1\56\2\77\1\41\2\77\1\uffff\1\2\1\60\1\77\1\uffff\1\61\1\uffff\1\77\1\75\3\uffff\1\43\1\uffff\1\50\1\45\1\46\1\47\1\uffff\1\51\1\uffff\1\5\2\uffff\1\54\11\uffff\1\65\1\64\10\uffff\1\44\1\uffff\1\77\1\uffff\1\77",
             "",
             "",
@@ -103910,12 +104142,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final short[] dfa_298 = DFA.unpackEncodedString(dfa_298s);
-    static final char[] dfa_299 = DFA.unpackEncodedStringToUnsignedChars(dfa_299s);
-    static final char[] dfa_300 = DFA.unpackEncodedStringToUnsignedChars(dfa_300s);
-    static final short[] dfa_301 = DFA.unpackEncodedString(dfa_301s);
-    static final short[] dfa_302 = DFA.unpackEncodedString(dfa_302s);
-    static final short[][] dfa_303 = unpackEncodedStringArray(dfa_303s);
+    static final short[] dfa_300 = DFA.unpackEncodedString(dfa_300s);
+    static final char[] dfa_301 = DFA.unpackEncodedStringToUnsignedChars(dfa_301s);
+    static final char[] dfa_302 = DFA.unpackEncodedStringToUnsignedChars(dfa_302s);
+    static final short[] dfa_303 = DFA.unpackEncodedString(dfa_303s);
+    static final short[] dfa_304 = DFA.unpackEncodedString(dfa_304s);
+    static final short[][] dfa_305 = unpackEncodedStringArray(dfa_305s);
 
     class DFA379 extends DFA {
 
@@ -103923,15 +104155,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 379;
             this.eot = dfa_91;
-            this.eof = dfa_298;
-            this.min = dfa_299;
-            this.max = dfa_300;
-            this.accept = dfa_301;
-            this.special = dfa_302;
-            this.transition = dfa_303;
+            this.eof = dfa_300;
+            this.min = dfa_301;
+            this.max = dfa_302;
+            this.accept = dfa_303;
+            this.special = dfa_304;
+            this.transition = dfa_305;
         }
         public String getDescription() {
-            return "24164:3: ( ( Await | CommercialAt | LeftParenthesis | Async | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Yield | New | This_1 | Super | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_expression_3_0= norm3_AssignmentExpression ) )?";
+            return "24260:3: ( ( Await | CommercialAt | LeftParenthesis | Async | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Yield | New | This_1 | Super | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD )=> (lv_expression_3_0= norm3_AssignmentExpression ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -103978,13 +104210,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_304s = "\136\uffff";
-    static final String dfa_305s = "\1\2\135\uffff";
-    static final String dfa_306s = "\1\4\1\0\134\uffff";
-    static final String dfa_307s = "\1\u0094\1\0\134\uffff";
-    static final String dfa_308s = "\2\uffff\1\2\132\uffff\1\1";
-    static final String dfa_309s = "\1\uffff\1\0\134\uffff}>";
-    static final String[] dfa_310s = {
+    static final String dfa_306s = "\136\uffff";
+    static final String dfa_307s = "\1\2\135\uffff";
+    static final String dfa_308s = "\1\4\1\0\134\uffff";
+    static final String dfa_309s = "\1\u0094\1\0\134\uffff";
+    static final String dfa_310s = "\2\uffff\1\2\132\uffff\1\1";
+    static final String dfa_311s = "\1\uffff\1\0\134\uffff}>";
+    static final String[] dfa_312s = {
             "\61\2\1\uffff\1\2\2\uffff\10\2\5\uffff\1\2\1\uffff\1\2\1\uffff\1\2\4\uffff\1\2\1\uffff\5\2\2\uffff\1\2\2\uffff\1\1\1\uffff\2\2\1\uffff\1\2\1\uffff\1\2\1\uffff\2\2\2\uffff\3\2\2\uffff\1\2\2\uffff\1\2\3\uffff\1\2\1\uffff\4\2\1\uffff\1\2\1\uffff\1\2\2\uffff\1\2\11\uffff\2\2\10\uffff\1\2",
             "\1\uffff",
             "",
@@ -104081,29 +104313,29 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_304 = DFA.unpackEncodedString(dfa_304s);
-    static final short[] dfa_305 = DFA.unpackEncodedString(dfa_305s);
-    static final char[] dfa_306 = DFA.unpackEncodedStringToUnsignedChars(dfa_306s);
-    static final char[] dfa_307 = DFA.unpackEncodedStringToUnsignedChars(dfa_307s);
-    static final short[] dfa_308 = DFA.unpackEncodedString(dfa_308s);
-    static final short[] dfa_309 = DFA.unpackEncodedString(dfa_309s);
-    static final short[][] dfa_310 = unpackEncodedStringArray(dfa_310s);
+    static final short[] dfa_306 = DFA.unpackEncodedString(dfa_306s);
+    static final short[] dfa_307 = DFA.unpackEncodedString(dfa_307s);
+    static final char[] dfa_308 = DFA.unpackEncodedStringToUnsignedChars(dfa_308s);
+    static final char[] dfa_309 = DFA.unpackEncodedStringToUnsignedChars(dfa_309s);
+    static final short[] dfa_310 = DFA.unpackEncodedString(dfa_310s);
+    static final short[] dfa_311 = DFA.unpackEncodedString(dfa_311s);
+    static final short[][] dfa_312 = unpackEncodedStringArray(dfa_312s);
 
     class DFA411 extends DFA {
 
         public DFA411(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 411;
-            this.eot = dfa_304;
-            this.eof = dfa_305;
-            this.min = dfa_306;
-            this.max = dfa_307;
-            this.accept = dfa_308;
-            this.special = dfa_309;
-            this.transition = dfa_310;
+            this.eot = dfa_306;
+            this.eof = dfa_307;
+            this.min = dfa_308;
+            this.max = dfa_309;
+            this.accept = dfa_310;
+            this.special = dfa_311;
+            this.transition = dfa_312;
         }
         public String getDescription() {
-            return "26500:3: ( ( ( LeftParenthesis )=>otherlv_1= LeftParenthesis ) ( ( (lv_args_2_0= ruleAnnotationArgument ) ) (otherlv_3= Comma ( (lv_args_4_0= ruleAnnotationArgument ) ) )* )? otherlv_5= RightParenthesis )?";
+            return "26596:3: ( ( ( LeftParenthesis )=>otherlv_1= LeftParenthesis ) ( ( (lv_args_2_0= ruleAnnotationArgument ) ) (otherlv_3= Comma ( (lv_args_4_0= ruleAnnotationArgument ) ) )* )? otherlv_5= RightParenthesis )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -104132,13 +104364,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_311s = "\12\uffff";
-    static final String dfa_312s = "\1\uffff\7\11\2\uffff";
-    static final String dfa_313s = "\1\10\7\4\2\uffff";
-    static final String dfa_314s = "\1\175\7\u00a4\2\uffff";
-    static final String dfa_315s = "\10\uffff\1\1\1\2";
-    static final String dfa_316s = "\12\uffff}>";
-    static final String[] dfa_317s = {
+    static final String dfa_313s = "\12\uffff";
+    static final String dfa_314s = "\1\uffff\7\11\2\uffff";
+    static final String dfa_315s = "\1\10\7\4\2\uffff";
+    static final String dfa_316s = "\1\175\7\u00a4\2\uffff";
+    static final String dfa_317s = "\10\uffff\1\1\1\2";
+    static final String dfa_318s = "\12\uffff}>";
+    static final String[] dfa_319s = {
             "\1\4\7\uffff\1\6\13\uffff\1\5\2\uffff\1\3\12\uffff\1\2\10\uffff\1\1\111\uffff\1\7",
             "\135\11\1\10\17\11\3\uffff\1\11\1\uffff\4\11\1\uffff\1\11\1\uffff\1\11\2\uffff\1\11\11\uffff\2\11\10\uffff\1\11\1\uffff\1\11\1\uffff\1\11\13\uffff\1\11",
             "\135\11\1\10\17\11\3\uffff\1\11\1\uffff\4\11\1\uffff\1\11\1\uffff\1\11\2\uffff\1\11\11\uffff\2\11\10\uffff\1\11\1\uffff\1\11\1\uffff\1\11\13\uffff\1\11",
@@ -104151,36 +104383,36 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_311 = DFA.unpackEncodedString(dfa_311s);
-    static final short[] dfa_312 = DFA.unpackEncodedString(dfa_312s);
-    static final char[] dfa_313 = DFA.unpackEncodedStringToUnsignedChars(dfa_313s);
-    static final char[] dfa_314 = DFA.unpackEncodedStringToUnsignedChars(dfa_314s);
-    static final short[] dfa_315 = DFA.unpackEncodedString(dfa_315s);
-    static final short[] dfa_316 = DFA.unpackEncodedString(dfa_316s);
-    static final short[][] dfa_317 = unpackEncodedStringArray(dfa_317s);
+    static final short[] dfa_313 = DFA.unpackEncodedString(dfa_313s);
+    static final short[] dfa_314 = DFA.unpackEncodedString(dfa_314s);
+    static final char[] dfa_315 = DFA.unpackEncodedStringToUnsignedChars(dfa_315s);
+    static final char[] dfa_316 = DFA.unpackEncodedStringToUnsignedChars(dfa_316s);
+    static final short[] dfa_317 = DFA.unpackEncodedString(dfa_317s);
+    static final short[] dfa_318 = DFA.unpackEncodedString(dfa_318s);
+    static final short[][] dfa_319 = unpackEncodedStringArray(dfa_319s);
 
     class DFA417 extends DFA {
 
         public DFA417(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 417;
-            this.eot = dfa_311;
-            this.eof = dfa_312;
-            this.min = dfa_313;
-            this.max = dfa_314;
-            this.accept = dfa_315;
-            this.special = dfa_316;
-            this.transition = dfa_317;
+            this.eot = dfa_313;
+            this.eof = dfa_314;
+            this.min = dfa_315;
+            this.max = dfa_316;
+            this.accept = dfa_317;
+            this.special = dfa_318;
+            this.transition = dfa_319;
         }
         public String getDescription() {
-            return "26901:3: ( ( ( ruleTypeReferenceName ) ) otherlv_1= FullStop )?";
+            return "26997:3: ( ( ( ruleTypeReferenceName ) ) otherlv_1= FullStop )?";
         }
     }
-    static final String dfa_318s = "\1\4\1\uffff\30\0\2\uffff\60\0\4\uffff";
-    static final String dfa_319s = "\1\u0094\1\uffff\30\0\2\uffff\60\0\4\uffff";
-    static final String dfa_320s = "\1\uffff\1\1\30\uffff\2\4\60\uffff\1\6\1\2\1\3\1\5";
-    static final String dfa_321s = "\1\0\1\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\2\uffff\1\31\1\32\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\57\1\60\1\61\1\62\1\63\1\64\1\65\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\102\1\103\1\104\1\105\1\106\1\107\1\110\4\uffff}>";
-    static final String[] dfa_322s = {
+    static final String dfa_320s = "\1\4\1\uffff\30\0\2\uffff\60\0\4\uffff";
+    static final String dfa_321s = "\1\u0094\1\uffff\30\0\2\uffff\60\0\4\uffff";
+    static final String dfa_322s = "\1\uffff\1\1\30\uffff\2\4\60\uffff\1\6\1\2\1\3\1\5";
+    static final String dfa_323s = "\1\0\1\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\2\uffff\1\31\1\32\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\57\1\60\1\61\1\62\1\63\1\64\1\65\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\102\1\103\1\104\1\105\1\106\1\107\1\110\4\uffff}>";
+    static final String[] dfa_324s = {
             "\1\27\1\24\1\102\1\56\1\15\1\103\1\4\1\7\1\41\1\42\1\6\1\52\1\17\1\47\1\50\1\2\1\3\1\43\1\46\1\54\1\5\1\60\1\10\1\62\1\16\1\65\1\34\1\14\1\35\1\37\1\40\1\11\1\74\1\61\1\63\1\26\1\67\1\71\1\13\1\36\1\45\1\75\1\100\1\72\1\22\1\73\1\23\1\12\1\70\4\uffff\1\51\1\30\1\76\1\57\1\104\1\31\1\64\1\66\20\uffff\1\77\1\44\1\53\1\55\1\101\5\uffff\1\114\1\uffff\1\33\7\uffff\1\32\3\uffff\1\1\1\113\2\uffff\1\25\2\uffff\1\21\3\uffff\1\106\1\uffff\1\111\1\uffff\1\110\2\uffff\1\112\1\uffff\1\20\2\uffff\1\105\23\uffff\1\107",
             "",
             "\1\uffff",
@@ -104262,27 +104494,27 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_318 = DFA.unpackEncodedStringToUnsignedChars(dfa_318s);
-    static final char[] dfa_319 = DFA.unpackEncodedStringToUnsignedChars(dfa_319s);
-    static final short[] dfa_320 = DFA.unpackEncodedString(dfa_320s);
-    static final short[] dfa_321 = DFA.unpackEncodedString(dfa_321s);
-    static final short[][] dfa_322 = unpackEncodedStringArray(dfa_322s);
+    static final char[] dfa_320 = DFA.unpackEncodedStringToUnsignedChars(dfa_320s);
+    static final char[] dfa_321 = DFA.unpackEncodedStringToUnsignedChars(dfa_321s);
+    static final short[] dfa_322 = DFA.unpackEncodedString(dfa_322s);
+    static final short[] dfa_323 = DFA.unpackEncodedString(dfa_323s);
+    static final short[][] dfa_324 = unpackEncodedStringArray(dfa_324s);
 
     class DFA454 extends DFA {
 
         public DFA454(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 454;
-            this.eot = dfa_195;
-            this.eof = dfa_195;
-            this.min = dfa_318;
-            this.max = dfa_319;
-            this.accept = dfa_320;
-            this.special = dfa_321;
-            this.transition = dfa_322;
+            this.eot = dfa_196;
+            this.eof = dfa_196;
+            this.min = dfa_320;
+            this.max = dfa_321;
+            this.accept = dfa_322;
+            this.special = dfa_323;
+            this.transition = dfa_324;
         }
         public String getDescription() {
-            return "28156:2: (this_AnnotatedN4MemberDeclaration_0= ruleAnnotatedN4MemberDeclaration | ( ( ( () ( ( ruleN4Modifier ) )* ruleGetterHeader[null] ) )=>this_N4GetterDeclaration_1= ruleN4GetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_N4SetterDeclaration_2= ruleN4SetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeVariables[null] )? ( ruleBogusTypeRefFragment[null] )? ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ruleAsyncNoTrailingLineBreak[null] ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_N4MethodDeclaration_3= ruleN4MethodDeclaration ) | this_N4FieldDeclaration_4= ruleN4FieldDeclaration | this_N4CallableConstructorDeclaration_5= ruleN4CallableConstructorDeclaration )";
+            return "28252:2: (this_AnnotatedN4MemberDeclaration_0= ruleAnnotatedN4MemberDeclaration | ( ( ( () ( ( ruleN4Modifier ) )* ruleGetterHeader[null] ) )=>this_N4GetterDeclaration_1= ruleN4GetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_N4SetterDeclaration_2= ruleN4SetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeVariables[null] )? ( ruleBogusTypeRefFragment[null] )? ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ruleAsyncNoTrailingLineBreak[null] ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_N4MethodDeclaration_3= ruleN4MethodDeclaration ) | this_N4FieldDeclaration_4= ruleN4FieldDeclaration | this_N4CallableConstructorDeclaration_5= ruleN4CallableConstructorDeclaration )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -105463,16 +105695,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA455(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 455;
-            this.eot = dfa_195;
-            this.eof = dfa_195;
-            this.min = dfa_318;
-            this.max = dfa_319;
-            this.accept = dfa_320;
-            this.special = dfa_321;
-            this.transition = dfa_322;
+            this.eot = dfa_196;
+            this.eof = dfa_196;
+            this.min = dfa_320;
+            this.max = dfa_321;
+            this.accept = dfa_322;
+            this.special = dfa_323;
+            this.transition = dfa_324;
         }
         public String getDescription() {
-            return "28432:2: (this_AnnotatedN4MemberDeclaration_0= norm1_AnnotatedN4MemberDeclaration | ( ( ( () ( ( ruleN4Modifier ) )* norm1_GetterHeader[null] ) )=>this_N4GetterDeclaration_1= norm1_N4GetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_N4SetterDeclaration_2= norm1_N4SetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeVariables[null] )? ( ruleBogusTypeRefFragment[null] )? ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ruleAsyncNoTrailingLineBreak[null] ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_N4MethodDeclaration_3= norm1_N4MethodDeclaration ) | this_N4FieldDeclaration_4= norm1_N4FieldDeclaration | this_N4CallableConstructorDeclaration_5= norm1_N4CallableConstructorDeclaration )";
+            return "28528:2: (this_AnnotatedN4MemberDeclaration_0= norm1_AnnotatedN4MemberDeclaration | ( ( ( () ( ( ruleN4Modifier ) )* norm1_GetterHeader[null] ) )=>this_N4GetterDeclaration_1= norm1_N4GetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_N4SetterDeclaration_2= norm1_N4SetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeVariables[null] )? ( ruleBogusTypeRefFragment[null] )? ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ruleAsyncNoTrailingLineBreak[null] ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_N4MethodDeclaration_3= norm1_N4MethodDeclaration ) | this_N4FieldDeclaration_4= norm1_N4FieldDeclaration | this_N4CallableConstructorDeclaration_5= norm1_N4CallableConstructorDeclaration )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -106647,12 +106879,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_323s = "\116\uffff";
-    static final String dfa_324s = "\1\4\30\0\2\uffff\60\0\3\uffff";
-    static final String dfa_325s = "\1\u0094\30\0\2\uffff\60\0\3\uffff";
-    static final String dfa_326s = "\31\uffff\2\3\60\uffff\1\1\1\2\1\4";
-    static final String dfa_327s = "\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\2\uffff\1\31\1\32\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\57\1\60\1\61\1\62\1\63\1\64\1\65\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\102\1\103\1\104\1\105\1\106\1\107\1\110\3\uffff}>";
-    static final String[] dfa_328s = {
+    static final String dfa_325s = "\116\uffff";
+    static final String dfa_326s = "\1\4\30\0\2\uffff\60\0\3\uffff";
+    static final String dfa_327s = "\1\u0094\30\0\2\uffff\60\0\3\uffff";
+    static final String dfa_328s = "\31\uffff\2\3\60\uffff\1\1\1\2\1\4";
+    static final String dfa_329s = "\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\2\uffff\1\31\1\32\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\57\1\60\1\61\1\62\1\63\1\64\1\65\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\102\1\103\1\104\1\105\1\106\1\107\1\110\3\uffff}>";
+    static final String[] dfa_330s = {
             "\1\26\1\23\1\101\1\55\1\14\1\102\1\3\1\6\1\40\1\41\1\5\1\51\1\16\1\46\1\47\1\1\1\2\1\42\1\45\1\53\1\4\1\57\1\7\1\61\1\15\1\64\1\33\1\13\1\34\1\36\1\37\1\10\1\73\1\60\1\62\1\25\1\66\1\70\1\12\1\35\1\44\1\74\1\77\1\71\1\21\1\72\1\22\1\11\1\67\4\uffff\1\50\1\27\1\75\1\56\1\103\1\30\1\63\1\65\20\uffff\1\76\1\43\1\52\1\54\1\100\7\uffff\1\32\7\uffff\1\31\4\uffff\1\112\2\uffff\1\24\2\uffff\1\20\3\uffff\1\105\1\uffff\1\110\1\uffff\1\107\2\uffff\1\111\1\uffff\1\17\2\uffff\1\104\23\uffff\1\106",
             "\1\uffff",
             "\1\uffff",
@@ -106733,28 +106965,28 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_323 = DFA.unpackEncodedString(dfa_323s);
-    static final char[] dfa_324 = DFA.unpackEncodedStringToUnsignedChars(dfa_324s);
-    static final char[] dfa_325 = DFA.unpackEncodedStringToUnsignedChars(dfa_325s);
-    static final short[] dfa_326 = DFA.unpackEncodedString(dfa_326s);
-    static final short[] dfa_327 = DFA.unpackEncodedString(dfa_327s);
-    static final short[][] dfa_328 = unpackEncodedStringArray(dfa_328s);
+    static final short[] dfa_325 = DFA.unpackEncodedString(dfa_325s);
+    static final char[] dfa_326 = DFA.unpackEncodedStringToUnsignedChars(dfa_326s);
+    static final char[] dfa_327 = DFA.unpackEncodedStringToUnsignedChars(dfa_327s);
+    static final short[] dfa_328 = DFA.unpackEncodedString(dfa_328s);
+    static final short[] dfa_329 = DFA.unpackEncodedString(dfa_329s);
+    static final short[][] dfa_330 = unpackEncodedStringArray(dfa_330s);
 
     class DFA468 extends DFA {
 
         public DFA468(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 468;
-            this.eot = dfa_323;
-            this.eof = dfa_323;
-            this.min = dfa_324;
-            this.max = dfa_325;
-            this.accept = dfa_326;
-            this.special = dfa_327;
-            this.transition = dfa_328;
+            this.eot = dfa_325;
+            this.eof = dfa_325;
+            this.min = dfa_326;
+            this.max = dfa_327;
+            this.accept = dfa_328;
+            this.special = dfa_329;
+            this.transition = dfa_330;
         }
         public String getDescription() {
-            return "28723:3: ( ( ( ( ( () ( ( ruleN4Modifier ) )* ruleGetterHeader[null] ) )=> ( () ( (lv_declaredModifiers_2_0= ruleN4Modifier ) )* this_GetterHeader_3= ruleGetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_4_0= ruleBlock ) )? (otherlv_5= Semicolon )? ) | ( ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () ( (lv_declaredModifiers_7_0= ruleN4Modifier ) )* otherlv_8= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_9_0= ruleLiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_10_0= QuestionMark ) )? otherlv_11= LeftParenthesis ( (lv_fpar_12_0= ruleFormalParameter ) ) otherlv_13= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_14_0= ruleBlock ) )? (otherlv_15= Semicolon )? ) | ( ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeVariables[null] )? ( ruleBogusTypeRefFragment[null] )? ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ruleAsyncNoTrailingLineBreak[null] ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () ( (lv_declaredModifiers_17_0= ruleN4Modifier ) )* (this_TypeVariables_18= ruleTypeVariables[$current] )? (this_BogusTypeRefFragment_19= ruleBogusTypeRefFragment[$current] )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsReturnAndBody_22= norm1_MethodParamsReturnAndBody[$current] ) ) | (this_AsyncNoTrailingLineBreak_23= ruleAsyncNoTrailingLineBreak[$current] ( (lv_declaredName_24_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsReturnAndBody_25= ruleMethodParamsReturnAndBody[$current] ) ) ) ) ) (otherlv_26= Semicolon )? ) | ( () this_FieldDeclarationImpl_28= ruleFieldDeclarationImpl[$current] ) )";
+            return "28819:3: ( ( ( ( ( () ( ( ruleN4Modifier ) )* ruleGetterHeader[null] ) )=> ( () ( (lv_declaredModifiers_2_0= ruleN4Modifier ) )* this_GetterHeader_3= ruleGetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_4_0= ruleBlock ) )? (otherlv_5= Semicolon )? ) | ( ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () ( (lv_declaredModifiers_7_0= ruleN4Modifier ) )* otherlv_8= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_9_0= ruleLiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_10_0= QuestionMark ) )? otherlv_11= LeftParenthesis ( (lv_fpar_12_0= ruleFormalParameter ) ) otherlv_13= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_14_0= ruleBlock ) )? (otherlv_15= Semicolon )? ) | ( ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeVariables[null] )? ( ruleBogusTypeRefFragment[null] )? ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ruleAsyncNoTrailingLineBreak[null] ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () ( (lv_declaredModifiers_17_0= ruleN4Modifier ) )* (this_TypeVariables_18= ruleTypeVariables[$current] )? (this_BogusTypeRefFragment_19= ruleBogusTypeRefFragment[$current] )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsReturnAndBody_22= norm1_MethodParamsReturnAndBody[$current] ) ) | (this_AsyncNoTrailingLineBreak_23= ruleAsyncNoTrailingLineBreak[$current] ( (lv_declaredName_24_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsReturnAndBody_25= ruleMethodParamsReturnAndBody[$current] ) ) ) ) ) (otherlv_26= Semicolon )? ) | ( () this_FieldDeclarationImpl_28= ruleFieldDeclarationImpl[$current] ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -107929,12 +108161,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_329s = "\1\2\120\uffff";
-    static final String dfa_330s = "\1\4\1\0\117\uffff";
-    static final String dfa_331s = "\1\u0094\1\0\117\uffff";
-    static final String dfa_332s = "\2\uffff\1\2\115\uffff\1\1";
-    static final String dfa_333s = "\1\uffff\1\0\117\uffff}>";
-    static final String[] dfa_334s = {
+    static final String dfa_331s = "\1\2\120\uffff";
+    static final String dfa_332s = "\1\4\1\0\117\uffff";
+    static final String dfa_333s = "\1\u0094\1\0\117\uffff";
+    static final String dfa_334s = "\2\uffff\1\2\115\uffff\1\1";
+    static final String dfa_335s = "\1\uffff\1\0\117\uffff}>";
+    static final String[] dfa_336s = {
             "\61\2\4\uffff\10\2\20\uffff\5\2\5\uffff\1\2\1\uffff\1\2\6\uffff\2\2\3\uffff\2\2\2\uffff\1\1\1\uffff\2\2\3\uffff\1\2\1\uffff\1\2\1\uffff\1\2\2\uffff\1\2\1\uffff\1\2\2\uffff\1\2\23\uffff\1\2",
             "\1\uffff",
             "",
@@ -108017,12 +108249,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final short[] dfa_329 = DFA.unpackEncodedString(dfa_329s);
-    static final char[] dfa_330 = DFA.unpackEncodedStringToUnsignedChars(dfa_330s);
-    static final char[] dfa_331 = DFA.unpackEncodedStringToUnsignedChars(dfa_331s);
-    static final short[] dfa_332 = DFA.unpackEncodedString(dfa_332s);
-    static final short[] dfa_333 = DFA.unpackEncodedString(dfa_333s);
-    static final short[][] dfa_334 = unpackEncodedStringArray(dfa_334s);
+    static final short[] dfa_331 = DFA.unpackEncodedString(dfa_331s);
+    static final char[] dfa_332 = DFA.unpackEncodedStringToUnsignedChars(dfa_332s);
+    static final char[] dfa_333 = DFA.unpackEncodedStringToUnsignedChars(dfa_333s);
+    static final short[] dfa_334 = DFA.unpackEncodedString(dfa_334s);
+    static final short[] dfa_335 = DFA.unpackEncodedString(dfa_335s);
+    static final short[][] dfa_336 = unpackEncodedStringArray(dfa_336s);
 
     class DFA457 extends DFA {
 
@@ -108030,15 +108262,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 457;
             this.eot = dfa_91;
-            this.eof = dfa_329;
-            this.min = dfa_330;
-            this.max = dfa_331;
-            this.accept = dfa_332;
-            this.special = dfa_333;
-            this.transition = dfa_334;
+            this.eof = dfa_331;
+            this.min = dfa_332;
+            this.max = dfa_333;
+            this.accept = dfa_334;
+            this.special = dfa_335;
+            this.transition = dfa_336;
         }
         public String getDescription() {
-            return "28777:5: ( ( ( () LeftCurlyBracket ) )=> (lv_body_4_0= ruleBlock ) )?";
+            return "28873:5: ( ( ( () LeftCurlyBracket ) )=> (lv_body_4_0= ruleBlock ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -108074,15 +108306,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 461;
             this.eot = dfa_91;
-            this.eof = dfa_329;
-            this.min = dfa_330;
-            this.max = dfa_331;
-            this.accept = dfa_332;
-            this.special = dfa_333;
-            this.transition = dfa_334;
+            this.eof = dfa_331;
+            this.min = dfa_332;
+            this.max = dfa_333;
+            this.accept = dfa_334;
+            this.special = dfa_335;
+            this.transition = dfa_336;
         }
         public String getDescription() {
-            return "29058:5: ( ( ( () LeftCurlyBracket ) )=> (lv_body_14_0= ruleBlock ) )?";
+            return "29154:5: ( ( ( () LeftCurlyBracket ) )=> (lv_body_14_0= ruleBlock ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -108111,10 +108343,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_335s = "\1\4\1\uffff\10\4\1\uffff";
-    static final String dfa_336s = "\1\u0094\1\uffff\10\u0094\1\uffff";
-    static final String dfa_337s = "\1\uffff\1\2\10\uffff\1\1";
-    static final String[] dfa_338s = {
+    static final String dfa_337s = "\1\4\1\uffff\10\4\1\uffff";
+    static final String dfa_338s = "\1\u0094\1\uffff\10\u0094\1\uffff";
+    static final String dfa_339s = "\1\uffff\1\2\10\uffff\1\1";
+    static final String[] dfa_340s = {
             "\6\1\1\10\1\5\2\1\1\4\4\1\1\7\1\3\3\1\1\11\1\1\1\6\10\1\1\2\21\1\4\uffff\10\1\20\uffff\5\1\7\uffff\1\1\7\uffff\1\1\4\uffff\1\1\2\uffff\1\1\2\uffff\1\1\3\uffff\1\1\1\uffff\1\1\1\uffff\1\1\2\uffff\1\1\1\uffff\1\1\2\uffff\1\1\23\uffff\1\1",
             "",
             "\61\12\4\uffff\10\12\20\uffff\5\12\5\uffff\1\1\1\uffff\1\12\7\uffff\1\12\4\uffff\1\12\2\uffff\1\12\2\uffff\1\12\3\uffff\1\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\1\uffff\1\12\2\uffff\1\12\23\uffff\1\12",
@@ -108127,10 +108359,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "\61\12\4\uffff\10\12\20\uffff\5\12\5\uffff\1\1\1\uffff\1\12\7\uffff\1\12\4\uffff\1\12\2\uffff\1\12\2\uffff\1\12\3\uffff\1\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\1\uffff\1\12\2\uffff\1\12\23\uffff\1\12",
             ""
     };
-    static final char[] dfa_335 = DFA.unpackEncodedStringToUnsignedChars(dfa_335s);
-    static final char[] dfa_336 = DFA.unpackEncodedStringToUnsignedChars(dfa_336s);
-    static final short[] dfa_337 = DFA.unpackEncodedString(dfa_337s);
-    static final short[][] dfa_338 = unpackEncodedStringArray(dfa_338s);
+    static final char[] dfa_337 = DFA.unpackEncodedStringToUnsignedChars(dfa_337s);
+    static final char[] dfa_338 = DFA.unpackEncodedStringToUnsignedChars(dfa_338s);
+    static final short[] dfa_339 = DFA.unpackEncodedString(dfa_339s);
+    static final short[][] dfa_340 = unpackEncodedStringArray(dfa_340s);
 
     class DFA463 extends DFA {
 
@@ -108139,14 +108371,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 463;
             this.eot = dfa_13;
             this.eof = dfa_13;
-            this.min = dfa_335;
-            this.max = dfa_336;
-            this.accept = dfa_337;
+            this.min = dfa_337;
+            this.max = dfa_338;
+            this.accept = dfa_339;
             this.special = dfa_17;
-            this.transition = dfa_338;
+            this.transition = dfa_340;
         }
         public String getDescription() {
-            return "()* loopback of 29142:7: ( (lv_declaredModifiers_17_0= ruleN4Modifier ) )*";
+            return "()* loopback of 29238:7: ( (lv_declaredModifiers_17_0= ruleN4Modifier ) )*";
         }
     }
 
@@ -108155,16 +108387,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA465(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 465;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "29174:7: (this_BogusTypeRefFragment_19= ruleBogusTypeRefFragment[$current] )?";
+            return "29270:7: (this_BogusTypeRefFragment_19= ruleBogusTypeRefFragment[$current] )?";
         }
     }
 
@@ -108173,16 +108405,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA481(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 481;
-            this.eot = dfa_323;
-            this.eof = dfa_323;
-            this.min = dfa_324;
-            this.max = dfa_325;
-            this.accept = dfa_326;
-            this.special = dfa_327;
-            this.transition = dfa_328;
+            this.eot = dfa_325;
+            this.eof = dfa_325;
+            this.min = dfa_326;
+            this.max = dfa_327;
+            this.accept = dfa_328;
+            this.special = dfa_329;
+            this.transition = dfa_330;
         }
         public String getDescription() {
-            return "29337:3: ( ( ( ( ( () ( ( ruleN4Modifier ) )* norm1_GetterHeader[null] ) )=> ( () ( (lv_declaredModifiers_2_0= ruleN4Modifier ) )* this_GetterHeader_3= norm1_GetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_4_0= norm1_Block ) )? (otherlv_5= Semicolon )? ) | ( ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () ( (lv_declaredModifiers_7_0= ruleN4Modifier ) )* otherlv_8= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_9_0= norm1_LiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_10_0= QuestionMark ) )? otherlv_11= LeftParenthesis ( (lv_fpar_12_0= norm1_FormalParameter ) ) otherlv_13= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_14_0= norm1_Block ) )? (otherlv_15= Semicolon )? ) | ( ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeVariables[null] )? ( ruleBogusTypeRefFragment[null] )? ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ruleAsyncNoTrailingLineBreak[null] ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () ( (lv_declaredModifiers_17_0= ruleN4Modifier ) )* (this_TypeVariables_18= ruleTypeVariables[$current] )? (this_BogusTypeRefFragment_19= ruleBogusTypeRefFragment[$current] )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsReturnAndBody_22= norm1_MethodParamsReturnAndBody[$current] ) ) | (this_AsyncNoTrailingLineBreak_23= ruleAsyncNoTrailingLineBreak[$current] ( (lv_declaredName_24_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsReturnAndBody_25= ruleMethodParamsReturnAndBody[$current] ) ) ) ) ) (otherlv_26= Semicolon )? ) | ( () this_FieldDeclarationImpl_28= norm1_FieldDeclarationImpl[$current] ) )";
+            return "29433:3: ( ( ( ( ( () ( ( ruleN4Modifier ) )* norm1_GetterHeader[null] ) )=> ( () ( (lv_declaredModifiers_2_0= ruleN4Modifier ) )* this_GetterHeader_3= norm1_GetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_4_0= norm1_Block ) )? (otherlv_5= Semicolon )? ) | ( ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () ( (lv_declaredModifiers_7_0= ruleN4Modifier ) )* otherlv_8= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_9_0= norm1_LiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_10_0= QuestionMark ) )? otherlv_11= LeftParenthesis ( (lv_fpar_12_0= norm1_FormalParameter ) ) otherlv_13= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_14_0= norm1_Block ) )? (otherlv_15= Semicolon )? ) | ( ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeVariables[null] )? ( ruleBogusTypeRefFragment[null] )? ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ruleAsyncNoTrailingLineBreak[null] ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () ( (lv_declaredModifiers_17_0= ruleN4Modifier ) )* (this_TypeVariables_18= ruleTypeVariables[$current] )? (this_BogusTypeRefFragment_19= ruleBogusTypeRefFragment[$current] )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsReturnAndBody_22= norm1_MethodParamsReturnAndBody[$current] ) ) | (this_AsyncNoTrailingLineBreak_23= ruleAsyncNoTrailingLineBreak[$current] ( (lv_declaredName_24_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsReturnAndBody_25= ruleMethodParamsReturnAndBody[$current] ) ) ) ) ) (otherlv_26= Semicolon )? ) | ( () this_FieldDeclarationImpl_28= norm1_FieldDeclarationImpl[$current] ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -109357,11 +109589,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_339s = "\1\4\1\0\116\uffff";
-    static final String dfa_340s = "\1\u0094\1\0\116\uffff";
-    static final String dfa_341s = "\2\uffff\1\2\114\uffff\1\1";
-    static final String dfa_342s = "\1\uffff\1\0\116\uffff}>";
-    static final String[] dfa_343s = {
+    static final String dfa_341s = "\1\4\1\0\116\uffff";
+    static final String dfa_342s = "\1\u0094\1\0\116\uffff";
+    static final String dfa_343s = "\2\uffff\1\2\114\uffff\1\1";
+    static final String dfa_344s = "\1\uffff\1\0\116\uffff}>";
+    static final String[] dfa_345s = {
             "\61\2\4\uffff\10\2\20\uffff\5\2\5\uffff\1\2\1\uffff\1\2\6\uffff\2\2\3\uffff\2\2\2\uffff\1\1\1\uffff\2\2\3\uffff\1\2\1\uffff\1\2\1\uffff\1\2\2\uffff\1\2\1\uffff\1\2\2\uffff\1\2\23\uffff\1\2",
             "\1\uffff",
             "",
@@ -109443,27 +109675,27 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_339 = DFA.unpackEncodedStringToUnsignedChars(dfa_339s);
-    static final char[] dfa_340 = DFA.unpackEncodedStringToUnsignedChars(dfa_340s);
-    static final short[] dfa_341 = DFA.unpackEncodedString(dfa_341s);
-    static final short[] dfa_342 = DFA.unpackEncodedString(dfa_342s);
-    static final short[][] dfa_343 = unpackEncodedStringArray(dfa_343s);
+    static final char[] dfa_341 = DFA.unpackEncodedStringToUnsignedChars(dfa_341s);
+    static final char[] dfa_342 = DFA.unpackEncodedStringToUnsignedChars(dfa_342s);
+    static final short[] dfa_343 = DFA.unpackEncodedString(dfa_343s);
+    static final short[] dfa_344 = DFA.unpackEncodedString(dfa_344s);
+    static final short[][] dfa_345 = unpackEncodedStringArray(dfa_345s);
 
     class DFA470 extends DFA {
 
         public DFA470(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 470;
-            this.eot = dfa_195;
-            this.eof = dfa_195;
-            this.min = dfa_339;
-            this.max = dfa_340;
-            this.accept = dfa_341;
-            this.special = dfa_342;
-            this.transition = dfa_343;
+            this.eot = dfa_196;
+            this.eof = dfa_196;
+            this.min = dfa_341;
+            this.max = dfa_342;
+            this.accept = dfa_343;
+            this.special = dfa_344;
+            this.transition = dfa_345;
         }
         public String getDescription() {
-            return "29391:5: ( ( ( () LeftCurlyBracket ) )=> (lv_body_4_0= norm1_Block ) )?";
+            return "29487:5: ( ( ( () LeftCurlyBracket ) )=> (lv_body_4_0= norm1_Block ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -109498,16 +109730,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA474(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 474;
-            this.eot = dfa_195;
-            this.eof = dfa_195;
-            this.min = dfa_339;
-            this.max = dfa_340;
-            this.accept = dfa_341;
-            this.special = dfa_342;
-            this.transition = dfa_343;
+            this.eot = dfa_196;
+            this.eof = dfa_196;
+            this.min = dfa_341;
+            this.max = dfa_342;
+            this.accept = dfa_343;
+            this.special = dfa_344;
+            this.transition = dfa_345;
         }
         public String getDescription() {
-            return "29672:5: ( ( ( () LeftCurlyBracket ) )=> (lv_body_14_0= norm1_Block ) )?";
+            return "29768:5: ( ( ( () LeftCurlyBracket ) )=> (lv_body_14_0= norm1_Block ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -109544,14 +109776,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 476;
             this.eot = dfa_13;
             this.eof = dfa_13;
-            this.min = dfa_335;
-            this.max = dfa_336;
-            this.accept = dfa_337;
+            this.min = dfa_337;
+            this.max = dfa_338;
+            this.accept = dfa_339;
             this.special = dfa_17;
-            this.transition = dfa_338;
+            this.transition = dfa_340;
         }
         public String getDescription() {
-            return "()* loopback of 29756:7: ( (lv_declaredModifiers_17_0= ruleN4Modifier ) )*";
+            return "()* loopback of 29852:7: ( (lv_declaredModifiers_17_0= ruleN4Modifier ) )*";
         }
     }
 
@@ -109560,21 +109792,21 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA478(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 478;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "29788:7: (this_BogusTypeRefFragment_19= ruleBogusTypeRefFragment[$current] )?";
+            return "29884:7: (this_BogusTypeRefFragment_19= ruleBogusTypeRefFragment[$current] )?";
         }
     }
-    static final String dfa_344s = "\2\uffff\10\1\1\uffff";
-    static final String dfa_345s = "\1\u0094\1\uffff\10\u0098\1\uffff";
-    static final String[] dfa_346s = {
+    static final String dfa_346s = "\2\uffff\10\1\1\uffff";
+    static final String dfa_347s = "\1\u0094\1\uffff\10\u0098\1\uffff";
+    static final String[] dfa_348s = {
             "\6\1\1\10\1\5\2\1\1\4\4\1\1\7\1\3\3\1\1\11\1\1\1\6\10\1\1\2\21\1\4\uffff\10\1\20\uffff\5\1\24\uffff\1\1\2\uffff\1\1\2\uffff\1\1\3\uffff\1\1\1\uffff\1\1\1\uffff\1\1\2\uffff\1\1\1\uffff\1\1\2\uffff\1\1\23\uffff\1\1",
             "",
             "\61\12\4\uffff\10\12\20\uffff\5\12\15\uffff\2\1\1\uffff\1\1\1\uffff\1\1\1\uffff\1\12\2\uffff\1\12\1\uffff\1\1\1\12\3\uffff\1\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\1\uffff\1\12\2\uffff\1\12\23\uffff\1\12\1\uffff\1\1\1\uffff\1\1",
@@ -109587,9 +109819,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "\61\12\4\uffff\10\12\20\uffff\5\12\15\uffff\2\1\1\uffff\1\1\1\uffff\1\1\1\uffff\1\12\2\uffff\1\12\1\uffff\1\1\1\12\3\uffff\1\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\1\uffff\1\12\2\uffff\1\12\23\uffff\1\12\1\uffff\1\1\1\uffff\1\1",
             ""
     };
-    static final short[] dfa_344 = DFA.unpackEncodedString(dfa_344s);
-    static final char[] dfa_345 = DFA.unpackEncodedStringToUnsignedChars(dfa_345s);
-    static final short[][] dfa_346 = unpackEncodedStringArray(dfa_346s);
+    static final short[] dfa_346 = DFA.unpackEncodedString(dfa_346s);
+    static final char[] dfa_347 = DFA.unpackEncodedStringToUnsignedChars(dfa_347s);
+    static final short[][] dfa_348 = unpackEncodedStringArray(dfa_348s);
 
     class DFA482 extends DFA {
 
@@ -109597,20 +109829,20 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 482;
             this.eot = dfa_13;
-            this.eof = dfa_344;
-            this.min = dfa_335;
-            this.max = dfa_345;
-            this.accept = dfa_337;
+            this.eof = dfa_346;
+            this.min = dfa_337;
+            this.max = dfa_347;
+            this.accept = dfa_339;
             this.special = dfa_17;
-            this.transition = dfa_346;
+            this.transition = dfa_348;
         }
         public String getDescription() {
-            return "()* loopback of 29943:3: ( (lv_declaredModifiers_0_0= ruleN4Modifier ) )*";
+            return "()* loopback of 30039:3: ( (lv_declaredModifiers_0_0= ruleN4Modifier ) )*";
         }
     }
-    static final String dfa_347s = "\1\uffff\7\16\1\uffff\5\16\1\uffff\1\16";
-    static final String dfa_348s = "\1\u0094\7\u00a4\1\uffff\5\u0098\1\uffff\1\u0098";
-    static final String[] dfa_349s = {
+    static final String dfa_349s = "\1\uffff\7\16\1\uffff\5\16\1\uffff\1\16";
+    static final String dfa_350s = "\1\u0094\7\u00a4\1\uffff\5\u0098\1\uffff\1\u0098";
+    static final String[] dfa_351s = {
             "\1\15\1\13\2\16\1\4\7\16\1\6\13\16\1\5\2\16\1\3\7\16\1\14\2\16\1\2\5\16\1\11\1\16\1\12\1\1\1\16\4\uffff\10\16\20\uffff\5\16\24\uffff\1\16\2\uffff\1\10\2\uffff\1\10\3\uffff\1\16\1\uffff\1\16\1\uffff\1\16\2\uffff\1\16\1\uffff\1\7\2\uffff\1\16\23\uffff\1\16",
             "\61\10\4\uffff\10\10\20\uffff\5\10\10\uffff\1\10\2\uffff\1\10\1\uffff\2\16\1\10\1\16\1\uffff\1\17\1\uffff\1\10\4\uffff\1\16\4\uffff\1\10\1\uffff\1\10\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\2\uffff\1\10\23\uffff\1\10\1\uffff\1\16\1\uffff\1\16\13\uffff\1\10",
             "\61\10\4\uffff\10\10\20\uffff\5\10\10\uffff\1\10\2\uffff\1\10\1\uffff\2\16\1\10\1\16\1\uffff\1\17\1\uffff\1\10\4\uffff\1\16\4\uffff\1\10\1\uffff\1\10\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\2\uffff\1\10\23\uffff\1\10\1\uffff\1\16\1\uffff\1\16\13\uffff\1\10",
@@ -109628,25 +109860,25 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             "\61\10\4\uffff\10\10\20\uffff\5\10\15\uffff\2\16\1\uffff\1\16\3\uffff\1\10\4\uffff\1\16\4\uffff\1\10\1\uffff\1\10\1\uffff\1\10\2\uffff\1\10\1\uffff\1\10\2\uffff\1\10\23\uffff\1\10\1\uffff\1\16\1\uffff\1\16"
     };
-    static final short[] dfa_347 = DFA.unpackEncodedString(dfa_347s);
-    static final char[] dfa_348 = DFA.unpackEncodedStringToUnsignedChars(dfa_348s);
-    static final short[][] dfa_349 = unpackEncodedStringArray(dfa_349s);
+    static final short[] dfa_349 = DFA.unpackEncodedString(dfa_349s);
+    static final char[] dfa_350 = DFA.unpackEncodedStringToUnsignedChars(dfa_350s);
+    static final short[][] dfa_351 = unpackEncodedStringArray(dfa_351s);
 
     class DFA483 extends DFA {
 
         public DFA483(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 483;
-            this.eot = dfa_217;
-            this.eof = dfa_347;
-            this.min = dfa_218;
-            this.max = dfa_348;
-            this.accept = dfa_220;
-            this.special = dfa_221;
-            this.transition = dfa_349;
+            this.eot = dfa_218;
+            this.eof = dfa_349;
+            this.min = dfa_219;
+            this.max = dfa_350;
+            this.accept = dfa_221;
+            this.special = dfa_222;
+            this.transition = dfa_351;
         }
         public String getDescription() {
-            return "29962:3: (this_BogusTypeRefFragment_1= ruleBogusTypeRefFragment[$current] )?";
+            return "30058:3: (this_BogusTypeRefFragment_1= ruleBogusTypeRefFragment[$current] )?";
         }
     }
 
@@ -109656,15 +109888,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 487;
             this.eot = dfa_13;
-            this.eof = dfa_344;
-            this.min = dfa_335;
-            this.max = dfa_345;
-            this.accept = dfa_337;
+            this.eof = dfa_346;
+            this.min = dfa_337;
+            this.max = dfa_347;
+            this.accept = dfa_339;
             this.special = dfa_17;
-            this.transition = dfa_346;
+            this.transition = dfa_348;
         }
         public String getDescription() {
-            return "()* loopback of 30066:3: ( (lv_declaredModifiers_0_0= ruleN4Modifier ) )*";
+            return "()* loopback of 30162:3: ( (lv_declaredModifiers_0_0= ruleN4Modifier ) )*";
         }
     }
 
@@ -109673,16 +109905,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA488(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 488;
-            this.eot = dfa_217;
-            this.eof = dfa_347;
-            this.min = dfa_218;
-            this.max = dfa_348;
-            this.accept = dfa_220;
-            this.special = dfa_221;
-            this.transition = dfa_349;
+            this.eot = dfa_218;
+            this.eof = dfa_349;
+            this.min = dfa_219;
+            this.max = dfa_350;
+            this.accept = dfa_221;
+            this.special = dfa_222;
+            this.transition = dfa_351;
         }
         public String getDescription() {
-            return "30085:3: (this_BogusTypeRefFragment_1= ruleBogusTypeRefFragment[$current] )?";
+            return "30181:3: (this_BogusTypeRefFragment_1= ruleBogusTypeRefFragment[$current] )?";
         }
     }
 
@@ -109693,14 +109925,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 492;
             this.eot = dfa_13;
             this.eof = dfa_13;
-            this.min = dfa_335;
-            this.max = dfa_336;
-            this.accept = dfa_337;
+            this.min = dfa_337;
+            this.max = dfa_338;
+            this.accept = dfa_339;
             this.special = dfa_17;
-            this.transition = dfa_338;
+            this.transition = dfa_340;
         }
         public String getDescription() {
-            return "()* loopback of 30313:5: ( (lv_declaredModifiers_1_0= ruleN4Modifier ) )*";
+            return "()* loopback of 30409:5: ( (lv_declaredModifiers_1_0= ruleN4Modifier ) )*";
         }
     }
 
@@ -109709,16 +109941,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA494(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 494;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "30345:5: (this_BogusTypeRefFragment_3= ruleBogusTypeRefFragment[$current] )?";
+            return "30441:5: (this_BogusTypeRefFragment_3= ruleBogusTypeRefFragment[$current] )?";
         }
     }
 
@@ -109729,14 +109961,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 497;
             this.eot = dfa_13;
             this.eof = dfa_13;
-            this.min = dfa_335;
-            this.max = dfa_336;
-            this.accept = dfa_337;
+            this.min = dfa_337;
+            this.max = dfa_338;
+            this.accept = dfa_339;
             this.special = dfa_17;
-            this.transition = dfa_338;
+            this.transition = dfa_340;
         }
         public String getDescription() {
-            return "()* loopback of 30527:5: ( (lv_declaredModifiers_1_0= ruleN4Modifier ) )*";
+            return "()* loopback of 30623:5: ( (lv_declaredModifiers_1_0= ruleN4Modifier ) )*";
         }
     }
 
@@ -109745,16 +109977,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA499(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 499;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "30559:5: (this_BogusTypeRefFragment_3= ruleBogusTypeRefFragment[$current] )?";
+            return "30655:5: (this_BogusTypeRefFragment_3= ruleBogusTypeRefFragment[$current] )?";
         }
     }
 
@@ -109764,15 +109996,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 507;
             this.eot = dfa_91;
-            this.eof = dfa_329;
-            this.min = dfa_330;
-            this.max = dfa_331;
-            this.accept = dfa_332;
-            this.special = dfa_333;
-            this.transition = dfa_334;
+            this.eof = dfa_331;
+            this.min = dfa_332;
+            this.max = dfa_333;
+            this.accept = dfa_334;
+            this.special = dfa_335;
+            this.transition = dfa_336;
         }
         public String getDescription() {
-            return "30879:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_2_0= ruleBlock ) )?";
+            return "30975:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_2_0= ruleBlock ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -109808,15 +110040,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 509;
             this.eot = dfa_91;
-            this.eof = dfa_329;
-            this.min = dfa_330;
-            this.max = dfa_331;
-            this.accept = dfa_332;
-            this.special = dfa_333;
-            this.transition = dfa_334;
+            this.eof = dfa_331;
+            this.min = dfa_332;
+            this.max = dfa_333;
+            this.accept = dfa_334;
+            this.special = dfa_335;
+            this.transition = dfa_336;
         }
         public String getDescription() {
-            return "30941:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_2_0= norm1_Block ) )?";
+            return "31037:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_2_0= norm1_Block ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -109852,15 +110084,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 511;
             this.eot = dfa_91;
-            this.eof = dfa_329;
-            this.min = dfa_330;
-            this.max = dfa_331;
-            this.accept = dfa_332;
-            this.special = dfa_333;
-            this.transition = dfa_334;
+            this.eof = dfa_331;
+            this.min = dfa_332;
+            this.max = dfa_333;
+            this.accept = dfa_334;
+            this.special = dfa_335;
+            this.transition = dfa_336;
         }
         public String getDescription() {
-            return "31037:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_3_0= ruleBlock ) )?";
+            return "31133:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_3_0= ruleBlock ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -109895,16 +110127,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA514(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 514;
-            this.eot = dfa_195;
-            this.eof = dfa_195;
-            this.min = dfa_339;
-            this.max = dfa_340;
-            this.accept = dfa_341;
-            this.special = dfa_342;
-            this.transition = dfa_343;
+            this.eot = dfa_196;
+            this.eof = dfa_196;
+            this.min = dfa_341;
+            this.max = dfa_342;
+            this.accept = dfa_343;
+            this.special = dfa_344;
+            this.transition = dfa_345;
         }
         public String getDescription() {
-            return "31133:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_3_0= norm1_Block ) )?";
+            return "31229:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_3_0= norm1_Block ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -109940,15 +110172,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 524;
             this.eot = dfa_91;
-            this.eof = dfa_329;
-            this.min = dfa_330;
-            this.max = dfa_331;
-            this.accept = dfa_332;
-            this.special = dfa_333;
-            this.transition = dfa_334;
+            this.eof = dfa_331;
+            this.min = dfa_332;
+            this.max = dfa_333;
+            this.accept = dfa_334;
+            this.special = dfa_335;
+            this.transition = dfa_336;
         }
         public String getDescription() {
-            return "31600:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= ruleBlock ) )?";
+            return "31696:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= ruleBlock ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -109983,16 +110215,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA528(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 528;
-            this.eot = dfa_195;
-            this.eof = dfa_195;
-            this.min = dfa_339;
-            this.max = dfa_340;
-            this.accept = dfa_341;
-            this.special = dfa_342;
-            this.transition = dfa_343;
+            this.eot = dfa_196;
+            this.eof = dfa_196;
+            this.min = dfa_341;
+            this.max = dfa_342;
+            this.accept = dfa_343;
+            this.special = dfa_344;
+            this.transition = dfa_345;
         }
         public String getDescription() {
-            return "31891:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= norm1_Block ) )?";
+            return "31987:3: ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= norm1_Block ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -110021,16 +110253,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_350s = "\1\153\1\175\1\uffff\1\175\1\uffff";
-    static final String[] dfa_351s = {
+    static final String dfa_352s = "\1\153\1\175\1\uffff\1\175\1\uffff";
+    static final String[] dfa_353s = {
             "\1\1\13\uffff\1\2",
             "\3\4\1\uffff\4\4\2\uffff\1\4\4\uffff\2\4\3\uffff\1\4\1\uffff\1\4\1\uffff\1\4\1\uffff\2\4\7\uffff\1\4\1\uffff\2\4\3\uffff\1\4\3\uffff\1\4\3\uffff\1\4\3\uffff\2\4\1\uffff\2\4\22\uffff\1\4\3\uffff\1\4\11\uffff\1\3\11\uffff\2\4\1\2\1\uffff\1\4\17\uffff\1\4",
             "",
             "\3\4\1\uffff\4\4\2\uffff\1\4\4\uffff\2\4\3\uffff\1\4\1\uffff\1\4\1\uffff\1\4\1\uffff\2\4\7\uffff\1\4\1\uffff\2\4\3\uffff\1\4\3\uffff\1\4\3\uffff\1\4\3\uffff\2\4\1\uffff\2\4\22\uffff\1\4\3\uffff\1\4\11\uffff\1\3\11\uffff\2\4\1\2\1\uffff\1\4\17\uffff\1\4",
             ""
     };
-    static final char[] dfa_350 = DFA.unpackEncodedStringToUnsignedChars(dfa_350s);
-    static final short[][] dfa_351 = unpackEncodedStringArray(dfa_351s);
+    static final char[] dfa_352 = DFA.unpackEncodedStringToUnsignedChars(dfa_352s);
+    static final short[][] dfa_353 = unpackEncodedStringArray(dfa_353s);
 
     class DFA538 extends DFA {
 
@@ -110040,23 +110272,23 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.eot = dfa_184;
             this.eof = dfa_184;
             this.min = dfa_185;
-            this.max = dfa_350;
+            this.max = dfa_352;
             this.accept = dfa_187;
             this.special = dfa_188;
-            this.transition = dfa_351;
+            this.transition = dfa_353;
         }
         public String getDescription() {
-            return "()* loopback of 32211:4: (otherlv_4= Comma ( (lv_elements_5_0= ruleElision ) )* ( (lv_elements_6_0= ruleBindingRestElement ) ) )*";
+            return "()* loopback of 32307:4: (otherlv_4= Comma ( (lv_elements_5_0= ruleElision ) )* ( (lv_elements_6_0= ruleBindingRestElement ) ) )*";
         }
     }
-    static final String[] dfa_352s = {
+    static final String[] dfa_354s = {
             "\1\1\13\uffff\1\2",
             "\3\4\1\uffff\4\4\2\uffff\1\4\4\uffff\2\4\3\uffff\1\4\1\uffff\1\4\1\uffff\1\4\1\uffff\2\4\7\uffff\1\4\2\uffff\1\4\3\uffff\1\4\3\uffff\1\4\3\uffff\1\4\3\uffff\2\4\1\uffff\2\4\22\uffff\1\4\3\uffff\1\4\11\uffff\1\3\11\uffff\2\4\1\2\1\uffff\1\4\17\uffff\1\4",
             "",
             "\3\4\1\uffff\4\4\2\uffff\1\4\4\uffff\2\4\3\uffff\1\4\1\uffff\1\4\1\uffff\1\4\1\uffff\2\4\7\uffff\1\4\2\uffff\1\4\3\uffff\1\4\3\uffff\1\4\3\uffff\1\4\3\uffff\2\4\1\uffff\2\4\22\uffff\1\4\3\uffff\1\4\11\uffff\1\3\11\uffff\2\4\1\2\1\uffff\1\4\17\uffff\1\4",
             ""
     };
-    static final short[][] dfa_352 = unpackEncodedStringArray(dfa_352s);
+    static final short[][] dfa_354 = unpackEncodedStringArray(dfa_354s);
 
     class DFA544 extends DFA {
 
@@ -110066,22 +110298,22 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.eot = dfa_184;
             this.eof = dfa_184;
             this.min = dfa_185;
-            this.max = dfa_350;
+            this.max = dfa_352;
             this.accept = dfa_187;
             this.special = dfa_188;
-            this.transition = dfa_352;
+            this.transition = dfa_354;
         }
         public String getDescription() {
-            return "()* loopback of 32348:4: (otherlv_4= Comma ( (lv_elements_5_0= ruleElision ) )* ( (lv_elements_6_0= norm1_BindingRestElement ) ) )*";
+            return "()* loopback of 32444:4: (otherlv_4= Comma ( (lv_elements_5_0= ruleElision ) )* ( (lv_elements_6_0= norm1_BindingRestElement ) ) )*";
         }
     }
-    static final String dfa_353s = "\111\uffff";
-    static final String dfa_354s = "\1\uffff\1\107\40\uffff\1\107\4\uffff\31\107\11\uffff";
-    static final String dfa_355s = "\1\4\1\137\40\uffff\1\137\4\uffff\31\137\11\uffff";
-    static final String dfa_356s = "\1\u0094\1\157\40\uffff\1\157\4\uffff\31\157\11\uffff";
-    static final String dfa_357s = "\2\uffff\40\1\1\uffff\4\1\31\uffff\7\1\1\2\1\1";
-    static final String dfa_358s = "\1\12\1\21\40\uffff\1\25\4\uffff\1\6\1\13\1\16\1\22\1\26\1\31\1\0\1\3\1\7\1\14\1\17\1\23\1\27\1\32\1\1\1\4\1\10\1\15\1\20\1\24\1\30\1\33\1\2\1\5\1\11\11\uffff}>";
-    static final String[] dfa_359s = {
+    static final String dfa_355s = "\111\uffff";
+    static final String dfa_356s = "\1\uffff\1\107\40\uffff\1\107\4\uffff\31\107\11\uffff";
+    static final String dfa_357s = "\1\4\1\137\40\uffff\1\137\4\uffff\31\137\11\uffff";
+    static final String dfa_358s = "\1\u0094\1\157\40\uffff\1\157\4\uffff\31\157\11\uffff";
+    static final String dfa_359s = "\2\uffff\40\1\1\uffff\4\1\31\uffff\7\1\1\2\1\1";
+    static final String dfa_360s = "\1\10\1\0\40\uffff\1\4\4\uffff\1\25\1\31\1\1\1\5\1\11\1\14\1\17\1\22\1\26\1\32\1\2\1\6\1\12\1\15\1\20\1\23\1\27\1\33\1\3\1\7\1\13\1\16\1\21\1\24\1\30\11\uffff}>";
+    static final String[] dfa_361s = {
             "\1\65\1\60\1\72\1\25\1\67\1\73\1\75\1\54\1\7\1\10\1\53\1\21\1\11\1\16\1\17\1\74\1\52\1\12\1\15\1\23\1\76\1\27\1\55\1\31\1\62\1\35\1\71\1\70\1\2\1\4\1\5\1\6\1\45\1\30\1\33\1\64\1\40\1\42\1\66\1\3\1\14\1\46\1\57\1\43\1\32\1\44\1\63\1\37\1\41\4\uffff\1\20\1\47\1\51\1\26\1\77\1\50\1\34\1\36\20\uffff\1\56\1\13\1\22\1\24\1\61\23\uffff\1\107\1\106\11\uffff\1\101\1\uffff\1\104\1\uffff\1\103\2\uffff\1\105\1\uffff\1\1\2\uffff\1\100\23\uffff\1\102",
             "\1\107\3\uffff\1\110\2\uffff\1\107\10\uffff\1\107",
             "",
@@ -110157,185 +110389,155 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_353 = DFA.unpackEncodedString(dfa_353s);
-    static final short[] dfa_354 = DFA.unpackEncodedString(dfa_354s);
-    static final char[] dfa_355 = DFA.unpackEncodedStringToUnsignedChars(dfa_355s);
-    static final char[] dfa_356 = DFA.unpackEncodedStringToUnsignedChars(dfa_356s);
-    static final short[] dfa_357 = DFA.unpackEncodedString(dfa_357s);
-    static final short[] dfa_358 = DFA.unpackEncodedString(dfa_358s);
-    static final short[][] dfa_359 = unpackEncodedStringArray(dfa_359s);
+    static final short[] dfa_355 = DFA.unpackEncodedString(dfa_355s);
+    static final short[] dfa_356 = DFA.unpackEncodedString(dfa_356s);
+    static final char[] dfa_357 = DFA.unpackEncodedStringToUnsignedChars(dfa_357s);
+    static final char[] dfa_358 = DFA.unpackEncodedStringToUnsignedChars(dfa_358s);
+    static final short[] dfa_359 = DFA.unpackEncodedString(dfa_359s);
+    static final short[] dfa_360 = DFA.unpackEncodedString(dfa_360s);
+    static final short[][] dfa_361 = unpackEncodedStringArray(dfa_361s);
 
     class DFA548 extends DFA {
 
         public DFA548(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 548;
-            this.eot = dfa_353;
-            this.eof = dfa_354;
-            this.min = dfa_355;
-            this.max = dfa_356;
-            this.accept = dfa_357;
-            this.special = dfa_358;
-            this.transition = dfa_359;
+            this.eot = dfa_355;
+            this.eof = dfa_356;
+            this.min = dfa_357;
+            this.max = dfa_358;
+            this.accept = dfa_359;
+            this.special = dfa_360;
+            this.transition = dfa_361;
         }
         public String getDescription() {
-            return "32440:2: ( ( ( ( ( ( ( ruleLiteralOrComputedPropertyName ) ) Colon ) )=> ( ( (lv_declaredName_0_0= ruleLiteralOrComputedPropertyName ) ) otherlv_1= Colon ) ) ( (lv_value_2_0= ruleBindingElement ) ) ) | ( (lv_value_3_0= ruleSingleNameBinding ) ) )";
+            return "32536:2: ( ( ( ( ( ( ( ruleLiteralOrComputedPropertyName ) ) Colon ) )=> ( ( (lv_declaredName_0_0= ruleLiteralOrComputedPropertyName ) ) otherlv_1= Colon ) ) ( (lv_value_2_0= ruleBindingElement ) ) ) | ( (lv_value_3_0= ruleSingleNameBinding ) ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA548_45 = input.LA(1);
+                        int LA548_1 = input.LA(1);
 
                          
-                        int index548_45 = input.index();
+                        int index548_1 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_45==EOF||LA548_45==Comma||LA548_45==EqualsSign||LA548_45==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_1==EOF||LA548_1==Comma||LA548_1==EqualsSign||LA548_1==RightCurlyBracket) ) {s = 71;}
 
-                        else if ( (LA548_45==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_1==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
                          
-                        input.seek(index548_45);
+                        input.seek(index548_1);
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
-                        int LA548_53 = input.LA(1);
+                        int LA548_41 = input.LA(1);
 
                          
-                        int index548_53 = input.index();
+                        int index548_41 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_53==EOF||LA548_53==Comma||LA548_53==EqualsSign||LA548_53==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_41==EOF||LA548_41==Comma||LA548_41==EqualsSign||LA548_41==RightCurlyBracket) ) {s = 71;}
 
-                        else if ( (LA548_53==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_41==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
                          
-                        input.seek(index548_53);
+                        input.seek(index548_41);
                         if ( s>=0 ) return s;
                         break;
                     case 2 : 
-                        int LA548_61 = input.LA(1);
+                        int LA548_49 = input.LA(1);
 
                          
-                        int index548_61 = input.index();
+                        int index548_49 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_61==EOF||LA548_61==Comma||LA548_61==EqualsSign||LA548_61==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_49==EOF||LA548_49==Comma||LA548_49==EqualsSign||LA548_49==RightCurlyBracket) ) {s = 71;}
 
-                        else if ( (LA548_61==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_49==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
                          
-                        input.seek(index548_61);
+                        input.seek(index548_49);
                         if ( s>=0 ) return s;
                         break;
                     case 3 : 
-                        int LA548_46 = input.LA(1);
+                        int LA548_57 = input.LA(1);
 
                          
-                        int index548_46 = input.index();
+                        int index548_57 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_46==EOF||LA548_46==Comma||LA548_46==EqualsSign||LA548_46==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_57==EOF||LA548_57==Comma||LA548_57==EqualsSign||LA548_57==RightCurlyBracket) ) {s = 71;}
 
-                        else if ( (LA548_46==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_57==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
                          
-                        input.seek(index548_46);
+                        input.seek(index548_57);
                         if ( s>=0 ) return s;
                         break;
                     case 4 : 
-                        int LA548_54 = input.LA(1);
+                        int LA548_34 = input.LA(1);
 
                          
-                        int index548_54 = input.index();
+                        int index548_34 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_54==EOF||LA548_54==Comma||LA548_54==EqualsSign||LA548_54==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_34==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA548_54==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_34==EOF||LA548_34==Comma||LA548_34==EqualsSign||LA548_34==RightCurlyBracket) ) {s = 71;}
 
                          
-                        input.seek(index548_54);
+                        input.seek(index548_34);
                         if ( s>=0 ) return s;
                         break;
                     case 5 : 
-                        int LA548_62 = input.LA(1);
+                        int LA548_42 = input.LA(1);
 
                          
-                        int index548_62 = input.index();
+                        int index548_42 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_62==EOF||LA548_62==Comma||LA548_62==EqualsSign||LA548_62==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_42==EOF||LA548_42==Comma||LA548_42==EqualsSign||LA548_42==RightCurlyBracket) ) {s = 71;}
 
-                        else if ( (LA548_62==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_42==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
                          
-                        input.seek(index548_62);
+                        input.seek(index548_42);
                         if ( s>=0 ) return s;
                         break;
                     case 6 : 
-                        int LA548_39 = input.LA(1);
+                        int LA548_50 = input.LA(1);
 
                          
-                        int index548_39 = input.index();
+                        int index548_50 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_39==EOF||LA548_39==Comma||LA548_39==EqualsSign||LA548_39==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_50==EOF||LA548_50==Comma||LA548_50==EqualsSign||LA548_50==RightCurlyBracket) ) {s = 71;}
 
-                        else if ( (LA548_39==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_50==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
                          
-                        input.seek(index548_39);
+                        input.seek(index548_50);
                         if ( s>=0 ) return s;
                         break;
                     case 7 : 
-                        int LA548_47 = input.LA(1);
+                        int LA548_58 = input.LA(1);
 
                          
-                        int index548_47 = input.index();
+                        int index548_58 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_47==EOF||LA548_47==Comma||LA548_47==EqualsSign||LA548_47==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_58==EOF||LA548_58==Comma||LA548_58==EqualsSign||LA548_58==RightCurlyBracket) ) {s = 71;}
 
-                        else if ( (LA548_47==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_58==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
                          
-                        input.seek(index548_47);
+                        input.seek(index548_58);
                         if ( s>=0 ) return s;
                         break;
                     case 8 : 
-                        int LA548_55 = input.LA(1);
-
-                         
-                        int index548_55 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_55==EOF||LA548_55==Comma||LA548_55==EqualsSign||LA548_55==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_55==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_55);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 9 : 
-                        int LA548_63 = input.LA(1);
-
-                         
-                        int index548_63 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_63==EOF||LA548_63==Comma||LA548_63==EqualsSign||LA548_63==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_63==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_63);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 10 : 
                         int LA548_0 = input.LA(1);
 
                          
@@ -110378,172 +110580,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index548_0);
                         if ( s>=0 ) return s;
                         break;
-                    case 11 : 
-                        int LA548_40 = input.LA(1);
-
-                         
-                        int index548_40 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_40==EOF||LA548_40==Comma||LA548_40==EqualsSign||LA548_40==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_40==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_40);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 12 : 
-                        int LA548_48 = input.LA(1);
-
-                         
-                        int index548_48 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_48==EOF||LA548_48==Comma||LA548_48==EqualsSign||LA548_48==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_48==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_48);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 13 : 
-                        int LA548_56 = input.LA(1);
-
-                         
-                        int index548_56 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_56==EOF||LA548_56==Comma||LA548_56==EqualsSign||LA548_56==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_56==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_56);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 14 : 
-                        int LA548_41 = input.LA(1);
-
-                         
-                        int index548_41 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_41==EOF||LA548_41==Comma||LA548_41==EqualsSign||LA548_41==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_41==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_41);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 15 : 
-                        int LA548_49 = input.LA(1);
-
-                         
-                        int index548_49 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_49==EOF||LA548_49==Comma||LA548_49==EqualsSign||LA548_49==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_49==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_49);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 16 : 
-                        int LA548_57 = input.LA(1);
-
-                         
-                        int index548_57 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_57==EOF||LA548_57==Comma||LA548_57==EqualsSign||LA548_57==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_57==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_57);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 17 : 
-                        int LA548_1 = input.LA(1);
-
-                         
-                        int index548_1 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_1==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                        else if ( (LA548_1==EOF||LA548_1==Comma||LA548_1==EqualsSign||LA548_1==RightCurlyBracket) ) {s = 71;}
-
-                         
-                        input.seek(index548_1);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 18 : 
-                        int LA548_42 = input.LA(1);
-
-                         
-                        int index548_42 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_42==EOF||LA548_42==Comma||LA548_42==EqualsSign||LA548_42==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_42==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_42);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 19 : 
-                        int LA548_50 = input.LA(1);
-
-                         
-                        int index548_50 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_50==EOF||LA548_50==Comma||LA548_50==EqualsSign||LA548_50==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_50==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_50);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 20 : 
-                        int LA548_58 = input.LA(1);
-
-                         
-                        int index548_58 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_58==EOF||LA548_58==Comma||LA548_58==EqualsSign||LA548_58==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA548_58==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index548_58);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 21 : 
-                        int LA548_34 = input.LA(1);
-
-                         
-                        int index548_34 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA548_34==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
-
-                        else if ( (LA548_34==EOF||LA548_34==Comma||LA548_34==EqualsSign||LA548_34==RightCurlyBracket) ) {s = 71;}
-
-                         
-                        input.seek(index548_34);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 22 : 
+                    case 9 : 
                         int LA548_43 = input.LA(1);
 
                          
@@ -110558,7 +110595,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index548_43);
                         if ( s>=0 ) return s;
                         break;
-                    case 23 : 
+                    case 10 : 
                         int LA548_51 = input.LA(1);
 
                          
@@ -110573,7 +110610,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index548_51);
                         if ( s>=0 ) return s;
                         break;
-                    case 24 : 
+                    case 11 : 
                         int LA548_59 = input.LA(1);
 
                          
@@ -110588,49 +110625,244 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index548_59);
                         if ( s>=0 ) return s;
                         break;
-                    case 25 : 
+                    case 12 : 
                         int LA548_44 = input.LA(1);
 
                          
                         int index548_44 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_44==EOF||LA548_44==Comma||LA548_44==EqualsSign||LA548_44==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_44==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA548_44==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_44==EOF||LA548_44==Comma||LA548_44==EqualsSign||LA548_44==RightCurlyBracket) ) {s = 71;}
 
                          
                         input.seek(index548_44);
                         if ( s>=0 ) return s;
                         break;
-                    case 26 : 
+                    case 13 : 
                         int LA548_52 = input.LA(1);
 
                          
                         int index548_52 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_52==EOF||LA548_52==Comma||LA548_52==EqualsSign||LA548_52==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_52==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA548_52==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_52==EOF||LA548_52==Comma||LA548_52==EqualsSign||LA548_52==RightCurlyBracket) ) {s = 71;}
 
                          
                         input.seek(index548_52);
                         if ( s>=0 ) return s;
                         break;
-                    case 27 : 
+                    case 14 : 
                         int LA548_60 = input.LA(1);
 
                          
                         int index548_60 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA548_60==EOF||LA548_60==Comma||LA548_60==EqualsSign||LA548_60==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA548_60==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA548_60==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA548_60==EOF||LA548_60==Comma||LA548_60==EqualsSign||LA548_60==RightCurlyBracket) ) {s = 71;}
 
                          
                         input.seek(index548_60);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 15 : 
+                        int LA548_45 = input.LA(1);
+
+                         
+                        int index548_45 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_45==EOF||LA548_45==Comma||LA548_45==EqualsSign||LA548_45==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA548_45==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index548_45);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 16 : 
+                        int LA548_53 = input.LA(1);
+
+                         
+                        int index548_53 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_53==EOF||LA548_53==Comma||LA548_53==EqualsSign||LA548_53==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA548_53==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index548_53);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 17 : 
+                        int LA548_61 = input.LA(1);
+
+                         
+                        int index548_61 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_61==EOF||LA548_61==Comma||LA548_61==EqualsSign||LA548_61==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA548_61==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index548_61);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 18 : 
+                        int LA548_46 = input.LA(1);
+
+                         
+                        int index548_46 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_46==EOF||LA548_46==Comma||LA548_46==EqualsSign||LA548_46==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA548_46==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index548_46);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 19 : 
+                        int LA548_54 = input.LA(1);
+
+                         
+                        int index548_54 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_54==EOF||LA548_54==Comma||LA548_54==EqualsSign||LA548_54==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA548_54==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index548_54);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 20 : 
+                        int LA548_62 = input.LA(1);
+
+                         
+                        int index548_62 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_62==EOF||LA548_62==Comma||LA548_62==EqualsSign||LA548_62==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA548_62==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index548_62);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 21 : 
+                        int LA548_39 = input.LA(1);
+
+                         
+                        int index548_39 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_39==EOF||LA548_39==Comma||LA548_39==EqualsSign||LA548_39==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA548_39==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index548_39);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 22 : 
+                        int LA548_47 = input.LA(1);
+
+                         
+                        int index548_47 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_47==EOF||LA548_47==Comma||LA548_47==EqualsSign||LA548_47==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA548_47==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index548_47);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 23 : 
+                        int LA548_55 = input.LA(1);
+
+                         
+                        int index548_55 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_55==EOF||LA548_55==Comma||LA548_55==EqualsSign||LA548_55==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA548_55==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index548_55);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 24 : 
+                        int LA548_63 = input.LA(1);
+
+                         
+                        int index548_63 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_63==EOF||LA548_63==Comma||LA548_63==EqualsSign||LA548_63==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA548_63==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index548_63);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 25 : 
+                        int LA548_40 = input.LA(1);
+
+                         
+                        int index548_40 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_40==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                        else if ( (LA548_40==EOF||LA548_40==Comma||LA548_40==EqualsSign||LA548_40==RightCurlyBracket) ) {s = 71;}
+
+                         
+                        input.seek(index548_40);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 26 : 
+                        int LA548_48 = input.LA(1);
+
+                         
+                        int index548_48 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_48==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                        else if ( (LA548_48==EOF||LA548_48==Comma||LA548_48==EqualsSign||LA548_48==RightCurlyBracket) ) {s = 71;}
+
+                         
+                        input.seek(index548_48);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 27 : 
+                        int LA548_56 = input.LA(1);
+
+                         
+                        int index548_56 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA548_56==Colon) && (synpred316_InternalN4JSParser())) {s = 72;}
+
+                        else if ( (LA548_56==EOF||LA548_56==Comma||LA548_56==EqualsSign||LA548_56==RightCurlyBracket) ) {s = 71;}
+
+                         
+                        input.seek(index548_56);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -110641,11 +110873,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_360s = "\1\4\1\137\45\uffff\31\137\11\uffff";
-    static final String dfa_361s = "\1\u0094\1\157\45\uffff\31\157\11\uffff";
-    static final String dfa_362s = "\2\uffff\45\1\31\uffff\7\1\1\2\1\1";
-    static final String dfa_363s = "\1\15\1\21\45\uffff\1\6\1\12\1\16\1\22\1\25\1\30\1\0\1\3\1\7\1\13\1\17\1\23\1\26\1\31\1\1\1\4\1\10\1\14\1\20\1\24\1\27\1\32\1\2\1\5\1\11\11\uffff}>";
-    static final String[] dfa_364s = {
+    static final String dfa_362s = "\1\4\1\137\45\uffff\31\137\11\uffff";
+    static final String dfa_363s = "\1\u0094\1\157\45\uffff\31\157\11\uffff";
+    static final String dfa_364s = "\2\uffff\45\1\31\uffff\7\1\1\2\1\1";
+    static final String dfa_365s = "\1\15\1\27\45\uffff\1\11\1\16\1\21\1\24\1\30\1\0\1\3\1\6\1\12\1\17\1\22\1\25\1\31\1\1\1\4\1\7\1\13\1\20\1\23\1\26\1\32\1\2\1\5\1\10\1\14\11\uffff}>";
+    static final String[] dfa_366s = {
             "\1\65\1\60\1\72\1\25\1\67\1\73\1\75\1\54\1\7\1\10\1\53\1\21\1\11\1\16\1\17\1\74\1\52\1\12\1\15\1\23\1\76\1\27\1\55\1\31\1\62\1\35\1\71\1\70\1\2\1\4\1\5\1\6\1\45\1\30\1\33\1\64\1\40\1\42\1\66\1\3\1\14\1\46\1\57\1\43\1\32\1\44\1\63\1\37\1\41\4\uffff\1\20\1\47\1\51\1\26\1\77\1\50\1\34\1\36\20\uffff\1\56\1\13\1\22\1\24\1\61\23\uffff\1\107\1\106\11\uffff\1\101\1\uffff\1\104\1\uffff\1\103\2\uffff\1\105\1\uffff\1\1\2\uffff\1\100\23\uffff\1\102",
             "\1\107\3\uffff\1\110\2\uffff\1\107\10\uffff\1\107",
             "",
@@ -110720,33 +110952,78 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_360 = DFA.unpackEncodedStringToUnsignedChars(dfa_360s);
-    static final char[] dfa_361 = DFA.unpackEncodedStringToUnsignedChars(dfa_361s);
-    static final short[] dfa_362 = DFA.unpackEncodedString(dfa_362s);
-    static final short[] dfa_363 = DFA.unpackEncodedString(dfa_363s);
-    static final short[][] dfa_364 = unpackEncodedStringArray(dfa_364s);
+    static final char[] dfa_362 = DFA.unpackEncodedStringToUnsignedChars(dfa_362s);
+    static final char[] dfa_363 = DFA.unpackEncodedStringToUnsignedChars(dfa_363s);
+    static final short[] dfa_364 = DFA.unpackEncodedString(dfa_364s);
+    static final short[] dfa_365 = DFA.unpackEncodedString(dfa_365s);
+    static final short[][] dfa_366 = unpackEncodedStringArray(dfa_366s);
 
     class DFA549 extends DFA {
 
         public DFA549(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 549;
-            this.eot = dfa_353;
-            this.eof = dfa_353;
-            this.min = dfa_360;
-            this.max = dfa_361;
-            this.accept = dfa_362;
-            this.special = dfa_363;
-            this.transition = dfa_364;
+            this.eot = dfa_355;
+            this.eof = dfa_355;
+            this.min = dfa_362;
+            this.max = dfa_363;
+            this.accept = dfa_364;
+            this.special = dfa_365;
+            this.transition = dfa_366;
         }
         public String getDescription() {
-            return "32530:2: ( ( ( ( ( ( ( norm1_LiteralOrComputedPropertyName ) ) Colon ) )=> ( ( (lv_declaredName_0_0= norm1_LiteralOrComputedPropertyName ) ) otherlv_1= Colon ) ) ( (lv_value_2_0= norm1_BindingElement ) ) ) | ( (lv_value_3_0= norm1_SingleNameBinding ) ) )";
+            return "32626:2: ( ( ( ( ( ( ( norm1_LiteralOrComputedPropertyName ) ) Colon ) )=> ( ( (lv_declaredName_0_0= norm1_LiteralOrComputedPropertyName ) ) otherlv_1= Colon ) ) ( (lv_value_2_0= norm1_BindingElement ) ) ) | ( (lv_value_3_0= norm1_SingleNameBinding ) ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
+                        int LA549_44 = input.LA(1);
+
+                         
+                        int index549_44 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA549_44==Comma||LA549_44==EqualsSign||LA549_44==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA549_44==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index549_44);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
+                        int LA549_52 = input.LA(1);
+
+                         
+                        int index549_52 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA549_52==Comma||LA549_52==EqualsSign||LA549_52==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA549_52==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index549_52);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
+                        int LA549_60 = input.LA(1);
+
+                         
+                        int index549_60 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA549_60==Comma||LA549_60==EqualsSign||LA549_60==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA549_60==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index549_60);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 3 : 
                         int LA549_45 = input.LA(1);
 
                          
@@ -110761,7 +111038,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_45);
                         if ( s>=0 ) return s;
                         break;
-                    case 1 : 
+                    case 4 : 
                         int LA549_53 = input.LA(1);
 
                          
@@ -110776,7 +111053,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_53);
                         if ( s>=0 ) return s;
                         break;
-                    case 2 : 
+                    case 5 : 
                         int LA549_61 = input.LA(1);
 
                          
@@ -110791,7 +111068,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_61);
                         if ( s>=0 ) return s;
                         break;
-                    case 3 : 
+                    case 6 : 
                         int LA549_46 = input.LA(1);
 
                          
@@ -110806,7 +111083,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_46);
                         if ( s>=0 ) return s;
                         break;
-                    case 4 : 
+                    case 7 : 
                         int LA549_54 = input.LA(1);
 
                          
@@ -110821,7 +111098,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_54);
                         if ( s>=0 ) return s;
                         break;
-                    case 5 : 
+                    case 8 : 
                         int LA549_62 = input.LA(1);
 
                          
@@ -110836,109 +111113,64 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_62);
                         if ( s>=0 ) return s;
                         break;
-                    case 6 : 
+                    case 9 : 
                         int LA549_39 = input.LA(1);
 
                          
                         int index549_39 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA549_39==Comma||LA549_39==EqualsSign||LA549_39==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA549_39==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA549_39==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA549_39==Comma||LA549_39==EqualsSign||LA549_39==RightCurlyBracket) ) {s = 71;}
 
                          
                         input.seek(index549_39);
                         if ( s>=0 ) return s;
                         break;
-                    case 7 : 
+                    case 10 : 
                         int LA549_47 = input.LA(1);
 
                          
                         int index549_47 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA549_47==Comma||LA549_47==EqualsSign||LA549_47==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA549_47==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA549_47==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA549_47==Comma||LA549_47==EqualsSign||LA549_47==RightCurlyBracket) ) {s = 71;}
 
                          
                         input.seek(index549_47);
                         if ( s>=0 ) return s;
                         break;
-                    case 8 : 
+                    case 11 : 
                         int LA549_55 = input.LA(1);
 
                          
                         int index549_55 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA549_55==Comma||LA549_55==EqualsSign||LA549_55==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA549_55==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA549_55==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA549_55==Comma||LA549_55==EqualsSign||LA549_55==RightCurlyBracket) ) {s = 71;}
 
                          
                         input.seek(index549_55);
                         if ( s>=0 ) return s;
                         break;
-                    case 9 : 
+                    case 12 : 
                         int LA549_63 = input.LA(1);
 
                          
                         int index549_63 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA549_63==Comma||LA549_63==EqualsSign||LA549_63==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA549_63==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA549_63==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA549_63==Comma||LA549_63==EqualsSign||LA549_63==RightCurlyBracket) ) {s = 71;}
 
                          
                         input.seek(index549_63);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 10 : 
-                        int LA549_40 = input.LA(1);
-
-                         
-                        int index549_40 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA549_40==Comma||LA549_40==EqualsSign||LA549_40==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA549_40==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index549_40);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 11 : 
-                        int LA549_48 = input.LA(1);
-
-                         
-                        int index549_48 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA549_48==Comma||LA549_48==EqualsSign||LA549_48==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA549_48==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index549_48);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 12 : 
-                        int LA549_56 = input.LA(1);
-
-                         
-                        int index549_56 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA549_56==Comma||LA549_56==EqualsSign||LA549_56==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA549_56==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index549_56);
                         if ( s>=0 ) return s;
                         break;
                     case 13 : 
@@ -110975,6 +111207,51 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         if ( s>=0 ) return s;
                         break;
                     case 14 : 
+                        int LA549_40 = input.LA(1);
+
+                         
+                        int index549_40 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA549_40==Comma||LA549_40==EqualsSign||LA549_40==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA549_40==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index549_40);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 15 : 
+                        int LA549_48 = input.LA(1);
+
+                         
+                        int index549_48 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA549_48==Comma||LA549_48==EqualsSign||LA549_48==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA549_48==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index549_48);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 16 : 
+                        int LA549_56 = input.LA(1);
+
+                         
+                        int index549_56 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA549_56==Comma||LA549_56==EqualsSign||LA549_56==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA549_56==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index549_56);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 17 : 
                         int LA549_41 = input.LA(1);
 
                          
@@ -110989,7 +111266,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_41);
                         if ( s>=0 ) return s;
                         break;
-                    case 15 : 
+                    case 18 : 
                         int LA549_49 = input.LA(1);
 
                          
@@ -111004,7 +111281,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_49);
                         if ( s>=0 ) return s;
                         break;
-                    case 16 : 
+                    case 19 : 
                         int LA549_57 = input.LA(1);
 
                          
@@ -111019,22 +111296,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_57);
                         if ( s>=0 ) return s;
                         break;
-                    case 17 : 
-                        int LA549_1 = input.LA(1);
-
-                         
-                        int index549_1 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA549_1==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
-
-                        else if ( (LA549_1==Comma||LA549_1==EqualsSign||LA549_1==RightCurlyBracket) ) {s = 71;}
-
-                         
-                        input.seek(index549_1);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 18 : 
+                    case 20 : 
                         int LA549_42 = input.LA(1);
 
                          
@@ -111049,7 +111311,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_42);
                         if ( s>=0 ) return s;
                         break;
-                    case 19 : 
+                    case 21 : 
                         int LA549_50 = input.LA(1);
 
                          
@@ -111064,7 +111326,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_50);
                         if ( s>=0 ) return s;
                         break;
-                    case 20 : 
+                    case 22 : 
                         int LA549_58 = input.LA(1);
 
                          
@@ -111079,94 +111341,64 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index549_58);
                         if ( s>=0 ) return s;
                         break;
-                    case 21 : 
+                    case 23 : 
+                        int LA549_1 = input.LA(1);
+
+                         
+                        int index549_1 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA549_1==Comma||LA549_1==EqualsSign||LA549_1==RightCurlyBracket) ) {s = 71;}
+
+                        else if ( (LA549_1==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+
+                         
+                        input.seek(index549_1);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 24 : 
                         int LA549_43 = input.LA(1);
 
                          
                         int index549_43 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA549_43==Comma||LA549_43==EqualsSign||LA549_43==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA549_43==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA549_43==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA549_43==Comma||LA549_43==EqualsSign||LA549_43==RightCurlyBracket) ) {s = 71;}
 
                          
                         input.seek(index549_43);
                         if ( s>=0 ) return s;
                         break;
-                    case 22 : 
+                    case 25 : 
                         int LA549_51 = input.LA(1);
 
                          
                         int index549_51 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA549_51==Comma||LA549_51==EqualsSign||LA549_51==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA549_51==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA549_51==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA549_51==Comma||LA549_51==EqualsSign||LA549_51==RightCurlyBracket) ) {s = 71;}
 
                          
                         input.seek(index549_51);
                         if ( s>=0 ) return s;
                         break;
-                    case 23 : 
+                    case 26 : 
                         int LA549_59 = input.LA(1);
 
                          
                         int index549_59 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA549_59==Comma||LA549_59==EqualsSign||LA549_59==RightCurlyBracket) ) {s = 71;}
+                        if ( (LA549_59==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
 
-                        else if ( (LA549_59==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
+                        else if ( (LA549_59==Comma||LA549_59==EqualsSign||LA549_59==RightCurlyBracket) ) {s = 71;}
 
                          
                         input.seek(index549_59);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 24 : 
-                        int LA549_44 = input.LA(1);
-
-                         
-                        int index549_44 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA549_44==Comma||LA549_44==EqualsSign||LA549_44==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA549_44==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index549_44);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 25 : 
-                        int LA549_52 = input.LA(1);
-
-                         
-                        int index549_52 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA549_52==Comma||LA549_52==EqualsSign||LA549_52==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA549_52==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index549_52);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 26 : 
-                        int LA549_60 = input.LA(1);
-
-                         
-                        int index549_60 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA549_60==Comma||LA549_60==EqualsSign||LA549_60==RightCurlyBracket) ) {s = 71;}
-
-                        else if ( (LA549_60==Colon) && (synpred317_InternalN4JSParser())) {s = 72;}
-
-                         
-                        input.seek(index549_60);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -111177,12 +111409,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_365s = "\23\uffff";
-    static final String dfa_366s = "\1\4\1\0\21\uffff";
-    static final String dfa_367s = "\1\175\1\0\21\uffff";
-    static final String dfa_368s = "\2\uffff\1\2\1\3\15\uffff\1\1\1\4";
-    static final String dfa_369s = "\1\uffff\1\0\21\uffff}>";
-    static final String[] dfa_370s = {
+    static final String dfa_367s = "\23\uffff";
+    static final String dfa_368s = "\1\4\1\0\21\uffff";
+    static final String dfa_369s = "\1\175\1\0\21\uffff";
+    static final String dfa_370s = "\2\uffff\1\2\1\3\15\uffff\1\1\1\4";
+    static final String dfa_371s = "\1\uffff\1\0\21\uffff}>";
+    static final String[] dfa_372s = {
             "\2\3\2\uffff\1\3\7\uffff\1\3\13\uffff\1\3\2\uffff\1\3\7\uffff\1\3\2\uffff\1\3\5\uffff\1\3\1\uffff\2\3\47\uffff\1\1\16\uffff\1\2\2\uffff\1\3\2\uffff\1\3\14\uffff\1\3",
             "\1\uffff",
             "",
@@ -111204,28 +111436,28 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_365 = DFA.unpackEncodedString(dfa_365s);
-    static final char[] dfa_366 = DFA.unpackEncodedStringToUnsignedChars(dfa_366s);
-    static final char[] dfa_367 = DFA.unpackEncodedStringToUnsignedChars(dfa_367s);
-    static final short[] dfa_368 = DFA.unpackEncodedString(dfa_368s);
-    static final short[] dfa_369 = DFA.unpackEncodedString(dfa_369s);
-    static final short[][] dfa_370 = unpackEncodedStringArray(dfa_370s);
+    static final short[] dfa_367 = DFA.unpackEncodedString(dfa_367s);
+    static final char[] dfa_368 = DFA.unpackEncodedStringToUnsignedChars(dfa_368s);
+    static final char[] dfa_369 = DFA.unpackEncodedStringToUnsignedChars(dfa_369s);
+    static final short[] dfa_370 = DFA.unpackEncodedString(dfa_370s);
+    static final short[] dfa_371 = DFA.unpackEncodedString(dfa_371s);
+    static final short[][] dfa_372 = unpackEncodedStringArray(dfa_372s);
 
     class DFA575 extends DFA {
 
         public DFA575(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 575;
-            this.eot = dfa_365;
-            this.eof = dfa_365;
-            this.min = dfa_366;
-            this.max = dfa_367;
-            this.accept = dfa_368;
-            this.special = dfa_369;
-            this.transition = dfa_370;
+            this.eot = dfa_367;
+            this.eof = dfa_367;
+            this.min = dfa_368;
+            this.max = dfa_369;
+            this.accept = dfa_370;
+            this.special = dfa_371;
+            this.transition = dfa_372;
         }
         public String getDescription() {
-            return "34267:2: ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) )";
+            return "34363:2: ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -111254,13 +111486,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_371s = "\173\uffff";
-    static final String dfa_372s = "\1\2\172\uffff";
-    static final String dfa_373s = "\1\4\1\0\171\uffff";
-    static final String dfa_374s = "\1\u0098\1\0\171\uffff";
-    static final String dfa_375s = "\2\uffff\1\2\167\uffff\1\1";
-    static final String dfa_376s = "\1\uffff\1\0\171\uffff}>";
-    static final String[] dfa_377s = {
+    static final String dfa_373s = "\173\uffff";
+    static final String dfa_374s = "\1\2\172\uffff";
+    static final String dfa_375s = "\1\4\1\0\171\uffff";
+    static final String dfa_376s = "\1\u0098\1\0\171\uffff";
+    static final String dfa_377s = "\2\uffff\1\2\167\uffff\1\1";
+    static final String dfa_378s = "\1\uffff\1\0\171\uffff}>";
+    static final String[] dfa_379s = {
             "\135\2\1\uffff\6\2\1\1\10\2\3\uffff\1\2\1\uffff\4\2\1\uffff\1\2\1\uffff\1\2\2\uffff\1\2\11\uffff\2\2\10\uffff\1\2\1\uffff\1\2\1\uffff\1\2",
             "\1\uffff",
             "",
@@ -111386,29 +111618,29 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             ""
     };
 
-    static final short[] dfa_371 = DFA.unpackEncodedString(dfa_371s);
-    static final short[] dfa_372 = DFA.unpackEncodedString(dfa_372s);
-    static final char[] dfa_373 = DFA.unpackEncodedStringToUnsignedChars(dfa_373s);
-    static final char[] dfa_374 = DFA.unpackEncodedStringToUnsignedChars(dfa_374s);
-    static final short[] dfa_375 = DFA.unpackEncodedString(dfa_375s);
-    static final short[] dfa_376 = DFA.unpackEncodedString(dfa_376s);
-    static final short[][] dfa_377 = unpackEncodedStringArray(dfa_377s);
+    static final short[] dfa_373 = DFA.unpackEncodedString(dfa_373s);
+    static final short[] dfa_374 = DFA.unpackEncodedString(dfa_374s);
+    static final char[] dfa_375 = DFA.unpackEncodedStringToUnsignedChars(dfa_375s);
+    static final char[] dfa_376 = DFA.unpackEncodedStringToUnsignedChars(dfa_376s);
+    static final short[] dfa_377 = DFA.unpackEncodedString(dfa_377s);
+    static final short[] dfa_378 = DFA.unpackEncodedString(dfa_378s);
+    static final short[][] dfa_379 = unpackEncodedStringArray(dfa_379s);
 
     class DFA576 extends DFA {
 
         public DFA576(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 576;
-            this.eot = dfa_371;
-            this.eof = dfa_372;
-            this.min = dfa_373;
-            this.max = dfa_374;
-            this.accept = dfa_375;
-            this.special = dfa_376;
-            this.transition = dfa_377;
+            this.eot = dfa_373;
+            this.eof = dfa_374;
+            this.min = dfa_375;
+            this.max = dfa_376;
+            this.accept = dfa_377;
+            this.special = dfa_378;
+            this.transition = dfa_379;
         }
         public String getDescription() {
-            return "34351:3: ( ( ( QuestionMark ) )=> (lv_followedByQuestionMark_1_0= QuestionMark ) )?";
+            return "34447:3: ( ( ( QuestionMark ) )=> (lv_followedByQuestionMark_1_0= QuestionMark ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -111437,7 +111669,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String[] dfa_378s = {
+    static final String[] dfa_380s = {
             "\132\2\1\1\2\2\1\uffff\17\2\3\uffff\1\2\1\uffff\4\2\1\uffff\1\2\1\uffff\1\2\2\uffff\1\2\11\uffff\2\2\10\uffff\1\2\1\uffff\1\2\1\uffff\1\2",
             "\1\uffff",
             "",
@@ -111562,23 +111794,23 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final short[][] dfa_378 = unpackEncodedStringArray(dfa_378s);
+    static final short[][] dfa_380 = unpackEncodedStringArray(dfa_380s);
 
     class DFA578 extends DFA {
 
         public DFA578(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 578;
-            this.eot = dfa_371;
-            this.eof = dfa_372;
-            this.min = dfa_373;
-            this.max = dfa_374;
-            this.accept = dfa_375;
-            this.special = dfa_376;
-            this.transition = dfa_378;
+            this.eot = dfa_373;
+            this.eof = dfa_374;
+            this.min = dfa_375;
+            this.max = dfa_376;
+            this.accept = dfa_377;
+            this.special = dfa_378;
+            this.transition = dfa_380;
         }
         public String getDescription() {
-            return "34408:4: ( ( ( PlusSign ) )=> (lv_dynamic_2_0= PlusSign ) )?";
+            return "34504:4: ( ( ( PlusSign ) )=> (lv_dynamic_2_0= PlusSign ) )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -111607,12 +111839,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_379s = "\1\uffff\1\34\14\uffff\1\34\3\uffff\3\34\11\uffff";
-    static final String dfa_380s = "\1\4\1\132\12\uffff\1\143\1\uffff\1\132\3\143\3\132\11\uffff";
-    static final String dfa_381s = "\1\175\1\u00a4\12\uffff\1\155\1\uffff\1\u00a4\3\155\3\u00a4\11\uffff";
-    static final String dfa_382s = "\2\uffff\12\1\1\uffff\1\1\7\uffff\7\1\1\2\1\1";
-    static final String dfa_383s = "\1\11\1\7\12\uffff\1\3\1\uffff\1\5\1\1\1\0\1\10\1\6\1\4\1\2\11\uffff}>";
-    static final String[] dfa_384s = {
+    static final String dfa_381s = "\1\uffff\1\34\14\uffff\1\34\3\uffff\3\34\11\uffff";
+    static final String dfa_382s = "\1\4\1\132\12\uffff\1\143\1\uffff\1\132\3\143\3\132\11\uffff";
+    static final String dfa_383s = "\1\175\1\u00a4\12\uffff\1\155\1\uffff\1\u00a4\3\155\3\u00a4\11\uffff";
+    static final String dfa_384s = "\2\uffff\12\1\1\uffff\1\1\7\uffff\7\1\1\2\1\1";
+    static final String dfa_385s = "\1\10\1\11\12\uffff\1\4\1\uffff\1\6\1\1\1\3\1\0\1\7\1\5\1\2\11\uffff}>";
+    static final String[] dfa_386s = {
             "\1\21\1\14\1\26\1\uffff\1\23\1\27\1\31\1\10\2\uffff\1\7\1\uffff\1\34\2\uffff\1\30\1\6\3\uffff\1\32\1\uffff\1\11\1\uffff\1\16\1\uffff\1\25\1\24\7\uffff\1\20\1\uffff\1\2\1\22\3\uffff\1\13\1\uffff\1\34\1\uffff\1\17\1\34\6\uffff\1\3\1\5\1\uffff\1\33\1\4\22\uffff\1\12\3\uffff\1\15\5\uffff\1\34\14\uffff\1\34\1\uffff\1\34\2\uffff\1\34\2\uffff\1\34\14\uffff\1\1",
             "\1\34\1\uffff\1\34\1\uffff\2\34\1\uffff\1\34\1\uffff\1\35\1\uffff\2\34\1\uffff\1\34\1\uffff\1\34\3\uffff\1\34\65\uffff\1\34",
             "",
@@ -111644,12 +111876,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final short[] dfa_379 = DFA.unpackEncodedString(dfa_379s);
-    static final char[] dfa_380 = DFA.unpackEncodedStringToUnsignedChars(dfa_380s);
-    static final char[] dfa_381 = DFA.unpackEncodedStringToUnsignedChars(dfa_381s);
-    static final short[] dfa_382 = DFA.unpackEncodedString(dfa_382s);
-    static final short[] dfa_383 = DFA.unpackEncodedString(dfa_383s);
-    static final short[][] dfa_384 = unpackEncodedStringArray(dfa_384s);
+    static final short[] dfa_381 = DFA.unpackEncodedString(dfa_381s);
+    static final char[] dfa_382 = DFA.unpackEncodedStringToUnsignedChars(dfa_382s);
+    static final char[] dfa_383 = DFA.unpackEncodedStringToUnsignedChars(dfa_383s);
+    static final short[] dfa_384 = DFA.unpackEncodedString(dfa_384s);
+    static final short[] dfa_385 = DFA.unpackEncodedString(dfa_385s);
+    static final short[][] dfa_386 = unpackEncodedStringArray(dfa_386s);
 
     class DFA591 extends DFA {
 
@@ -111657,33 +111889,33 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.recognizer = recognizer;
             this.decisionNumber = 591;
             this.eot = dfa_46;
-            this.eof = dfa_379;
-            this.min = dfa_380;
-            this.max = dfa_381;
-            this.accept = dfa_382;
-            this.special = dfa_383;
-            this.transition = dfa_384;
+            this.eof = dfa_381;
+            this.min = dfa_382;
+            this.max = dfa_383;
+            this.accept = dfa_384;
+            this.special = dfa_385;
+            this.transition = dfa_386;
         }
         public String getDescription() {
-            return "35036:3: ( ( ( ( ( ( ruleBindingIdentifier ) ) Colon ) )=> ( ( (lv_name_1_0= ruleBindingIdentifier ) ) ( ( Colon )=>this_ColonSepTypeRef_2= ruleColonSepTypeRef[$current] ) ) ) | ( (lv_typeRef_3_0= ruleTypeRef ) ) )";
+            return "35132:3: ( ( ( ( ( ( ruleBindingIdentifier ) ) Colon ) )=> ( ( (lv_name_1_0= ruleBindingIdentifier ) ) ( ( Colon )=>this_ColonSepTypeRef_2= ruleColonSepTypeRef[$current] ) ) ) | ( (lv_typeRef_3_0= ruleTypeRef ) ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA591_16 = input.LA(1);
+                        int LA591_17 = input.LA(1);
 
                          
-                        int index591_16 = input.index();
+                        int index591_17 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA591_16==LeftCurlyBracket) ) {s = 28;}
+                        if ( (LA591_17==Colon) && (synpred328_InternalN4JSParser())) {s = 29;}
 
-                        else if ( (LA591_16==Colon) && (synpred328_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA591_17==LeftCurlyBracket) ) {s = 28;}
 
                          
-                        input.seek(index591_16);
+                        input.seek(index591_17);
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
@@ -111708,30 +111940,45 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index591_20 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA591_20==EOF||LA591_20==Ampersand||LA591_20==RightParenthesis||(LA591_20>=PlusSign && LA591_20<=Comma)||LA591_20==FullStop||(LA591_20>=LessThanSign && LA591_20<=EqualsSign)||LA591_20==QuestionMark||LA591_20==LeftSquareBracket||LA591_20==VerticalLine||LA591_20==RULE_VERSION) ) {s = 28;}
+                        if ( (LA591_20==Colon) && (synpred328_InternalN4JSParser())) {s = 29;}
 
-                        else if ( (LA591_20==Colon) && (synpred328_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA591_20==EOF||LA591_20==Ampersand||LA591_20==RightParenthesis||(LA591_20>=PlusSign && LA591_20<=Comma)||LA591_20==FullStop||(LA591_20>=LessThanSign && LA591_20<=EqualsSign)||LA591_20==QuestionMark||LA591_20==LeftSquareBracket||LA591_20==VerticalLine||LA591_20==RULE_VERSION) ) {s = 28;}
 
                          
                         input.seek(index591_20);
                         if ( s>=0 ) return s;
                         break;
                     case 3 : 
+                        int LA591_16 = input.LA(1);
+
+                         
+                        int index591_16 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA591_16==Colon) && (synpred328_InternalN4JSParser())) {s = 29;}
+
+                        else if ( (LA591_16==LeftCurlyBracket) ) {s = 28;}
+
+                         
+                        input.seek(index591_16);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
                         int LA591_12 = input.LA(1);
 
                          
                         int index591_12 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA591_12==LeftCurlyBracket) ) {s = 28;}
+                        if ( (LA591_12==Colon) && (synpred328_InternalN4JSParser())) {s = 29;}
 
-                        else if ( (LA591_12==Colon) && (synpred328_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA591_12==LeftCurlyBracket) ) {s = 28;}
 
                          
                         input.seek(index591_12);
                         if ( s>=0 ) return s;
                         break;
-                    case 4 : 
+                    case 5 : 
                         int LA591_19 = input.LA(1);
 
                          
@@ -111746,7 +111993,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index591_19);
                         if ( s>=0 ) return s;
                         break;
-                    case 5 : 
+                    case 6 : 
                         int LA591_14 = input.LA(1);
 
                          
@@ -111761,7 +112008,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index591_14);
                         if ( s>=0 ) return s;
                         break;
-                    case 6 : 
+                    case 7 : 
                         int LA591_18 = input.LA(1);
 
                          
@@ -111776,37 +112023,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index591_18);
                         if ( s>=0 ) return s;
                         break;
-                    case 7 : 
-                        int LA591_1 = input.LA(1);
-
-                         
-                        int index591_1 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA591_1==EOF||LA591_1==Ampersand||LA591_1==RightParenthesis||(LA591_1>=PlusSign && LA591_1<=Comma)||LA591_1==FullStop||(LA591_1>=LessThanSign && LA591_1<=EqualsSign)||LA591_1==QuestionMark||LA591_1==LeftSquareBracket||LA591_1==VerticalLine||LA591_1==RULE_VERSION) ) {s = 28;}
-
-                        else if ( (LA591_1==Colon) && (synpred328_InternalN4JSParser())) {s = 29;}
-
-                         
-                        input.seek(index591_1);
-                        if ( s>=0 ) return s;
-                        break;
                     case 8 : 
-                        int LA591_17 = input.LA(1);
-
-                         
-                        int index591_17 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA591_17==Colon) && (synpred328_InternalN4JSParser())) {s = 29;}
-
-                        else if ( (LA591_17==LeftCurlyBracket) ) {s = 28;}
-
-                         
-                        input.seek(index591_17);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 9 : 
                         int LA591_0 = input.LA(1);
 
                          
@@ -111855,6 +112072,21 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         input.seek(index591_0);
                         if ( s>=0 ) return s;
                         break;
+                    case 9 : 
+                        int LA591_1 = input.LA(1);
+
+                         
+                        int index591_1 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA591_1==EOF||LA591_1==Ampersand||LA591_1==RightParenthesis||(LA591_1>=PlusSign && LA591_1<=Comma)||LA591_1==FullStop||(LA591_1>=LessThanSign && LA591_1<=EqualsSign)||LA591_1==QuestionMark||LA591_1==LeftSquareBracket||LA591_1==VerticalLine||LA591_1==RULE_VERSION) ) {s = 28;}
+
+                        else if ( (LA591_1==Colon) && (synpred328_InternalN4JSParser())) {s = 29;}
+
+                         
+                        input.seek(index591_1);
+                        if ( s>=0 ) return s;
+                        break;
             }
             if (state.backtracking>0) {state.failed=true; return -1;}
             NoViableAltException nvae =
@@ -111863,59 +112095,59 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_385s = "\22\uffff";
-    static final String dfa_386s = "\1\uffff\7\12\3\uffff\7\12";
-    static final String dfa_387s = "\1\10\7\4\1\uffff\1\10\1\uffff\7\4";
-    static final String dfa_388s = "\1\175\7\u00a4\1\uffff\1\175\1\uffff\7\u00a4";
-    static final String dfa_389s = "\10\uffff\1\2\1\uffff\1\1\7\uffff";
-    static final String dfa_390s = "\22\uffff}>";
-    static final String[] dfa_391s = {
+    static final String dfa_387s = "\22\uffff";
+    static final String dfa_388s = "\1\uffff\7\12\3\uffff\7\12";
+    static final String dfa_389s = "\1\10\7\4\1\10\2\uffff\7\4";
+    static final String dfa_390s = "\1\175\7\u00a4\1\175\2\uffff\7\u00a4";
+    static final String dfa_391s = "\11\uffff\1\2\1\1\7\uffff";
+    static final String dfa_392s = "\22\uffff}>";
+    static final String[] dfa_393s = {
             "\1\4\7\uffff\1\6\13\uffff\1\5\2\uffff\1\3\12\uffff\1\2\10\uffff\1\1\111\uffff\1\7",
-            "\135\12\1\11\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\11\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\11\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\11\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\11\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\11\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\11\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "",
+            "\135\12\1\10\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\10\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\10\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\10\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\10\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\10\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\10\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
             "\1\16\7\uffff\1\20\13\uffff\1\17\2\uffff\1\15\12\uffff\1\14\10\uffff\1\13\111\uffff\1\21",
             "",
-            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10",
-            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\10"
+            "",
+            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11",
+            "\135\12\1\uffff\17\12\3\uffff\1\12\1\uffff\4\12\1\uffff\1\12\1\uffff\1\12\2\uffff\1\12\11\uffff\2\12\10\uffff\1\12\1\uffff\1\12\1\uffff\1\12\13\uffff\1\11"
     };
 
-    static final short[] dfa_385 = DFA.unpackEncodedString(dfa_385s);
-    static final short[] dfa_386 = DFA.unpackEncodedString(dfa_386s);
-    static final char[] dfa_387 = DFA.unpackEncodedStringToUnsignedChars(dfa_387s);
-    static final char[] dfa_388 = DFA.unpackEncodedStringToUnsignedChars(dfa_388s);
-    static final short[] dfa_389 = DFA.unpackEncodedString(dfa_389s);
-    static final short[] dfa_390 = DFA.unpackEncodedString(dfa_390s);
-    static final short[][] dfa_391 = unpackEncodedStringArray(dfa_391s);
+    static final short[] dfa_387 = DFA.unpackEncodedString(dfa_387s);
+    static final short[] dfa_388 = DFA.unpackEncodedString(dfa_388s);
+    static final char[] dfa_389 = DFA.unpackEncodedStringToUnsignedChars(dfa_389s);
+    static final char[] dfa_390 = DFA.unpackEncodedStringToUnsignedChars(dfa_390s);
+    static final short[] dfa_391 = DFA.unpackEncodedString(dfa_391s);
+    static final short[] dfa_392 = DFA.unpackEncodedString(dfa_392s);
+    static final short[][] dfa_393 = unpackEncodedStringArray(dfa_393s);
 
     class DFA597 extends DFA {
 
         public DFA597(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 597;
-            this.eot = dfa_385;
-            this.eof = dfa_386;
-            this.min = dfa_387;
-            this.max = dfa_388;
-            this.accept = dfa_389;
-            this.special = dfa_390;
-            this.transition = dfa_391;
+            this.eot = dfa_387;
+            this.eof = dfa_388;
+            this.min = dfa_389;
+            this.max = dfa_390;
+            this.accept = dfa_391;
+            this.special = dfa_392;
+            this.transition = dfa_393;
         }
         public String getDescription() {
-            return "35380:3: (this_TypeReference_0= ruleTypeReference[$current] | ( () this_TypeReference_2= ruleTypeReference[$current] this_VersionRequest_3= ruleVersionRequest[$current] ) )";
+            return "35476:3: (this_TypeReference_0= ruleTypeReference[$current] | ( () this_TypeReference_2= ruleTypeReference[$current] this_VersionRequest_3= ruleVersionRequest[$current] ) )";
         }
     }
-    static final String[] dfa_392s = {
+    static final String[] dfa_394s = {
             "\135\2\1\uffff\3\2\1\1\13\2\3\uffff\1\2\1\uffff\4\2\1\uffff\1\2\1\uffff\1\2\2\uffff\1\2\11\uffff\2\2\10\uffff\1\2\1\uffff\1\2\1\uffff\1\2",
             "\1\uffff",
             "",
@@ -112040,23 +112272,23 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final short[][] dfa_392 = unpackEncodedStringArray(dfa_392s);
+    static final short[][] dfa_394 = unpackEncodedStringArray(dfa_394s);
 
     class DFA598 extends DFA {
 
         public DFA598(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 598;
-            this.eot = dfa_371;
-            this.eof = dfa_372;
-            this.min = dfa_373;
-            this.max = dfa_374;
-            this.accept = dfa_375;
-            this.special = dfa_376;
-            this.transition = dfa_392;
+            this.eot = dfa_373;
+            this.eof = dfa_374;
+            this.min = dfa_375;
+            this.max = dfa_376;
+            this.accept = dfa_377;
+            this.special = dfa_378;
+            this.transition = dfa_394;
         }
         public String getDescription() {
-            return "35425:3: ( ( LessThanSign )=>this_TypeArguments_4= ruleTypeArguments[$current] )?";
+            return "35521:3: ( ( LessThanSign )=>this_TypeArguments_4= ruleTypeArguments[$current] )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -112085,13 +112317,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_393s = "\25\uffff";
-    static final String dfa_394s = "\4\uffff\7\14\3\uffff\7\14";
-    static final String dfa_395s = "\1\160\3\10\7\4\1\10\2\uffff\7\4";
-    static final String dfa_396s = "\1\160\1\u0092\2\175\7\u00a4\1\175\2\uffff\7\u00a4";
-    static final String dfa_397s = "\14\uffff\1\1\1\2\7\uffff";
-    static final String dfa_398s = "\25\uffff}>";
-    static final String[] dfa_399s = {
+    static final String dfa_395s = "\25\uffff";
+    static final String dfa_396s = "\4\uffff\7\14\3\uffff\7\14";
+    static final String dfa_397s = "\1\160\3\10\7\4\1\10\2\uffff\7\4";
+    static final String dfa_398s = "\1\160\1\u0092\2\175\7\u00a4\1\175\2\uffff\7\u00a4";
+    static final String dfa_399s = "\14\uffff\1\1\1\2\7\uffff";
+    static final String dfa_400s = "\25\uffff}>";
+    static final String[] dfa_401s = {
             "\1\1",
             "\1\7\7\uffff\1\11\13\uffff\1\10\2\uffff\1\6\12\uffff\1\5\10\uffff\1\4\74\uffff\1\2\14\uffff\1\12\24\uffff\1\3",
             "\1\7\7\uffff\1\11\13\uffff\1\10\2\uffff\1\6\12\uffff\1\5\10\uffff\1\4\111\uffff\1\12",
@@ -112115,29 +112347,29 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "\135\14\1\uffff\17\14\3\uffff\1\14\1\uffff\4\14\1\uffff\1\14\1\uffff\1\14\2\uffff\1\14\11\uffff\2\14\10\uffff\1\14\1\uffff\1\14\1\uffff\1\14\13\uffff\1\15"
     };
 
-    static final short[] dfa_393 = DFA.unpackEncodedString(dfa_393s);
-    static final short[] dfa_394 = DFA.unpackEncodedString(dfa_394s);
-    static final char[] dfa_395 = DFA.unpackEncodedStringToUnsignedChars(dfa_395s);
-    static final char[] dfa_396 = DFA.unpackEncodedStringToUnsignedChars(dfa_396s);
-    static final short[] dfa_397 = DFA.unpackEncodedString(dfa_397s);
-    static final short[] dfa_398 = DFA.unpackEncodedString(dfa_398s);
-    static final short[][] dfa_399 = unpackEncodedStringArray(dfa_399s);
+    static final short[] dfa_395 = DFA.unpackEncodedString(dfa_395s);
+    static final short[] dfa_396 = DFA.unpackEncodedString(dfa_396s);
+    static final char[] dfa_397 = DFA.unpackEncodedStringToUnsignedChars(dfa_397s);
+    static final char[] dfa_398 = DFA.unpackEncodedStringToUnsignedChars(dfa_398s);
+    static final short[] dfa_399 = DFA.unpackEncodedString(dfa_399s);
+    static final short[] dfa_400 = DFA.unpackEncodedString(dfa_400s);
+    static final short[][] dfa_401 = unpackEncodedStringArray(dfa_401s);
 
     class DFA599 extends DFA {
 
         public DFA599(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 599;
-            this.eot = dfa_393;
-            this.eof = dfa_394;
-            this.min = dfa_395;
-            this.max = dfa_396;
-            this.accept = dfa_397;
-            this.special = dfa_398;
-            this.transition = dfa_399;
+            this.eot = dfa_395;
+            this.eof = dfa_396;
+            this.min = dfa_397;
+            this.max = dfa_398;
+            this.accept = dfa_399;
+            this.special = dfa_400;
+            this.transition = dfa_401;
         }
         public String getDescription() {
-            return "35458:3: ( ( ( (lv_definedTypingStrategy_0_0= ruleTypingStrategyUseSiteOperator ) ) this_TypeReference_1= ruleTypeReference[$current] ) | ( () ( (lv_definedTypingStrategy_3_0= ruleTypingStrategyUseSiteOperator ) ) this_TypeReference_4= ruleTypeReference[$current] this_VersionRequest_5= ruleVersionRequest[$current] ) )";
+            return "35554:3: ( ( ( (lv_definedTypingStrategy_0_0= ruleTypingStrategyUseSiteOperator ) ) this_TypeReference_1= ruleTypeReference[$current] ) | ( () ( (lv_definedTypingStrategy_3_0= ruleTypingStrategyUseSiteOperator ) ) this_TypeReference_4= ruleTypeReference[$current] this_VersionRequest_5= ruleVersionRequest[$current] ) )";
         }
     }
 
@@ -112146,16 +112378,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA600(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 600;
-            this.eot = dfa_371;
-            this.eof = dfa_372;
-            this.min = dfa_373;
-            this.max = dfa_374;
-            this.accept = dfa_375;
-            this.special = dfa_376;
-            this.transition = dfa_392;
+            this.eot = dfa_373;
+            this.eof = dfa_374;
+            this.min = dfa_375;
+            this.max = dfa_376;
+            this.accept = dfa_377;
+            this.special = dfa_378;
+            this.transition = dfa_394;
         }
         public String getDescription() {
-            return "35543:3: ( ( LessThanSign )=>this_TypeArguments_6= ruleTypeArguments[$current] )?";
+            return "35639:3: ( ( LessThanSign )=>this_TypeArguments_6= ruleTypeArguments[$current] )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -112184,11 +112416,11 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_400s = "\1\4\2\0\1\uffff\75\0\3\uffff";
-    static final String dfa_401s = "\1\175\2\0\1\uffff\75\0\3\uffff";
-    static final String dfa_402s = "\3\uffff\1\3\75\uffff\1\1\1\4\1\2";
-    static final String dfa_403s = "\1\0\1\1\1\2\1\uffff\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\57\1\60\1\61\1\62\1\63\1\64\1\65\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\76\1\77\3\uffff}>";
-    static final String[] dfa_404s = {
+    static final String dfa_402s = "\1\4\2\0\1\uffff\75\0\3\uffff";
+    static final String dfa_403s = "\1\175\2\0\1\uffff\75\0\3\uffff";
+    static final String dfa_404s = "\3\uffff\1\3\75\uffff\1\1\1\4\1\2";
+    static final String dfa_405s = "\1\0\1\1\1\2\1\uffff\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31\1\32\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\57\1\60\1\61\1\62\1\63\1\64\1\65\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\76\1\77\3\uffff}>";
+    static final String[] dfa_406s = {
             "\1\66\1\61\1\73\1\30\1\70\1\74\1\76\1\55\1\12\1\13\1\54\1\24\1\14\1\21\1\22\1\75\1\53\1\15\1\20\1\26\1\77\1\32\1\56\1\34\1\63\1\40\1\72\1\71\1\5\1\7\1\10\1\11\1\50\1\33\1\36\1\65\1\43\1\45\1\67\1\6\1\17\1\51\1\60\1\46\1\35\1\47\1\64\1\42\1\44\4\uffff\1\23\1\1\1\52\1\31\1\100\1\2\1\37\1\41\20\uffff\1\57\1\16\1\25\1\27\1\62\17\uffff\1\3\27\uffff\1\4",
             "\1\uffff",
             "\1\uffff",
@@ -112258,27 +112490,27 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             "",
             ""
     };
-    static final char[] dfa_400 = DFA.unpackEncodedStringToUnsignedChars(dfa_400s);
-    static final char[] dfa_401 = DFA.unpackEncodedStringToUnsignedChars(dfa_401s);
-    static final short[] dfa_402 = DFA.unpackEncodedString(dfa_402s);
-    static final short[] dfa_403 = DFA.unpackEncodedString(dfa_403s);
-    static final short[][] dfa_404 = unpackEncodedStringArray(dfa_404s);
+    static final char[] dfa_402 = DFA.unpackEncodedStringToUnsignedChars(dfa_402s);
+    static final char[] dfa_403 = DFA.unpackEncodedStringToUnsignedChars(dfa_403s);
+    static final short[] dfa_404 = DFA.unpackEncodedString(dfa_404s);
+    static final short[] dfa_405 = DFA.unpackEncodedString(dfa_405s);
+    static final short[][] dfa_406 = unpackEncodedStringArray(dfa_406s);
 
     class DFA607 extends DFA {
 
         public DFA607(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 607;
-            this.eot = dfa_235;
-            this.eof = dfa_235;
-            this.min = dfa_400;
-            this.max = dfa_401;
-            this.accept = dfa_402;
-            this.special = dfa_403;
-            this.transition = dfa_404;
+            this.eot = dfa_236;
+            this.eof = dfa_236;
+            this.min = dfa_402;
+            this.max = dfa_403;
+            this.accept = dfa_404;
+            this.special = dfa_405;
+            this.transition = dfa_406;
         }
         public String getDescription() {
-            return "35874:2: ( ( ( ( () Get ( ( ruleIdentifierName ) ) ) )=>this_TStructGetter_0= ruleTStructGetter ) | ( ( ( () Set ( ( ruleIdentifierName ) ) ) )=>this_TStructSetter_1= ruleTStructSetter ) | ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleIdentifierName ) ) LeftParenthesis ) )=>this_TStructMethod_2= ruleTStructMethod ) | this_TStructField_3= ruleTStructField )";
+            return "35970:2: ( ( ( ( () Get ( ( ruleIdentifierName ) ) ) )=>this_TStructGetter_0= ruleTStructGetter ) | ( ( ( () Set ( ( ruleIdentifierName ) ) ) )=>this_TStructSetter_1= ruleTStructSetter ) | ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleIdentifierName ) ) LeftParenthesis ) )=>this_TStructMethod_2= ruleTStructMethod ) | this_TStructField_3= ruleTStructField )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -113265,13 +113497,13 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA682(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 682;
-            this.eot = dfa_217;
-            this.eof = dfa_217;
-            this.min = dfa_218;
-            this.max = dfa_219;
-            this.accept = dfa_220;
-            this.special = dfa_221;
-            this.transition = dfa_222;
+            this.eot = dfa_218;
+            this.eof = dfa_218;
+            this.min = dfa_219;
+            this.max = dfa_220;
+            this.accept = dfa_221;
+            this.special = dfa_222;
+            this.transition = dfa_223;
         }
         public String getDescription() {
             return "14059:5: ( ( ruleTypeRefWithModifiers ) )?";
@@ -113283,16 +113515,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA685(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 685;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "14269:5: ( ( ruleTypeRefWithModifiers ) )?";
+            return "14278:5: ( ( ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -113301,16 +113533,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA687(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 687;
-            this.eot = dfa_217;
-            this.eof = dfa_217;
-            this.min = dfa_218;
-            this.max = dfa_219;
-            this.accept = dfa_220;
-            this.special = dfa_221;
-            this.transition = dfa_222;
+            this.eot = dfa_218;
+            this.eof = dfa_218;
+            this.min = dfa_219;
+            this.max = dfa_220;
+            this.accept = dfa_221;
+            this.special = dfa_222;
+            this.transition = dfa_223;
         }
         public String getDescription() {
-            return "14344:5: ( ( ruleTypeRefWithModifiers ) )?";
+            return "14353:5: ( ( ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -113319,16 +113551,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA690(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 690;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "14554:5: ( ( ruleTypeRefWithModifiers ) )?";
+            return "14572:5: ( ( ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -113337,16 +113569,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA692(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 692;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_202;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_206;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_203;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_207;
         }
         public String getDescription() {
-            return "14636:7: ( ( ruleTypeRefWithModifiers ) )?";
+            return "14654:7: ( ( ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -113355,16 +113587,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA694(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 694;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "15037:7: ( ( ruleTypeRefWithModifiers ) )?";
+            return "15055:7: ( ( ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -113373,16 +113605,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA696(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 696;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_202;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_206;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_203;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_207;
         }
         public String getDescription() {
-            return "15305:7: ( ( ruleTypeRefWithModifiers ) )?";
+            return "15323:7: ( ( ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -113391,16 +113623,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA698(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 698;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "15706:7: ( ( ruleTypeRefWithModifiers ) )?";
+            return "15724:7: ( ( ruleTypeRefWithModifiers ) )?";
         }
     }
 
@@ -113411,14 +113643,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 735;
             this.eot = dfa_13;
             this.eof = dfa_13;
-            this.min = dfa_335;
-            this.max = dfa_336;
-            this.accept = dfa_337;
+            this.min = dfa_337;
+            this.max = dfa_338;
+            this.accept = dfa_339;
             this.special = dfa_17;
-            this.transition = dfa_338;
+            this.transition = dfa_340;
         }
         public String getDescription() {
-            return "()* loopback of 28355:5: ( ( ruleN4Modifier ) )*";
+            return "()* loopback of 28451:5: ( ( ruleN4Modifier ) )*";
         }
     }
 
@@ -113427,16 +113659,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA737(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 737;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "28363:5: ( ruleBogusTypeRefFragment[null] )?";
+            return "28459:5: ( ruleBogusTypeRefFragment[null] )?";
         }
     }
 
@@ -113447,14 +113679,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 741;
             this.eot = dfa_13;
             this.eof = dfa_13;
-            this.min = dfa_335;
-            this.max = dfa_336;
-            this.accept = dfa_337;
+            this.min = dfa_337;
+            this.max = dfa_338;
+            this.accept = dfa_339;
             this.special = dfa_17;
-            this.transition = dfa_338;
+            this.transition = dfa_340;
         }
         public String getDescription() {
-            return "()* loopback of 28631:5: ( ( ruleN4Modifier ) )*";
+            return "()* loopback of 28727:5: ( ( ruleN4Modifier ) )*";
         }
     }
 
@@ -113463,16 +113695,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA743(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 743;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "28639:5: ( ruleBogusTypeRefFragment[null] )?";
+            return "28735:5: ( ruleBogusTypeRefFragment[null] )?";
         }
     }
 
@@ -113483,14 +113715,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 747;
             this.eot = dfa_13;
             this.eof = dfa_13;
-            this.min = dfa_335;
-            this.max = dfa_336;
-            this.accept = dfa_337;
+            this.min = dfa_337;
+            this.max = dfa_338;
+            this.accept = dfa_339;
             this.special = dfa_17;
-            this.transition = dfa_338;
+            this.transition = dfa_340;
         }
         public String getDescription() {
-            return "()* loopback of 29096:7: ( ( ruleN4Modifier ) )*";
+            return "()* loopback of 29192:7: ( ( ruleN4Modifier ) )*";
         }
     }
 
@@ -113499,16 +113731,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA749(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 749;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "29104:7: ( ruleBogusTypeRefFragment[null] )?";
+            return "29200:7: ( ruleBogusTypeRefFragment[null] )?";
         }
     }
 
@@ -113519,14 +113751,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.decisionNumber = 753;
             this.eot = dfa_13;
             this.eof = dfa_13;
-            this.min = dfa_335;
-            this.max = dfa_336;
-            this.accept = dfa_337;
+            this.min = dfa_337;
+            this.max = dfa_338;
+            this.accept = dfa_339;
             this.special = dfa_17;
-            this.transition = dfa_338;
+            this.transition = dfa_340;
         }
         public String getDescription() {
-            return "()* loopback of 29710:7: ( ( ruleN4Modifier ) )*";
+            return "()* loopback of 29806:7: ( ( ruleN4Modifier ) )*";
         }
     }
 
@@ -113535,16 +113767,16 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         public DFA755(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
             this.decisionNumber = 755;
-            this.eot = dfa_201;
-            this.eof = dfa_201;
-            this.min = dfa_207;
-            this.max = dfa_203;
-            this.accept = dfa_204;
-            this.special = dfa_205;
-            this.transition = dfa_208;
+            this.eot = dfa_202;
+            this.eof = dfa_202;
+            this.min = dfa_208;
+            this.max = dfa_204;
+            this.accept = dfa_205;
+            this.special = dfa_206;
+            this.transition = dfa_209;
         }
         public String getDescription() {
-            return "29718:7: ( ruleBogusTypeRefFragment[null] )?";
+            return "29814:7: ( ruleBogusTypeRefFragment[null] )?";
         }
     }
  
@@ -113653,8 +113885,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_101 = new BitSet(new long[]{0x7C4FC6B4F5B8CF70L,0x2BD12625C9220540L,0x0000000000100C01L});
     public static final BitSet FOLLOW_102 = new BitSet(new long[]{0x7C4FC6B4F5B8CF70L,0x2BD12E25C9220540L,0x0000001000100C01L});
     public static final BitSet FOLLOW_103 = new BitSet(new long[]{0x7C4FC6B4F5B8CF70L,0x2BD12625C9220540L,0x0000001000100C01L});
-    public static final BitSet FOLLOW_104 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x2951A720283E0001L,0x0000000000100001L});
-    public static final BitSet FOLLOW_105 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x29512720283E0001L,0x0000000000100001L});
+    public static final BitSet FOLLOW_104 = new BitSet(new long[]{0xFE5FFFFFFFFFFFF0L,0x2951A720283E0001L,0x0000000000100001L});
+    public static final BitSet FOLLOW_105 = new BitSet(new long[]{0xFE5FFFFFFFFFFFF0L,0x29512720283E0001L,0x0000000000100001L});
     public static final BitSet FOLLOW_106 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x29512520283E0001L,0x0000000000100001L});
     public static final BitSet FOLLOW_107 = new BitSet(new long[]{0xFE1FFFFFFFFFFFF0L,0x29512400003E0001L,0x0000000000100001L});
     public static final BitSet FOLLOW_108 = new BitSet(new long[]{0x0000000000000000L,0x0000010008000000L});
@@ -113780,14 +114012,13 @@ final class T2S{
 	final static int[] M_22 = { 14, 11, 60, 33, 4, 61, 63, 54, 20, 21, 53, 29, 6, 26, 27, 62, 52, 22, 25, 31, 64, 35, 55, 37, 5, 40, 59, 3, 15, 17, 18, 19, 47, 36, 38, 13, 42, 44, 2, 16, 24, 48, 57, 45, 9, 46, 10, 1, 43, -1, -1, -1, -1, 28, 49, 51, 34, 65, 50, 39, 41, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 56, 23, 30, 32, 58, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 72, -1, -1, 12, -1, -1, 8, -1, -1, -1, 67, -1, 70, -1, 69, -1, -1, 71, -1, 7, -1, -1, 66, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 68};
 	final static int[] M_24 = { 23, 18, 28, -1, 25, 29, 31, 14, -1, -1, 13, 53, -1, -1, -1, 30, 12, -1, -1, 35, 32, -1, 15, -1, 20, -1, 27, 26, -1, -1, 54, -1, 44, 6, -1, 22, -1, 8, 24, -1, -1, -1, 17, 46, 5, 43, 21, -1, -1, -1, -1, -1, -1, -1, 9, 11, 4, 33, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 48, -1, -1, -1, -1, -1, -1, 16, -1, -1, -1, 19, -1, -1, -1, -1, -1, 51, -1, -1, -1, -1, -1, 3, 47, -1, -1, 34, -1, -1, -1, 52, 49, -1, -1, 50, -1, -1, -1, -1, -1, -1, 36, -1, 41, 38, 39, 40, -1, 42, -1, 7, -1, -1, 45, -1, -1, -1, -1, -1, -1, -1, -1, -1, 56, 55, -1, -1, -1, -1, -1, -1, -1, -1, 37};
 	final static int[] M_25 = { 22, 17, 27, -1, 24, 28, 30, 13, -1, -1, 12, 52, -1, -1, -1, 29, 11, -1, -1, 34, 31, -1, 14, -1, 19, -1, 26, 25, -1, -1, 53, -1, 43, 6, -1, 21, -1, -1, 23, -1, -1, -1, 16, 45, 5, 42, 20, -1, -1, -1, -1, -1, -1, -1, 8, 10, 4, 32, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 47, -1, -1, -1, -1, -1, -1, 15, -1, -1, -1, 18, -1, -1, -1, -1, -1, 50, -1, -1, -1, -1, -1, 3, 46, -1, -1, 33, -1, -1, -1, 51, 48, -1, -1, 49, -1, -1, -1, -1, -1, -1, 35, -1, 40, 37, 38, 39, -1, 41, -1, 7, -1, -1, 44, -1, -1, -1, -1, -1, -1, -1, -1, -1, 55, 54, -1, -1, -1, -1, -1, -1, -1, -1, 36};
-	final static int[] M_26 = { 25, 20, 30, -1, 27, 31, 33, 16, -1, -1, 15, 55, -1, -1, -1, 32, 14, 59, -1, 37, 34, -1, 17, -1, 22, 61, 29, 28, -1, -1, 56, -1, 46, 8, -1, 24, -1, 10, 26, -1, -1, -1, 19, 48, 7, 45, 23, 60, -1, -1, -1, -1, -1, -1, 11, 13, 6, 35, 12, -1, -1, -1, -1, -1, -1, -1, 62, -1, 63, -1, 50, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, 21, -1, -1, 67, -1, -1, 53, -1, -1, 64, -1, 65, -1, 49, -1, -1, 36, 1, -1, -1, 54, 51, -1, -1, 52, -1, -1, 66, -1, -1, -1, 38, -1, 43, 40, 41, 42, -1, 44, -1, 9, -1, -1, 47, -1, -1, -1, -1, -1, -1, -1, -1, -1, 58, 57, -1, -1, -1, -1, -1, -1, -1, -1, 39};
-	final static int[] M_27 = { 25, 20, 30, -1, 27, 31, 33, 16, -1, -1, 15, 55, -1, -1, -1, 32, 14, 59, -1, 37, 34, -1, 17, -1, 22, 61, 29, 28, -1, -1, 56, -1, 46, 8, -1, 24, -1, 10, 26, -1, -1, -1, 19, 48, 7, 45, 23, 60, -1, -1, -1, -1, -1, -1, 11, 13, 6, 35, 12, -1, -1, -1, -1, -1, -1, -1, 62, -1, 63, -1, 50, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, 21, -1, -1, 67, -1, -1, 53, -1, -1, 64, -1, 65, -1, 49, -1, -1, 36, -1, -1, -1, 54, 51, -1, -1, 52, -1, -1, 66, -1, -1, -1, 38, -1, 43, 40, 41, 42, -1, 44, -1, 9, -1, -1, 47, -1, -1, -1, -1, -1, -1, -1, -1, -1, 58, 57, -1, -1, -1, -1, -1, -1, -1, -1, 39};
-	final static int[] M_28 = { 24, 19, 29, -1, 26, 30, 32, 15, -1, -1, 14, 54, -1, -1, -1, 31, 13, 58, -1, 36, 33, -1, 16, -1, 21, 60, 28, 27, -1, -1, 55, -1, 45, 8, -1, 23, -1, -1, 25, -1, -1, -1, 18, 47, 7, 44, 22, 59, -1, -1, -1, -1, -1, -1, 10, 12, 6, 34, 11, -1, -1, -1, -1, -1, -1, -1, 61, -1, 62, -1, 49, -1, -1, -1, -1, -1, -1, 17, -1, -1, -1, 20, -1, -1, 66, -1, -1, 52, -1, -1, 63, -1, 64, -1, 48, -1, -1, 35, -1, -1, -1, 53, 50, -1, -1, 51, -1, -1, 65, -1, -1, -1, 37, -1, 42, 39, 40, 41, -1, 43, -1, 9, -1, -1, 46, -1, -1, -1, -1, -1, -1, -1, -1, -1, 57, 56, -1, -1, -1, -1, -1, -1, -1, -1, 38};
+	final static int[] M_26 = { 25, 20, 30, -1, 27, 31, 33, 16, -1, -1, 15, 55, -1, -1, -1, 32, 14, 59, -1, 37, 34, -1, 17, -1, 22, 61, 29, 28, -1, -1, 56, -1, 46, 8, -1, 24, -1, 10, 26, -1, -1, -1, 19, 48, 7, 45, 23, 60, -1, -1, -1, -1, -1, -1, 11, 13, 6, 35, 12, -1, -1, -1, -1, -1, -1, -1, 62, -1, 63, -1, 50, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, 21, -1, -1, 67, -1, -1, 53, -1, -1, 64, -1, 65, -1, 49, -1, -1, 36, -1, -1, -1, 54, 51, -1, -1, 52, -1, -1, 66, -1, -1, -1, 38, -1, 43, 40, 41, 42, -1, 44, -1, 9, -1, -1, 47, -1, -1, -1, -1, -1, -1, -1, -1, -1, 58, 57, -1, -1, -1, -1, -1, -1, -1, -1, 39};
+	final static int[] M_28 = { 24, 19, 29, -1, 26, 30, 32, 15, -1, -1, 14, 54, -1, -1, -1, 31, 13, 58, -1, 36, 33, -1, 16, -1, 21, 60, 28, 27, -1, -1, 55, -1, 45, 8, -1, 23, -1, -1, 25, -1, -1, -1, 18, 47, 7, 44, 22, 59, -1, -1, -1, -1, -1, -1, 10, 12, 6, 34, 11, -1, -1, -1, -1, -1, -1, -1, 61, -1, 62, -1, 49, -1, -1, -1, -1, -1, -1, 17, -1, -1, -1, 20, -1, -1, 66, -1, -1, 52, -1, -1, 63, -1, 64, -1, 48, -1, -1, 35, -1, 5, -1, 53, 50, -1, -1, 51, -1, -1, 65, -1, -1, -1, 37, -1, 42, 39, 40, 41, -1, 43, -1, 9, -1, -1, 46, -1, -1, -1, -1, -1, -1, -1, -1, -1, 57, 56, -1, -1, -1, -1, -1, -1, -1, -1, 38};
 	final static int[] M_29 = { 24, 19, 29, -1, 26, 30, 32, 15, -1, -1, 14, 54, -1, -1, -1, 31, 13, 58, -1, 36, 33, -1, 16, -1, 21, 60, 28, 27, -1, -1, 55, -1, 45, 8, -1, 23, -1, -1, 25, -1, -1, -1, 18, 47, 7, 44, 22, 59, -1, -1, -1, -1, -1, -1, 10, 12, 6, 34, 11, -1, -1, -1, -1, -1, -1, -1, 61, -1, 62, -1, 49, -1, -1, -1, -1, -1, -1, 17, -1, -1, -1, 20, -1, -1, 66, -1, -1, 52, -1, -1, 63, -1, 64, -1, 48, -1, -1, 35, 1, -1, -1, 53, 50, -1, -1, 51, -1, -1, 65, -1, -1, -1, 37, -1, 42, 39, 40, 41, -1, 43, -1, 9, -1, -1, 46, -1, -1, -1, -1, -1, -1, -1, -1, -1, 57, 56, -1, -1, -1, -1, -1, -1, -1, -1, 38};
 	final static int[] M_30 = { 26, 21, 31, -1, 28, 32, 34, 17, -1, -1, 16, 56, -1, -1, -1, 33, 15, 60, -1, 38, 35, -1, 18, -1, 23, 62, 30, 29, -1, -1, 57, -1, 47, 9, -1, 25, -1, 11, 27, -1, -1, -1, 20, 49, 8, 46, 24, 61, -1, -1, -1, -1, -1, -1, 12, 14, 7, 36, 13, -1, -1, -1, -1, -1, -1, -1, 63, -1, 64, -1, 51, -1, -1, -1, -1, -1, -1, 19, -1, -1, -1, 22, -1, -1, 68, -1, -1, 54, -1, -1, 65, -1, 66, -1, 50, -1, -1, 37, 6, 1, -1, 55, 52, -1, -1, 53, -1, -1, 67, -1, -1, -1, 39, -1, 44, 41, 42, 43, -1, 45, -1, 10, -1, -1, 48, -1, -1, -1, -1, -1, -1, -1, -1, -1, 59, 58, -1, -1, -1, -1, -1, -1, -1, -1, 40};
-	final static int[] M_31 = { 27, 22, 32, -1, 29, 33, 35, 18, -1, -1, 17, 57, -1, -1, -1, 34, 16, 61, -1, 39, 36, -1, 19, -1, 24, 63, 31, 30, -1, -1, 58, -1, 48, 10, -1, 26, -1, 12, 28, -1, -1, -1, 21, 50, 9, 47, 25, 62, -1, -1, -1, -1, -1, -1, 13, 15, 8, 37, 14, -1, -1, -1, -1, -1, -1, -1, 64, -1, 65, -1, 52, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, 23, -1, -1, 69, -1, -1, 55, -1, -1, 66, -1, 67, -1, 51, -1, -1, 38, 7, -1, -1, 56, 53, -1, -1, 54, -1, -1, 68, -1, -1, -1, 40, -1, 45, 42, 43, 44, -1, 46, -1, 11, -1, -1, 49, -1, -1, -1, -1, -1, -1, -1, -1, -1, 60, 59, -1, -1, -1, -1, -1, -1, -1, -1, 41};
-	final static int[] M_32 = { 25, 20, 30, -1, 27, 31, 33, 16, -1, -1, 15, 55, -1, -1, -1, 32, 14, 59, -1, 37, 34, -1, 17, -1, 22, 61, 29, 28, -1, -1, 56, -1, 46, 9, -1, 24, -1, -1, 26, -1, -1, -1, 19, 48, 8, 45, 23, 60, -1, -1, -1, -1, -1, -1, 11, 13, 7, 35, 12, -1, -1, -1, -1, -1, -1, -1, 62, -1, 63, -1, 50, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, 21, -1, -1, 67, -1, -1, 53, -1, -1, 64, -1, 65, -1, 49, -1, -1, 36, 6, -1, -1, 54, 51, -1, -1, 52, -1, -1, 66, -1, -1, -1, 38, -1, 43, 40, 41, 42, -1, 44, -1, 10, -1, -1, 47, -1, -1, -1, -1, -1, -1, -1, -1, -1, 58, 57, -1, -1, -1, -1, -1, -1, -1, -1, 39};
-	final static int[] M_33 = { 26, 21, 31, -1, 28, 32, 34, 17, -1, -1, 16, 56, -1, -1, -1, 33, 15, 60, -1, 38, 35, -1, 18, -1, 23, 62, 30, 29, -1, -1, 57, -1, 47, 10, -1, 25, -1, -1, 27, -1, -1, -1, 20, 49, 9, 46, 24, 61, -1, -1, -1, -1, -1, -1, 12, 14, 8, 36, 13, -1, -1, -1, -1, -1, -1, -1, 63, -1, 64, -1, 51, -1, -1, -1, -1, -1, -1, 19, -1, -1, -1, 22, -1, -1, 68, -1, -1, 54, -1, -1, 65, -1, 66, -1, 50, -1, -1, 37, 7, 1, -1, 55, 52, -1, -1, 53, -1, -1, 67, -1, -1, -1, 39, -1, 44, 41, 42, 43, -1, 45, -1, 11, -1, -1, 48, -1, -1, -1, -1, -1, -1, -1, -1, -1, 59, 58, -1, -1, -1, -1, -1, -1, -1, -1, 40};
+	final static int[] M_31 = { 27, 22, 32, -1, 29, 33, 35, 18, -1, -1, 17, 57, -1, -1, -1, 34, 16, 61, -1, 39, 36, -1, 19, -1, 24, 63, 31, 30, -1, -1, 58, -1, 48, 10, -1, 26, -1, 12, 28, -1, -1, -1, 21, 50, 9, 47, 25, 62, -1, -1, -1, -1, -1, -1, 13, 15, 8, 37, 14, -1, -1, -1, -1, -1, -1, -1, 64, -1, 65, -1, 52, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, 23, -1, -1, 69, -1, -1, 55, -1, -1, 66, -1, 67, -1, 51, -1, -1, 38, 7, 1, -1, 56, 53, -1, -1, 54, -1, -1, 68, -1, -1, -1, 40, -1, 45, 42, 43, 44, -1, 46, -1, 11, -1, -1, 49, -1, -1, -1, -1, -1, -1, -1, -1, -1, 60, 59, -1, -1, -1, -1, -1, -1, -1, -1, 41};
+	final static int[] M_32 = { 25, 20, 30, -1, 27, 31, 33, 16, -1, -1, 15, 55, -1, -1, -1, 32, 14, 59, -1, 37, 34, -1, 17, -1, 22, 61, 29, 28, -1, -1, 56, -1, 46, 9, -1, 24, -1, -1, 26, -1, -1, -1, 19, 48, 8, 45, 23, 60, -1, -1, -1, -1, -1, -1, 11, 13, 7, 35, 12, -1, -1, -1, -1, -1, -1, -1, 62, -1, 63, -1, 50, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, 21, -1, -1, 67, -1, -1, 53, -1, -1, 64, -1, 65, -1, 49, -1, -1, 36, 6, 1, -1, 54, 51, -1, -1, 52, -1, -1, 66, -1, -1, -1, 38, -1, 43, 40, 41, 42, -1, 44, -1, 10, -1, -1, 47, -1, -1, -1, -1, -1, -1, -1, -1, -1, 58, 57, -1, -1, -1, -1, -1, -1, -1, -1, 39};
+	final static int[] M_33 = { 26, 21, 31, -1, 28, 32, 34, 17, -1, -1, 16, 56, -1, -1, -1, 33, 15, 60, -1, 38, 35, -1, 18, -1, 23, 62, 30, 29, -1, -1, 57, -1, 47, 10, -1, 25, -1, -1, 27, -1, -1, -1, 20, 49, 9, 46, 24, 61, -1, -1, -1, -1, -1, -1, 12, 14, 8, 36, 13, -1, -1, -1, -1, -1, -1, -1, 63, -1, 64, -1, 51, -1, -1, -1, -1, -1, -1, 19, -1, -1, -1, 22, -1, -1, 68, -1, -1, 54, -1, -1, 65, -1, 66, -1, 50, -1, -1, 37, 7, -1, -1, 55, 52, -1, -1, 53, -1, -1, 67, -1, -1, -1, 39, -1, 44, 41, 42, 43, -1, 45, -1, 11, -1, -1, 48, -1, -1, -1, -1, -1, -1, -1, -1, -1, 59, 58, -1, -1, -1, -1, -1, -1, -1, -1, 40};
 	final static int[] M_34 = { 15, -1, -1, -1, -1, -1, 11, -1, -1, 10, -1, -1, -1, -1, -1, 9, -1, -1, -1, -1, -1, 12, -1, -1, -1, 4, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, 8, -1, -1, 7, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 5};
 	final static int[] M_35 = { 20, -1, 23, -1, 22, 24, 26, -1, -1, -1, -1, -1, -1, -1, -1, 25, -1, -1, -1, 34, 27, -1, -1, -1, 17, -1, -1, -1, -1, -1, -1, -1, 43, 32, -1, 19, -1, 29, 21, -1, -1, -1, -1, 45, 31, 42, 18, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, 28, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 46, -1, -1, 33, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 35, -1, 40, 37, 38, 39, -1, 41, -1, -1, -1, -1, 44, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 36};
 	final static int[] M_36 = { 50, -1, -1, -1, -1, -1, 54, -1, -1, -1, -1, -1, -1, -1, 56, -1, -1, -1, -1, 51, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 55, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 57, -1, 58, -1, 47, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, -1, -1, 59, -1, 60, -1, -1, -1, -1, -1, -1, -1, -1, -1, 48, -1, -1, 49, -1, -1, 61, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 53, 52};

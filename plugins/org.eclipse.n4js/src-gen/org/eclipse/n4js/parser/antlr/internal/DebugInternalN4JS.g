@@ -2812,6 +2812,8 @@ rulePropertyAssignment:
 			rulePropertyNameValuePair
 		)
 		    |
+		rulePropertyNameValuePairSingleName
+		    |
 		(
 			(ruleGetterHeader
 			)=>
@@ -2981,7 +2983,7 @@ rulePropertyAssignment:
 			rulePropertyMethodDeclaration
 		)
 		    |
-		rulePropertyNameValuePairSingleName
+		rulePropertySpread
 	)
 ;
 
@@ -3000,6 +3002,8 @@ norm1_PropertyAssignment:
 			)=>
 			norm1_PropertyNameValuePair
 		)
+		    |
+		norm1_PropertyNameValuePairSingleName
 		    |
 		(
 			(norm1_GetterHeader
@@ -3170,7 +3174,7 @@ norm1_PropertyAssignment:
 			norm1_PropertyMethodDeclaration
 		)
 		    |
-		norm1_PropertyNameValuePairSingleName
+		norm1_PropertySpread
 	)
 ;
 
@@ -4126,6 +4130,18 @@ norm1_PropertySetterDeclaration:
 		)=>
 		ruleBlock
 	)
+;
+
+// Rule PropertySpread
+rulePropertySpread:
+	'...'
+	norm1_AssignmentExpression
+;
+
+// Rule PropertySpread
+norm1_PropertySpread:
+	'...'
+	norm3_AssignmentExpression
 ;
 
 // Rule ParameterizedCallExpression

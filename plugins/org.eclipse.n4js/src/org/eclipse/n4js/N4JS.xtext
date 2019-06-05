@@ -647,10 +647,11 @@ ObjectLiteral <Yield>: {ObjectLiteral}
 PropertyAssignment <Yield>:
 	  AnnotatedPropertyAssignment<Yield>
 	| PropertyNameValuePair<Yield>
+	| PropertyNameValuePairSingleName<Yield>
 	| PropertyGetterDeclaration<Yield>
 	| PropertySetterDeclaration<Yield>
 	| PropertyMethodDeclaration<Yield>
-	| PropertyNameValuePairSingleName<Yield>
+	| PropertySpread<Yield>
 ;
 
 AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
@@ -723,6 +724,10 @@ PropertySetterDeclaration <Yield>:
 	)
 	(declaredOptional?='?')?
 	'(' fpar=FormalParameter<Yield> ')'	body=Block<Yield=false>
+;
+
+PropertySpread <Yield>:
+	'...' expression=AssignmentExpression<In=true,Yield>
 ;
 
 /* Left-hand-side expressions (11.2) [ECM11]

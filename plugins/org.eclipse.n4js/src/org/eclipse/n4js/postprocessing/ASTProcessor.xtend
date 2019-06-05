@@ -286,6 +286,7 @@ public class ASTProcessor extends AbstractProcessor {
 						}
 					}
 					// In ObjectLiterals, the ThisLiteral in Initializers can cause cyclic dependencies
+					// TODO GH-1337 add support for spread operator
 					val thisLiteralCausesCyclDep =
 						funDef instanceof PropertyMethodDeclaration // let o = { a:1, f(p=this.a) {} }
 						|| funDef instanceof FunctionExpression && funDef.eContainer instanceof PropertyNameValuePair; // let o = {a:2, f: function(p=this.a) {}}
@@ -336,6 +337,7 @@ public class ASTProcessor extends AbstractProcessor {
 		if (cache.astNodesCurrentlyBeingTyped.contains(node)) {
 			// cyclic forward reference
 			// legal cases of a cyclic reference
+			// TODO GH-1337 add support for spread operator
 			val isCyclicForwardReference = cache.astNodesCurrentlyBeingTyped.contains(node);
 			if (isCyclicForwardReference && (
 				node instanceof VariableDeclaration

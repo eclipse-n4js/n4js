@@ -4354,18 +4354,21 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cAnnotatedPropertyAssignmentParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cPropertyNameValuePairParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cPropertyGetterDeclarationParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cPropertySetterDeclarationParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cPropertyMethodDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cPropertyNameValuePairSingleNameParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cPropertyNameValuePairSingleNameParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cPropertyGetterDeclarationParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cPropertySetterDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cPropertyMethodDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cPropertySpreadParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
 		
 		//PropertyAssignment <Yield>:
-		//	AnnotatedPropertyAssignment<Yield> | PropertyNameValuePair<Yield> | PropertyGetterDeclaration<Yield> |
-		//	PropertySetterDeclaration<Yield> | PropertyMethodDeclaration<Yield> | PropertyNameValuePairSingleName<Yield>;
+		//	AnnotatedPropertyAssignment<Yield> | PropertyNameValuePair<Yield> | PropertyNameValuePairSingleName<Yield> |
+		//	PropertyGetterDeclaration<Yield> | PropertySetterDeclaration<Yield> | PropertyMethodDeclaration<Yield> |
+		//	PropertySpread<Yield>;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//AnnotatedPropertyAssignment<Yield> | PropertyNameValuePair<Yield> | PropertyGetterDeclaration<Yield> |
-		//PropertySetterDeclaration<Yield> | PropertyMethodDeclaration<Yield> | PropertyNameValuePairSingleName<Yield>
+		//AnnotatedPropertyAssignment<Yield> | PropertyNameValuePair<Yield> | PropertyNameValuePairSingleName<Yield> |
+		//PropertyGetterDeclaration<Yield> | PropertySetterDeclaration<Yield> | PropertyMethodDeclaration<Yield> |
+		//PropertySpread<Yield>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//AnnotatedPropertyAssignment<Yield>
@@ -4374,17 +4377,20 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//PropertyNameValuePair<Yield>
 		public RuleCall getPropertyNameValuePairParserRuleCall_1() { return cPropertyNameValuePairParserRuleCall_1; }
 		
+		//PropertyNameValuePairSingleName<Yield>
+		public RuleCall getPropertyNameValuePairSingleNameParserRuleCall_2() { return cPropertyNameValuePairSingleNameParserRuleCall_2; }
+		
 		//PropertyGetterDeclaration<Yield>
-		public RuleCall getPropertyGetterDeclarationParserRuleCall_2() { return cPropertyGetterDeclarationParserRuleCall_2; }
+		public RuleCall getPropertyGetterDeclarationParserRuleCall_3() { return cPropertyGetterDeclarationParserRuleCall_3; }
 		
 		//PropertySetterDeclaration<Yield>
-		public RuleCall getPropertySetterDeclarationParserRuleCall_3() { return cPropertySetterDeclarationParserRuleCall_3; }
+		public RuleCall getPropertySetterDeclarationParserRuleCall_4() { return cPropertySetterDeclarationParserRuleCall_4; }
 		
 		//PropertyMethodDeclaration<Yield>
-		public RuleCall getPropertyMethodDeclarationParserRuleCall_4() { return cPropertyMethodDeclarationParserRuleCall_4; }
+		public RuleCall getPropertyMethodDeclarationParserRuleCall_5() { return cPropertyMethodDeclarationParserRuleCall_5; }
 		
-		//PropertyNameValuePairSingleName<Yield>
-		public RuleCall getPropertyNameValuePairSingleNameParserRuleCall_5() { return cPropertyNameValuePairSingleNameParserRuleCall_5; }
+		//PropertySpread<Yield>
+		public RuleCall getPropertySpreadParserRuleCall_6() { return cPropertySpreadParserRuleCall_6; }
 	}
 	public class AnnotatedPropertyAssignmentElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotatedPropertyAssignment");
@@ -5007,6 +5013,29 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//Block<Yield=false>
 		public RuleCall getBodyBlockParserRuleCall_5_0() { return cBodyBlockParserRuleCall_5_0; }
+	}
+	public class PropertySpreadElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.PropertySpread");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cFullStopFullStopFullStopKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cExpressionAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cExpressionAssignmentExpressionParserRuleCall_1_0 = (RuleCall)cExpressionAssignment_1.eContents().get(0);
+		
+		//PropertySpread <Yield>:
+		//	'...' expression=AssignmentExpression<In=true,Yield>;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'...' expression=AssignmentExpression<In=true,Yield>
+		public Group getGroup() { return cGroup; }
+		
+		//'...'
+		public Keyword getFullStopFullStopFullStopKeyword_0() { return cFullStopFullStopFullStopKeyword_0; }
+		
+		//expression=AssignmentExpression<In=true,Yield>
+		public Assignment getExpressionAssignment_1() { return cExpressionAssignment_1; }
+		
+		//AssignmentExpression<In=true,Yield>
+		public RuleCall getExpressionAssignmentExpressionParserRuleCall_1_0() { return cExpressionAssignmentExpressionParserRuleCall_1_0; }
 	}
 	public class ParameterizedCallExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ParameterizedCallExpression");
@@ -10114,6 +10143,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final PropertyNameValuePairSingleNameElements pPropertyNameValuePairSingleName;
 	private final PropertyGetterDeclarationElements pPropertyGetterDeclaration;
 	private final PropertySetterDeclarationElements pPropertySetterDeclaration;
+	private final PropertySpreadElements pPropertySpread;
 	private final ParameterizedCallExpressionElements pParameterizedCallExpression;
 	private final ConcreteTypeArgumentsElements pConcreteTypeArguments;
 	private final ImportCallExpressionElements pImportCallExpression;
@@ -10369,6 +10399,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pPropertyNameValuePairSingleName = new PropertyNameValuePairSingleNameElements();
 		this.pPropertyGetterDeclaration = new PropertyGetterDeclarationElements();
 		this.pPropertySetterDeclaration = new PropertySetterDeclarationElements();
+		this.pPropertySpread = new PropertySpreadElements();
 		this.pParameterizedCallExpression = new ParameterizedCallExpressionElements();
 		this.pConcreteTypeArguments = new ConcreteTypeArgumentsElements();
 		this.pImportCallExpression = new ImportCallExpressionElements();
@@ -11582,8 +11613,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//PropertyAssignment <Yield>:
-	//	AnnotatedPropertyAssignment<Yield> | PropertyNameValuePair<Yield> | PropertyGetterDeclaration<Yield> |
-	//	PropertySetterDeclaration<Yield> | PropertyMethodDeclaration<Yield> | PropertyNameValuePairSingleName<Yield>;
+	//	AnnotatedPropertyAssignment<Yield> | PropertyNameValuePair<Yield> | PropertyNameValuePairSingleName<Yield> |
+	//	PropertyGetterDeclaration<Yield> | PropertySetterDeclaration<Yield> | PropertyMethodDeclaration<Yield> |
+	//	PropertySpread<Yield>;
 	public PropertyAssignmentElements getPropertyAssignmentAccess() {
 		return pPropertyAssignment;
 	}
@@ -11674,6 +11706,16 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getPropertySetterDeclarationRule() {
 		return getPropertySetterDeclarationAccess().getRule();
+	}
+	
+	//PropertySpread <Yield>:
+	//	'...' expression=AssignmentExpression<In=true,Yield>;
+	public PropertySpreadElements getPropertySpreadAccess() {
+		return pPropertySpread;
+	}
+	
+	public ParserRule getPropertySpreadRule() {
+		return getPropertySpreadAccess().getRule();
 	}
 	
 	///* Left-hand-side expressions (11.2) [ECM11]

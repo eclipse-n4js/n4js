@@ -1334,6 +1334,14 @@ class PropertySetterDeclaration extends SetterDeclaration, AnnotablePropertyAssi
 	}
 }
 
+class PropertySpread extends AnnotablePropertyAssignment {
+	contains Expression expression
+
+	op TStructField getDefinedMember() {
+		null
+	}
+}
+
 enum PostfixOperator {
 	inc as "++"
 	dec as "--" = 1

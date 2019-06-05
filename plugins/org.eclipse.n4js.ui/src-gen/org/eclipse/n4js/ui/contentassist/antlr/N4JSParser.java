@@ -334,6 +334,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getPropertySetterDeclarationAccess().getGroup(), "rule__PropertySetterDeclaration__Group__0");
 			builder.put(grammarAccess.getPropertySetterDeclarationAccess().getGroup_0(), "rule__PropertySetterDeclaration__Group_0__0");
 			builder.put(grammarAccess.getPropertySetterDeclarationAccess().getGroup_0_0(), "rule__PropertySetterDeclaration__Group_0_0__0");
+			builder.put(grammarAccess.getPropertySpreadAccess().getGroup(), "rule__PropertySpread__Group__0");
 			builder.put(grammarAccess.getParameterizedCallExpressionAccess().getGroup(), "rule__ParameterizedCallExpression__Group__0");
 			builder.put(grammarAccess.getConcreteTypeArgumentsAccess().getGroup(), "rule__ConcreteTypeArguments__Group__0");
 			builder.put(grammarAccess.getConcreteTypeArgumentsAccess().getGroup_2(), "rule__ConcreteTypeArguments__Group_2__0");
@@ -819,6 +820,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getPropertySetterDeclarationAccess().getDeclaredOptionalAssignment_1(), "rule__PropertySetterDeclaration__DeclaredOptionalAssignment_1");
 			builder.put(grammarAccess.getPropertySetterDeclarationAccess().getFparAssignment_3(), "rule__PropertySetterDeclaration__FparAssignment_3");
 			builder.put(grammarAccess.getPropertySetterDeclarationAccess().getBodyAssignment_5(), "rule__PropertySetterDeclaration__BodyAssignment_5");
+			builder.put(grammarAccess.getPropertySpreadAccess().getExpressionAssignment_1(), "rule__PropertySpread__ExpressionAssignment_1");
 			builder.put(grammarAccess.getParameterizedCallExpressionAccess().getTargetAssignment_1(), "rule__ParameterizedCallExpression__TargetAssignment_1");
 			builder.put(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsAssignment_1(), "rule__ConcreteTypeArguments__TypeArgsAssignment_1");
 			builder.put(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsAssignment_2_1(), "rule__ConcreteTypeArguments__TypeArgsAssignment_2_1");
