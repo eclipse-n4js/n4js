@@ -48,9 +48,12 @@ pipeline {
                     	sh "ls -la /shared/common/maven/"
                     	sh "ls -la /shared/common/java/openjdk/"
                     	
+                    	sh "echo $JAVA_TOOL_OPTIONS"
                     	// important to not use java version which is set in /tmp/genie.n4js
                     	sh "unset JAVA_TOOL_OPTIONS"
                     
+                    	sh "echo $JAVA_TOOL_OPTIONS"
+                    	
                         script {
                             def options = [
                                 '--batch-mode',
