@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export external public function debuglog(section: string): {function(msg: string, ...param: Array<any>): void};
+export external public function debuglog(section: string): {function(msg: string, ...param: any[]): void};
 export external public function deprecate(func: Function, msg: string): Function;
-export external public function format(formatString: string, ...params: Array<any>): string;
+export external public function format(formatString: string, ...params: any[]): string;
 export external public function inherits(constructor: Function, superConstructor: Function): void;
 export external public function inspect(object: Object+, options: ~Object with {
     showHidden: boolean;

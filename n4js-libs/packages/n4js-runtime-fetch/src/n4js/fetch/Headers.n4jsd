@@ -16,7 +16,7 @@ export external public class Headers implements Iterable<Iterable2<string, strin
     public append(name: string, value: string): void;
     public delete(name: string): void;
     public get(name: string): string?;
-    public getAll(name: string): Array<string>;
+    public getAll(name: string): string[];
     public has(name: string): boolean;
     public set(name: string, value: string): void;
 

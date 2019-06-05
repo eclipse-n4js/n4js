@@ -94,14 +94,14 @@ export public class TestExecutor {
         return TestStatus.error;
     }
 
-    private static getTrace(e: Object): Array<string> {
-        let trace: Array<string>; // undefined is valid return
+    private static getTrace(e: Object): string[] {
+        let trace: string[]; // undefined is valid return
         if (e['stack']) {
             const stack = e['stack'];
             if (typeof stack === "string") {
                 trace = (stack as string).split("\n");
             } else if (Array.isArray(stack)) {
-                trace = stack as Array<string>;
+                trace = stack as string[];
             } else {
                 trace = [(stack as Object).toString()];
             }
@@ -134,7 +134,7 @@ export public class TestExecutor {
     }
 
     /** executes a list of groups of test methods, delegates to {@link callAll}*/
-    private async callAllGrouped(instrumentedTest: IInstrumentedTest, testMethodDescriptors: [[TestMethodDescriptor]]) {
+    private async callAllGrouped(instrumentedTest: IInstrumentedTest, testMethodDescriptors: TestMethodDescriptor[][]) {
         for (const batch of testMethodDescriptors) {
             await this.callAll(instrumentedTest, batch);
         }
@@ -143,7 +143,7 @@ export public class TestExecutor {
     /**
      * executes a list of test methods, i.e. methods annotated with {@code @BeforeAll}, {@code @Before}, {@code @AfterAll}, {@code @After}, {@code @Test}.
      */
-    private async callAll(instrumentedTest: IInstrumentedTest, testMethodDescriptors: [TestMethodDescriptor]) {
+    private async callAll(instrumentedTest: IInstrumentedTest, testMethodDescriptors: TestMethodDescriptor[]) {
         if (testMethodDescriptors) {
             const runTestMethod = getExecutingFunction(instrumentedTest);
             await Promise.all(testMethodDescriptors.map(runTestMethod));
@@ -153,8 +153,8 @@ export public class TestExecutor {
     /**
      * Collects test methods from up the inheritance chain (as processed in InstrumentedTEst).
      */
-    private getAncestorTestMethods(iTest: IInstrumentedTest, testMethodName): Array<Array<TestMethodDescriptor>> {
-        let testMethods: Array<Array<TestMethodDescriptor>> = [];
+    private getAncestorTestMethods(iTest: IInstrumentedTest, testMethodName): TestMethodDescriptor[][] {
+        let testMethods: TestMethodDescriptor[][] = [];
         let node: IInstrumentedTest = iTest;
         // get head node
         while (node.parent) {
@@ -163,7 +163,7 @@ export public class TestExecutor {
         // get all of the methods top down.
         do {
             let nodeObj: Object = node;
-            const nodeTestMethods = nodeObj[testMethodName] as Array<TestMethodDescriptor>;
+            const nodeTestMethods = nodeObj[testMethodName] as TestMethodDescriptor[];
             if (nodeTestMethods && nodeTestMethods.length) {
                 testMethods.push(nodeTestMethods);
             }
@@ -183,7 +183,7 @@ export public class TestExecutor {
      * Runs an entire group of tests, reporting on the status.
      */
     private async runGroup(iTest: IInstrumentedTest, scope: string=): ResultGroup {
-        let testResults: Array<TestResult> = [];
+        let testResults: TestResult[] = [];
 
         await this.spy.groupStarted.dispatch([iTest]);
         if (!iTest.error) {
@@ -211,7 +211,7 @@ export public class TestExecutor {
         return result;
     }
 
-    private async runBeforesTestsAfters(testResults: Array<TestResult>, iTest: IInstrumentedTest, scope: string=) {
+    private async runBeforesTestsAfters(testResults: TestResult[], iTest: IInstrumentedTest, scope: string=) {
         const numTests = iTest.tests.length;
         for (let ii = 0; ii < numTests; ++ii) {
             let testMethod = iTest.tests[ii];
@@ -258,13 +258,13 @@ export public class TestExecutor {
     /**
      * Runs all test groups, collecting results and handling parameterized tests.
      */
-    public async runTestsAsync(instrumentedTests: Array<? extends IInstrumentedTest>, scope: string=): ResultGroups {
-        let results: Array<ResultGroup> = [];
+    public async runTestsAsync(instrumentedTests: (? extends IInstrumentedTest)[], scope: string=): ResultGroups {
+        let results: ResultGroup[] = [];
 
         for (let test of instrumentedTests) {
             if (test) {
                 if (test.hasParameterizedTests) {
-                    let pResults: Array<ResultGroup> = [];
+                    let pResults: ResultGroup[] = [];
                     await this.spy.parameterizedGroupsStarted.dispatch([test]);
                     for (let ptest of test.parameterizedTests) {
                         let testRes = await this.runGroup(ptest, scope);
@@ -285,8 +285,8 @@ export public class TestExecutor {
     /**
      * Creates errors for the tests in an entire group. Used, for example, if there is a failure in a BeforeAll.
      */
-    public async errorTests(instrumentedTest: IInstrumentedTest, error: any): Array<TestResult> {
-        const testResults: Array<TestResult> = [];
+    public async errorTests(instrumentedTest: IInstrumentedTest, error: any): TestResult[] {
+        const testResults: TestResult[] = [];
         const len = instrumentedTest.tests.length;
         for (let ii = 0; ii < len; ++ii) {
             const test = instrumentedTest.tests[ii];

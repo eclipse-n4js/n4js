@@ -13,12 +13,12 @@ import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus";
 export public class ResultGroup {
     public description?: string = "";
-    public testResults?: Array<TestResult> = [];
+    public testResults?: TestResult[] = [];
     public successes: number = 0;
     public failures: number = 0;
     public errors: number = 0;
     public skipped: number = 0;
-    public constructor(testResults: Array<TestResult>, description: string) {
+    public constructor(testResults: TestResult[], description: string) {
         this.testResults = testResults;
         this.description = description;
         for (let testResult of testResults) {

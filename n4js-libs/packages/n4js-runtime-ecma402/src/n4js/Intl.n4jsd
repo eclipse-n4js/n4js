@@ -29,7 +29,7 @@ export external public class Intl {
 	/**
 	 * Converts given list of locales to canonical forms as far as possible.
 	 */
-	public static getCanonicalLocales(locales: [string]=): [string]
+	public static getCanonicalLocales(locales: string[]=): string[]
 
 	/**
 	 * The ECMA-402 Collator class, modelled as constant field since nested class declarations

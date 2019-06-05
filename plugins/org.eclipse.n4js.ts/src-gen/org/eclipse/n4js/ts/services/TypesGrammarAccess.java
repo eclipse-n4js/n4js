@@ -2631,7 +2631,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//IntersectionTypeExpression TypeRef:
-	//	PrimaryTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=PrimaryTypeExpression)+)?;
+	//	ArrayTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=ArrayTypeExpression)+)?;
 	public TypeExpressionsGrammarAccess.IntersectionTypeExpressionElements getIntersectionTypeExpressionAccess() {
 		return gaTypeExpressions.getIntersectionTypeExpressionAccess();
 	}
@@ -2640,9 +2640,23 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getIntersectionTypeExpressionAccess().getRule();
 	}
 	
+	//ArrayTypeExpression TypeRef:
+	//	{ParameterizedTypeRef} typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>
+	//	({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')* | {ParameterizedTypeRef} '('
+	//	typeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' => ({ParameterizedTypeRef.typeArgs+=current}
+	//	arrayTypeExpression?='[' ']')* | PrimaryTypeExpression => ({ParameterizedTypeRef.typeArgs+=current}
+	//	arrayTypeExpression?='[' ']')*;
+	public TypeExpressionsGrammarAccess.ArrayTypeExpressionElements getArrayTypeExpressionAccess() {
+		return gaTypeExpressions.getArrayTypeExpressionAccess();
+	}
+	
+	public ParserRule getArrayTypeExpressionRule() {
+		return getArrayTypeExpressionAccess().getRule();
+	}
+	
 	//PrimaryTypeExpression TypeRef:
 	//	ArrowFunctionTypeExpression
-	//	| ArrayTypeRef
+	//	| IterableTypeExpression
 	//	| TypeRefWithModifiers
 	//	| "(" super::TypeRef ")";
 	public TypeExpressionsGrammarAccess.PrimaryTypeExpressionElements getPrimaryTypeExpressionAccess() {
@@ -2678,7 +2692,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//TypeRefFunctionTypeExpression StaticBaseTypeRef:
 	//	ParameterizedTypeRef
-	//	| ArrayTypeRef
+	//	| IterableTypeExpression
 	//	| TypeTypeRef
 	//	| UnionTypeExpressionOLD
 	//	| IntersectionTypeExpressionOLD;
@@ -2693,7 +2707,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//TypeArgInTypeTypeRef TypeArgument:
 	//	ParameterizedTypeRefNominal
 	//	| ThisTypeRefNominal
-	//	| Wildcard;
+	//	| WildcardOldNotation;
 	public TypeExpressionsGrammarAccess.TypeArgInTypeTypeRefElements getTypeArgInTypeTypeRefAccess() {
 		return gaTypeExpressions.getTypeArgInTypeTypeRefAccess();
 	}
@@ -2811,7 +2825,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//UnionTypeExpressionOLD UnionTypeExpression:
 	//	{UnionTypeExpression}
-	//	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	//	'union' '{' typeRefs+=super::TypeRef (',' typeRefs+=super::TypeRef)* '}';
 	public TypeExpressionsGrammarAccess.UnionTypeExpressionOLDElements getUnionTypeExpressionOLDAccess() {
 		return gaTypeExpressions.getUnionTypeExpressionOLDAccess();
 	}
@@ -2822,7 +2836,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//IntersectionTypeExpressionOLD IntersectionTypeExpression:
 	//	{IntersectionTypeExpression}
-	//	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	//	'intersection' '{' typeRefs+=super::TypeRef (',' typeRefs+=super::TypeRef)* '}';
 	public TypeExpressionsGrammarAccess.IntersectionTypeExpressionOLDElements getIntersectionTypeExpressionOLDAccess() {
 		return gaTypeExpressions.getIntersectionTypeExpressionOLDAccess();
 	}
@@ -2864,14 +2878,25 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
-	//ArrayTypeRef ParameterizedTypeRef:
-	//	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
-	public TypeExpressionsGrammarAccess.ArrayTypeRefElements getArrayTypeRefAccess() {
-		return gaTypeExpressions.getArrayTypeRefAccess();
+	//IterableTypeExpression ParameterizedTypeRef:
+	//	iterableTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail
+	//	| typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']');
+	public TypeExpressionsGrammarAccess.IterableTypeExpressionElements getIterableTypeExpressionAccess() {
+		return gaTypeExpressions.getIterableTypeExpressionAccess();
 	}
 	
-	public ParserRule getArrayTypeRefRule() {
-		return getArrayTypeRefAccess().getRule();
+	public ParserRule getIterableTypeExpressionRule() {
+		return getIterableTypeExpressionAccess().getRule();
+	}
+	
+	//EmptyIterableTypeExpressionTail Wildcard:
+	//	{Wildcard} ']';
+	public TypeExpressionsGrammarAccess.EmptyIterableTypeExpressionTailElements getEmptyIterableTypeExpressionTailAccess() {
+		return gaTypeExpressions.getEmptyIterableTypeExpressionTailAccess();
+	}
+	
+	public ParserRule getEmptyIterableTypeExpressionTailRule() {
+		return getEmptyIterableTypeExpressionTailAccess().getRule();
 	}
 	
 	//fragment VersionRequest *:
@@ -3058,7 +3083,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TypeArgument:
-	//	Wildcard | WildcardNewNotation | super::TypeRef;
+	//	Wildcard | super::TypeRef;
 	public TypeExpressionsGrammarAccess.TypeArgumentElements getTypeArgumentAccess() {
 		return gaTypeExpressions.getTypeArgumentAccess();
 	}
@@ -3068,14 +3093,35 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Wildcard:
-	//	=> ({Wildcard} '?') ('extends' declaredUpperBound=super::TypeRef | 'super'
-	//	declaredLowerBound=super::TypeRef)?;
+	//	WildcardOldNotation
+	//	| WildcardNewNotation;
 	public TypeExpressionsGrammarAccess.WildcardElements getWildcardAccess() {
 		return gaTypeExpressions.getWildcardAccess();
 	}
 	
 	public ParserRule getWildcardRule() {
 		return getWildcardAccess().getRule();
+	}
+	
+	//WildcardOldNotation Wildcard:
+	//	=> ({Wildcard} '?') ('extends' declaredUpperBound=super::TypeRef | 'super'
+	//	declaredLowerBound=super::TypeRef)?;
+	public TypeExpressionsGrammarAccess.WildcardOldNotationElements getWildcardOldNotationAccess() {
+		return gaTypeExpressions.getWildcardOldNotationAccess();
+	}
+	
+	public ParserRule getWildcardOldNotationRule() {
+		return getWildcardOldNotationAccess().getRule();
+	}
+	
+	//WildcardOldNotationWithoutBound Wildcard:
+	//	{Wildcard} '?';
+	public TypeExpressionsGrammarAccess.WildcardOldNotationWithoutBoundElements getWildcardOldNotationWithoutBoundAccess() {
+		return gaTypeExpressions.getWildcardOldNotationWithoutBoundAccess();
+	}
+	
+	public ParserRule getWildcardOldNotationWithoutBoundRule() {
+		return getWildcardOldNotationWithoutBoundAccess().getRule();
 	}
 	
 	//WildcardNewNotation Wildcard:

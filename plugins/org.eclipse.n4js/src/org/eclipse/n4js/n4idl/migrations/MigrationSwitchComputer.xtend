@@ -49,7 +49,7 @@ class MigrationSwitchComputer {
 	 * at runtime (within limits).
 	 * 
 	 *  Currently the generated switch conditions support the following {@link TypeRef} features:
-	 * - parameterized array types (such as [A#1] or Array<A#1>)
+	 * - parameterized array types (such as A#1[] or Array<A#1>)
 	 * - plain non-parameterized types (such as A#1)
 	 * 
 	 * There is currently no support for composed type references (such as A#1|A#2).

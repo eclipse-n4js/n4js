@@ -812,7 +812,7 @@ enum PostfixOperator: inc='++' | dec='--';
 
 /* Cast expression (N4JS 6.2.3) */
 CastExpression <Yield> returns Expression: PostfixExpression<Yield>
-	(=>({CastExpression.expression=current} 'as') targetTypeRef=TypeRefForCast)?;
+	(=>({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?;
 
 /* Unary operators ([ECM11] 11.4) */
 UnaryExpression <Yield> returns Expression:
@@ -1189,17 +1189,6 @@ LiteralAnnotationArgument:
 TypeRefAnnotationArgument:
 	typeRef=TypeRef
 ;
-
-TypeRefForCast returns types::StaticBaseTypeRef:
-	  ParameterizedTypeRef
-	| ArrayTypeRef
-	| ThisTypeRef
-	| TypeTypeRef
-	| ArrowFunctionTypeExpression
-
-	| FunctionTypeExpressionOLD
-	| UnionTypeExpressionOLD
-	| IntersectionTypeExpressionOLD;
 
 AnnotationList:
 	=>({AnnotationList} '@' -> annotations+=AnnotationNoAtSign) annotations+=Annotation*

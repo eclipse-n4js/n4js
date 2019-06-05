@@ -33,7 +33,7 @@ export public class IDEReporter implements ITestReporter {
     @Inject
     protected spy: TestSpy;
 
-    public async send(uri: string, method: Method, headers: union{Headers,Array<Array<string>>,Object}, body: Object) {
+    public async send(uri: string, method: Method, headers: Headers|string[][]|Object, body: Object) {
         let ret: Response,
             bodyStr: string;
 
@@ -46,7 +46,7 @@ export public class IDEReporter implements ITestReporter {
                    }, 2)
             ret = await fetch(this.endpoint + uri, {
                    Method method: method,
-                   union{Headers,Array<Array<string>>,Object} headers: headers,
+                   union{Headers,string[][],Object} headers: headers,
                    string body: bodyStr
             });
         }catch(er) {

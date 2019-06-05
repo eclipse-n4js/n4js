@@ -23,7 +23,7 @@ let obj: Test = {
 }
 obj;
 
-let arrN1: [Test] = [{
+let arrN1: Test[] = [{
 	// XPECT warnings --> "b is not defined in Test." at "b"
     b: "yyy1"
 },{
@@ -32,7 +32,7 @@ let arrN1: [Test] = [{
 }]
 arrN1;
 
-let arrN2: [[Test]] = [[{
+let arrN2: Test[][] = [[{
 	// XPECT warnings --> "b is not defined in Test." at "b"
     b: "zzz1"
 },{
