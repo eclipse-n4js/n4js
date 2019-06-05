@@ -17,7 +17,7 @@ ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
 # see https://github.com/carlossg/docker-maven/tree/ecf54b9839caed8aa2bcf9b8f7bb19594634ee89/jdk-8
 # and https://hub.docker.com/_/maven/
 #
-ARG MAVEN_VERSION=3.6.1
+ARG MAVEN_VERSION=3.6.0
 ARG USER_HOME_DIR="/home/build"
 ARG SHA=b4880fb7a3d81edd190a029440cdf17f308621af68475a4fe976296e71ff4a4b546dd6d8a58aaafba334d309cc11e638c52808a4b0e818fc0fd544226d952544
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
