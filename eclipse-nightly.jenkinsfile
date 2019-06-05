@@ -46,6 +46,7 @@ pipeline {
                     dir('n4js') {
                     	sh "ls -la /shared/common/java"
                     	sh "ls -la /shared/common/java/oracle"
+                    	sh "ls -la /shared/common/java/openjdk"
                     
                         script {
                             def options = [
