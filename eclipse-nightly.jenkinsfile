@@ -27,7 +27,7 @@ pipeline {
         YARN_PATH = '/shared/common/yarn/1.15.2/bin'
         PATH       = "${PATH}"                                          +
                      ":/shared/common/apache-ant-1.9.6/bin"             +
-                     ":/shared/common/maven/apache-maven-3.6.1/bin/"    +
+                     ":/shared/common/maven/apache-maven-3.6.0/bin/"    +
                      ":/shared/common/node-v10.15.3-linux-x64/bin"      +
                      ":/shared/common/java/openjdk/jdk11-x64/bin"
         MAVEN_OPTS = '-Xmx4G'
@@ -47,6 +47,8 @@ pipeline {
                     	sh "ls -la /shared/common/"
                     	sh "ls -la /shared/common/maven/"
                     	sh "ls -la /shared/common/java/openjdk/"
+                    	
+                    	// important to not use java version which is set in /tmp/genie.n4js
                     	sh "unset JAVA_TOOL_OPTIONS"
                     
                         script {
