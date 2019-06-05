@@ -264,6 +264,14 @@
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
+      label="Bash Editor">
+    <requirement
+        name="de.jcup.basheditor.feature.group"/>
+    <repository
+        url="https://dl.bintray.com/de-jcup/basheditor"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task"
       label="Jenkins Editor">
     <requirement
         name="de.jcup.jenkinseditor.feature.feature.group"/>
