@@ -205,6 +205,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
+			case N4JSPackage.MODULE_SPECIFIER_FORM:
+				return createModuleSpecifierFormFromString(eDataType, initialValue);
 			case N4JSPackage.VARIABLE_STATEMENT_KEYWORD:
 				return createVariableStatementKeywordFromString(eDataType, initialValue);
 			case N4JSPackage.PROPERTY_NAME_KIND:
@@ -252,6 +254,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
+			case N4JSPackage.MODULE_SPECIFIER_FORM:
+				return convertModuleSpecifierFormToString(eDataType, instanceValue);
 			case N4JSPackage.VARIABLE_STATEMENT_KEYWORD:
 				return convertVariableStatementKeywordToString(eDataType, instanceValue);
 			case N4JSPackage.PROPERTY_NAME_KIND:
@@ -1664,6 +1668,26 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public MigrationContextVariable createMigrationContextVariable() {
 		MigrationContextVariableImpl migrationContextVariable = new MigrationContextVariableImpl();
 		return migrationContextVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ModuleSpecifierForm createModuleSpecifierFormFromString(EDataType eDataType, String initialValue) {
+		ModuleSpecifierForm result = ModuleSpecifierForm.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertModuleSpecifierFormToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

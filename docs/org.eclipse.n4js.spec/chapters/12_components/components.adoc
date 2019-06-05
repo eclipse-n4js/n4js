@@ -557,9 +557,11 @@ Besides the usual properties the package.json file usually needs to specify the 
 The project type declares this project to be a type definition projects.
 Consequently, it has to also declare the name for which plain-JS project its type definitions are provided (using `definesPackage`).
 Lastly, the main module has to be specified since this information will not be taken from the package.json of the plain-JS project.
-In case the plain-JS project does not have a main module or the main module is located at the package root,
-the mainModule property can be omitted.
 
+A type definition project may only define a main module if the corresponding plain-JS project defines a main module. In this case,
+the main module of the type definition project may have a different fully-qualified name / module specifier (but should, of course,
+define the types provided by the plain-JS project's main module). This is possible, because in client code the import of a main
+module will always look the same, no matter the main module's fully-qualified name / module specifier.
 
 
 === Name Conventions
