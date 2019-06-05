@@ -31,6 +31,7 @@ pipeline {
                      ":/shared/common/node-v10.15.3-linux-x64/bin"      +
                      ":/shared/common/java/openjdk/jdk11-x64/bin"
         MAVEN_OPTS = '-Xmx4G'
+        JAVA_HOME  = '/shared/common/java/openjdk/jdk11-x64'
         TIMESTAMP  = new Date().format("yyyyMMddHHmm")
     }
 
