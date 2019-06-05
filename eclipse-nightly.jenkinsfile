@@ -29,7 +29,7 @@ pipeline {
                      ":/shared/common/apache-ant-1.9.6/bin"             +
                      ":/shared/common/maven/apache-maven-3.5.2/bin/"    +
                      ":/shared/common/node-v10.15.3-linux-x64/bin"      +
-                     ":/shared/common/java/oracle/jdk1.8.0_162_x64/bin"
+                     ":/shared/common/java/openjdk/jdk11-x64/bin"
         MAVEN_OPTS = '-Xmx4G'
         TIMESTAMP  = new Date().format("yyyyMMddHHmm")
     }
@@ -44,9 +44,7 @@ pipeline {
             steps {
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
                     dir('n4js') {
-                    	sh "ls -la /shared/common/java"
-                    	sh "ls -la /shared/common/java/oracle"
-                    	sh "ls -la /shared/common/java/openjdk"
+                    	sh "ls -la /shared/common/java/openjdk/jdk11-x64"
                     
                         script {
                             def options = [
