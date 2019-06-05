@@ -124,9 +124,9 @@ In case of a failure the tool uses exit code 1 for compilation problems, and exi
 `;
 
 export public class NodeTestCLI {
-    public static toCommandLine(options: NodeTestOptions): Array<string> {
+    public static toCommandLine(options: NodeTestOptions): string[] {
         const optionsObj: Object = options;
-        const res: Array<string> = [];
+        const res: string[] = [];
 
         Object.keys(optionsObj).forEach(k => {
             const info: Object+ = nomnomOptions[k] as Object;
@@ -136,7 +136,7 @@ export public class NodeTestCLI {
                 k = "--" + k;
                 if (Array.isArray(v)) {
                     const positionedArg = typeof info.position !== "undefined";
-                    (v as Array<string>).forEach(vv => positionedArg ? res.push(vv) : res.push(k, vv));
+                    (v as string[]).forEach(vv => positionedArg ? res.push(vv) : res.push(k, vv));
                 } else {
                     if (typeof v !== "boolean") {
                         res.push(k, v as string);

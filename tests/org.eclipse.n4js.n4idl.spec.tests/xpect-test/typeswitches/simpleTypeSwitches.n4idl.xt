@@ -18,17 +18,16 @@ class A#2 {}
 function f() {
 	// Simple type expression A#1 XPECT typeSwitch of a1 --> "v instanceof A#1" 
 	let a1 : A#1
-	
+
 	// Simple type expression A#2 (version 2) XPECT typeSwitch of a2  --> "v instanceof A#2"
 	let a2 : A#2
-	
+
 	// Array type ref '[]' syntax XPECT typeSwitch of a3 --> "(v array with (v[0] instanceof A#2))"
-	let a3 : [A#2]
+	let a3 : A#2[]
 
 	// Array type ref 'Array<>' syntax XPECT typeSwitch of a4 --> "(v array with (v[0] instanceof A#2))"
 	let a4 : Array<A#2>
-	
+
 	// Simple type expression virtual version A#3 XPECT typeSwitch of a5  --> "v instanceof A#2"
 	let a5 : A#3
 }
-

@@ -61,7 +61,7 @@ class NodeTestRunner  {
 
         if (options.filter && options.filter.length) { // filter out tests
             const filters = options.filter.slice(0).sort();
-            const descriptors: Array<TestInfo> = [];
+            const descriptors: TestInfo[] = [];
 
             for (const info of testCatalog.testDescriptors) {
                 let methods = new Set<string>();
@@ -92,7 +92,7 @@ class NodeTestRunner  {
         this.consoleReporter.cliColor = cli_color_.default;
         this.consoleReporter.setLogger(log);
 
-        const reporters: Array<ITestReporter> = [this.consoleReporter];
+        const reporters: ITestReporter[] = [this.consoleReporter];
 
         if (options.xunitReportFile) {
             this.xunitReporter.spec = options;

@@ -56,7 +56,8 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getTypeArgs <em>Type Args</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayTypeLiteral <em>Array Type Literal</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayTypeExpression <em>Array Type Expression</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isIterableTypeExpression <em>Iterable Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getAstNamespace <em>Ast Namespace</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
@@ -86,24 +87,44 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	protected EList<TypeArgument> typeArgs;
 
 	/**
-	 * The default value of the '{@link #isArrayTypeLiteral() <em>Array Type Literal</em>}' attribute.
+	 * The default value of the '{@link #isArrayTypeExpression() <em>Array Type Expression</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isArrayTypeLiteral()
+	 * @see #isArrayTypeExpression()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean ARRAY_TYPE_LITERAL_EDEFAULT = false;
+	protected static final boolean ARRAY_TYPE_EXPRESSION_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isArrayTypeLiteral() <em>Array Type Literal</em>}' attribute.
+	 * The cached value of the '{@link #isArrayTypeExpression() <em>Array Type Expression</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isArrayTypeLiteral()
+	 * @see #isArrayTypeExpression()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean arrayTypeLiteral = ARRAY_TYPE_LITERAL_EDEFAULT;
+	protected boolean arrayTypeExpression = ARRAY_TYPE_EXPRESSION_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isIterableTypeExpression() <em>Iterable Type Expression</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIterableTypeExpression()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean ITERABLE_TYPE_EXPRESSION_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isIterableTypeExpression() <em>Iterable Type Expression</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIterableTypeExpression()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean iterableTypeExpression = ITERABLE_TYPE_EXPRESSION_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getAstNamespace() <em>Ast Namespace</em>}' reference.
@@ -233,8 +254,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public boolean isArrayTypeLiteral() {
-		return arrayTypeLiteral;
+	public boolean isArrayTypeExpression() {
+		return arrayTypeExpression;
 	}
 
 	/**
@@ -243,11 +264,34 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public void setArrayTypeLiteral(boolean newArrayTypeLiteral) {
-		boolean oldArrayTypeLiteral = arrayTypeLiteral;
-		arrayTypeLiteral = newArrayTypeLiteral;
+	public void setArrayTypeExpression(boolean newArrayTypeExpression) {
+		boolean oldArrayTypeExpression = arrayTypeExpression;
+		arrayTypeExpression = newArrayTypeExpression;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL, oldArrayTypeLiteral, arrayTypeLiteral));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION, oldArrayTypeExpression, arrayTypeExpression));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isIterableTypeExpression() {
+		return iterableTypeExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setIterableTypeExpression(boolean newIterableTypeExpression) {
+		boolean oldIterableTypeExpression = iterableTypeExpression;
+		iterableTypeExpression = newIterableTypeExpression;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION, oldIterableTypeExpression, iterableTypeExpression));
 	}
 
 	/**
@@ -516,8 +560,10 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return basicGetDeclaredType();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
 				return getTypeArgs();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL:
-				return isArrayTypeLiteral();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION:
+				return isArrayTypeExpression();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION:
+				return isIterableTypeExpression();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
 				if (resolve) return getAstNamespace();
 				return basicGetAstNamespace();
@@ -545,8 +591,11 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				getTypeArgs().clear();
 				getTypeArgs().addAll((Collection<? extends TypeArgument>)newValue);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL:
-				setArrayTypeLiteral((Boolean)newValue);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION:
+				setArrayTypeExpression((Boolean)newValue);
+				return;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION:
+				setIterableTypeExpression((Boolean)newValue);
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
 				setAstNamespace((ModuleNamespaceVirtualType)newValue);
@@ -575,8 +624,11 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
 				getTypeArgs().clear();
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL:
-				setArrayTypeLiteral(ARRAY_TYPE_LITERAL_EDEFAULT);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION:
+				setArrayTypeExpression(ARRAY_TYPE_EXPRESSION_EDEFAULT);
+				return;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION:
+				setIterableTypeExpression(ITERABLE_TYPE_EXPRESSION_EDEFAULT);
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
 				setAstNamespace((ModuleNamespaceVirtualType)null);
@@ -603,8 +655,10 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return declaredType != null;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
 				return typeArgs != null && !typeArgs.isEmpty();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL:
-				return arrayTypeLiteral != ARRAY_TYPE_LITERAL_EDEFAULT;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION:
+				return arrayTypeExpression != ARRAY_TYPE_EXPRESSION_EDEFAULT;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION:
+				return iterableTypeExpression != ITERABLE_TYPE_EXPRESSION_EDEFAULT;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
 				return astNamespace != null;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
@@ -685,8 +739,10 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (arrayTypeLiteral: ");
-		result.append(arrayTypeLiteral);
+		result.append(" (arrayTypeExpression: ");
+		result.append(arrayTypeExpression);
+		result.append(", iterableTypeExpression: ");
+		result.append(iterableTypeExpression);
 		result.append(", aSTNodeOptionalFieldStrategy: ");
 		result.append(aSTNodeOptionalFieldStrategy);
 		result.append(", definedTypingStrategy: ");

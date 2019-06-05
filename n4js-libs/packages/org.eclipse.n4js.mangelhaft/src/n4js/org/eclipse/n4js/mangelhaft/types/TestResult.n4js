@@ -17,7 +17,7 @@ export public class TestResult {
     public expected: string = "";
     public actual: string = "";
     public elapsedTime: number = 0;
-    public trace: Array<string> = [];
+    public trace: string[] = [];
 
     public constructor(@Spec spec: ~i~this) {}
 }

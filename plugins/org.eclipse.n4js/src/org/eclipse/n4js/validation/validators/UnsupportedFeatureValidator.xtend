@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.BindingPattern
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -22,11 +24,10 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NewTarget
 import org.eclipse.n4js.n4JS.TaggedTemplateString
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.validation.ASTStructureValidator
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -133,6 +134,18 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 		if(argument.spread) {
 			unsupported("spread operator in new and call expressions (only allowed in array destructuring patterns)",
 				argument, N4JSPackage.eINSTANCE.argument_Spread);
+		}
+	}
+
+
+	// FIXME GH-1299 remove the following
+	@Check
+	def void checkOldShortHandSyntaxForArrayType(ParameterizedTypeRef typeRef) {
+		if (typeRef.isIterableTypeExpression && typeRef.typeArgs.size === 1) {
+			addIssue(
+				IssueCodes.messageForTEMP_DEPRECATED_OLD_ARRAY_SYNTAX,
+				typeRef,
+				IssueCodes.TEMP_DEPRECATED_OLD_ARRAY_SYNTAX);
 		}
 	}
 

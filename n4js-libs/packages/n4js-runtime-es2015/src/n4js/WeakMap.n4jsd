@@ -11,7 +11,7 @@
 @@Global @@ProvidedByRuntime
 
 export external public class WeakMap<KeyT extends Object, ValueT> extends Object {
-    public constructor(arg: Iterable<Array<union{KeyT, ValueT}>> =);
+    public constructor(arg: Iterable<union{KeyT, ValueT}[]> =);
 
     /**
      * Length property is 1.

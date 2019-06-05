@@ -22,4 +22,4 @@
  * 
  * Returns a promise.
  */
-export external public async function n4jsc(options: union{Object, Array<string>}, files: Array<string>=undefined);
+export external public async function n4jsc(options: Object|string[], files: string[]=undefined);

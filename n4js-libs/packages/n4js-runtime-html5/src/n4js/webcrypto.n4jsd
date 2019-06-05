@@ -9,14 +9,14 @@ export external public interface Crypto {
 
 export external public interface SubtleCrypto {
     public decrypt(algorithm: CryptoEncryptDecryptAlgorithm, key: CryptoKey, data: ArrayBuffer|TypedArray): Promise<string, ?>;
-    public deriveKey(algorithm: CryptoDeriveKeyAlgorithm, masterKey: CryptoKey, derivedKeyAlgorithm: CryptoAlgorithm, extractable: boolean, keyUsages: [CryptoKeyUsage]): Promise<CryptoKey|CryptoKeyPair, ?>;
+    public deriveKey(algorithm: CryptoDeriveKeyAlgorithm, masterKey: CryptoKey, derivedKeyAlgorithm: CryptoAlgorithm, extractable: boolean, keyUsages: CryptoKeyUsage[]): Promise<CryptoKey|CryptoKeyPair, ?>;
     public digest(algorithm: string, buffer: ArrayBuffer|ArrayBufferView): Promise<ArrayBuffer, ?>;
     public encrypt(algorithm: CryptoEncryptDecryptAlgorithm, key: CryptoKey, data: ArrayBuffer|TypedArray): Promise<ArrayBuffer, ?>;
     public exportKey(format: CryptoKeyFormat, key: CryptoKey): Promise<?, ?>
-    public generateKey(algorithm: CryptoGenerateKeyAlgorithm, extractable: boolean, keyUsages: [CryptoKeyUsage]): Promise<CryptoKey|CryptoKeyPair, ?>;
-    public importKey(format: CryptoKeyFormat, keyData: ArrayBuffer|string, algorithm: CryptoGenerateKeyAlgorithm, extractable: boolean, usages: [CryptoKeyUsage]): Promise<CryptoKey, ?>;
+    public generateKey(algorithm: CryptoGenerateKeyAlgorithm, extractable: boolean, keyUsages: CryptoKeyUsage[]): Promise<CryptoKey|CryptoKeyPair, ?>;
+    public importKey(format: CryptoKeyFormat, keyData: ArrayBuffer|string, algorithm: CryptoGenerateKeyAlgorithm, extractable: boolean, usages: CryptoKeyUsage[]): Promise<CryptoKey, ?>;
     public sign(algorithm: CryptoKey|string, key: CryptoKey, text2sign: ArrayBuffer|ArrayBufferView): Promise<ArrayBuffer|ArrayBufferView, ?>;
-    public unwrapKey(format: CryptoKeyFormat, wrappedKey: ArrayBuffer, unwrappingKey: CryptoKey, unwrapAlgo: string, unwrappedKeyAlgorithm: string, extractable: boolean, keyUsages: [CryptoKeyUsage]): Promise<CryptoKey, ?>;
+    public unwrapKey(format: CryptoKeyFormat, wrappedKey: ArrayBuffer, unwrappingKey: CryptoKey, unwrapAlgo: string, unwrappedKeyAlgorithm: string, extractable: boolean, keyUsages: CryptoKeyUsage[]): Promise<CryptoKey, ?>;
     public verify(algorithm: string, key: CryptoKey, signature: ArrayBuffer|ArrayBufferView, text2verify: ArrayBuffer|ArrayBufferView): Promise<boolean, ?>;
     public wrapKey(format: CryptoKeyFormat, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: string): Promise<?, ?>
 }
@@ -25,7 +25,7 @@ export external public interface CryptoKey {
     public get type(): CryptoKeyType;
     public get extractable(): boolean;
     public get algorithm(): any;
-    public get usages(): [CryptoKeyUsage];
+    public get usages(): CryptoKeyUsage[];
 }
 
 export external public interface CryptoKeyPair {

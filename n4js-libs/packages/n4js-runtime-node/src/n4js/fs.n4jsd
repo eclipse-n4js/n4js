@@ -125,8 +125,8 @@ export external public function mkdtemp(prefix: string, callback: {function(Erro
 export external public function mkdtempSync(prefix: string): string;
 
 @Promisifiable
-export external public function readdir(path: string, callback: {function(Error, Array<string>): void}=): void;
-export external public function readdirSync(path: string): Array<string>;
+export external public function readdir(path: string, callback: {function(Error, string[]): void}=): void;
+export external public function readdirSync(path: string): string[];
 
 @Promisifiable
 export external public function close(fd: number, callback: {function(Error=):void}=): void;

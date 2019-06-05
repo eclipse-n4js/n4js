@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export external public const builtinModules: [string];
+export external public const builtinModules: string[];
 
 @Final
 export external public class ~__RequireFn {
@@ -17,7 +17,7 @@ export external public class ~__RequireFn {
     
     public static get cache(): Object+;
     public static resolve(request: string, options: ~Object with {
-        paths: [string]
+        paths: string[]
     }=): string;
 }
 
@@ -30,6 +30,6 @@ export external public class ~Module {
     public get parent(): Module;
     public get filename(): string;
     public get loaded(): boolean;
-    public get children(): [Module];
-    public get paths(): [string];
+    public get children(): Module[];
+    public get paths(): string[];
 }

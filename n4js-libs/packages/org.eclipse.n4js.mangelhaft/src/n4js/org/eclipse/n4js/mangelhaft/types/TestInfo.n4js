@@ -18,7 +18,7 @@ export public class ~TestInfo {
     /** name of the module containing test class */
     public module?: string;
     /** names of the test methods from a given class to be executed */
-    public testMethods?: Array<string>;
+    public testMethods?: string[];
 
     public constructor(@Spec spec: ~i~this) {}
 }
