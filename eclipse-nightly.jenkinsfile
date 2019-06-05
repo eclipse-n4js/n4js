@@ -44,6 +44,9 @@ pipeline {
             steps {
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
                     dir('n4js') {
+                    	sh "ls -la /shared/common/java"
+                    	sh "ls -la /shared/common/java/oracle"
+                    
                         script {
                             def options = [
                                 '--batch-mode',
