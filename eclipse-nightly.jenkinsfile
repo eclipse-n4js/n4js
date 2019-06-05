@@ -24,7 +24,7 @@ pipeline {
 
     environment {
         NODEJS_PATH= '/shared/common/node-v10.15.3-linux-x64/bin'
-        YARN_PATH = '/shared/common/yarn/1.15.2/bin'
+        YARN_PATH  = '/shared/common/yarn/1.15.2/bin'
         PATH       = "${PATH}"                                          +
                      ":/shared/common/apache-ant-1.9.6/bin"             +
                      ":/shared/common/maven/apache-maven-3.6.0/bin/"    +
@@ -47,6 +47,8 @@ pipeline {
                     	sh "ls -la /shared/common/"
                     	sh "ls -la /shared/common/maven/"
                     	sh "ls -la /shared/common/java/openjdk/"
+                    	
+                    	sh "echo $JAVA_HOME"
                     	
                     	sh "echo $JAVA_TOOL_OPTIONS"
                     	// important to not use java version which is set in /tmp/genie.n4js
