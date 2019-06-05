@@ -264,6 +264,22 @@
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
+      label="Jenkins Editor">
+    <requirement
+        name="de.jcup.jenkinseditor.feature.feature.group"/>
+    <repository
+        url="https://dl.bintray.com/de-jcup/jenkinseditor"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task"
+      label="Docker Tooling">
+    <requirement
+        name="org.eclipse.linuxtools.docker.feature.feature.group"/>
+    <repository
+        url="http://download.eclipse.org/releases/2019-03"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task"
       label="M2E">
     <requirement
         name="org.eclipse.m2e.feature.feature.group"/>
