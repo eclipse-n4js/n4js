@@ -7231,14 +7231,12 @@ rulePropertyAssignment
 		PropertyNameValuePairParserRuleCall_1=rulePropertyNameValuePair{ announce($PropertyNameValuePairParserRuleCall_1.start, $PropertyNameValuePairParserRuleCall_1.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairParserRuleCall_1()); }
 	)
 	    |
-	PropertyNameValuePairSingleNameParserRuleCall_2=rulePropertyNameValuePairSingleName{ announce($PropertyNameValuePairSingleNameParserRuleCall_2.start, $PropertyNameValuePairSingleNameParserRuleCall_2.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_2()); }
-	    |
 	(
 		((
 			ruleGetterHeader
 		)
 		)=>
-		PropertyGetterDeclarationParserRuleCall_3=rulePropertyGetterDeclaration{ announce($PropertyGetterDeclarationParserRuleCall_3.start, $PropertyGetterDeclarationParserRuleCall_3.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_3()); }
+		PropertyGetterDeclarationParserRuleCall_2=rulePropertyGetterDeclaration{ announce($PropertyGetterDeclarationParserRuleCall_2.start, $PropertyGetterDeclarationParserRuleCall_2.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_2()); }
 	)
 	    |
 	(
@@ -7387,7 +7385,7 @@ rulePropertyAssignment
 			)
 		)
 		)=>
-		PropertySetterDeclarationParserRuleCall_4=rulePropertySetterDeclaration{ announce($PropertySetterDeclarationParserRuleCall_4.start, $PropertySetterDeclarationParserRuleCall_4.stop, grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_4()); }
+		PropertySetterDeclarationParserRuleCall_3=rulePropertySetterDeclaration{ announce($PropertySetterDeclarationParserRuleCall_3.start, $PropertySetterDeclarationParserRuleCall_3.stop, grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_3()); }
 	)
 	    |
 	(
@@ -7426,8 +7424,10 @@ rulePropertyAssignment
 			)
 		)
 		)=>
-		PropertyMethodDeclarationParserRuleCall_5=rulePropertyMethodDeclaration{ announce($PropertyMethodDeclarationParserRuleCall_5.start, $PropertyMethodDeclarationParserRuleCall_5.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_5()); }
+		PropertyMethodDeclarationParserRuleCall_4=rulePropertyMethodDeclaration{ announce($PropertyMethodDeclarationParserRuleCall_4.start, $PropertyMethodDeclarationParserRuleCall_4.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_4()); }
 	)
+	    |
+	PropertyNameValuePairSingleNameParserRuleCall_5=rulePropertyNameValuePairSingleName{ announce($PropertyNameValuePairSingleNameParserRuleCall_5.start, $PropertyNameValuePairSingleNameParserRuleCall_5.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_5()); }
 	    |
 	PropertySpreadParserRuleCall_6=rulePropertySpread{ announce($PropertySpreadParserRuleCall_6.start, $PropertySpreadParserRuleCall_6.stop, grammarAccess.getPropertyAssignmentAccess().getPropertySpreadParserRuleCall_6()); }
 )
@@ -7464,14 +7464,12 @@ norm1_PropertyAssignment
 		PropertyNameValuePairParserRuleCall_1=norm1_PropertyNameValuePair{ announce($PropertyNameValuePairParserRuleCall_1.start, $PropertyNameValuePairParserRuleCall_1.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairParserRuleCall_1()); }
 	)
 	    |
-	PropertyNameValuePairSingleNameParserRuleCall_2=norm1_PropertyNameValuePairSingleName{ announce($PropertyNameValuePairSingleNameParserRuleCall_2.start, $PropertyNameValuePairSingleNameParserRuleCall_2.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_2()); }
-	    |
 	(
 		((
 			norm1_GetterHeader
 		)
 		)=>
-		PropertyGetterDeclarationParserRuleCall_3=norm1_PropertyGetterDeclaration{ announce($PropertyGetterDeclarationParserRuleCall_3.start, $PropertyGetterDeclarationParserRuleCall_3.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_3()); }
+		PropertyGetterDeclarationParserRuleCall_2=norm1_PropertyGetterDeclaration{ announce($PropertyGetterDeclarationParserRuleCall_2.start, $PropertyGetterDeclarationParserRuleCall_2.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_2()); }
 	)
 	    |
 	(
@@ -7620,7 +7618,7 @@ norm1_PropertyAssignment
 			)
 		)
 		)=>
-		PropertySetterDeclarationParserRuleCall_4=norm1_PropertySetterDeclaration{ announce($PropertySetterDeclarationParserRuleCall_4.start, $PropertySetterDeclarationParserRuleCall_4.stop, grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_4()); }
+		PropertySetterDeclarationParserRuleCall_3=norm1_PropertySetterDeclaration{ announce($PropertySetterDeclarationParserRuleCall_3.start, $PropertySetterDeclarationParserRuleCall_3.stop, grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_3()); }
 	)
 	    |
 	(
@@ -7659,8 +7657,10 @@ norm1_PropertyAssignment
 			)
 		)
 		)=>
-		PropertyMethodDeclarationParserRuleCall_5=norm1_PropertyMethodDeclaration{ announce($PropertyMethodDeclarationParserRuleCall_5.start, $PropertyMethodDeclarationParserRuleCall_5.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_5()); }
+		PropertyMethodDeclarationParserRuleCall_4=norm1_PropertyMethodDeclaration{ announce($PropertyMethodDeclarationParserRuleCall_4.start, $PropertyMethodDeclarationParserRuleCall_4.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_4()); }
 	)
+	    |
+	PropertyNameValuePairSingleNameParserRuleCall_5=norm1_PropertyNameValuePairSingleName{ announce($PropertyNameValuePairSingleNameParserRuleCall_5.start, $PropertyNameValuePairSingleNameParserRuleCall_5.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_5()); }
 	    |
 	PropertySpreadParserRuleCall_6=norm1_PropertySpread{ announce($PropertySpreadParserRuleCall_6.start, $PropertySpreadParserRuleCall_6.stop, grammarAccess.getPropertyAssignmentAccess().getPropertySpreadParserRuleCall_6()); }
 )
@@ -8135,6 +8135,20 @@ ruleAnnotatedPropertyAssignment
 				)
 			)?
 		)
+		    |
+		(
+			FullStopFullStopFullStopKeyword_1_5_1=FullStopFullStopFullStop
+			 {
+				announce($FullStopFullStopFullStopKeyword_1_5_1, grammarAccess.getAnnotatedPropertyAssignmentAccess().getFullStopFullStopFullStopKeyword_1_5_1());
+			}
+			(
+				(
+					ExpressionAssignmentExpressionParserRuleCall_1_5_2_0=norm1_AssignmentExpression{
+						announce($ExpressionAssignmentExpressionParserRuleCall_1_5_2_0.start, $ExpressionAssignmentExpressionParserRuleCall_1_5_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignment_1_5_2());
+					}
+				)
+			)
+		)
 	)
 )
 ;
@@ -8602,6 +8616,20 @@ norm1_AnnotatedPropertyAssignment
 					)
 				)
 			)?
+		)
+		    |
+		(
+			FullStopFullStopFullStopKeyword_1_5_1=FullStopFullStopFullStop
+			 {
+				announce($FullStopFullStopFullStopKeyword_1_5_1, grammarAccess.getAnnotatedPropertyAssignmentAccess().getFullStopFullStopFullStopKeyword_1_5_1());
+			}
+			(
+				(
+					ExpressionAssignmentExpressionParserRuleCall_1_5_2_0=norm3_AssignmentExpression{
+						announce($ExpressionAssignmentExpressionParserRuleCall_1_5_2_0.start, $ExpressionAssignmentExpressionParserRuleCall_1_5_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignment_1_5_2());
+					}
+				)
+			)
 		)
 	)
 )

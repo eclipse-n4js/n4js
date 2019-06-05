@@ -647,10 +647,10 @@ ObjectLiteral <Yield>: {ObjectLiteral}
 PropertyAssignment <Yield>:
 	  AnnotatedPropertyAssignment<Yield>
 	| PropertyNameValuePair<Yield>
-	| PropertyNameValuePairSingleName<Yield>
 	| PropertyGetterDeclaration<Yield>
 	| PropertySetterDeclaration<Yield>
 	| PropertyMethodDeclaration<Yield>
+	| PropertyNameValuePairSingleName<Yield>
 	| PropertySpread<Yield>
 ;
 
@@ -673,7 +673,9 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 			)
 		) ';'?
 	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRef=TypeRef? identifierRef=IdentifierRef<Yield>
-		( '=' expression=AssignmentExpression<In=true,Yield>)?)
+		( '=' expression=AssignmentExpression<In=true,Yield>)?
+	| {PropertySpread.annotationList=current} '...' expression=AssignmentExpression<In=true,Yield>
+	)
 ;
 
 PropertyMethodDeclaration <Yield>:

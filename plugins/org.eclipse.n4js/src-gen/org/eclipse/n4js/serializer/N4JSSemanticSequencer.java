@@ -1120,8 +1120,19 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case N4JSPackage.PROPERTY_SPREAD:
-				sequence_PropertySpread(context, (PropertySpread) semanticObject); 
-				return; 
+				if (rule == grammarAccess.getAnnotatedPropertyAssignmentRule()) {
+					sequence_AnnotatedPropertyAssignment(context, (PropertySpread) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPropertyAssignmentRule()) {
+					sequence_AnnotatedPropertyAssignment_PropertySpread(context, (PropertySpread) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPropertySpreadRule()) {
+					sequence_PropertySpread(context, (PropertySpread) semanticObject); 
+					return; 
+				}
+				else break;
 			case N4JSPackage.REGULAR_EXPRESSION_LITERAL:
 				sequence_RegularExpressionLiteral(context, (RegularExpressionLiteral) semanticObject); 
 				return; 
@@ -3485,13 +3496,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             )
+	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -3857,6 +3868,41 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_PropertySetterDeclaration(ISerializationContext context, PropertySetterDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedPropertyAssignment<Yield> returns PropertySpread
+	 *     AnnotatedPropertyAssignment returns PropertySpread
+	 *
+	 * Constraint:
+	 *     (annotationList=AnnotatedPropertyAssignment_PropertySpread_1_5_0 expression=AssignmentExpression)
+	 */
+	protected void sequence_AnnotatedPropertyAssignment(ISerializationContext context, PropertySpread semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ANNOTABLE_PROPERTY_ASSIGNMENT__ANNOTATION_LIST) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ANNOTABLE_PROPERTY_ASSIGNMENT__ANNOTATION_LIST));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.PROPERTY_SPREAD__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.PROPERTY_SPREAD__EXPRESSION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getAnnotatedPropertyAssignmentAccess().getPropertySpreadAnnotationListAction_1_5_0(), semanticObject.getAnnotationList());
+		feeder.accept(grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignmentExpressionParserRuleCall_1_5_2_0(), semanticObject.getExpression());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PropertyAssignment<Yield> returns PropertySpread
+	 *     PropertyAssignment returns PropertySpread
+	 *
+	 * Constraint:
+	 *     ((annotationList=AnnotatedPropertyAssignment_PropertySpread_1_5_0 expression=AssignmentExpression) | expression=AssignmentExpression)
+	 */
+	protected void sequence_AnnotatedPropertyAssignment_PropertySpread(ISerializationContext context, PropertySpread semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -21262,6 +21308,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePairSingleName_1_4_0<Yield> returns PropertyAssignmentAnnotationList
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePairSingleName_1_4_0<PropertyAssignment.Yield> returns PropertyAssignmentAnnotationList
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePairSingleName_1_4_0 returns PropertyAssignmentAnnotationList
+	 *     AnnotatedPropertyAssignment.PropertySpread_1_5_0<Yield> returns PropertyAssignmentAnnotationList
+	 *     AnnotatedPropertyAssignment.PropertySpread_1_5_0<PropertyAssignment.Yield> returns PropertyAssignmentAnnotationList
+	 *     AnnotatedPropertyAssignment.PropertySpread_1_5_0 returns PropertyAssignmentAnnotationList
 	 *     PropertyAssignmentAnnotationList returns PropertyAssignmentAnnotationList
 	 *
 	 * Constraint:
@@ -21313,8 +21362,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     PropertyAssignment<Yield> returns PropertySpread
-	 *     PropertyAssignment returns PropertySpread
 	 *     PropertySpread<Yield> returns PropertySpread
 	 *     PropertySpread returns PropertySpread
 	 *

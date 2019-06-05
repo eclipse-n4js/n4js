@@ -14084,15 +14084,6 @@ rulePropertyAssignment returns [EObject current=null]
 			}
 		)
 		    |
-		{
-			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_2());
-		}
-		this_PropertyNameValuePairSingleName_2=rulePropertyNameValuePairSingleName
-		{
-			$current = $this_PropertyNameValuePairSingleName_2.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
 		(
 			((
 				(
@@ -14101,11 +14092,11 @@ rulePropertyAssignment returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_3());
+				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_2());
 			}
-			this_PropertyGetterDeclaration_3=rulePropertyGetterDeclaration
+			this_PropertyGetterDeclaration_2=rulePropertyGetterDeclaration
 			{
-				$current = $this_PropertyGetterDeclaration_3.current;
+				$current = $this_PropertyGetterDeclaration_2.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -14259,11 +14250,11 @@ rulePropertyAssignment returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_4());
+				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_3());
 			}
-			this_PropertySetterDeclaration_4=rulePropertySetterDeclaration
+			this_PropertySetterDeclaration_3=rulePropertySetterDeclaration
 			{
-				$current = $this_PropertySetterDeclaration_4.current;
+				$current = $this_PropertySetterDeclaration_3.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -14307,14 +14298,23 @@ rulePropertyAssignment returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_5());
+				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_4());
 			}
-			this_PropertyMethodDeclaration_5=rulePropertyMethodDeclaration
+			this_PropertyMethodDeclaration_4=rulePropertyMethodDeclaration
 			{
-				$current = $this_PropertyMethodDeclaration_5.current;
+				$current = $this_PropertyMethodDeclaration_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
+		    |
+		{
+			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_5());
+		}
+		this_PropertyNameValuePairSingleName_5=rulePropertyNameValuePairSingleName
+		{
+			$current = $this_PropertyNameValuePairSingleName_5.current;
+			afterParserOrEnumRuleCall();
+		}
 		    |
 		{
 			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySpreadParserRuleCall_6());
@@ -14378,15 +14378,6 @@ norm1_PropertyAssignment returns [EObject current=null]
 			}
 		)
 		    |
-		{
-			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_2());
-		}
-		this_PropertyNameValuePairSingleName_2=norm1_PropertyNameValuePairSingleName
-		{
-			$current = $this_PropertyNameValuePairSingleName_2.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
 		(
 			((
 				(
@@ -14395,11 +14386,11 @@ norm1_PropertyAssignment returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_3());
+				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyGetterDeclarationParserRuleCall_2());
 			}
-			this_PropertyGetterDeclaration_3=norm1_PropertyGetterDeclaration
+			this_PropertyGetterDeclaration_2=norm1_PropertyGetterDeclaration
 			{
-				$current = $this_PropertyGetterDeclaration_3.current;
+				$current = $this_PropertyGetterDeclaration_2.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -14553,11 +14544,11 @@ norm1_PropertyAssignment returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_4());
+				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySetterDeclarationParserRuleCall_3());
 			}
-			this_PropertySetterDeclaration_4=norm1_PropertySetterDeclaration
+			this_PropertySetterDeclaration_3=norm1_PropertySetterDeclaration
 			{
-				$current = $this_PropertySetterDeclaration_4.current;
+				$current = $this_PropertySetterDeclaration_3.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -14601,14 +14592,23 @@ norm1_PropertyAssignment returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_5());
+				newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyMethodDeclarationParserRuleCall_4());
 			}
-			this_PropertyMethodDeclaration_5=norm1_PropertyMethodDeclaration
+			this_PropertyMethodDeclaration_4=norm1_PropertyMethodDeclaration
 			{
-				$current = $this_PropertyMethodDeclaration_5.current;
+				$current = $this_PropertyMethodDeclaration_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
+		    |
+		{
+			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_5());
+		}
+		this_PropertyNameValuePairSingleName_5=norm1_PropertyNameValuePairSingleName
+		{
+			$current = $this_PropertyNameValuePairSingleName_5.current;
+			afterParserOrEnumRuleCall();
+		}
 		    |
 		{
 			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySpreadParserRuleCall_6());
@@ -15292,6 +15292,39 @@ ruleAnnotatedPropertyAssignment returns [EObject current=null]
 					)
 				)?
 			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getAnnotatedPropertyAssignmentAccess().getPropertySpreadAnnotationListAction_1_5_0(),
+							$current);
+					}
+				)
+				otherlv_32=FullStopFullStopFullStop
+				{
+					newLeafNode(otherlv_32, grammarAccess.getAnnotatedPropertyAssignmentAccess().getFullStopFullStopFullStopKeyword_1_5_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignmentExpressionParserRuleCall_1_5_2_0());
+						}
+						lv_expression_33_0=norm1_AssignmentExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getAnnotatedPropertyAssignmentRule());
+							}
+							set(
+								$current,
+								"expression",
+								lv_expression_33_0,
+								"org.eclipse.n4js.N4JS.AssignmentExpression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
 		)
 	)
 ;
@@ -15960,6 +15993,39 @@ norm1_AnnotatedPropertyAssignment returns [EObject current=null]
 						)
 					)
 				)?
+			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getAnnotatedPropertyAssignmentAccess().getPropertySpreadAnnotationListAction_1_5_0(),
+							$current);
+					}
+				)
+				otherlv_32=FullStopFullStopFullStop
+				{
+					newLeafNode(otherlv_32, grammarAccess.getAnnotatedPropertyAssignmentAccess().getFullStopFullStopFullStopKeyword_1_5_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignmentExpressionParserRuleCall_1_5_2_0());
+						}
+						lv_expression_33_0=norm3_AssignmentExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getAnnotatedPropertyAssignmentRule());
+							}
+							set(
+								$current,
+								"expression",
+								lv_expression_33_0,
+								"org.eclipse.n4js.N4JS.AssignmentExpression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
 			)
 		)
 	)
