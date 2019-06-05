@@ -27,7 +27,7 @@ pipeline {
         YARN_PATH = '/shared/common/yarn/1.15.2/bin'
         PATH       = "${PATH}"                                          +
                      ":/shared/common/apache-ant-1.9.6/bin"             +
-                     ":/shared/common/maven/apache-maven-3.5.2/bin/"    +
+                     ":/shared/common/maven/apache-maven-3.6.1/bin/"    +
                      ":/shared/common/node-v10.15.3-linux-x64/bin"      +
                      ":/shared/common/java/openjdk/jdk11-x64/bin"
         MAVEN_OPTS = '-Xmx4G'
@@ -44,7 +44,10 @@ pipeline {
             steps {
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
                     dir('n4js') {
-                    	sh "ls -la /shared/common/java/openjdk/jdk11-x64"
+                    	sh "ls -la /shared/common/"
+                    	sh "ls -la /shared/common/maven/"
+                    	sh "ls -la /shared/common/java/openjdk/"
+                    	sh "unset JAVA_TOOL_OPTIONS"
                     
                         script {
                             def options = [
