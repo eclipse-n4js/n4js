@@ -16,6 +16,7 @@ export external public abstract class Navigator extends Element implements Navig
     public languages: string[];
     public language: string;
     public get geolocation(): Geolocation;
+    public get standalone(): boolean;
     // getBattery, connection, ...
 }
 

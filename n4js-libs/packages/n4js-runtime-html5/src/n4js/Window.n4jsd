@@ -9,11 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 @@Global @@ProvidedByRuntime
+import {MediaQueryList} from "MediaQueryList";
+import {Screen} from "Screen";
 
 export external public abstract class Window extends Element implements GlobalFetch {
-    public get document(): Document;
-    public get navigator(): Navigator;
-    public get location(): Location;
+    public get document(): Document+;
+    public get navigator(): Navigator+;
+    public get location(): Location+;
 
     public get localStorage(): Storage;
     public get sessionStorage(): Storage;
@@ -21,9 +23,14 @@ export external public abstract class Window extends Element implements GlobalFe
     public get Notification(): constructor{Notification};
 
     public get crypto(): Crypto;
+    public get screen(): Screen;
 
-    public innerHeight: number;
-    public innerWidth: number;
+    public get devicePixelRatio(): int;
+
+    public get innerHeight(): int;
+    public get innerWidth(): int;
+
+    public matchMedia(mediaQueryString: string): MediaQueryList;
 
     public requestAnimationFrame(callback: Function): number;
     public cancelAnimationFrame(frameId: number): void;
