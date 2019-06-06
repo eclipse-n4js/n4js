@@ -656,6 +656,8 @@ An empty array literal will be inferred as follows:
 
 === Object Literal
 
+In addition to ordinary Javascript object literals, N4JS supports the spread operator within object literals as introduced in cite:[ECMA18a].
+
 [discrete]
 ==== Syntax  [[object-literal-syntax]]
 
@@ -678,6 +680,7 @@ PropertyAssignment <Yield>:
     | PropertySetterDeclaration<Yield>
     | PropertyMethodDeclaration<Yield>
     | PropertyNameValuePairSingleName<Yield>
+	| PropertySpread<Yield>
 ;
 
 
@@ -729,6 +732,10 @@ PropertySetterDeclaration <Yield>:
         ->LiteralOrComputedPropertyName <Yield>
     )
     '(' fpar=FormalParameter<Yield> ')' body=Block<Yield=false>
+;
+
+PropertySpread <Yield>:
+	'...' expression=AssignmentExpression<In=true,Yield>
 ;
 ----
 
