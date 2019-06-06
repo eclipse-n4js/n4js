@@ -107,10 +107,10 @@ RUN set -ex && \
         gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
         gpg --keyserver hkp://ipv4.pool.sks-keyservers.net   --recv-keys "$key" || \
         gpg --keyserver hkp://pgp.mit.edu:80                 --recv-keys "$key" ; \
-    done
-RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz"     && \
-    curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc"
-RUN gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz                       && \
+    done && \
+    curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz"     && \
+    curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" && \
+    gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz                       && \
     mkdir -p /opt                                                                                        && \
     tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/                                                         && \
     ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn                                          && \
