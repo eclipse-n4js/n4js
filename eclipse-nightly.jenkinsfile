@@ -45,12 +45,6 @@ pipeline {
             steps {
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
                     dir('n4js') {
-                    	echo "Show available software (in case of updating)"
-                    	sh "ls -la /shared/common/"
-                    	sh "ls -la /shared/common/maven/"
-                    	sh "ls -la /shared/common/java/openjdk/"
-                    	
-                    	
                         script {
                             def options = [
                                 '--batch-mode',
