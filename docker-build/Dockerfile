@@ -4,11 +4,6 @@ LABEL version="0.1.3" \
       description="Build n4js with Maven. Includes xvfb, node." \
       maintainer="N4JS Team <n4js-dev@eclipse.org>"
 
-
-
-
-
-
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Berlin
 
