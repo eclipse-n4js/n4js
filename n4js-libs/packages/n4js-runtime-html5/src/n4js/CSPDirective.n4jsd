@@ -15,6 +15,7 @@ export external public enum CSPDirective {
     childSrc: "child-src",
     scriptSrc: "script-src",
     connectSrc: "connect-src",
+    manifestSrc: "manifest-src",
     fontSrc: "font-src",
     formAction: "form-action",
     frameAncestors: "frame-ancestors",
@@ -27,7 +28,9 @@ export external public enum CSPDirective {
     styleSrc: "style-src",
     upgradeInsecureRequests: "upgrade-insecure-requests",
     workerSrc: "worker-src",
-    sandbox: "sandbox"
+    sandbox: "sandbox",
+    reportTo: "report-to",
+    blockAllMixedContent: "block-all-mixed-content"
 }
 
 @StringBased

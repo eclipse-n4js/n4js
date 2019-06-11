@@ -187,7 +187,7 @@ Contributors:
 										<arg value="4873:4873"/>
 										<arg value="-v"/>
 										<arg value="${project.basedir}/verdaccioConfig/config.yaml:/verdaccio/conf/config.yaml"/>
-										<arg value="verdaccio/verdaccio"/>
+										<arg value="verdaccio/verdaccio:3.12"/>
 									</exec>
 								</target>
 							</configuration>

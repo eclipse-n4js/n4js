@@ -35,7 +35,7 @@ Contributors:
 		<maven.compiler.source>${jdk-version}</maven.compiler.source>
 		<maven.compiler.target>${jdk-version}</maven.compiler.target>
 		<!-- keep in sync with n4js/docker-build/Dockerfile -->
-		<maven-version>3.6.1</maven-version>
+		<maven-version>3.6.0</maven-version>
 
 		<!-- encoding -->
 		<project.encoding>UTF-8</project.encoding>

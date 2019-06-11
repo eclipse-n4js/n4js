@@ -122,6 +122,7 @@ import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
 import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.MultiplicativeOperator;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -1455,6 +1456,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EEnum moduleSpecifierFormEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EEnum variableStatementKeywordEEnum = null;
 
 	/**
@@ -1923,6 +1931,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EAttribute getImportDeclaration_ModuleSpecifierAsText() {
 		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getImportDeclaration_ModuleSpecifierForm() {
+		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -7101,6 +7119,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EEnum getModuleSpecifierForm() {
+		return moduleSpecifierFormEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EEnum getVariableStatementKeyword() {
 		return variableStatementKeywordEEnum;
 	}
@@ -7330,6 +7358,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__IMPORT_FROM);
 		createEReference(importDeclarationEClass, IMPORT_DECLARATION__MODULE);
 		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT);
+		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__MODULE_SPECIFIER_FORM);
 
 		importSpecifierEClass = createEClass(IMPORT_SPECIFIER);
 		createEAttribute(importSpecifierEClass, IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE);
@@ -8016,6 +8045,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(migrationContextVariableEClass, MIGRATION_CONTEXT_VARIABLE___GET_NAME);
 
 		// Create enums
+		moduleSpecifierFormEEnum = createEEnum(MODULE_SPECIFIER_FORM);
 		variableStatementKeywordEEnum = createEEnum(VARIABLE_STATEMENT_KEYWORD);
 		propertyNameKindEEnum = createEEnum(PROPERTY_NAME_KIND);
 		postfixOperatorEEnum = createEEnum(POSTFIX_OPERATOR);
@@ -8370,6 +8400,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getImportDeclaration_ImportFrom(), theEcorePackage.getEBoolean(), "importFrom", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getImportDeclaration_Module(), theTypesPackage.getTModule(), null, "module", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportDeclaration_ModuleSpecifierAsText(), theEcorePackage.getEString(), "moduleSpecifierAsText", null, 0, 1, ImportDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportDeclaration_ModuleSpecifierForm(), this.getModuleSpecifierForm(), "moduleSpecifierForm", null, 0, 1, ImportDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(importSpecifierEClass, ImportSpecifier.class, "ImportSpecifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getImportSpecifier_FlaggedUsedInCode(), theEcorePackage.getEBoolean(), "flaggedUsedInCode", null, 0, 1, ImportSpecifier.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -9214,6 +9245,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getMigrationContextVariable__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		// Initialize enums and add enum literals
+		initEEnum(moduleSpecifierFormEEnum, ModuleSpecifierForm.class, "ModuleSpecifierForm");
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.UNKNOWN);
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.PLAIN);
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.COMPLETE);
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.PROJECT);
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.PROJECT_NO_MAIN);
+
 		initEEnum(variableStatementKeywordEEnum, VariableStatementKeyword.class, "VariableStatementKeyword");
 		addEEnumLiteral(variableStatementKeywordEEnum, VariableStatementKeyword.VAR);
 		addEEnumLiteral(variableStatementKeywordEEnum, VariableStatementKeyword.CONST);

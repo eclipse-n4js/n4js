@@ -17,7 +17,7 @@
 class Annos {}
 class A <X, Y> {}
 
-/* X--PECT formattedLines 27 ---
+/* XPECT formattedLines 27 ---
 let a: A<[Annos], [A<[[Annos]], [A<Annos & string, number | Annos>]>]>;
 --- */
 let a :

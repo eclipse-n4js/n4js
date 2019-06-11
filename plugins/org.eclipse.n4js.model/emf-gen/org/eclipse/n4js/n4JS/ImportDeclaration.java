@@ -27,6 +27,7 @@ import org.eclipse.n4js.ts.types.TModule;
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#isImportFrom <em>Import From</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModule <em>Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModuleSpecifierAsText <em>Module Specifier As Text</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModuleSpecifierForm <em>Module Specifier Form</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportDeclaration()
@@ -111,5 +112,30 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	 * @generated
 	 */
 	void setModuleSpecifierAsText(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Module Specifier Form</b></em>' attribute.
+	 * The literals are from the enumeration {@link org.eclipse.n4js.n4JS.ModuleSpecifierForm}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Module Specifier Form</em>' attribute.
+	 * @see org.eclipse.n4js.n4JS.ModuleSpecifierForm
+	 * @see #setModuleSpecifierForm(ModuleSpecifierForm)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportDeclaration_ModuleSpecifierForm()
+	 * @model unique="false" transient="true"
+	 * @generated
+	 */
+	ModuleSpecifierForm getModuleSpecifierForm();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModuleSpecifierForm <em>Module Specifier Form</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Module Specifier Form</em>' attribute.
+	 * @see org.eclipse.n4js.n4JS.ModuleSpecifierForm
+	 * @see #getModuleSpecifierForm()
+	 * @generated
+	 */
+	void setModuleSpecifierForm(ModuleSpecifierForm value);
 
 } // ImportDeclaration

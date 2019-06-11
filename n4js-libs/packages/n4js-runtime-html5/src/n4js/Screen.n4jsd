@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@@ProvidedByRuntime
+import {ScreenOrientation} from "ScreenOrientation";
+
+/**
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Screen
+ */
+export public interface ~Screen extends EventTarget {
+    public get availTop(): int;
+    public get availLeft(): int;
+    public get availHeight(): int;
+    public get availWidth(): int;
+    public get colorDepth(): int;
+    public get height(): int;
+    public get left(): int;
+    public get orientation(): ScreenOrientation;
+    public get pixelDepth(): int;
+    public get top(): int;
+    public get width(): int;
+}

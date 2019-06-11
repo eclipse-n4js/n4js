@@ -92,31 +92,6 @@ export default public class NodeTestAPI {
                         }, null, 2), { encoding: "UTF-8" });
                     }
                 }
-
-                // HACK until we have proper support for top-level import():
-                switch (packageJson["name"]) {
-                    case "n4js-runtime":
-                    case "n4js-mangelhaft-cli":
-                        break;
-                    default:
-                        if (!packageJson.n4js) {
-                            break;
-                        }
-                        const transpiledFiles = glob.sync("**/*.js", {
-                            cwd: lib_path.join(dir, (packageJson.n4js as Object)["output"] as string),
-                            absolute: true
-                        }) as string[];
-                        for (const file of transpiledFiles) {
-                            const content = lib_fs.readFileSync(file, { encoding: "UTF-8" });
-                            let newContent = content.replace(/_n4jsImport/mg, "import");
-                            newContent = newContent.replace(/_nodeRequire/mg, "require");
-                            if (newContent !== content) {
-                                log("patching:", file);
-                                lib_fs.writeFileSync(file, newContent, { encoding: "UTF-8" });
-                            }
-                        }
-                        break;
-                }
             }
         }
 
