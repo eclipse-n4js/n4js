@@ -70,6 +70,10 @@ fi;
 echo "==== STEP 1/9: clean up (clean yarn cache, etc.)"
 yarn cache clean
 rm -rf $(find . -type d -name "node_modules")
+if [ "$DESTINATION" = "public" ]; then
+    echo "Stopping verdaccio (if it is running)"
+    docker rm -f verdaccio2 || true
+fi
 
 echo "==== STEP 2/9: install dependencies and prepare npm task scripts"
 yarn install
