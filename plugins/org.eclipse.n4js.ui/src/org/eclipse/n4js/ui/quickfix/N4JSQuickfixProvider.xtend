@@ -45,10 +45,8 @@ import org.eclipse.n4js.projectDescription.ProjectDependency
 import org.eclipse.n4js.projectDescription.ProjectReference
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
 import org.eclipse.n4js.semver.SemverUtils
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClassifier
