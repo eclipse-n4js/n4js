@@ -70,10 +70,10 @@ fi;
 echo "==== STEP 1/9: clean up (clean yarn cache, etc.)"
 yarn cache clean
 rm -rf $(find . -type d -name "node_modules")
-if [ "$DESTINATION" = "public" ]; then
-    echo "Stopping verdaccio (if it is running)"
-    docker rm -f verdaccio2 || true
-fi
+# Since we include the commit ID in the published artifacts, we should
+# make sure to not publish any dirty state in the working copy.
+# Thus, we reset the working copy here:
+git checkout HEAD -- .
 
 echo "==== STEP 2/9: install dependencies and prepare npm task scripts"
 yarn install
