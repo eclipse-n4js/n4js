@@ -20,7 +20,7 @@ CMD ["mvn"]
 #
 ARG MAVEN_VERSION=3.6.0
 ARG USER_HOME_DIR="/home/build"
-ARG SHA=5b4b5ca569d5476f9d6a2b8080927f58da9ca10a04c593df3d8c012e60fdcf7dcf70c4bc5db0d068b3a36785ede62a55fd1778b22ecadcf787485681ddc758a8
+ARG SHA=fae9c12b570c3ba18116a4e26ea524b29f7279c17cbaadc3326ca72927368924d9131d11b9e851b8dc9162228b6fdea955446be41207a5cfc61283dd8a561d2f
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG MAVEN_CENTRAL_URL=https://repo.maven.apache.org/maven2/
 
