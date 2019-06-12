@@ -1,4 +1,6 @@
-FROM openjdk:11.0.3-jdk-stretch
+# When updating the JRE: Refer to n4js/docs/org.eclipse.n4js.design/chapters/03_releng/releng.adoc: "Update of the embedded JRE"
+# openjdk:11.0.2-jdk-stretch
+FROM openjdk@sha256:2c5663a6d16bbf7bb62e20155caf7577a30dad19f67e4db07986f00d096bde1a
 
 LABEL version="0.1.3" \
       description="Build n4js with Maven. Includes xvfb, node." \
