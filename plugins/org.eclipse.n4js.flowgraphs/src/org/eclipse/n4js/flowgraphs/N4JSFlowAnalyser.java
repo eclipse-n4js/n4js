@@ -37,7 +37,7 @@ import org.eclipse.n4js.utils.N4JSDataCollectors;
 public class N4JSFlowAnalyser {
 	static private final Logger logger = Logger.getLogger(N4JSFlowAnalyser.class);
 
-	private final Callable<Void> cancelledChecker;
+	private Callable<?> cancelledChecker;
 	private FlowGraph cfg;
 	private SymbolFactory symbolFactory;
 	private DirectPathAnalyses dpa;
@@ -55,7 +55,7 @@ public class N4JSFlowAnalyser {
 	 * @param cancelledChecker
 	 *            is called in the main loop to react on cancel events. Can be null.
 	 */
-	public N4JSFlowAnalyser(Callable<Void> cancelledChecker) {
+	public N4JSFlowAnalyser(Callable<?> cancelledChecker) {
 		this.cancelledChecker = cancelledChecker;
 	}
 
@@ -77,6 +77,17 @@ public class N4JSFlowAnalyser {
 			gva = new GraphVisitorAnalysis(this, cfg);
 			spa = new SuccessorPredecessorAnalysis(cfg);
 		}
+	}
+
+	/**
+	 * @see #createGraphs(Script)
+	 *
+	 * @param newCancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public void createGraphs(Script script, Callable<?> newCancelledChecker) {
+		this.cancelledChecker = newCancelledChecker;
+		this.createGraphs(script);
 	}
 
 	/** Checks if the user hit the cancel button and if so, a RuntimeException is thrown. */
@@ -183,6 +194,17 @@ public class N4JSFlowAnalyser {
 	}
 
 	/**
+	 * @see #accept(FlowAnalyser...)
+	 *
+	 * @param newCancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public void accept(Callable<?> newCancelledChecker, FlowAnalyser... flowAnalysers) {
+		this.cancelledChecker = newCancelledChecker;
+		this.accept(flowAnalysers);
+	}
+
+	/**
 	 * Performs all given {@link FlowAnalyser}s in a single run. Only instances of {@link TraverseDirection#Forward} are
 	 * supported. This analysis must be performed before {@link #acceptBackwardAnalysers(FlowAnalyser...)} is invoked.
 	 */
@@ -194,6 +216,17 @@ public class N4JSFlowAnalyser {
 
 			gva.forwardAnalysis(flowAnalysers);
 		}
+	}
+
+	/**
+	 * @see #acceptForwardAnalysers(FlowAnalyser...)
+	 *
+	 * @param newCancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public void acceptForwardAnalysers(Callable<?> newCancelledChecker, FlowAnalyser... flowAnalysers) {
+		this.cancelledChecker = newCancelledChecker;
+		this.acceptForwardAnalysers(flowAnalysers);
 	}
 
 	/**
@@ -209,6 +242,17 @@ public class N4JSFlowAnalyser {
 
 			gva.backwardAnalysis(flowAnalysers);
 		}
+	}
+
+	/**
+	 * @see #acceptBackwardAnalysers(FlowAnalyser...)
+	 *
+	 * @param newCancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public void acceptBackwardAnalysers(Callable<?> newCancelledChecker, FlowAnalyser... flowAnalysers) {
+		this.cancelledChecker = newCancelledChecker;
+		this.acceptBackwardAnalysers(flowAnalysers);
 	}
 
 	/** Augments the flow graph with effect and symbol information. */
