@@ -12,10 +12,10 @@ package org.eclipse.n4js.validation.validators;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.n4js.flowgraphs.FlowAnalyser;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.postprocessing.ASTFlowInfo;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.FindReferenceHelper;
@@ -77,24 +77,18 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	public void checkFlowGraphs(Script script) {
-		// Note: The Flow Graph is NOT stored in the meta info cache. Hence, it is created here at use site.
-		// In case the its creation is moved to the N4JSPostProcessor, care about an increase in memory consumption.
-		N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser(this::checkCancelled);
+		N4JSResource resource = (N4JSResource) script.eResource();
+		ASTFlowInfo flowInfo = resource.getASTMetaInfoCache().getFlowInfo();
+
+		flowInfo.augmentEffectInformation();
+		flowInfo.performBackwardAnalysis(this::checkCancelled);
 
 		FlowValidator[] fValidators = {
-				new DeadCodeValidator(keywordProvider),
-				new UsedBeforeDeclaredValidator(),
-				new NullUndefinedValidator(n4jsCore, findReferenceHelper),
-				new MissingReturnOrThrowValidator(typeSystemHelper, jsVariantHelper)
+				new DeadCodeValidator(flowInfo.deadCodeAnalyser, keywordProvider),
+				new UsedBeforeDeclaredValidator(flowInfo.usedBeforeDeclaredAnalyser),
+				new NullUndefinedValidator(flowInfo.nullDereferenceAnalyser, n4jsCore, findReferenceHelper),
+				new MissingReturnOrThrowValidator(flowInfo.missingReturnOrThrowAnalyser)
 		};
-
-		FlowAnalyser[] fAnalysers = new FlowAnalyser[fValidators.length];
-		for (int i = 0; i < fValidators.length; i++) {
-			fAnalysers[i] = fValidators[i].getFlowAnalyser();
-		}
-
-		flowAnalyzer.createGraphs(script);
-		flowAnalyzer.accept(fAnalysers);
 
 		String uriString = script.eResource().getURI().toString();
 

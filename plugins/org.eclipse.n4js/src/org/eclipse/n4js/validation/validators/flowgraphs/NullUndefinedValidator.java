@@ -43,10 +43,12 @@ public class NullUndefinedValidator implements FlowValidator {
 	final private IN4JSCore n4jsCore;
 
 	/** Constructor */
-	public NullUndefinedValidator(IN4JSCore n4jsCore, FindReferenceHelper findReferenceHelper) {
+	public NullUndefinedValidator(NullDereferenceAnalyser nullDereferenceAnalyser, IN4JSCore n4jsCore,
+			FindReferenceHelper findReferenceHelper) {
+
 		this.findReferenceHelper = findReferenceHelper;
 		this.n4jsCore = n4jsCore;
-		this.nda = new NullDereferenceAnalyser();
+		this.nda = nullDereferenceAnalyser;
 	}
 
 	@Override
