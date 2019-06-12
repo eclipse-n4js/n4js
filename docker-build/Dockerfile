@@ -1,4 +1,5 @@
-FROM openjdk:11.0.3-jdk-stretch
+# openjdk:11.0.2-jdk-stretch
+FROM openjdk@sha256:c53d026dc9e38c6c30fdaf07bb4dfcd05c2709906de1eaceea04489f624cb92c
 
 LABEL version="0.1.3" \
       description="Build n4js with Maven. Includes xvfb, node." \
