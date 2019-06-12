@@ -26,8 +26,10 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -50,6 +52,10 @@ public class N4JSPostProcessor implements PostProcessor {
 	private ASTProcessor astProcessor;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
+	@Inject
+	private TypeSystemHelper typeSystemHelper;
+	@Inject
+	private JavaScriptVariantHelper jsVariantHelper;
 
 	@Override
 	public boolean expectsLazyLinkResolution() {
@@ -83,11 +89,12 @@ public class N4JSPostProcessor implements PostProcessor {
 		((N4JSResource) resource).setASTMetaInfoCache(null);
 	}
 
-	private static ASTMetaInfoCache createASTMetaInfoCache(N4JSResource resource) {
+	private ASTMetaInfoCache createASTMetaInfoCache(N4JSResource resource) {
 		// at the time the cache is created (i.e. before any validation happens), we can assume that all errors are
 		// syntax errors created by the parser or the ASTStructureValidator
 		final boolean hasBrokenAST = !resource.getErrors().isEmpty();
-		final ASTMetaInfoCache newCache = new ASTMetaInfoCache(resource, hasBrokenAST);
+		final ASTFlowInfo flowInfo = new ASTFlowInfo(typeSystemHelper, jsVariantHelper);
+		final ASTMetaInfoCache newCache = new ASTMetaInfoCache(resource, hasBrokenAST, flowInfo);
 		resource.setASTMetaInfoCache(newCache);
 		return newCache;
 	}

@@ -122,7 +122,7 @@ public class ASTProcessor extends AbstractProcessor {
 		val G = resource.newRuleEnvironment;
 		G.addCancelIndicator(cancelIndicator);
 		try {
-			processAST(G, script, cache);
+			processAST(G, script, cache, cancelIndicator);
 		} finally {
 			if (G.canceled) {
 				log(0, "CANCELED by cancelIndicator");
@@ -146,7 +146,7 @@ public class ASTProcessor extends AbstractProcessor {
 	 * @param resource  may not be null.
 	 * @param cancelIndicator  may be null.
 	 */
-	def private void processAST(RuleEnvironment G, Script script, ASTMetaInfoCache cache) {
+	def private void processAST(RuleEnvironment G, Script script, ASTMetaInfoCache cache, CancelIndicator cancelIndicator) {
 		// phase 0: process compile-time expressions & computed property names (order is important)
 		for(node : script.eAllContents.filter(Expression).toIterable) {
 			compileTimeExpressionProcessor.evaluateCompileTimeExpression(G, node, cache, 0);
@@ -154,6 +154,9 @@ public class ASTProcessor extends AbstractProcessor {
 		for(node : script.eAllContents.filter(LiteralOrComputedPropertyName).toIterable) {
 			computedNameProcessor.processComputedPropertyName(G, node, cache, 0);
 		}
+		cache.flowInfo.createGraphs(script, [cancelIndicator.isCanceled]);
+		cache.flowInfo.performForwardAnalysis([cancelIndicator.isCanceled]);
+
 		// phase 1: main processing
 		processSubtree(G, script, cache, 0);
 		// phase 2: processing of postponed subtrees
