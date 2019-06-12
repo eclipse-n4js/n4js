@@ -36,3 +36,5 @@ import { A } from 'circularDependency/req_03/A'
 
 new A();
 console.log('A was created.');
+
+// TODO GH-1335: consider re-enabling this test
