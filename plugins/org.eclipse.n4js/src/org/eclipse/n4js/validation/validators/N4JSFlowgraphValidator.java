@@ -17,11 +17,9 @@ import org.eclipse.n4js.postprocessing.ASTFlowInfo;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
-import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.n4js.validation.validators.flowgraphs.DeadCodeValidator;
 import org.eclipse.n4js.validation.validators.flowgraphs.FlowValidator;
 import org.eclipse.n4js.validation.validators.flowgraphs.MissingReturnOrThrowValidator;
@@ -49,12 +47,6 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	private IN4JSCore n4jsCore;
 
-	@Inject
-	private TypeSystemHelper typeSystemHelper;
-
-	@Inject
-	private JavaScriptVariantHelper jsVariantHelper;
-
 	/**
 	 * NEEEDED
 	 *
@@ -80,7 +72,6 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		N4JSResource resource = (N4JSResource) script.eResource();
 		ASTFlowInfo flowInfo = resource.getASTMetaInfoCache().getFlowInfo();
 
-		flowInfo.augmentEffectInformation();
 		flowInfo.performBackwardAnalysis(this::checkCancelled);
 
 		FlowValidator[] fValidators = {
