@@ -27,16 +27,22 @@ import org.eclipse.n4js.validation.JavaScriptVariantHelper;
  *
  */
 public class ASTFlowInfo {
-
+	/** Provides results of dead code analysis */
 	public final DeadCodeAnalyser deadCodeAnalyser;
+	/** Provides results of type guards analysis */
 	public final InstanceofGuardAnalyser instanceofGuardAnalyser;
+	/** Provides results of used before declared analysis */
 	public final UsedBeforeDeclaredAnalyser usedBeforeDeclaredAnalyser;
+	/** Provides results of null dereference analysis */
 	public final NullDereferenceAnalyser nullDereferenceAnalyser;
+	/** Provides results of missing return or throw analysis */
 	public final MissingReturnOrThrowAnalyser missingReturnOrThrowAnalyser;
+	/** Array of all analyses */
 	public final FlowAnalyser[] allAnalysers;
 
 	private final N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
 
+	/** Constructor */
 	public ASTFlowInfo(TypeSystemHelper typeSystemHelper, JavaScriptVariantHelper jsVariantHelper) {
 		this.deadCodeAnalyser = new DeadCodeAnalyser();
 		this.instanceofGuardAnalyser = new InstanceofGuardAnalyser();
@@ -55,11 +61,6 @@ public class ASTFlowInfo {
 	/** Performs a forward control flow analysis. Call second and only once. */
 	public void performForwardAnalysis(Callable<?> cancelledChecker) {
 		flowAnalyzer.acceptForwardAnalysers(cancelledChecker, allAnalysers);
-	}
-
-	/** Adds effect information to nodes of the CFG. Call third. */
-	public void augmentEffectInformation() {
-		flowAnalyzer.augmentEffectInformation();
 	}
 
 	/** Performs a backward control flow analysis. Call forth. */
