@@ -33,11 +33,6 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 	}
 
 	/** @return reference to the {@link SymbolFactory} */
-	final protected SymbolFactory getSymbolFactory() {
-		return flowAnalyzer.getSymbolFactory();
-	}
-
-	/** @return reference to the {@link SymbolFactory} */
 	final protected AssignmentRelationFactory getAssignmentRelationFactory() {
 		return assignmentFactory;
 	}
