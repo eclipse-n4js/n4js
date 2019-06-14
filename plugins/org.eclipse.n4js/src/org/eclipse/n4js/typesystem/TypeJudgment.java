@@ -47,12 +47,15 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefi
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.voidType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.AdditiveOperator;
 import org.eclipse.n4js.n4JS.Argument;
@@ -120,7 +123,9 @@ import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.n4jsx.ReactHelper;
+import org.eclipse.n4js.postprocessing.ASTFlowInfo;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.members.MemberScopingHelper;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
@@ -157,6 +162,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
@@ -184,6 +190,8 @@ import com.google.inject.Inject;
 	private JavaScriptVariantHelper javaScriptVariantHelper;
 	@Inject
 	private ReactHelper reactHelper;
+	@Inject
+	private TypeSystemHelper tsh;
 
 	/**
 	 * See {@link N4JSTypeSystem#type(RuleEnvironment, TypableElement)} and
@@ -564,6 +572,39 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseIdentifierRef(IdentifierRef idref) {
 			TypeRef T = ts.type(G, idref.getId());
+
+			final ASTFlowInfo flowInfo = ((N4JSResource) idref.eResource()).getASTMetaInfoCache().getFlowInfo();
+			final Collection<InstanceofGuard> alwaysHoldingTypes = flowInfo.instanceofGuardAnalyser
+					.getAlwaysHoldingTypes(idref);
+
+			if (!alwaysHoldingTypes.isEmpty()) {
+				final Collection<TypeRef> intersectionTypes = new LinkedList<>();
+				for (InstanceofGuard ioGuard : alwaysHoldingTypes) {
+					if (ioGuard.symbolCFE instanceof IdentifierRef) {
+						final IdentifiableElement guardedElement = ((IdentifierRef) ioGuard.symbolCFE).getId();
+						if (guardedElement != null && idref.getId() == guardedElement) {
+							final Expression typeIdentifier = ioGuard.typeIdentifier;
+							TypeRef instanceofType = ts.type(G, typeIdentifier);
+
+							if (tsh.isClassConstructorFunction(G, instanceofType)
+									&& instanceofType instanceof TypeTypeRef) {
+
+								final TypeTypeRef ttRef = (TypeTypeRef) instanceofType;
+								final TypeArgument typeArg = ttRef.getTypeArg();
+								if (typeArg instanceof TypeRef) {
+									instanceofType = (TypeRef) typeArg;
+								}
+							}
+
+							TypeUtils.sanitizeRawTypeRef(instanceofType);
+							intersectionTypes.add(instanceofType);
+						}
+					}
+				}
+				if (!intersectionTypes.isEmpty()) {
+					T = tsh.createIntersectionType(G, intersectionTypes.toArray(new TypeRef[intersectionTypes.size()]));
+				}
+			}
 
 			T = n4idlVersionResolver.resolveVersion(T, idref);
 
