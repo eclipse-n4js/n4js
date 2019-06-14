@@ -265,7 +265,11 @@ class ImageDescriptionHelper {
 			if (isEmpty) {
 				return Optional.empty
 			}
-			val uri = EcoreUtil2.getURI(if(eo instanceof SyntaxRelatedTElement) eo.astElement else eo)
+			val astElem = if(eo instanceof SyntaxRelatedTElement) eo.astElement else eo;
+			if (astElem === null) {
+				return Optional.empty
+			}
+			val uri = EcoreUtil2.getURI(astElem)
 			val currentURI = uri.toString;
 			if (enclosesAnyOf(currentURI, errors)) {
 				return Optional.of(Severity.ERROR)
