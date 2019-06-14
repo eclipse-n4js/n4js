@@ -77,7 +77,7 @@ public class GuardFactory {
 		Expression rhs = re.getRhs();
 		if (SymbolFactory.canCreate(lhs)) {
 			GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, re, negateTree, false);
-			Guard guard = createIsZeroGuard(re, asserts, lhs, rhs);
+			Guard guard = createInstanceofGuard(re, asserts, lhs, rhs);
 			return guard;
 		}
 		return null;
@@ -229,7 +229,7 @@ public class GuardFactory {
 		return new Guard(expr, GuardType.IsZero, asserts, symoblExpr);
 	}
 
-	static private Guard createIsZeroGuard(Expression expr, GuardAssertion asserts, Expression symoblExpr,
+	static private Guard createInstanceofGuard(Expression expr, GuardAssertion asserts, Expression symoblExpr,
 			Expression typeIdentifier) {
 
 		return new InstanceofGuard(expr, asserts, symoblExpr, typeIdentifier);
