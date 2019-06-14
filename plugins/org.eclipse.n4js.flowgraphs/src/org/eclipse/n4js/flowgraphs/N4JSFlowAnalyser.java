@@ -77,6 +77,8 @@ public class N4JSFlowAnalyser {
 			gva = new GraphVisitorAnalysis(this, cfg);
 			spa = new SuccessorPredecessorAnalysis(cfg);
 		}
+
+		augmentEffectInformation();
 	}
 
 	/**
@@ -189,7 +191,6 @@ public class N4JSFlowAnalyser {
 	 */
 	public void accept(FlowAnalyser... flowAnalysers) {
 		acceptForwardAnalysers(flowAnalysers);
-		augmentEffectInformation();
 		acceptBackwardAnalysers(flowAnalysers);
 	}
 
