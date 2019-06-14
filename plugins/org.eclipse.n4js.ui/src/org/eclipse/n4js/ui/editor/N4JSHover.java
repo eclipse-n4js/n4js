@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
@@ -57,8 +56,12 @@ public class N4JSHover extends DispatchingEObjectTextHover {
 					if (state == null) {
 						return null;
 					}
-
-					return new Region(offset, 0);
+					Pair<EObject, IRegion> element = getXtextElementAt(state, offset);
+					if (element != null) {
+						return element.getSecond();
+					} else {
+						return null;
+					}
 				}
 			}, (IRegion) null);
 		} catch (OperationCanceledException e) {
@@ -84,17 +87,18 @@ public class N4JSHover extends DispatchingEObjectTextHover {
 						return null;
 					}
 
+					// to support type guard information in hover text, pass the cross-reference itself
 					IParseResult parseResult = state.getParseResult();
 					if (parseResult != null) {
 						ILeafNode leaf = NodeModelUtils.findLeafNodeAtOffset(parseResult.getRootNode(),
 								hoverRegion.getOffset());
-
 						EObject semanticElement = leaf.getSemanticElement();
 						if (semanticElement != null) {
 							return getHoverInfo(semanticElement, textViewer, hoverRegion);
 						}
 					}
 
+					// fall-back in case the node for the cross-reference could not be passed
 					Pair<EObject, IRegion> element = getXtextElementAt(state, hoverRegion.getOffset());
 					if (element != null && element.getFirst() != null) {
 						return getHoverInfo(element.getFirst(), textViewer, hoverRegion);
