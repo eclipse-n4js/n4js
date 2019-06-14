@@ -32,7 +32,6 @@ import org.eclipse.n4js.flowgraphs.analysers.DummyForwardVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.InstanceofGuardAnalyser;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
-import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -368,29 +367,18 @@ public class FlowgraphsXpectMethod {
 	}
 
 	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)? (arg2=STRING)?")
+	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
 	@Xpect
 	public void instanceofguard(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
-			IEObjectCoveringRegion offset, String holdsName) {
+			IEObjectCoveringRegion offset) {
 
 		ControlFlowElement cfe = getCFE(offset);
-		GuardAssertion assertion = null;
-		if (holdsName != null) {
-			assertion = GuardAssertion.valueOf(holdsName);
-		}
 
 		InstanceofGuardAnalyser iga = new InstanceofGuardAnalyser();
 		N4JSFlowAnalyser flowAnalyzer = getFlowAnalyzer(cfe);
 		flowAnalyzer.accept(iga);
 
-		Collection<InstanceofGuard> ioGuards = null;
-		if (assertion == GuardAssertion.MayHolds) {
-			ioGuards = iga.getMayHoldingTypes(cfe);
-		} else if (assertion == GuardAssertion.NeverHolds) {
-			ioGuards = iga.getNeverHoldingTypes(cfe);
-		} else {
-			ioGuards = iga.getAlwaysHoldingTypes(cfe);
-		}
+		Collection<InstanceofGuard> ioGuards = iga.getAlwaysHoldingTypes(cfe);
 
 		List<String> commonPredStrs = new LinkedList<>();
 		for (InstanceofGuard ioGuard : ioGuards) {
