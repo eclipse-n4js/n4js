@@ -19,6 +19,7 @@ import org.eclipse.n4js.jsdoc.dom.Doclet
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionExpression
+import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -62,11 +63,18 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		if (o instanceof LiteralOrComputedPropertyName) {
 			return getFirstLine(o.eContainer);
 		}
-		return composeFirstLine(o.keyword, o.label);
+		val keyword = keyword(if (o instanceof IdentifierRef) o.id else o);
+		val label = getLabel(o);
+		return composeFirstLine(keyword, label);
 	}
 
 	override protected String getLabel(EObject o) {
-		sanitizeForHTML(doGetLabel(o));
+		val label = if (o instanceof IdentifierRef) {
+			doGetLabel(o.id, o);
+		} else {
+			doGetLabel(o, null);
+		}
+		sanitizeForHTML(label);
 	}
 
 	override protected getDocumentation(EObject o) {
@@ -84,40 +92,48 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		}
 	}
 
-	def private dispatch doGetLabel(EObject o) {
+	def private dispatch doGetLabel(EObject o, IdentifierRef identifierRef) {
 		val tElem = o.getCorrespondingTypeModelElement;
 		return if (null === tElem) super.getLabel(o) else typesHoverProvider.getLabel(tElem);
 	}
 
-	def private dispatch doGetLabel(VariableDeclaration vd) {
-		if (vd instanceof ExportedVariableDeclaration) _doGetLabel(vd as EObject) else vd.labelFromTypeSystem;
+	def private dispatch doGetLabel(IdentifierRef ir, IdentifierRef identifierRef) {
+		getLabelFromTypeSystem(ir, identifierRef);
 	}
 
-	def private dispatch doGetLabel(PropertyNameValuePair nameValuePair) {
-		nameValuePair.labelFromTypeSystem;
+	def private dispatch doGetLabel(VariableDeclaration vd, IdentifierRef identifierRef) {
+		if (vd instanceof ExportedVariableDeclaration)
+			_doGetLabel(vd as EObject, identifierRef)
+		else
+			getLabelFromTypeSystem(vd, identifierRef);
 	}
 
-	def private dispatch doGetLabel(FormalParameter fp) {
+	def private dispatch doGetLabel(PropertyNameValuePair nameValuePair, IdentifierRef identifierRef) {
+		getLabelFromTypeSystem(nameValuePair, identifierRef);
+	}
+
+	def private dispatch doGetLabel(FormalParameter fp, IdentifierRef identifierRef) {
 		val String optinonalMarker = if (fp.hasInitializerAssignment) "=…" else "";
-		fp.labelFromTypeSystem + optinonalMarker;
+		getLabelFromTypeSystem(fp, identifierRef) + optinonalMarker;
 	}
 
-	def private dispatch doGetLabel(FunctionExpression fe) {
-		fe.labelFromTypeSystem;
+	def private dispatch doGetLabel(FunctionExpression fe, IdentifierRef identifierRef) {
+		getLabelFromTypeSystem(fe, identifierRef);
 	}
 
-	def private dispatch doGetLabel(LiteralOrComputedPropertyName name) {
+	def private dispatch doGetLabel(LiteralOrComputedPropertyName name, IdentifierRef identifierRef) {
 		if (name.eContainer instanceof TypableElement) {
-			return (name.eContainer as TypableElement).labelFromTypeSystem;
+			return getLabelFromTypeSystem(name.eContainer as TypableElement, identifierRef);
 		}
 		return name.name;
 	}
 
-	def private getLabelFromTypeSystem(TypableElement o) {
+	def private getLabelFromTypeSystem(TypableElement o, IdentifierRef identifierRef) {
 		if (null === o || null === o.eResource) {
 			return null;
 		}
-		val typeRef = o.newRuleEnvironment.type(o);
+		val elem = if (identifierRef !== null) identifierRef else o;
+		val typeRef = elem.newRuleEnvironment.type(elem);
 		return '''«getName(o)»: «typeRef.typeRefAsString»''';
 	}
 
@@ -125,8 +141,8 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		'';
 	}
 
-	def private dispatch getName(NamedElement nameValuePair) {
-		''' «nameValuePair.name»''';
+	def private dispatch getName(NamedElement namedElement) {
+		''' «namedElement.name»''';
 	}
 
 	override protected hasHover(EObject o) {
@@ -136,6 +152,10 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	def private dispatch doHasHover(EObject o) {
 		val tElem = o.getCorrespondingTypeModelElement;
 		return if (null === tElem) super.hasHover(o) else typesHoverProvider.hasHover(tElem);
+	}
+
+	def private dispatch doHasHover(IdentifierRef identifierRef) {
+		true;
 	}
 
 	def private dispatch doHasHover(VariableDeclaration vd) {
