@@ -32,7 +32,6 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.impl.IdentifierRefImpl;
 import org.eclipse.n4js.n4JS.impl.NullLiteralImpl;
 import org.eclipse.n4js.n4JS.impl.NumericLiteralImpl;
-import org.eclipse.n4js.n4JS.impl.ParameterizedPropertyAccessExpressionImpl;
 import org.eclipse.n4js.n4JS.impl.SuperLiteralImpl;
 import org.eclipse.n4js.n4JS.impl.ThisLiteralImpl;
 import org.eclipse.n4js.n4JS.impl.UnaryExpressionImpl;
@@ -53,8 +52,9 @@ public class SymbolFactory {
 		symbolCreators = new HashMap<>();
 		symbolCreators.put(VariableDeclarationImpl.class, SymbolFactory::createFromVariableDeclaration);
 		symbolCreators.put(IdentifierRefImpl.class, SymbolFactory::createFromIdentifierRef);
-		symbolCreators.put(ParameterizedPropertyAccessExpressionImpl.class,
-				SymbolFactory::createFromParameterizedPropertyAccessExpression);
+		// Deactivated. Not necessary at the moment.
+		// symbolCreators.put(ParameterizedPropertyAccessExpressionImpl.class,
+		// SymbolFactory::createFromParameterizedPropertyAccessExpression);
 		symbolCreators.put(NullLiteralImpl.class, SymbolFactory::createFromNullLiteral);
 		symbolCreators.put(UnaryExpressionImpl.class, SymbolFactory::createFromUnaryExpression);
 		symbolCreators.put(ThisLiteralImpl.class, SymbolFactory::createFromThisLiteral);
@@ -70,9 +70,8 @@ public class SymbolFactory {
 		return new SymbolOfIdentifierRef((IdentifierRef) cfe);
 	}
 
-	static private Symbol createFromParameterizedPropertyAccessExpression(
-			@SuppressWarnings("unused") ControlFlowElement cfe) {
-
+	@SuppressWarnings("unused")
+	static private Symbol createFromParameterizedPropertyAccessExpression(ControlFlowElement cfe) {
 		// Deactivated.
 		// Not necessary at the moment. Causes performance issues in
 		// n4js-n4/tests/com.enfore.n4js.tests.libraryparsing/src/com/enfore/n4js/tests/libraryparsing/SmokeTestSuite
