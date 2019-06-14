@@ -67,6 +67,7 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 
 	@Inject
 	private N4JSDocletParser docletParser;
+	
 
 
 	override protected getFirstLine(EObject o) {
@@ -81,11 +82,13 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	}
 	
 	def private EObject getIdentifiableElement(EObject o) {
-		return switch (o) {
+		val result = switch (o) {
 			IdentifierRef: o.id
 			ParameterizedPropertyAccessExpression: o.property
+			LiteralOrComputedPropertyName: o.eContainer
 			default: o
 		}
+		return result;
 	}
 
 	override protected String getLabel(EObject o) {
@@ -96,7 +99,8 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 
 	override protected getDocumentation(EObject o) {
 		try {
-			var String jsdocString = super.getDocumentation(o);
+			val id = getIdentifiableElement(o);
+			var String jsdocString = super.getDocumentation(id);
 			if (jsdocString === null) {
 				return null;
 			}
