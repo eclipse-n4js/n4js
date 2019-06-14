@@ -16,14 +16,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
-import org.eclipse.n4js.n4JS.N4JSASTUtils;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
-import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.xtext.documentation.impl.MultiLineCommentDocumentationProvider;
 import org.eclipse.xtext.nodemodel.BidiTreeIterator;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -32,22 +24,20 @@ import org.eclipse.xtext.nodemodel.impl.LeafNode;
 import org.eclipse.xtext.nodemodel.impl.LeafNodeWithSyntaxError;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
+import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
+import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
 /**
  */
 public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProvider {
 
 	private static final Logger logger = Logger.getLogger(N4JSDocumentationProvider.class);
-
-	/** Overwritten to fix https://github.com/eclipse/xtext-core/issues/1171 */
-	@Override
-	protected String findComment(EObject o) {
-		String fullComment = super.findComment(o);
-		if (fullComment.startsWith("/**")) {
-			// This is a fix for https://github.com/eclipse/xtext-core/issues/1171
-			fullComment = fullComment.substring(3);
-		}
-		return fullComment;
-	}
 
 	/**
 	 * Returns documentation nodes for N4JS AST and type elements (in which case the method returns the nodes of the
