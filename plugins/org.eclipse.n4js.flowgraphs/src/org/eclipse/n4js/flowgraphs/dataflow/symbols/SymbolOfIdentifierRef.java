@@ -18,9 +18,11 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * Creates {@link Symbol}s depending on the given AST element
  */
 public class SymbolOfIdentifierRef extends Symbol {
+	final IdentifiableElement id;
 	final IdentifierRef ir;
 
-	SymbolOfIdentifierRef(IdentifierRef ir) {
+	SymbolOfIdentifierRef(IdentifiableElement id, IdentifierRef ir) {
+		this.id = id;
 		this.ir = ir;
 	}
 
@@ -31,7 +33,7 @@ public class SymbolOfIdentifierRef extends Symbol {
 
 	@Override
 	public String getName() {
-		return ir.getId().getName();
+		return id.getName();
 	}
 
 	@Override
@@ -49,17 +51,12 @@ public class SymbolOfIdentifierRef extends Symbol {
 		 * and can cause side effects. Hence, instead of the declaration site, the IdentifiableElement is used as a
 		 * unique identifier for variables.
 		 */
-		IdentifiableElement id = ir.getId();
 		return id;
 	}
 
 	@Override
 	public boolean isUndefinedLiteral() {
-		IdentifiableElement id = ir.getId();
-		if (id == null) {
-			return false;
-		}
-		return "undefined".equals(id.getName());
+		return "undefined".equals(getName());
 	}
 
 }

@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.NumericLiteral;
@@ -67,7 +68,12 @@ public class SymbolFactory {
 	}
 
 	static private Symbol createFromIdentifierRef(ControlFlowElement cfe) {
-		return new SymbolOfIdentifierRef((IdentifierRef) cfe);
+		IdentifierRef idRef = (IdentifierRef) cfe;
+		IdentifiableElement id = getId(idRef);
+		if (id != null) {
+			return new SymbolOfIdentifierRef(id, idRef);
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unused")
@@ -108,7 +114,7 @@ public class SymbolFactory {
 		return null;
 	}
 
-	/** @return true iff the given element represents a {@link Symbol} */
+	/** @return true if the given element can represent a {@link Symbol} */
 	static public boolean canCreate(ControlFlowElement cfe) {
 		if (cfe == null) {
 			return false;
@@ -164,10 +170,34 @@ public class SymbolFactory {
 		return new SymbolOfParameterizedPropertyAccessExpression(this, ppae);
 	}
 
-	/** @return true iff the given {@link Expression} */
-	public boolean isUndefined(Expression expr) {
-		Symbol undef = create(expr);
-		return undef != null && undef.isUndefinedLiteral();
+	/** @return {@link IdentifiableElement}. Does not resolve proxies. */
+	static public IdentifiableElement getId(IdentifierRef idRef) {
+		if (idRef instanceof IdentifierRefImpl) {
+			IdentifiableElement id = ((IdentifierRefImpl) idRef).basicGetId();
+			if (id != null && !id.eIsProxy()) {
+				return id;
+			}
+		}
+		return null;
+	}
+
+	/** @return true iff the given {@link Expression} represents 'undefined' */
+	static public boolean isUndefined(Expression expr) {
+		if (expr instanceof IdentifierRef) {
+			IdentifiableElement id = getId((IdentifierRef) expr);
+			if (id != null && "undefined".equals(id.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** @return true iff the given {@link Expression} represents '0' */
+	static public boolean isZero(Expression expr) {
+		if (expr instanceof IntLiteral && new BigDecimal(0).equals(((NumericLiteral) expr).getValue())) {
+			return true;
+		}
+		return false;
 	}
 
 	/** @return a {@link Symbol} that represents {@code undefined} */
