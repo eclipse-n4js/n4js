@@ -158,6 +158,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject private ValidatorMessageHelper messageHelper;
 
 	@Inject private MigrationScopeHelper migrationScopeHelper;
+	
+	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
+	public boolean suppressCrossFileResolutionOfIdentifierRef = false;
 
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
@@ -420,12 +423,16 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val scopeLists = newArrayList;
 		// variables declared in module
 		collectLexialEnvironmentsScopeLists(vee, scopeLists);
-		val Script script = EcoreUtil.getRootContainer(vee) as Script;
 
-		val IScope baseScope = script.getScriptBaseScope(context, reference);
-
-		// imported variables (added as second step to enable shadowing of imported elements)
-		var IScope scope = getImportedIdentifiables(baseScope, script);
+		var IScope scope;
+		if (suppressCrossFileResolutionOfIdentifierRef) {
+			scope = IScope.NULLSCOPE;
+		} else {
+			val Script script = EcoreUtil.getRootContainer(vee) as Script;
+			val IScope baseScope = script.getScriptBaseScope(context, reference);
+			// imported variables (added as second step to enable shadowing of imported elements)
+			scope = getImportedIdentifiables(baseScope, script);
+		}
 
 		for (scopeList : scopeLists.reverseView) {
 			scope = scopesHelper.mapBasedScopeFor(context, scope, scopeList);
