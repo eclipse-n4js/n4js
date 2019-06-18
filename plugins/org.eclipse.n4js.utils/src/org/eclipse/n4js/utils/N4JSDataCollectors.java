@@ -76,7 +76,7 @@ public final class N4JSDataCollectors {
 		} else {
 			if (!N4JSDataCollectors.dcValidations.isPaused()) {
 				DataCollectors.INSTANCE.warn("check method " + methodName
-						+ " invoked without data collector " + N4JSDataCollectors.dcValidations
+						+ " invoked without data collector " + N4JSDataCollectors.dcValidations.getId()
 						+ " being active");
 			}
 			parent = N4JSDataCollectors.dcValidations;
