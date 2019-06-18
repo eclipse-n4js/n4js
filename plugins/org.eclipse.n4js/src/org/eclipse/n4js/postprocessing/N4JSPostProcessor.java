@@ -12,15 +12,19 @@ package org.eclipse.n4js.postprocessing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
+import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -56,6 +60,8 @@ public class N4JSPostProcessor implements PostProcessor {
 	private TypeSystemHelper typeSystemHelper;
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
+	@Inject
+	private N4JSScopeProvider n4jsScopeProvider;
 
 	@Override
 	public boolean expectsLazyLinkResolution() {
@@ -100,17 +106,46 @@ public class N4JSPostProcessor implements PostProcessor {
 	}
 
 	private void postProcessN4JSResource(N4JSResource resource, CancelIndicator cancelIndicator) {
-		// step 1: process the AST (resolve all proxies in AST, infer type of all typable AST nodes, etc.)
+		// step 1: resolve all local IdentifierRefs
+		resolveLocalIdentifierRefs(resource);
+		// step 2: create CFG/DFG and perform flow analyses
+		performFlowAnalysis(resource, cancelIndicator);
+		// step 3: process the AST (resolve all proxies in AST, infer type of all typable AST nodes, etc.)
 		astProcessor.processAST(resource, cancelIndicator);
-		// step 2: expose internal types visible from outside
+		// step 4: expose internal types visible from outside
 		// (i.e. if they are referenced from a type that is visible form the outside)
 		exposeReferencedInternalTypes(resource);
-		// step 3: resolve remaining proxies in TModule
+		// step 5: resolve remaining proxies in TModule
 		// (the TModule was created programmatically, so it usually does not contain proxies; however, in case of
 		// explicitly declared types, the types builder copies type references from the AST to the corresponding
 		// TModule element *without* resolving proxies, so the TModule might contain lazy-cross-ref proxies; most of
 		// these should have been resolved during AST traversal and exposing internal types, but some can be left)
 		EcoreUtil.resolveAll(resource.getModule());
+	}
+
+	/** Traverse contents of resource/script and resolve all IdentifierRefs. */
+	private void resolveLocalIdentifierRefs(N4JSResource resource) {
+		try {
+			n4jsScopeProvider.suppressCrossFileResolutionOfIdentifierRef = true;
+			Script script = resource.getScript();
+
+			for (Iterator<EObject> iter = script.eAllContents(); iter.hasNext();) {
+				EObject eObject = iter.next();
+				if (eObject instanceof IdentifierRef) {
+					((IdentifierRef) eObject).getId(); // do resolve
+				}
+			}
+		} finally {
+			n4jsScopeProvider.suppressCrossFileResolutionOfIdentifierRef = false;
+		}
+	}
+
+	/** Create the CFG and DFG for the given resource and perform flow analyses afterwards */
+	private void performFlowAnalysis(N4JSResource resource, CancelIndicator cancelIndicator) {
+		Script script = resource.getScript();
+		ASTMetaInfoCache cache = resource.getASTMetaInfoCache();
+		cache.getFlowInfo().createGraphs(script, cancelIndicator::isCanceled);
+		cache.getFlowInfo().performForwardAnalysis(cancelIndicator::isCanceled);
 	}
 
 	/**

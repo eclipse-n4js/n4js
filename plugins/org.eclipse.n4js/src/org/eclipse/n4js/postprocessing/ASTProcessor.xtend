@@ -135,6 +135,7 @@ public class ASTProcessor extends AbstractProcessor {
 			log(0, "### done: " + resource.URI);
 		}
 	}
+	
 
 	/**
 	 * First method to actually perform processing of the AST. This method defines the various processing phases.
@@ -154,8 +155,6 @@ public class ASTProcessor extends AbstractProcessor {
 		for(node : script.eAllContents.filter(LiteralOrComputedPropertyName).toIterable) {
 			computedNameProcessor.processComputedPropertyName(G, node, cache, 0);
 		}
-		cache.flowInfo.createGraphs(script, [cancelIndicator.isCanceled]);
-		cache.flowInfo.performForwardAnalysis([cancelIndicator.isCanceled]);
 
 		// phase 1: main processing
 		processSubtree(G, script, cache, 0);
