@@ -125,7 +125,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 				// Type guards only work on IdentifierRefs
 				IdentifierRef iRef = (IdentifierRef) cfe;
 				Symbol cfeSymbol = getSymbolFactory().create(cfe);
-				if (cfeSymbol.definingContainers.size() < 2) {
+				if (cfeSymbol != null && cfeSymbol.definingContainers.size() < 2) {
 					Collection<InstanceofGuard> guardsOnCfe = guards.get(cfeSymbol);
 					guardsOnIRef.replaceValues(iRef, guardsOnCfe);
 				}
