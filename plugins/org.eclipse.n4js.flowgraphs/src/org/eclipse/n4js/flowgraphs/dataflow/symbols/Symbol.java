@@ -10,7 +10,11 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -28,6 +32,9 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
  */
 abstract public class Symbol {
 	private Object cachedKey;
+
+	/** Set of all containers that define (ie. write) this symbol. */
+	final public Set<ControlFlowElement> definingContainers = new HashSet<>();
 
 	/** @return the name of this {@link Symbol} */
 	abstract public String getName();
@@ -106,6 +113,12 @@ abstract public class Symbol {
 			key = getASTLocation();
 		}
 		return key;
+	}
+
+	/** Internal method to populate {@link #definingContainers} */
+	public void addDefinitionCFE(ControlFlowElement defCFE) {
+		ControlFlowElement cfContainer = FGUtils.getCFContainer(defCFE);
+		this.definingContainers.add(cfContainer);
 	}
 
 	/** @return a unique key of this {@link Symbol} */

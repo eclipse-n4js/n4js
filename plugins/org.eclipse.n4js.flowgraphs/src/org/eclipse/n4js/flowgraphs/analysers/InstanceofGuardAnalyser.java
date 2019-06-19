@@ -112,7 +112,6 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 			ControlFlowElement cfe = node.getControlFlowElement();
 			elementsToBranch.put(cfe, this);
 
-			Symbol cfeSymbol = getSymbolFactory().create(cfe);
 			Collection<EffectInfo> writeEInfos = EffectInfo.findAll(node.effectInfos, EffectType.Write);
 			if (!writeEInfos.isEmpty()) {
 				// The symbol was written, hence the guard is invalid and is removed.
@@ -125,8 +124,11 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 			if (cfe instanceof IdentifierRef) {
 				// Type guards only work on IdentifierRefs
 				IdentifierRef iRef = (IdentifierRef) cfe;
-				Collection<InstanceofGuard> guardsOnCfe = guards.get(cfeSymbol);
-				guardsOnIRef.replaceValues(iRef, guardsOnCfe);
+				Symbol cfeSymbol = getSymbolFactory().create(cfe);
+				if (cfeSymbol.definingContainers.size() < 2) {
+					Collection<InstanceofGuard> guardsOnCfe = guards.get(cfeSymbol);
+					guardsOnIRef.replaceValues(iRef, guardsOnCfe);
+				}
 			}
 		}
 
