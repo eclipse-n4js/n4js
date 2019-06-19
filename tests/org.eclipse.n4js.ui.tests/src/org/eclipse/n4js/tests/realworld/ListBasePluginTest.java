@@ -63,6 +63,7 @@ public class ListBasePluginTest extends AbstractBuilderParticipantTest {
 				private final List<String> EXPECTED_ERROR_CODES = Arrays.asList(
 						IssueCodes.CFG_LOCAL_VAR_UNUSED,
 						IssueCodes.DFG_NULL_DEREFERENCE,
+						IssueCodes.EXP_CAST_UNNECESSARY,
 						IssueCodes.CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER);
 
 				@Override
