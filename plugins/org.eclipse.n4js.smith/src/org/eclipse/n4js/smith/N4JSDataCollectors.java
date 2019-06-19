@@ -8,13 +8,9 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils;
+package org.eclipse.n4js.smith;
 
 import java.util.function.Supplier;
-
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 
 /**
  * Data collectors used throughout the N4JS implementation.

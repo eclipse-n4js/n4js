@@ -32,7 +32,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.validation.N4JSValidator.N4JSMethodWrapperCancelable;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
