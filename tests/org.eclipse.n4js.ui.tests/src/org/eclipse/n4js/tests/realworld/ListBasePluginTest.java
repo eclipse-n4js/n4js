@@ -46,7 +46,7 @@ public class ListBasePluginTest extends AbstractBuilderParticipantTest {
 	 * (N4JS identifier recommendations) in the specification. In a nutshell: & (dollar sign) is discouraged to be used
 	 * in field and variable names. See issue IDE-1143 for more details.
 	 */
-	private static final int NUMBER_OF_EXPECTED_ISSUES = 26;
+	private static final int NUMBER_OF_EXPECTED_ISSUES = 27;
 
 	private static final String EXPECTED_NUMBER_OF_ISSUE_TEMPLATE = //
 			"Expected exactly " + NUMBER_OF_EXPECTED_ISSUES + " validation issues but found {0} instead.";
