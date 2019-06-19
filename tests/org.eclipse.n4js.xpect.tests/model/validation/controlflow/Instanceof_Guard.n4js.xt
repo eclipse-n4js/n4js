@@ -13,7 +13,7 @@
 
 
 
-function f0a() {
+function f0() {
 	// XPECT instanceofguard of 'a' -->
 	let a = 2;
 	if (a instanceof Number) {
@@ -22,7 +22,7 @@ function f0a() {
 }
 
 
-function f1a() {
+function f1() {
 	let a = 2;
 	if (a instanceof Number) {
 		// XPECT instanceofguard of 'a' --> a<:Number
@@ -31,7 +31,7 @@ function f1a() {
 }
 
 
-function f2a() {
+function f2() {
 	let a = 2;
 	if (!(a instanceof Number)) {
 		// XPECT instanceofguard of 'a' -->
@@ -40,7 +40,7 @@ function f2a() {
 }
 
 
-function f3a() {
+function f3() {
 	let a = 2;
 	if (a instanceof Number) {
 	}
@@ -49,7 +49,7 @@ function f3a() {
 }
 
 
-function f4a() {
+function f4() {
 	let a = 2;
 	if (a instanceof Number) {
 		return;
@@ -59,7 +59,7 @@ function f4a() {
 }
 
 
-function f5a() {
+function f5() {
 	let a = 2;
 	if (!(a instanceof Number)) {
 		return;
@@ -69,7 +69,7 @@ function f5a() {
 }
 
 
-function f6a() {
+function f6() {
 	let a = 2;
 	if (a instanceof Number &&
 		// XPECT instanceofguard of 'a' --> a<:Number
@@ -79,7 +79,7 @@ function f6a() {
 }
 
 
-function f7a() {
+function f7() {
 	let a = 2;
 	if (!(a instanceof Number) ||
 		// XPECT instanceofguard of 'a' --> a<:Number
@@ -89,7 +89,7 @@ function f7a() {
 }
 
 
-function f8a() {
+function f8() {
 	let a = 2;
 	if (a instanceof Number ||
 		// XPECT instanceofguard of 'a' -->
@@ -99,7 +99,7 @@ function f8a() {
 }
 
 
-function f9a() {
+function f9() {
 	let a = 2;
 	if (!(a instanceof Number) &&
 		// XPECT instanceofguard of 'a' -->
@@ -110,7 +110,7 @@ function f9a() {
 
 
 
-function f10a() {
+function f10() {
 	let a = 2;
 	if (!(a instanceof Number) &&
 		// XPECT instanceofguard of 'a' -->
@@ -120,7 +120,7 @@ function f10a() {
 }
 
 
-function f11a() {
+function f11() {
 	let a = 2;
 	if (a instanceof Number && a instanceof Object) {
 		// XPECT instanceofguard of 'a' --> a<:Number, a<:Object
@@ -129,7 +129,7 @@ function f11a() {
 }
 
 
-function f12a() {
+function f12() {
 	let a = 2;
 	if (a instanceof Number || a instanceof Object) {
 		// XPECT instanceofguard of 'a' -->
@@ -138,7 +138,86 @@ function f12a() {
 }
 
 
-function f20a() {
+
+
+function f101() {
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' -->
+		a;
+	}
+	
+	let x = () => { a = 0; };
+	x;
+}
+
+function f102() {
+	let x = () => { a = 0; };
+	x;
+	
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' -->
+		a;
+	}
+}
+
+function f103() {
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a;
+	}
+	
+	let x = () => { a; };
+	x;
+}
+
+function f104() {
+	let x = () => { a; };
+	x;
+	
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a;
+	}
+}
+
+
+
+
+function f111() {
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a;
+		// XPECT instanceofguard of 'a' -->
+		a = 0;
+	}
+}
+
+function f112() {
+	let a = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' -->
+		a = 0;
+		// XPECT instanceofguard of 'a' -->
+		a;
+	}
+}
+
+function f113() {
+	let a: any = 2;
+	if (a instanceof Number) {
+		// XPECT instanceofguard of 'a' -->
+		a = a === new Number() ? "n" : "nn";
+	}
+}
+
+
+
+function f20() {
 	let a = 2;
 	// XPECT instanceofguard of 'a' -->
 	if (a instanceof Number && 2+3) {
@@ -146,7 +225,7 @@ function f20a() {
 }
 
 
-function f21a() {
+function f21() {
 	let a = 2;
 	if (a instanceof Number &&
 		// XPECT instanceofguard of 'a' --> a<:Number
@@ -156,14 +235,14 @@ function f21a() {
 }
 
 
-function f30a() {
+function f30() {
 	let a = 2;
 	// XPECT instanceofguard of 'a' -->
 	(a instanceof Number) ? 3 : 4;
 }
 
 
-function f31a() {
+function f31() {
 	let a = 2;
 	(a instanceof Number) ?
 		// XPECT instanceofguard of 'a' --> a<:Number
@@ -171,10 +250,11 @@ function f31a() {
 }
 
 
-function f32a() {
+function f32() {
 	let a = 2;
 	(a instanceof Number) ?
 		// XPECT instanceofguard of 'a' -->
 		a : 4;
 }
+
 
