@@ -14,21 +14,7 @@
 
 
 function f0a() {
-	// XPECT instanceofguard of 'a = 2' 'AlwaysHolds' -->
-	let a = 2;
-	if (a instanceof Number) {
-		a;
-	}
-}
-function f0b() {
-	// XPECT instanceofguard of 'a = 2' 'NeverHolds' -->
-	let a = 2;
-	if (a instanceof Number) {
-		a;
-	}
-}
-function f0c() {
-	// XPECT instanceofguard of 'a = 2' 'MayHolds' -->
+	// XPECT instanceofguard of 'a' -->
 	let a = 2;
 	if (a instanceof Number) {
 		a;
@@ -39,345 +25,156 @@ function f0c() {
 function f1a() {
 	let a = 2;
 	if (a instanceof Number) {
-		// XPECT instanceofguard of 'a;' 'AlwaysHolds' --> a<:Number
-		a;
-	}
-}
-function f1b() {
-	let a = 2;
-	if (a instanceof Number) {
-		// XPECT instanceofguard of 'a;' 'NeverHolds' -->
-		a;
-	}
-}
-function f1c() {
-	let a = 2;
-	if (a instanceof Number) {
-		// XPECT instanceofguard of 'a;' 'MayHolds' -->
+		// XPECT instanceofguard of 'a' --> a<:Number
 		a;
 	}
 }
 
+
 function f2a() {
 	let a = 2;
 	if (!(a instanceof Number)) {
-		// XPECT instanceofguard of 'a;' 'AlwaysHolds' -->
+		// XPECT instanceofguard of 'a' -->
 		a;
 	}
 }
-function f2b() {
-	let a = 2;
-	if (!(a instanceof Number)) {
-		// XPECT instanceofguard of 'a;' 'NeverHolds' --> a<:Number
-		a;
-	}
-}
-function f2c() {
-	let a = 2;
-	if (!(a instanceof Number)) {
-		// XPECT instanceofguard of 'a;' 'MayHolds' -->
-		a;
-	}
-}
+
 
 function f3a() {
 	let a = 2;
 	if (a instanceof Number) {
 	}
-	// XPECT instanceofguard of 'a;' 'AlwaysHolds' -->
+	// XPECT instanceofguard of 'a' -->
 	a;
 }
-function f3b() {
-	let a = 2;
-	if (a instanceof Number) {
-	}
-	// XPECT instanceofguard of 'a;' 'NeverHolds' -->
-	a;
-}
-function f3c() {
-	let a = 2;
-	if (a instanceof Number) {
-	}
-	// XPECT instanceofguard of 'a;' 'MayHolds' --> a<:Number
-	a;
-}
+
 
 function f4a() {
 	let a = 2;
 	if (a instanceof Number) {
 		return;
 	}
-	// XPECT instanceofguard of 'a;' 'AlwaysHolds' -->
+	// XPECT instanceofguard of 'a' -->
 	a;
 }
-function f4b() {
-	let a = 2;
-	if (a instanceof Number) {
-		return;
-	}
-	// XPECT instanceofguard of 'a;' 'NeverHolds' --> a<:Number
-	a;
-}
-function f4c() {
-	let a = 2;
-	if (a instanceof Number) {
-		return;
-	}
-	// XPECT instanceofguard of 'a;' 'MayHolds' -->
-	a;
-}
+
 
 function f5a() {
 	let a = 2;
 	if (!(a instanceof Number)) {
 		return;
 	}
-	// XPECT instanceofguard of 'a;' 'AlwaysHolds' --> a<:Number
+	// XPECT instanceofguard of 'a' --> a<:Number
 	a;
 }
-function f5b() {
-	let a = 2;
-	if (!(a instanceof Number)) {
-		return;
-	}
-	// XPECT instanceofguard of 'a;' 'NeverHolds' -->
-	a;
-}
-function f5c() {
-	let a = 2;
-	if (!(a instanceof Number)) {
-		return;
-	}
-	// XPECT instanceofguard of 'a;' 'MayHolds' -->
-	a;
-}
+
 
 function f6a() {
 	let a = 2;
-	// XPECT instanceofguard of '2+3' 'AlwaysHolds' --> a<:Number
-	if (a instanceof Number && 2+3) {
+	if (a instanceof Number &&
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a
+	) {
 	}
 }
-function f6b() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'NeverHolds' -->
-	if (a instanceof Number && 2+3) {
-	}
-}
-function f6c() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'MayHolds' -->
-	if (a instanceof Number && 2+3) {
-	}
-}
+
 
 function f7a() {
 	let a = 2;
-	// XPECT instanceofguard of '2+3' 'AlwaysHolds' --> a<:Number
-	if (!(a instanceof Number) || 2+3) {
+	if (!(a instanceof Number) ||
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a
+	) {
 	}
 }
-function f7b() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'NeverHolds' -->
-	if (!(a instanceof Number) || 2+3) {
-	}
-}
-function f7c() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'MayHolds' -->
-	if (!(a instanceof Number) || 2+3) {
-	}
-}
+
 
 function f8a() {
 	let a = 2;
-	// XPECT instanceofguard of '2+3' 'AlwaysHolds' -->
-	if (a instanceof Number || 2+3) {
-	}
-}
-function f8b() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'NeverHolds' --> a<:Number
-	if (a instanceof Number || 2+3) {
-	}
-}
-function f8c() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'MayHolds' -->
-	if (a instanceof Number || 2+3) {
+	if (a instanceof Number ||
+		// XPECT instanceofguard of 'a' -->
+		a
+	) {
 	}
 }
 
+
 function f9a() {
 	let a = 2;
-	// XPECT instanceofguard of '2+3' 'AlwaysHolds' -->
-	if (!(a instanceof Number) && 2+3) {
+	if (!(a instanceof Number) &&
+		// XPECT instanceofguard of 'a' -->
+		a
+	) {
 	}
 }
-function f9b() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'NeverHolds' --> a<:Number
-	if (!(a instanceof Number) && 2+3) {
-	}
-}
-function f9c() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'MayHolds' -->
-	if (!(a instanceof Number) && 2+3) {
-	}
-}
+
 
 
 function f10a() {
 	let a = 2;
-	// XPECT instanceofguard of '2+3' 'AlwaysHolds' -->
-	if (!(a instanceof Number) && 2+3) {
+	if (!(a instanceof Number) &&
+		// XPECT instanceofguard of 'a' -->
+		a
+	) {
 	}
 }
-function f10b() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'NeverHolds' --> a<:Number
-	if (!(a instanceof Number) && 2+3) {
-	}
-}
-function f10c() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'MayHolds' -->
-	if (!(a instanceof Number) && 2+3) {
-	}
-}
+
 
 function f11a() {
 	let a = 2;
 	if (a instanceof Number && a instanceof Object) {
-		// XPECT instanceofguard of 'a;' 'AlwaysHolds' --> a<:Number, a<:Object
+		// XPECT instanceofguard of 'a' --> a<:Number, a<:Object
 		a;
 	}
 }
-function f11b() {
-	let a = 2;
-	if (a instanceof Number && a instanceof Object) {
-		// XPECT instanceofguard of 'a;' 'NeverHolds' -->
-		a;
-	}
-}
-function f11c() {
-	let a = 2;
-	if (a instanceof Number && a instanceof Object) {
-		// XPECT instanceofguard of 'a;' 'MayHolds' -->
-		a;
-	}
-}
+
 
 function f12a() {
 	let a = 2;
 	if (a instanceof Number || a instanceof Object) {
-		// XPECT instanceofguard of 'a;' 'AlwaysHolds' -->
+		// XPECT instanceofguard of 'a' -->
 		a;
 	}
 }
-function f12b() {
-	let a = 2;
-	if (a instanceof Number || a instanceof Object) {
-		// XPECT instanceofguard of 'a;' 'NeverHolds' -->
-		a;
-	}
-}
-function f12c() {
-	let a = 2;
-	if (a instanceof Number || a instanceof Object) {
-		// XPECT FIXME instanceofguard of 'a;' 'MayHolds' --> a<:Number, a<:Object
-		a;
-	}
-}
-
 
 
 function f20a() {
 	let a = 2;
-	// XPECT instanceofguard of 'instanceof' 'AlwaysHolds' -->
+	// XPECT instanceofguard of 'a' -->
 	if (a instanceof Number && 2+3) {
 	}
 }
-function f20b() {
-	let a = 2;
-	// XPECT instanceofguard of 'instanceof' 'NeverHolds' -->
-	if (a instanceof Number && 2+3) {
-	}
-}
-function f20c() {
-	let a = 2;
-	// XPECT instanceofguard of 'instanceof' 'MayHolds' -->
-	if (a instanceof Number && 2+3) {
-	}
-}
+
 
 function f21a() {
 	let a = 2;
-	// XPECT instanceofguard of '2+3' 'AlwaysHolds' --> a<:Number
-	if (a instanceof Number && 2+3) {
+	if (a instanceof Number &&
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a
+	) {
 	}
 }
-function f21b() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'NeverHolds' -->
-	if (a instanceof Number && 2+3) {
-	}
-}
-function f21c() {
-	let a = 2;
-	// XPECT instanceofguard of '2+3' 'MayHolds' -->
-	if (a instanceof Number && 2+3) {
-	}
-}
-
 
 
 function f30a() {
 	let a = 2;
-	// XPECT instanceofguard of 'instanceof' 'AlwaysHolds' -->
+	// XPECT instanceofguard of 'a' -->
 	(a instanceof Number) ? 3 : 4;
 }
-function f30b() {
-	let a = 2;
-	// XPECT instanceofguard of 'instanceof' 'NeverHolds' -->
-	(a instanceof Number) ? 3 : 4;
-}
-function f30c() {
-	let a = 2;
-	// XPECT instanceofguard of 'instanceof' 'MayHolds' -->
-	(a instanceof Number) ? 3 : 4;
-}
+
 
 function f31a() {
 	let a = 2;
-	// XPECT instanceofguard of '3' 'AlwaysHolds' --> a<:Number
-	(a instanceof Number) ? 3 : 4;
+	(a instanceof Number) ?
+		// XPECT instanceofguard of 'a' --> a<:Number
+		a : 4;
 }
-function f31b() {
-	let a = 2;
-	// XPECT instanceofguard of '3' 'NeverHolds' -->
-	(a instanceof Number) ? 3 : 4;
-}
-function f31c() {
-	let a = 2;
-	// XPECT instanceofguard of '3' 'MayHolds' -->
-	(a instanceof Number) ? 3 : 4;
-}
+
 
 function f32a() {
 	let a = 2;
-	// XPECT instanceofguard of '4' 'AlwaysHolds' -->
-	(a instanceof Number) ? 3 : 4;
+	(a instanceof Number) ?
+		// XPECT instanceofguard of 'a' -->
+		a : 4;
 }
-function f32b() {
-	let a = 2;
-	// XPECT instanceofguard of '4' 'NeverHolds' --> a<:Number
-	(a instanceof Number) ? 3 : 4;
-}
-function f32c() {
-	let a = 2;
-	// XPECT instanceofguard of '4' 'MayHolds' -->
-	(a instanceof Number) ? 3 : 4;
-}
+
