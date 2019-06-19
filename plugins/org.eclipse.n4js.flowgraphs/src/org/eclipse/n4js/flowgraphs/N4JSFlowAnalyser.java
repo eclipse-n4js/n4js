@@ -29,7 +29,7 @@ import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 
 /**
  * Facade for all control and data flow related methods.
@@ -72,13 +72,11 @@ public class N4JSFlowAnalyser {
 				Measurement m2 = N4JSDataCollectors.dcCreateGraph.getMeasurement("createGraph_" + uriString);) {
 
 			symbolFactory = new SymbolFactory();
-			cfg = ControlFlowGraphFactory.build(script);
+			cfg = ControlFlowGraphFactory.build(symbolFactory, script);
 			dpa = new DirectPathAnalyses(cfg);
 			gva = new GraphVisitorAnalysis(this, cfg);
 			spa = new SuccessorPredecessorAnalysis(cfg);
 		}
-
-		augmentEffectInformation();
 	}
 
 	/**
@@ -254,17 +252,6 @@ public class N4JSFlowAnalyser {
 	public void acceptBackwardAnalysers(Callable<?> newCancelledChecker, FlowAnalyser... flowAnalysers) {
 		this.cancelledChecker = newCancelledChecker;
 		this.acceptBackwardAnalysers(flowAnalysers);
-	}
-
-	/** Augments the flow graph with effect and symbol information. */
-	public void augmentEffectInformation() {
-		String name = cfg.getScriptName();
-		try (Measurement m1 = N4JSDataCollectors.dcFlowGraphs.getMeasurement("flowGraphs_" + name);
-				Measurement m2 = N4JSDataCollectors.dcCreateGraph.getMeasurement("createGraph_" + name);
-				Measurement m = N4JSDataCollectors.dcAugmentEffectInfo.getMeasurement("AugmentEffectInfo_" + name);) {
-
-			gva.augmentEffectInformation(symbolFactory);
-		}
 	}
 
 	/** @return the containing {@link ControlFlowElement} for the given cfe. */
