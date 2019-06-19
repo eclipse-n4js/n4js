@@ -73,4 +73,17 @@ public class EffectInfo {
 		return null;
 	}
 
+	/**
+	 * Filters the given {@link Collection} of {@link EffectInfo}s and returns a new collection that only contains
+	 * {@link EffectInfo} of the given {@link EffectType}.
+	 */
+	static public EffectInfo findFirst(Collection<EffectInfo> eInfos, EffectType type) {
+		for (EffectInfo ei : eInfos) {
+			if (ei.type == type) {
+				return ei;
+			}
+		}
+		return null;
+	}
+
 }
