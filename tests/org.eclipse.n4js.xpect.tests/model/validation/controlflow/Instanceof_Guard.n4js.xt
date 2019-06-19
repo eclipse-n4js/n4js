@@ -254,7 +254,7 @@ function f32() {
 	let a = 2;
 	(a instanceof Number) ?
 		// XPECT instanceofguard of 'a' -->
-		a : 4;
+		3 : a;
 }
 
 
