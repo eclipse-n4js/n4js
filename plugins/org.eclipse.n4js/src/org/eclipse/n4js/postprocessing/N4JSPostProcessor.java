@@ -32,6 +32,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.n4js.utils.TameAutoClosable;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -106,10 +107,12 @@ public class N4JSPostProcessor implements PostProcessor {
 	}
 
 	private void postProcessN4JSResource(N4JSResource resource, CancelIndicator cancelIndicator) {
-		// step 1: resolve all local IdentifierRefs
-		resolveLocalIdentifierRefs(resource);
-		// step 2: create CFG/DFG and perform flow analyses
-		performFlowAnalysis(resource, cancelIndicator);
+		try (TameAutoClosable tac = n4jsScopeProvider.newCrossFileResolutionSuppressor()) {
+			// step 1: resolve all local IdentifierRefs
+			resolveLocalIdentifierRefs(resource);
+			// step 2: create CFG/DFG and perform flow analyses
+			performFlowAnalysis(resource, cancelIndicator);
+		}
 		// step 3: process the AST (resolve all proxies in AST, infer type of all typable AST nodes, etc.)
 		astProcessor.processAST(resource, cancelIndicator);
 		// step 4: expose internal types visible from outside
@@ -125,18 +128,13 @@ public class N4JSPostProcessor implements PostProcessor {
 
 	/** Traverse contents of resource/script and resolve all IdentifierRefs. */
 	private void resolveLocalIdentifierRefs(N4JSResource resource) {
-		try {
-			n4jsScopeProvider.suppressCrossFileResolutionOfIdentifierRef = true;
-			Script script = resource.getScript();
+		Script script = resource.getScript();
 
-			for (Iterator<EObject> iter = script.eAllContents(); iter.hasNext();) {
-				EObject eObject = iter.next();
-				if (eObject instanceof IdentifierRef) {
-					((IdentifierRef) eObject).getId(); // do resolve
-				}
+		for (Iterator<EObject> iter = script.eAllContents(); iter.hasNext();) {
+			EObject eObject = iter.next();
+			if (eObject instanceof IdentifierRef) {
+				((IdentifierRef) eObject).getId(); // do resolve
 			}
-		} finally {
-			n4jsScopeProvider.suppressCrossFileResolutionOfIdentifierRef = false;
 		}
 	}
 

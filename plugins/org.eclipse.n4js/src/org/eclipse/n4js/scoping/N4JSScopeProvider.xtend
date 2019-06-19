@@ -80,6 +80,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EObjectDescriptionHelper
 import org.eclipse.n4js.utils.ResourceType
+import org.eclipse.n4js.utils.TameAutoClosable
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.xtext.scoping.FilteringScope
@@ -160,8 +161,21 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject private MigrationScopeHelper migrationScopeHelper;
 	
 	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
-	public boolean suppressCrossFileResolutionOfIdentifierRef = false;
-
+	private boolean suppressCrossFileResolutionOfIdentifierRef = false;
+	
+	public def TameAutoClosable newCrossFileResolutionSuppressor() {
+		val TameAutoClosable tac =  new TameAutoClosable() {
+			private boolean tmpSuppressCrossFileResolutionOfIdentifierRef = init();
+			private def boolean init() {
+				this.tmpSuppressCrossFileResolutionOfIdentifierRef = suppressCrossFileResolutionOfIdentifierRef;
+				suppressCrossFileResolutionOfIdentifierRef = true;
+			}	
+			override close() {
+				suppressCrossFileResolutionOfIdentifierRef = tmpSuppressCrossFileResolutionOfIdentifierRef;
+			}
+		};
+		return tac;
+	}
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
