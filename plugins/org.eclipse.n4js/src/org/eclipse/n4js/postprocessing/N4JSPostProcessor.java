@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
@@ -132,7 +133,8 @@ public class N4JSPostProcessor implements PostProcessor {
 
 		for (Iterator<EObject> iter = script.eAllContents(); iter.hasNext();) {
 			EObject eObject = iter.next();
-			if (eObject instanceof IdentifierRef) {
+			// Note: the migration function of N4IDL cannot be resolved here since this depends on its argument type(s)
+			if (eObject instanceof IdentifierRef && !MigrationUtils.isMigrateCallIdentifier((IdentifierRef) eObject)) {
 				((IdentifierRef) eObject).getId(); // do resolve
 			}
 		}
