@@ -242,13 +242,8 @@
     <requirement
         name="org.eclipse.xpect.sdk.feature.group"
         versionRange="[0.2.0,0.2.1)"/>
-    <requirement
-        name="io.github.classgraph"
-        versionRange="[4.8.35,4.8.36)"/>
     <repository
         url="https://ci.eclipse.org/xpect/job/Xpect/job/GH-264/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
-    <repository
-        url="https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
