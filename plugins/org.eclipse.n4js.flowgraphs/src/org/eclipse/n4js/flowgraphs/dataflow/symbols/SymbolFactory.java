@@ -41,7 +41,10 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TypesFactory;
 
 /**
- * Creates {@link Symbol}s depending on the given AST element
+ * Creates {@link Symbol}s depending on the given AST element.
+ * <p>
+ * <b>Note:</b> Do not resolve proxies during the CFG/DFG analyses. This is done beforehand only (see
+ * N4JSPostProcessor#postProcessN4JSResource(...) in step 1)
  */
 public class SymbolFactory {
 	private Symbol undefined;

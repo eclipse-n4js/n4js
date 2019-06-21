@@ -89,7 +89,12 @@ abstract public class Symbol {
 		return false;
 	}
 
-	/** @return the declaration, or null iff the declaration is available only with help of the type system */
+	/**
+	 * <b>Note:</b> Do not resolve proxies during the CFG/DFG analyses. This is done beforehand only (see
+	 * N4JSPostProcessor#postProcessN4JSResource(...) in step 1)
+	 *
+	 * @return the declaration, or null iff the declaration is available only with help of the type system
+	 */
 	public EObject getDeclaration() {
 		return null;
 	}

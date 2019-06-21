@@ -108,6 +108,9 @@ public class N4JSPostProcessor implements PostProcessor {
 	}
 
 	private void postProcessN4JSResource(N4JSResource resource, CancelIndicator cancelIndicator) {
+		// Deactivate cross file resolution (of IdentifierRefs since no other proxies are resolved here).
+		// Reason is that flow analysis shall not trigger resolution of other resources.
+		// Note that flow analysis is intra-procedural only and does not rely on information of other resources.
 		try (TameAutoClosable tac = n4jsScopeProvider.newCrossFileResolutionSuppressor()) {
 			// step 1: resolve all local IdentifierRefs
 			resolveLocalIdentifierRefs(resource);
