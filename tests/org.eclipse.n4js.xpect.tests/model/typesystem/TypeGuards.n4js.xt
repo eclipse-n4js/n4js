@@ -24,8 +24,8 @@ function foo1() {
 	
 	if (x instanceof J1) {
 		let y: J1;
-		// XPECT type of 'x' --> ""
-		// XPECT noerrors --> "type{J1} is not a subtype of J1." at "x"
+		// XPECT type of 'x' --> "intersection{I1,J1}"
+		// XPECT noerrors --> "J1 is not a subtype of J1." at "x"
 		y = x;
 	}
 }
@@ -41,7 +41,7 @@ function foo2() {
 	
 	if (d instanceof C2.constructor) {
 		let dd: D2;
-		// XPECT type of 'd' --> ""
+		// XPECT type of 'd' --> "D2"
 		// XPECT noerrors --> "C2 is not a subtype of D2." at "d"
 		dd = d;
 	}
@@ -58,6 +58,7 @@ function foo3() {
 	
 	if (c instanceof I3) {
 		let cc: C3;
+		// XPECT type of 'c' --> "intersection{C3,I3}"
 		// XPECT noerrors --> "I3 is not a subtype of C3." at "c"
 		cc = c;
 	}
@@ -74,6 +75,7 @@ class H4<T4> extends G4<T4> {}
 function foo4(g: G4<string>) {
 	if (g instanceof H4) {
 		let s: string;
+		// XPECT type of 'g' --> "intersection{G4<string>,H4<?>}"
 		// XPECT noerrors --> "? is not a subtype of string." at "g.getIt()"
 		s = g.getIt();
 	}
