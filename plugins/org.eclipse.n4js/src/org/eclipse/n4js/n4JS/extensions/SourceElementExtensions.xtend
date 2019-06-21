@@ -139,9 +139,16 @@ class SourceElementExtensions {
 			val next = allContents.next
 			switch (next) {
 				N4ClassDeclaration: {
-					val polyfilledOrOriginalType = next.getTypeOrPolyfilledType() as TClass;
-					val n4ClassDecl = polyfilledOrOriginalType?.astElement as N4ClassDeclaration
-					val nonNullClassDecl = if (n4ClassDecl === null) next else n4ClassDecl;
+					val polyfilledOrOriginalType = next.getTypeOrPolyfilledType();
+					val nonNullClassDecl = if (polyfilledOrOriginalType instanceof TClass) {
+						val n4ClassDecl = polyfilledOrOriginalType?.astElement as N4ClassDeclaration;
+						if (n4ClassDecl === null)
+							next
+						else
+							n4ClassDecl;
+					} else
+						next;
+
 					nonNullClassDecl.collectVisibleTypedElement(addHere)
 					allContents.prune
 				}
