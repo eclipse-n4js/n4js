@@ -1,0 +1,80 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
+
+
+
+/* EXAMPLE 1 */
+
+interface I1 {}
+interface J1 extends I1 {}
+class C1 implements J1 {}
+
+function foo1() {
+	let x: I1 = new C1();
+	
+	if (x instanceof J1) {
+		let y: J1;
+		// XPECT type of 'x' --> ""
+		// XPECT noerrors --> "type{J1} is not a subtype of J1." at "x"
+		y = x;
+	}
+}
+
+
+/* EXAMPLE 2 */
+
+class C2 {}
+class D2 extends C2 {}
+
+function foo2() {
+	let d: D2;
+	
+	if (d instanceof C2.constructor) {
+		let dd: D2;
+		// XPECT type of 'd' --> ""
+		// XPECT noerrors --> "C2 is not a subtype of D2." at "d"
+		dd = d;
+	}
+}
+
+
+/* EXAMPLE 3 */
+
+interface I3 {}
+class C3 implements I3 {}
+
+function foo3() {
+	let c: C3;
+	
+	if (c instanceof I3) {
+		let cc: C3;
+		// XPECT noerrors --> "I3 is not a subtype of C3." at "c"
+		cc = c;
+	}
+}
+
+
+/* EXAMPLE 4 */
+
+class G4<T4> {
+	getIt(): T4 { return null; }
+}
+class H4<T4> extends G4<T4> {}
+
+function foo4(g: G4<string>) {
+	if (g instanceof H4) {
+		let s: string;
+		// XPECT noerrors --> "? is not a subtype of string." at "g.getIt()"
+		s = g.getIt();
+	}
+}
