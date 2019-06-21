@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4JS.extensions
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import java.util.List
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
@@ -26,14 +28,15 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TypableElement
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import java.util.List
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
-import org.eclipse.n4js.ts.types.TypeVariable
+import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
  * Extensions for source element, in particular for statements.
@@ -83,6 +86,18 @@ class SourceElementExtensions {
 			result
 		]
 	}
+	
+	/** @return the defined type of the given element or the declared type of the corresponding polyfilled class */
+	def Type getTypeOrPolyfilledType(TypeDefiningElement tde) {
+		if (tde instanceof N4ClassDeclaration) {
+			if (tde.isPolyfill
+				||	tde.isStaticPolyfill) { // in polyfill? delegate to filled type and its type variables
+				val filledType = tde.definedTypeAsClass?.superClassRef?.declaredType;
+				return filledType;
+			}
+		}
+		return tde.definedType;
+	}
 
 	def private <T extends TypeDefiningElement> collectVisibleTypedElement(T element,
 		List<? super IdentifiableElement> addHere) {
@@ -124,7 +139,10 @@ class SourceElementExtensions {
 			val next = allContents.next
 			switch (next) {
 				N4ClassDeclaration: {
-					next.collectVisibleTypedElement(addHere)
+					val polyfilledOrOriginalType = next.getTypeOrPolyfilledType() as TClass;
+					val n4ClassDecl = polyfilledOrOriginalType?.astElement as N4ClassDeclaration
+					val nonNullClassDecl = if (n4ClassDecl === null) next else n4ClassDecl;
+					nonNullClassDecl.collectVisibleTypedElement(addHere)
 					allContents.prune
 				}
 				N4InterfaceDeclaration: {

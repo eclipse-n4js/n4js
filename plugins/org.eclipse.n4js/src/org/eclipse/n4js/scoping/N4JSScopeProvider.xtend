@@ -387,7 +387,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			val vacs = new VisibilityAwareCtorScope(scope, checker, containerTypesHelper, newExpr);
 			return vacs;
 		}
-		return getLexicalEnvironmentScope(vee, identifierRef, ref);
+		return scope;
 	}
 
 	/**
@@ -555,15 +555,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			TypeDefiningElement: {
 				val isStaticContext = context instanceof N4MemberDeclaration && (context as N4MemberDeclaration).static;
 				val IScope parent = getTypeScope(context.eContainer, isStaticContext); // use new static access status for parent scope
-				if (context instanceof N4ClassDeclaration) {
-					if ( context.isPolyfill
-						||	context.isStaticPolyfill ) { // in polyfill? delegate to filled type and its type variables
-						val filledType = context.definedTypeAsClass?.superClassRef?.declaredType;
-						return scopeWithTypeAndItsTypeVariables(parent, filledType, fromStaticContext); // use old static access status for current scope
-					}
-				}
+				val polyfilledOrOriginalType = context.getTypeOrPolyfilledType();
 
-				return scopeWithTypeAndItsTypeVariables(parent, context.definedType, fromStaticContext); // use old static access status for current scope
+				return scopeWithTypeAndItsTypeVariables(parent, polyfilledOrOriginalType, fromStaticContext); // use old static access status for current scope
 			}
 			TStructMethod: {
 				val parent = getTypeScope(context.eContainer, fromStaticContext);
