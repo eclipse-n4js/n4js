@@ -122,7 +122,7 @@ public class ASTProcessor extends AbstractProcessor {
 		val G = resource.newRuleEnvironment;
 		G.addCancelIndicator(cancelIndicator);
 		try {
-			processAST(G, script, cache, cancelIndicator);
+			processAST(G, script, cache);
 		} finally {
 			if (G.canceled) {
 				log(0, "CANCELED by cancelIndicator");
@@ -147,7 +147,7 @@ public class ASTProcessor extends AbstractProcessor {
 	 * @param resource  may not be null.
 	 * @param cancelIndicator  may be null.
 	 */
-	def private void processAST(RuleEnvironment G, Script script, ASTMetaInfoCache cache, CancelIndicator cancelIndicator) {
+	def private void processAST(RuleEnvironment G, Script script, ASTMetaInfoCache cache) {
 		// phase 0: process compile-time expressions & computed property names (order is important)
 		for(node : script.eAllContents.filter(Expression).toIterable) {
 			compileTimeExpressionProcessor.evaluateCompileTimeExpression(G, node, cache, 0);
