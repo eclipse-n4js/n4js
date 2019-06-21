@@ -440,6 +440,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		var IScope scope;
 		if (suppressCrossFileResolutionOfIdentifierRef) {
+			// Suppressing cross-file resolution is necessary for the CFG/DFG analysis
+			// triggered in N4JSPostProcessor#postProcessN4JSResource(...).
 			scope = IScope.NULLSCOPE;
 		} else {
 			val Script script = EcoreUtil.getRootContainer(vee) as Script;

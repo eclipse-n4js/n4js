@@ -106,7 +106,7 @@ public class TypeProcessor extends AbstractProcessor {
 	 *         --> ignore this node ({@code PolyProcessor} will deal with it when processing the parent poly expression)
 	 *     </ol>
 	 * <li>otherwise (standard case):<br>
-	 *     --> infer type of node and store the result in the given cache.
+	 *     --> infer type of node by asking the TypeJudgment and store the result in the given cache.
 	 * </ol>
 	 */
 	def private void typeNode2(RuleEnvironment G, TypableElement node, ASTMetaInfoCache cache, int indentLevel) {
@@ -130,7 +130,7 @@ public class TypeProcessor extends AbstractProcessor {
 					return; // return only required to avoid confusing logging of cache.getFailSafe(node) below
 				}
 			} else {
-				// ordinary typing of typable AST nodes
+				// ordinary typing of typable AST nodes by asking the TypeJudgment
 				log(indentLevel, "asking Xsemantics ...");
 				val result = invokeTypeJudgmentToInferType(G, node);
 
