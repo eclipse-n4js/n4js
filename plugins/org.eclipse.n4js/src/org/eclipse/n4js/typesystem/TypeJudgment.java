@@ -579,6 +579,9 @@ import com.google.inject.Inject;
 
 			if (!alwaysHoldingTypes.isEmpty()) {
 				final Collection<TypeRef> intersectionTypes = new LinkedList<>();
+				if (T != null) {
+					intersectionTypes.add(T);
+				}
 				for (InstanceofGuard ioGuard : alwaysHoldingTypes) {
 					if (ioGuard.symbolCFE instanceof IdentifierRef) {
 						final IdentifiableElement guardedElement = ((IdentifierRef) ioGuard.symbolCFE).getId();
@@ -586,9 +589,7 @@ import com.google.inject.Inject;
 							final Expression typeIdentifier = ioGuard.typeIdentifier;
 							TypeRef instanceofType = ts.type(G, typeIdentifier);
 
-							if (tsh.isClassConstructorFunction(G, instanceofType)
-									&& instanceofType instanceof TypeTypeRef) {
-
+							if (instanceofType instanceof TypeTypeRef) {
 								final TypeTypeRef ttRef = (TypeTypeRef) instanceofType;
 								final TypeArgument typeArg = ttRef.getTypeArg();
 								if (typeArg instanceof TypeRef) {
