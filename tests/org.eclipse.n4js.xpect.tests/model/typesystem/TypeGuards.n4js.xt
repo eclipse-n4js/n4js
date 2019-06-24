@@ -97,7 +97,7 @@ function changeVToC5() {
 	v5 = new C5();
 }
 
-if (v instanceof D5) {
+if (v5 instanceof D5) {
 	changeVToC5();
 	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'md'." at "md"
 	v5.md();
@@ -115,7 +115,7 @@ class D6 extends C6 {
 
 export const v6 = new C6();
 
-if (v instanceof D6) {
+if (v6 instanceof D6) {
 	// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'md'." at "md"
 	v6.md();
 }
@@ -136,7 +136,7 @@ function changeVToC7() {
 	v7 = new C7();
 }
 
-if (v instanceof D7) {
+if (v7 instanceof D7) {
 	changeVToC7();
 	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'md'." at "md"
 	v7.md();
@@ -154,7 +154,7 @@ class D8 extends C8 {
 
 var v8 = new C8();
 
-if (v instanceof D8) {
+if (v8 instanceof D8) {
 	// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'md'." at "md"
 	v8.md();
 }
