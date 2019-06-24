@@ -80,3 +80,83 @@ function foo4(g: G4<string>) {
 		s = g.getIt();
 	}
 }
+
+
+/* EXAMPLE 5 */
+
+class C5 {
+	mc() {}
+}
+class D5 extends C5 {
+	md() {}
+}
+
+export var v5 = new C5();
+
+function changeVToC5() {
+	v5 = new C5();
+}
+
+if (v instanceof D5) {
+	changeVToC5();
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'md'." at "md"
+	v5.md();
+}
+
+
+/* EXAMPLE 6 */
+
+class C6 {
+	mc() {}
+}
+class D6 extends C6 {
+	md() {}
+}
+
+export const v6 = new C6();
+
+if (v instanceof D6) {
+	// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'md'." at "md"
+	v6.md();
+}
+
+
+/* EXAMPLE 7 */
+
+class C7 {
+	mc() {}
+}
+class D7 extends C7 {
+	md() {}
+}
+
+var v7 = new C7();
+
+function changeVToC7() {
+	v7 = new C7();
+}
+
+if (v instanceof D7) {
+	changeVToC7();
+	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'md'." at "md"
+	v7.md();
+}
+
+
+/* EXAMPLE 8 */
+
+class C8 {
+	mc() {}
+}
+class D8 extends C8 {
+	md() {}
+}
+
+var v8 = new C8();
+
+if (v instanceof D8) {
+	// XPECT noerrors --> "Couldn't resolve reference to IdentifiableElement 'md'." at "md"
+	v8.md();
+}
+
+
