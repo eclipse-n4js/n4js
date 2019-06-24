@@ -21,7 +21,7 @@ import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;

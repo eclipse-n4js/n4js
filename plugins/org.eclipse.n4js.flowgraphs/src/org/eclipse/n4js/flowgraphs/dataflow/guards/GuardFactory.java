@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow.guards;
 
-import java.math.BigDecimal;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.dataflow.FlowAssertionFactory;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
@@ -20,8 +18,6 @@ import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.EqualityOperator;
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.IdentifierRef;
-import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -32,7 +28,6 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**
  * Creates {@link Guard}s from given {@link Expression}s that are used as conditions.
@@ -77,7 +72,7 @@ public class GuardFactory {
 		Expression rhs = re.getRhs();
 		if (SymbolFactory.canCreate(lhs)) {
 			GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, re, negateTree, false);
-			Guard guard = createIsZeroGuard(re, asserts, lhs, rhs);
+			Guard guard = createInstanceofGuard(re, asserts, lhs, rhs);
 			return guard;
 		}
 		return null;
@@ -164,13 +159,10 @@ public class GuardFactory {
 		if (nuz instanceof NullLiteral) {
 			return GuardType.IsNull;
 		}
-		if (nuz instanceof IdentifierRef) {
-			IdentifiableElement id = ((IdentifierRef) nuz).getId();
-			if (id != null && "undefined".equals(id.getName())) {
-				return GuardType.IsUndefined;
-			}
+		if (SymbolFactory.isUndefined(nuz)) {
+			return GuardType.IsUndefined;
 		}
-		if (nuz instanceof IntLiteral && new BigDecimal(0).equals(((NumericLiteral) nuz).getValue())) {
+		if (SymbolFactory.isZero(nuz)) {
 			return GuardType.IsZero;
 		}
 		return null;
@@ -229,7 +221,7 @@ public class GuardFactory {
 		return new Guard(expr, GuardType.IsZero, asserts, symoblExpr);
 	}
 
-	static private Guard createIsZeroGuard(Expression expr, GuardAssertion asserts, Expression symoblExpr,
+	static private Guard createInstanceofGuard(Expression expr, GuardAssertion asserts, Expression symoblExpr,
 			Expression typeIdentifier) {
 
 		return new InstanceofGuard(expr, asserts, symoblExpr, typeIdentifier);

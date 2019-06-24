@@ -22,7 +22,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 public class DestructureUtilsForSymbols {
 
 	/** @return the {@link EObject} that is assigned to the given lhs element in the pattern. Defaults are respected. */
-	public static EObject getValueFromDestructuring(SymbolFactory symbolFactory, EObject nodeElem) {
+	public static EObject getValueFromDestructuring(EObject nodeElem) {
 		Pair<EObject, EObject> values = DestructNode.getValueFromDestructuring(nodeElem);
 		if (values == null) {
 			return null;
@@ -31,14 +31,14 @@ public class DestructureUtilsForSymbols {
 		EObject assignedValue = values.getKey();
 		EObject defaultValue = values.getValue();
 
-		return respectDefaultValue(symbolFactory, assignedValue, defaultValue);
+		return respectDefaultValue(assignedValue, defaultValue);
 	}
 
 	/**
 	 * @return the {@link EObject} that is assigned to the given {@link DestructNode} in the pattern. Defaults are
 	 *         respected.
 	 */
-	public static EObject getValueFromDestructuring(SymbolFactory symbolFactory, DestructNode dNode) {
+	public static EObject getValueFromDestructuring(DestructNode dNode) {
 		if (dNode == null) {
 			return null;
 		}
@@ -46,16 +46,14 @@ public class DestructureUtilsForSymbols {
 		EObject assignedValue = dNode.getAssignedElem();
 		EObject defaultValue = dNode.getDefaultExpr();
 
-		return respectDefaultValue(symbolFactory, assignedValue, defaultValue);
+		return respectDefaultValue(assignedValue, defaultValue);
 	}
 
-	private static EObject respectDefaultValue(SymbolFactory symbolFactory, EObject assignedValue,
-			EObject defaultValue) {
-
+	private static EObject respectDefaultValue(EObject assignedValue, EObject defaultValue) {
 		if (assignedValue == null) {
 			return defaultValue;
 		}
-		if (assignedValue instanceof Expression && symbolFactory.isUndefined((Expression) assignedValue)) {
+		if (assignedValue instanceof Expression && SymbolFactory.isUndefined((Expression) assignedValue)) {
 			if (defaultValue != null) {
 				return defaultValue;
 			} else {

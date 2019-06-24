@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.builder.MonitorBasedCancelIndicator;
 import org.eclipse.xtext.builder.builderState.BuilderStateUtil;

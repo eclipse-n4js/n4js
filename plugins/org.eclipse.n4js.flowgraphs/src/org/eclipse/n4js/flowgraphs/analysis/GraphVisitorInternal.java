@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.FlowAnalyser;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -284,6 +285,11 @@ abstract public class GraphVisitorInternal implements FlowAnalyser {
 			}
 		}
 		return failedPEI;
+	}
+
+	/** @return reference to the {@link SymbolFactory} */
+	final public SymbolFactory getSymbolFactory() {
+		return flowAnalyzer.getSymbolFactory();
 	}
 
 }
