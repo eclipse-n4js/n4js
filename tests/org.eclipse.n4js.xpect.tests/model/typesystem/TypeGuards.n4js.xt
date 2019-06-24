@@ -57,10 +57,10 @@ function foo3() {
 	let c: C3;
 	
 	if (c instanceof I3) {
-		let cc: C3;
+		let dd: C3;
 		// XPECT type of 'c' --> intersection{C3,I3}
 		// XPECT noerrors --> "I3 is not a subtype of C3." at "c"
-		cc = c;
+		dd = c;
 	}
 }
 
