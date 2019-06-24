@@ -29,44 +29,6 @@ Contributors:
 
 	<profiles>
 		<profile>
-			<id>stagingNpmRegistry</id>
-			<activation>
-				<property>
-					<name>env.STAGING_NPM_REGISTRY</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>${codehaus-exec-maven-plugin.version}</version>
-						<executions>
-							<!-- Publish n4js-libs to staging area if the env variable STAGING_NPM_REGISTRY is set.
-							The staging area is the place where we publish n4js-libs to, Other builds can retrieve n4js-lib npms from the staging area.
-							This is done here because first the publishing should only happen once and second it only makes sense to publish when we can build the product.
-							 -->
-							<execution>
-								<id>publish-n4js-libs</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<executable>bash</executable>
-									<arguments>
-										<argument>${project.basedir}/../../releng/utils/scripts/publish-n4js-libs.sh</argument>
-										<argument>bridge</argument>
-										<argument>${env.STAGING_NPM_REGISTRY}</argument>
-									</arguments>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
 			<id>buildProduct</id>
 				<properties>
 					<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
