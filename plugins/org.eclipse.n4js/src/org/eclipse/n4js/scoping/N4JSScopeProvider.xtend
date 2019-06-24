@@ -80,6 +80,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EObjectDescriptionHelper
 import org.eclipse.n4js.utils.ResourceType
+import org.eclipse.n4js.utils.TameAutoClosable
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.xtext.scoping.FilteringScope
@@ -158,7 +159,23 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject private ValidatorMessageHelper messageHelper;
 
 	@Inject private MigrationScopeHelper migrationScopeHelper;
-
+	
+	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
+	private boolean suppressCrossFileResolutionOfIdentifierRef = false;
+	
+	public def TameAutoClosable newCrossFileResolutionSuppressor() {
+		val TameAutoClosable tac =  new TameAutoClosable() {
+			private boolean tmpSuppressCrossFileResolutionOfIdentifierRef = init();
+			private def boolean init() {
+				this.tmpSuppressCrossFileResolutionOfIdentifierRef = suppressCrossFileResolutionOfIdentifierRef;
+				suppressCrossFileResolutionOfIdentifierRef = true;
+			}	
+			override close() {
+				suppressCrossFileResolutionOfIdentifierRef = tmpSuppressCrossFileResolutionOfIdentifierRef;
+			}
+		};
+		return tac;
+	}
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -420,12 +437,18 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val scopeLists = newArrayList;
 		// variables declared in module
 		collectLexialEnvironmentsScopeLists(vee, scopeLists);
-		val Script script = EcoreUtil.getRootContainer(vee) as Script;
 
-		val IScope baseScope = script.getScriptBaseScope(context, reference);
-
-		// imported variables (added as second step to enable shadowing of imported elements)
-		var IScope scope = getImportedIdentifiables(baseScope, script);
+		var IScope scope;
+		if (suppressCrossFileResolutionOfIdentifierRef) {
+			// Suppressing cross-file resolution is necessary for the CFG/DFG analysis
+			// triggered in N4JSPostProcessor#postProcessN4JSResource(...).
+			scope = IScope.NULLSCOPE;
+		} else {
+			val Script script = EcoreUtil.getRootContainer(vee) as Script;
+			val IScope baseScope = script.getScriptBaseScope(context, reference);
+			// imported variables (added as second step to enable shadowing of imported elements)
+			scope = getImportedIdentifiables(baseScope, script);
+		}
 
 		for (scopeList : scopeLists.reverseView) {
 			scope = scopesHelper.mapBasedScopeFor(context, scope, scopeList);

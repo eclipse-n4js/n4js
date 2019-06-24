@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
@@ -35,7 +34,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -46,14 +45,14 @@ public class ControlFlowGraphFactory {
 	private final static boolean PRINT_EDGE_DETAILS = false;
 
 	/** Builds and returns a control flow graph from a given {@link Script}. */
-	static public FlowGraph build(Script script) {
+	static public FlowGraph build(SymbolFactory symbolFactory, Script script) {
 		Set<ControlFlowElement> cfContainers = new LinkedHashSet<>();
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 		String uriString = script.eResource().getURI().toString();
 
 		ComplexNodeMapper cnMapper = null;
 		try (Measurement m = N4JSDataCollectors.dcCreateNodes.getMeasurement("createNodes_" + uriString);) {
-			createComplexNodes(script, cfContainers, cnMap);
+			createComplexNodes(symbolFactory, script, cfContainers, cnMap);
 			cnMapper = new ComplexNodeMapper(cnMap);
 		}
 
@@ -73,21 +72,11 @@ public class ControlFlowGraphFactory {
 		return cfg;
 	}
 
-	/** see {@link N4JSFlowAnalyser#augmentEffectInformation()} */
-	static public void augmentDataflowInformation(FlowGraph fg, SymbolFactory symbolFactory) {
-		Map<ControlFlowElement, ComplexNode> cnMap = fg.getMap();
-		for (Map.Entry<ControlFlowElement, ComplexNode> entry : cnMap.entrySet()) {
-			ControlFlowElement cfe = entry.getKey();
-			ComplexNode cn = entry.getValue();
-			CFEEffectInfos.set(symbolFactory, cnMap, cn, cfe);
-		}
-	}
-
 	/** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
-	static private void createComplexNodes(Script script, Set<ControlFlowElement> cfContainers,
-			Map<ControlFlowElement, ComplexNode> cnMap) {
+	static private void createComplexNodes(SymbolFactory symbolFactory, Script script,
+			Set<ControlFlowElement> cfContainers, Map<ControlFlowElement, ComplexNode> cnMap) {
 
-		ReentrantASTIterator astIt = new ReentrantASTIterator(cfContainers, cnMap, script);
+		ReentrantASTIterator astIt = new ReentrantASTIterator(symbolFactory, cfContainers, cnMap, script);
 		astIt.visitAll();
 	}
 

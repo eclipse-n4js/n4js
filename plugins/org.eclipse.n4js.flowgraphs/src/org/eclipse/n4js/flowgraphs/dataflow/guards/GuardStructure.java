@@ -47,14 +47,15 @@ public class GuardStructure {
 	final private Multimap<Symbol, Guard> guards = HashMultimap.create();
 
 	/** Constructor. */
-	GuardStructure(Expression condition, boolean negate) {
+	GuardStructure(SymbolFactory symbolFactory, Expression condition, boolean negate) {
 		this.condition = condition;
 		this.negate = negate;
-		guardList = getGuardList();
+		this.guardList = getGuardList();
+		this.initSymbols(symbolFactory);
 	}
 
 	/** This will initialize the symbol of all guards, and delete guards where a {@link Symbol} cannot be found */
-	public void initSymbols(SymbolFactory symbolFactory) {
+	private void initSymbols(SymbolFactory symbolFactory) {
 		for (Iterator<Guard> guardsIter = guardList.iterator(); guardsIter.hasNext();) {
 			Guard guard = guardsIter.next();
 			guard.initSymbol(symbolFactory);

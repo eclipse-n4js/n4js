@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.dataflow.guards;
 
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
@@ -35,7 +36,7 @@ public class GuardStructureFactory {
 	 * @return {@link GuardStructure} or null
 	 */
 	@SuppressWarnings("incomplete-switch")
-	static public GuardStructure create(ControlFlowEdge edge) {
+	static public GuardStructure create(SymbolFactory symbolFactory, ControlFlowEdge edge) {
 		boolean negate = false;
 		switch (edge.cfType) {
 		case IfFalse:
@@ -47,7 +48,7 @@ public class GuardStructureFactory {
 		case LoopReenter:
 			Expression condition = getCondition(edge);
 			if (condition != null) {
-				return new GuardStructure(condition, negate);
+				return new GuardStructure(symbolFactory, condition, negate);
 			}
 		}
 		return null;
