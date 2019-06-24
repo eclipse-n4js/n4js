@@ -33,6 +33,7 @@ import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -48,6 +49,7 @@ import static org.eclipse.n4js.utils.UtilN4.sanitizeForHTML
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.getCorrespondingTypeModelElement
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment
+import org.eclipse.n4js.ts.types.IdentifiableElement
 
 /**
  */
@@ -122,6 +124,10 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		getLabelFromTypeSystem(ir, ir);
 	}
 
+	def private dispatch doGetLabel(TVariable tv, EObject ref) {
+		getLabelFromTypeSystem(tv, ref);
+	}
+
 	def private dispatch doGetLabel(ParameterizedPropertyAccessExpression ppae, EObject ref) {
 		getLabelFromTypeSystem(ppae, ppae);
 	}
@@ -168,6 +174,14 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 
 	def private dispatch getName(NamedElement namedElement) {
 		''' «namedElement.name»''';
+	}
+
+	def private dispatch getName(IdentifiableElement identifiableElement) {
+		''' «identifiableElement.name»''';
+	}
+
+	def private dispatch getName(TVariable tVariable) {
+		''' «if (tVariable.const) "const" else "var"» «tVariable.name»''';
 	}
 
 	override protected hasHover(EObject o) {
