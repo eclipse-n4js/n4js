@@ -38,6 +38,7 @@ import org.eclipse.n4js.n4JS.impl.ThisLiteralImpl;
 import org.eclipse.n4js.n4JS.impl.UnaryExpressionImpl;
 import org.eclipse.n4js.n4JS.impl.VariableDeclarationImpl;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
 
 /**
@@ -74,6 +75,10 @@ public class SymbolFactory {
 		IdentifierRef idRef = (IdentifierRef) cfe;
 		IdentifiableElement id = getId(idRef);
 		if (id != null) {
+			if (id instanceof TVariable && !((TVariable) id).isConst()) {
+				// id is an imported non-const variable
+				return null;
+			}
 			return new SymbolOfIdentifierRef(id, idRef);
 		}
 		return null;
