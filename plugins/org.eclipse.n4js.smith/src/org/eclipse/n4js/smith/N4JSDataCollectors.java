@@ -8,13 +8,9 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils;
+package org.eclipse.n4js.smith;
 
 import java.util.function.Supplier;
-
-import org.eclipse.n4js.smith.DataCollector;
-import org.eclipse.n4js.smith.DataCollectors;
-import org.eclipse.n4js.smith.Measurement;
 
 /**
  * Data collectors used throughout the N4JS implementation.
@@ -76,7 +72,7 @@ public final class N4JSDataCollectors {
 		} else {
 			if (!N4JSDataCollectors.dcValidations.isPaused()) {
 				DataCollectors.INSTANCE.warn("check method " + methodName
-						+ " invoked without data collector " + N4JSDataCollectors.dcValidations
+						+ " invoked without data collector " + N4JSDataCollectors.dcValidations.getId()
 						+ " being active");
 			}
 			parent = N4JSDataCollectors.dcValidations;

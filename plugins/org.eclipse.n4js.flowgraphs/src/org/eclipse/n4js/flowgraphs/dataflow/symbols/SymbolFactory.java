@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.NumericLiteral;
@@ -32,16 +33,19 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.impl.IdentifierRefImpl;
 import org.eclipse.n4js.n4JS.impl.NullLiteralImpl;
 import org.eclipse.n4js.n4JS.impl.NumericLiteralImpl;
-import org.eclipse.n4js.n4JS.impl.ParameterizedPropertyAccessExpressionImpl;
 import org.eclipse.n4js.n4JS.impl.SuperLiteralImpl;
 import org.eclipse.n4js.n4JS.impl.ThisLiteralImpl;
 import org.eclipse.n4js.n4JS.impl.UnaryExpressionImpl;
 import org.eclipse.n4js.n4JS.impl.VariableDeclarationImpl;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
 
 /**
- * Creates {@link Symbol}s depending on the given AST element
+ * Creates {@link Symbol}s depending on the given AST element.
+ * <p>
+ * <b>Note:</b> Do not resolve proxies during the CFG/DFG analyses. This is done beforehand only (see
+ * N4JSPostProcessor#postProcessN4JSResource(...) in step 1)
  */
 public class SymbolFactory {
 	private Symbol undefined;
@@ -53,8 +57,9 @@ public class SymbolFactory {
 		symbolCreators = new HashMap<>();
 		symbolCreators.put(VariableDeclarationImpl.class, SymbolFactory::createFromVariableDeclaration);
 		symbolCreators.put(IdentifierRefImpl.class, SymbolFactory::createFromIdentifierRef);
-		symbolCreators.put(ParameterizedPropertyAccessExpressionImpl.class,
-				SymbolFactory::createFromParameterizedPropertyAccessExpression);
+		// Deactivated. Not necessary at the moment.
+		// symbolCreators.put(ParameterizedPropertyAccessExpressionImpl.class,
+		// SymbolFactory::createFromParameterizedPropertyAccessExpression);
 		symbolCreators.put(NullLiteralImpl.class, SymbolFactory::createFromNullLiteral);
 		symbolCreators.put(UnaryExpressionImpl.class, SymbolFactory::createFromUnaryExpression);
 		symbolCreators.put(ThisLiteralImpl.class, SymbolFactory::createFromThisLiteral);
@@ -67,12 +72,20 @@ public class SymbolFactory {
 	}
 
 	static private Symbol createFromIdentifierRef(ControlFlowElement cfe) {
-		return new SymbolOfIdentifierRef((IdentifierRef) cfe);
+		IdentifierRef idRef = (IdentifierRef) cfe;
+		IdentifiableElement id = getId(idRef);
+		if (id != null) {
+			if (id instanceof TVariable && !((TVariable) id).isConst()) {
+				// id is an imported non-const variable
+				return null;
+			}
+			return new SymbolOfIdentifierRef(id, idRef);
+		}
+		return null;
 	}
 
-	static private Symbol createFromParameterizedPropertyAccessExpression(
-			@SuppressWarnings("unused") ControlFlowElement cfe) {
-
+	@SuppressWarnings("unused")
+	static private Symbol createFromParameterizedPropertyAccessExpression(ControlFlowElement cfe) {
 		// Deactivated.
 		// Not necessary at the moment. Causes performance issues in
 		// n4js-n4/tests/com.enfore.n4js.tests.libraryparsing/src/com/enfore/n4js/tests/libraryparsing/SmokeTestSuite
@@ -109,7 +122,7 @@ public class SymbolFactory {
 		return null;
 	}
 
-	/** @return true iff the given element represents a {@link Symbol} */
+	/** @return true if the given element can represent a {@link Symbol} */
 	static public boolean canCreate(ControlFlowElement cfe) {
 		if (cfe == null) {
 			return false;
@@ -165,10 +178,34 @@ public class SymbolFactory {
 		return new SymbolOfParameterizedPropertyAccessExpression(this, ppae);
 	}
 
-	/** @return true iff the given {@link Expression} */
-	public boolean isUndefined(Expression expr) {
-		Symbol undef = create(expr);
-		return undef != null && undef.isUndefinedLiteral();
+	/** @return {@link IdentifiableElement}. Does not resolve proxies. */
+	static public IdentifiableElement getId(IdentifierRef idRef) {
+		if (idRef instanceof IdentifierRefImpl) {
+			IdentifiableElement id = ((IdentifierRefImpl) idRef).basicGetId();
+			if (id != null && !id.eIsProxy()) {
+				return id;
+			}
+		}
+		return null;
+	}
+
+	/** @return true iff the given {@link Expression} represents 'undefined' */
+	static public boolean isUndefined(Expression expr) {
+		if (expr instanceof IdentifierRef) {
+			IdentifiableElement id = getId((IdentifierRef) expr);
+			if (id != null && "undefined".equals(id.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** @return true iff the given {@link Expression} represents '0' */
+	static public boolean isZero(Expression expr) {
+		if (expr instanceof IntLiteral && new BigDecimal(0).equals(((NumericLiteral) expr).getValue())) {
+			return true;
+		}
+		return false;
 	}
 
 	/** @return a {@link Symbol} that represents {@code undefined} */
