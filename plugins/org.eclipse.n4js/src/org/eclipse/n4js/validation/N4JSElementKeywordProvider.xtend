@@ -33,6 +33,7 @@ import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
+import org.eclipse.n4js.n4JS.PropertySpread
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.ThrowStatement
@@ -133,6 +134,10 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 
 	def dispatch String keyword(PropertyNameValuePair propertyNameValuePair) {
 		"property"
+	}
+
+	def dispatch String keyword(PropertySpread propertySpread) {
+		"property spread"
 	}
 
 	def dispatch String keyword(ThisLiteral thisLiteral) {

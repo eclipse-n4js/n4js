@@ -14315,6 +14315,15 @@ rulePropertyAssignment returns [EObject current=null]
 			$current = $this_PropertyNameValuePairSingleName_5.current;
 			afterParserOrEnumRuleCall();
 		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySpreadParserRuleCall_6());
+		}
+		this_PropertySpread_6=rulePropertySpread
+		{
+			$current = $this_PropertySpread_6.current;
+			afterParserOrEnumRuleCall();
+		}
 	)
 ;
 
@@ -14598,6 +14607,15 @@ norm1_PropertyAssignment returns [EObject current=null]
 		this_PropertyNameValuePairSingleName_5=norm1_PropertyNameValuePairSingleName
 		{
 			$current = $this_PropertyNameValuePairSingleName_5.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getPropertyAssignmentAccess().getPropertySpreadParserRuleCall_6());
+		}
+		this_PropertySpread_6=norm1_PropertySpread
+		{
+			$current = $this_PropertySpread_6.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -15274,6 +15292,39 @@ ruleAnnotatedPropertyAssignment returns [EObject current=null]
 					)
 				)?
 			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getAnnotatedPropertyAssignmentAccess().getPropertySpreadAnnotationListAction_1_5_0(),
+							$current);
+					}
+				)
+				otherlv_32=FullStopFullStopFullStop
+				{
+					newLeafNode(otherlv_32, grammarAccess.getAnnotatedPropertyAssignmentAccess().getFullStopFullStopFullStopKeyword_1_5_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignmentExpressionParserRuleCall_1_5_2_0());
+						}
+						lv_expression_33_0=norm1_AssignmentExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getAnnotatedPropertyAssignmentRule());
+							}
+							set(
+								$current,
+								"expression",
+								lv_expression_33_0,
+								"org.eclipse.n4js.N4JS.AssignmentExpression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
 		)
 	)
 ;
@@ -15942,6 +15993,39 @@ norm1_AnnotatedPropertyAssignment returns [EObject current=null]
 						)
 					)
 				)?
+			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getAnnotatedPropertyAssignmentAccess().getPropertySpreadAnnotationListAction_1_5_0(),
+							$current);
+					}
+				)
+				otherlv_32=FullStopFullStopFullStop
+				{
+					newLeafNode(otherlv_32, grammarAccess.getAnnotatedPropertyAssignmentAccess().getFullStopFullStopFullStopKeyword_1_5_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignmentExpressionParserRuleCall_1_5_2_0());
+						}
+						lv_expression_33_0=norm3_AssignmentExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getAnnotatedPropertyAssignmentRule());
+							}
+							set(
+								$current,
+								"expression",
+								lv_expression_33_0,
+								"org.eclipse.n4js.N4JS.AssignmentExpression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
 			)
 		)
 	)
@@ -17388,6 +17472,84 @@ norm1_PropertySetterDeclaration returns [EObject current=null]
 						"body",
 						lv_body_7_0,
 						"org.eclipse.n4js.N4JS.Block");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+	)
+;
+
+// Entry rule entryRulePropertySpread
+entryRulePropertySpread returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getPropertySpreadRule()); }
+	iv_rulePropertySpread=rulePropertySpread
+	{ $current=$iv_rulePropertySpread.current; }
+	EOF;
+
+// Rule PropertySpread
+rulePropertySpread returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0=FullStopFullStopFullStop
+		{
+			newLeafNode(otherlv_0, grammarAccess.getPropertySpreadAccess().getFullStopFullStopFullStopKeyword_0());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getPropertySpreadAccess().getExpressionAssignmentExpressionParserRuleCall_1_0());
+				}
+				lv_expression_1_0=norm1_AssignmentExpression
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getPropertySpreadRule());
+					}
+					set(
+						$current,
+						"expression",
+						lv_expression_1_0,
+						"org.eclipse.n4js.N4JS.AssignmentExpression");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+	)
+;
+
+
+// Rule PropertySpread
+norm1_PropertySpread returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0=FullStopFullStopFullStop
+		{
+			newLeafNode(otherlv_0, grammarAccess.getPropertySpreadAccess().getFullStopFullStopFullStopKeyword_0());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getPropertySpreadAccess().getExpressionAssignmentExpressionParserRuleCall_1_0());
+				}
+				lv_expression_1_0=norm3_AssignmentExpression
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getPropertySpreadRule());
+					}
+					set(
+						$current,
+						"expression",
+						lv_expression_1_0,
+						"org.eclipse.n4js.N4JS.AssignmentExpression");
 					afterParserOrEnumRuleCall();
 				}
 			)
