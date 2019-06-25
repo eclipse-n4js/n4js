@@ -45,18 +45,6 @@ pipeline {
 
     stages {
 
-        stage('fs browse') {
-            steps {
-                script {
-                        sh """\
-                                pwd
-                                git status
-                                ls -la
-                           """
-                }
-            }
-        }
-
         stage('build') {
             steps {
                 sshagent(['github-com-ssh-key']) {
