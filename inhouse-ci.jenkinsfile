@@ -34,8 +34,9 @@ pipeline {
     }
 
     environment {
-        MAVEN_OPTS = '-XX:+UnlockExperimentalVMOptions ' +
-                     '-XX:MaxRAMFraction=2 '             +
+        MAVEN_OPTS = '-XX:+UnlockExperimentalVMOptions '           +
+                     // '-XX:MaxRAMFraction=2 '                    +
+                     '-Xms4096m -Xmx6144m -XX:MaxPermSize=1024m '  +
                      '-XshowSettings:vm '
     }
 
