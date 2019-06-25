@@ -680,7 +680,7 @@ PropertyAssignment <Yield>:
     | PropertySetterDeclaration<Yield>
     | PropertyMethodDeclaration<Yield>
     | PropertyNameValuePairSingleName<Yield>
-	| PropertySpread<Yield>
+    | PropertySpread<Yield>
 ;
 
 
