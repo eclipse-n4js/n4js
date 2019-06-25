@@ -8,6 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+
 pipeline {
     agent {
         dockerfile {
@@ -24,11 +25,11 @@ pipeline {
         ansiColor('xterm')
         buildDiscarder(
             logRotator(
-                numToKeepStr:          '15',
-                artifactDaysToKeepStr: '30',
-                artifactNumToKeepStr:  '15',
-                daysToKeepStr:         '30'))
-        timeout(time: 5, unit: 'HOURS')
+                numToKeepStr:          '20',
+                daysToKeepStr:         '30',
+                artifactNumToKeepStr:  '20',
+                artifactDaysToKeepStr: '30'))
+        timeout(time: 4, unit: 'HOURS')
         timestamps()
     }
 
