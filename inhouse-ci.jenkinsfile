@@ -21,6 +21,7 @@ pipeline {
             label 'm5xlarge'
         }
     }
+
     options {
         ansiColor('xterm')
         buildDiscarder(
@@ -35,9 +36,8 @@ pipeline {
 
     environment {
         MAVEN_OPTS = '-XX:+UnlockExperimentalVMOptions '           +
-                     // '-XX:MaxRAMFraction=2 '                    +
-                     '-Xms4096m -Xmx6144m -XX:MaxPermSize=1024m '  +
-                     '-XshowSettings:vm '
+                     '-Xms4096m -Xmx8192m -XX:MaxPermSize=1024m '  +
+                     '-XshowSettings:vm'
     }
 
     triggers {
@@ -46,7 +46,7 @@ pipeline {
 
     stages {
 
-        stage('build') {
+        stage('Build N4JS') {
             steps {
                 sshagent(['github-com-ssh-key']) {
                     script {
