@@ -41,11 +41,6 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 	private static final String PROBANDS = "probands";
 	private static final String PROJECT_NAME = "ClearCacheOnClean";
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	@Inject
 	private MultiCleartriggerCache cache;
 

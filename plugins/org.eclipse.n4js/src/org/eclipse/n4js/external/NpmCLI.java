@@ -265,7 +265,6 @@ public class NpmCLI {
 				if (actualVersion.isEmpty()) {
 					String msg = "Error reading package json when " + reqChg.toString();
 					IStatus packJsonError = statusHelper.createError(msg);
-					logger.logError(msg, new IllegalStateException(msg));
 					mergeStatusHere.merge(packJsonError);
 				} else {
 					URI actualLocation = URI.createFileURI(completePath.toString());

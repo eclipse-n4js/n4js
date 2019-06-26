@@ -29,7 +29,7 @@ import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 
 /**
  * Facade for all control and data flow related methods.
@@ -37,7 +37,7 @@ import org.eclipse.n4js.utils.N4JSDataCollectors;
 public class N4JSFlowAnalyser {
 	static private final Logger logger = Logger.getLogger(N4JSFlowAnalyser.class);
 
-	private final Callable<Void> cancelledChecker;
+	private Callable<?> cancelledChecker;
 	private FlowGraph cfg;
 	private SymbolFactory symbolFactory;
 	private DirectPathAnalyses dpa;
@@ -55,7 +55,7 @@ public class N4JSFlowAnalyser {
 	 * @param cancelledChecker
 	 *            is called in the main loop to react on cancel events. Can be null.
 	 */
-	public N4JSFlowAnalyser(Callable<Void> cancelledChecker) {
+	public N4JSFlowAnalyser(Callable<?> cancelledChecker) {
 		this.cancelledChecker = cancelledChecker;
 	}
 
@@ -72,11 +72,22 @@ public class N4JSFlowAnalyser {
 				Measurement m2 = N4JSDataCollectors.dcCreateGraph.getMeasurement("createGraph_" + uriString);) {
 
 			symbolFactory = new SymbolFactory();
-			cfg = ControlFlowGraphFactory.build(script);
+			cfg = ControlFlowGraphFactory.build(symbolFactory, script);
 			dpa = new DirectPathAnalyses(cfg);
 			gva = new GraphVisitorAnalysis(this, cfg);
 			spa = new SuccessorPredecessorAnalysis(cfg);
 		}
+	}
+
+	/**
+	 * @see #createGraphs(Script)
+	 *
+	 * @param newCancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public void createGraphs(Script script, Callable<?> newCancelledChecker) {
+		this.cancelledChecker = newCancelledChecker;
+		this.createGraphs(script);
 	}
 
 	/** Checks if the user hit the cancel button and if so, a RuntimeException is thrown. */
@@ -178,8 +189,18 @@ public class N4JSFlowAnalyser {
 	 */
 	public void accept(FlowAnalyser... flowAnalysers) {
 		acceptForwardAnalysers(flowAnalysers);
-		augmentEffectInformation();
 		acceptBackwardAnalysers(flowAnalysers);
+	}
+
+	/**
+	 * @see #accept(FlowAnalyser...)
+	 *
+	 * @param newCancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public void accept(Callable<?> newCancelledChecker, FlowAnalyser... flowAnalysers) {
+		this.cancelledChecker = newCancelledChecker;
+		this.accept(flowAnalysers);
 	}
 
 	/**
@@ -197,6 +218,17 @@ public class N4JSFlowAnalyser {
 	}
 
 	/**
+	 * @see #acceptForwardAnalysers(FlowAnalyser...)
+	 *
+	 * @param newCancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public void acceptForwardAnalysers(Callable<?> newCancelledChecker, FlowAnalyser... flowAnalysers) {
+		this.cancelledChecker = newCancelledChecker;
+		this.acceptForwardAnalysers(flowAnalysers);
+	}
+
+	/**
 	 * Performs all given {@link FlowAnalyser}s in a single run. Only instances of {@link TraverseDirection#Backward}
 	 * are supported. This analysis must be performed after {@link #acceptForwardAnalysers(FlowAnalyser...)} was
 	 * performed.
@@ -211,15 +243,15 @@ public class N4JSFlowAnalyser {
 		}
 	}
 
-	/** Augments the flow graph with effect and symbol information. */
-	public void augmentEffectInformation() {
-		String name = cfg.getScriptName();
-		try (Measurement m1 = N4JSDataCollectors.dcFlowGraphs.getMeasurement("flowGraphs_" + name);
-				Measurement m2 = N4JSDataCollectors.dcCreateGraph.getMeasurement("createGraph_" + name);
-				Measurement m = N4JSDataCollectors.dcAugmentEffectInfo.getMeasurement("AugmentEffectInfo_" + name);) {
-
-			gva.augmentEffectInformation(symbolFactory);
-		}
+	/**
+	 * @see #acceptBackwardAnalysers(FlowAnalyser...)
+	 *
+	 * @param newCancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public void acceptBackwardAnalysers(Callable<?> newCancelledChecker, FlowAnalyser... flowAnalysers) {
+		this.cancelledChecker = newCancelledChecker;
+		this.acceptBackwardAnalysers(flowAnalysers);
 	}
 
 	/** @return the containing {@link ControlFlowElement} for the given cfe. */

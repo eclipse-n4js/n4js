@@ -28,13 +28,12 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.model;visibility:=reexport,
  org.eclipse.n4js.releng.utils;resolution:=optional,
  org.eclipse.n4js.ts.model,
- org.eclipse.n4js.external.libraries,
  org.eclipse.n4js.smith,
  org.eclipse.n4js.flowgraphs,
  org.eclipse.n4js.json,
  org.eclipse.n4js.semver.model,
  org.eclipse.n4js.semver
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.binaries,
  org.eclipse.n4js.binaries.nodejs,

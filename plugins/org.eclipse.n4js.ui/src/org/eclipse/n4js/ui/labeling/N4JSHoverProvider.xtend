@@ -11,6 +11,12 @@
 package org.eclipse.n4js.ui.labeling
 
 import com.google.inject.Inject
+import java.io.IOException
+import java.net.URL
+import java.nio.file.Files
+import java.nio.file.Paths
+import org.eclipse.core.runtime.FileLocator
+import org.eclipse.core.runtime.Path
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.text.IRegion
 import org.eclipse.n4js.jsdoc.JSDoc2HoverSerializer
@@ -19,15 +25,20 @@ import org.eclipse.n4js.jsdoc.dom.Doclet
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionExpression
+import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.NamedElement
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.ui.internal.N4JSActivator
+import org.eclipse.n4js.ui.labeling.helper.ImageFileNameCalculationHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider
@@ -38,6 +49,7 @@ import static org.eclipse.n4js.utils.UtilN4.sanitizeForHTML
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.getCorrespondingTypeModelElement
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment
+import org.eclipse.n4js.ts.types.IdentifiableElement
 
 /**
  */
@@ -57,21 +69,40 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 
 	@Inject
 	private N4JSDocletParser docletParser;
+	
+
 
 	override protected getFirstLine(EObject o) {
 		if (o instanceof LiteralOrComputedPropertyName) {
 			return getFirstLine(o.eContainer);
 		}
-		return composeFirstLine(o.keyword, o.label);
+		val id = getIdentifiableElement(o);
+		val image = getImageURL(id);
+		val keyword = keyword(id);
+		val label = getLabel(o);
+		return composeFirstLine(image, keyword, label);
+	}
+	
+	def private EObject getIdentifiableElement(EObject o) {
+		val result = switch (o) {
+			IdentifierRef: o.id
+			ParameterizedPropertyAccessExpression: o.property
+			LiteralOrComputedPropertyName: o.eContainer
+			default: o
+		}
+		return result;
 	}
 
 	override protected String getLabel(EObject o) {
-		sanitizeForHTML(doGetLabel(o));
+		val id = getIdentifiableElement(o);
+		val label = doGetLabel(id, o);
+		sanitizeForHTML(label);
 	}
 
 	override protected getDocumentation(EObject o) {
 		try {
-			var String jsdocString = super.getDocumentation(o);
+			val id = getIdentifiableElement(o);
+			var String jsdocString = super.getDocumentation(id);
 			if (jsdocString === null) {
 				return null;
 			}
@@ -84,40 +115,56 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		}
 	}
 
-	def private dispatch doGetLabel(EObject o) {
+	def private dispatch doGetLabel(EObject o, EObject ref) {
 		val tElem = o.getCorrespondingTypeModelElement;
 		return if (null === tElem) super.getLabel(o) else typesHoverProvider.getLabel(tElem);
 	}
 
-	def private dispatch doGetLabel(VariableDeclaration vd) {
-		if (vd instanceof ExportedVariableDeclaration) _doGetLabel(vd as EObject) else vd.labelFromTypeSystem;
+	def private dispatch doGetLabel(IdentifierRef ir, EObject ref) {
+		getLabelFromTypeSystem(ir, ir);
 	}
 
-	def private dispatch doGetLabel(PropertyNameValuePair nameValuePair) {
-		nameValuePair.labelFromTypeSystem;
+	def private dispatch doGetLabel(TVariable tv, EObject ref) {
+		getLabelFromTypeSystem(tv, ref);
 	}
 
-	def private dispatch doGetLabel(FormalParameter fp) {
+	def private dispatch doGetLabel(ParameterizedPropertyAccessExpression ppae, EObject ref) {
+		getLabelFromTypeSystem(ppae, ppae);
+	}
+
+	def private dispatch doGetLabel(VariableDeclaration vd, EObject ref) {
+		if (vd instanceof ExportedVariableDeclaration)
+			_doGetLabel(vd as EObject, ref)
+		else
+			getLabelFromTypeSystem(vd, ref);
+	}
+
+	def private dispatch doGetLabel(PropertyNameValuePair nameValuePair, EObject ref) {
+		getLabelFromTypeSystem(nameValuePair, ref);
+	}
+
+	def private dispatch doGetLabel(FormalParameter fp, EObject ref) {
 		val String optinonalMarker = if (fp.hasInitializerAssignment) "=…" else "";
-		fp.labelFromTypeSystem + optinonalMarker;
+		getLabelFromTypeSystem(fp, ref) + optinonalMarker;
 	}
 
-	def private dispatch doGetLabel(FunctionExpression fe) {
-		fe.labelFromTypeSystem;
+	def private dispatch doGetLabel(FunctionExpression fe, EObject ref) {
+		getLabelFromTypeSystem(fe, ref);
 	}
 
-	def private dispatch doGetLabel(LiteralOrComputedPropertyName name) {
+	def private dispatch doGetLabel(LiteralOrComputedPropertyName name, EObject ref) {
 		if (name.eContainer instanceof TypableElement) {
-			return (name.eContainer as TypableElement).labelFromTypeSystem;
+			return getLabelFromTypeSystem(name.eContainer as TypableElement, ref);
 		}
 		return name.name;
 	}
 
-	def private getLabelFromTypeSystem(TypableElement o) {
+	def private getLabelFromTypeSystem(TypableElement o, EObject ref) {
 		if (null === o || null === o.eResource) {
 			return null;
 		}
-		val typeRef = o.newRuleEnvironment.type(o);
+		val elem = if (ref instanceof TypableElement) ref else o;
+		val typeRef = elem.newRuleEnvironment.type(elem);
 		return '''«getName(o)»: «typeRef.typeRefAsString»''';
 	}
 
@@ -125,8 +172,16 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		'';
 	}
 
-	def private dispatch getName(NamedElement nameValuePair) {
-		''' «nameValuePair.name»''';
+	def private dispatch getName(NamedElement namedElement) {
+		''' «namedElement.name»''';
+	}
+
+	def private dispatch getName(IdentifiableElement identifiableElement) {
+		''' «identifiableElement.name»''';
+	}
+
+	def private dispatch getName(TVariable tVariable) {
+		''' «if (tVariable.const) "const" else "var"» «tVariable.name»''';
 	}
 
 	override protected hasHover(EObject o) {
@@ -136,6 +191,14 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	def private dispatch doHasHover(EObject o) {
 		val tElem = o.getCorrespondingTypeModelElement;
 		return if (null === tElem) super.hasHover(o) else typesHoverProvider.hasHover(tElem);
+	}
+
+	def private dispatch doHasHover(ParameterizedPropertyAccessExpression ppae) {
+		true;
+	}
+
+	def private dispatch doHasHover(IdentifierRef identifierRef) {
+		true;
 	}
 
 	def private dispatch doHasHover(VariableDeclaration vd) {
@@ -173,33 +236,47 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		}
 	}
 
-//
-// the following code can be used to show images in hovers
-// (but is not used yet because this would also be required in
-// TypesHoverProvider, but no access to the images from that class/bundle!)
-//
-// private String getImageTag(EObject obj) {
-// final URL url = getImageURL(obj);
-// if (url != null)
-// return "<image align='middle' src=\"" + url.toExternalForm() + "\"/>";
-// return null;
-// }
-//
-// @Inject
-// private ImageFileNameCalculationHelper h;
-//
-// private URL getImageURL(EObject obj) {
-// final String fn = h.getImageFileName(obj);
-// if (fn != null) {
-// final URL url = FileLocator.find(N4JSActivator.getInstance().getBundle(), new Path("icons/" + fn), null);
-// if (url != null) {
-// try {
-// return FileLocator.toFileURL(url);
-// } catch (IOException e) {
-// //
-// }
-// }
-// }
-// return null;
-// }
+
+	@Inject
+	private ImageFileNameCalculationHelper h;
+
+	def private URL getImageURL(EObject obj) {
+
+		val String fn = h.getImageFileName(obj);
+		if (fn !== null) {
+			val lastDotIndex = fn.lastIndexOf(".");
+			val name = fn.substring(0, lastDotIndex);
+			val extn = fn.substring(lastDotIndex);
+			val fnHighRes = name + "@2x" + extn;
+			
+			val bundle = N4JSActivator.getInstance().getBundle()
+			val folder = new Path("icons/");
+
+			// try to load high resolution image first
+			val pathHighRes = folder.append(fnHighRes);
+			val URL urlHighRes = FileLocator.find(bundle, pathHighRes, null);
+			if (urlHighRes !== null) {
+				try {
+					val file = FileLocator.toFileURL(urlHighRes);
+					if (Files.exists(Paths.get(file.toURI))) {
+						return file;
+					}
+				} catch (Exception e) {
+					//
+				}
+			}
+
+			// fallback image
+			val path = folder.append(fn);
+			val URL url = FileLocator.find(bundle, path, null);
+			if (url !== null) {
+				try {
+					return FileLocator.toFileURL(url);
+				} catch (IOException e) {
+					//
+				}
+			}
+		}
+		return null;
+	}
 }

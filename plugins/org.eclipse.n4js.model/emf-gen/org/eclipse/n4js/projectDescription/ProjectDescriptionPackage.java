@@ -40,7 +40,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-model-doc -->
  * @see org.eclipse.n4js.projectDescription.ProjectDescriptionFactory
  * @model kind="package"
- *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4jsProjectDescription' modelDirectory='/org.eclipse.n4js.model/emf-gen' forceOverwrite='true' updateClasspath='false' complianceLevel='8.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js'"
+ *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4jsProjectDescription' modelDirectory='/org.eclipse.n4js.model/emf-gen' forceOverwrite='true' updateClasspath='false' complianceLevel='11.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js'"
  * @generated
  */
 public interface ProjectDescriptionPackage extends EPackage {
@@ -195,31 +195,13 @@ public interface ProjectDescriptionPackage extends EPackage {
 	int PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS = 11;
 
 	/**
-	 * The feature id for the '<em><b>Init Modules</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION__INIT_MODULES = 12;
-
-	/**
-	 * The feature id for the '<em><b>Exec Module</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION__EXEC_MODULE = 13;
-
-	/**
 	 * The feature id for the '<em><b>Output Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__OUTPUT_PATH = 14;
+	int PROJECT_DESCRIPTION__OUTPUT_PATH = 12;
 
 	/**
 	 * The feature id for the '<em><b>Source Containers</b></em>' containment reference list.
@@ -228,7 +210,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__SOURCE_CONTAINERS = 15;
+	int PROJECT_DESCRIPTION__SOURCE_CONTAINERS = 13;
 
 	/**
 	 * The feature id for the '<em><b>Module Filters</b></em>' containment reference list.
@@ -237,7 +219,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__MODULE_FILTERS = 16;
+	int PROJECT_DESCRIPTION__MODULE_FILTERS = 14;
 
 	/**
 	 * The feature id for the '<em><b>Tested Projects</b></em>' containment reference list.
@@ -246,16 +228,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__TESTED_PROJECTS = 17;
-
-	/**
-	 * The feature id for the '<em><b>Module Loader</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION__MODULE_LOADER = 18;
+	int PROJECT_DESCRIPTION__TESTED_PROJECTS = 15;
 
 	/**
 	 * The feature id for the '<em><b>Defines Package</b></em>' attribute.
@@ -264,7 +237,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__DEFINES_PACKAGE = 19;
+	int PROJECT_DESCRIPTION__DEFINES_PACKAGE = 16;
 
 	/**
 	 * The feature id for the '<em><b>Has Nested Node Modules Folder</b></em>' attribute.
@@ -273,7 +246,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER = 20;
+	int PROJECT_DESCRIPTION__HAS_NESTED_NODE_MODULES_FOLDER = 17;
 
 	/**
 	 * The feature id for the '<em><b>Has N4JS Nature</b></em>' attribute.
@@ -282,7 +255,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__HAS_N4JS_NATURE = 21;
+	int PROJECT_DESCRIPTION__HAS_N4JS_NATURE = 18;
 
 	/**
 	 * The feature id for the '<em><b>Yarn Workspace Root</b></em>' attribute.
@@ -291,7 +264,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__YARN_WORKSPACE_ROOT = 22;
+	int PROJECT_DESCRIPTION__YARN_WORKSPACE_ROOT = 19;
 
 	/**
 	 * The feature id for the '<em><b>Workspaces</b></em>' attribute list.
@@ -300,16 +273,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION__WORKSPACES = 23;
-
-	/**
-	 * The feature id for the '<em><b>Use ES6 Imports</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT_DESCRIPTION__USE_ES6_IMPORTS = 24;
+	int PROJECT_DESCRIPTION__WORKSPACES = 20;
 
 	/**
 	 * The number of structural features of the '<em>Project Description</em>' class.
@@ -318,7 +282,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_DESCRIPTION_FEATURE_COUNT = 25;
+	int PROJECT_DESCRIPTION_FEATURE_COUNT = 21;
 
 	/**
 	 * The number of operations of the '<em>Project Description</em>' class.
@@ -569,43 +533,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 	int MODULE_FILTER_SPECIFIER_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.projectDescription.impl.BootstrapModuleImpl <em>Bootstrap Module</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.projectDescription.impl.BootstrapModuleImpl
-	 * @see org.eclipse.n4js.projectDescription.impl.ProjectDescriptionPackageImpl#getBootstrapModule()
-	 * @generated
-	 */
-	int BOOTSTRAP_MODULE = 6;
-
-	/**
-	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOOTSTRAP_MODULE__MODULE_SPECIFIER = 0;
-
-	/**
-	 * The number of structural features of the '<em>Bootstrap Module</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOOTSTRAP_MODULE_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Bootstrap Module</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOOTSTRAP_MODULE_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.projectDescription.ProjectType <em>Project Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -613,7 +540,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @see org.eclipse.n4js.projectDescription.impl.ProjectDescriptionPackageImpl#getProjectType()
 	 * @generated
 	 */
-	int PROJECT_TYPE = 7;
+	int PROJECT_TYPE = 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.projectDescription.SourceContainerType <em>Source Container Type</em>}' enum.
@@ -623,7 +550,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @see org.eclipse.n4js.projectDescription.impl.ProjectDescriptionPackageImpl#getSourceContainerType()
 	 * @generated
 	 */
-	int SOURCE_CONTAINER_TYPE = 8;
+	int SOURCE_CONTAINER_TYPE = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.projectDescription.ModuleFilterType <em>Module Filter Type</em>}' enum.
@@ -633,17 +560,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @see org.eclipse.n4js.projectDescription.impl.ProjectDescriptionPackageImpl#getModuleFilterType()
 	 * @generated
 	 */
-	int MODULE_FILTER_TYPE = 9;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.projectDescription.ModuleLoader <em>Module Loader</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.projectDescription.ModuleLoader
-	 * @see org.eclipse.n4js.projectDescription.impl.ProjectDescriptionPackageImpl#getModuleLoader()
-	 * @generated
-	 */
-	int MODULE_LOADER = 10;
+	int MODULE_FILTER_TYPE = 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.projectDescription.DependencyType <em>Dependency Type</em>}' enum.
@@ -653,7 +570,7 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @see org.eclipse.n4js.projectDescription.impl.ProjectDescriptionPackageImpl#getDependencyType()
 	 * @generated
 	 */
-	int DEPENDENCY_TYPE = 11;
+	int DEPENDENCY_TYPE = 9;
 
 
 	/**
@@ -799,28 +716,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 	EReference getProjectDescription_ImplementedProjects();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getInitModules <em>Init Modules</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Init Modules</em>'.
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescription#getInitModules()
-	 * @see #getProjectDescription()
-	 * @generated
-	 */
-	EReference getProjectDescription_InitModules();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getExecModule <em>Exec Module</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Exec Module</em>'.
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescription#getExecModule()
-	 * @see #getProjectDescription()
-	 * @generated
-	 */
-	EReference getProjectDescription_ExecModule();
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getOutputPath <em>Output Path</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -863,17 +758,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getProjectDescription_TestedProjects();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getModuleLoader <em>Module Loader</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Module Loader</em>'.
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescription#getModuleLoader()
-	 * @see #getProjectDescription()
-	 * @generated
-	 */
-	EAttribute getProjectDescription_ModuleLoader();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#getDefinesPackage <em>Defines Package</em>}'.
@@ -929,17 +813,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getProjectDescription_Workspaces();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.ProjectDescription#isUseES6Imports <em>Use ES6 Imports</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Use ES6 Imports</em>'.
-	 * @see org.eclipse.n4js.projectDescription.ProjectDescription#isUseES6Imports()
-	 * @see #getProjectDescription()
-	 * @generated
-	 */
-	EAttribute getProjectDescription_UseES6Imports();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.projectDescription.SourceContainerDescription <em>Source Container Description</em>}'.
@@ -1102,27 +975,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 	EAttribute getModuleFilterSpecifier_SourcePath();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.projectDescription.BootstrapModule <em>Bootstrap Module</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Bootstrap Module</em>'.
-	 * @see org.eclipse.n4js.projectDescription.BootstrapModule
-	 * @generated
-	 */
-	EClass getBootstrapModule();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.projectDescription.BootstrapModule#getModuleSpecifier <em>Module Specifier</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Module Specifier</em>'.
-	 * @see org.eclipse.n4js.projectDescription.BootstrapModule#getModuleSpecifier()
-	 * @see #getBootstrapModule()
-	 * @generated
-	 */
-	EAttribute getBootstrapModule_ModuleSpecifier();
-
-	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.projectDescription.ProjectType <em>Project Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1151,16 +1003,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getModuleFilterType();
-
-	/**
-	 * Returns the meta object for enum '{@link org.eclipse.n4js.projectDescription.ModuleLoader <em>Module Loader</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Module Loader</em>'.
-	 * @see org.eclipse.n4js.projectDescription.ModuleLoader
-	 * @generated
-	 */
-	EEnum getModuleLoader();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.projectDescription.DependencyType <em>Dependency Type</em>}'.
@@ -1302,22 +1144,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 		EReference PROJECT_DESCRIPTION__IMPLEMENTED_PROJECTS = eINSTANCE.getProjectDescription_ImplementedProjects();
 
 		/**
-		 * The meta object literal for the '<em><b>Init Modules</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROJECT_DESCRIPTION__INIT_MODULES = eINSTANCE.getProjectDescription_InitModules();
-
-		/**
-		 * The meta object literal for the '<em><b>Exec Module</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROJECT_DESCRIPTION__EXEC_MODULE = eINSTANCE.getProjectDescription_ExecModule();
-
-		/**
 		 * The meta object literal for the '<em><b>Output Path</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1348,14 +1174,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PROJECT_DESCRIPTION__TESTED_PROJECTS = eINSTANCE.getProjectDescription_TestedProjects();
-
-		/**
-		 * The meta object literal for the '<em><b>Module Loader</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PROJECT_DESCRIPTION__MODULE_LOADER = eINSTANCE.getProjectDescription_ModuleLoader();
 
 		/**
 		 * The meta object literal for the '<em><b>Defines Package</b></em>' attribute feature.
@@ -1396,14 +1214,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PROJECT_DESCRIPTION__WORKSPACES = eINSTANCE.getProjectDescription_Workspaces();
-
-		/**
-		 * The meta object literal for the '<em><b>Use ES6 Imports</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PROJECT_DESCRIPTION__USE_ES6_IMPORTS = eINSTANCE.getProjectDescription_UseES6Imports();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.projectDescription.impl.SourceContainerDescriptionImpl <em>Source Container Description</em>}' class.
@@ -1536,24 +1346,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 		EAttribute MODULE_FILTER_SPECIFIER__SOURCE_PATH = eINSTANCE.getModuleFilterSpecifier_SourcePath();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.projectDescription.impl.BootstrapModuleImpl <em>Bootstrap Module</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.projectDescription.impl.BootstrapModuleImpl
-		 * @see org.eclipse.n4js.projectDescription.impl.ProjectDescriptionPackageImpl#getBootstrapModule()
-		 * @generated
-		 */
-		EClass BOOTSTRAP_MODULE = eINSTANCE.getBootstrapModule();
-
-		/**
-		 * The meta object literal for the '<em><b>Module Specifier</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute BOOTSTRAP_MODULE__MODULE_SPECIFIER = eINSTANCE.getBootstrapModule_ModuleSpecifier();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.projectDescription.ProjectType <em>Project Type</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1582,16 +1374,6 @@ public interface ProjectDescriptionPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum MODULE_FILTER_TYPE = eINSTANCE.getModuleFilterType();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.projectDescription.ModuleLoader <em>Module Loader</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.projectDescription.ModuleLoader
-		 * @see org.eclipse.n4js.projectDescription.impl.ProjectDescriptionPackageImpl#getModuleLoader()
-		 * @generated
-		 */
-		EEnum MODULE_LOADER = eINSTANCE.getModuleLoader();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.projectDescription.DependencyType <em>Dependency Type</em>}' enum.

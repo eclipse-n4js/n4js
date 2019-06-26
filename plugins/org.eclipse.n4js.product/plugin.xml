@@ -51,10 +51,6 @@ Contributors:
                name="aboutText"
                value="%aboutText">
          </property>
-         <property
-               name="includesBuiltInLibraries"
-               value="true">
-         </property>
       </product>
    </extension>
    <extension

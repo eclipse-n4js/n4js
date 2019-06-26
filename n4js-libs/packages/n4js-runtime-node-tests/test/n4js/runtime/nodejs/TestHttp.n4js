@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 import {AbstractVerifyRuntimeSupport} from "AbstractVerifyRuntimeSupport";
-import {Server, ServerResponse, ClientRequest, IncomingMessage, ClientResponse, Agent} from "http";
+import {Server, ServerResponse, ClientRequest, IncomingMessage, Agent} from "http";
 
 export public class TestHttp extends AbstractVerifyRuntimeSupport {
 
@@ -346,84 +346,6 @@ export public class TestHttp extends AbstractVerifyRuntimeSupport {
     @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
     public __IncomingMessage___030_readable(): void {
         let _testSubject = this.getTestSubject(IncomingMessage, 'IncomingMessage');
-        this.verifyProperty(_testSubject,'readable', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___001_port(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'port', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___002_maxHeadersCount(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'maxHeadersCount', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___003_httpVersion(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'httpVersion', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___004_headers(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'headers', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___005_rawHeaders(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'rawHeaders', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___006_trailers(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'trailers', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___007_rawTrailers(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'rawTrailers', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___008_method(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'method', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___009_url(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'url', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___010_statusCode(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'statusCode', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___011_statusMessage(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'statusMessage', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___012_socket(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
-        this.verifyProperty(_testSubject,'socket', false);
-    }
-
-    @Test @Ignore("Currently cannot verify node members (they are not in prototype nor always in constructor)")
-    public __ClientResponse___013_readable(): void {
-        let _testSubject = this.getTestSubject(ClientResponse, 'ClientResponse');
         this.verifyProperty(_testSubject,'readable', false);
     }
 

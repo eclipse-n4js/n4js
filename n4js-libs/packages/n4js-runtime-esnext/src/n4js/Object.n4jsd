@@ -11,7 +11,7 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill export external public class Object extends Object {
-    public static values(obj: Object): [any];
-    public static entries(obj: Object): [Iterable2<string, any>];
+    public static values(obj: Object): any[];
+    public static entries(obj: Object): Iterable2<string, any>[];
 }
 

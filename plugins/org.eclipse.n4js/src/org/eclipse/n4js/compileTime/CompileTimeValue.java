@@ -21,15 +21,14 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TObjectPrototype;
-import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 /**
  * The value of a compile-time expression as returned by {@link ASTMetaInfoCache#getCompileTimeValue(Expression)} and
@@ -60,12 +59,12 @@ public abstract class CompileTimeValue {
 			RoundingMode.DOWN);
 
 	/** Representation of the Javascript value <code>undefined</code>. */
-	public static final CompileTimeValue UNDEFINED = new ValueValid<String>("undefined") {
+	public static final CompileTimeValue UNDEFINED = new ValueValid<>("undefined") {
 		// no adjustments required
 	};
 
 	/** Representation of the Javascript value <code>null</code>. */
-	public static final CompileTimeValue NULL = new ValueValid<String>("null") {
+	public static final CompileTimeValue NULL = new ValueValid<>("null") {
 		// no adjustments required
 	};
 

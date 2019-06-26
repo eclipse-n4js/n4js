@@ -11,6 +11,7 @@
 pipeline {
     agent {
         dockerfile {
+            filename 'Dockerfile'
             dir 'docker-build/'
             // Reuse repository.volume container if one exists, to speed up subsequent builds.
             // Bind to host's docker sock to use host's docker daemon
@@ -33,7 +34,6 @@ pipeline {
 
     environment {
         MAVEN_OPTS = '-XX:+UnlockExperimentalVMOptions ' +
-                     '-XX:+UseCGroupMemoryLimitForHeap ' +
                      '-XX:MaxRAMFraction=2 '             +
                      '-XshowSettings:vm '
     }

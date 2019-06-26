@@ -16,13 +16,12 @@ import java.util.concurrent.ExecutionException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Similar to {@link RunnerFrontEnd}, but adds a method for running code within Eclipse.
@@ -39,7 +38,7 @@ public class RunnerFrontEndUI {
 	 * <p>
 	 * This method may be invoked from non-UI threads.
 	 */
-	public Process runInUI(RunConfiguration config) {
+	public Process runInUI(RunConfiguration config) throws ExecutionException {
 		return runnerFrontEnd.run(config, createEclipseExecutor());
 	}
 

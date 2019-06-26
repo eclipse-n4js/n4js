@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.external;
 
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -248,7 +246,6 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	public java.net.URI getRootLocationForResourceOrInfer(org.eclipse.emf.common.util.URI nestedLocation) {
 		HashSet<java.net.URI> allRootLocations = new LinkedHashSet<>();
 		allRootLocations.addAll(externalLibraryPreferenceStore.getLocations());
-		allRootLocations.addAll(EXTERNAL_LIBRARIES_SUPPLIER.get().keySet());
 
 		java.net.URI rootLocation = getRootLocationForResource(allRootLocations, nestedLocation);
 		if (rootLocation == null) {

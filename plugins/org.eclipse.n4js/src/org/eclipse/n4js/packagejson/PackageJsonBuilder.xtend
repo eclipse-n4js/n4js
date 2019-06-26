@@ -12,16 +12,16 @@ package org.eclipse.n4js.packagejson
 
 import java.util.Collection
 import java.util.Map
+import java.util.SortedMap
+import java.util.TreeMap
 import org.eclipse.n4js.json.JSON.JSONDocument
+import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
 
 import static com.google.common.base.Optional.fromNullable
 import static com.google.common.base.Preconditions.checkNotNull
-import java.util.SortedMap
-import java.util.TreeMap
-import org.eclipse.n4js.json.model.utils.JSONModelUtils
 
 /**
  * Convenient builder for creating the N4JS package.json compliant {@link JSONDocument} model 
@@ -33,17 +33,27 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils
 public class PackageJsonBuilder {
 
 	/**
-	 * Creates a new builder instance.
+	 * Creates a new builder instance with a default project type of {@link ProjectType#VALIDATION}.
 	 */
 	public static def PackageJsonBuilder newBuilder() {
-		return new PackageJsonBuilder();
+		return new PackageJsonBuilder(ProjectType.VALIDATION); // use project type 'validation'
+	}
+
+	/**
+	 * Creates a new builder instance without a default project type. Use this for creating a
+	 * plain package.json without an "n4js" section.
+	 */
+	public static def PackageJsonBuilder newPlainBuilder() {
+		return new PackageJsonBuilder(null);
 	}
 
 	private String projectName;
 	private ProjectType type;
 	private String version;
+	private Boolean _private;
 
 	private SortedMap<String, String> dependencies;
+	private SortedMap<String, String> devDependencies;
 
 	private String vendorId;
 	private String vendorName;
@@ -59,14 +69,18 @@ public class PackageJsonBuilder {
 
 	private Map<SourceContainerType, String> sourceContainers;
 
-	private new() {
-		type = ProjectType.VALIDATION // use project type 'validation'
+	private Collection<String> workspaces;
+
+	private new(ProjectType defaultProjectType) {
+		type = defaultProjectType;
 		providedRLs = newArrayList
 		requiredRLs = newArrayList
 		dependencies = new TreeMap();
+		devDependencies = new TreeMap();
 		implementedProjects = newArrayList
 		testedProjects = newArrayList;
 		sourceContainers = newHashMap;
+		workspaces = newArrayList;
 	}
 
 	/**
@@ -86,18 +100,21 @@ public class PackageJsonBuilder {
 	 */
 	def JSONDocument buildModel() {
 		return PackageJsonContentProvider.getModel(
-			checkNotNull(projectName),
+			fromNullable(projectName),
 			fromNullable(version),
-			checkNotNull(type),
+			fromNullable(_private),
+			workspaces,
+			fromNullable(type),
 			fromNullable(vendorId),
 			fromNullable(vendorName),
 			fromNullable(output),
-			fromNullable(extendedRE), 
+			fromNullable(extendedRE),
 			dependencies,
-			providedRLs, 
-			requiredRLs, 
-			fromNullable(implementationId), 
-			implementedProjects, 
+			devDependencies,
+			providedRLs,
+			requiredRLs,
+			fromNullable(implementationId),
+			implementedProjects,
 			testedProjects,
 			sourceContainers);
 	}
@@ -125,6 +142,14 @@ public class PackageJsonBuilder {
 	}
 
 	/**
+	 * Adds top-level property "private" to the package.json, with the given value.
+	 */
+	def PackageJsonBuilder withPrivate(boolean _private) {
+		this._private = _private;
+		return this;
+	}
+
+	/**
 	 * Sets the project type and returns with the builder.
 	 * 
 	 * @param type the N4JS project type.
@@ -134,7 +159,7 @@ public class PackageJsonBuilder {
 		this.type = checkNotNull(type)
 		return this;
 	}
-	
+
 	/**
 	 * Sets the vendorId and returns with the builder.
 	 * 
@@ -255,6 +280,29 @@ public class PackageJsonBuilder {
 	}
 
 	/**
+	 * Adds a new project devDependency to the current builder.
+	 * @param projectDevDependency the project devDependency to add to the current builder. Cannot be {@code null}.
+	 * @return the builder.
+	 */
+	def PackageJsonBuilder withDevDependency(String projectDevDependency) {
+		devDependencies.put(checkNotNull(projectDevDependency), "*")
+		return this;
+	}
+	
+	/**
+	 * Adds a new project devDependency to the current builder.
+	 * 
+	 * @param projectDevDependency The project devDependency to add to the current builder. Cannot be {@code null}.
+	 * @param versionConstraint The version constraint of the added project devDependency.
+	 * 
+	 * @return the builder.
+	 */
+	def PackageJsonBuilder withDevDependency(String projectDevDependency, String versionConstraint) {
+		devDependencies.put(checkNotNull(projectDevDependency), checkNotNull(versionConstraint))
+		return this;
+	}
+
+	/**
 	 * Adds the given project id to the list of tested projects.
 	 * 
 	 * This method also adds the given tested project as project dependency.
@@ -293,6 +341,12 @@ public class PackageJsonBuilder {
 	 */
 	def PackageJsonBuilder withImplementedProject(String implementationAPI) {
 		implementedProjects.add(checkNotNull(implementationAPI))
+		return this;
+	}
+
+	/** Adds top-level property "workspaces" to the package.json, using an array with the given strings as value. */
+	def PackageJsonBuilder withWorkspaces(String... workspaces) {
+		this.workspaces.addAll(workspaces);
 		return this;
 	}
 

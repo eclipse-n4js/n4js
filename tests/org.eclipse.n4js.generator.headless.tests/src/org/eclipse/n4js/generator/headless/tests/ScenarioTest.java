@@ -56,7 +56,7 @@ public class ScenarioTest {
 		FileDeleter.delete(workspace.toPath());
 
 		// extract test-scenarios.
-		DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
+		DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<>() {
 			@Override
 			public boolean accept(Path file) throws IOException {
 				String fname = file.getFileName().toString();
@@ -229,63 +229,6 @@ public class ScenarioTest {
 	}
 
 	/**
-	 * Testing for different output-folder, configured in package.json. Testing for external source and configuration of
-	 * noModuleWrapFilter
-	 */
-	@Test
-	public void testScenario06NoModuleWrapFilter() throws N4JSCompileException, IOException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
-		File root = new File(workspace, "scenario06");
-
-		List<File> toCompile = Arrays.asList(//
-				new File(root, "wsp1/P1") // requires nothing
-		);
-
-		hlc.compile(projects(hlc, toCompile));
-
-		// those should be available
-		assertExists(root, "wsp1/P1/outfolder/c/Csrc1.js");
-		assertExists(root, "wsp1/P1/outfolder/c/X.js");
-		assertExists(root, "wsp1/P1/outfolder/c/X2.js");
-
-		// there should be no src-gen folder:
-		assertNotExists(root, "wsp1/P1/src-gen");
-
-		assertFileSystemCallStartsWith(root, "wsp1/P1/outfolder/c/X.js",
-				"System.registerDynamic([");
-		assertFileSystemCallStartsNotWith(root, "wsp1/P1/outfolder/c/X2.js",
-				"System.register([");
-	}
-
-	/**
-	 * Same as scenario 6, but now we have a project that ONLY contains external sources (i.e. *no* n4js file). This
-	 * kind of project caused problems before.
-	 */
-	@Test
-	public void testScenario06bNoModuleWrapFilter() throws N4JSCompileException, IOException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
-		File root = new File(workspace, "scenario06b");
-
-		List<File> toCompile = Arrays.asList(//
-				new File(root, "wsp1/P1") // requires nothing
-		);
-
-		hlc.compile(projects(hlc, toCompile));
-
-		// those should be available
-		assertExists(root, "wsp1/P1/outfolder/c/X.js");
-		assertExists(root, "wsp1/P1/outfolder/c/X2.js");
-
-		// there should be no src-gen folder:
-		assertNotExists(root, "wsp1/P1/src-gen");
-
-		assertFileSystemCallStartsWith(root, "wsp1/P1/outfolder/c/X.js",
-				"System.registerDynamic([");
-		assertFileSystemCallStartsNotWith(root, "wsp1/P1/outfolder/c/X2.js",
-				"System.register([");
-	}
-
-	/**
 	 * Building a project but only the test-files.
 	 *
 	 */
@@ -428,26 +371,6 @@ public class ScenarioTest {
 
 	// //////// //// /// / ///////// //// //// /// / ///////// //// //// /// / ///////// //// //// /// / ///////// ////
 	// //// /// / ///
-
-	/**
-	 */
-	private void assertFileSystemCallStartsWith(File root, String file, String content) throws IOException {
-		List<String> lines = Files.readAllLines(new File(root, file).toPath(), StandardCharsets.UTF_8);
-		// First line is CJS System-patching, second is System-call:
-		String firstLine = lines.get(1).trim();
-		assertTrue("File " + file + " should start with \'" + content + "\' but started with \'" + firstLine
-				+ "\' instead",
-				firstLine.startsWith(content));
-	}
-
-	/**
-	 */
-	private void assertFileSystemCallStartsNotWith(File root, String file, String content) throws IOException {
-		List<String> lines = Files.readAllLines(new File(root, file).toPath(), StandardCharsets.UTF_8);
-		// First line is CJS System-patching, second is System-call:
-		String firstLine = lines.get(1).trim();
-		assertFalse("File " + file + " should NOT start with " + content, firstLine.startsWith(content));
-	}
 
 	/**
 	 * Computes a 'Projects' build set based on the given project locations.

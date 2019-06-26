@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.json.model.utils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -444,6 +448,15 @@ public class JSONModelUtils {
 	}
 
 	/**
+	 * Creates a new {@link JSONBooleanLiteral} with the given boolean {@code value}.
+	 */
+	public static JSONBooleanLiteral createBooleanLiteral(boolean value) {
+		final JSONBooleanLiteral literal = JSONFactory.eINSTANCE.createJSONBooleanLiteral();
+		literal.setBooleanValue(value);
+		return literal;
+	}
+
+	/**
 	 * Creates a new {@link JSONStringLiteral} with the given string {@code value}.
 	 */
 	public static JSONStringLiteral createStringLiteral(String value) {
@@ -516,6 +529,17 @@ public class JSONModelUtils {
 		JSONDocument result = JSONFactory.eINSTANCE.createJSONDocument();
 		result.setContent(content);
 		return result;
+	}
+
+	/**
+	 * Same as {@link #parseJSON(String)}, but reads the source from a file on disk at the given path.
+	 */
+	public static JSONDocument loadJSON(Path path, Charset cs) throws IOException {
+		try (BufferedReader in = Files.newBufferedReader(path, cs)) {
+			ParseResult<JSONDocument> result = N4LanguageUtils.parseXtextLanguage(FILE_EXTENSION, null,
+					JSONDocument.class, in);
+			return result.errors.isEmpty() ? result.ast : null;
+		}
 	}
 
 	/**

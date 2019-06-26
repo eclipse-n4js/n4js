@@ -15,7 +15,7 @@
  */
 export public class DispatchQueue<TListener extends Function> {
    
-    protected listeners: Array<ListenerDS<TListener>>;
+    protected listeners: ListenerDS<TListener>[];
     protected lastIndex: int = 0;
     protected lastInsertionOrder: int = 0;
     private shouldHalt: boolean = false;
@@ -102,7 +102,7 @@ export public class DispatchQueue<TListener extends Function> {
      * priority first), in case of equal priority in the order they were added to the queue.
      * The given parameters will be passed to the listeners.
      */
-    public async dispatch(params: Array<?>) {
+    public async dispatch(params: ?[]) {
         this.isDispatching = true;
         var listeners = this.getListOfListeners();
         for (var i = 0; i < listeners.length;  i++) {
@@ -119,7 +119,7 @@ export public class DispatchQueue<TListener extends Function> {
         this.shouldHalt = false;
     }
     
-    public getListOfListeners(): Array<~Object with {listener: TListener, listenerContext: Object, priority: int, insertionOrder: int, applyOnlyOnce: boolean}> {
+    public getListOfListeners(): ~Object with {listener: TListener, listenerContext: Object, priority: int, insertionOrder: int, applyOnlyOnce: boolean}[] {
         var oldListeners = this.listeners.slice();
         var oldLastIndex = this.lastIndex;
         var oldLastInsertionOrder = this.lastInsertionOrder;

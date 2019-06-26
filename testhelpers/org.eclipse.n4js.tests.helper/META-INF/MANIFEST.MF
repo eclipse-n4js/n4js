@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.tests.helper
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-BundleShape: dir
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.core.runtime,
@@ -24,7 +24,9 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.hlc.base,
  org.eclipse.n4js.semver.model,
  org.eclipse.n4js.semver,
- org.eclipse.n4js.external.libraries
+ org.eclipse.n4js.json,
+ org.eclipse.n4js.json.model,
+ org.eclipse.n4js.libs.build
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.analysis,
  org.eclipse.n4js.csv,

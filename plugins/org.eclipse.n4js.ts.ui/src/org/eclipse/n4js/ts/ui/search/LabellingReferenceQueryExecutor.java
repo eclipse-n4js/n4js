@@ -57,7 +57,7 @@ public class LabellingReferenceQueryExecutor extends ReferenceQueryExecutor {
 	 */
 	@Override
 	protected Predicate<IReferenceDescription> getFilter(EObject primaryTarget) {
-		return new Predicate<IReferenceDescription>() {
+		return new Predicate<>() {
 
 			@Override
 			public boolean apply(IReferenceDescription input) {

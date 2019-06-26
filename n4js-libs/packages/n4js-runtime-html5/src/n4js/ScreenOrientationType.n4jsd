@@ -1,0 +1,10 @@
+/**
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/type
+ */
+@StringBased
+export external public enum ScreenOrientationType {
+    portraitPrimary: "portrait-primary",
+    portraitSecondary: "portrait-secondary",
+    landscapePrimary: "landscape-primary",
+    landscapeSecondary: "landscape-secondary"
+}

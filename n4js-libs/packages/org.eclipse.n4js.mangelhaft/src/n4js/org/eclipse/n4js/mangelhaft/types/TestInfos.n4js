@@ -11,7 +11,7 @@
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
 
 export public class ~TestInfos {
-    public sessionId: string;
-    public endpoint: string = "NO_ENDPOINT";
-    public testDescriptors: Array<TestInfo>;
+    public sessionId?: string;
+    public endpoint?: string;
+    public testDescriptors: TestInfo[];
 }

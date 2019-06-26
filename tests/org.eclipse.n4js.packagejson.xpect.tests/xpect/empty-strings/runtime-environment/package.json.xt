@@ -28,12 +28,6 @@
 		"providedRuntimeLibraries": [
 			// XPECT errors --> "A project reference must not be empty." at """"
 			""
-		],
-		"initModules": [
-			// XPECT errors --> "An init module specifier must not be empty." at """"
-			""
-		],
-		// XPECT errors --> "Value for property "execModule" must not be empty." at """"
-		"execModule": ""
+		]
 	}
 }

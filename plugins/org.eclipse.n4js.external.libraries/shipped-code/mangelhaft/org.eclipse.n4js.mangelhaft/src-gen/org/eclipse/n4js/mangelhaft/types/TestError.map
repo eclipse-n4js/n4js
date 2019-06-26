@@ -1,8 +1,0 @@
-{
-	"version": 3,
-	"file": "TestError.js",
-	"sourceRoot": "",
-	"sources": ["../../../../../../src/n4js/org/eclipse/n4js/mangelhaft/types/TestError.n4js"],
-	"names": [],
-	"mappings": ";;;;;;EAUA;;;;;;;;;;IAAoB;;iCAKQ,SAAqB;OACzC,MAAM,IAAI,UAAU"
-}

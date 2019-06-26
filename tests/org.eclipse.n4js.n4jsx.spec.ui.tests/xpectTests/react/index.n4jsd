@@ -85,3 +85,9 @@ export external public class ~PropTypes {
     public static objectOf(valueType: PropType): PropConstraint;
     public static shape(Object): PropConstraint;
 }
+
+@Final
+export external public class Fragment extends Component<ComponentProps, Object> {
+    @Override
+    public render(): Element;
+}

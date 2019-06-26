@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -54,7 +55,7 @@ public class UsedBeforeDeclaredAnalyserFastVersion extends GraphVisitor {
 		}
 		if (cfe instanceof IdentifierRef) {
 			IdentifierRef ir = (IdentifierRef) cfe;
-			IdentifiableElement id = ir.getId();
+			IdentifiableElement id = SymbolFactory.getId(ir);
 			if (id instanceof TVariable) {
 				TVariable tvar = (TVariable) id;
 				id = (VariableDeclaration) tvar.getAstElement();

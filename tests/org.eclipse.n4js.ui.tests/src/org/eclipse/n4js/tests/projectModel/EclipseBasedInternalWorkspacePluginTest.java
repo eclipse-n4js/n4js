@@ -45,6 +45,16 @@ public class EclipseBasedInternalWorkspacePluginTest extends AbstractInternalWor
 	}
 
 	@Override
+	protected String[] getExpectedIssuesInInitialSetup(String projectName) {
+		if (projectName.equals(myProjectName)) {
+			return new String[] {
+					"line 6: Project depends on workspace project libProject which is missing in the node_modules folder. Either install project libProject or introduce a yarn workspace of both of the projects."
+			};
+		}
+		return new String[0];
+	}
+
+	@Override
 	public void setUp() {
 		testMe = new EclipseBasedN4JSWorkspace(workspace, projectDescriptionLoader, cache);
 		super.setUp();

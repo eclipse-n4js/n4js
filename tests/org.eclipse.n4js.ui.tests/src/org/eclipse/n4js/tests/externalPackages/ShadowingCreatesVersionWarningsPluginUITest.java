@@ -19,6 +19,7 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.N4JSExternalProject;
@@ -54,11 +55,6 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 	@Inject
 	private ShadowingInfoHelper shadowingInfoHelper;
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/**
 	 * Checks whether the external refreshing does not cause deadlock due to incorrect workspace checkpoints and
 	 * incorrect job family configuration.
@@ -67,6 +63,8 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 	public void testShadowingCreatesVersionWarnings() throws Exception {
 		File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 		ProjectTestsUtils.importYarnWorkspace(libraryManager, projectsRoot, YARN_PROJECT);
+		ProjectTestsUtils.importProject(projectsRoot, PROJECT_N4JSLANG);
+		libraryManager.runNpmYarnInstallOnAllProjects(new NullProgressMonitor());
 
 		syncExtAndBuild();
 

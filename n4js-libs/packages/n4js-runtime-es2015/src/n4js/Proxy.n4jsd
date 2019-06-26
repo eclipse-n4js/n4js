@@ -11,14 +11,14 @@
 @@Global @@ProvidedByRuntime
 
 export external public interface ~ProxyHandler<T extends Object> {
-    public construct?: {function(/*target: */T, /*argumentsList: */Array<any>): Object};
-    public apply?: {function(/*target: */T, /*thisArg: */Object, /*argumentsList: */Array<any>): any};
+    public construct?: {function(/*target: */T, /*argumentsList: */any[]): Object};
+    public apply?: {function(/*target: */T, /*thisArg: */Object, /*argumentsList: */any[]): any};
     public has?: {function(/*target: */T, /*property: */union{string, symbol}): boolean};
     public get?: {function(/*target: */T, /*property: */union{string, symbol}, /*receiver: */T): any};
     public set?: {function(/*target: */T, /*property: */union{string, symbol}, /*value: */any, /*receiver: */T): boolean};
     public deleteProperty?: {function(/*target:  */T, /*property: */union{string, symbol}): boolean};
     public defineProperty?: {function(/*target:  */T, /*property: */union{string, symbol}, /*descriptor: */Object): boolean};
-    public ownKeys?: {function(/*target:  */T): Array<union{symbol, string}>};
+    public ownKeys?: {function(/*target:  */T): union{symbol, string}[]};
 
     public getOwnPropertyDescriptor?: {function(/*target:  */T, /*property: */union{string, symbol}): Object?};
     public getPrototypeOf?: {function(/*target:  */T): Object};

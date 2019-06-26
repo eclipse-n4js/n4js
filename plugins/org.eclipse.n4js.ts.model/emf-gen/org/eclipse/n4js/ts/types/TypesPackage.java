@@ -42,7 +42,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-model-doc -->
  * @see org.eclipse.n4js.ts.types.TypesFactory
  * @model kind="package"
- *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4ts' rootExtendsClass='org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl' modelDirectory='/org.eclipse.n4js.ts.model/emf-gen' forceOverwrite='true' updateClasspath='false' complianceLevel='8.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.ts'"
+ *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4ts' rootExtendsClass='org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl' modelDirectory='/org.eclipse.n4js.ts.model/emf-gen' forceOverwrite='true' updateClasspath='false' complianceLevel='11.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.ts'"
  * @generated
  */
 public interface TypesPackage extends EPackage {
@@ -208,22 +208,13 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__VENDOR_ID = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Module Loader</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__MODULE_LOADER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 4;
-
-	/**
 	 * The feature id for the '<em><b>N4jsd Module</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__N4JSD_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 5;
+	int TMODULE__N4JSD_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Static Polyfill Module</b></em>' attribute.
@@ -232,7 +223,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__STATIC_POLYFILL_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 6;
+	int TMODULE__STATIC_POLYFILL_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Static Polyfill Aware</b></em>' attribute.
@@ -241,7 +232,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__STATIC_POLYFILL_AWARE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 7;
+	int TMODULE__STATIC_POLYFILL_AWARE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Main Module</b></em>' attribute.
@@ -250,7 +241,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MAIN_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 8;
+	int TMODULE__MAIN_MODULE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Pre Linking Phase</b></em>' attribute.
@@ -259,7 +250,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__PRE_LINKING_PHASE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 9;
+	int TMODULE__PRE_LINKING_PHASE = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Reconciled</b></em>' attribute.
@@ -268,7 +259,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__RECONCILED = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 10;
+	int TMODULE__RECONCILED = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
@@ -277,7 +268,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TOP_LEVEL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
+	int TMODULE__TOP_LEVEL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
@@ -286,7 +277,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__VARIABLES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
+	int TMODULE__VARIABLES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Internal Types</b></em>' containment reference list.
@@ -295,7 +286,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
+	int TMODULE__INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Exposed Internal Types</b></em>' containment reference list.
@@ -304,7 +295,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__EXPOSED_INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
+	int TMODULE__EXPOSED_INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Ast MD5</b></em>' attribute.
@@ -313,7 +304,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__AST_MD5 = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
+	int TMODULE__AST_MD5 = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Composed Member Caches</b></em>' containment reference list.
@@ -322,7 +313,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
+	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Temporary Types</b></em>' containment reference list.
@@ -331,7 +322,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TEMPORARY_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
+	int TMODULE__TEMPORARY_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
@@ -340,7 +331,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 18;
+	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
 
 	/**
 	 * The number of structural features of the '<em>TModule</em>' class.
@@ -349,7 +340,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 19;
+	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 18;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -12756,17 +12747,6 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTModule_VendorID();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getModuleLoader <em>Module Loader</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Module Loader</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getModuleLoader()
-	 * @see #getTModule()
-	 * @generated
-	 */
-	EAttribute getTModule_ModuleLoader();
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#isN4jsdModule <em>N4jsd Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15738,14 +15718,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMODULE__VENDOR_ID = eINSTANCE.getTModule_VendorID();
-
-		/**
-		 * The meta object literal for the '<em><b>Module Loader</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TMODULE__MODULE_LOADER = eINSTANCE.getTModule_ModuleLoader();
 
 		/**
 		 * The meta object literal for the '<em><b>N4jsd Module</b></em>' attribute feature.

@@ -28,8 +28,7 @@
       "source": [
         "src/n4js"
       ]
-    },
-    "moduleLoader": "n4js"
+    }
   },
   "dependencies": {
     "n4js-runtime-es2015": "^0.1.0"

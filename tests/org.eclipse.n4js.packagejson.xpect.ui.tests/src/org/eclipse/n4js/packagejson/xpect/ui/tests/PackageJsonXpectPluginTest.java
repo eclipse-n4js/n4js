@@ -1,6 +1,6 @@
 package org.eclipse.n4js.packagejson.xpect.ui.tests;
 
-import org.eclipse.n4js.json.validation.suppression.JSONSuppressIssuesSetup;
+import org.eclipse.n4js.json.validation.suppression.PackageJsonSuppressIssuesSetup;
 import org.eclipse.n4js.xpect.ui.methods.HyperlinkXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.xpect.XpectImport;
@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect", fileExtensions = { "xt" })
-@XpectImport({JSONSuppressIssuesSetup.class})
+@XpectImport({PackageJsonSuppressIssuesSetup.class})
 public class PackageJsonXpectPluginTest {
 	// test setup configuration class
 }

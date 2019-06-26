@@ -95,16 +95,19 @@ import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.HexIntLiteral;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IfStatement;
+import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.IterationStatement;
+import org.eclipse.n4js.n4JS.JSXAbstractElement;
 import org.eclipse.n4js.n4JS.JSXAttribute;
 import org.eclipse.n4js.n4JS.JSXChild;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXElementName;
 import org.eclipse.n4js.n4JS.JSXExpression;
+import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.JSXText;
@@ -119,6 +122,7 @@ import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
 import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.MultiplicativeOperator;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -168,6 +172,7 @@ import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration;
+import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RegularExpressionLiteral;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.RelationalOperator;
@@ -871,6 +876,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass propertySpreadEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass expressionEClass = null;
 
 	/**
@@ -900,6 +912,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass parameterizedCallExpressionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass importCallExpressionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1403,7 +1422,21 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass jsxAbstractElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass jsxElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxFragmentEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1425,6 +1458,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass migrationContextVariableEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum moduleSpecifierFormEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1899,6 +1939,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EAttribute getImportDeclaration_ModuleSpecifierAsText() {
 		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getImportDeclaration_ModuleSpecifierForm() {
+		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -4477,6 +4527,36 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getPropertySpread() {
+		return propertySpreadEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getPropertySpread_Expression() {
+		return (EReference)propertySpreadEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getPropertySpread__GetDefinedMember() {
+		return propertySpreadEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getExpression() {
 		return expressionEClass;
 	}
@@ -4609,6 +4689,36 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EOperation getParameterizedCallExpression__GetReceiver() {
 		return parameterizedCallExpressionEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getImportCallExpression() {
+		return importCallExpressionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getImportCallExpression_Arguments() {
+		return (EReference)importCallExpressionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getImportCallExpression__GetArgument() {
+		return importCallExpressionEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -6897,6 +7007,26 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getJSXAbstractElement() {
+		return jsxAbstractElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getJSXAbstractElement_JsxChildren() {
+		return (EReference)jsxAbstractElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getJSXElement() {
 		return jsxElementEClass;
 	}
@@ -6927,7 +7057,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getJSXElement_JsxChildren() {
+	public EReference getJSXElement_JsxClosingName() {
 		return (EReference)jsxElementEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -6937,8 +7067,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getJSXElement_JsxClosingName() {
-		return (EReference)jsxElementEClass.getEStructuralFeatures().get(3);
+	public EClass getJSXFragment() {
+		return jsxFragmentEClass;
 	}
 
 	/**
@@ -7019,6 +7149,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EOperation getMigrationContextVariable__GetName() {
 		return migrationContextVariableEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EEnum getModuleSpecifierForm() {
+		return moduleSpecifierFormEEnum;
 	}
 
 	/**
@@ -7256,6 +7396,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__IMPORT_FROM);
 		createEReference(importDeclarationEClass, IMPORT_DECLARATION__MODULE);
 		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT);
+		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__MODULE_SPECIFIER_FORM);
 
 		importSpecifierEClass = createEClass(IMPORT_SPECIFIER);
 		createEAttribute(importSpecifierEClass, IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE);
@@ -7598,6 +7739,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(propertySetterDeclarationEClass, PROPERTY_SETTER_DECLARATION___GET_DEFINED_MEMBER);
 		createEOperation(propertySetterDeclarationEClass, PROPERTY_SETTER_DECLARATION___IS_VALID_NAME);
 
+		propertySpreadEClass = createEClass(PROPERTY_SPREAD);
+		createEReference(propertySpreadEClass, PROPERTY_SPREAD__EXPRESSION);
+		createEOperation(propertySpreadEClass, PROPERTY_SPREAD___GET_DEFINED_MEMBER);
+
 		expressionEClass = createEClass(EXPRESSION);
 		createEOperation(expressionEClass, EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET);
 
@@ -7616,6 +7761,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(parameterizedCallExpressionEClass, PARAMETERIZED_CALL_EXPRESSION__TARGET);
 		createEReference(parameterizedCallExpressionEClass, PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS);
 		createEOperation(parameterizedCallExpressionEClass, PARAMETERIZED_CALL_EXPRESSION___GET_RECEIVER);
+
+		importCallExpressionEClass = createEClass(IMPORT_CALL_EXPRESSION);
+		createEReference(importCallExpressionEClass, IMPORT_CALL_EXPRESSION__ARGUMENTS);
+		createEOperation(importCallExpressionEClass, IMPORT_CALL_EXPRESSION___GET_ARGUMENT);
 
 		argumentEClass = createEClass(ARGUMENT);
 		createEAttribute(argumentEClass, ARGUMENT__SPREAD);
@@ -7916,11 +8065,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxSpreadAttributeEClass = createEClass(JSX_SPREAD_ATTRIBUTE);
 		createEReference(jsxSpreadAttributeEClass, JSX_SPREAD_ATTRIBUTE__EXPRESSION);
 
+		jsxAbstractElementEClass = createEClass(JSX_ABSTRACT_ELEMENT);
+		createEReference(jsxAbstractElementEClass, JSX_ABSTRACT_ELEMENT__JSX_CHILDREN);
+
 		jsxElementEClass = createEClass(JSX_ELEMENT);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_ELEMENT_NAME);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_ATTRIBUTES);
-		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CHILDREN);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CLOSING_NAME);
+
+		jsxFragmentEClass = createEClass(JSX_FRAGMENT);
 
 		versionedElementEClass = createEClass(VERSIONED_ELEMENT);
 		createEAttribute(versionedElementEClass, VERSIONED_ELEMENT__DECLARED_VERSION);
@@ -7934,6 +8087,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(migrationContextVariableEClass, MIGRATION_CONTEXT_VARIABLE___GET_NAME);
 
 		// Create enums
+		moduleSpecifierFormEEnum = createEEnum(MODULE_SPECIFIER_FORM);
 		variableStatementKeywordEEnum = createEEnum(VARIABLE_STATEMENT_KEYWORD);
 		propertyNameKindEEnum = createEEnum(PROPERTY_NAME_KIND);
 		postfixOperatorEEnum = createEEnum(POSTFIX_OPERATOR);
@@ -8122,6 +8276,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		propertyGetterDeclarationEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
 		propertySetterDeclarationEClass.getESuperTypes().add(this.getSetterDeclaration());
 		propertySetterDeclarationEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
+		propertySpreadEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
 		expressionEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		expressionEClass.getESuperTypes().add(this.getControlFlowElement());
 		newTargetEClass.getESuperTypes().add(this.getExpression());
@@ -8129,6 +8284,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		newExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
 		parameterizedCallExpressionEClass.getESuperTypes().add(this.getExpression());
 		parameterizedCallExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
+		importCallExpressionEClass.getESuperTypes().add(this.getExpression());
 		argumentEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		indexedAccessExpressionEClass.getESuperTypes().add(this.getExpression());
 		indexedAccessExpressionEClass.getESuperTypes().add(this.getMemberAccess());
@@ -8235,8 +8391,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxPropertyAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
 		jsxPropertyAttributeEClass.getESuperTypes().add(this.getMemberAccess());
 		jsxSpreadAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
+		jsxAbstractElementEClass.getESuperTypes().add(this.getExpression());
 		jsxElementEClass.getESuperTypes().add(this.getExpression());
 		jsxElementEClass.getESuperTypes().add(this.getJSXChild());
+		jsxElementEClass.getESuperTypes().add(this.getJSXAbstractElement());
+		jsxFragmentEClass.getESuperTypes().add(this.getJSXChild());
+		jsxFragmentEClass.getESuperTypes().add(this.getJSXAbstractElement());
 		versionedIdentifierRefEClass.getESuperTypes().add(this.getIdentifierRef());
 		versionedIdentifierRefEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedReference());
 		migrationContextVariableEClass.getESuperTypes().add(this.getVariable());
@@ -8283,6 +8443,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getImportDeclaration_ImportFrom(), theEcorePackage.getEBoolean(), "importFrom", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getImportDeclaration_Module(), theTypesPackage.getTModule(), null, "module", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportDeclaration_ModuleSpecifierAsText(), theEcorePackage.getEString(), "moduleSpecifierAsText", null, 0, 1, ImportDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportDeclaration_ModuleSpecifierForm(), this.getModuleSpecifierForm(), "moduleSpecifierForm", null, 0, 1, ImportDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(importSpecifierEClass, ImportSpecifier.class, "ImportSpecifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getImportSpecifier_FlaggedUsedInCode(), theEcorePackage.getEBoolean(), "flaggedUsedInCode", null, 0, 1, ImportSpecifier.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -8707,6 +8868,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getPropertySetterDeclaration__IsValidName(), theEcorePackage.getEBoolean(), "isValidName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEClass(propertySpreadEClass, PropertySpread.class, "PropertySpread", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getPropertySpread_Expression(), this.getExpression(), null, "expression", null, 0, 1, PropertySpread.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getPropertySpread__GetDefinedMember(), theTypesPackage.getTStructField(), "getDefinedMember", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(expressionEClass, Expression.class, "Expression", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getExpression__IsValidSimpleAssignmentTarget(), theEcorePackage.getEBoolean(), "isValidSimpleAssignmentTarget", 0, 1, !IS_UNIQUE, IS_ORDERED);
@@ -8728,6 +8894,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getParameterizedCallExpression_Arguments(), this.getArgument(), null, "arguments", null, 0, -1, ParameterizedCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getParameterizedCallExpression__GetReceiver(), this.getExpression(), "getReceiver", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(importCallExpressionEClass, ImportCallExpression.class, "ImportCallExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getImportCallExpression_Arguments(), this.getArgument(), null, "arguments", null, 0, -1, ImportCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getImportCallExpression__GetArgument(), this.getArgument(), "getArgument", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(argumentEClass, Argument.class, "Argument", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getArgument_Spread(), theEcorePackage.getEBoolean(), "spread", null, 0, 1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -9096,11 +9267,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(jsxSpreadAttributeEClass, JSXSpreadAttribute.class, "JSXSpreadAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJSXSpreadAttribute_Expression(), this.getExpression(), null, "expression", null, 0, 1, JSXSpreadAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(jsxAbstractElementEClass, JSXAbstractElement.class, "JSXAbstractElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSXAbstractElement_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXAbstractElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(jsxElementEClass, JSXElement.class, "JSXElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJSXElement_JsxElementName(), this.getJSXElementName(), null, "jsxElementName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getJSXElement_JsxAttributes(), this.getJSXAttribute(), null, "jsxAttributes", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getJSXElement_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getJSXElement_JsxClosingName(), this.getJSXElementName(), null, "jsxClosingName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsxFragmentEClass, JSXFragment.class, "JSXFragment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(versionedElementEClass, VersionedElement.class, "VersionedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getVersionedElement_DeclaredVersion(), theEcorePackage.getEBigDecimal(), "declaredVersion", null, 0, 1, VersionedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -9118,6 +9293,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getMigrationContextVariable__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		// Initialize enums and add enum literals
+		initEEnum(moduleSpecifierFormEEnum, ModuleSpecifierForm.class, "ModuleSpecifierForm");
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.UNKNOWN);
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.PLAIN);
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.COMPLETE);
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.PROJECT);
+		addEEnumLiteral(moduleSpecifierFormEEnum, ModuleSpecifierForm.PROJECT_NO_MAIN);
+
 		initEEnum(variableStatementKeywordEEnum, VariableStatementKeyword.class, "VariableStatementKeyword");
 		addEEnumLiteral(variableStatementKeywordEEnum, VariableStatementKeyword.VAR);
 		addEEnumLiteral(variableStatementKeywordEEnum, VariableStatementKeyword.CONST);

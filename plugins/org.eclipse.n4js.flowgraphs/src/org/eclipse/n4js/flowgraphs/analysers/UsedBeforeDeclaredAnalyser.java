@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.analysis.FastFlowVisitor;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -65,7 +66,7 @@ public class UsedBeforeDeclaredAnalyser extends FastFlowVisitor {
 			}
 		} else if (cfe instanceof IdentifierRef) {
 			IdentifierRef ir = (IdentifierRef) cfe;
-			IdentifiableElement id = ir.getId();
+			IdentifiableElement id = SymbolFactory.getId(ir);
 			CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(id);
 			if (userData != null) {
 				userData.idRefs.add(ir);

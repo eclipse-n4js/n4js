@@ -13,7 +13,7 @@
 export public interface ~URLSearchParams {
     public has(param: string): boolean;
     public get(param: string): string;
-    public getAll(param: string): Array<string>;
+    public getAll(param: string): string[];
     public append(param: string, value: string=): void;
     public delete(param: string): void;
     //public string toString();

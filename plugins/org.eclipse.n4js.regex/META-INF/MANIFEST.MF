@@ -7,7 +7,7 @@ Bundle-SymbolicName: org.eclipse.n4js.regex;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.xtext.generator;resolution:=optional,
- org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional,
+ org.apache.commons.logging;resolution:=optional,
  org.eclipse.emf.codegen.ecore;resolution:=optional,
  org.eclipse.emf.mwe.utils;resolution:=optional,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.equinox.common;resolution:=optional,
  org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.regex,
  org.eclipse.n4js.regex.services,
  org.eclipse.n4js.regex.regularExpression,

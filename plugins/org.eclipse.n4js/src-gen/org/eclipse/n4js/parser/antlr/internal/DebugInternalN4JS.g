@@ -72,7 +72,10 @@ ruleScriptElement:
 			ruleN4EnumDeclaration
 		)
 		    |
-		ruleImportDeclaration
+		(
+			(ruleImportDeclaration)=>
+			ruleImportDeclaration
+		)
 		    |
 		ruleExportDeclaration
 		    |
@@ -1897,6 +1900,8 @@ ruleForStatement:
 						    |
 						'<'
 						    |
+						'import'
+						    |
 						'true'
 						    |
 						'false'
@@ -1963,7 +1968,7 @@ ruleForStatement:
 						'of'
 					)
 					(
-						('await' | '@' | '(' | 'async' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'new' | 'this' | 'super' | '<' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+						('await' | '@' | '(' | 'async' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 						norm1_AssignmentExpression
 					)?
 				)
@@ -2116,6 +2121,8 @@ norm1_ForStatement:
 						    |
 						'<'
 						    |
+						'import'
+						    |
 						'true'
 						    |
 						'false'
@@ -2182,7 +2189,7 @@ norm1_ForStatement:
 						'of'
 					)
 					(
-						('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+						('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 						norm3_AssignmentExpression
 					)?
 				)
@@ -2577,7 +2584,11 @@ rulePrimaryExpression:
 		    |
 		ruleIdentifierRef
 		    |
+		ruleJSXFragment
+		    |
 		ruleJSXElement
+		    |
+		ruleImportCallExpression
 		    |
 		ruleParameterizedCallExpression
 		    |
@@ -2616,7 +2627,11 @@ norm1_PrimaryExpression:
 		    |
 		norm1_IdentifierRef
 		    |
+		ruleJSXFragment
+		    |
 		ruleJSXElement
+		    |
+		norm1_ImportCallExpression
 		    |
 		norm1_ParameterizedCallExpression
 		    |
@@ -2967,6 +2982,8 @@ rulePropertyAssignment:
 		)
 		    |
 		rulePropertyNameValuePairSingleName
+		    |
+		rulePropertySpread
 	)
 ;
 
@@ -3156,6 +3173,8 @@ norm1_PropertyAssignment:
 		)
 		    |
 		norm1_PropertyNameValuePairSingleName
+		    |
+		norm1_PropertySpread
 	)
 ;
 
@@ -3388,6 +3407,9 @@ ruleAnnotatedPropertyAssignment:
 			'='
 			norm1_AssignmentExpression
 		)?
+		    |
+		'...'
+		norm1_AssignmentExpression
 	)
 ;
 
@@ -3620,6 +3642,9 @@ norm1_AnnotatedPropertyAssignment:
 			'='
 			norm3_AssignmentExpression
 		)?
+		    |
+		'...'
+		norm3_AssignmentExpression
 	)
 ;
 
@@ -4113,6 +4138,18 @@ norm1_PropertySetterDeclaration:
 	)
 ;
 
+// Rule PropertySpread
+rulePropertySpread:
+	'...'
+	norm1_AssignmentExpression
+;
+
+// Rule PropertySpread
+norm1_PropertySpread:
+	'...'
+	norm3_AssignmentExpression
+;
+
 // Rule ParameterizedCallExpression
 ruleParameterizedCallExpression:
 	ruleConcreteTypeArguments
@@ -4136,6 +4173,18 @@ ruleConcreteTypeArguments:
 		ruleTypeRef
 	)*
 	'>'
+;
+
+// Rule ImportCallExpression
+ruleImportCallExpression:
+	'import'
+	ruleArgumentsWithParentheses
+;
+
+// Rule ImportCallExpression
+norm1_ImportCallExpression:
+	'import'
+	norm1_ArgumentsWithParentheses
 ;
 
 // Rule LeftHandSideExpression
@@ -4381,7 +4430,7 @@ ruleCastExpression:
 			)=>
 			'as'
 		)
-		ruleTypeRefForCast
+		ruleArrayTypeExpression
 	)?
 ;
 
@@ -4394,7 +4443,7 @@ norm1_CastExpression:
 			)=>
 			'as'
 		)
-		ruleTypeRefForCast
+		ruleArrayTypeExpression
 	)?
 ;
 
@@ -4571,6 +4620,8 @@ ruleRelationalExpression:
 			    |
 			'<'
 			    |
+			'import'
+			    |
 			'true'
 			    |
 			'false'
@@ -4636,7 +4687,7 @@ ruleRelationalExpression:
 		)=>
 		ruleRelationalOperator
 		(
-			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 			ruleShiftExpression
 		)
 	)*
@@ -4708,6 +4759,8 @@ norm1_RelationalExpression:
 			    |
 			'<'
 			    |
+			'import'
+			    |
 			'true'
 			    |
 			'false'
@@ -4773,7 +4826,7 @@ norm1_RelationalExpression:
 		)=>
 		norm1_RelationalOperator
 		(
-			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 			ruleShiftExpression
 		)
 	)*
@@ -4843,6 +4896,8 @@ norm2_RelationalExpression:
 			    |
 			'<'
 			    |
+			'import'
+			    |
 			'true'
 			    |
 			'false'
@@ -4908,7 +4963,7 @@ norm2_RelationalExpression:
 		)=>
 		ruleRelationalOperator
 		(
-			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 			norm1_ShiftExpression
 		)
 	)*
@@ -4978,6 +5033,8 @@ norm3_RelationalExpression:
 			    |
 			'<'
 			    |
+			'import'
+			    |
 			'true'
 			    |
 			'false'
@@ -5043,7 +5100,7 @@ norm3_RelationalExpression:
 		)=>
 		norm1_RelationalOperator
 		(
-			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 			norm1_ShiftExpression
 		)
 	)*
@@ -5705,7 +5762,7 @@ ruleYieldExpression:
 		'*'
 	)?
 	(
-		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 		norm2_AssignmentExpression
 	)?
 ;
@@ -5719,7 +5776,7 @@ norm1_YieldExpression:
 		'*'
 	)?
 	(
-		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 		norm3_AssignmentExpression
 	)?
 ;
@@ -6167,34 +6224,6 @@ ruleLiteralAnnotationArgument:
 // Rule TypeRefAnnotationArgument
 ruleTypeRefAnnotationArgument:
 	ruleTypeRef
-;
-
-// Rule TypeRefForCast
-ruleTypeRefForCast:
-	(
-		ruleParameterizedTypeRef
-		    |
-		ruleArrayTypeRef
-		    |
-		ruleThisTypeRef
-		    |
-		ruleTypeTypeRef
-		    |
-		(
-			('('
-			ruleTAnonymousFormalParameterList
-			')'
-			'=>'
-			)=>
-			ruleArrowFunctionTypeExpression
-		)
-		    |
-		ruleFunctionTypeExpressionOLD
-		    |
-		ruleUnionTypeExpressionOLD
-		    |
-		ruleIntersectionTypeExpressionOLD
-	)
 ;
 
 // Rule AnnotationList
@@ -8112,18 +8141,24 @@ ruleJSXElement:
 		'>'
 		ruleJSXChild
 		*
-		ruleJSXClosingElement
+		'<'
+		'/'
+		ruleJSXElementName
+		'>'
 		    |
 		'/'
 		'>'
 	)
 ;
 
-// Rule JSXClosingElement
-ruleJSXClosingElement:
+// Rule JSXFragment
+ruleJSXFragment:
+	'<'
+	'>'
+	ruleJSXChild
+	*
 	'<'
 	'/'
-	ruleJSXElementName
 	'>'
 ;
 
@@ -8131,6 +8166,8 @@ ruleJSXClosingElement:
 ruleJSXChild:
 	(
 		ruleJSXElement
+		    |
+		ruleJSXFragment
 		    |
 		ruleJSXExpression
 	)
@@ -8212,13 +8249,51 @@ ruleTypeRef:
 
 // Rule IntersectionTypeExpression
 ruleIntersectionTypeExpression:
-	rulePrimaryTypeExpression
+	ruleArrayTypeExpression
 	(
 		(
 			'&'
-			rulePrimaryTypeExpression
+			ruleArrayTypeExpression
 		)+
 	)?
+;
+
+// Rule ArrayTypeExpression
+ruleArrayTypeExpression:
+	(
+		ruleWildcardOldNotationWithoutBound
+		'['
+		']'
+		(
+			('['
+			']'
+			)=>
+			'['
+			']'
+		)*
+		    |
+		'('
+		ruleWildcard
+		')'
+		'['
+		']'
+		(
+			('['
+			']'
+			)=>
+			'['
+			']'
+		)*
+		    |
+		rulePrimaryTypeExpression
+		(
+			('['
+			']'
+			)=>
+			'['
+			']'
+		)*
+	)
 ;
 
 // Rule PrimaryTypeExpression
@@ -8233,7 +8308,7 @@ rulePrimaryTypeExpression:
 			ruleArrowFunctionTypeExpression
 		)
 		    |
-		ruleArrayTypeRef
+		ruleIterableTypeExpression
 		    |
 		ruleTypeRefWithModifiers
 		    |
@@ -8282,7 +8357,7 @@ ruleTypeRefFunctionTypeExpression:
 	(
 		ruleParameterizedTypeRef
 		    |
-		ruleArrayTypeRef
+		ruleIterableTypeExpression
 		    |
 		ruleTypeTypeRef
 		    |
@@ -8302,7 +8377,7 @@ ruleTypeArgInTypeTypeRef:
 		(
 			('?'
 			)=>
-			ruleWildcard
+			ruleWildcardOldNotation
 		)
 	)
 ;
@@ -8419,10 +8494,10 @@ ruleDefaultFormalParameter:
 ruleUnionTypeExpressionOLD:
 	'union'
 	'{'
-	ruleTypeRefWithoutModifiers
+	ruleTypeRef
 	(
 		','
-		ruleTypeRefWithoutModifiers
+		ruleTypeRef
 	)*
 	'}'
 ;
@@ -8431,10 +8506,10 @@ ruleUnionTypeExpressionOLD:
 ruleIntersectionTypeExpressionOLD:
 	'intersection'
 	'{'
-	ruleTypeRefWithoutModifiers
+	ruleTypeRef
 	(
 		','
-		ruleTypeRefWithoutModifiers
+		ruleTypeRef
 	)*
 	'}'
 ;
@@ -8482,10 +8557,23 @@ ruleParameterizedTypeRefStructural:
 	)?
 ;
 
-// Rule ArrayTypeRef
-ruleArrayTypeRef:
+// Rule IterableTypeExpression
+ruleIterableTypeExpression:
 	'['
-	ruleTypeArgument
+	(
+		ruleEmptyIterableTypeExpressionTail
+		    |
+		ruleTypeArgument
+		(
+			','
+			ruleTypeArgument
+		)*
+		']'
+	)
+;
+
+// Rule EmptyIterableTypeExpressionTail
+ruleEmptyIterableTypeExpressionTail:
 	']'
 ;
 
@@ -8663,13 +8751,7 @@ ruleTypeTypeRef:
 // Rule TypeArgument
 ruleTypeArgument:
 	(
-		(
-			('?'
-			)=>
-			ruleWildcard
-		)
-		    |
-		ruleWildcardNewNotation
+		ruleWildcard
 		    |
 		ruleTypeRef
 	)
@@ -8677,6 +8759,19 @@ ruleTypeArgument:
 
 // Rule Wildcard
 ruleWildcard:
+	(
+		(
+			('?'
+			)=>
+			ruleWildcardOldNotation
+		)
+		    |
+		ruleWildcardNewNotation
+	)
+;
+
+// Rule WildcardOldNotation
+ruleWildcardOldNotation:
 	(
 		('?'
 		)=>
@@ -8689,6 +8784,11 @@ ruleWildcard:
 		'super'
 		ruleTypeRef
 	)?
+;
+
+// Rule WildcardOldNotationWithoutBound
+ruleWildcardOldNotationWithoutBound:
+	'?'
 ;
 
 // Rule WildcardNewNotation

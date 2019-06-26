@@ -65,6 +65,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
@@ -72,7 +73,6 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
-import org.eclipse.n4js.utils.N4JSDataCollectors;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
@@ -376,7 +376,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Override
 	public EList<Adapter> eAdapters() {
 		if (eAdapters == null) {
-			eAdapters = new EAdapterList<Adapter>(this) {
+			eAdapters = new EAdapterList<>(this) {
 				@Override
 				protected void didRemove(int index, Adapter oldObject) {
 					boolean wasRemoving = removingAdapters;

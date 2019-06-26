@@ -23,7 +23,6 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.JSXElement#getJsxElementName <em>Jsx Element Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.JSXElement#getJsxAttributes <em>Jsx Attributes</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.JSXElement#getJsxChildren <em>Jsx Children</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.JSXElement#getJsxClosingName <em>Jsx Closing Name</em>}</li>
  * </ul>
  *
@@ -31,7 +30,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface JSXElement extends Expression, JSXChild {
+public interface JSXElement extends Expression, JSXChild, JSXAbstractElement {
 	/**
 	 * Returns the value of the '<em><b>Jsx Element Name</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -65,18 +64,6 @@ public interface JSXElement extends Expression, JSXChild {
 	 * @generated
 	 */
 	EList<JSXAttribute> getJsxAttributes();
-
-	/**
-	 * Returns the value of the '<em><b>Jsx Children</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4JS.JSXChild}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Jsx Children</em>' containment reference list.
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getJSXElement_JsxChildren()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<JSXChild> getJsxChildren();
 
 	/**
 	 * Returns the value of the '<em><b>Jsx Closing Name</b></em>' containment reference.

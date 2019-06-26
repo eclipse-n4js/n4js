@@ -2,6 +2,7 @@
   "name": "GHOLD-120",
   "version": "0.0.1",
   "dependencies": {
+    "n4js-runtime": "*",
     "org.eclipse.n4js.mangelhaft": "*",
     "org.eclipse.n4js.mangelhaft.assert": "*"
   },
@@ -14,7 +15,6 @@
       "test": [
         "test"
       ]
-    },
-    "moduleLoader": "n4js"
+    }
   }
 }

@@ -1,8 +1,8 @@
 {
 	"private": true,
 	"devDependencies": {
-		"lerna": "2.11.0",
-		"semver": "5.5.1"
+		"lerna": "3.14.1",
+		"semver": "6.1.1"
 	},
 	"scripts": {
 		"build": "./npm-build-all.sh"

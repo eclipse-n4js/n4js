@@ -17,6 +17,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope;
+import org.eclipse.n4js.ts.scoping.builtin.ExecutionEnvironmentDescriptor;
+import org.eclipse.n4js.ts.types.TClass;
+import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -24,11 +28,6 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.common.annotations.VisibleForTesting;
-
-import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope;
-import org.eclipse.n4js.ts.scoping.builtin.ExecutionEnvironmentDescriptor;
-import org.eclipse.n4js.ts.types.TClass;
-import org.eclipse.n4js.ts.types.TField;
 
 /**
  * This scope provides access to the built in JS global object.
@@ -94,7 +93,7 @@ public final class GlobalObjectScope extends EnumerableScope {
 		IDefaultResourceDescriptionStrategy strategy = ((XtextResource) resource).getResourceServiceProvider()
 				.get(IDefaultResourceDescriptionStrategy.class);
 		TreeIterator<EObject> allProperContents = EcoreUtil.getAllProperContents(resource, false);
-		IAcceptor<IEObjectDescription> acceptor = new IAcceptor<IEObjectDescription>() {
+		IAcceptor<IEObjectDescription> acceptor = new IAcceptor<>() {
 			@Override
 			public void accept(IEObjectDescription description) {
 				elements.put(description.getQualifiedName(), description);

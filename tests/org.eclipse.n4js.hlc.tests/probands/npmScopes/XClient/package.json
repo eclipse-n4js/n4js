@@ -2,6 +2,7 @@
 	"name": "XClient",
 	"version": "0.0.1",
 	"dependencies": {
+		"n4js-runtime": "0.1.0",
 		"@myScope/Lib": "*",
 		"Lib": "*"
 	},

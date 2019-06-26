@@ -133,26 +133,6 @@
 		// XPECT noerrors
 		"requiredRuntimeLibraries": [
 			
-		],
-		
-		// XPECT errors --> "Invalid module loader "invalidLoader"." at ""invalidLoader""
-		"moduleLoader": "invalidLoader",
-		// XPECT errors --> "Expected string instead of number ." at "123"
-		"moduleLoader": 123,
-		// XPECT noerrors
-		"moduleLoader": "n4js",
-		
-		// XPECT errors --> "Expected array instead of number as init modules." at "123"
-		"initModules": 123,
-		// XPECT noerrors
-		"initModules": [
-			"valid"
-		],
-		
-		// XPECT errors --> "Expected string instead of array as exec module." at "[]"
-		"execModule": [],
-		// XPECT noerrors
-		"execModule": "valid"
-		
+		]
 	}
 }

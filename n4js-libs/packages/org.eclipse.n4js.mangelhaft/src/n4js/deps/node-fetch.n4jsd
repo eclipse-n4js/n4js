@@ -1,0 +1,24 @@
+import {Agent} from "http";
+
+export external public abstract class ~NodeFetchRequestInit extends RequestInit {
+    @Override
+    public get body?(): string|Buffer;
+
+    public follow?: int; // maximum redirect count. 0 to not follow redirect
+    public timeout?: int; // req/res timeout in ms, it resets on redirect. 0 to disable (OS limit applies). Signal is recommended instead.
+    public compress?: boolean // support gzip/deflate content encoding. false to disable
+    public size?: int // maximum response body size in bytes. 0 to disable
+    public agent?: Agent // http(s).Agent instance, allows custom proxy, certificate, dns lookup etc.
+}
+
+export external public abstract class NodeFetchBody extends Body {
+    public async buffer(): Buffer;
+    public async textConverted(): string;
+}
+
+// TODO: npm/n4jsd
+export default external public async function fetch(input: union{string, Request}, init: NodeFetchRequestInit=): Response;
+
+export external public const Request: constructor{Request};
+export external public const Response: constructor{Response};
+export external public const Headers: constructor{Headers};

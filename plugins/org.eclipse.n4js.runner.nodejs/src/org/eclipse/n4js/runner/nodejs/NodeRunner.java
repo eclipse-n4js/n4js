@@ -10,34 +10,29 @@
  */
 package org.eclipse.n4js.runner.nodejs;
 
-import static com.google.common.base.Joiner.on;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newLinkedHashSet;
+import static com.google.common.base.CharMatcher.breakingWhitespace;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.IRunner;
 import org.eclipse.n4js.runner.RunConfiguration;
-import org.eclipse.n4js.runner.RunnerFileBasedShippedCodeConfigurationHelper;
-import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerDescriptorImpl;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
-import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -46,12 +41,18 @@ import com.google.inject.Provider;
  * Concrete runner, i.e. runner implementation for node.js engine.
  */
 public class NodeRunner implements IRunner {
-	private final static String NODE_PATH_SEP = File.pathSeparator;
 
-	/** Environment key */
+	/** Name of environment variable used by node to obtain list of search paths. */
 	private static final String NODE_PATH = "NODE_PATH";
 
-	private static final Logger LOGGER = Logger.getLogger(NodeRunner.class);
+	/** Separator used in {@link #NODE_PATH}. */
+	private static final String NODE_PATH_SEP = File.pathSeparator;
+
+	/**
+	 * Splitter used for parsing the {@link RunConfiguration#getEngineOptions() engine} and
+	 * {@link RunConfiguration#getRunOptions() run options}.
+	 */
+	private static final Splitter OPTIONS_SPLITTER = Splitter.on(breakingWhitespace()).omitEmptyStrings().trimResults();
 
 	/** ID of the Node.js runner as defined in the plugin.xml. */
 	public static final String ID = "org.eclipse.n4js.runner.nodejs.NODEJS";
@@ -79,16 +80,7 @@ public class NodeRunner implements IRunner {
 			RuntimeEnvironment.NODEJS, new NodeRunner());
 
 	@Inject
-	private Provider<NodeEngineCommandBuilder> commandBuilderProvider;
-
-	@Inject
 	private Provider<NodeJsBinary> nodeJsBinaryProvider;
-
-	@Inject
-	private RunnerFileBasedShippedCodeConfigurationHelper shippedCodeConfigurationHelper;
-
-	@Inject
-	private Provider<NodeRunOptions> nodeRunOptionsProvider;
 
 	@Override
 	public RunConfiguration createConfiguration() {
@@ -97,13 +89,11 @@ public class NodeRunner implements IRunner {
 
 	@Override
 	public void prepareConfiguration(RunConfiguration config) {
-		if (config.isUseCustomBootstrap()) {
-			shippedCodeConfigurationHelper.configureFromFileSystem(config);
-		}
+		// no special preparations required
 	}
 
 	@Override
-	public Process run(RunConfiguration runConfig, IExecutor executor) {
+	public Process run(RunConfiguration runConfig, IExecutor executor) throws ExecutionException {
 
 		final NodeJsBinary nodeJsBinary = nodeJsBinaryProvider.get();
 		final IStatus status = nodeJsBinary.validate();
@@ -111,54 +101,57 @@ public class NodeRunner implements IRunner {
 			Exceptions.sneakyThrow(new IllegalBinaryStateException(nodeJsBinary, status));
 		}
 
-		Process process = null;
-		String[] cmds = new String[0];
-		try {
-			NodeRunOptions runOptions = createRunOptions(runConfig);
+		final String[] cmd = createCommand(runConfig);
 
-			Path workingDirectory = FileUtils.createTempDirectory("N4JSNodeRun");
-
-			NodeEngineCommandBuilder cb = commandBuilderProvider.get();
-			cmds = cb.createCmds(runOptions, workingDirectory);
-
-			final Collection<String> paths = newLinkedHashSet();
-			paths.addAll(newArrayList(Splitter.on(NODE_PATH_SEP).omitEmptyStrings().trimResults()
-					.split(runConfig.getCustomEnginePath())));
-
-			paths.addAll(runConfig.getAdditionalPaths());
-
-			paths.add(workingDirectory.resolve(N4JSGlobals.NODE_MODULES).toAbsolutePath().toString());
-
-			String nodePaths = on(NODE_PATH_SEP).join(paths);
-
-			Map<String, String> env = new LinkedHashMap<>();
-			env.putAll(runOptions.getEnvironmentVariables());
-
-			env.put(NODE_PATH, nodePaths);
-			env = nodeJsBinary.updateEnvironment(env);
-
-			process = executor.exec(cmds, workingDirectory.toFile(), env);
-
-		} catch (IOException | RuntimeException | ExecutionException e) {
-			LOGGER.error(e);
+		final Path workingDirectory = runConfig.getWorkingDirectory();
+		if (workingDirectory == null) {
+			throw new IllegalArgumentException("run configuration does not specify a working directory");
 		}
-		return process;
+
+		Map<String, String> env = new LinkedHashMap<>();
+		env.putAll(runConfig.getEnvironmentVariables());
+		final Collection<String> additionalPaths = runConfig.getAdditionalPaths();
+		if (additionalPaths != null && !additionalPaths.isEmpty()) {
+			env.put(NODE_PATH, Joiner.on(NODE_PATH_SEP).join(additionalPaths));
+		}
+		env = nodeJsBinary.updateEnvironment(env);
+
+		return executor.exec(cmd, workingDirectory.toFile(), env);
 	}
 
-	/**
-	 * Creates the {@link NodeRunOptions} based on the given {@link RunConfiguration}.
-	 */
-	protected NodeRunOptions createRunOptions(RunConfiguration runConfig) {
-		NodeRunOptions runOptions = nodeRunOptionsProvider.get();
+	private String[] createCommand(RunConfiguration runConfig) {
+		final ArrayList<String> cmd = new ArrayList<>();
 
-		runOptions.setExecModule(runConfig.getExecModule());
-		runOptions.addInitModules(runConfig.getInitModules());
-		runOptions.setCoreProjectPaths(runConfig.getCoreProjectPaths());
-		runOptions.setEngineOptions(runConfig.getEngineOptions());
-		runOptions.setEnvironmentVariables(runConfig.getEnvironmentVariables());
-		runOptions.setCustomEnginePath(runConfig.getCustomEnginePath());
-		runOptions.setExecutionData(runConfig.getExecutionDataAsJSON());
-		runOptions.setSystemLoader(SystemLoaderInfo.fromString(runConfig.getSystemLoader()));
-		return runOptions;
+		// start command line with absolute path to node binary
+		cmd.add(nodeJsBinaryProvider.get().getBinaryAbsolutePath());
+
+		// activate esm
+		cmd.add("-r");
+		cmd.add("esm");
+
+		// allow user flags
+		final String engineOptions = runConfig.getEngineOptions();
+		for (String engineOption : splitOptions(engineOptions)) {
+			cmd.add(engineOption);
+		}
+
+		// the file to launch
+		final Path fileToRun = runConfig.getFileToRun();
+		if (fileToRun == null) {
+			throw new IllegalArgumentException("run configuration does not specify a file to run");
+		}
+		cmd.add(fileToRun.toString());
+
+		// more user flags
+		final String runOptions = runConfig.getRunOptions();
+		for (String runOption : splitOptions(runOptions)) {
+			cmd.add(runOption);
+		}
+
+		return cmd.toArray(new String[0]);
+	}
+
+	private Iterable<String> splitOptions(String optionsString) {
+		return optionsString != null ? OPTIONS_SPLITTER.split(optionsString.trim()) : Collections.emptyList();
 	}
 }

@@ -1,4 +1,0 @@
-@@Global @@ProvidedByRuntime
-
-export external public function btoa(str: string): string;
-export external public function atob(str: string): string;

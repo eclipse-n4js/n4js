@@ -60,11 +60,6 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 	@Inject
 	ISharedStateContributionRegistry sharedRegistry;
 
-	@Override
-	protected boolean provideShippedCode() {
-		return true;
-	}
-
 	/**
 	 * The tests first collects all injectors. The shared injector is identified using the class
 	 * {@link InjectorCollector}. Afterwards, it detects all singleton classes that are bound in N4JS related injectors.
@@ -154,7 +149,7 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 
 		// sort to preserve output order
 		List<Class<?>> sortedByClassName = new ArrayList<>(singletonInstances.keySet());
-		Comparator<Class<?>> comparatorByClassName = new Comparator<Class<?>>() {
+		Comparator<Class<?>> comparatorByClassName = new Comparator<>() {
 			@Override
 			public int compare(Class<?> c1, Class<?> c2) {
 				return c1.getName().compareTo(c2.getName());

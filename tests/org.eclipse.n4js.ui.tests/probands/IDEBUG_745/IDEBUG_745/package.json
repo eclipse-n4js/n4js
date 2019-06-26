@@ -16,7 +16,6 @@
         "ext.one",
         "ext.two"
       ]
-    },
-    "moduleLoader": "n4js"
+    }
   }
 }

@@ -38,6 +38,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullTy
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.objectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.promiseType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.promiseTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.regexpTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringTypeRef;
@@ -46,12 +47,15 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefi
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.voidType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.AdditiveOperator;
 import org.eclipse.n4js.n4JS.Argument;
@@ -75,9 +79,11 @@ import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
@@ -99,6 +105,7 @@ import org.eclipse.n4js.n4JS.ParenExpression;
 import org.eclipse.n4js.n4JS.PostfixExpression;
 import org.eclipse.n4js.n4JS.PromisifyExpression;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
+import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RegularExpressionLiteral;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.SetterDeclaration;
@@ -117,7 +124,9 @@ import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.n4jsx.ReactHelper;
+import org.eclipse.n4js.postprocessing.ASTFlowInfo;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.members.MemberScopingHelper;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
@@ -154,6 +163,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
@@ -181,6 +191,8 @@ import com.google.inject.Inject;
 	private JavaScriptVariantHelper javaScriptVariantHelper;
 	@Inject
 	private ReactHelper reactHelper;
+	@Inject
+	private TypeSystemHelper tsh;
 
 	/**
 	 * See {@link N4JSTypeSystem#type(RuleEnvironment, TypableElement)} and
@@ -561,6 +573,40 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseIdentifierRef(IdentifierRef idref) {
 			TypeRef T = ts.type(G, idref.getId());
+
+			final ASTFlowInfo flowInfo = ((N4JSResource) idref.eResource()).getASTMetaInfoCache().getFlowInfo();
+			final Collection<InstanceofGuard> alwaysHoldingTypes = flowInfo.instanceofGuardAnalyser
+					.getAlwaysHoldingTypes(idref);
+
+			if (!alwaysHoldingTypes.isEmpty()) {
+				final Collection<TypeRef> intersectionTypes = new LinkedList<>();
+				if (T != null) {
+					intersectionTypes.add(T);
+				}
+				for (InstanceofGuard ioGuard : alwaysHoldingTypes) {
+					if (ioGuard.symbolCFE instanceof IdentifierRef) {
+						final IdentifiableElement guardedElement = ((IdentifierRef) ioGuard.symbolCFE).getId();
+						if (guardedElement != null && idref.getId() == guardedElement) {
+							final Expression typeIdentifier = ioGuard.typeIdentifier;
+							TypeRef instanceofType = ts.type(G, typeIdentifier);
+
+							if (instanceofType instanceof TypeTypeRef) {
+								final TypeTypeRef ttRef = (TypeTypeRef) instanceofType;
+								final TypeArgument typeArg = ttRef.getTypeArg();
+								if (typeArg instanceof TypeRef) {
+									instanceofType = (TypeRef) typeArg;
+								}
+							}
+
+							TypeUtils.sanitizeRawTypeRef(instanceofType);
+							intersectionTypes.add(instanceofType);
+						}
+					}
+				}
+				if (!intersectionTypes.isEmpty()) {
+					T = tsh.createIntersectionType(G, intersectionTypes.toArray(new TypeRef[intersectionTypes.size()]));
+				}
+			}
 
 			T = n4idlVersionResolver.resolveVersion(T, idref);
 
@@ -996,6 +1042,11 @@ import com.google.inject.Inject;
 		}
 
 		@Override
+		public TypeRef caseImportCallExpression(ImportCallExpression object) {
+			return promiseTypeRef(G, anyTypeRefDynamic(G), TypeUtils.createWildcard());
+		}
+
+		@Override
 		public TypeRef caseArgument(Argument arg) {
 			return ts.type(G, arg.getExpression());
 		}
@@ -1214,8 +1265,22 @@ import com.google.inject.Inject;
 		}
 
 		@Override
+		public TypeRef casePropertySpread(PropertySpread object) {
+			return unknown(); // TODO GH-1337 add support for spread operator
+		}
+
+		@Override
 		public TypeRef caseJSXElement(JSXElement jsxElem) {
 			final TClassifier classifierReactElement = reactHelper.lookUpReactElement(jsxElem);
+			if (classifierReactElement == null) {
+				return unknown();
+			}
+			return ref(classifierReactElement);
+		}
+
+		@Override
+		public TypeRef caseJSXFragment(JSXFragment jsxFragment) {
+			final TClassifier classifierReactElement = reactHelper.lookUpReactElement(jsxFragment);
 			if (classifierReactElement == null) {
 				return unknown();
 			}

@@ -16,10 +16,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ASTIterator;
+import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 
 /**
  * The {@link ReentrantASTIterator} is implemented to number all nodes in order of their location in the AST. This works
@@ -31,18 +34,23 @@ import org.eclipse.n4js.n4JS.Script;
 public class ReentrantASTIterator {
 	static final String ASSERTION_MSG_AST_ORDER = "DelegatingNode or AST order erroneous";
 
+	final private SymbolFactory symbolFactory;
 	final private Set<ControlFlowElement> cfContainers;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 	final private ASTIterator astIt;
+	final private String scriptName;
+
 	private int astPositionCounter = 0;
 
 	/** Constructor */
-	ReentrantASTIterator(Set<ControlFlowElement> cfContainers, Map<ControlFlowElement, ComplexNode> cnMap,
-			Script script) {
+	ReentrantASTIterator(SymbolFactory symbolFactory, Set<ControlFlowElement> cfContainers,
+			Map<ControlFlowElement, ComplexNode> cnMap, Script script) {
 
+		this.symbolFactory = symbolFactory;
 		this.cfContainers = cfContainers;
 		this.cnMap = cnMap;
 		this.astIt = new ASTIterator(script);
+		this.scriptName = script.eResource().getURI().toString();
 	}
 
 	/** Visits all {@link ControlFlowElement} in the {@link Script} */
@@ -64,6 +72,12 @@ public class ReentrantASTIterator {
 
 						cfContainers.add(cn.getControlFlowContainer());
 						cnMap.put(mappedCFE, cn);
+
+						try (Measurement m = N4JSDataCollectors.dcAugmentEffectInfo
+								.getMeasurement("AugmentEffectInfo_" + scriptName);) {
+
+							CFEEffectInfos.set(symbolFactory, cnMap, cn, cfe);
+						}
 					}
 				}
 				if (termNode == cfe || (termNode == mappedCFE && termNode != null)) {

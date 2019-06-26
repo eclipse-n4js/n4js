@@ -13,7 +13,6 @@ package org.eclipse.n4js.internal;
 import java.io.File;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IExternalPackageManager;
@@ -43,40 +42,7 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 	}
 
 	/**
-	 * Returns {@code true} iff the given {@code rootLocation} refers to an external library project location that
-	 * contains a {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON}.
-	 */
-	@Override
-	public boolean isExternalProjectWithFragment(URI rootLocation) {
-		if (null != rootLocation && rootLocation.isFile()) {
-			File projectRoot = new File(rootLocation.toFileString());
-			return new File(projectRoot, N4JSGlobals.PACKAGE_FRAGMENT_JSON).exists();
-		}
-		return false;
-	}
-
-	/**
-	 * Loads a project description from the given external library root location, purely based on the contents of the
-	 * {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON} file.
-	 *
-	 * Returns {@code null} if no fragment can be found at the given location.
-	 */
-	@Override
-	public ProjectDescription loadFragmentProjectDescriptionFromProjectRoot(URI rootLocation) {
-		if (null != rootLocation && rootLocation.isFile()) {
-			File projectRoot = new File(rootLocation.toFileString());
-			if (projectRoot.exists() && projectRoot.isDirectory()) {
-				return projectDescriptionLoader.loadProjectDescriptionAtLocation(rootLocation);
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Loads the project description from the given external library root location.
-	 *
-	 * For plain npm packages with {@link N4JSGlobals#PACKAGE_FRAGMENT_JSON} this returns a project description that
-	 * represents the original {@code package.json} merged with the contents of the fragment.
 	 *
 	 * Returns {@code null} if no valid project description can be read from the given project location.
 	 */

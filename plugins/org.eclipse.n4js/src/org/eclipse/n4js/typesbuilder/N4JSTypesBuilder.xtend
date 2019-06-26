@@ -163,7 +163,6 @@ public class N4JSTypesBuilder {
 				val project = optionalProject.get;
 				result.projectName = project.projectName;
 				result.vendorID = project.vendorID;
-				result.moduleLoader = project.moduleLoader?.literal;
 
 				// main module
 				val mainModuleSpec = project.mainModule;

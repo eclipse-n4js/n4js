@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,11 +27,8 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.projectDescription.BootstrapModule;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
-import org.eclipse.n4js.projectDescription.ModuleLoader;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -274,29 +270,6 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public List<BootstrapModule> getInitModules() {
-		if (!exists())
-			return new ArrayList<>();
-		ProjectDescription pd = model.getProjectDescription(getLocation());
-		if (pd == null) {
-			return new ArrayList<>();
-		}
-		return pd.getInitModules();
-	}
-
-	@Override
-	public Optional<BootstrapModule> getExecModule() {
-		if (!exists()) {
-			return absent();
-		}
-		final ProjectDescription pd = model.getProjectDescription(getLocation());
-		if (pd == null) {
-			return absent();
-		}
-		return Optional.fromNullable(pd.getExecModule());
-	}
-
-	@Override
 	public URI getLocation() {
 		return location;
 	}
@@ -340,11 +313,6 @@ public class N4JSProject implements IN4JSProject {
 	@Override
 	public ModuleFilter getModuleValidationFilter() {
 		return getModuleFilterByType(ModuleFilterType.NO_VALIDATE);
-	}
-
-	@Override
-	public ModuleFilter getNoModuleWrappingFilter() {
-		return getModuleFilterByType(ModuleFilterType.NO_MODULE_WRAP);
 	}
 
 	private ModuleFilter getModuleFilterByType(ModuleFilterType type) {
@@ -406,17 +374,6 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public ModuleLoader getModuleLoader() {
-		if (!exists())
-			return null;
-		final ProjectDescription pd = model.getProjectDescription(getLocation());
-		if (pd == null) {
-			return null;
-		}
-		return pd.getModuleLoader() != null ? pd.getModuleLoader() : N4JSLanguageConstants.MODULE_LOADER_DEFAULT;
-	}
-
-	@Override
 	public String toString() {
 		String str = getProjectName();
 		str += " (" + (exists() ? getProjectType() : "doesn't exist") + ")";
@@ -470,10 +427,5 @@ public class N4JSProject implements IN4JSProject {
 	@Override
 	public String getDefinesPackageName() {
 		return getModel().getDefinesPackage(this);
-	}
-
-	@Override
-	public boolean isUseES6Imports() {
-		return getModel().isUseES6Imports(this);
 	}
 }

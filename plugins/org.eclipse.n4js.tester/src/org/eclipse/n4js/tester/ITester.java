@@ -12,6 +12,7 @@ package org.eclipse.n4js.tester;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
@@ -56,5 +57,6 @@ public interface ITester {
 	 * Actually launch the code, based on the given configuration by calling method
 	 * {@link IExecutor#exec(String[], File, Map) exec()} on the given executor.
 	 */
-	public Process test(TestConfiguration config, IExecutor executor, RunnerFrontEnd runnerFrontEnd);
+	public Process test(TestConfiguration config, IExecutor executor, RunnerFrontEnd runnerFrontEnd)
+			throws ExecutionException;
 }

@@ -74,7 +74,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 
 	/** Installs a specific npm */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
-	@Fix(IssueCodes.NON_EXISTING_PROJECT_WARNING)
 	@Fix(IssueCodes.NO_MATCHING_VERSION)
 	@Fix(IssueCodes.MISSING_YARN_WORKSPACE)
 	public void installMissingNPM(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -101,7 +100,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			public Collection<? extends IChange> computeChanges(IModificationContext context, final IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
-				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
 						final URI uri = issue.getUriToProblem();
@@ -126,7 +125,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 
 	/** Runs 'npm/yarn install' on a single project. Afterwards, re-registers external libraries. */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
-	@Fix(IssueCodes.NON_EXISTING_PROJECT_WARNING)
 	@Fix(IssueCodes.NO_MATCHING_VERSION)
 	@Fix(IssueCodes.MISSING_YARN_WORKSPACE)
 	public void runNpmInstallInProject(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -149,7 +147,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
-				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
 						return libraryManager.runNpmYarnInstall(issue.getUriToProblem(), monitor);
@@ -165,7 +163,6 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 
 	/** Runs 'npm/yarn install' on all projects. Afterwards, re-registers external libraries. */
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
-	@Fix(IssueCodes.NON_EXISTING_PROJECT_WARNING)
 	@Fix(IssueCodes.NO_MATCHING_VERSION)
 	public void runNpmInstallInAllProjects(Issue issue, IssueResolutionAcceptor acceptor) {
 		final String label = "Run 'npm/yarn install' in all projects";
@@ -187,7 +184,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
-				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
 						return libraryManager.runNpmYarnInstallOnAllProjects(monitor);
@@ -222,7 +219,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 			public Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker,
 					int offset, int length, EObject element) throws Exception {
 
-				Function<IProgressMonitor, IStatus> registerFunction = new Function<IProgressMonitor, IStatus>() {
+				Function<IProgressMonitor, IStatus> registerFunction = new Function<>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
 						indexSynchronizer.synchronizeNpms(monitor);

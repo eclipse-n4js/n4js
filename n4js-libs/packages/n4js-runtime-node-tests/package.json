@@ -12,14 +12,6 @@
     "url": "https://github.com/eclipse/n4js"
   },
   "description": "N4JS node runtime tests.",
-  "scripts": {
-    "build": "./npm-build.sh"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.6.5",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.7.4",
-    "babel-preset-es2015": "^6.6.0"
-  },
   "n4js": {
     "projectType": "test",
     "vendorId": "org.eclipse.n4js",
@@ -33,25 +25,17 @@
         "test/n4js"
       ]
     },
-    "moduleFilters": {
-      "noModuleWrap": [
-        "**/run-es5"
-      ]
-    },
     "requiredRuntimeLibraries": [
-      "n4js-runtime-n4",
       "n4js-runtime-es2015",
       "n4js-runtime-node"
     ],
     "testedProjects": [
       "n4js-runtime-node"
-    ],
-    "moduleLoader": "n4js"
+    ]
   },
   "dependencies": {
     "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",
-    "n4js-node": "^0.1.0",
-    "n4js-runtime-n4": "^0.1.0",
+    "n4js-runtime": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0",
     "n4js-runtime-node": "^0.1.0"
   }

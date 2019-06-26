@@ -13,7 +13,6 @@ package org.eclipse.n4js.ui.preferences.external;
 import static com.google.common.primitives.Ints.asList;
 import static java.util.Collections.singletonList;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
-import static org.eclipse.n4js.external.libraries.ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER;
 import static org.eclipse.n4js.ui.preferences.external.ButtonFactoryUtil.createEnabledPushButton;
 import static org.eclipse.swt.SWT.END;
 import static org.eclipse.swt.SWT.FILL;
@@ -22,7 +21,6 @@ import static org.eclipse.swt.SWT.TOP;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -69,8 +67,6 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 * The unique preference page ID.
 	 */
 	public static final String ID = ExternalLibraryPreferencePage.class.getName();
-
-	static final Map<URI, String> BUILT_IN_LIBS = EXTERNAL_LIBRARIES_SUPPLIER.get();
 
 	@Inject
 	private ExternalLibraryPreferenceStore store;

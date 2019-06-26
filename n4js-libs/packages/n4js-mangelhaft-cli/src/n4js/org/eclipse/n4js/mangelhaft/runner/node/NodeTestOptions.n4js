@@ -17,22 +17,17 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     /**
      * Scan for projects in directories.
      */
-    public scan: Array<string>;
+    public scan: string[];
     
     /**
      * Project directories.
      */
-    public projects: Array<string>;
+    public projects: string[];
     
     /**
      * Filter for matching test cases.
      */
-    public filter: Array<string>;
-
-    /**
-     * Definition of n4js runtime options key=value.
-     */
-    public define: Array<string>;
+    public filter: string[];
 
     /**
      * Compiles the given targets, generating a test catalog.
@@ -61,11 +56,6 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     public emitProjectTestCatalogs: string;
     
     /**
-     * When compiling, write a __bundle-gen.js CommonJS module to bulk register generated code modules.
-     */
-    public generatedModulesGlob: string;
-
-    /**
      * Installs NPM dependencies using npm or yarn.
      */
     public installMissingDependencies: boolean;
@@ -76,11 +66,6 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     public npmrcRootLocation: string;
 
     /**
-     * Debug output.
-     */
-    public debug: boolean;
-
-    /**
      * Attach V8 Inspector with --inspect-brk.
      */
     public inspectBrk: int;
@@ -89,18 +74,9 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
      * scope in which to run tests 
      */
     public testScope: string;
-    
-    /**
-     * if set turns off console log output 
-     */
-    public quiet: boolean;
 
     /**
-     * if set turns off debug logs 
+     * Turn off mangelhaft console reporting.
      */
-    public noDebugLog: boolean;
-    /**
-     * if set does not log passing nor skipped tests (but still runs them) 
-     */
-    public showOnlyErrors: boolean;
+    public quiet: boolean;
 }

@@ -56,7 +56,7 @@ ScriptElement:
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
 	| N4EnumDeclaration<Yield=false>
-	| ImportDeclaration
+	| => ImportDeclaration // syntactic predicate required due to RootStatement > ExpressionStatement > ... > ImportCallExpression
 	| ExportDeclaration
 	| RootStatement<Yield=false>
 ;
@@ -574,7 +574,9 @@ PrimaryExpression <Yield> returns Expression:
 	  ThisLiteral
 	| SuperLiteral
 	| IdentifierRef<Yield>
+	| JSXFragment /* see JSX  */
 	| JSXElement /* see JSX  */
+	| ImportCallExpression<Yield>
 	| ParameterizedCallExpression<Yield>
 	| Literal
 	| ArrayLiteral<Yield>
@@ -649,6 +651,7 @@ PropertyAssignment <Yield>:
 	| PropertySetterDeclaration<Yield>
 	| PropertyMethodDeclaration<Yield>
 	| PropertyNameValuePairSingleName<Yield>
+	| PropertySpread<Yield>
 ;
 
 AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
@@ -670,7 +673,9 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 			)
 		) ';'?
 	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRef=TypeRef? identifierRef=IdentifierRef<Yield>
-		( '=' expression=AssignmentExpression<In=true,Yield>)?)
+		( '=' expression=AssignmentExpression<In=true,Yield>)?
+	| {PropertySpread.annotationList=current} '...' expression=AssignmentExpression<In=true,Yield>
+	)
 ;
 
 PropertyMethodDeclaration <Yield>:
@@ -723,6 +728,10 @@ PropertySetterDeclaration <Yield>:
 	'(' fpar=FormalParameter<Yield> ')'	body=Block<Yield=false>
 ;
 
+PropertySpread <Yield>:
+	'...' expression=AssignmentExpression<In=true,Yield>
+;
+
 /* Left-hand-side expressions (11.2) [ECM11]
  * Heavily refactored to make them LL(*) compliant.
  */
@@ -735,6 +744,10 @@ ParameterizedCallExpression <Yield>:
 
 fragment ConcreteTypeArguments*:
 	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>'
+;
+
+ImportCallExpression<Yield>:
+	'import' ArgumentsWithParentheses<Yield> // import calls must have exactly one argument (allowing more flexibility here for better error messages)
 ;
 
 LeftHandSideExpression <Yield> returns Expression:
@@ -806,7 +819,7 @@ enum PostfixOperator: inc='++' | dec='--';
 
 /* Cast expression (N4JS 6.2.3) */
 CastExpression <Yield> returns Expression: PostfixExpression<Yield>
-	(=>({CastExpression.expression=current} 'as') targetTypeRef=TypeRefForCast)?;
+	(=>({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?;
 
 /* Unary operators ([ECM11] 11.4) */
 UnaryExpression <Yield> returns Expression:
@@ -1184,17 +1197,6 @@ TypeRefAnnotationArgument:
 	typeRef=TypeRef
 ;
 
-TypeRefForCast returns types::StaticBaseTypeRef:
-	  ParameterizedTypeRef
-	| ArrayTypeRef
-	| ThisTypeRef
-	| TypeTypeRef
-	| ArrowFunctionTypeExpression
-
-	| FunctionTypeExpressionOLD
-	| UnionTypeExpressionOLD
-	| IntersectionTypeExpressionOLD;
-
 AnnotationList:
 	=>({AnnotationList} '@' -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
 ;
@@ -1494,14 +1496,19 @@ terminal INCOMPLETE_ASYNC_ARROW:
 
 JSXElement:
 	'<' jsxElementName=JSXElementName JSXAttributes
-	(('>' jsxChildren+=JSXChild* JSXClosingElement) | ('/' '>'));
+	(
+		  '>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
+		| '/' '>'
+	);
 
-fragment JSXClosingElement *:
-	'<' '/' jsxClosingName=JSXElementName '>';
+JSXFragment:
+	{JSXFragment} '<' '>' jsxChildren+=JSXChild* '<' '/' '>';
 
 JSXChild:
-	JSXElement | JSXExpression
-	//	| JSXText -- not supported yet, cf. IDE-2414
+	  JSXElement
+	| JSXFragment
+	| JSXExpression
+//	| JSXText -- not supported yet, cf. IDE-2414
 ;
 
 // terminal JSX_TEXT: !('{'|'<'|'>'|'}'); needs to be refactored similar to template text, cf. IDE-2414
@@ -1509,13 +1516,12 @@ JSXChild:
 JSXExpression: '{' expression=AssignmentExpression<false,false> '}';
 
 JSXElementName:
-	expression=JSXElementNameExpression
-	;
+	expression=JSXElementNameExpression;
 
 JSXElementNameExpression returns Expression:
 	IdentifierRef<false>
 	({ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<false>)*
-	//	| JSXNamedspacedName not supported
+//	| JSXNamedspacedName not supported
 ;
 
 //JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
@@ -1525,9 +1531,8 @@ fragment JSXAttributes *:
 	jsxAttributes+=JSXAttribute*;
 
 JSXAttribute:
-	JSXSpreadAttribute
-	|
-	JSXPropertyAttribute;
+	  JSXSpreadAttribute
+	| JSXPropertyAttribute;
 
 JSXSpreadAttribute:
 	'{' '...' expression=AssignmentExpression<In=false, Yield=false> '}';

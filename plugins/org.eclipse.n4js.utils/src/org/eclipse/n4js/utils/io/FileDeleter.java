@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 
@@ -109,6 +110,21 @@ public class FileDeleter implements FileVisitor<Path> {
 			} catch (IOException ioe) {
 				errorHandler.accept(ioe);
 			}
+		}
+	}
+
+	/**
+	 * Requests that the resource denoted by the given path be deleted upon (normal) termination of the Java virtual
+	 * machine. If the given path denotes a non-empty directory, its entire contents will be deleted as well.
+	 */
+	public static void deleteOnExit(Path resourceToDelete) throws IOException {
+		final File resourceToDeleteAsFile = resourceToDelete.toFile();
+		if (resourceToDeleteAsFile.isDirectory()) {
+			try (Stream<Path> walker = Files.walk(resourceToDelete)) {
+				walker.forEachOrdered(path -> path.toFile().deleteOnExit());
+			}
+		} else {
+			resourceToDeleteAsFile.deleteOnExit();
 		}
 	}
 

@@ -19,31 +19,31 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
+import org.eclipse.n4js.internal.RaceDetectionHelper
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.utils.StaticPolyfillHelper
+import org.eclipse.n4js.validation.helper.FolderContainmentHelper
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IFileSystemAccess2
+import org.eclipse.xtext.generator.IGenerator2
+import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
-import org.eclipse.n4js.internal.RaceDetectionHelper
-import org.eclipse.n4js.validation.helper.FolderContainmentHelper
-import org.eclipse.xtext.generator.IGenerator2
-import org.eclipse.xtext.generator.IFileSystemAccess2
-import org.eclipse.xtext.generator.IGeneratorContext
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
@@ -126,8 +126,11 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 
 			updateOutputPath(fsa, getCompilerID, input);
 			internalDoGenerate(input, GeneratorOption.DEFAULT_OPTIONS, fsa);
-		} catch (Exception e) {
 
+		} catch (UnresolvedProxyInSubGeneratorException e) {
+			genMarkerSupport.createMarker(input, e.message, Severity.ERROR);
+
+		} catch (Exception e) {
 			// cancellation is not an error case, so simply propagate as usual
 			operationCanceledManager.propagateIfCancelException(e);
 
@@ -401,8 +404,8 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 *
 	 * TODO IDE-1487 currently there is no notion of default compiler. We fake call to the ES5 sub generator.
 	 */
-	def final static String calculateProjectBasedOutputDirectory(IN4JSProject project) {
-		return project.projectName + "/" + project.outputPath
+	def final static String calculateProjectBasedOutputDirectory(IN4JSProject project, boolean includeProjectName) {
+		return if (includeProjectName) project.projectName + "/" + project.outputPath else project.outputPath;
 	}
 
 	/** Access to compiler ID */

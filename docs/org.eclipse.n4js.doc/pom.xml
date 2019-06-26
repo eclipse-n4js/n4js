@@ -18,12 +18,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <asciidoctor.maven.plugin.version>1.5.5</asciidoctor.maven.plugin.version>
-        <asciidoctorj.version>1.5.4</asciidoctorj.version>
-        <jruby.version>1.7.21</jruby.version>
-        <asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>
-        <asciidoctor-epub3.version>1.5.0-alpha.6</asciidoctor-epub3.version>
-        <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
+        <asciidoctor.maven.plugin.version>1.6.0</asciidoctor.maven.plugin.version>
+        <asciidoctorj.version>1.6.2</asciidoctorj.version>
+        <jruby.version>9.2.7.0</jruby.version>
+        <asciidoctorj.pdf.version>1.5.0-alpha.17</asciidoctorj.pdf.version>
+        <asciidoctor-epub3.version>1.5.0-alpha.9</asciidoctor-epub3.version>
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
 
         <eclipse.html>eclipse-html</eclipse.html>
         <website.html>website-html</website.html>

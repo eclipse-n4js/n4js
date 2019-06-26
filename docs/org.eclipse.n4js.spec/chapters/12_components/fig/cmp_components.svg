@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-25.5 -67.5 875 714.4413" width="875" height="714.4413">
+  <defs>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -8 14 16" markerWidth="14" markerHeight="16" color="black">
+      <g>
+        <path d="M 12 0 L 0 -7 L 0 7 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="10" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="-1e3" x-height="539.5508" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-style="italic" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-BoldOblique"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="10" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#cb0b00">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica Neue" font-size="11" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker_3" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#cb0b00">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.8 
+    <dc:date>2019-05-10 14:52:26 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" fill-opacity="1" stroke-dasharray="none" stroke="none" stroke-opacity="1" fill="none">
+    <title>Canvas 1</title>
+    <rect fill="white" x="-25.5" y="-67.5" width="875" height="714.4413"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_57">
+        <rect x="660.494" y="123.5" width="156.5" height="55.5" fill="white"/>
+        <rect x="660.494" y="123.5" width="156.5" height="55.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(665.494 130.25)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="60.916016" y="11">Impl</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="4.5634766" y="25">JS library written in N4JS, </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="20.210938" y="39">types defined in API</tspan>
+        </text>
+      </g>
+      <g id="Line_56">
+        <path d="M 352.1 125.75 L 352.1 110.25 L 351.75 89.7727 L 351.75 87.7727" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_55">
+        <path d="M 34 139.625 L 22.1 139.625 L 22.1 96.38298 L 22.73759 96.38298 L 73.125 96.38298 L 73.125 113.85 L 73.125 115.85" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_54">
+        <text transform="translate(31.44185 96.38298)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_53">
+        <rect x="273.5" y="10.5" width="156.5" height="63.7727" fill="white"/>
+        <rect x="273.5" y="10.5" width="156.5" height="63.7727" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(278.5 14.38635)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-style="italic" font-weight="700" fill="black" x="24.239258" y="11">NPMDependency</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="15.88086" y="25">listed in package.json </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="28.882812" y="39">dependencies or </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="1.5371094" y="53">devDependencies property</tspan>
+        </text>
+      </g>
+      <g id="Graphic_52">
+        <rect x="289.5" y="125.75" width="156.5" height="55.5" fill="white"/>
+        <rect x="289.5" y="125.75" width="156.5" height="55.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(294.5 139.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-style="italic" font-weight="700" fill="black" x="30.359375" y="11">Type Definition</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="12.883789" y="25">not required at runtime</tspan>
+        </text>
+      </g>
+      <g id="Graphic_51">
+        <rect x="445" y="311.17906" width="156.5" height="55.5" fill="white"/>
+        <rect x="445" y="311.17906" width="156.5" height="55.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(450 324.92906)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="63.24805" y="11">API</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="9.883789" y="25">Type definitions for Impl</tspan>
+        </text>
+      </g>
+      <g id="Line_50">
+        <path d="M 523.25 311.17906 L 523.25 295.67906 L 523.25 230.67906 L 414.7 230.67906 L 414.7 196.75 L 414.7 194.75" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_49">
+        <rect x="193" y="439.5" width="156.5" height="55.5" fill="white"/>
+        <rect x="193" y="439.5" width="156.5" height="55.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(198 446.25)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="30.58789" y="11">NPM Definition</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x=".875" y="25">Type definitions for existing </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="32.56543" y="39">NPM pacakges</tspan>
+        </text>
+      </g>
+      <g id="Graphic_48">
+        <rect x="34" y="125.75" width="156.5" height="55.5" fill="white"/>
+        <rect x="34" y="125.75" width="156.5" height="55.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(39 139.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="35.56543" y="11">NPMPackage</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="26.881836" y="25">good old JS code</tspan>
+        </text>
+      </g>
+      <g id="Line_47">
+        <path d="M 112.25 125.75 L 112.25 110.25 L 112.25 97.25 L 312.625 97.25 L 312.625 89.7727 L 312.625 87.7727" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_46">
+        <rect x="383.5" y="439.5" width="156.5" height="55.5" fill="white"/>
+        <rect x="383.5" y="439.5" width="156.5" height="55.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(388.5 440.25)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="37.80078" y="11">Runtime API </tspan>
+          <tspan font-family="Helvetica" font-size="10" font-weight="700" fill="black" x="22.964355" y="24">(fka Runtime Library)</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x=".53808594" y="37">type definitions provided by </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="53.243164" y="51">runtime</tspan>
+        </text>
+      </g>
+      <g id="Line_45">
+        <path d="M 422.625 439.5 L 422.625 424 L 422.625 295 L 383.4 295 L 383.4 196.75 L 383.4 194.75" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_44">
+        <rect x="366.5" y="523.4999" width="127" height="70.3456" fill="white"/>
+        <rect x="366.5" y="523.4999" width="127" height="70.3456" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(371.5 530.6727)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="21.829102" y="11">Runtime Env</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="5.1416016" y="25">collection of runtime </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="13.142578" y="39">APIs provided by </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x=".8144531" y="53">runtime or via polyfills</tspan>
+        </text>
+      </g>
+      <g id="Graphic_43">
+        <rect x="129.2997" y="311.17906" width="156.5" height="55.5" fill="white"/>
+        <rect x="129.2997" y="311.17906" width="156.5" height="55.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(134.2997 318.92906)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="33.88965" y="11">N4JSPackage</tspan>
+          <tspan font-family="Helvetica" font-size="10" font-weight="700" fill="black" x="44.353516" y="24">(fka Library)</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="6.230469" y="37">JS library written in N4JS</tspan>
+        </text>
+      </g>
+      <g id="Graphic_42">
+        <rect x="598" y="572" width="99" height="43.5" fill="white"/>
+        <rect x="598" y="572" width="99" height="43.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(603 572.75)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.833984" y="11">Application</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="1.1435547" y="25">node or browser </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="34.489258" y="39">app</tspan>
+        </text>
+      </g>
+      <g id="Line_41">
+        <path d="M 193 453.375 L 181.1 453.375 L 175.21986 453.375 L 175.21986 422.2695 L 232.125 422.2695 L 232.125 427.6 L 232.125 429.6" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_40">
+        <text transform="translate(187.03456 422.2695)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Line_39">
+        <path d="M 562.375 311.17906 L 562.375 299.27906 L 562.375 170.85106 L 454.65 170.85106" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_38">
+        <text transform="translate(516.61786 170.85106)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Line_37">
+        <path d="M 446 159.05 L 457.9 159.05 L 628.41135 159.05 L 628.41135 251.34752 L 628.41135 453.375 L 551.9 453.375 L 549.9 453.375" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_36">
+        <text transform="translate(583.4222 453.375)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Line_35">
+        <path d="M 207.5497 311.17906 L 207.5497 299.27906 L 207.5497 170.15 L 277.6 170.15 L 279.6 170.15" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_34">
+        <text transform="translate(244 155.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Line_33">
+        <path d="M 168.4247 311.17906 L 168.4247 295.67906 L 168.4247 230.67906 L 151.375 230.67906 L 151.375 196.75 L 151.375 194.75" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_32">
+        <path d="M 232.125 495 L 232.125 506.9 L 112.25 506.9 L 112.25 193.15 L 112.25 191.15" marker-end="url(#StickArrow_Marker_2)" stroke="#cb0b00" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_31">
+        <text transform="translate(89.3315 462.2687)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="11" font-weight="400" fill="black" x="0" y="10">«defines»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_29">
+        <text transform="translate(665.992 295.90468)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="11" font-weight="400" fill="black" x="40500936e-20" y="10">«implements»</tspan>
+        </text>
+      </g>
+      <g id="Line_28">
+        <path d="M 738.744 123.5 L 738.744 108 L 738.744 97 L 390.875 97 L 390.875 89.7727 L 390.875 87.7727" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_27">
+        <path d="M 699.619 123.5 L 699.619 111.6 L 699.619 110.5461 L 205.7163 110.5461 L 151.375 110.5461 L 151.375 113.85 L 151.375 115.85" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_26">
+        <text transform="translate(461.4699 110.5461)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Line_25">
+        <path d="M 660.494 137.375 L 648.594 137.375 L 541.594 137.375 L 541.594 136.85 L 457.9 136.85 L 455.9 136.85" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_24">
+        <text transform="translate(486.1672 136.85)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Line_23">
+        <path d="M 697 593.75 L 708.9 593.75 L 777.869 593.75 L 777.869 190.9 L 777.869 188.9" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="miter" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_22">
+        <text transform="translate(767.1966 194.26887)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Line_21">
+        <path d="M 598 604.625 L 586.1 604.625 L 22.1 604.625 L 22.1 167.375 L 24.1 167.375" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_20">
+        <text transform="translate(13.427637 186.0338)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Line_19">
+        <path d="M 647.5 572 L 647.5 560.1 L 647.5 147.95 L 457.9 147.95 L 455.9 147.95" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_18">
+        <text transform="translate(497.8825 147.95)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Line_17">
+        <path d="M 622.75 572 L 622.75 560.1 L 622.75 558.6727 L 505.4 558.6727 L 503.4 558.6727" marker-end="url(#StickArrow_Marker_2)" stroke="#cb0b00" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_16">
+        <text transform="translate(516.7149 545.6727)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«runsOn»</tspan>
+        </text>
+      </g>
+      <g id="Line_15">
+        <path d="M 366.5 541.0863 L 354.6 541.0863 L 73.125 541.0863 L 73.125 193.15 L 73.125 191.15" marker-end="url(#StickArrow_Marker_2)" stroke="#cb0b00" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_14">
+        <text transform="translate(48.38623 507.8486)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«enforces»</tspan>
+        </text>
+      </g>
+      <g id="Line_13">
+        <path d="M 461.75 523.4999 L 461.75 511.5999 L 461.75 506.9 L 461.75 504.9" marker-end="url(#StickArrow_Marker_2)" stroke="#cb0b00" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_12">
+        <text transform="translate(443.28955 504.80116)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«provides»</tspan>
+        </text>
+      </g>
+      <g id="Line_11">
+        <path d="M 697 582.875 L 708.9 582.875 L 738.246 582.875 L 738.246 557.7305 L 672.25 557.7305 L 672.25 560.1 L 672.25 562.1" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_10">
+        <text transform="translate(698.2529 557.7305)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«NPM»</tspan>
+        </text>
+      </g>
+      <g id="Line_9">
+        <path d="M 310.375 439.5 L 310.375 424 L 310.375 295 L 352.1 295 L 352.1 196.75 L 352.1 194.75" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_8">
+        <path d="M 246.6747 311.17906 L 246.6747 295.67906 L 246.6747 230.67906 L 320.8 230.67906 L 320.8 196.75 L 320.8 194.75" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_7">
+        <path d="M 738.744 179 L 738.744 190.9 L 738.744 541.0863 L 653 541.0863 C 653 535.5863 642 535.5863 642 541.0863 L 513.3 541.0863" marker-end="url(#StickArrow_Marker_3)" stroke="#cb0b00" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_6">
+        <text transform="translate(529.4179 528.9323)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="11" font-weight="400" fill="black" x="34816594e-20" y="10">«runsOn»</tspan>
+        </text>
+      </g>
+      <g id="Group_58">
+        <g id="Graphic_60">
+          <rect x="-21" y="-63" width="866" height="705.4413" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_59">
+          <path d="M -21 -63 L 276.1565 -63 L 276.1565 -45.29139 L 251.39357 -27.58278 L -21 -27.582994 Z" fill="white"/>
+          <path d="M -21 -63 L 276.1565 -63 L 276.1565 -45.29139 L 251.39357 -27.58278 L -21 -27.582994 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(-16 -59.29139)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="11">cd Components and (inherited) dependencies</tspan>
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="25">ver. 1</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Line_30">
+        <path d="M 699.619 179 L 699.619 190.9 L 699.619 338.92906 L 653 338.92906 C 653 333.42906 642 333.42906 642 338.92906 L 633.91135 338.92906 C 633.91135 333.42906 622.91135 333.42906 622.91135 338.92906 L 621.3 338.92906" marker-end="url(#StickArrow_Marker_2)" stroke="#cb0b00" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

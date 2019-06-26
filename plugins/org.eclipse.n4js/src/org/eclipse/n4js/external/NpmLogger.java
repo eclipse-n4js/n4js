@@ -11,9 +11,9 @@
 package org.eclipse.n4js.external;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
+import static java.lang.System.lineSeparator;
 import static org.eclipse.n4js.utils.process.OutputStreamPrinterThread.OutputStreamType.STD_ERR;
 import static org.eclipse.n4js.utils.process.OutputStreamPrinterThread.OutputStreamType.STD_OUT;
-import static java.lang.System.lineSeparator;
 
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -21,13 +21,12 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Helper for consistent npm operations logging. It will log all provided data to the standard {@link Logger} as well to
@@ -40,7 +39,7 @@ public class NpmLogger {
 
 	private static Logger LOGGER = Logger.getLogger(NpmLogger.class);
 
-	private static final ThreadLocal<SimpleDateFormat> DATE_FORMAT = new ThreadLocal<SimpleDateFormat>() {
+	private static final ThreadLocal<SimpleDateFormat> DATE_FORMAT = new ThreadLocal<>() {
 
 		private final SimpleDateFormat delegate = new SimpleDateFormat("[dd-MM-yyyy hh:mm:ss] ");
 

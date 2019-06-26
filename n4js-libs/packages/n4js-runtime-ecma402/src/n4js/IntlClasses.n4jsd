@@ -57,7 +57,7 @@ export public interface ~Collator {
 	 * @param locales: IETF BCP 47 language tag(s)
 	 * @param options: object literal with formatting options 
 	 */
-	public constructor(locales: string | [string]=, options: ~r~CollatorOptions=)
+	public constructor(locales: string | string[]=, options: ~r~CollatorOptions=)
 
 //	/**
 //	 * Returns list of supported locales. Locales not included in that list are
@@ -146,7 +146,7 @@ export public interface ~NumberFormat {
 	 * @param locales: IETF BCP 47 language tag
 	 * @param options: object literal with formatting options
 	 */
-	public constructor(locales: string | [string]=, options: ~r~NumberFormatOptions=)
+	public constructor(locales: string | string[]=, options: ~r~NumberFormatOptions=)
 //	public static supportedLocalesOf(locales: string | [string]=, options: ~r~NumberFormatOptions=)
 	/**
 	 * Returns a function formatting a number to a string with the formatting options specified at construction.
@@ -252,7 +252,7 @@ export public interface ~DateTimeFormat {
 	 * @param locales: IETF BCP 47 language tag
 	 * @param options: object literal with formatting options
 	 */
-	public constructor(locales: string | [string]=, options: ~r~DateTimeFormatOptions=)
+	public constructor(locales: string | string[]=, options: ~r~DateTimeFormatOptions=)
 //	/**
 //	 * @param locales: IETF BCP 47 language tag
 //	 * @param options: object literal with formatting options
@@ -265,7 +265,7 @@ export public interface ~DateTimeFormat {
 	/**
 	 * Returns formatted parts of given date or today if omitted) according to formatting options.
 	 */
-	public formatToParts(date: Date=): [string]
+	public formatToParts(date: Date=): string[]
 	/** 
 	 * Returns a fully initialized object literal with the options of this formatter. 
 	 */

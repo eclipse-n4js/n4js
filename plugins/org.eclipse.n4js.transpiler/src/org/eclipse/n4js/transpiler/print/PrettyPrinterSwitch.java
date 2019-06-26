@@ -712,6 +712,13 @@ import org.eclipse.xtext.EcoreUtil2;
 	}
 
 	@Override
+	public Boolean casePropertySpread(PropertySpread original) {
+		write("...");
+		process(original.getExpression());
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseNewExpression(NewExpression original) {
 		write("new ");
 		process(original.getCallee());
@@ -728,6 +735,15 @@ import org.eclipse.xtext.EcoreUtil2;
 		process(original.getTarget());
 		write('(');
 		process(original.getArguments(), ", ");
+		write(')');
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseImportCallExpression(ImportCallExpression original) {
+		write("import");
+		write('(');
+		process(original.getArgument());
 		write(')');
 		return DONE;
 	}
@@ -1018,7 +1034,7 @@ import org.eclipse.xtext.EcoreUtil2;
 			// single-name binding
 			process(original.getValue().getVarDecl());
 		} else {
-			write(original.getName());
+			processPropertyName(original);
 			write(": ");
 			process(original.getValue());
 		}

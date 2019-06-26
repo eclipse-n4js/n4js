@@ -19,13 +19,13 @@ export public interface ~ArrayLike<T> {
 export public interface ~ArrayIterator<T> extends Iterator<T> {}
 
 @Polyfill export external public class Array<T> extends Array<T> {
-    public static <I> from(source: Iterable<I>|ArrayLike<I>|Iterator<I>|string, mapFn: (I, int) => any=, thisArg: Object=): Array<I>;
+    public static <I> from(source: Iterable<I>|ArrayLike<I>|Iterator<I>|string, mapFn: (I, int) => any=, thisArg: Object=): I[];
 
     // TODO: Currently impossible due to missing support for default type parameters, see GH-157
-    // public static <I,O> from(source: Iterable<I>|ArrayLike<I>|Iterator<I>, mapFn: (I, int) => O=, thisArg: Object=): Array<O>;
+    // public static <I,O> from(source: Iterable<I>|ArrayLike<I>|Iterator<I>, mapFn: (I, int) => O=, thisArg: Object=): O[];
 
-    public findIndex(predicate: (T, int=, [T]=) => boolean, thisArg: Object=): int;
-    public find(predicate: (T, int=, [T]=) => boolean, thisArg: Object=): T;
+    public findIndex(predicate: (T, int=, T[]=) => boolean, thisArg: Object=): int;
+    public find(predicate: (T, int=, T[]=) => boolean, thisArg: Object=): T;
 
     public entries(): IteratorExt<Iterable2<int, T>>;
     public keys(): IteratorExt<int>;

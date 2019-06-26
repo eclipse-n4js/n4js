@@ -1,0 +1,23 @@
+/**
+ * https://github.com/visionmedia/debug
+ */
+
+export external public var names: string[];
+export external public var skips: string[];
+export external public var formatters: Object;
+export external public function coerce(val: any): void;
+export external public function enable(namespace: string): void;
+export external public function disable(): void; // disables debug output
+export external public function enabled(namespace: string): boolean;
+
+@Final
+export external public class __DebugFn {
+    (string, ...any): void;
+    
+    public static get namespace(): string;
+    public static get enabled(): boolean;
+    public static get useColors(): boolean;
+    public static get color(): string;
+}
+
+export default external public function debug(namespace: string): type{__DebugFn};

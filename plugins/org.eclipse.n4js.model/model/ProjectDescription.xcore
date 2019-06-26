@@ -16,7 +16,7 @@
 	modelDirectory="/org.eclipse.n4js.model/emf-gen",
 	forceOverwrite="true",
 	updateClasspath="false",
-	complianceLevel="8.0",
+	complianceLevel="11.0",
 	copyrightFields="false",
 	// both copyrightText and documentation are required to align the output of the MWE2 and incremental builder (see GH-841)
 	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
@@ -50,13 +50,10 @@ class ProjectDescription {
 	contains ProjectDependency[] projectDependencies
 	String implementationId
 	contains ProjectReference[] implementedProjects
-	contains BootstrapModule[] initModules
-	contains BootstrapModule execModule
 	String outputPath
 	contains SourceContainerDescription[] sourceContainers
 	contains ModuleFilter[] moduleFilters
 	contains ProjectReference[] testedProjects
-	ModuleLoader moduleLoader
 
 	/**
 	 *  Returns the name of the package the project provides type definitions for.
@@ -90,11 +87,6 @@ class ProjectDescription {
 	 * Value of top-level property "workspaces" in package.json, used by yarn to denote the contained projects.
 	 */
 	String[] workspaces
-
-	/*
-	 * EXPERIMENTAL: if value is 'true', transpiler will generate ES6 imports/exports in the output code.
-	 */
-	boolean useES6Imports
 }
 
 /*
@@ -131,10 +123,6 @@ class ModuleFilterSpecifier {
 	String sourcePath
 }
 
-class BootstrapModule {
-	String moduleSpecifier
-}
-
 enum ProjectType {
 	PLAINJS = 0,
 	VALIDATION = 1,
@@ -156,16 +144,7 @@ enum SourceContainerType {
 
 enum ModuleFilterType {
 	/* Turns off validation of affected modules. */
-	NO_VALIDATE = 0,
-	/* Turns off wrapping of output code *and* validation of affected modules. */
-	NO_MODULE_WRAP = 1
-}
-
-/* The Javascript module loading techniques. */
-enum ModuleLoader {
-	N4JS = 0,
-	COMMONJS = 1,
-	NODE_BUILTIN = 2
+	NO_VALIDATE = 0
 }
 
 /** Different types of dependencies. */

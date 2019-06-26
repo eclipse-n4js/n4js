@@ -81,8 +81,6 @@
 		"requiredRuntimeLibraries": [
 			// XPECT errors --> "A project reference must not be empty." at """"
 			""
-		],
-		// XPECT errors --> "Value for property "moduleLoader" must not be empty." at """"
-		"moduleLoader": ""
+		]
 	}
 }

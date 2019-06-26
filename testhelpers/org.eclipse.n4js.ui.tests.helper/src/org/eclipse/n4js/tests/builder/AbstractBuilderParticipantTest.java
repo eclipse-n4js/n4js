@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -31,19 +32,20 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -83,9 +85,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	private Provider<IDirtyStateManager> dirtyStateManager;
 
 	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeHelper;
-
-	@Inject
 	private ProjectTestsHelper projectTestsHelper;
 
 	@Inject
@@ -97,10 +96,12 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	Predicate<IMarker> ignoreSomeWarnings = (IMarker marker) -> {
 		String code = issueUtil.getCode(marker);
-		switch (code) {
-		case IssueCodes.CFG_LOCAL_VAR_UNUSED:
-		case IssueCodes.DFG_NULL_DEREFERENCE:
-			return false;
+		if (code != null) {
+			switch (code) {
+			case IssueCodes.CFG_LOCAL_VAR_UNUSED:
+			case IssueCodes.DFG_NULL_DEREFERENCE:
+				return false;
+			}
 		}
 		return true;
 	};
@@ -120,6 +121,9 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	 * Creates a new N4JS project with the given name and project type. The source and output folders will be named as
 	 * {@code src} and {@code src-gen}. The Xtext project nature will be already configured on the N4JS project. Blocks
 	 * until the auto-build job is terminated.
+	 * <p>
+	 * If the given project type {@link N4JSGlobals#PROJECT_TYPES_REQUIRING_N4JS_RUNTIME requires the N4JS runtime},
+	 * then a dependency to "n4js-runtime" will be added to the <code>package.json</code>.
 	 *
 	 * @param projectName
 	 *            the name of the project.
@@ -131,10 +135,32 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	 */
 	protected IProject createN4JSProject(String projectName, ProjectType type) throws CoreException {
 		final IProject project = createJSProject(projectName, "src", "src-gen",
-				b -> b.withType(type));
+				b -> {
+					b.withType(type);
+					if (N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(type)) {
+						b.withDependency(N4JSGlobals.N4JS_RUNTIME);
+					}
+				});
 		configureProjectWithXtext(project);
 		waitForAutoBuild();
 		return project;
+	}
+
+	/**
+	 * Same as {@link ProjectTestsUtils#createDummyN4JSRuntime(IProject)}, but will
+	 * {@link LibraryManager#registerAllExternalProjects(org.eclipse.core.runtime.IProgressMonitor) refresh all external
+	 * libraries} in the library manager.
+	 */
+	protected IFolder createAndRegisterDummyN4JSRuntime(IProject project) throws CoreException {
+		IFolder runtimeProjectFolder = createDummyN4JSRuntime(project);
+		waitForAutoBuild();
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
+		return runtimeProjectFolder;
+	}
+
+	/** Same as {@link ProjectTestsUtils#createDummyN4JSRuntime(IProject)}. */
+	protected IFolder createDummyN4JSRuntime(IProject project) throws CoreException {
+		return ProjectTestsUtils.createDummyN4JSRuntime(project);
 	}
 
 	/***/
@@ -223,6 +249,14 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/**
+	 * Adds a dependency to project 'projectName' in the package.json of project 'toChange'.
+	 */
+	protected void addProjectToDependencies(IProject toChange, String projectName, String versionConstraint)
+			throws IOException {
+		ProjectTestsUtils.addProjectToDependencies(toChange, projectName, versionConstraint);
+	}
+
+	/**
 	 * @return the source folder of the project
 	 */
 	protected IFolder configureProjectWithXtext(final IProject project) throws CoreException {
@@ -263,6 +297,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	@SuppressWarnings("resource")
 	protected IFile doCreateTestFile(IFolder folder, String fullName, CharSequence content) throws CoreException {
 		IFile file = folder.getFile(fullName);
+		createFolder(folder);
 		file.create(new StringInputStream(content.toString()), true, monitor());
 		waitForAutoBuild();
 		return file;
@@ -299,6 +334,14 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	}
 
 	/***/
+	protected void createFolder(IFolder folder) throws CoreException {
+		if (!folder.exists()) {
+			createParentFolder(folder);
+			folder.create(true, true, null);
+		}
+	}
+
+	/***/
 	protected void createParentFolder(IFolder folder) throws CoreException {
 		IContainer parent = folder.getParent();
 		if (parent instanceof IFolder) {
@@ -308,16 +351,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 				parentFolder.create(true, true, null);
 			}
 		}
-	}
-
-	/** Sets up the known external library locations with the {@code node_modules} folder. */
-	protected void setupShippedLibraries() throws Exception {
-		shippedCodeHelper.setupBuiltIns();
-	}
-
-	/** Tears down the external libraries. */
-	protected void tearDownShippedLibraries() throws Exception {
-		shippedCodeHelper.tearDownBuiltIns();
 	}
 
 	/***/
@@ -384,13 +417,20 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		ProjectTestsUtils.assertIssues(resource, expectedMessages);
 	}
 
+	/** See {@link ProjectTestsUtils#assertIssues(String, IResource, String...)}. */
+	protected void assertIssues(String message, final IResource resource, String... expectedMessages)
+			throws CoreException {
+		ProjectTestsUtils.assertIssues(message, resource, expectedMessages);
+	}
+
 	/** See {@link ProjectTestsHelper#runWithNodeRunnerUI(URI)}. */
-	protected ProcessResult runWithNodeRunnerUI(URI moduleToRun) {
+	protected ProcessResult runWithNodeRunnerUI(URI moduleToRun) throws ExecutionException {
 		return projectTestsHelper.runWithNodeRunnerUI(moduleToRun);
 	}
 
 	/** See {@link ProjectTestsHelper#runWithRunnerUI(String, String, URI)}. */
-	protected ProcessResult runWithRunnerUI(String runnerId, String implementationId, URI moduleToRun) {
+	protected ProcessResult runWithRunnerUI(String runnerId, String implementationId, URI moduleToRun)
+			throws ExecutionException {
 		return projectTestsHelper.runWithRunnerUI(runnerId, implementationId, moduleToRun);
 	}
 

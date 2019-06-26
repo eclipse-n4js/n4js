@@ -129,9 +129,11 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION: return createPropertyMethodDeclaration();
 			case N4JSPackage.PROPERTY_GETTER_DECLARATION: return createPropertyGetterDeclaration();
 			case N4JSPackage.PROPERTY_SETTER_DECLARATION: return createPropertySetterDeclaration();
+			case N4JSPackage.PROPERTY_SPREAD: return createPropertySpread();
 			case N4JSPackage.NEW_TARGET: return createNewTarget();
 			case N4JSPackage.NEW_EXPRESSION: return createNewExpression();
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION: return createParameterizedCallExpression();
+			case N4JSPackage.IMPORT_CALL_EXPRESSION: return createImportCallExpression();
 			case N4JSPackage.ARGUMENT: return createArgument();
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION: return createIndexedAccessExpression();
 			case N4JSPackage.TAGGED_TEMPLATE_STRING: return createTaggedTemplateString();
@@ -188,6 +190,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.JSX_PROPERTY_ATTRIBUTE: return createJSXPropertyAttribute();
 			case N4JSPackage.JSX_SPREAD_ATTRIBUTE: return createJSXSpreadAttribute();
 			case N4JSPackage.JSX_ELEMENT: return createJSXElement();
+			case N4JSPackage.JSX_FRAGMENT: return createJSXFragment();
 			case N4JSPackage.VERSIONED_IDENTIFIER_REF: return createVersionedIdentifierRef();
 			case N4JSPackage.MIGRATION_CONTEXT_VARIABLE: return createMigrationContextVariable();
 			default:
@@ -203,6 +206,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
+			case N4JSPackage.MODULE_SPECIFIER_FORM:
+				return createModuleSpecifierFormFromString(eDataType, initialValue);
 			case N4JSPackage.VARIABLE_STATEMENT_KEYWORD:
 				return createVariableStatementKeywordFromString(eDataType, initialValue);
 			case N4JSPackage.PROPERTY_NAME_KIND:
@@ -250,6 +255,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
+			case N4JSPackage.MODULE_SPECIFIER_FORM:
+				return convertModuleSpecifierFormToString(eDataType, instanceValue);
 			case N4JSPackage.VARIABLE_STATEMENT_KEYWORD:
 				return convertVariableStatementKeywordToString(eDataType, instanceValue);
 			case N4JSPackage.PROPERTY_NAME_KIND:
@@ -977,6 +984,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@Override
+	public PropertySpread createPropertySpread() {
+		PropertySpreadImpl propertySpread = new PropertySpreadImpl();
+		return propertySpread;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NewTarget createNewTarget() {
 		NewTargetImpl newTarget = new NewTargetImpl();
 		return newTarget;
@@ -1002,6 +1020,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public ParameterizedCallExpression createParameterizedCallExpression() {
 		ParameterizedCallExpressionImpl parameterizedCallExpression = new ParameterizedCallExpressionImpl();
 		return parameterizedCallExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ImportCallExpression createImportCallExpression() {
+		ImportCallExpressionImpl importCallExpression = new ImportCallExpressionImpl();
+		return importCallExpression;
 	}
 
 	/**
@@ -1626,6 +1655,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@Override
+	public JSXFragment createJSXFragment() {
+		JSXFragmentImpl jsxFragment = new JSXFragmentImpl();
+		return jsxFragment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public VersionedIdentifierRef createVersionedIdentifierRef() {
 		VersionedIdentifierRefImpl versionedIdentifierRef = new VersionedIdentifierRefImpl();
 		return versionedIdentifierRef;
@@ -1640,6 +1680,26 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public MigrationContextVariable createMigrationContextVariable() {
 		MigrationContextVariableImpl migrationContextVariable = new MigrationContextVariableImpl();
 		return migrationContextVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ModuleSpecifierForm createModuleSpecifierFormFromString(EDataType eDataType, String initialValue) {
+		ModuleSpecifierForm result = ModuleSpecifierForm.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertModuleSpecifierFormToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

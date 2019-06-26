@@ -28,7 +28,8 @@ export external public abstract class Element extends Node implements EventTarge
     public getBoundingClientRect(): ClientRect;
     public getClientRects(): Object;
 
-    public dispatchEvent(event: Event): void;
+    @Override
+    public dispatchEvent(event: Event): boolean;
     @Override public cloneNode(deep: boolean): Element;
 
     public matches(selector: string): boolean;

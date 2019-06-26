@@ -13,11 +13,6 @@
       "external": [
         "testdata_external_impls"
       ]
-    },
-    "moduleFilters": {
-      "noModuleWrap": [
-        "nowrapping/*"
-      ]
     }
   }
 }

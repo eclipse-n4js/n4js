@@ -36,7 +36,7 @@ export public class AssertionError extends Error {
     public operator?: string;
     public stackStartFunction?: Function;
     constructor (spec: ~Object with {
-        stack?: Array<string>;
+        stack?: string[];
         actual?: any;
         expected?: any;
         operator?: string;

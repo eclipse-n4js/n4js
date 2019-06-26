@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 
 import org.eclipse.n4js.ts.types.TModule;
@@ -43,6 +44,7 @@ import org.eclipse.n4js.ts.types.TModule;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#isImportFrom <em>Import From</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModule <em>Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModuleSpecifierAsText <em>Module Specifier As Text</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModuleSpecifierForm <em>Module Specifier Form</em>}</li>
  * </ul>
  *
  * @generated
@@ -107,6 +109,26 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @ordered
 	 */
 	protected String moduleSpecifierAsText = MODULE_SPECIFIER_AS_TEXT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getModuleSpecifierForm() <em>Module Specifier Form</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModuleSpecifierForm()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final ModuleSpecifierForm MODULE_SPECIFIER_FORM_EDEFAULT = ModuleSpecifierForm.UNKNOWN;
+
+	/**
+	 * The cached value of the '{@link #getModuleSpecifierForm() <em>Module Specifier Form</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModuleSpecifierForm()
+	 * @generated
+	 * @ordered
+	 */
+	protected ModuleSpecifierForm moduleSpecifierForm = MODULE_SPECIFIER_FORM_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -232,6 +254,29 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
+	public ModuleSpecifierForm getModuleSpecifierForm() {
+		return moduleSpecifierForm;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setModuleSpecifierForm(ModuleSpecifierForm newModuleSpecifierForm) {
+		ModuleSpecifierForm oldModuleSpecifierForm = moduleSpecifierForm;
+		moduleSpecifierForm = newModuleSpecifierForm == null ? MODULE_SPECIFIER_FORM_EDEFAULT : newModuleSpecifierForm;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM, oldModuleSpecifierForm, moduleSpecifierForm));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
@@ -257,6 +302,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return basicGetModule();
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
 				return getModuleSpecifierAsText();
+			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
+				return getModuleSpecifierForm();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -283,6 +330,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
 				setModuleSpecifierAsText((String)newValue);
 				return;
+			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
+				setModuleSpecifierForm((ModuleSpecifierForm)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -307,6 +357,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
 				setModuleSpecifierAsText(MODULE_SPECIFIER_AS_TEXT_EDEFAULT);
 				return;
+			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
+				setModuleSpecifierForm(MODULE_SPECIFIER_FORM_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -327,6 +380,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return module != null;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
 				return MODULE_SPECIFIER_AS_TEXT_EDEFAULT == null ? moduleSpecifierAsText != null : !MODULE_SPECIFIER_AS_TEXT_EDEFAULT.equals(moduleSpecifierAsText);
+			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
+				return moduleSpecifierForm != MODULE_SPECIFIER_FORM_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -345,6 +400,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 		result.append(importFrom);
 		result.append(", moduleSpecifierAsText: ");
 		result.append(moduleSpecifierAsText);
+		result.append(", moduleSpecifierForm: ");
+		result.append(moduleSpecifierForm);
 		result.append(')');
 		return result.toString();
 	}

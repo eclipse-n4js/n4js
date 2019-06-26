@@ -140,7 +140,6 @@ public class TesterModule implements Module {
 		binder.bind(TestCatalogSupplier.class);
 		binder.bind(ServletHolderBuilder.class);
 		binder.bind(DefaultTestTreeTransformer.class);
-		binder.bind(TesterFileBasedShippedCodeConfigurationHelper.class);
 
 		binder.bind(TestFsm.class).to(TestFsmImpl.class);
 		binder.bind(HttpServerManager.class).to(JettyManager.class);
@@ -159,7 +158,7 @@ public class TesterModule implements Module {
 	 * would be a problem.
 	 */
 	private void bindListenerForN4jsSingletons(Binder binder) {
-		Matcher<TypeLiteral<?>> m = new AbstractMatcher<TypeLiteral<?>>() {
+		Matcher<TypeLiteral<?>> m = new AbstractMatcher<>() {
 			@Override
 			public boolean matches(TypeLiteral<?> t) {
 				checkAndThrowMissingBindingException(t);

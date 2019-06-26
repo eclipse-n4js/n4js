@@ -122,7 +122,7 @@ export public class TestExecutorTests {
         methods.forEach(function(method, index) {
             let actualIndex: number
                 ,found: boolean = false
-                ,actualMethods: Array<string> = []
+                ,actualMethods: string[] = []
             ;
 
             for (actualIndex of positions[index] ) {
@@ -149,7 +149,7 @@ export public class TestExecutorTests {
     @Test
     async testExecutionOrderSubclass() {
         MockTest.reset();
-        let tests: Array<InstrumentedTest> = []
+        let tests: InstrumentedTest[] = []
             , val: ResultGroups
             , methods = [
             "beforeAll1"
@@ -193,7 +193,7 @@ export public class TestExecutorTests {
                ,[17,18]
                ,[17,18]
            ]
-           ,called: Array<string>
+           ,called: string[]
         ;
         tests.push(new InstrumentedTest().load(ChildOfMock)
                                          .setTestObject(new  ChildOfMock()));
@@ -207,7 +207,7 @@ export public class TestExecutorTests {
         methods.forEach(function(method, index) {
             let actualIndex: number
                 ,found: boolean = false
-                ,actualMethods: Array<string> = []
+                ,actualMethods: string[] = []
             ;
 
             for (actualIndex of positions[index] ) {
@@ -232,7 +232,7 @@ export public class TestExecutorTests {
     }
     @Test 
     async testBeforeAllErrors() {
-        let  tests: Array<InstrumentedTest> = []
+        let  tests: InstrumentedTest[] = []
             , val: ResultGroups
         ;
         tests.push(new InstrumentedTest().load(BeforeAllErrorMockTest)
@@ -244,7 +244,7 @@ export public class TestExecutorTests {
 
     @Test 
     async preconditionBasicFail() {
-        let tests: Array<InstrumentedTest> = []
+        let tests: InstrumentedTest[] = []
         , val: ResultGroups
         ;
         tests.push(new InstrumentedTest().load(PreconditionTests).setTestObject(new  PreconditionTests()));
@@ -254,7 +254,6 @@ export public class TestExecutorTests {
     
     @Test 
     async fixmes___noScope() {
-        console.log(n4);
         const expected = [
             ["fixme__noScope___success", TestStatus.failed],
             ["fixme__noScope___failure", TestStatus.skipped_fixme],
@@ -266,7 +265,7 @@ export public class TestExecutorTests {
             ["fixme__multiScope___fail", TestStatus.failed],
         ]
         const expectedMap = new Map<string, string>(expected as Iterable<Iterable2<string,string>>);
-        const tests: Array<InstrumentedTest> = []        
+        const tests: InstrumentedTest[] = []        
         tests.push(new InstrumentedTest().load(FixmeTests).setTestObject(new FixmeTests()));
         const val =  await this.subject.executor.runTestsAsync(tests);
         const results = val.results[0].testResults.map(res => [res.description, res.testStatus]);
@@ -288,7 +287,7 @@ export public class TestExecutorTests {
             ["fixme__multiScope___fail", TestStatus.skipped_fixme],
         ]
         const expectedMap = new Map<string, string>(expected as Iterable<Iterable2<string,string>>);
-        const tests: Array<InstrumentedTest> = []        
+        const tests: InstrumentedTest[] = []        
         tests.push(new InstrumentedTest().load(FixmeTests).setTestObject(new FixmeTests()));
         const val =  await this.subject.executor.runTestsAsync(tests, "SERVER");
         const results = val.results[0].testResults.map(res => [res.description, res.testStatus]);
@@ -310,7 +309,7 @@ export public class TestExecutorTests {
             ["fixme__multiScope___fail", TestStatus.skipped_fixme],
         ]
         const expectedMap = new Map<string, string>(expected as Iterable<Iterable2<string,string>>);
-        const tests: Array<InstrumentedTest> = []        
+        const tests: InstrumentedTest[] = []        
         tests.push(new InstrumentedTest().load(FixmeTests).setTestObject(new FixmeTests()));
         const val =  await this.subject.executor.runTestsAsync(tests, "MOCK");
         const results = val.results[0].testResults.map(res => [res.description, res.testStatus]);

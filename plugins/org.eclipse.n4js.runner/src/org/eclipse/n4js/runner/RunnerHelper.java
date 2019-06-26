@@ -26,24 +26,19 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
-import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
-import org.eclipse.n4js.utils.FindArtifactHelper;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
-import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
 /**
@@ -55,12 +50,6 @@ public class RunnerHelper {
 
 	@Inject
 	private IN4JSCore n4jsCore;
-
-	@Inject
-	private FindArtifactHelper artifactHelper;
-
-	@Inject
-	private ResourceNameComputer compilerHelper;
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
@@ -89,53 +78,6 @@ public class RunnerHelper {
 		if (pathNormalized.toString().isEmpty())
 			return null;
 		return Pair.of(pathNormalized, name);
-	}
-
-	/**
-	 * Returns paths to all bootstrap files defined in the given N4JS projects. The paths are relative to their
-	 * containing project's output folder.
-	 */
-	public List<String> getInitModulePaths(List<IN4JSProject> extendedDeps) {
-		return extendedDeps.stream()
-				.filter(p -> {
-					ProjectType pt = p.getProjectType();
-					return ProjectType.RUNTIME_LIBRARY.equals(pt) || ProjectType.RUNTIME_ENVIRONMENT.equals(pt);
-				})
-				.flatMap(p -> getInitModulesAsURIs(p).stream()
-						.map(bmURI -> getProjectRelativePath(p,
-								compilerHelper.generateFileDescriptor(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION))))
-				.collect(Collectors.toList());
-	}
-
-	/**
-	 * Returns URI to execution module from runtime environment.
-	 */
-	public Optional<String> getExecModuleURI(List<IN4JSProject> extendedDeps) {
-		List<String> execModules = extendedDeps.stream()
-				.filter(p -> ProjectType.RUNTIME_ENVIRONMENT.equals(p.getProjectType()))
-				.map(re -> {
-					// obtain the module specifier of the execModule
-					final Optional<String> oExecModuleSpecifier = re.getExecModule()
-							.transform(bootstrapModule -> bootstrapModule.getModuleSpecifier());
-
-					if (!oExecModuleSpecifier.isPresent()) {
-						return null;
-					}
-
-					// compute execModule location, by appending FQN to output folder location
-					return getProjectRelativePath(re, oExecModuleSpecifier.get() + "." + N4JSGlobals.JS_FILE_EXTENSION);
-				})
-				.filter(s -> !Strings.isNullOrEmpty(s))
-				.collect(Collectors.toList());
-
-		if (execModules.size() >= 1)
-			return Optional.of(execModules.get(0));
-
-		return Optional.absent();
-	}
-
-	private String getProjectRelativePath(IN4JSProject project, String subPath) {
-		return AbstractSubGenerator.calculateProjectBasedOutputDirectory(project) + "/" + subPath;
 	}
 
 	/**
@@ -207,16 +149,6 @@ public class RunnerHelper {
 		final RecursionGuard<URI> guard = new RecursionGuard<>();
 		recursiveDependencyCollector(sourceContainerAware, dependencies, guard);
 		return dependencies;
-	}
-
-	/**
-	 * Same as {@link IN4JSProject#getInitModules()}, but returns the initialization modules as URIs.
-	 */
-	private List<URI> getInitModulesAsURIs(IN4JSProject project) {
-		return project.getInitModules().stream()
-				.map(bm -> artifactHelper.findArtifact(project, bm.getModuleSpecifier(),
-						Optional.of(".js")))
-				.filter(module -> module != null).collect(Collectors.toList());
 	}
 
 	private void recursiveDependencyCollector(IN4JSProject project,

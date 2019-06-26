@@ -19,6 +19,7 @@ import com.google.common.collect.LinkedListMultimap
 import com.google.common.collect.Multimap
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import java.io.File
 import java.io.IOException
 import java.nio.file.FileVisitResult
 import java.nio.file.Files
@@ -32,12 +33,17 @@ import java.util.Map
 import java.util.Set
 import java.util.Stack
 import org.apache.log4j.Logger
+import org.eclipse.core.resources.IProject
+import org.eclipse.core.resources.IWorkspaceRoot
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.Platform
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.external.ExternalIndexSynchronizer
+import org.eclipse.n4js.external.ExternalLibraryWorkspace
 import org.eclipse.n4js.external.ShadowingInfoHelper
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
@@ -67,7 +73,10 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
@@ -88,15 +97,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.external.ExternalLibraryWorkspace
-import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper
-import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.resources.IWorkspaceRoot
-import org.eclipse.core.resources.IProject
-import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder
-import java.io.File
-import org.eclipse.n4js.utils.ProjectDescriptionUtils
-import org.eclipse.core.runtime.Platform
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -589,7 +589,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val references = getDependencies(!isExternal);
 
 		if (!references.empty) {
-			checkReferencedProjects(references, createDependenciesPredicate(), "dependencies or devDependencies", false, false); 
+			checkReferencedProjects(references, createDependenciesPredicate(), "dependencies or devDependencies", false, false);
 		}
 
 		// special validation for API projects
@@ -597,7 +597,39 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			internalValidateAPIProjectReferences(references);
 		}
 	}
-	
+
+	@Check
+	def void checkMandatoryDependencies(JSONDocument document) {
+
+		val description = getProjectDescription();
+		val projectName = description.projectName;
+		val projectType = description.projectType;
+		if (projectName == N4JSGlobals.N4JS_RUNTIME) {
+			return; // not applicable ("n4js-runtime" does not need to have a dependency to "n4js-runtime"!)
+		}
+		if (!N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(projectType)) {
+			return; // not applicable
+		}
+
+		val dependencies = getDocumentValues(DEPENDENCIES).filter(JSONObject).flatMap[nameValuePairs].toList;
+		if (!dependencies.exists[name == N4JSGlobals.N4JS_RUNTIME]) {
+			val devDependencies = getDocumentValues(DEV_DEPENDENCIES).filter(JSONObject).flatMap[nameValuePairs].toList;
+			val matchingDevDep = devDependencies.findFirst[name == N4JSGlobals.N4JS_RUNTIME];
+			if (matchingDevDep === null) {
+				// dependency to 'n4js-runtime' missing entirely
+				val msg = IssueCodes.getMessageForPKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME;
+				val projectTypeValue = getDocumentValues(PROJECT_TYPE).head;
+				if (projectTypeValue !== null) { // should always be non-null, because we check for 3 non-default project types above!
+					addIssue(msg, projectTypeValue, IssueCodes.PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME);
+				}
+			} else {
+				// dependency to 'n4js-runtime' defined in wrong section (under 'devDependencies' instead of 'dependencies')
+				val msg = IssueCodes.getMessageForPKGJ_WRONG_DEPENDENCY_N4JS_RUNTIME;
+				addIssue(msg, matchingDevDep, IssueCodes.PKGJ_WRONG_DEPENDENCY_N4JS_RUNTIME);
+			}
+		}
+	}
+
 	/**
 	 * Returns a representation of all declared runtime dependencies of 
 	 * the currently validate document (cf. {@link #getDocument()}).
@@ -684,35 +716,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val references =  testedProjectsValue.referencesFromJSONStringArray
 		
 		checkReferencedProjects(references, not(TEST_TYPE).forN4jsProjects, "tested projects", true, false);
-	}
-	
-	/** Checks the 'n4js.initModules' section. */
-	@CheckProperty(property = INIT_MODULES)
-	def checkInitModules(JSONValue initModulesValue) {
-		// initModule usage restriction
-		if (checkFeatureRestrictions(INIT_MODULES.name, initModulesValue, RE_OR_RL_TYPE)) {
-			if (initModulesValue instanceof JSONArray) {
-				// check all init module entries for empty strings
-				initModulesValue.elements.filter(JSONStringLiteral)
-					.filter[ l | l.value.empty ]
-					.forEach[ l |
-						addIssue(IssueCodes.getMessageForPKGJ_EMPTY_INIT_MODULE(), l, 
-							IssueCodes.PKGJ_EMPTY_INIT_MODULE)
-					]
-			}
-		}
-	}
-	
-	/** Checks the 'n4js.execModule' section. */
-	@CheckProperty(property = EXEC_MODULE)
-	def checkExecModule(JSONValue execModuleValue) {
-		// execModule usage restriction
-		if (checkFeatureRestrictions(EXEC_MODULE.name, execModuleValue, RE_OR_RL_TYPE)) {
-			// check for empty string
-			if (execModuleValue instanceof JSONStringLiteral) {
-				checkIsNonEmptyString(execModuleValue, EXEC_MODULE);
-			}
-		}
 	}
 	
 	/** Checks the 'n4js.implementationId' section. */
@@ -1179,11 +1182,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			if (currNPM !== null && !currNPM.toFile.exists) {
 				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
 				if (project.external) {
-					// TODO GH-1259: After removing shipped code, replace this with NON_EXISTING_PROJECT
-					val msg = getMessageForNON_EXISTING_PROJECT_WARNING(id);
-					addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT_WARNING, id, packageVersion);
+					val msg = getMessageForNON_EXISTING_PROJECT(id);
+					addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id, packageVersion);
 				} else {
-					// TODO GH-1259: After removing shipped code, make this an error
 					val msg = getMessageForMISSING_YARN_WORKSPACE(id);
 					addIssue(msg, ref.astRepresentation, null, MISSING_YARN_WORKSPACE, id, packageVersion);
 				}
