@@ -154,4 +154,3 @@ For updating the embedded JRE inside the N4JS IDE follow these steps:
 . Update the openjdk docker image used as base image in the "FROM" line at the top of all docker files:
 .. n4js/docker-build/Dockerfile
 .. n4js-n4/jenkins/docker-build/Dockerfile
-.. n4js-n4/jenkins/create-composed-updatesite/Dockerfile
