@@ -59,10 +59,7 @@ pipeline {
                             'execute-hlc-integration-tests'
                         ].join(',')
 
-                        // Execute in the n4js repository folder since the BuildN4jsLibs requires this
-                        dir ('n4js') {
-                            sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
-                        }
+                        sh "export SWT_GTK3=0; ${xvfb} mvn --batch-mode --update-snapshots clean verify -P${profiles} ${options}"
                     }
                 }
             }
