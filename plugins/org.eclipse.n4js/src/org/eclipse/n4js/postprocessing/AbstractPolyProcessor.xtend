@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
+import org.eclipse.n4js.n4JS.PropertySpread
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -114,6 +115,8 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				pa.declaredTypeRef === null
 			PropertyMethodDeclaration:
 				false
+			PropertySpread:
+				false // TODO GH-1337 add support for spread operator
 			PropertyAssignmentAnnotationList:
 				false
 			default:
@@ -165,6 +168,8 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				null // getters never have nested poly expressions
 			PropertySetterDeclaration:
 				null // setters never have nested poly expressions
+			PropertySpread:
+				null // TODO GH-1337 add support for spread operator
 		}
 	}
 

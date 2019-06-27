@@ -56,6 +56,7 @@ import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.PostfixExpression;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
+import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.ShiftExpression;
@@ -517,6 +518,11 @@ import com.google.inject.Inject;
 			} else {
 				return topTypeRef(G);
 			}
+		}
+
+		@Override
+		public TypeRef casePropertySpread(PropertySpread object) {
+			return unknown(); // TODO GH-1337 add support for spread operator
 		}
 
 		@Override

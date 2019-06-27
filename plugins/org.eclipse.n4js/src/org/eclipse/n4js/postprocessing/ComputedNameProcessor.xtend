@@ -11,6 +11,7 @@
 package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Singleton
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
@@ -19,13 +20,13 @@ import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
+import org.eclipse.n4js.n4JS.PropertySpread
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 
 /**
@@ -114,6 +115,9 @@ class ComputedNameProcessor {
 				PropertySetterDeclaration:
 					astNode.definedSetter = null
 				// note: PropertyMethodDeclaration is a TypeDefiningElement (handled above)
+				PropertySpread: {
+					// nothing to discard in this case
+				}
 				default:
 					throw new UnsupportedOperationException("switch case missing for: " + astNode)
 			};
