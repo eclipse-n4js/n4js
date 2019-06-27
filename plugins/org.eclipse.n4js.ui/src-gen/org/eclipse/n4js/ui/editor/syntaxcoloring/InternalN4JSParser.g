@@ -7428,6 +7428,8 @@ rulePropertyAssignment
 	)
 	    |
 	PropertyNameValuePairSingleNameParserRuleCall_5=rulePropertyNameValuePairSingleName{ announce($PropertyNameValuePairSingleNameParserRuleCall_5.start, $PropertyNameValuePairSingleNameParserRuleCall_5.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_5()); }
+	    |
+	PropertySpreadParserRuleCall_6=rulePropertySpread{ announce($PropertySpreadParserRuleCall_6.start, $PropertySpreadParserRuleCall_6.stop, grammarAccess.getPropertyAssignmentAccess().getPropertySpreadParserRuleCall_6()); }
 )
 ;
 
@@ -7659,6 +7661,8 @@ norm1_PropertyAssignment
 	)
 	    |
 	PropertyNameValuePairSingleNameParserRuleCall_5=norm1_PropertyNameValuePairSingleName{ announce($PropertyNameValuePairSingleNameParserRuleCall_5.start, $PropertyNameValuePairSingleNameParserRuleCall_5.stop, grammarAccess.getPropertyAssignmentAccess().getPropertyNameValuePairSingleNameParserRuleCall_5()); }
+	    |
+	PropertySpreadParserRuleCall_6=norm1_PropertySpread{ announce($PropertySpreadParserRuleCall_6.start, $PropertySpreadParserRuleCall_6.stop, grammarAccess.getPropertyAssignmentAccess().getPropertySpreadParserRuleCall_6()); }
 )
 ;
 
@@ -8131,6 +8135,20 @@ ruleAnnotatedPropertyAssignment
 				)
 			)?
 		)
+		    |
+		(
+			FullStopFullStopFullStopKeyword_1_5_1=FullStopFullStopFullStop
+			 {
+				announce($FullStopFullStopFullStopKeyword_1_5_1, grammarAccess.getAnnotatedPropertyAssignmentAccess().getFullStopFullStopFullStopKeyword_1_5_1());
+			}
+			(
+				(
+					ExpressionAssignmentExpressionParserRuleCall_1_5_2_0=norm1_AssignmentExpression{
+						announce($ExpressionAssignmentExpressionParserRuleCall_1_5_2_0.start, $ExpressionAssignmentExpressionParserRuleCall_1_5_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignment_1_5_2());
+					}
+				)
+			)
+		)
 	)
 )
 ;
@@ -8598,6 +8616,20 @@ norm1_AnnotatedPropertyAssignment
 					)
 				)
 			)?
+		)
+		    |
+		(
+			FullStopFullStopFullStopKeyword_1_5_1=FullStopFullStopFullStop
+			 {
+				announce($FullStopFullStopFullStopKeyword_1_5_1, grammarAccess.getAnnotatedPropertyAssignmentAccess().getFullStopFullStopFullStopKeyword_1_5_1());
+			}
+			(
+				(
+					ExpressionAssignmentExpressionParserRuleCall_1_5_2_0=norm3_AssignmentExpression{
+						announce($ExpressionAssignmentExpressionParserRuleCall_1_5_2_0.start, $ExpressionAssignmentExpressionParserRuleCall_1_5_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignment_1_5_2());
+					}
+				)
+			)
 		)
 	)
 )
@@ -9622,6 +9654,51 @@ norm1_PropertySetterDeclaration
 		(
 			BodyBlockParserRuleCall_5_0=ruleBlock{
 				announce($BodyBlockParserRuleCall_5_0.start, $BodyBlockParserRuleCall_5_0.stop, grammarAccess.getPropertySetterDeclarationAccess().getBodyAssignment_5());
+			}
+		)
+	)
+)
+;
+
+// Entry rule entryRulePropertySpread
+entryRulePropertySpread
+	:
+	rulePropertySpread
+	EOF;
+
+// Rule PropertySpread
+rulePropertySpread
+@init {
+}:
+(
+	FullStopFullStopFullStopKeyword_0=FullStopFullStopFullStop
+	 {
+		announce($FullStopFullStopFullStopKeyword_0, grammarAccess.getPropertySpreadAccess().getFullStopFullStopFullStopKeyword_0());
+	}
+	(
+		(
+			ExpressionAssignmentExpressionParserRuleCall_1_0=norm1_AssignmentExpression{
+				announce($ExpressionAssignmentExpressionParserRuleCall_1_0.start, $ExpressionAssignmentExpressionParserRuleCall_1_0.stop, grammarAccess.getPropertySpreadAccess().getExpressionAssignment_1());
+			}
+		)
+	)
+)
+;
+
+
+// Rule PropertySpread
+norm1_PropertySpread
+@init {
+}:
+(
+	FullStopFullStopFullStopKeyword_0=FullStopFullStopFullStop
+	 {
+		announce($FullStopFullStopFullStopKeyword_0, grammarAccess.getPropertySpreadAccess().getFullStopFullStopFullStopKeyword_0());
+	}
+	(
+		(
+			ExpressionAssignmentExpressionParserRuleCall_1_0=norm3_AssignmentExpression{
+				announce($ExpressionAssignmentExpressionParserRuleCall_1_0.start, $ExpressionAssignmentExpressionParserRuleCall_1_0.stop, grammarAccess.getPropertySpreadAccess().getExpressionAssignment_1());
 			}
 		)
 	)

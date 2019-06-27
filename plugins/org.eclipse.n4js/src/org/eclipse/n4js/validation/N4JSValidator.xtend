@@ -14,9 +14,9 @@ import com.google.inject.Inject
 import java.lang.reflect.Method
 import org.eclipse.emf.common.util.BasicDiagnostic
 import org.eclipse.emf.common.util.Diagnostic
+import org.eclipse.n4js.smith.N4JSDataCollectors
 import org.eclipse.n4js.ts.validation.TypesValidator
 import org.eclipse.n4js.utils.Log
-import org.eclipse.n4js.utils.N4JSDataCollectors
 import org.eclipse.n4js.validation.validators.IDEBUGValidator
 import org.eclipse.n4js.validation.validators.N4IDLMigrationValidator
 import org.eclipse.n4js.validation.validators.N4IDLValidator

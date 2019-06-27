@@ -208,7 +208,7 @@ public class AssignmentRelationFactory {
 		for (Iterator<DestructNode> dnIter = dNode.stream().iterator(); dnIter.hasNext();) {
 			DestructNode dnChild = dnIter.next();
 			ControlFlowElement lhs = dnChild.getVarRef() != null ? dnChild.getVarRef() : dnChild.getVarDecl();
-			EObject rhs = DestructureUtilsForSymbols.getValueFromDestructuring(symbolFactory, dnChild);
+			EObject rhs = DestructureUtilsForSymbols.getValueFromDestructuring(dnChild);
 			if (rhs == null) {
 				Symbol undefinedSymbol = symbolFactory.getUndefined();
 				createRelation(assgns, lhs, undefinedSymbol, null);

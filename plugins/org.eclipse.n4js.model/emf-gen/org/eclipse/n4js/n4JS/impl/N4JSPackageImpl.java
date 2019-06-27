@@ -172,6 +172,7 @@ import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration;
+import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RegularExpressionLiteral;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.RelationalOperator;
@@ -869,6 +870,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass propertySetterDeclarationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass propertySpreadEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -4519,6 +4527,36 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getPropertySpread() {
+		return propertySpreadEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getPropertySpread_Expression() {
+		return (EReference)propertySpreadEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getPropertySpread__GetDefinedMember() {
+		return propertySpreadEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getExpression() {
 		return expressionEClass;
 	}
@@ -7701,6 +7739,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(propertySetterDeclarationEClass, PROPERTY_SETTER_DECLARATION___GET_DEFINED_MEMBER);
 		createEOperation(propertySetterDeclarationEClass, PROPERTY_SETTER_DECLARATION___IS_VALID_NAME);
 
+		propertySpreadEClass = createEClass(PROPERTY_SPREAD);
+		createEReference(propertySpreadEClass, PROPERTY_SPREAD__EXPRESSION);
+		createEOperation(propertySpreadEClass, PROPERTY_SPREAD___GET_DEFINED_MEMBER);
+
 		expressionEClass = createEClass(EXPRESSION);
 		createEOperation(expressionEClass, EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET);
 
@@ -8234,6 +8276,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		propertyGetterDeclarationEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
 		propertySetterDeclarationEClass.getESuperTypes().add(this.getSetterDeclaration());
 		propertySetterDeclarationEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
+		propertySpreadEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
 		expressionEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		expressionEClass.getESuperTypes().add(this.getControlFlowElement());
 		newTargetEClass.getESuperTypes().add(this.getExpression());
@@ -8824,6 +8867,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getPropertySetterDeclaration__GetDefinedMember(), theTypesPackage.getTStructSetter(), "getDefinedMember", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getPropertySetterDeclaration__IsValidName(), theEcorePackage.getEBoolean(), "isValidName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(propertySpreadEClass, PropertySpread.class, "PropertySpread", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getPropertySpread_Expression(), this.getExpression(), null, "expression", null, 0, 1, PropertySpread.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getPropertySpread__GetDefinedMember(), theTypesPackage.getTStructField(), "getDefinedMember", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(expressionEClass, Expression.class, "Expression", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

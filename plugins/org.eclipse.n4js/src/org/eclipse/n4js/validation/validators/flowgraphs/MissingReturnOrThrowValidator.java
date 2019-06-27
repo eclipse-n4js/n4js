@@ -21,9 +21,7 @@ import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
-import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
 
 /**
@@ -33,8 +31,8 @@ public class MissingReturnOrThrowValidator implements FlowValidator {
 	private final MissingReturnOrThrowAnalyser mrta;
 
 	/** Constructor */
-	public MissingReturnOrThrowValidator(TypeSystemHelper typeSystemHelper, JavaScriptVariantHelper jsVariantHelper) {
-		this.mrta = new MissingReturnOrThrowAnalyser(typeSystemHelper, jsVariantHelper);
+	public MissingReturnOrThrowValidator(MissingReturnOrThrowAnalyser missingReturnOrThrowAnalyser) {
+		this.mrta = missingReturnOrThrowAnalyser;
 	}
 
 	@Override

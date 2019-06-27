@@ -53,6 +53,7 @@ public class N4JSObjectLiteralTypesBuilder {
 		target.internalTypes += structType
 	}
 
+	// TODO GH-1337 add support for spread operator
 	private def dispatch TStructMember createTypeModelElement(TStructuralType structType, ObjectLiteral objectLiteral, PropertyAssignment assignment, BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 	}
 

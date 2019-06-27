@@ -450,6 +450,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createPropertySetterDeclarationAdapter();
 			}
 			@Override
+			public Adapter casePropertySpread(PropertySpread object) {
+				return createPropertySpreadAdapter();
+			}
+			@Override
 			public Adapter caseExpression(Expression object) {
 				return createExpressionAdapter();
 			}
@@ -2102,6 +2106,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createPropertySetterDeclarationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.PropertySpread <em>Property Spread</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.PropertySpread
+	 * @generated
+	 */
+	public Adapter createPropertySpreadAdapter() {
 		return null;
 	}
 

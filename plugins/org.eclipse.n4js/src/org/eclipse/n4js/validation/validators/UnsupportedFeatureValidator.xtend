@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NewTarget
+import org.eclipse.n4js.n4JS.PropertySpread
 import org.eclipse.n4js.n4JS.TaggedTemplateString
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.validation.ASTStructureValidator
@@ -124,8 +125,8 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 
 
 	/**
-	 * NOTE: in addition to the errors produced by this method, spread operator in <em>array literals</em> is also
-	 * unsupported; but that is checked in
+	 * NOTE: in addition to the errors produced by this and the following method, spread operator
+	 * in <em>array literals</em> is also unsupported; but that is checked in
 	 * {@link ASTStructureValidator#validateSpreadInArrayLiteral(org.eclipse.n4js.n4JS.ArrayElement,
 	 * org.eclipse.n4js.validation.ASTStructureDiagnosticProducer)}
 	 */
@@ -135,6 +136,11 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 			unsupported("spread operator in new and call expressions (only allowed in array destructuring patterns)",
 				argument, N4JSPackage.eINSTANCE.argument_Spread);
 		}
+	}
+
+	@Check
+	def void checkSpreadOperatorInObjectLiteral(PropertySpread propertySpread) {
+		unsupported("spread operator in object literals (only allowed in array destructuring patterns)", propertySpread)
 	}
 
 
