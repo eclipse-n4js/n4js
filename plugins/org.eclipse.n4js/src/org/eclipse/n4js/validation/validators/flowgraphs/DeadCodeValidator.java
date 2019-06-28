@@ -31,13 +31,12 @@ import com.google.common.base.Strings;
  */
 public class DeadCodeValidator implements FlowValidator {
 	final private DeadCodeAnalyser dca;
-
 	final private N4JSElementKeywordProvider keywordProvider;
 
 	/** Constructor. */
-	public DeadCodeValidator(N4JSElementKeywordProvider keywordProvider) {
+	public DeadCodeValidator(DeadCodeAnalyser deadCodeAnalyser, N4JSElementKeywordProvider keywordProvider) {
 		this.keywordProvider = keywordProvider;
-		dca = new DeadCodeAnalyser();
+		dca = deadCodeAnalyser;
 	}
 
 	@Override

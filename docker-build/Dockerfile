@@ -1,4 +1,6 @@
-FROM openjdk:11.0.3-jdk-stretch
+# When updating the JRE: Refer to n4js/docs/org.eclipse.n4js.design/chapters/03_releng/releng.adoc: "Update of the embedded JRE"
+# openjdk:11.0.2-jdk-stretch
+FROM openjdk@sha256:2c5663a6d16bbf7bb62e20155caf7577a30dad19f67e4db07986f00d096bde1a
 
 LABEL version="0.1.3" \
       description="Build n4js with Maven. Includes xvfb, node." \
@@ -11,15 +13,16 @@ VOLUME /workspace
 WORKDIR /workspace
 
 ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
+CMD ["mvn"]
 
 #
 # Maven installation:
 # see https://github.com/carlossg/docker-maven/tree/ecf54b9839caed8aa2bcf9b8f7bb19594634ee89/jdk-8
 # and https://hub.docker.com/_/maven/
 #
-ARG MAVEN_VERSION=3.6.1
+ARG MAVEN_VERSION=3.6.0
 ARG USER_HOME_DIR="/home/build"
-ARG SHA=b4880fb7a3d81edd190a029440cdf17f308621af68475a4fe976296e71ff4a4b546dd6d8a58aaafba334d309cc11e638c52808a4b0e818fc0fd544226d952544
+ARG SHA=fae9c12b570c3ba18116a4e26ea524b29f7279c17cbaadc3326ca72927368924d9131d11b9e851b8dc9162228b6fdea955446be41207a5cfc61283dd8a561d2f
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 ARG MAVEN_CENTRAL_URL=https://repo.maven.apache.org/maven2/
 
@@ -27,7 +30,7 @@ ARG MAVEN_CENTRAL_URL=https://repo.maven.apache.org/maven2/
 RUN groupadd --gid 1000 build && \
     useradd --uid 1000 --gid build --shell /bin/bash --create-home build
 
-# Add build user to the docker group
+# Add `build` user to the `docker` group
 RUN groupadd -g 994 docker && usermod -aG docker build
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref && \
@@ -122,8 +125,16 @@ RUN set -ex && \
 #
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        rsync \
         xauth \
         xvfb
+
+#
+# jq install
+#
+RUN apt-get update && \
+  apt-get install -y jq
+
 
 #
 # docker install
@@ -135,12 +146,6 @@ RUN apt-get update && \
      curl \
      gnupg2 \
      software-properties-common
-
-#
-# jq install
-#
-RUN apt-get update && \
-  apt-get install -y jq
 
 
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -

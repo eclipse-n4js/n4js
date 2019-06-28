@@ -32,7 +32,6 @@ import org.eclipse.n4js.flowgraphs.analysers.DummyForwardVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.InstanceofGuardAnalyser;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
-import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -56,7 +55,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 @XpectImport(N4JSOffsetAdapter.class)
 public class FlowgraphsXpectMethod {
 
-	N4JSFlowAnalyser getFlowAnalyzer(EObject eo) {
+	N4JSFlowAnalyser createFlowAnalyzer(EObject eo) {
 		Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
 		N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
 		flowAnalyzer.createGraphs(script);
@@ -102,7 +101,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowType cfType = getControlFlowType(type);
 		ControlFlowElement cfe = getCFE(offset);
-		Set<ControlFlowElement> preds = getFlowAnalyzer(cfe).getPredecessorsSkipInternal(cfe);
+		Set<ControlFlowElement> preds = createFlowAnalyzer(cfe).getPredecessorsSkipInternal(cfe);
 		filterByControlFlowType(cfe, preds, cfType);
 
 		List<String> predTexts = new LinkedList<>();
@@ -126,7 +125,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowType cfType = getControlFlowType(type);
 		ControlFlowElement cfe = getCFE(offset);
-		Set<ControlFlowElement> succs = getFlowAnalyzer(cfe).getSuccessorsSkipInternal(cfe);
+		Set<ControlFlowElement> succs = createFlowAnalyzer(cfe).getSuccessorsSkipInternal(cfe);
 		filterByControlFlowType(cfe, succs, cfType);
 
 		List<String> succTexts = new LinkedList<>();
@@ -156,7 +155,7 @@ public class FlowgraphsXpectMethod {
 			return;
 
 		for (Iterator<ControlFlowElement> succIt = succList.iterator(); succIt.hasNext();) {
-			N4JSFlowAnalyser flowAnalyzer = getFlowAnalyzer(start);
+			N4JSFlowAnalyser flowAnalyzer = createFlowAnalyzer(start);
 			Set<ControlFlowType> currCFTypes = flowAnalyzer.getControlFlowTypeToSuccessors(start, succIt.next());
 			if (!currCFTypes.contains(cfType)) {
 				succIt.remove();
@@ -195,10 +194,10 @@ public class FlowgraphsXpectMethod {
 
 		boolean actualPathExists;
 		if (viaCFE != null) {
-			actualPathExists = getFlowAnalyzer(fromCFE).isTransitiveSuccessor(fromCFE, viaCFE, notViaCFE);
-			actualPathExists &= getFlowAnalyzer(fromCFE).isTransitiveSuccessor(viaCFE, targetCFE, notViaCFE);
+			actualPathExists = createFlowAnalyzer(fromCFE).isTransitiveSuccessor(fromCFE, viaCFE, notViaCFE);
+			actualPathExists &= createFlowAnalyzer(fromCFE).isTransitiveSuccessor(viaCFE, targetCFE, notViaCFE);
 		} else {
-			actualPathExists = getFlowAnalyzer(fromCFE).isTransitiveSuccessor(fromCFE, targetCFE, notViaCFE);
+			actualPathExists = createFlowAnalyzer(fromCFE).isTransitiveSuccessor(fromCFE, targetCFE, notViaCFE);
 		}
 
 		if (expectPathExists && !actualPathExists) {
@@ -229,7 +228,7 @@ public class FlowgraphsXpectMethod {
 		GraphVisitor dfv = new DummyForwardVisitor();
 		GraphVisitor dbv = new DummyBackwardVisitor();
 		ControlFlowElement referenceCFE = getCFE(referenceOffset);
-		getFlowAnalyzer(referenceCFE).accept(dfv, dbv);
+		createFlowAnalyzer(referenceCFE).accept(dfv, dbv);
 		N4JSFlowAnalyserDataRecorder.setEnabled(false);
 		performBranchAnalysis(referenceOffset, null, referenceOffset);
 		List<String> edgeStrings = new LinkedList<>();
@@ -292,7 +291,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
 		AllBranchPrintVisitor appw = new AllBranchPrintVisitor(container, startCFE, direction);
-		getFlowAnalyzer(referenceCFE).accept(appw);
+		createFlowAnalyzer(referenceCFE).accept(appw);
 		return appw;
 	}
 
@@ -320,7 +319,7 @@ public class FlowgraphsXpectMethod {
 		cfe = FGUtils.getCFContainer(cfe);
 
 		AllNodesAndEdgesPrintVisitor anaepw = new AllNodesAndEdgesPrintVisitor(cfe);
-		getFlowAnalyzer(cfe).accept(anaepw);
+		createFlowAnalyzer(cfe).accept(anaepw);
 		List<String> pathStrings = anaepw.getAllEdgeStrings();
 
 		expectation.assertEquals(pathStrings);
@@ -335,7 +334,7 @@ public class FlowgraphsXpectMethod {
 		ControlFlowElement aCFE = getCFE(a);
 		ControlFlowElement bCFE = getCFE(b);
 
-		Set<ControlFlowElement> commonPreds = getFlowAnalyzer(aCFE).getCommonPredecessors(aCFE, bCFE);
+		Set<ControlFlowElement> commonPreds = createFlowAnalyzer(aCFE).getCommonPredecessors(aCFE, bCFE);
 		List<String> commonPredStrs = new LinkedList<>();
 		for (ControlFlowElement commonPred : commonPreds) {
 			String commonPredStr = FGUtils.getSourceText(commonPred);
@@ -359,7 +358,7 @@ public class FlowgraphsXpectMethod {
 	@Xpect
 	public void cfContainer(@StringExpectation IStringExpectation expectation, IEObjectCoveringRegion offset) {
 		ControlFlowElement cfe = getCFE(offset);
-		ControlFlowElement container = getFlowAnalyzer(cfe).getContainer(cfe);
+		ControlFlowElement container = createFlowAnalyzer(cfe).getContainer(cfe);
 		EObject containerContainer = container.eContainer();
 
 		String ccString = (containerContainer != null) ? FGUtils.getClassName(containerContainer) + "::" : "";
@@ -368,29 +367,18 @@ public class FlowgraphsXpectMethod {
 	}
 
 	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)? (arg2=STRING)?")
+	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
 	@Xpect
 	public void instanceofguard(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
-			IEObjectCoveringRegion offset, String holdsName) {
+			IEObjectCoveringRegion offset) {
 
 		ControlFlowElement cfe = getCFE(offset);
-		GuardAssertion assertion = null;
-		if (holdsName != null) {
-			assertion = GuardAssertion.valueOf(holdsName);
-		}
 
 		InstanceofGuardAnalyser iga = new InstanceofGuardAnalyser();
-		N4JSFlowAnalyser flowAnalyzer = getFlowAnalyzer(cfe);
+		N4JSFlowAnalyser flowAnalyzer = createFlowAnalyzer(cfe);
 		flowAnalyzer.accept(iga);
 
-		Collection<InstanceofGuard> ioGuards = null;
-		if (assertion == GuardAssertion.MayHolds) {
-			ioGuards = iga.getMayHoldingTypes(cfe);
-		} else if (assertion == GuardAssertion.NeverHolds) {
-			ioGuards = iga.getNeverHoldingTypes(cfe);
-		} else {
-			ioGuards = iga.getAlwaysHoldingTypes(cfe);
-		}
+		Collection<InstanceofGuard> ioGuards = iga.getAlwaysHoldingTypes(cfe);
 
 		List<String> commonPredStrs = new LinkedList<>();
 		for (InstanceofGuard ioGuard : ioGuards) {

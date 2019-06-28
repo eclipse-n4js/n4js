@@ -54,7 +54,7 @@ export external public class Notification implements EventTarget {
     public sound: string;
 
     @Final
-    public vibrate: Array<int>;
+    public vibrate: int[];
 
     @Final
     public timestamp: int;
@@ -72,7 +72,7 @@ export external public class Notification implements EventTarget {
     public data: any;
 
     @Final
-    public actions: Array<NotificationAction>;
+    public actions: NotificationAction[];
 
     public close(): void;
 }
@@ -86,13 +86,13 @@ export external public interface ~NotificationOptions {
     public icon?: string;
     public badge?: string;
     public sound?: string;
-    public vibrate?: Array<int>;
+    public vibrate?: int[];
     public timestamp?: int;
     public renotify?: boolean;
     public silent?: boolean;
     public requireInteraction?: boolean;
     public data?: any;
-    public actions?: Array<NotificationAction>;
+    public actions?: NotificationAction[];
 }
 
 export @StringBased external public enum NotificationPermission {

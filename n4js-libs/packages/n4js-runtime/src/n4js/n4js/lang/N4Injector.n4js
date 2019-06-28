@@ -34,9 +34,9 @@ export public interface InjectedClassMeta {
     /** present if type has super type, contains loaded type itself */
     public superType?: constructor{? extends N4Object};
     /** present if type has own injected constructor, can be empty (if annotated ctor has no params) */
-    public injectCtorParams?: Array<InjectedTypeMeta>;
+    public injectCtorParams?: InjectedTypeMeta[];
     /** present if type has own injected fields, includes overriden fields */
-    public fieldsInjectedTypes?: Array<InjectedTypeMeta>;
+    public fieldsInjectedTypes?: InjectedTypeMeta[];
 }
 
 /** exported just for testing*/
@@ -51,7 +51,7 @@ export public interface BindingInfo {
 export public interface ProvideMethodInfo {
     public to: constructor{? extends N4Object};
     public name: string;
-    public args: Array<InjectedTypeMeta>;
+    public args: InjectedTypeMeta[];
 }
 
 /**
@@ -63,9 +63,9 @@ export public interface ProvideMethodInfo {
 @Internal
 export public interface BinderMeta extends InjectedClassMeta {
     /** present if binding annotations */
-    public bindings?: Array<BindingInfo>;
+    public bindings?: BindingInfo[];
     /** present if provide methods */
-    public methodBindings?: Array<ProvideMethodInfo>;
+    public methodBindings?: ProvideMethodInfo[];
 }
 
 /**
@@ -77,7 +77,7 @@ export public interface BinderMeta extends InjectedClassMeta {
 @Internal
 export public interface DIComponentMeta extends InjectedClassMeta {
     public parent?: constructor{? extends N4Object};
-    public binders: Array<constructor{? extends N4Object}>;
+    public binders: constructor{? extends N4Object}[];
 }
 
 /** exported just for testing*/
@@ -447,7 +447,7 @@ export public class N4Injector{
      * Creates new type instance from provided ctor and parameters.
      * Basically calls <pre>new ctor(parameters)</pre>.
      */
-    private <T extends N4Object> createNew(ctor: constructor{T}, parameters: Array<any>): T {
+    private <T extends N4Object> createNew(ctor: constructor{T}, parameters: any[]): T {
         if(!ctor){
             throw new DIConfigurationError("Tried to create instance from null or undefined ctor" + ctor);
         }
@@ -499,7 +499,7 @@ export public class N4Injector{
             return this.scopedInstances.get(ofqn) as T;
         }
 
-        let ctorParams: Array<any> = this.getInjectorParams(ctor as constructor{N4Object})
+        let ctorParams: any[] = this.getInjectorParams(ctor as constructor{N4Object})
             .map(fp => delegate.createFromInjectedTypeMeta(fp, delegate, new Map<string, N4Object>(cachedInstances)));
         let instance = this.createNew(ctor as constructor{T}, ctorParams);
         cachedInstances.set(ofqn, instance);
@@ -519,7 +519,7 @@ export public class N4Injector{
      * Will traverse to super types to check for inherited constructor
      * (if owned ctor not there).
      */
-    private getInjectorParams(type: constructor{? extends N4Object}): Array<InjectedTypeMeta>{
+    private getInjectorParams(type: constructor{? extends N4Object}): InjectedTypeMeta[] {
         if(hasDIMeta(type)){
             let meta = getInjectedClassMeta(type);
             //owned injected constructor
@@ -569,7 +569,7 @@ export public class N4Injector{
      * For any injected parameters of the provider method delegates to itself via  {@link N4Injector.create}.
      */
     private createProvided(binder: N4Object, info: ProvideMethodInfo, delegate: N4Injector, cachedInstances: Map<string, N4Object>): N4Object{
-        let params: Array<N4Object> = info.args.map(e => this.createFromInjectedTypeMeta(e, delegate, cachedInstances));
+        let params: N4Object[] = info.args.map(e => this.createFromInjectedTypeMeta(e, delegate, cachedInstances));
         let binderObj: Object = binder;
         return (binderObj[info.name] as Function).apply(binder, params) as N4Object;
     }
@@ -610,8 +610,8 @@ export public class N4Injector{
      * Note that only information about which binder has binding for given type is stored,
      * not binding information itself.
      */
-    private static prepareBindingsMap(providedBinders: Array<N4Object>, expectedBindersTypes: Array<constructor{? extends N4Object}> =): Map<string, N4Object>{
-        let bindings: Array<N4Object> = [];
+    private static prepareBindingsMap(providedBinders: N4Object[], expectedBindersTypes: constructor{? extends N4Object}[] =): Map<string, N4Object>{
+        let bindings: N4Object[] = [];
         if(expectedBindersTypes){
             let expectedBindersMap = new Map<string, constructor{? extends N4Object}>();
             expectedBindersTypes.forEach(eb=> expectedBindersMap.set(getOFQN(eb),eb));

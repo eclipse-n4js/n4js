@@ -29,7 +29,7 @@ export external public abstract class TypedArray extends ArrayBufferView impleme
     public reduce(callback: (number, number, int, TypedArray) => number, initialValue: number=): number;
     public reduceRight(callback: (number, number, int, TypedArray) => number, initialValue: number=): number;
     public reverse(): TypedArray;
-    public <T> set(array: Array<T>|TypedArray, offset: int = 0): void;
+    public <T> set(array: T[]|TypedArray, offset: int = 0): void;
     public slice(begin: int = 0, end: int = this.length): TypedArray;
     public some(callback: (number, int, TypedArray) => boolean, thisArg: Object=): boolean;
     public sort(compareFunction: (number, number) => int = ): TypedArray;

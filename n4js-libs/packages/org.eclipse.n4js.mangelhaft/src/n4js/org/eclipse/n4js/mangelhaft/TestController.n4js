@@ -44,13 +44,13 @@ export public class TestController {
     @Inject
     public injector: N4Injector;
 
-    private reportersVal: Array<? extends ITestReporter> = [];
+    private reportersVal: (? extends ITestReporter)[] = [];
 
     // TODO GH-710 remove, expose different API
-    public get reporters(): Array<? extends ITestReporter> {
+    public get reporters(): (? extends ITestReporter)[] {
         return this.reportersVal;
     }
-    public set reporters(reporters: Array<? extends ITestReporter>) {
+    public set reporters(reporters: (? extends ITestReporter)[]) {
         reporters.forEach(function(reporter) {
                 let dummy: Promise<any, ?> = reporter.register();
                 dummy;
@@ -66,7 +66,7 @@ export public class TestController {
         if (!testCatalog) {
             throw new Error("TestController::runGroups called with a null testCatalog");
         }
-        const testInfos: Array<TestInfo> = testCatalog.testDescriptors.sort((x: TestInfo, y: TestInfo) => {
+        const testInfos: TestInfo[] = testCatalog.testDescriptors.sort((x: TestInfo, y: TestInfo) => {
                 let xVal = x.fqn ? x.fqn : x.module;
                 let yVal = y.fqn ? y.fqn : y.module;
                 return xVal.localeCompare(yVal);
@@ -87,32 +87,32 @@ export public class TestController {
     }
 
     /** Runs provided tests in batches,  */
-    private async runInBatches(testInfos: Array<TestInfo>, scope: string=): ResultGroups {
+    private async runInBatches(testInfos: TestInfo[], scope: string=): ResultGroups {
         let res: ResultGroups;
 
         // groups tests into batches to execute
-        const batchedTestInfos: Array<Array<TestInfo>> = [];
+        const batchedTestInfos: TestInfo[][] = [];
         for (let batchedCount = 0; batchedCount < testInfos.length; batchedCount += MAX_GROUPS_PER_TEST_BATCH) {
             const batch = testInfos.slice(batchedCount, batchedCount + MAX_GROUPS_PER_TEST_BATCH);
             batchedTestInfos.push(batch);
         }
 
         // utils
-        const mapper: (TestInfo) => Promise<[InstrumentedTest], ?> = async (testInfo) => await this
+        const mapper: (TestInfo) => Promise<InstrumentedTest[], ?> = async (testInfo) => await this
             .instrument(testInfo);
-        const flatten = (arr: [[InstrumentedTest]]): [InstrumentedTest] => Array.prototype.concat.apply([],
-            arr) as [InstrumentedTest];
-        const instrumentBatch = async function(testInfosBatch: Array<TestInfo>): Array<InstrumentedTest> {
+        const flatten = (arr: InstrumentedTest[][]): InstrumentedTest[] => Array.prototype.concat.apply([],
+            arr) as InstrumentedTest[];
+        const instrumentBatch = async function(testInfosBatch: TestInfo[]): InstrumentedTest[] {
                 const instrumentedBatches = testInfosBatch.map(mapper).filter(notNull);
-                const instrumentedTestsBatch1d = await Promise.<[InstrumentedTest]>all(instrumentedBatches);
+                const instrumentedTestsBatch1d = await Promise.<InstrumentedTest[]>all(instrumentedBatches);
                 const instrumentedTestsBatch2d = await Promise
-                    .<[[InstrumentedTest]],any>resolve(instrumentedTestsBatch1d);
+                    .<InstrumentedTest[][],any>resolve(instrumentedTestsBatch1d);
                 const instrumentedTestsBatch = flatten(instrumentedTestsBatch2d);
 
                 return instrumentedTestsBatch;
             };
 
-        const resultGroups: Array<ResultGroups> = [];
+        const resultGroups: ResultGroups[] = [];
         // execute batched groups
         for (let numOfBatches = 0; numOfBatches < batchedTestInfos.length; ++numOfBatches) {
             try {
@@ -130,8 +130,8 @@ export public class TestController {
         return res;
     }
 
-    private async instrument(info: TestInfo): Array<InstrumentedTest> {
-        let testClasses: [constructor{N4Object}];
+    private async instrument(info: TestInfo): InstrumentedTest[] {
+        let testClasses: constructor{N4Object}[];
 
         const parts = info.fqn.split("/");
         const ctorName = parts.pop();
@@ -139,14 +139,14 @@ export public class TestController {
         try {
             let groupModule: Object;
             try {
-                groupModule = await _n4jsImport(`${info.origin}/${moduleName}`);
+                groupModule = (await import(`${info.origin}/${moduleName}`)) as Object;
             } catch (exc) { // find package.json
                 const packageJsonPath = findPackageJson(process.cwd());
                 if (!packageJsonPath || readJsonFile(packageJsonPath).name !== info.origin) {
                     throw exc;
                 }
                 const fpath = `${lib_path.dirname(packageJsonPath)}${lib_path.sep}${moduleName.split("/").join(lib_path.sep)}.js`;
-                groupModule = await _n4jsImport(fpath);
+                groupModule = (await import(fpath)) as Object;
             }
             testClasses = [groupModule[ctorName] as constructor{N4Object}];
         } catch (ex) {
@@ -157,7 +157,7 @@ export public class TestController {
             await this.errorGroup(info, info.origin + "/" + parts.join("/"));
             return null;
         }
-        let instrumentedTests: Array<IInstrumentedTest> = [];
+        let instrumentedTests: IInstrumentedTest[] = [];
         for (const testClass of testClasses) {
             if (!testClass) {
                 await this.errorGroup(info, info.origin + "/" + moduleName, null,
@@ -179,7 +179,7 @@ export public class TestController {
             }
         }
         const result = (await Promise.all(instrumentedTests)).filter(notNull);
-        return result as Array<InstrumentedTest>;
+        return result as InstrumentedTest[];
     }
 
     /**
@@ -189,7 +189,7 @@ export public class TestController {
         if (!testObject) testObject = this.getInstrumentedTestStub(info);
         await this.spy.groupStarted.dispatch([testObject]);
 
-        const testResults: Array<TestResult> = [];
+        const testResults: TestResult[] = [];
         const that = this;
         for (const test of testObject.tests) {
             await that.spy.testStarted.dispatch([testObject, test]);

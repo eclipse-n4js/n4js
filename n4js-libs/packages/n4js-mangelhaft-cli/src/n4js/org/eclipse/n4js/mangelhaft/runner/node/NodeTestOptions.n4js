@@ -17,17 +17,17 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     /**
      * Scan for projects in directories.
      */
-    public scan: Array<string>;
+    public scan: string[];
     
     /**
      * Project directories.
      */
-    public projects: Array<string>;
+    public projects: string[];
     
     /**
      * Filter for matching test cases.
      */
-    public filter: Array<string>;
+    public filter: string[];
 
     /**
      * Compiles the given targets, generating a test catalog.

@@ -84,23 +84,26 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) '(' ')' '=>' returnTypeRef=PrimaryTypeExpression
-	 *     (rule start) (ambiguity) 'intersection' '{' typeRefs+=TypeRefWithoutModifiers
+	 *     (rule start) (ambiguity) '(' typeArgs+=Wildcard
+	 *     (rule start) (ambiguity) 'intersection' '{' typeRefs+=TypeRef
 	 *     (rule start) (ambiguity) 'this' (rule start)
 	 *     (rule start) (ambiguity) 'this' dynamic?='+'
 	 *     (rule start) (ambiguity) 'this' followedByQuestionMark?='?'
 	 *     (rule start) (ambiguity) 'type' '{' typeArg=TypeArgInTypeTypeRef
-	 *     (rule start) (ambiguity) 'union' '{' typeRefs+=TypeRefWithoutModifiers
+	 *     (rule start) (ambiguity) 'union' '{' typeRefs+=TypeRef
 	 *     (rule start) (ambiguity) '{' '@' 'This' '(' declaredThisType=TypeRefFunctionTypeExpression
 	 *     (rule start) (ambiguity) '{' 'function' '(' ')' ':' returnTypeRef=TypeRef
 	 *     (rule start) (ambiguity) '{' 'function' '(' ')' '}' (rule start)
 	 *     (rule start) (ambiguity) '{' 'function' '(' ')' '}' followedByQuestionMark?='?'
 	 *     (rule start) (ambiguity) '{' 'function' '<' ownedTypeVars+=TypeVariable
 	 *     (rule start) (ambiguity) (('{' 'function' '(') | '(') fpars+=TAnonymousFormalParameter
-	 *     (rule start) (ambiguity) arrayTypeLiteral?='['
 	 *     (rule start) (ambiguity) constructorRef?='constructor'
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
+	 *     (rule start) (ambiguity) iterableTypeExpression?='['
+	 *     (rule start) (ambiguity) typeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
+	 *     (rule start) (ambiguity) {ParameterizedTypeRef.typeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
 	 */
 	protected void emit_PrimaryTypeExpression_LeftParenthesisKeyword_3_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -112,7 +115,10 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     '('+
 	 *
 	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) '(' typeArgs+=Wildcard
+	 *     (rule start) (ambiguity) typeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
+	 *     (rule start) (ambiguity) {ParameterizedTypeRef.typeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
 	 */
 	protected void emit_PrimaryTypeExpression_LeftParenthesisKeyword_3_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {

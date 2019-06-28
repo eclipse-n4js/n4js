@@ -108,6 +108,7 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration;
+import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RegularExpressionLiteral;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.ReturnStatement;
@@ -1118,6 +1119,20 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else break;
+			case N4JSPackage.PROPERTY_SPREAD:
+				if (rule == grammarAccess.getAnnotatedPropertyAssignmentRule()) {
+					sequence_AnnotatedPropertyAssignment(context, (PropertySpread) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPropertyAssignmentRule()) {
+					sequence_AnnotatedPropertyAssignment_PropertySpread(context, (PropertySpread) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPropertySpreadRule()) {
+					sequence_PropertySpread(context, (PropertySpread) semanticObject); 
+					return; 
+				}
+				else break;
 			case N4JSPackage.REGULAR_EXPRESSION_LITERAL:
 				sequence_RegularExpressionLiteral(context, (RegularExpressionLiteral) semanticObject); 
 				return; 
@@ -1306,14 +1321,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		else if (epackage == TypeRefsPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION:
-				if (rule == grammarAccess.getTypeRefForCastRule()) {
-					sequence_ArrowFunctionTypeExpression_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList(context, (FunctionTypeExpression) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getTypeRefRule()
+				if (rule == grammarAccess.getTypeRefRule()
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_ArrowFunctionTypeExpression_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList_TypeRefWithModifiers(context, (FunctionTypeExpression) semanticObject); 
@@ -1334,8 +1347,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION:
-				if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefWithoutModifiersRule()
+				if (rule == grammarAccess.getTypeRefWithoutModifiersRule()
 						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getIntersectionTypeExpressionOLDRule()) {
 					sequence_IntersectionTypeExpressionOLD(context, (IntersectionTypeExpression) semanticObject); 
@@ -1349,6 +1361,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_IntersectionTypeExpression_IntersectionTypeExpressionOLD_TypeRefWithModifiers(context, (IntersectionTypeExpression) semanticObject); 
@@ -1356,22 +1370,31 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF:
-				if (rule == grammarAccess.getArrayTypeRefRule()) {
-					sequence_ArrayTypeRef(context, (ParameterizedTypeRef) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getTypeRefRule()
+				if (rule == grammarAccess.getTypeRefRule()
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
-					sequence_ArrayTypeRef_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
+					sequence_ArrayTypeExpression_IterableTypeExpression_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()) {
-					sequence_ArrayTypeRef_TypeArguments_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
+				else if (action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_0_4_0_0()) {
+					sequence_ArrayTypeExpression_ParameterizedTypeRef_0_4_0_0(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_1_6_0_0()) {
+					sequence_ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getIterableTypeExpressionRule()) {
+					sequence_IterableTypeExpression(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()) {
+					sequence_IterableTypeExpression_TypeArguments_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefWithModifiersRule()) {
@@ -1394,6 +1417,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1404,8 +1429,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithoutModifiers_TypeReference(context, (ParameterizedTypeRefStructural) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
+				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getParameterizedTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefStructuralRule()) {
 					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference(context, (ParameterizedTypeRefStructural) semanticObject); 
@@ -1413,8 +1437,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.THIS_TYPE_REF_NOMINAL:
-				if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeArgInTypeTypeRefRule()
+				if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
 						|| rule == grammarAccess.getThisTypeRefRule()
 						|| rule == grammarAccess.getThisTypeRefNominalRule()) {
 					sequence_ThisTypeRefNominal(context, (ThisTypeRefNominal) semanticObject); 
@@ -1424,6 +1447,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1436,8 +1461,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL:
-				if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getThisTypeRefRule()
+				if (rule == grammarAccess.getThisTypeRefRule()
 						|| rule == grammarAccess.getThisTypeRefStructuralRule()) {
 					sequence_TStructMemberList_ThisTypeRefStructural(context, (ThisTypeRefStructural) semanticObject); 
 					return; 
@@ -1446,6 +1470,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1462,14 +1488,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_TypeRefWithModifiers_TypeTypeRef(context, (TypeTypeRef) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefWithoutModifiersRule()
+				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()
 						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getTypeTypeRefRule()) {
 					sequence_TypeTypeRef(context, (TypeTypeRef) semanticObject); 
@@ -1485,13 +1512,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_TypeRef_TypeRefWithModifiers_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefWithoutModifiersRule()
+				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()
 						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getUnionTypeExpressionOLDRule()) {
 					sequence_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
@@ -1503,6 +1531,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1513,8 +1543,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_ParameterizedTypeRefNominal_TypeArguments_TypeRefWithoutModifiers_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRef) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
+				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgInTypeTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefNominalRule()) {
@@ -1527,6 +1556,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1537,8 +1568,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithoutModifiers_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRefStructural) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
+				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getParameterizedTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefStructuralRule()) {
 					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRefStructural) semanticObject); 
@@ -1546,17 +1576,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.WILDCARD:
-				if (rule == grammarAccess.getWildcardNewNotationRule()) {
+				if (rule == grammarAccess.getEmptyIterableTypeExpressionTailRule()
+						|| rule == grammarAccess.getWildcardOldNotationWithoutBoundRule()) {
+					sequence_EmptyIterableTypeExpressionTail_WildcardOldNotationWithoutBound(context, (Wildcard) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getWildcardNewNotationRule()) {
 					sequence_WildcardNewNotation(context, (Wildcard) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
+				else if (rule == grammarAccess.getTypeArgumentRule()
 						|| rule == grammarAccess.getWildcardRule()) {
-					sequence_Wildcard(context, (Wildcard) semanticObject); 
+					sequence_WildcardNewNotation_WildcardOldNotation(context, (Wildcard) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeArgumentRule()) {
-					sequence_Wildcard_WildcardNewNotation(context, (Wildcard) semanticObject); 
+				else if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
+						|| rule == grammarAccess.getWildcardOldNotationRule()) {
+					sequence_WildcardOldNotation(context, (Wildcard) semanticObject); 
 					return; 
 				}
 				else break;
@@ -3832,6 +3868,41 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_PropertySetterDeclaration(ISerializationContext context, PropertySetterDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedPropertyAssignment<Yield> returns PropertySpread
+	 *     AnnotatedPropertyAssignment returns PropertySpread
+	 *
+	 * Constraint:
+	 *     (annotationList=AnnotatedPropertyAssignment_PropertySpread_1_5_0 expression=AssignmentExpression)
+	 */
+	protected void sequence_AnnotatedPropertyAssignment(ISerializationContext context, PropertySpread semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ANNOTABLE_PROPERTY_ASSIGNMENT__ANNOTATION_LIST) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ANNOTABLE_PROPERTY_ASSIGNMENT__ANNOTATION_LIST));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.PROPERTY_SPREAD__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.PROPERTY_SPREAD__EXPRESSION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getAnnotatedPropertyAssignmentAccess().getPropertySpreadAnnotationListAction_1_5_0(), semanticObject.getAnnotationList());
+		feeder.accept(grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignmentExpressionParserRuleCall_1_5_2_0(), semanticObject.getExpression());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PropertyAssignment<Yield> returns PropertySpread
+	 *     PropertyAssignment returns PropertySpread
+	 *
+	 * Constraint:
+	 *     ((annotationList=AnnotatedPropertyAssignment_PropertySpread_1_5_0 expression=AssignmentExpression) | expression=AssignmentExpression)
+	 */
+	protected void sequence_AnnotatedPropertyAssignment_PropertySpread(ISerializationContext context, PropertySpread semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6711,6 +6782,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TypeRef.UnionTypeExpression_1_0 returns ParameterizedTypeRef
 	 *     IntersectionTypeExpression returns ParameterizedTypeRef
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRef
+	 *     ArrayTypeExpression returns ParameterizedTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns ParameterizedTypeRef
 	 *     PrimaryTypeExpression returns ParameterizedTypeRef
 	 *     TypeArgument returns ParameterizedTypeRef
 	 *
@@ -6723,30 +6796,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             dynamic?='+'? 
 	 *             followedByQuestionMark?='?'?
 	 *         ) | 
-	 *         (arrayTypeLiteral?='[' typeArgs+=TypeArgument)
+	 *         (typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[') | 
+	 *         (typeArgs+=ArrayTypeExpression_ParameterizedTypeRef_0_4_0_0 arrayTypeExpression?='[') | 
+	 *         (typeArgs+=Wildcard arrayTypeExpression?='[') | 
+	 *         (typeArgs+=ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0 arrayTypeExpression?='[') | 
+	 *         (typeArgs+=ArrayTypeExpression_ParameterizedTypeRef_2_1_0_0 arrayTypeExpression?='[') | 
+	 *         (iterableTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail | (typeArgs+=TypeArgument typeArgs+=TypeArgument*)))
 	 *     )
 	 */
-	protected void sequence_ArrayTypeRef_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefForCast returns ParameterizedTypeRef
-	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
-	 *             declaredType=[Type|TypeReferenceName] 
-	 *             (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?
-	 *         ) | 
-	 *         (arrayTypeLiteral?='[' typeArgs+=TypeArgument)
-	 *     )
-	 */
-	protected void sequence_ArrayTypeRef_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
+	protected void sequence_ArrayTypeExpression_IterableTypeExpression_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6777,28 +6835,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_ArrowExpression_ColonSepReturnTypeRef_StrictFormalParameters(ISerializationContext context, ArrowFunction semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefForCast returns FunctionTypeExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             declaredThisType=TypeRefFunctionTypeExpression? 
-	 *             (ownedTypeVars+=TypeVariable ownedTypeVars+=TypeVariable*)? 
-	 *             (
-	 *                 (fpars+=TAnonymousFormalParameter fpars+=TAnonymousFormalParameter* (returnTypeRef=PrimaryTypeExpression | returnTypeRef=TypeRef)) | 
-	 *                 returnTypeRef=TypeRef
-	 *             )?
-	 *         ) | 
-	 *         returnTypeRef=PrimaryTypeExpression
-	 *     )?
-	 */
-	protected void sequence_ArrowFunctionTypeExpression_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList(ISerializationContext context, FunctionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -8865,7 +8901,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     Expression.CommaExpression_1_0 returns CastExpression
 	 *
 	 * Constraint:
-	 *     (expression=CastExpression_CastExpression_1_0_0_0 targetTypeRef=TypeRefForCast)
+	 *     (expression=CastExpression_CastExpression_1_0_0_0 targetTypeRef=ArrayTypeExpression)
 	 */
 	protected void sequence_CastExpression(ISerializationContext context, CastExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -8876,7 +8912,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getCastExpressionAccess().getCastExpressionExpressionAction_1_0_0_0(), semanticObject.getExpression());
-		feeder.accept(grammarAccess.getCastExpressionAccess().getTargetTypeRefTypeRefForCastParserRuleCall_1_1_0(), semanticObject.getTargetTypeRef());
+		feeder.accept(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0(), semanticObject.getTargetTypeRef());
 		feeder.finish();
 	}
 	
@@ -14488,6 +14524,25 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRef
+	 *
+	 * Constraint:
+	 *     (
+	 *         (
+	 *             astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *             declaredType=[Type|TypeReferenceName] 
+	 *             (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?
+	 *         ) | 
+	 *         (iterableTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail | (typeArgs+=TypeArgument typeArgs+=TypeArgument*)))
+	 *     )
+	 */
+	protected void sequence_IterableTypeExpression_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     PrimaryExpression<Yield> returns JSXElement
 	 *     PrimaryExpression returns JSXElement
 	 *     LeftHandSideExpression<Yield> returns JSXElement
@@ -20046,6 +20101,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TypeRef.UnionTypeExpression_1_0 returns VersionedParameterizedTypeRef
 	 *     IntersectionTypeExpression returns VersionedParameterizedTypeRef
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns VersionedParameterizedTypeRef
+	 *     ArrayTypeExpression returns VersionedParameterizedTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns VersionedParameterizedTypeRef
 	 *     PrimaryTypeExpression returns VersionedParameterizedTypeRef
 	 *     TypeRefWithModifiers returns VersionedParameterizedTypeRef
 	 *     TypeArgument returns VersionedParameterizedTypeRef
@@ -20085,7 +20142,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     TypeRefForCast returns VersionedParameterizedTypeRef
 	 *     TypeRefFunctionTypeExpression returns VersionedParameterizedTypeRef
 	 *     TypeArgInTypeTypeRef returns VersionedParameterizedTypeRef
 	 *     ParameterizedTypeRef returns VersionedParameterizedTypeRef
@@ -20110,6 +20166,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TypeRef.UnionTypeExpression_1_0 returns ParameterizedTypeRefStructural
 	 *     IntersectionTypeExpression returns ParameterizedTypeRefStructural
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRefStructural
+	 *     ArrayTypeExpression returns ParameterizedTypeRefStructural
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns ParameterizedTypeRefStructural
 	 *     PrimaryTypeExpression returns ParameterizedTypeRefStructural
 	 *     TypeRefWithModifiers returns ParameterizedTypeRefStructural
 	 *     TypeArgument returns ParameterizedTypeRefStructural
@@ -20136,6 +20194,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TypeRef.UnionTypeExpression_1_0 returns VersionedParameterizedTypeRefStructural
 	 *     IntersectionTypeExpression returns VersionedParameterizedTypeRefStructural
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns VersionedParameterizedTypeRefStructural
+	 *     ArrayTypeExpression returns VersionedParameterizedTypeRefStructural
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns VersionedParameterizedTypeRefStructural
 	 *     PrimaryTypeExpression returns VersionedParameterizedTypeRefStructural
 	 *     TypeRefWithModifiers returns VersionedParameterizedTypeRefStructural
 	 *     TypeArgument returns VersionedParameterizedTypeRefStructural
@@ -20198,7 +20258,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     TypeRefForCast returns ParameterizedTypeRefStructural
 	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRefStructural
 	 *     ParameterizedTypeRef returns ParameterizedTypeRefStructural
 	 *     ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural
@@ -20219,7 +20278,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     TypeRefForCast returns VersionedParameterizedTypeRefStructural
 	 *     TypeRefFunctionTypeExpression returns VersionedParameterizedTypeRefStructural
 	 *     ParameterizedTypeRef returns VersionedParameterizedTypeRefStructural
 	 *     ParameterizedTypeRefStructural returns VersionedParameterizedTypeRefStructural
@@ -21250,6 +21308,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePairSingleName_1_4_0<Yield> returns PropertyAssignmentAnnotationList
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePairSingleName_1_4_0<PropertyAssignment.Yield> returns PropertyAssignmentAnnotationList
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePairSingleName_1_4_0 returns PropertyAssignmentAnnotationList
+	 *     AnnotatedPropertyAssignment.PropertySpread_1_5_0<Yield> returns PropertyAssignmentAnnotationList
+	 *     AnnotatedPropertyAssignment.PropertySpread_1_5_0<PropertyAssignment.Yield> returns PropertyAssignmentAnnotationList
+	 *     AnnotatedPropertyAssignment.PropertySpread_1_5_0 returns PropertyAssignmentAnnotationList
 	 *     PropertyAssignmentAnnotationList returns PropertyAssignmentAnnotationList
 	 *
 	 * Constraint:
@@ -21296,6 +21357,25 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_PropertySetterDeclaration(ISerializationContext context, PropertySetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PropertySpread<Yield> returns PropertySpread
+	 *     PropertySpread returns PropertySpread
+	 *
+	 * Constraint:
+	 *     expression=AssignmentExpression
+	 */
+	protected void sequence_PropertySpread(ISerializationContext context, PropertySpread semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.PROPERTY_SPREAD__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.PROPERTY_SPREAD__EXPRESSION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPropertySpreadAccess().getExpressionAssignmentExpressionParserRuleCall_1_0(), semanticObject.getExpression());
+		feeder.finish();
 	}
 	
 	

@@ -623,6 +623,44 @@ ruleTEnumLiteral:
 	RULE_IDENTIFIER
 ;
 
+// Rule ArrayTypeExpression
+ruleArrayTypeExpression:
+	(
+		ruleWildcardOldNotationWithoutBound
+		'['
+		']'
+		(
+			('['
+			']'
+			)=>
+			'['
+			']'
+		)*
+		    |
+		'('
+		ruleWildcard
+		')'
+		'['
+		']'
+		(
+			('['
+			']'
+			)=>
+			'['
+			']'
+		)*
+		    |
+		rulePrimaryTypeExpression
+		(
+			('['
+			']'
+			)=>
+			'['
+			']'
+		)*
+	)
+;
+
 // Rule PrimaryTypeExpression
 rulePrimaryTypeExpression:
 	(
@@ -635,7 +673,7 @@ rulePrimaryTypeExpression:
 			ruleArrowFunctionTypeExpression
 		)
 		    |
-		ruleArrayTypeRef
+		ruleIterableTypeExpression
 		    |
 		ruleTypeRefWithModifiers
 		    |
@@ -684,7 +722,7 @@ ruleTypeRefFunctionTypeExpression:
 	(
 		ruleParameterizedTypeRef
 		    |
-		ruleArrayTypeRef
+		ruleIterableTypeExpression
 		    |
 		ruleTypeTypeRef
 		    |
@@ -704,7 +742,7 @@ ruleTypeArgInTypeTypeRef:
 		(
 			('?'
 			)=>
-			ruleWildcard
+			ruleWildcardOldNotation
 		)
 	)
 ;
@@ -830,10 +868,10 @@ ruleDefaultFormalParameter:
 ruleUnionTypeExpressionOLD:
 	'union'
 	'{'
-	ruleTypeRefWithoutModifiers
+	ruleTypeRef
 	(
 		','
-		ruleTypeRefWithoutModifiers
+		ruleTypeRef
 	)*
 	'}'
 ;
@@ -842,10 +880,10 @@ ruleUnionTypeExpressionOLD:
 ruleIntersectionTypeExpressionOLD:
 	'intersection'
 	'{'
-	ruleTypeRefWithoutModifiers
+	ruleTypeRef
 	(
 		','
-		ruleTypeRefWithoutModifiers
+		ruleTypeRef
 	)*
 	'}'
 ;
@@ -893,10 +931,23 @@ ruleParameterizedTypeRefStructural:
 	)?
 ;
 
-// Rule ArrayTypeRef
-ruleArrayTypeRef:
+// Rule IterableTypeExpression
+ruleIterableTypeExpression:
 	'['
-	ruleTypeArgument
+	(
+		ruleEmptyIterableTypeExpressionTail
+		    |
+		ruleTypeArgument
+		(
+			','
+			ruleTypeArgument
+		)*
+		']'
+	)
+;
+
+// Rule EmptyIterableTypeExpressionTail
+ruleEmptyIterableTypeExpressionTail:
 	']'
 ;
 
@@ -1079,13 +1130,7 @@ ruleTypeTypeRef:
 // Rule TypeArgument
 ruleTypeArgument:
 	(
-		(
-			('?'
-			)=>
-			ruleWildcard
-		)
-		    |
-		ruleWildcardNewNotation
+		ruleWildcard
 		    |
 		ruleTypeRef
 	)
@@ -1093,6 +1138,19 @@ ruleTypeArgument:
 
 // Rule Wildcard
 ruleWildcard:
+	(
+		(
+			('?'
+			)=>
+			ruleWildcardOldNotation
+		)
+		    |
+		ruleWildcardNewNotation
+	)
+;
+
+// Rule WildcardOldNotation
+ruleWildcardOldNotation:
 	(
 		('?'
 		)=>
@@ -1105,6 +1163,11 @@ ruleWildcard:
 		'super'
 		ruleTypeRef
 	)?
+;
+
+// Rule WildcardOldNotationWithoutBound
+ruleWildcardOldNotationWithoutBound:
+	'?'
 ;
 
 // Rule WildcardNewNotation

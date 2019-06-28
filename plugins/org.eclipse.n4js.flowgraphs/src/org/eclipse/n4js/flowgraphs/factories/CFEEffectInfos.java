@@ -200,7 +200,12 @@ class CFEEffectInfos {
 			if (symbol != null) {
 				EffectInfo eiDecl = new EffectInfo(effectType, expr, symbol);
 				node.addEffectInfo(eiDecl);
+
+				if (effectType == EffectType.Write) {
+					symbol.addDefinitionCFE(expr);
+				}
 			}
+
 		}
 	}
 

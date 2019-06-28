@@ -135,6 +135,7 @@ public class ASTProcessor extends AbstractProcessor {
 			log(0, "### done: " + resource.URI);
 		}
 	}
+	
 
 	/**
 	 * First method to actually perform processing of the AST. This method defines the various processing phases.
@@ -154,6 +155,7 @@ public class ASTProcessor extends AbstractProcessor {
 		for(node : script.eAllContents.filter(LiteralOrComputedPropertyName).toIterable) {
 			computedNameProcessor.processComputedPropertyName(G, node, cache, 0);
 		}
+
 		// phase 1: main processing
 		processSubtree(G, script, cache, 0);
 		// phase 2: processing of postponed subtrees
@@ -286,6 +288,7 @@ public class ASTProcessor extends AbstractProcessor {
 						}
 					}
 					// In ObjectLiterals, the ThisLiteral in Initializers can cause cyclic dependencies
+					// TODO GH-1337 add support for spread operator
 					val thisLiteralCausesCyclDep =
 						funDef instanceof PropertyMethodDeclaration // let o = { a:1, f(p=this.a) {} }
 						|| funDef instanceof FunctionExpression && funDef.eContainer instanceof PropertyNameValuePair; // let o = {a:2, f: function(p=this.a) {}}
@@ -336,6 +339,7 @@ public class ASTProcessor extends AbstractProcessor {
 		if (cache.astNodesCurrentlyBeingTyped.contains(node)) {
 			// cyclic forward reference
 			// legal cases of a cyclic reference
+			// TODO GH-1337 add support for spread operator
 			val isCyclicForwardReference = cache.astNodesCurrentlyBeingTyped.contains(node);
 			if (isCyclicForwardReference && (
 				node instanceof VariableDeclaration

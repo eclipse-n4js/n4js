@@ -299,7 +299,7 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 		// setup documentation provider to match jsdoc-style exactly two stars only:
 		binder.bind(String.class)
 				.annotatedWith(Names.named(AbstractMultiLineCommentProvider.START_TAG))
-				.toInstance("/\\*\\*[^*]");
+				.toInstance("/\\*\\*(?=[^*])");
 	}
 
 	/**

@@ -32,7 +32,7 @@ export external public abstract class Document extends HTMLElement {
     public getElementById(id: string): HTMLElement;
     public elementFromPoint(x: number, y: number): HTMLElement;
 
-    public elementsFromPoint(x: number, y: number): Array<HTMLElement>;
+    public elementsFromPoint(x: number, y: number): HTMLElement[];
 }
 
 export external public const document: Document+;

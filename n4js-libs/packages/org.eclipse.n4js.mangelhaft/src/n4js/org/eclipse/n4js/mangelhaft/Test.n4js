@@ -23,7 +23,7 @@
 export public function async(cb: Function, reject: Function): Function {
 	return function() {
 			try {
-				cb.apply(null, arguments as Array<?>);
+				cb.apply(null, arguments as ?[]);
 			} catch(ex) {
 				try {
 					reject.call({}, ex);

@@ -201,10 +201,7 @@ public class TypeUtils {
 			refTypeArgs.add(TypeUtils.copyIfContained(typeArg));
 		}
 		if (autoCreateTypeArgs) {
-			final int l = declaredType.getTypeVars().size();
-			for (int i = refTypeArgs.size(); i < l; i++) {
-				refTypeArgs.add(createWildcard());
-			}
+			sanitizeRawTypeRef(ref);
 		}
 		return ref;
 	}

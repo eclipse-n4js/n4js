@@ -17,8 +17,6 @@ import org.eclipse.n4js.flowgraphs.FlowAnalyser;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitorHost;
-import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
-import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -30,7 +28,6 @@ public class GraphVisitorAnalysis {
 	final N4JSFlowAnalyser flowAnalyzer;
 	final FlowGraph cfg;
 	private boolean forwardAnalysisDone = false;
-	private boolean symbolsAugmented = false;
 
 	/** Constructor */
 	public GraphVisitorAnalysis(N4JSFlowAnalyser flowAnalyzer, FlowGraph cfg) {
@@ -97,14 +94,6 @@ public class GraphVisitorAnalysis {
 			graphVisitors.add(dfvh);
 		}
 		return graphVisitors;
-	}
-
-	/** see {@link N4JSFlowAnalyser#augmentEffectInformation()} */
-	public void augmentEffectInformation(SymbolFactory symbolFactory) {
-		if (!symbolsAugmented) {
-			ControlFlowGraphFactory.augmentDataflowInformation(cfg, symbolFactory);
-			symbolsAugmented = true;
-		}
 	}
 
 }

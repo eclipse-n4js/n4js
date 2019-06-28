@@ -41,6 +41,6 @@ function f() {
 	
 	// Parameterized array type ref 1 XPECT typeSwitchTypeRef of a5 --> "Array<A#1>"
 	let a5 : Array<A#1>
-	// Parameterized array type ref 2 ([<typeRef>] syntax) XPECT typeSwitchTypeRef of a6 --> "Array<A#1>"
-	let a6 : [A#1]
+	// Parameterized array type ref 2 (<typeRef>[] syntax) XPECT typeSwitchTypeRef of a6 --> "Array<A#1>"
+	let a6 : A#1[]
 }

@@ -177,6 +177,35 @@ class ImportDeclaration extends AnnotableScriptElement {
 	boolean importFrom
 	refers TModule module
 	transient String moduleSpecifierAsText
+	transient ModuleSpecifierForm moduleSpecifierForm
+}
+
+enum ModuleSpecifierForm {
+	/*
+	 * Unknown form. This is the default value and will be changed in {@code ProjectImportEnablingScope}.
+	 */
+	UNKNOWN,
+	/*
+	 * A module specifier without leading project name.<p>
+	 * Example: <code>import {C} from "path/to/module"</code>.
+	 */
+	PLAIN,
+	/*
+	 * A module specifier including the target project's name.<p>
+	 * Example: <code>import {C} from "project-name/path/to/module"</code>.
+	 */
+	COMPLETE,
+	/* 
+	 * A module specifier consisting only of a project name (a.k.a. "bare import").
+	 * The target project defines a main module in its package.json.<p>
+	 * Example: <code>import {C} from "project-name"</code>.
+	 */
+	PROJECT,
+	/* 
+	 * Error case. Same as {@link #PROJECT}, but the target project does not
+	 * define a main module in its package.json.
+	 */
+	PROJECT_NO_MAIN
 }
 
 abstract class ImportSpecifier {
@@ -1302,6 +1331,14 @@ class PropertySetterDeclaration extends SetterDeclaration, AnnotablePropertyAssi
 			return false
 		}
 		return true
+	}
+}
+
+class PropertySpread extends AnnotablePropertyAssignment {
+	contains Expression expression
+
+	op TStructField getDefinedMember() {
+		null
 	}
 }
 

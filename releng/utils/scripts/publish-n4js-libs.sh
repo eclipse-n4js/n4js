@@ -70,6 +70,10 @@ fi;
 echo "==== STEP 1/9: clean up (clean yarn cache, etc.)"
 yarn cache clean
 rm -rf $(find . -type d -name "node_modules")
+# Since we include the commit ID in the published artifacts, we should
+# make sure to not publish any dirty state in the working copy.
+# Thus, we reset the working copy here:
+git checkout HEAD -- .
 
 echo "==== STEP 2/9: install dependencies and prepare npm task scripts"
 yarn install
@@ -90,7 +94,7 @@ if [ "$DESTINATION" = "public" ]; then
     N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.["dist-tags"].latest'`
     echo "  - version of latest published n4js-libs       : $N4JS_LIBS_VERSION_PUBLIC"
 
-    N4JS_LIBS_COMMIT_ID_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.versions."'${N4JS_LIBS_VERSION_PUBLIC}'".gitHead'`
+    N4JS_LIBS_COMMIT_ID_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.versions."'${N4JS_LIBS_VERSION_PUBLIC}'".gitHeadN4jsLibs'`
     if [ "${N4JS_LIBS_COMMIT_ID_PUBLIC}" = "null" ]; then
         N4JS_LIBS_COMMIT_ID_PUBLIC=unknown
     fi
@@ -108,11 +112,13 @@ if [ "$DESTINATION" = "public" ]; then
         echo '-> will publish (because commit IDs are different, i.e. there are changes since last publication)'
     fi
 
-    # update repository meta-info in package.json of all n4js-libs to point to the GitHub and the correct commit
-    # (yarn isn't doing this at the moment: https://github.com/yarnpkg/yarn/issues/2978 )
-    echo "==== STEP 5/9: Updating property 'gitHead' in package.json of all n4js-libs to new local commit ID ..."
+    # update repository meta-info in package.json of all n4js-libs to point to the commit ID of n4js-libs folder
+    # NOTE: we use our own property 'gitHeadN4jsLibs' instead of the official 'gitHead' property because:
+    # 1) yarn isn't updating 'gitHead' at all at the moment (see https://github.com/yarnpkg/yarn/issues/2978 ) and
+    # 2) behavior of lerna w.r.t. property 'gitHead' has recently changed and we want to avoid surprises in the future.
+    echo "==== STEP 5/9: Updating property 'gitHeadN4jsLibs' in package.json of all n4js-libs to new local commit ID ..."
     lerna exec -- cp package.json package.json_TEMP
-    lerna exec -- 'jq -r ".gitHead |= \"'$N4JS_LIBS_COMMIT_ID_LOCAL'\"" package.json_TEMP > package.json'
+    lerna exec -- 'jq -r ".gitHeadN4jsLibs |= \"'$N4JS_LIBS_COMMIT_ID_LOCAL'\"" package.json_TEMP > package.json'
     lerna exec -- rm package.json_TEMP
 
     echo "==== STEP 6/9: Compute new version number for publishing ..."
@@ -162,6 +168,6 @@ lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/e
 lerna exec -- rm package.json_TEMP
 
 echo "==== STEP 9/9: Now publishing with version: ${PUBLISH_VERSION} and dist-tag ${NPM_TAG}"
-lerna publish --loglevel info --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --bail --npm-tag="${NPM_TAG}"
+lerna publish --loglevel info --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --npm-tag="${NPM_TAG}"
 
 echo "==== DONE publishing n4js-libs (including n4js-cli)"

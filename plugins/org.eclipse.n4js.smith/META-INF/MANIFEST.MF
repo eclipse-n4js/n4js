@@ -7,5 +7,6 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.smith
 Require-Bundle: com.google.inject,
- com.google.guava
+ com.google.guava,
+ org.eclipse.n4js.utils
 Automatic-Module-Name: org.eclipse.n4js.smith

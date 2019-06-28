@@ -131,12 +131,7 @@ For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow t
 .. Ooomph another N4JS development environment with Eclipse Installer.
    This time, after Ooomphing is completed, the target platform file should no longer have any uncommitted changes.
 
-All the above steps need to be performed in the `n4js-n4` repository, accordingly (e.g. file `N4JS-N4.setup`). In addition:
-
-. Update file `redirected_com.enfore.n4js.targetplatform.target` by copying the content of file `com.enfore.n4js.targetplatform.target` and
-  then changing all repository location URLs to point to the n4ide-p2-mirror.
-. bump the hard-coded Eclipse version in Dockerfile `n4js-n4/jenkins/create-p2-mirror/Dockerfile`!
-. Run Jenkins build job `Management/Create_P2_Mirror[_From_Branch]`
+All the above steps need to be performed in the `n4js-n4` repository, accordingly (e.g. file `N4JS-N4.setup`).
 
 
 === Update of the embedded JRE
@@ -156,3 +151,6 @@ For updating the embedded JRE inside the N4JS IDE follow these steps:
 .. n4js/builds/org.eclipse.n4js.jre.macosx.cocoa.x86_64/META-INF/p2.inf
 .. n4js/builds/org.eclipse.n4js.jre.win32.win32.x86_64/META-INF/MANIFEST.MF
 .. n4js/builds/org.eclipse.n4js.jre.win32.win32.x86_64/META-INF/p2.inf
+. Update the openjdk docker image used as base image in the "FROM" line at the top of all docker files:
+.. n4js/docker-build/Dockerfile
+.. n4js-n4/jenkins/docker-build/Dockerfile

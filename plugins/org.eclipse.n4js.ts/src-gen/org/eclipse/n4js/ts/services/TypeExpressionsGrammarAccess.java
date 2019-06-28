@@ -97,47 +97,212 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	public class IntersectionTypeExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IntersectionTypeExpression");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cPrimaryTypeExpressionParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cArrayTypeExpressionParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Action cIntersectionTypeExpressionTypeRefsAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
 		private final Keyword cAmpersandKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
 		private final Assignment cTypeRefsAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
-		private final RuleCall cTypeRefsPrimaryTypeExpressionParserRuleCall_1_1_1_0 = (RuleCall)cTypeRefsAssignment_1_1_1.eContents().get(0);
+		private final RuleCall cTypeRefsArrayTypeExpressionParserRuleCall_1_1_1_0 = (RuleCall)cTypeRefsAssignment_1_1_1.eContents().get(0);
 		
 		//IntersectionTypeExpression TypeRef:
-		//	PrimaryTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=PrimaryTypeExpression)+)?;
+		//	ArrayTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=ArrayTypeExpression)+)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//PrimaryTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=PrimaryTypeExpression)+)?
+		//ArrayTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=ArrayTypeExpression)+)?
 		public Group getGroup() { return cGroup; }
 		
-		//PrimaryTypeExpression
-		public RuleCall getPrimaryTypeExpressionParserRuleCall_0() { return cPrimaryTypeExpressionParserRuleCall_0; }
+		//ArrayTypeExpression
+		public RuleCall getArrayTypeExpressionParserRuleCall_0() { return cArrayTypeExpressionParserRuleCall_0; }
 		
-		//({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=PrimaryTypeExpression)+)?
+		//({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=ArrayTypeExpression)+)?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//{IntersectionTypeExpression.typeRefs+=current}
 		public Action getIntersectionTypeExpressionTypeRefsAction_1_0() { return cIntersectionTypeExpressionTypeRefsAction_1_0; }
 		
-		//("&" typeRefs+=PrimaryTypeExpression)+
+		//("&" typeRefs+=ArrayTypeExpression)+
 		public Group getGroup_1_1() { return cGroup_1_1; }
 		
 		//"&"
 		public Keyword getAmpersandKeyword_1_1_0() { return cAmpersandKeyword_1_1_0; }
 		
-		//typeRefs+=PrimaryTypeExpression
+		//typeRefs+=ArrayTypeExpression
 		public Assignment getTypeRefsAssignment_1_1_1() { return cTypeRefsAssignment_1_1_1; }
 		
+		//ArrayTypeExpression
+		public RuleCall getTypeRefsArrayTypeExpressionParserRuleCall_1_1_1_0() { return cTypeRefsArrayTypeExpressionParserRuleCall_1_1_1_0; }
+	}
+	public class ArrayTypeExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Action cParameterizedTypeRefAction_0_0 = (Action)cGroup_0.eContents().get(0);
+		private final Assignment cTypeArgsAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final RuleCall cTypeArgsWildcardOldNotationWithoutBoundParserRuleCall_0_1_0 = (RuleCall)cTypeArgsAssignment_0_1.eContents().get(0);
+		private final Assignment cArrayTypeExpressionAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
+		private final Keyword cArrayTypeExpressionLeftSquareBracketKeyword_0_2_0 = (Keyword)cArrayTypeExpressionAssignment_0_2.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
+		private final Group cGroup_0_4 = (Group)cGroup_0.eContents().get(4);
+		private final Group cGroup_0_4_0 = (Group)cGroup_0_4.eContents().get(0);
+		private final Action cParameterizedTypeRefTypeArgsAction_0_4_0_0 = (Action)cGroup_0_4_0.eContents().get(0);
+		private final Assignment cArrayTypeExpressionAssignment_0_4_0_1 = (Assignment)cGroup_0_4_0.eContents().get(1);
+		private final Keyword cArrayTypeExpressionLeftSquareBracketKeyword_0_4_0_1_0 = (Keyword)cArrayTypeExpressionAssignment_0_4_0_1.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_0_4_0_2 = (Keyword)cGroup_0_4_0.eContents().get(2);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Action cParameterizedTypeRefAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cTypeArgsAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cTypeArgsWildcardParserRuleCall_1_2_0 = (RuleCall)cTypeArgsAssignment_1_2.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
+		private final Assignment cArrayTypeExpressionAssignment_1_4 = (Assignment)cGroup_1.eContents().get(4);
+		private final Keyword cArrayTypeExpressionLeftSquareBracketKeyword_1_4_0 = (Keyword)cArrayTypeExpressionAssignment_1_4.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_1_5 = (Keyword)cGroup_1.eContents().get(5);
+		private final Group cGroup_1_6 = (Group)cGroup_1.eContents().get(6);
+		private final Group cGroup_1_6_0 = (Group)cGroup_1_6.eContents().get(0);
+		private final Action cParameterizedTypeRefTypeArgsAction_1_6_0_0 = (Action)cGroup_1_6_0.eContents().get(0);
+		private final Assignment cArrayTypeExpressionAssignment_1_6_0_1 = (Assignment)cGroup_1_6_0.eContents().get(1);
+		private final Keyword cArrayTypeExpressionLeftSquareBracketKeyword_1_6_0_1_0 = (Keyword)cArrayTypeExpressionAssignment_1_6_0_1.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_1_6_0_2 = (Keyword)cGroup_1_6_0.eContents().get(2);
+		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
+		private final RuleCall cPrimaryTypeExpressionParserRuleCall_2_0 = (RuleCall)cGroup_2.eContents().get(0);
+		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
+		private final Group cGroup_2_1_0 = (Group)cGroup_2_1.eContents().get(0);
+		private final Action cParameterizedTypeRefTypeArgsAction_2_1_0_0 = (Action)cGroup_2_1_0.eContents().get(0);
+		private final Assignment cArrayTypeExpressionAssignment_2_1_0_1 = (Assignment)cGroup_2_1_0.eContents().get(1);
+		private final Keyword cArrayTypeExpressionLeftSquareBracketKeyword_2_1_0_1_0 = (Keyword)cArrayTypeExpressionAssignment_2_1_0_1.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_2_1_0_2 = (Keyword)cGroup_2_1_0.eContents().get(2);
+		
+		//ArrayTypeExpression TypeRef:
+		//	{ParameterizedTypeRef} typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>
+		//	({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')* | {ParameterizedTypeRef} '('
+		//	typeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' => ({ParameterizedTypeRef.typeArgs+=current}
+		//	arrayTypeExpression?='[' ']')* | PrimaryTypeExpression => ({ParameterizedTypeRef.typeArgs+=current}
+		//	arrayTypeExpression?='[' ']')*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{ParameterizedTypeRef} typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>
+		//({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')* | {ParameterizedTypeRef} '('
+		//typeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' => ({ParameterizedTypeRef.typeArgs+=current}
+		//arrayTypeExpression?='[' ']')* | PrimaryTypeExpression => ({ParameterizedTypeRef.typeArgs+=current}
+		//arrayTypeExpression?='[' ']')*
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//{ParameterizedTypeRef} typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>
+		//({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//{ParameterizedTypeRef}
+		public Action getParameterizedTypeRefAction_0_0() { return cParameterizedTypeRefAction_0_0; }
+		
+		//typeArgs+=WildcardOldNotationWithoutBound
+		public Assignment getTypeArgsAssignment_0_1() { return cTypeArgsAssignment_0_1; }
+		
+		//WildcardOldNotationWithoutBound
+		public RuleCall getTypeArgsWildcardOldNotationWithoutBoundParserRuleCall_0_1_0() { return cTypeArgsWildcardOldNotationWithoutBoundParserRuleCall_0_1_0; }
+		
+		//arrayTypeExpression?='['
+		public Assignment getArrayTypeExpressionAssignment_0_2() { return cArrayTypeExpressionAssignment_0_2; }
+		
+		//'['
+		public Keyword getArrayTypeExpressionLeftSquareBracketKeyword_0_2_0() { return cArrayTypeExpressionLeftSquareBracketKeyword_0_2_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_0_3() { return cRightSquareBracketKeyword_0_3; }
+		
+		//=> ({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*
+		public Group getGroup_0_4() { return cGroup_0_4; }
+		
+		//{ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']'
+		public Group getGroup_0_4_0() { return cGroup_0_4_0; }
+		
+		//{ParameterizedTypeRef.typeArgs+=current}
+		public Action getParameterizedTypeRefTypeArgsAction_0_4_0_0() { return cParameterizedTypeRefTypeArgsAction_0_4_0_0; }
+		
+		//arrayTypeExpression?='['
+		public Assignment getArrayTypeExpressionAssignment_0_4_0_1() { return cArrayTypeExpressionAssignment_0_4_0_1; }
+		
+		//'['
+		public Keyword getArrayTypeExpressionLeftSquareBracketKeyword_0_4_0_1_0() { return cArrayTypeExpressionLeftSquareBracketKeyword_0_4_0_1_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_0_4_0_2() { return cRightSquareBracketKeyword_0_4_0_2; }
+		
+		//{ParameterizedTypeRef} '(' typeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' =>
+		//({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{ParameterizedTypeRef}
+		public Action getParameterizedTypeRefAction_1_0() { return cParameterizedTypeRefAction_1_0; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_1_1() { return cLeftParenthesisKeyword_1_1; }
+		
+		//typeArgs+=Wildcard
+		public Assignment getTypeArgsAssignment_1_2() { return cTypeArgsAssignment_1_2; }
+		
+		//Wildcard
+		public RuleCall getTypeArgsWildcardParserRuleCall_1_2_0() { return cTypeArgsWildcardParserRuleCall_1_2_0; }
+		
+		//')'
+		public Keyword getRightParenthesisKeyword_1_3() { return cRightParenthesisKeyword_1_3; }
+		
+		//arrayTypeExpression?='['
+		public Assignment getArrayTypeExpressionAssignment_1_4() { return cArrayTypeExpressionAssignment_1_4; }
+		
+		//'['
+		public Keyword getArrayTypeExpressionLeftSquareBracketKeyword_1_4_0() { return cArrayTypeExpressionLeftSquareBracketKeyword_1_4_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_1_5() { return cRightSquareBracketKeyword_1_5; }
+		
+		//=> ({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*
+		public Group getGroup_1_6() { return cGroup_1_6; }
+		
+		//{ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']'
+		public Group getGroup_1_6_0() { return cGroup_1_6_0; }
+		
+		//{ParameterizedTypeRef.typeArgs+=current}
+		public Action getParameterizedTypeRefTypeArgsAction_1_6_0_0() { return cParameterizedTypeRefTypeArgsAction_1_6_0_0; }
+		
+		//arrayTypeExpression?='['
+		public Assignment getArrayTypeExpressionAssignment_1_6_0_1() { return cArrayTypeExpressionAssignment_1_6_0_1; }
+		
+		//'['
+		public Keyword getArrayTypeExpressionLeftSquareBracketKeyword_1_6_0_1_0() { return cArrayTypeExpressionLeftSquareBracketKeyword_1_6_0_1_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_1_6_0_2() { return cRightSquareBracketKeyword_1_6_0_2; }
+		
+		//PrimaryTypeExpression => ({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*
+		public Group getGroup_2() { return cGroup_2; }
+		
 		//PrimaryTypeExpression
-		public RuleCall getTypeRefsPrimaryTypeExpressionParserRuleCall_1_1_1_0() { return cTypeRefsPrimaryTypeExpressionParserRuleCall_1_1_1_0; }
+		public RuleCall getPrimaryTypeExpressionParserRuleCall_2_0() { return cPrimaryTypeExpressionParserRuleCall_2_0; }
+		
+		//=> ({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*
+		public Group getGroup_2_1() { return cGroup_2_1; }
+		
+		//{ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']'
+		public Group getGroup_2_1_0() { return cGroup_2_1_0; }
+		
+		//{ParameterizedTypeRef.typeArgs+=current}
+		public Action getParameterizedTypeRefTypeArgsAction_2_1_0_0() { return cParameterizedTypeRefTypeArgsAction_2_1_0_0; }
+		
+		//arrayTypeExpression?='['
+		public Assignment getArrayTypeExpressionAssignment_2_1_0_1() { return cArrayTypeExpressionAssignment_2_1_0_1; }
+		
+		//'['
+		public Keyword getArrayTypeExpressionLeftSquareBracketKeyword_2_1_0_1_0() { return cArrayTypeExpressionLeftSquareBracketKeyword_2_1_0_1_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_2_1_0_2() { return cRightSquareBracketKeyword_2_1_0_2; }
 	}
 	public class PrimaryTypeExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.PrimaryTypeExpression");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cArrowFunctionTypeExpressionParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cArrayTypeRefParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cIterableTypeExpressionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cTypeRefWithModifiersParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
 		private final Keyword cLeftParenthesisKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
@@ -146,19 +311,19 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//PrimaryTypeExpression TypeRef:
 		//	ArrowFunctionTypeExpression
-		//	| ArrayTypeRef
+		//	| IterableTypeExpression
 		//	| TypeRefWithModifiers
 		//	| "(" TypeRef ")";
 		@Override public ParserRule getRule() { return rule; }
 		
-		//ArrowFunctionTypeExpression | ArrayTypeRef | TypeRefWithModifiers | "(" TypeRef ")"
+		//ArrowFunctionTypeExpression | IterableTypeExpression | TypeRefWithModifiers | "(" TypeRef ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//ArrowFunctionTypeExpression
 		public RuleCall getArrowFunctionTypeExpressionParserRuleCall_0() { return cArrowFunctionTypeExpressionParserRuleCall_0; }
 		
-		//ArrayTypeRef
-		public RuleCall getArrayTypeRefParserRuleCall_1() { return cArrayTypeRefParserRuleCall_1; }
+		//IterableTypeExpression
+		public RuleCall getIterableTypeExpressionParserRuleCall_1() { return cIterableTypeExpressionParserRuleCall_1; }
 		
 		//TypeRefWithModifiers
 		public RuleCall getTypeRefWithModifiersParserRuleCall_2() { return cTypeRefWithModifiersParserRuleCall_2; }
@@ -257,27 +422,27 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.TypeRefFunctionTypeExpression");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cParameterizedTypeRefParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cArrayTypeRefParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cIterableTypeExpressionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cTypeTypeRefParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cUnionTypeExpressionOLDParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cIntersectionTypeExpressionOLDParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		
 		//TypeRefFunctionTypeExpression StaticBaseTypeRef:
 		//	ParameterizedTypeRef
-		//	| ArrayTypeRef
+		//	| IterableTypeExpression
 		//	| TypeTypeRef
 		//	| UnionTypeExpressionOLD
 		//	| IntersectionTypeExpressionOLD;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//ParameterizedTypeRef | ArrayTypeRef | TypeTypeRef | UnionTypeExpressionOLD | IntersectionTypeExpressionOLD
+		//ParameterizedTypeRef | IterableTypeExpression | TypeTypeRef | UnionTypeExpressionOLD | IntersectionTypeExpressionOLD
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//ParameterizedTypeRef
 		public RuleCall getParameterizedTypeRefParserRuleCall_0() { return cParameterizedTypeRefParserRuleCall_0; }
 		
-		//ArrayTypeRef
-		public RuleCall getArrayTypeRefParserRuleCall_1() { return cArrayTypeRefParserRuleCall_1; }
+		//IterableTypeExpression
+		public RuleCall getIterableTypeExpressionParserRuleCall_1() { return cIterableTypeExpressionParserRuleCall_1; }
 		
 		//TypeTypeRef
 		public RuleCall getTypeTypeRefParserRuleCall_2() { return cTypeTypeRefParserRuleCall_2; }
@@ -293,15 +458,15 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cParameterizedTypeRefNominalParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cThisTypeRefNominalParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cWildcardParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cWildcardOldNotationParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//TypeArgInTypeTypeRef TypeArgument:
 		//	ParameterizedTypeRefNominal
 		//	| ThisTypeRefNominal
-		//	| Wildcard;
+		//	| WildcardOldNotation;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//ParameterizedTypeRefNominal | ThisTypeRefNominal | Wildcard
+		//ParameterizedTypeRefNominal | ThisTypeRefNominal | WildcardOldNotation
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//ParameterizedTypeRefNominal
@@ -310,8 +475,8 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//ThisTypeRefNominal
 		public RuleCall getThisTypeRefNominalParserRuleCall_1() { return cThisTypeRefNominalParserRuleCall_1; }
 		
-		//Wildcard
-		public RuleCall getWildcardParserRuleCall_2() { return cWildcardParserRuleCall_2; }
+		//WildcardOldNotation
+		public RuleCall getWildcardOldNotationParserRuleCall_2() { return cWildcardOldNotationParserRuleCall_2; }
 	}
 	public class ThisTypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ThisTypeRef");
@@ -718,19 +883,19 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cUnionKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Assignment cTypeRefsAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0 = (RuleCall)cTypeRefsAssignment_3.eContents().get(0);
+		private final RuleCall cTypeRefsTypeRefParserRuleCall_3_0 = (RuleCall)cTypeRefsAssignment_3.eContents().get(0);
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
 		private final Keyword cCommaKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
 		private final Assignment cTypeRefsAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0 = (RuleCall)cTypeRefsAssignment_4_1.eContents().get(0);
+		private final RuleCall cTypeRefsTypeRefParserRuleCall_4_1_0 = (RuleCall)cTypeRefsAssignment_4_1.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		
 		//UnionTypeExpressionOLD UnionTypeExpression:
 		//	{UnionTypeExpression}
-		//	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+		//	'union' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{UnionTypeExpression} 'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}'
+		//{UnionTypeExpression} 'union' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//{UnionTypeExpression}
@@ -742,23 +907,23 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
 		
-		//typeRefs+=TypeRefWithoutModifiers
+		//typeRefs+=TypeRef
 		public Assignment getTypeRefsAssignment_3() { return cTypeRefsAssignment_3; }
 		
-		//TypeRefWithoutModifiers
-		public RuleCall getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0() { return cTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0; }
+		//TypeRef
+		public RuleCall getTypeRefsTypeRefParserRuleCall_3_0() { return cTypeRefsTypeRefParserRuleCall_3_0; }
 		
-		//(',' typeRefs+=TypeRefWithoutModifiers)*
+		//(',' typeRefs+=TypeRef)*
 		public Group getGroup_4() { return cGroup_4; }
 		
 		//','
 		public Keyword getCommaKeyword_4_0() { return cCommaKeyword_4_0; }
 		
-		//typeRefs+=TypeRefWithoutModifiers
+		//typeRefs+=TypeRef
 		public Assignment getTypeRefsAssignment_4_1() { return cTypeRefsAssignment_4_1; }
 		
-		//TypeRefWithoutModifiers
-		public RuleCall getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0() { return cTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0; }
+		//TypeRef
+		public RuleCall getTypeRefsTypeRefParserRuleCall_4_1_0() { return cTypeRefsTypeRefParserRuleCall_4_1_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_5() { return cRightCurlyBracketKeyword_5; }
@@ -770,20 +935,19 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cIntersectionKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Assignment cTypeRefsAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0 = (RuleCall)cTypeRefsAssignment_3.eContents().get(0);
+		private final RuleCall cTypeRefsTypeRefParserRuleCall_3_0 = (RuleCall)cTypeRefsAssignment_3.eContents().get(0);
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
 		private final Keyword cCommaKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
 		private final Assignment cTypeRefsAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0 = (RuleCall)cTypeRefsAssignment_4_1.eContents().get(0);
+		private final RuleCall cTypeRefsTypeRefParserRuleCall_4_1_0 = (RuleCall)cTypeRefsAssignment_4_1.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		
 		//IntersectionTypeExpressionOLD IntersectionTypeExpression:
 		//	{IntersectionTypeExpression}
-		//	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+		//	'intersection' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{IntersectionTypeExpression} 'intersection' '{' typeRefs+=TypeRefWithoutModifiers (','
-		//typeRefs+=TypeRefWithoutModifiers)* '}'
+		//{IntersectionTypeExpression} 'intersection' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//{IntersectionTypeExpression}
@@ -795,23 +959,23 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
 		
-		//typeRefs+=TypeRefWithoutModifiers
+		//typeRefs+=TypeRef
 		public Assignment getTypeRefsAssignment_3() { return cTypeRefsAssignment_3; }
 		
-		//TypeRefWithoutModifiers
-		public RuleCall getTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0() { return cTypeRefsTypeRefWithoutModifiersParserRuleCall_3_0; }
+		//TypeRef
+		public RuleCall getTypeRefsTypeRefParserRuleCall_3_0() { return cTypeRefsTypeRefParserRuleCall_3_0; }
 		
-		//(',' typeRefs+=TypeRefWithoutModifiers)*
+		//(',' typeRefs+=TypeRef)*
 		public Group getGroup_4() { return cGroup_4; }
 		
 		//','
 		public Keyword getCommaKeyword_4_0() { return cCommaKeyword_4_0; }
 		
-		//typeRefs+=TypeRefWithoutModifiers
+		//typeRefs+=TypeRef
 		public Assignment getTypeRefsAssignment_4_1() { return cTypeRefsAssignment_4_1; }
 		
-		//TypeRefWithoutModifiers
-		public RuleCall getTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0() { return cTypeRefsTypeRefWithoutModifiersParserRuleCall_4_1_0; }
+		//TypeRef
+		public RuleCall getTypeRefsTypeRefParserRuleCall_4_1_0() { return cTypeRefsTypeRefParserRuleCall_4_1_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_5() { return cRightCurlyBracketKeyword_5; }
@@ -952,36 +1116,89 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//TStructMemberList
 		public RuleCall getTStructMemberListParserRuleCall_2_1() { return cTStructMemberListParserRuleCall_2_1; }
 	}
-	public class ArrayTypeRefElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ArrayTypeRef");
+	public class IterableTypeExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IterableTypeExpression");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cArrayTypeLiteralAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final Keyword cArrayTypeLiteralLeftSquareBracketKeyword_0_0 = (Keyword)cArrayTypeLiteralAssignment_0.eContents().get(0);
-		private final Assignment cTypeArgsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cTypeArgsTypeArgumentParserRuleCall_1_0 = (RuleCall)cTypeArgsAssignment_1.eContents().get(0);
-		private final Keyword cRightSquareBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cIterableTypeExpressionAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final Keyword cIterableTypeExpressionLeftSquareBracketKeyword_0_0 = (Keyword)cIterableTypeExpressionAssignment_0.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Assignment cTypeArgsAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
+		private final RuleCall cTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0 = (RuleCall)cTypeArgsAssignment_1_0.eContents().get(0);
+		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
+		private final Assignment cTypeArgsAssignment_1_1_0 = (Assignment)cGroup_1_1.eContents().get(0);
+		private final RuleCall cTypeArgsTypeArgumentParserRuleCall_1_1_0_0 = (RuleCall)cTypeArgsAssignment_1_1_0.eContents().get(0);
+		private final Group cGroup_1_1_1 = (Group)cGroup_1_1.eContents().get(1);
+		private final Keyword cCommaKeyword_1_1_1_0 = (Keyword)cGroup_1_1_1.eContents().get(0);
+		private final Assignment cTypeArgsAssignment_1_1_1_1 = (Assignment)cGroup_1_1_1.eContents().get(1);
+		private final RuleCall cTypeArgsTypeArgumentParserRuleCall_1_1_1_1_0 = (RuleCall)cTypeArgsAssignment_1_1_1_1.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_1_1_2 = (Keyword)cGroup_1_1.eContents().get(2);
 		
-		//ArrayTypeRef ParameterizedTypeRef:
-		//	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
+		//IterableTypeExpression ParameterizedTypeRef:
+		//	iterableTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail
+		//	| typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']');
 		@Override public ParserRule getRule() { return rule; }
 		
-		//arrayTypeLiteral?="[" typeArgs+=TypeArgument "]"
+		//iterableTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail | typeArgs+=TypeArgument (','
+		//typeArgs+=TypeArgument)* ']')
 		public Group getGroup() { return cGroup; }
 		
-		//arrayTypeLiteral?="["
-		public Assignment getArrayTypeLiteralAssignment_0() { return cArrayTypeLiteralAssignment_0; }
+		//iterableTypeExpression?='['
+		public Assignment getIterableTypeExpressionAssignment_0() { return cIterableTypeExpressionAssignment_0; }
 		
-		//"["
-		public Keyword getArrayTypeLiteralLeftSquareBracketKeyword_0_0() { return cArrayTypeLiteralLeftSquareBracketKeyword_0_0; }
+		//'['
+		public Keyword getIterableTypeExpressionLeftSquareBracketKeyword_0_0() { return cIterableTypeExpressionLeftSquareBracketKeyword_0_0; }
+		
+		//typeArgs+=EmptyIterableTypeExpressionTail | typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//typeArgs+=EmptyIterableTypeExpressionTail
+		public Assignment getTypeArgsAssignment_1_0() { return cTypeArgsAssignment_1_0; }
+		
+		//EmptyIterableTypeExpressionTail
+		public RuleCall getTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0() { return cTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0; }
+		
+		//typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'
+		public Group getGroup_1_1() { return cGroup_1_1; }
 		
 		//typeArgs+=TypeArgument
-		public Assignment getTypeArgsAssignment_1() { return cTypeArgsAssignment_1; }
+		public Assignment getTypeArgsAssignment_1_1_0() { return cTypeArgsAssignment_1_1_0; }
 		
 		//TypeArgument
-		public RuleCall getTypeArgsTypeArgumentParserRuleCall_1_0() { return cTypeArgsTypeArgumentParserRuleCall_1_0; }
+		public RuleCall getTypeArgsTypeArgumentParserRuleCall_1_1_0_0() { return cTypeArgsTypeArgumentParserRuleCall_1_1_0_0; }
 		
-		//"]"
-		public Keyword getRightSquareBracketKeyword_2() { return cRightSquareBracketKeyword_2; }
+		//(',' typeArgs+=TypeArgument)*
+		public Group getGroup_1_1_1() { return cGroup_1_1_1; }
+		
+		//','
+		public Keyword getCommaKeyword_1_1_1_0() { return cCommaKeyword_1_1_1_0; }
+		
+		//typeArgs+=TypeArgument
+		public Assignment getTypeArgsAssignment_1_1_1_1() { return cTypeArgsAssignment_1_1_1_1; }
+		
+		//TypeArgument
+		public RuleCall getTypeArgsTypeArgumentParserRuleCall_1_1_1_1_0() { return cTypeArgsTypeArgumentParserRuleCall_1_1_1_1_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_1_1_2() { return cRightSquareBracketKeyword_1_1_2; }
+	}
+	public class EmptyIterableTypeExpressionTailElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.EmptyIterableTypeExpressionTail");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cWildcardAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//EmptyIterableTypeExpressionTail Wildcard:
+		//	{Wildcard} ']';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{Wildcard} ']'
+		public Group getGroup() { return cGroup; }
+		
+		//{Wildcard}
+		public Action getWildcardAction_0() { return cWildcardAction_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_1() { return cRightSquareBracketKeyword_1; }
 	}
 	public class VersionRequestElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.VersionRequest");
@@ -1571,27 +1788,43 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.TypeArgument");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cWildcardParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cWildcardNewNotationParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cTypeRefParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cTypeRefParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//TypeArgument:
-		//	Wildcard | WildcardNewNotation | TypeRef;
+		//	Wildcard | TypeRef;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//Wildcard | WildcardNewNotation | TypeRef
+		//Wildcard | TypeRef
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//Wildcard
 		public RuleCall getWildcardParserRuleCall_0() { return cWildcardParserRuleCall_0; }
 		
-		//WildcardNewNotation
-		public RuleCall getWildcardNewNotationParserRuleCall_1() { return cWildcardNewNotationParserRuleCall_1; }
-		
 		//TypeRef
-		public RuleCall getTypeRefParserRuleCall_2() { return cTypeRefParserRuleCall_2; }
+		public RuleCall getTypeRefParserRuleCall_1() { return cTypeRefParserRuleCall_1; }
 	}
 	public class WildcardElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.Wildcard");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cWildcardOldNotationParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cWildcardNewNotationParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		
+		//Wildcard:
+		//	WildcardOldNotation
+		//	| WildcardNewNotation;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//WildcardOldNotation | WildcardNewNotation
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//WildcardOldNotation
+		public RuleCall getWildcardOldNotationParserRuleCall_0() { return cWildcardOldNotationParserRuleCall_0; }
+		
+		//WildcardNewNotation
+		public RuleCall getWildcardNewNotationParserRuleCall_1() { return cWildcardNewNotationParserRuleCall_1; }
+	}
+	public class WildcardOldNotationElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.WildcardOldNotation");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
@@ -1607,7 +1840,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cDeclaredLowerBoundAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
 		private final RuleCall cDeclaredLowerBoundTypeRefParserRuleCall_1_1_1_0 = (RuleCall)cDeclaredLowerBoundAssignment_1_1_1.eContents().get(0);
 		
-		//Wildcard:
+		//WildcardOldNotation Wildcard:
 		//	=> ({Wildcard} '?') ('extends' declaredUpperBound=TypeRef | 'super'
 		//	declaredLowerBound=TypeRef)?;
 		@Override public ParserRule getRule() { return rule; }
@@ -1653,6 +1886,25 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//TypeRef
 		public RuleCall getDeclaredLowerBoundTypeRefParserRuleCall_1_1_1_0() { return cDeclaredLowerBoundTypeRefParserRuleCall_1_1_1_0; }
+	}
+	public class WildcardOldNotationWithoutBoundElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.WildcardOldNotationWithoutBound");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cWildcardAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cQuestionMarkKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//WildcardOldNotationWithoutBound Wildcard:
+		//	{Wildcard} '?';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{Wildcard} '?'
+		public Group getGroup() { return cGroup; }
+		
+		//{Wildcard}
+		public Action getWildcardAction_0() { return cWildcardAction_0; }
+		
+		//'?'
+		public Keyword getQuestionMarkKeyword_1() { return cQuestionMarkKeyword_1; }
 	}
 	public class WildcardNewNotationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.WildcardNewNotation");
@@ -2128,6 +2380,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	private final TypeRefElements pTypeRef;
 	private final IntersectionTypeExpressionElements pIntersectionTypeExpression;
+	private final ArrayTypeExpressionElements pArrayTypeExpression;
 	private final PrimaryTypeExpressionElements pPrimaryTypeExpression;
 	private final TypeRefWithModifiersElements pTypeRefWithModifiers;
 	private final TypeRefWithoutModifiersElements pTypeRefWithoutModifiers;
@@ -2147,7 +2400,8 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	private final ParameterizedTypeRefElements pParameterizedTypeRef;
 	private final ParameterizedTypeRefNominalElements pParameterizedTypeRefNominal;
 	private final ParameterizedTypeRefStructuralElements pParameterizedTypeRefStructural;
-	private final ArrayTypeRefElements pArrayTypeRef;
+	private final IterableTypeExpressionElements pIterableTypeExpression;
+	private final EmptyIterableTypeExpressionTailElements pEmptyIterableTypeExpressionTail;
 	private final VersionRequestElements pVersionRequest;
 	private final TypeReferenceElements pTypeReference;
 	private final TypeArgumentsElements pTypeArguments;
@@ -2168,6 +2422,8 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	private final TypeReferenceNameElements pTypeReferenceName;
 	private final TypeArgumentElements pTypeArgument;
 	private final WildcardElements pWildcard;
+	private final WildcardOldNotationElements pWildcardOldNotation;
+	private final WildcardOldNotationWithoutBoundElements pWildcardOldNotationWithoutBound;
 	private final WildcardNewNotationElements pWildcardNewNotation;
 	private final TypeVariableElements pTypeVariable;
 	private final BindingIdentifierElements pBindingIdentifier;
@@ -2197,6 +2453,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.gaUnicode = gaUnicode;
 		this.pTypeRef = new TypeRefElements();
 		this.pIntersectionTypeExpression = new IntersectionTypeExpressionElements();
+		this.pArrayTypeExpression = new ArrayTypeExpressionElements();
 		this.pPrimaryTypeExpression = new PrimaryTypeExpressionElements();
 		this.pTypeRefWithModifiers = new TypeRefWithModifiersElements();
 		this.pTypeRefWithoutModifiers = new TypeRefWithoutModifiersElements();
@@ -2216,7 +2473,8 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.pParameterizedTypeRef = new ParameterizedTypeRefElements();
 		this.pParameterizedTypeRefNominal = new ParameterizedTypeRefNominalElements();
 		this.pParameterizedTypeRefStructural = new ParameterizedTypeRefStructuralElements();
-		this.pArrayTypeRef = new ArrayTypeRefElements();
+		this.pIterableTypeExpression = new IterableTypeExpressionElements();
+		this.pEmptyIterableTypeExpressionTail = new EmptyIterableTypeExpressionTailElements();
 		this.pVersionRequest = new VersionRequestElements();
 		this.pTypeReference = new TypeReferenceElements();
 		this.pTypeArguments = new TypeArgumentsElements();
@@ -2237,6 +2495,8 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.pTypeReferenceName = new TypeReferenceNameElements();
 		this.pTypeArgument = new TypeArgumentElements();
 		this.pWildcard = new WildcardElements();
+		this.pWildcardOldNotation = new WildcardOldNotationElements();
+		this.pWildcardOldNotationWithoutBound = new WildcardOldNotationWithoutBoundElements();
 		this.pWildcardNewNotation = new WildcardNewNotationElements();
 		this.pTypeVariable = new TypeVariableElements();
 		this.pBindingIdentifier = new BindingIdentifierElements();
@@ -2318,7 +2578,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//IntersectionTypeExpression TypeRef:
-	//	PrimaryTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=PrimaryTypeExpression)+)?;
+	//	ArrayTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=ArrayTypeExpression)+)?;
 	public IntersectionTypeExpressionElements getIntersectionTypeExpressionAccess() {
 		return pIntersectionTypeExpression;
 	}
@@ -2327,9 +2587,23 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getIntersectionTypeExpressionAccess().getRule();
 	}
 	
+	//ArrayTypeExpression TypeRef:
+	//	{ParameterizedTypeRef} typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>
+	//	({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')* | {ParameterizedTypeRef} '('
+	//	typeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' => ({ParameterizedTypeRef.typeArgs+=current}
+	//	arrayTypeExpression?='[' ']')* | PrimaryTypeExpression => ({ParameterizedTypeRef.typeArgs+=current}
+	//	arrayTypeExpression?='[' ']')*;
+	public ArrayTypeExpressionElements getArrayTypeExpressionAccess() {
+		return pArrayTypeExpression;
+	}
+	
+	public ParserRule getArrayTypeExpressionRule() {
+		return getArrayTypeExpressionAccess().getRule();
+	}
+	
 	//PrimaryTypeExpression TypeRef:
 	//	ArrowFunctionTypeExpression
-	//	| ArrayTypeRef
+	//	| IterableTypeExpression
 	//	| TypeRefWithModifiers
 	//	| "(" TypeRef ")";
 	public PrimaryTypeExpressionElements getPrimaryTypeExpressionAccess() {
@@ -2365,7 +2639,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//TypeRefFunctionTypeExpression StaticBaseTypeRef:
 	//	ParameterizedTypeRef
-	//	| ArrayTypeRef
+	//	| IterableTypeExpression
 	//	| TypeTypeRef
 	//	| UnionTypeExpressionOLD
 	//	| IntersectionTypeExpressionOLD;
@@ -2380,7 +2654,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	//TypeArgInTypeTypeRef TypeArgument:
 	//	ParameterizedTypeRefNominal
 	//	| ThisTypeRefNominal
-	//	| Wildcard;
+	//	| WildcardOldNotation;
 	public TypeArgInTypeTypeRefElements getTypeArgInTypeTypeRefAccess() {
 		return pTypeArgInTypeTypeRef;
 	}
@@ -2498,7 +2772,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//UnionTypeExpressionOLD UnionTypeExpression:
 	//	{UnionTypeExpression}
-	//	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	//	'union' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 	public UnionTypeExpressionOLDElements getUnionTypeExpressionOLDAccess() {
 		return pUnionTypeExpressionOLD;
 	}
@@ -2509,7 +2783,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//IntersectionTypeExpressionOLD IntersectionTypeExpression:
 	//	{IntersectionTypeExpression}
-	//	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	//	'intersection' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 	public IntersectionTypeExpressionOLDElements getIntersectionTypeExpressionOLDAccess() {
 		return pIntersectionTypeExpressionOLD;
 	}
@@ -2551,14 +2825,25 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
-	//ArrayTypeRef ParameterizedTypeRef:
-	//	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
-	public ArrayTypeRefElements getArrayTypeRefAccess() {
-		return pArrayTypeRef;
+	//IterableTypeExpression ParameterizedTypeRef:
+	//	iterableTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail
+	//	| typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']');
+	public IterableTypeExpressionElements getIterableTypeExpressionAccess() {
+		return pIterableTypeExpression;
 	}
 	
-	public ParserRule getArrayTypeRefRule() {
-		return getArrayTypeRefAccess().getRule();
+	public ParserRule getIterableTypeExpressionRule() {
+		return getIterableTypeExpressionAccess().getRule();
+	}
+	
+	//EmptyIterableTypeExpressionTail Wildcard:
+	//	{Wildcard} ']';
+	public EmptyIterableTypeExpressionTailElements getEmptyIterableTypeExpressionTailAccess() {
+		return pEmptyIterableTypeExpressionTail;
+	}
+	
+	public ParserRule getEmptyIterableTypeExpressionTailRule() {
+		return getEmptyIterableTypeExpressionTailAccess().getRule();
 	}
 	
 	//fragment VersionRequest *:
@@ -2755,7 +3040,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TypeArgument:
-	//	Wildcard | WildcardNewNotation | TypeRef;
+	//	Wildcard | TypeRef;
 	public TypeArgumentElements getTypeArgumentAccess() {
 		return pTypeArgument;
 	}
@@ -2765,14 +3050,35 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Wildcard:
-	//	=> ({Wildcard} '?') ('extends' declaredUpperBound=TypeRef | 'super'
-	//	declaredLowerBound=TypeRef)?;
+	//	WildcardOldNotation
+	//	| WildcardNewNotation;
 	public WildcardElements getWildcardAccess() {
 		return pWildcard;
 	}
 	
 	public ParserRule getWildcardRule() {
 		return getWildcardAccess().getRule();
+	}
+	
+	//WildcardOldNotation Wildcard:
+	//	=> ({Wildcard} '?') ('extends' declaredUpperBound=TypeRef | 'super'
+	//	declaredLowerBound=TypeRef)?;
+	public WildcardOldNotationElements getWildcardOldNotationAccess() {
+		return pWildcardOldNotation;
+	}
+	
+	public ParserRule getWildcardOldNotationRule() {
+		return getWildcardOldNotationAccess().getRule();
+	}
+	
+	//WildcardOldNotationWithoutBound Wildcard:
+	//	{Wildcard} '?';
+	public WildcardOldNotationWithoutBoundElements getWildcardOldNotationWithoutBoundAccess() {
+		return pWildcardOldNotationWithoutBound;
+	}
+	
+	public ParserRule getWildcardOldNotationWithoutBoundRule() {
+		return getWildcardOldNotationWithoutBoundAccess().getRule();
 	}
 	
 	//WildcardNewNotation Wildcard:

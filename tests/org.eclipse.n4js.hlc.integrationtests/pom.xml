@@ -187,7 +187,8 @@ Contributors:
 										<arg value="4873:4873"/>
 										<arg value="-v"/>
 										<arg value="${project.basedir}/verdaccioConfig/config.yaml:/verdaccio/conf/config.yaml"/>
-										<arg value="verdaccio/verdaccio"/>
+										<!-- verdaccio/verdaccio:3.12 -->
+										<arg value="verdaccio/verdaccio@sha256:e64056b6aa104197dbac07e77a1fbcf8f5c67d9b443e0ed2a191d41a1da7a944"/>
 									</exec>
 								</target>
 							</configuration>

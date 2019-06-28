@@ -9,8 +9,16 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export public class P#1 {}
-export public class P#2 {}
+export public class P#1 {
+	public greet() {
+		console.log('Greetings from P#1!');
+	}
+}
+export public class P#2 {
+	public greet() {
+		console.log('Greetings from P#2!');
+	}
+}
 
 export public class Q#2 {}
 

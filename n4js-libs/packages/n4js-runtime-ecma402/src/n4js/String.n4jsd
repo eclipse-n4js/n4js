@@ -26,7 +26,7 @@ import {CollatorOptions} from "IntlClasses";
 	 * @see https://www.ecma-international.org/ecma-402/4.0/
 	 */
 	@Override
-	public localeCompare(that, locales: string | [string]=, options: ~r~CollatorOptions | any+ =): number
+	public localeCompare(that, locales: string | string[]=, options: ~r~CollatorOptions | any+ =): number
 
 	/**
 	 * Converts the string to lower case using the best available locale.
@@ -38,7 +38,7 @@ import {CollatorOptions} from "IntlClasses";
 	 * @see https://www.ecma-international.org/ecma-402/4.0/
 	 */
 	@Override
-	public toLocaleLowerCase(locales: string | [string]=): string
+	public toLocaleLowerCase(locales: string | string[]=): string
 
 	/**
 	 * Converts the string to upper case using the best available locale.
@@ -50,6 +50,6 @@ import {CollatorOptions} from "IntlClasses";
 	 * @see https://www.ecma-international.org/ecma-402/4.0/
 	 */
 	@Override
-	public toLocaleUpperCase(locales: string | [string]=): string
+	public toLocaleUpperCase(locales: string | string[]=): string
 }
 
