@@ -13,6 +13,7 @@ package org.eclipse.n4js.transpiler.print;
 import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.isLegalIdentifier;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -23,103 +24,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.conversion.ValueConverterUtils;
-import org.eclipse.n4js.n4JS.AdditiveExpression;
-import org.eclipse.n4js.n4JS.Annotation;
-import org.eclipse.n4js.n4JS.Argument;
-import org.eclipse.n4js.n4JS.ArrayBindingPattern;
-import org.eclipse.n4js.n4JS.ArrayElement;
-import org.eclipse.n4js.n4JS.ArrayLiteral;
-import org.eclipse.n4js.n4JS.ArrayPadding;
-import org.eclipse.n4js.n4JS.ArrowFunction;
-import org.eclipse.n4js.n4JS.AssignmentExpression;
-import org.eclipse.n4js.n4JS.AwaitExpression;
-import org.eclipse.n4js.n4JS.BinaryBitwiseExpression;
-import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
-import org.eclipse.n4js.n4JS.BindingElement;
-import org.eclipse.n4js.n4JS.BindingProperty;
-import org.eclipse.n4js.n4JS.Block;
-import org.eclipse.n4js.n4JS.BooleanLiteral;
-import org.eclipse.n4js.n4JS.BreakStatement;
-import org.eclipse.n4js.n4JS.CaseClause;
-import org.eclipse.n4js.n4JS.CastExpression;
-import org.eclipse.n4js.n4JS.CatchBlock;
-import org.eclipse.n4js.n4JS.CatchVariable;
-import org.eclipse.n4js.n4JS.CommaExpression;
-import org.eclipse.n4js.n4JS.ConditionalExpression;
-import org.eclipse.n4js.n4JS.ContinueStatement;
-import org.eclipse.n4js.n4JS.DebuggerStatement;
-import org.eclipse.n4js.n4JS.DefaultClause;
-import org.eclipse.n4js.n4JS.DoStatement;
-import org.eclipse.n4js.n4JS.DoubleLiteral;
-import org.eclipse.n4js.n4JS.EmptyStatement;
-import org.eclipse.n4js.n4JS.EqualityExpression;
-import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableBinding;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
-import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.ExpressionStatement;
-import org.eclipse.n4js.n4JS.FinallyBlock;
-import org.eclipse.n4js.n4JS.ForStatement;
-import org.eclipse.n4js.n4JS.FormalParameter;
-import org.eclipse.n4js.n4JS.FunctionDeclaration;
-import org.eclipse.n4js.n4JS.FunctionExpression;
-import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
-import org.eclipse.n4js.n4JS.HexIntLiteral;
-import org.eclipse.n4js.n4JS.IdentifierRef;
-import org.eclipse.n4js.n4JS.IfStatement;
-import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4JS.IndexedAccessExpression;
-import org.eclipse.n4js.n4JS.IntLiteral;
-import org.eclipse.n4js.n4JS.LabelledStatement;
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
-import org.eclipse.n4js.n4JS.MultiplicativeExpression;
-import org.eclipse.n4js.n4JS.N4Modifier;
-import org.eclipse.n4js.n4JS.NamedImportSpecifier;
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
-import org.eclipse.n4js.n4JS.NewExpression;
-import org.eclipse.n4js.n4JS.NullLiteral;
-import org.eclipse.n4js.n4JS.NumericLiteral;
-import org.eclipse.n4js.n4JS.ObjectBindingPattern;
-import org.eclipse.n4js.n4JS.ObjectLiteral;
-import org.eclipse.n4js.n4JS.OctalIntLiteral;
-import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
-import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
-import org.eclipse.n4js.n4JS.ParenExpression;
-import org.eclipse.n4js.n4JS.PostfixExpression;
-import org.eclipse.n4js.n4JS.PropertyAssignmentAnnotationList;
-import org.eclipse.n4js.n4JS.PropertyGetterDeclaration;
-import org.eclipse.n4js.n4JS.PropertyMethodDeclaration;
-import org.eclipse.n4js.n4JS.PropertyNameKind;
-import org.eclipse.n4js.n4JS.PropertyNameOwner;
-import org.eclipse.n4js.n4JS.PropertyNameValuePair;
-import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
-import org.eclipse.n4js.n4JS.PropertySetterDeclaration;
-import org.eclipse.n4js.n4JS.RegularExpressionLiteral;
-import org.eclipse.n4js.n4JS.RelationalExpression;
-import org.eclipse.n4js.n4JS.ReturnStatement;
-import org.eclipse.n4js.n4JS.ScientificIntLiteral;
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.n4JS.ShiftExpression;
-import org.eclipse.n4js.n4JS.Statement;
-import org.eclipse.n4js.n4JS.StringLiteral;
-import org.eclipse.n4js.n4JS.SuperLiteral;
-import org.eclipse.n4js.n4JS.SwitchStatement;
-import org.eclipse.n4js.n4JS.TemplateLiteral;
-import org.eclipse.n4js.n4JS.TemplateSegment;
-import org.eclipse.n4js.n4JS.ThisLiteral;
-import org.eclipse.n4js.n4JS.ThrowStatement;
-import org.eclipse.n4js.n4JS.TryStatement;
-import org.eclipse.n4js.n4JS.UnaryExpression;
-import org.eclipse.n4js.n4JS.UnaryOperator;
-import org.eclipse.n4js.n4JS.VariableBinding;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
-import org.eclipse.n4js.n4JS.VariableStatement;
-import org.eclipse.n4js.n4JS.VariableStatementKeyword;
-import org.eclipse.n4js.n4JS.WhileStatement;
-import org.eclipse.n4js.n4JS.WithStatement;
-import org.eclipse.n4js.n4JS.YieldExpression;
+import org.eclipse.n4js.n4JS.*;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
@@ -195,29 +100,37 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	@Override
 	public Boolean caseExportDeclaration(ExportDeclaration original) {
-		throwUnsupportedSyntax();
+		if (original.getReexportedFrom() != null) {
+			throwUnsupportedSyntax();
+		}
 		processAnnotations(original.getAnnotations());
 		write("export ");
-		process(original.getExportedElement());
+		final List<ExportSpecifier> namedExports = original.getNamedExports();
+		if (!namedExports.isEmpty()) {
+			write("{ ");
+			process(namedExports, ", ");
+			write(" }");
+		} else {
+			if (original.isDefaultExport()) {
+				write("default ");
+			}
+			final ExportableElement exportedElement = original.getExportedElement();
+			if (exportedElement != null) {
+				process(exportedElement);
+			} else {
+				final Expression exportedExpression = original.getDefaultExportedExpression();
+				if (exportedExpression != null && original.isDefaultExport()) {
+					process(exportedExpression);
+					write(';');
+				}
+			}
+		}
 		return DONE;
 	}
 
 	@Override
-	public Boolean caseImportDeclaration(ImportDeclaration original) {
-		throwUnsupportedSyntax();
-		processAnnotations(original.getAnnotations());
-		write("import ");
-		process(original.getImportSpecifiers(), ", ");
-		write(" from ");
-		write(quote(original.getModule().getQualifiedName()));
-		newLine();
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseNamedImportSpecifier(NamedImportSpecifier original) {
-		throwUnsupportedSyntax();
-		write(original.getImportedElement().getName()); // need to use symbol table entry here???
+	public Boolean caseExportSpecifier(ExportSpecifier original) {
+		process(original.getElement());
 		final String alias = original.getAlias();
 		if (alias != null) {
 			write(" as ");
@@ -227,8 +140,58 @@ import org.eclipse.xtext.EcoreUtil2;
 	}
 
 	@Override
+	public Boolean caseImportDeclaration(ImportDeclaration original) {
+		processAnnotations(original.getAnnotations());
+		write("import ");
+		// 1) import specifiers
+		List<ImportSpecifier> importSpecifiers = new ArrayList<>(original.getImportSpecifiers());
+		if (!importSpecifiers.isEmpty() && importSpecifiers.get(0) instanceof DefaultImportSpecifier) {
+			process(importSpecifiers.remove(0));
+			if (!importSpecifiers.isEmpty()) {
+				write(", ");
+			}
+		}
+		if (!importSpecifiers.isEmpty()) {
+			final boolean isNamespaceImport = importSpecifiers.get(0) instanceof NamespaceImportSpecifier;
+			if (isNamespaceImport) {
+				process(importSpecifiers.get(0)); // syntax does not allow more than one namespace import
+			} else {
+				write('{');
+				process(importSpecifiers, ", ");
+				write('}');
+			}
+		}
+		// 2) "from"
+		if (original.isImportFrom()) {
+			write(" from ");
+		}
+		// 3) module specifier
+		String moduleSpecifier = original.getModuleSpecifierAsText() != null
+				? original.getModuleSpecifierAsText()
+				: original.getModule().getQualifiedName();
+		write(quote(moduleSpecifier));
+		// 4) empty line after block of imports
+		boolean isLastImport = !(EcoreUtil2.getNextSibling(original) instanceof ImportDeclaration);
+		if (isLastImport) {
+			newLine();
+		}
+		return DONE;
+	}
+
+	/** Also handles DefaultImportSpecifier (which is a subclass of NamedImportSpecifier). */
+	@Override
+	public Boolean caseNamedImportSpecifier(NamedImportSpecifier original) {
+		write(original.getImportedElementAsText());
+		final String alias = original.getAlias();
+		if (alias != null && !original.isDefaultImport()) {
+			write(" as ");
+			write(alias);
+		}
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseNamespaceImportSpecifier(NamespaceImportSpecifier original) {
-		throwUnsupportedSyntax();
 		write("* as ");
 		write(original.getAlias());
 		return DONE;
@@ -361,11 +324,12 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	@Override
 	public Boolean caseExportedVariableStatement(ExportedVariableStatement original) {
+		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
+		// emitted there; so, no need to emit "export" in this method!
 		if (!original.getDeclaredModifiers().isEmpty()) {
 			processModifiers(original.getDeclaredModifiers());
 			write(' ');
 		}
-		write("export ");
 		caseVariableStatement(original);
 		return DONE;
 	}
@@ -748,6 +712,13 @@ import org.eclipse.xtext.EcoreUtil2;
 	}
 
 	@Override
+	public Boolean casePropertySpread(PropertySpread original) {
+		write("...");
+		process(original.getExpression());
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseNewExpression(NewExpression original) {
 		write("new ");
 		process(original.getCallee());
@@ -764,6 +735,15 @@ import org.eclipse.xtext.EcoreUtil2;
 		process(original.getTarget());
 		write('(');
 		process(original.getArguments(), ", ");
+		write(')');
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseImportCallExpression(ImportCallExpression original) {
+		write("import");
+		write('(');
+		process(original.getArgument());
 		write(')');
 		return DONE;
 	}
@@ -1054,7 +1034,7 @@ import org.eclipse.xtext.EcoreUtil2;
 			// single-name binding
 			process(original.getValue().getVarDecl());
 		} else {
-			write(original.getName());
+			processPropertyName(original);
 			write(": ");
 			process(original.getValue());
 		}

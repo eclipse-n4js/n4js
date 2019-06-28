@@ -85,6 +85,7 @@ public class CharacterClassRangeImpl extends CharacterClassElementImpl implement
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public CharacterClassAtom getLeft()
   {
     return left;
@@ -112,6 +113,7 @@ public class CharacterClassRangeImpl extends CharacterClassElementImpl implement
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setLeft(CharacterClassAtom newLeft)
   {
     if (newLeft != left)
@@ -133,6 +135,7 @@ public class CharacterClassRangeImpl extends CharacterClassElementImpl implement
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public CharacterClassAtom getRight()
   {
     return right;
@@ -160,6 +163,7 @@ public class CharacterClassRangeImpl extends CharacterClassElementImpl implement
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRight(CharacterClassAtom newRight)
   {
     if (newRight != right)

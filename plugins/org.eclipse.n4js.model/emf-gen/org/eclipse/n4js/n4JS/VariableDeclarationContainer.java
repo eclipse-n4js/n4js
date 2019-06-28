@@ -46,10 +46,6 @@ public interface VariableDeclarationContainer extends EObject {
 	 * Returns the value of the '<em><b>Var Decls Or Bindings</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.VariableDeclarationOrBinding}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Var Decls Or Bindings</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Var Decls Or Bindings</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getVariableDeclarationContainer_VarDeclsOrBindings()
@@ -62,10 +58,6 @@ public interface VariableDeclarationContainer extends EObject {
 	 * Returns the value of the '<em><b>Var Stmt Keyword</b></em>' attribute.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.n4JS.VariableStatementKeyword}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Var Stmt Keyword</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Var Stmt Keyword</em>' attribute.
 	 * @see org.eclipse.n4js.n4JS.VariableStatementKeyword

@@ -63,12 +63,14 @@ import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.HexIntLiteral;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IfStatement;
+import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXElementName;
 import org.eclipse.n4js.n4JS.JSXExpression;
+import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.LabelledStatement;
@@ -106,6 +108,7 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration;
+import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RegularExpressionLiteral;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.ReturnStatement;
@@ -551,6 +554,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 			case N4JSPackage.IF_STATEMENT:
 				sequence_IfStatement(context, (IfStatement) semanticObject); 
 				return; 
+			case N4JSPackage.IMPORT_CALL_EXPRESSION:
+				sequence_Arguments(context, (ImportCallExpression) semanticObject); 
+				return; 
 			case N4JSPackage.IMPORT_DECLARATION:
 				if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
 					sequence_AnnotatedScriptElement_ImportClause_ImportDeclarationImpl_ImportSpecifiersExceptDefault(context, (ImportDeclaration) semanticObject); 
@@ -630,13 +636,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_IntLiteral(context, (IntLiteral) semanticObject); 
 				return; 
 			case N4JSPackage.JSX_ELEMENT:
-				sequence_JSXAttributes_JSXClosingElement_JSXElement(context, (JSXElement) semanticObject); 
+				sequence_JSXAttributes_JSXElement(context, (JSXElement) semanticObject); 
 				return; 
 			case N4JSPackage.JSX_ELEMENT_NAME:
 				sequence_JSXElementName(context, (JSXElementName) semanticObject); 
 				return; 
 			case N4JSPackage.JSX_EXPRESSION:
 				sequence_JSXExpression(context, (JSXExpression) semanticObject); 
+				return; 
+			case N4JSPackage.JSX_FRAGMENT:
+				sequence_JSXFragment(context, (JSXFragment) semanticObject); 
 				return; 
 			case N4JSPackage.JSX_PROPERTY_ATTRIBUTE:
 				sequence_JSXPropertyAttribute(context, (JSXPropertyAttribute) semanticObject); 
@@ -1110,6 +1119,20 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else break;
+			case N4JSPackage.PROPERTY_SPREAD:
+				if (rule == grammarAccess.getAnnotatedPropertyAssignmentRule()) {
+					sequence_AnnotatedPropertyAssignment(context, (PropertySpread) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPropertyAssignmentRule()) {
+					sequence_AnnotatedPropertyAssignment_PropertySpread(context, (PropertySpread) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPropertySpreadRule()) {
+					sequence_PropertySpread(context, (PropertySpread) semanticObject); 
+					return; 
+				}
+				else break;
 			case N4JSPackage.REGULAR_EXPRESSION_LITERAL:
 				sequence_RegularExpressionLiteral(context, (RegularExpressionLiteral) semanticObject); 
 				return; 
@@ -1298,14 +1321,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		else if (epackage == TypeRefsPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION:
-				if (rule == grammarAccess.getTypeRefForCastRule()) {
-					sequence_ArrowFunctionTypeExpression_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList(context, (FunctionTypeExpression) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getTypeRefRule()
+				if (rule == grammarAccess.getTypeRefRule()
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_ArrowFunctionTypeExpression_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList_TypeRefWithModifiers(context, (FunctionTypeExpression) semanticObject); 
@@ -1326,8 +1347,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION:
-				if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefWithoutModifiersRule()
+				if (rule == grammarAccess.getTypeRefWithoutModifiersRule()
 						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getIntersectionTypeExpressionOLDRule()) {
 					sequence_IntersectionTypeExpressionOLD(context, (IntersectionTypeExpression) semanticObject); 
@@ -1341,6 +1361,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_IntersectionTypeExpression_IntersectionTypeExpressionOLD_TypeRefWithModifiers(context, (IntersectionTypeExpression) semanticObject); 
@@ -1348,22 +1370,31 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF:
-				if (rule == grammarAccess.getArrayTypeRefRule()) {
-					sequence_ArrayTypeRef(context, (ParameterizedTypeRef) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getTypeRefRule()
+				if (rule == grammarAccess.getTypeRefRule()
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
-					sequence_ArrayTypeRef_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
+					sequence_ArrayTypeExpression_IterableTypeExpression_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()) {
-					sequence_ArrayTypeRef_TypeArguments_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
+				else if (action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_0_4_0_0()) {
+					sequence_ArrayTypeExpression_ParameterizedTypeRef_0_4_0_0(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_1_6_0_0()) {
+					sequence_ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getIterableTypeExpressionRule()) {
+					sequence_IterableTypeExpression(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()) {
+					sequence_IterableTypeExpression_TypeArguments_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefWithModifiersRule()) {
@@ -1386,6 +1417,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1396,8 +1429,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithoutModifiers_TypeReference(context, (ParameterizedTypeRefStructural) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
+				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getParameterizedTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefStructuralRule()) {
 					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference(context, (ParameterizedTypeRefStructural) semanticObject); 
@@ -1405,8 +1437,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.THIS_TYPE_REF_NOMINAL:
-				if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeArgInTypeTypeRefRule()
+				if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
 						|| rule == grammarAccess.getThisTypeRefRule()
 						|| rule == grammarAccess.getThisTypeRefNominalRule()) {
 					sequence_ThisTypeRefNominal(context, (ThisTypeRefNominal) semanticObject); 
@@ -1416,6 +1447,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1428,8 +1461,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL:
-				if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getThisTypeRefRule()
+				if (rule == grammarAccess.getThisTypeRefRule()
 						|| rule == grammarAccess.getThisTypeRefStructuralRule()) {
 					sequence_TStructMemberList_ThisTypeRefStructural(context, (ThisTypeRefStructural) semanticObject); 
 					return; 
@@ -1438,6 +1470,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1454,14 +1488,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_TypeRefWithModifiers_TypeTypeRef(context, (TypeTypeRef) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefWithoutModifiersRule()
+				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()
 						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getTypeTypeRefRule()) {
 					sequence_TypeTypeRef(context, (TypeTypeRef) semanticObject); 
@@ -1477,13 +1512,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_TypeRef_TypeRefWithModifiers_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefWithoutModifiersRule()
+				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()
 						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getUnionTypeExpressionOLDRule()) {
 					sequence_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
@@ -1495,6 +1531,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1505,8 +1543,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_ParameterizedTypeRefNominal_TypeArguments_TypeRefWithoutModifiers_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRef) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
+				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgInTypeTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefNominalRule()) {
@@ -1519,6 +1556,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getArrayTypeExpressionRule()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1529,8 +1568,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithoutModifiers_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRefStructural) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefForCastRule()
-						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
+				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getParameterizedTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefStructuralRule()) {
 					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRefStructural) semanticObject); 
@@ -1538,17 +1576,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.WILDCARD:
-				if (rule == grammarAccess.getWildcardNewNotationRule()) {
+				if (rule == grammarAccess.getEmptyIterableTypeExpressionTailRule()
+						|| rule == grammarAccess.getWildcardOldNotationWithoutBoundRule()) {
+					sequence_EmptyIterableTypeExpressionTail_WildcardOldNotationWithoutBound(context, (Wildcard) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getWildcardNewNotationRule()) {
 					sequence_WildcardNewNotation(context, (Wildcard) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
+				else if (rule == grammarAccess.getTypeArgumentRule()
 						|| rule == grammarAccess.getWildcardRule()) {
-					sequence_Wildcard(context, (Wildcard) semanticObject); 
+					sequence_WildcardNewNotation_WildcardOldNotation(context, (Wildcard) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeArgumentRule()) {
-					sequence_Wildcard_WildcardNewNotation(context, (Wildcard) semanticObject); 
+				else if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
+						|| rule == grammarAccess.getWildcardOldNotationRule()) {
+					sequence_WildcardOldNotation(context, (Wildcard) semanticObject); 
 					return; 
 				}
 				else break;
@@ -3830,6 +3874,41 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedPropertyAssignment<Yield> returns PropertySpread
+	 *     AnnotatedPropertyAssignment returns PropertySpread
+	 *
+	 * Constraint:
+	 *     (annotationList=AnnotatedPropertyAssignment_PropertySpread_1_5_0 expression=AssignmentExpression)
+	 */
+	protected void sequence_AnnotatedPropertyAssignment(ISerializationContext context, PropertySpread semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.ANNOTABLE_PROPERTY_ASSIGNMENT__ANNOTATION_LIST) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.ANNOTABLE_PROPERTY_ASSIGNMENT__ANNOTATION_LIST));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.PROPERTY_SPREAD__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.PROPERTY_SPREAD__EXPRESSION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getAnnotatedPropertyAssignmentAccess().getPropertySpreadAnnotationListAction_1_5_0(), semanticObject.getAnnotationList());
+		feeder.accept(grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignmentExpressionParserRuleCall_1_5_2_0(), semanticObject.getExpression());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PropertyAssignment<Yield> returns PropertySpread
+	 *     PropertyAssignment returns PropertySpread
+	 *
+	 * Constraint:
+	 *     ((annotationList=AnnotatedPropertyAssignment_PropertySpread_1_5_0 expression=AssignmentExpression) | expression=AssignmentExpression)
+	 */
+	protected void sequence_AnnotatedPropertyAssignment_PropertySpread(ISerializationContext context, PropertySpread semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     ScriptElement returns FunctionDeclaration
 	 *
 	 * Constraint:
@@ -5344,6 +5423,579 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     PrimaryExpression<Yield> returns ImportCallExpression
+	 *     PrimaryExpression returns ImportCallExpression
+	 *     ImportCallExpression<Yield> returns ImportCallExpression
+	 *     ImportCallExpression returns ImportCallExpression
+	 *     LeftHandSideExpression<Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CastExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<UnaryExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<MultiplicativeExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AdditiveExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ShiftExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0 returns ImportCallExpression
+	 *     MemberExpression<Yield> returns ImportCallExpression
+	 *     MemberExpression returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LeftHandSideExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<PostfixExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CastExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<UnaryExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<MultiplicativeExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AdditiveExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ShiftExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0 returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LeftHandSideExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<PostfixExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CastExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<UnaryExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<MultiplicativeExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AdditiveExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ShiftExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0 returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LeftHandSideExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<PostfixExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CastExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<UnaryExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<MultiplicativeExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AdditiveExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ShiftExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0 returns ImportCallExpression
+	 *     PostfixExpression<Yield> returns ImportCallExpression
+	 *     PostfixExpression returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CastExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<UnaryExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<MultiplicativeExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AdditiveExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ShiftExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0 returns ImportCallExpression
+	 *     CastExpression<Yield> returns ImportCallExpression
+	 *     CastExpression returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<UnaryExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<MultiplicativeExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AdditiveExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ShiftExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0 returns ImportCallExpression
+	 *     UnaryExpression<Yield> returns ImportCallExpression
+	 *     UnaryExpression returns ImportCallExpression
+	 *     MultiplicativeExpression<Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AdditiveExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ShiftExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0 returns ImportCallExpression
+	 *     AdditiveExpression<Yield> returns ImportCallExpression
+	 *     AdditiveExpression returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ShiftExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0 returns ImportCallExpression
+	 *     ShiftExpression<Yield> returns ImportCallExpression
+	 *     ShiftExpression returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0 returns ImportCallExpression
+	 *     RelationalExpression<In,Yield> returns ImportCallExpression
+	 *     RelationalExpression<In> returns ImportCallExpression
+	 *     RelationalExpression<Yield> returns ImportCallExpression
+	 *     RelationalExpression returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<In,Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0 returns ImportCallExpression
+	 *     EqualityExpression<In,Yield> returns ImportCallExpression
+	 *     EqualityExpression<In> returns ImportCallExpression
+	 *     EqualityExpression<Yield> returns ImportCallExpression
+	 *     EqualityExpression returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<In,Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<In> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0 returns ImportCallExpression
+	 *     BitwiseANDExpression<In,Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression<In> returns ImportCallExpression
+	 *     BitwiseANDExpression<Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0 returns ImportCallExpression
+	 *     BitwiseXORExpression<In,Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression<In> returns ImportCallExpression
+	 *     BitwiseXORExpression<Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0 returns ImportCallExpression
+	 *     BitwiseORExpression<In,Yield> returns ImportCallExpression
+	 *     BitwiseORExpression<In> returns ImportCallExpression
+	 *     BitwiseORExpression<Yield> returns ImportCallExpression
+	 *     BitwiseORExpression returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0 returns ImportCallExpression
+	 *     LogicalANDExpression<In,Yield> returns ImportCallExpression
+	 *     LogicalANDExpression<In> returns ImportCallExpression
+	 *     LogicalANDExpression<Yield> returns ImportCallExpression
+	 *     LogicalANDExpression returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0 returns ImportCallExpression
+	 *     LogicalORExpression<In,Yield> returns ImportCallExpression
+	 *     LogicalORExpression<In> returns ImportCallExpression
+	 *     LogicalORExpression<Yield> returns ImportCallExpression
+	 *     LogicalORExpression returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ImportCallExpression
+	 *     ConditionalExpression<In,Yield> returns ImportCallExpression
+	 *     ConditionalExpression<In> returns ImportCallExpression
+	 *     ConditionalExpression<Yield> returns ImportCallExpression
+	 *     ConditionalExpression returns ImportCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In,Yield> returns ImportCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In> returns ImportCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0 returns ImportCallExpression
+	 *     AssignmentExpression<In,Yield> returns ImportCallExpression
+	 *     AssignmentExpression<In> returns ImportCallExpression
+	 *     AssignmentExpression<Yield> returns ImportCallExpression
+	 *     AssignmentExpression returns ImportCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In,Yield> returns ImportCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In> returns ImportCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Yield> returns ImportCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0 returns ImportCallExpression
+	 *     Expression<In,Yield> returns ImportCallExpression
+	 *     Expression<In> returns ImportCallExpression
+	 *     Expression<Yield> returns ImportCallExpression
+	 *     Expression returns ImportCallExpression
+	 *     Expression.CommaExpression_1_0<In,Yield> returns ImportCallExpression
+	 *     Expression.CommaExpression_1_0<In> returns ImportCallExpression
+	 *     Expression.CommaExpression_1_0<Yield> returns ImportCallExpression
+	 *     Expression.CommaExpression_1_0 returns ImportCallExpression
+	 *
+	 * Constraint:
+	 *     (arguments+=Argument arguments+=Argument*)?
+	 */
+	protected void sequence_Arguments(ISerializationContext context, ImportCallExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<CastExpression.Yield> returns ParameterizedCallExpression
@@ -6130,6 +6782,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TypeRef.UnionTypeExpression_1_0 returns ParameterizedTypeRef
 	 *     IntersectionTypeExpression returns ParameterizedTypeRef
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRef
+	 *     ArrayTypeExpression returns ParameterizedTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns ParameterizedTypeRef
 	 *     PrimaryTypeExpression returns ParameterizedTypeRef
 	 *     TypeArgument returns ParameterizedTypeRef
 	 *
@@ -6142,30 +6796,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             dynamic?='+'? 
 	 *             followedByQuestionMark?='?'?
 	 *         ) | 
-	 *         (arrayTypeLiteral?='[' typeArgs+=TypeArgument)
+	 *         (typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[') | 
+	 *         (typeArgs+=ArrayTypeExpression_ParameterizedTypeRef_0_4_0_0 arrayTypeExpression?='[') | 
+	 *         (typeArgs+=Wildcard arrayTypeExpression?='[') | 
+	 *         (typeArgs+=ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0 arrayTypeExpression?='[') | 
+	 *         (typeArgs+=ArrayTypeExpression_ParameterizedTypeRef_2_1_0_0 arrayTypeExpression?='[') | 
+	 *         (iterableTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail | (typeArgs+=TypeArgument typeArgs+=TypeArgument*)))
 	 *     )
 	 */
-	protected void sequence_ArrayTypeRef_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefForCast returns ParameterizedTypeRef
-	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
-	 *             declaredType=[Type|TypeReferenceName] 
-	 *             (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?
-	 *         ) | 
-	 *         (arrayTypeLiteral?='[' typeArgs+=TypeArgument)
-	 *     )
-	 */
-	protected void sequence_ArrayTypeRef_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
+	protected void sequence_ArrayTypeExpression_IterableTypeExpression_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6196,28 +6835,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_ArrowExpression_ColonSepReturnTypeRef_StrictFormalParameters(ISerializationContext context, ArrowFunction semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefForCast returns FunctionTypeExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             declaredThisType=TypeRefFunctionTypeExpression? 
-	 *             (ownedTypeVars+=TypeVariable ownedTypeVars+=TypeVariable*)? 
-	 *             (
-	 *                 (fpars+=TAnonymousFormalParameter fpars+=TAnonymousFormalParameter* (returnTypeRef=PrimaryTypeExpression | returnTypeRef=TypeRef)) | 
-	 *                 returnTypeRef=TypeRef
-	 *             )?
-	 *         ) | 
-	 *         returnTypeRef=PrimaryTypeExpression
-	 *     )?
-	 */
-	protected void sequence_ArrowFunctionTypeExpression_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList(ISerializationContext context, FunctionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -8284,7 +8901,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     Expression.CommaExpression_1_0 returns CastExpression
 	 *
 	 * Constraint:
-	 *     (expression=CastExpression_CastExpression_1_0_0_0 targetTypeRef=TypeRefForCast)
+	 *     (expression=CastExpression_CastExpression_1_0_0_0 targetTypeRef=ArrayTypeExpression)
 	 */
 	protected void sequence_CastExpression(ISerializationContext context, CastExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -8295,7 +8912,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getCastExpressionAccess().getCastExpressionExpressionAction_1_0_0_0(), semanticObject.getExpression());
-		feeder.accept(grammarAccess.getCastExpressionAccess().getTargetTypeRefTypeRefForCastParserRuleCall_1_1_0(), semanticObject.getTargetTypeRef());
+		feeder.accept(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0(), semanticObject.getTargetTypeRef());
 		feeder.finish();
 	}
 	
@@ -13907,6 +14524,25 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRef
+	 *
+	 * Constraint:
+	 *     (
+	 *         (
+	 *             astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *             declaredType=[Type|TypeReferenceName] 
+	 *             (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?
+	 *         ) | 
+	 *         (iterableTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail | (typeArgs+=TypeArgument typeArgs+=TypeArgument*)))
+	 *     )
+	 */
+	protected void sequence_IterableTypeExpression_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     PrimaryExpression<Yield> returns JSXElement
 	 *     PrimaryExpression returns JSXElement
 	 *     LeftHandSideExpression<Yield> returns JSXElement
@@ -14473,7 +15109,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* (jsxChildren+=JSXChild* jsxClosingName=JSXElementName)?)
 	 */
-	protected void sequence_JSXAttributes_JSXClosingElement_JSXElement(ISerializationContext context, JSXElement semanticObject) {
+	protected void sequence_JSXAttributes_JSXElement(ISerializationContext context, JSXElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -14512,6 +15148,579 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getJSXExpressionAccess().getExpressionAssignmentExpressionParserRuleCall_1_0(), semanticObject.getExpression());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PrimaryExpression<Yield> returns JSXFragment
+	 *     PrimaryExpression returns JSXFragment
+	 *     LeftHandSideExpression<Yield> returns JSXFragment
+	 *     LeftHandSideExpression returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CastExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<UnaryExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<MultiplicativeExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AdditiveExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ShiftExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In,RelationalExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In,EqualityExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0 returns JSXFragment
+	 *     MemberExpression<Yield> returns JSXFragment
+	 *     MemberExpression returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LeftHandSideExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<PostfixExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CastExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<UnaryExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<MultiplicativeExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AdditiveExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ShiftExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0 returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LeftHandSideExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<PostfixExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CastExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<UnaryExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<MultiplicativeExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AdditiveExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ShiftExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.In,RelationalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.In,EqualityExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0 returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LeftHandSideExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<PostfixExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CastExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<UnaryExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<MultiplicativeExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AdditiveExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ShiftExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.In,RelationalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.In,EqualityExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0 returns JSXFragment
+	 *     PostfixExpression<Yield> returns JSXFragment
+	 *     PostfixExpression returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<CastExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<UnaryExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<MultiplicativeExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<AdditiveExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<ShiftExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0 returns JSXFragment
+	 *     CastExpression<Yield> returns JSXFragment
+	 *     CastExpression returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<UnaryExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<MultiplicativeExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<AdditiveExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<ShiftExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0 returns JSXFragment
+	 *     UnaryExpression<Yield> returns JSXFragment
+	 *     UnaryExpression returns JSXFragment
+	 *     MultiplicativeExpression<Yield> returns JSXFragment
+	 *     MultiplicativeExpression returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AdditiveExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ShiftExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0 returns JSXFragment
+	 *     AdditiveExpression<Yield> returns JSXFragment
+	 *     AdditiveExpression returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ShiftExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0 returns JSXFragment
+	 *     ShiftExpression<Yield> returns JSXFragment
+	 *     ShiftExpression returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0 returns JSXFragment
+	 *     RelationalExpression<In,Yield> returns JSXFragment
+	 *     RelationalExpression<In> returns JSXFragment
+	 *     RelationalExpression<Yield> returns JSXFragment
+	 *     RelationalExpression returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<In,Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0 returns JSXFragment
+	 *     EqualityExpression<In,Yield> returns JSXFragment
+	 *     EqualityExpression<In> returns JSXFragment
+	 *     EqualityExpression<Yield> returns JSXFragment
+	 *     EqualityExpression returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<In,Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<In> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0 returns JSXFragment
+	 *     BitwiseANDExpression<In,Yield> returns JSXFragment
+	 *     BitwiseANDExpression<In> returns JSXFragment
+	 *     BitwiseANDExpression<Yield> returns JSXFragment
+	 *     BitwiseANDExpression returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0 returns JSXFragment
+	 *     BitwiseXORExpression<In,Yield> returns JSXFragment
+	 *     BitwiseXORExpression<In> returns JSXFragment
+	 *     BitwiseXORExpression<Yield> returns JSXFragment
+	 *     BitwiseXORExpression returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0 returns JSXFragment
+	 *     BitwiseORExpression<In,Yield> returns JSXFragment
+	 *     BitwiseORExpression<In> returns JSXFragment
+	 *     BitwiseORExpression<Yield> returns JSXFragment
+	 *     BitwiseORExpression returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0 returns JSXFragment
+	 *     LogicalANDExpression<In,Yield> returns JSXFragment
+	 *     LogicalANDExpression<In> returns JSXFragment
+	 *     LogicalANDExpression<Yield> returns JSXFragment
+	 *     LogicalANDExpression returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0 returns JSXFragment
+	 *     LogicalORExpression<In,Yield> returns JSXFragment
+	 *     LogicalORExpression<In> returns JSXFragment
+	 *     LogicalORExpression<Yield> returns JSXFragment
+	 *     LogicalORExpression returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns JSXFragment
+	 *     ConditionalExpression<In,Yield> returns JSXFragment
+	 *     ConditionalExpression<In> returns JSXFragment
+	 *     ConditionalExpression<Yield> returns JSXFragment
+	 *     ConditionalExpression returns JSXFragment
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In,Yield> returns JSXFragment
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In> returns JSXFragment
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0 returns JSXFragment
+	 *     AssignmentExpression<In,Yield> returns JSXFragment
+	 *     AssignmentExpression<In> returns JSXFragment
+	 *     AssignmentExpression<Yield> returns JSXFragment
+	 *     AssignmentExpression returns JSXFragment
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In,Yield> returns JSXFragment
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In> returns JSXFragment
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Yield> returns JSXFragment
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In> returns JSXFragment
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0 returns JSXFragment
+	 *     Expression<In,Yield> returns JSXFragment
+	 *     Expression<In> returns JSXFragment
+	 *     Expression<Yield> returns JSXFragment
+	 *     Expression returns JSXFragment
+	 *     Expression.CommaExpression_1_0<In,Yield> returns JSXFragment
+	 *     Expression.CommaExpression_1_0<In> returns JSXFragment
+	 *     Expression.CommaExpression_1_0<Yield> returns JSXFragment
+	 *     Expression.CommaExpression_1_0 returns JSXFragment
+	 *     JSXFragment returns JSXFragment
+	 *     JSXChild returns JSXFragment
+	 *
+	 * Constraint:
+	 *     jsxChildren+=JSXChild*
+	 */
+	protected void sequence_JSXFragment(ISerializationContext context, JSXFragment semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -18892,6 +20101,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TypeRef.UnionTypeExpression_1_0 returns VersionedParameterizedTypeRef
 	 *     IntersectionTypeExpression returns VersionedParameterizedTypeRef
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns VersionedParameterizedTypeRef
+	 *     ArrayTypeExpression returns VersionedParameterizedTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns VersionedParameterizedTypeRef
 	 *     PrimaryTypeExpression returns VersionedParameterizedTypeRef
 	 *     TypeRefWithModifiers returns VersionedParameterizedTypeRef
 	 *     TypeArgument returns VersionedParameterizedTypeRef
@@ -18931,7 +20142,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     TypeRefForCast returns VersionedParameterizedTypeRef
 	 *     TypeRefFunctionTypeExpression returns VersionedParameterizedTypeRef
 	 *     TypeArgInTypeTypeRef returns VersionedParameterizedTypeRef
 	 *     ParameterizedTypeRef returns VersionedParameterizedTypeRef
@@ -18956,6 +20166,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TypeRef.UnionTypeExpression_1_0 returns ParameterizedTypeRefStructural
 	 *     IntersectionTypeExpression returns ParameterizedTypeRefStructural
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRefStructural
+	 *     ArrayTypeExpression returns ParameterizedTypeRefStructural
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns ParameterizedTypeRefStructural
 	 *     PrimaryTypeExpression returns ParameterizedTypeRefStructural
 	 *     TypeRefWithModifiers returns ParameterizedTypeRefStructural
 	 *     TypeArgument returns ParameterizedTypeRefStructural
@@ -18982,6 +20194,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TypeRef.UnionTypeExpression_1_0 returns VersionedParameterizedTypeRefStructural
 	 *     IntersectionTypeExpression returns VersionedParameterizedTypeRefStructural
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns VersionedParameterizedTypeRefStructural
+	 *     ArrayTypeExpression returns VersionedParameterizedTypeRefStructural
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns VersionedParameterizedTypeRefStructural
 	 *     PrimaryTypeExpression returns VersionedParameterizedTypeRefStructural
 	 *     TypeRefWithModifiers returns VersionedParameterizedTypeRefStructural
 	 *     TypeArgument returns VersionedParameterizedTypeRefStructural
@@ -19044,7 +20258,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     TypeRefForCast returns ParameterizedTypeRefStructural
 	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRefStructural
 	 *     ParameterizedTypeRef returns ParameterizedTypeRefStructural
 	 *     ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural
@@ -19065,7 +20278,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     TypeRefForCast returns VersionedParameterizedTypeRefStructural
 	 *     TypeRefFunctionTypeExpression returns VersionedParameterizedTypeRefStructural
 	 *     ParameterizedTypeRef returns VersionedParameterizedTypeRefStructural
 	 *     ParameterizedTypeRefStructural returns VersionedParameterizedTypeRefStructural
@@ -20096,6 +21308,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePairSingleName_1_4_0<Yield> returns PropertyAssignmentAnnotationList
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePairSingleName_1_4_0<PropertyAssignment.Yield> returns PropertyAssignmentAnnotationList
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePairSingleName_1_4_0 returns PropertyAssignmentAnnotationList
+	 *     AnnotatedPropertyAssignment.PropertySpread_1_5_0<Yield> returns PropertyAssignmentAnnotationList
+	 *     AnnotatedPropertyAssignment.PropertySpread_1_5_0<PropertyAssignment.Yield> returns PropertyAssignmentAnnotationList
+	 *     AnnotatedPropertyAssignment.PropertySpread_1_5_0 returns PropertyAssignmentAnnotationList
 	 *     PropertyAssignmentAnnotationList returns PropertyAssignmentAnnotationList
 	 *
 	 * Constraint:
@@ -20142,6 +21357,25 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 */
 	protected void sequence_PropertySetterDeclaration(ISerializationContext context, PropertySetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PropertySpread<Yield> returns PropertySpread
+	 *     PropertySpread returns PropertySpread
+	 *
+	 * Constraint:
+	 *     expression=AssignmentExpression
+	 */
+	protected void sequence_PropertySpread(ISerializationContext context, PropertySpread semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.PROPERTY_SPREAD__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.PROPERTY_SPREAD__EXPRESSION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPropertySpreadAccess().getExpressionAssignmentExpressionParserRuleCall_1_0(), semanticObject.getExpression());
+		feeder.finish();
 	}
 	
 	

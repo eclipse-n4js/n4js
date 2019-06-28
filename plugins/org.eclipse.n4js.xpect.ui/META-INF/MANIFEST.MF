@@ -4,9 +4,9 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.xpect.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.debug.ui,
- org.eclipse.xpect.xtext.lib;bundle-version="0.2.0",
+ org.eclipse.xpect.xtext.lib,
  org.eclipse.xtext.ui.testing,
  org.eclipse.n4js.ui,
  org.eclipse.n4js.utils,
@@ -14,9 +14,9 @@ Require-Bundle: org.eclipse.debug.ui,
  org.eclipse.compare,
  org.eclipse.core.expressions,
  org.eclipse.n4js.xpect,
- org.eclipse.n4js.ui.tests.helper;bundle-version="0.0.1",
- org.eclipse.n4js.runner;bundle-version="0.0.1",
- org.eclipse.n4js.ts;bundle-version="0.0.1",
+ org.eclipse.n4js.ui.tests.helper,
+ org.eclipse.n4js.runner,
+ org.eclipse.n4js.ts,
  org.eclipse.n4js.runner.ui,
  org.eclipse.n4js.runner.nodejs,
  org.eclipse.n4js.transpiler,
@@ -27,6 +27,7 @@ Export-Package: org.eclipse.n4js.xpect.ui,
  org.eclipse.n4js.xpect.ui.methods,
  org.eclipse.n4js.xpect.ui.methods.contentassist,
  org.eclipse.n4js.xpect.ui.methods.quickfix,
+ org.eclipse.n4js.xpect.ui.refactoring,
  org.eclipse.n4js.xpect.ui.results,
  org.eclipse.n4js.xpect.ui.runner
 Bundle-Activator: org.eclipse.n4js.xpect.ui.N4IDEXpectUIPlugin

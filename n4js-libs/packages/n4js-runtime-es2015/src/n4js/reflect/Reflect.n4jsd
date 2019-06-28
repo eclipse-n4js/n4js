@@ -13,10 +13,8 @@
 export external public abstract class Reflect__ {
     private constructor();
 
-    public Loader: constructor{Loader};
-
-    public apply(target: Function, thisArgument: Object, argumentsList: Array<any>): any;
-    public construct(target: Function, argumentsList: Array<any>, newTarget: Object=): Object;
+    public apply(target: Function, thisArgument: Object, argumentsList: any[]): any;
+    public construct(target: Function, argumentsList: any[], newTarget: Object=): Object;
     public defineProperty(target: Object, propertyKey: union{symbol, string}, descr: Object): boolean;
     public deleteProperty(target: Object, propertyKey: union{symbol, string}): boolean;
     public get(target: Object, propertyKey: union{symbol, string}, receiver: Object=): any;
@@ -24,12 +22,10 @@ export external public abstract class Reflect__ {
     public getPrototypeOf(target: Object): Object;
     public has(target: Object, propertyKey: union{symbol, string}): boolean;
     public isExtensible(target: Object): boolean;
-    public ownKeys(target: Object): Array<union{symbol, string}>;
+    public ownKeys(target: Object): union{symbol, string}[];
     public preventExtensions(target: Object): boolean;
     public set(target: Object, propertyKey: union{symbol, string}, value: any, receiver: Object=): boolean;
     public setPrototypeOf(target: Object, prototype): boolean;
 }
 
 export external public const Reflect: Reflect__;
-export external public const System: Loader;
-

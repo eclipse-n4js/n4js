@@ -1,0 +1,5 @@
+import {C as C1} from "Lib/C"
+import {C as C2} from "@myScope/Lib/C"
+
+new C1().foo();
+new C2().foo();

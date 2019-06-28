@@ -10,13 +10,15 @@
  */
 package org.eclipse.n4js.typesystem
 
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 
 /**
  */
@@ -249,6 +251,35 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 				constraint(alpha,'<:',A) // α <: A
 			],
 			alpha -> A.ref
+		)
+	}
+
+	@Test
+	def void testRawTypeNotAcceptedAsSolution01() {
+		val thisG = TypeRefsFactory.eINSTANCE.createBoundThisTypeRef => [
+			actualThisTypeRef = G.rawTypeRef as ParameterizedTypeRef;
+		];
+
+		script.assertNoSolution(
+			#[
+				constraint(alpha,':>',thisG),
+				constraint(alpha,'<:',G.of(A))
+			],
+			alpha
+		)
+	}
+
+	@Test
+	def void testRawTypeNotAcceptedAsSolution02() {
+		val thisG = TypeRefsFactory.eINSTANCE.createBoundThisTypeRef => [
+			actualThisTypeRef = G.rawTypeRef as ParameterizedTypeRef;
+		];
+
+		script.assertNoSolution(
+			#[
+				constraint(alpha,':>',thisG)
+			],
+			alpha
 		)
 	}
 

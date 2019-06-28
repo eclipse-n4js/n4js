@@ -23,9 +23,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +38,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -45,10 +49,10 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
@@ -57,12 +61,15 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
+import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
@@ -72,11 +79,14 @@ import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.base.Stopwatch;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 /**
@@ -84,8 +94,13 @@ import com.google.common.collect.Lists;
  */
 public class ProjectTestsUtils {
 
+	/**
+	 * Version used for dummy "n4js-runtime" packages created with method {@link #createDummyN4JSRuntime(Path)}.
+	 */
+	public static final String N4JS_RUNTIME_DUMMY_VERSION = "0.0.1-dummy";
+
 	/** Default wait time used in waiting for jobs. */
-	public static final long MAX_WAIT_2_MINUTES = 100 * 60 * 2;
+	public static final long MAX_WAIT_2_MINUTES = 1000 * 60 * 2;
 	/** Default interval used to check state of jobs. */
 	public static final long CHECK_INTERVAL_100_MS = 100L;
 
@@ -100,24 +115,33 @@ public class ProjectTestsUtils {
 		return true;
 	}
 
+	/** Same as {@link #importProject(File, String, Collection)}, but without installing any n4js libraries. */
+	public static IProject importProject(File probandsFolder, String projectName) throws CoreException {
+		return importProject(probandsFolder, projectName, Collections.emptyList());
+	}
+
 	/**
 	 * Imports a project into the running JUnit test workspace. Usage:
 	 *
 	 * <pre>
-	 * IProject project = ProjectTestsUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;);
+	 * IProject project = ProjectTestsUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;, n4jsLibs);
 	 * </pre>
 	 *
 	 * @param probandsFolder
 	 *            the parent folder in which the test project is found
 	 * @param projectName
 	 *            the name of the test project, must be folder contained in probandsFolder
+	 * @param n4jsLibs
+	 *            names of N4JS libraries to install from the local <code>n4js-libs</code> top-level folder (see
+	 *            {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, String...)}).
 	 * @return the imported project
 	 * @see <a href=
 	 *      "http://stackoverflow.com/questions/12484128/how-do-i-import-an-eclipse-project-from-a-zip-file-programmatically">
 	 *      stackoverflow: from zip</a>
 	 */
-	public static IProject importProject(File probandsFolder, String projectName) throws CoreException {
-		return importProject(probandsFolder, projectName, true, true);
+	public static IProject importProject(File probandsFolder, String projectName, Collection<String> n4jsLibs)
+			throws CoreException {
+		return importProject(probandsFolder, projectName, true, true, n4jsLibs);
 	}
 
 	/**
@@ -127,7 +151,7 @@ public class ProjectTestsUtils {
 	 */
 	public static IProject importProjectFromExternalSource(File probandsFolder, String projectName,
 			boolean copyIntoWorkspace) throws Exception {
-		return importProject(probandsFolder, projectName, copyIntoWorkspace, false);
+		return importProject(probandsFolder, projectName, copyIntoWorkspace, false, Collections.emptyList());
 	}
 
 	/**
@@ -157,7 +181,7 @@ public class ProjectTestsUtils {
 
 		workspace.run((mon) -> {
 			IProjectDescription newProjectDescription = workspace.newProjectDescription(workspaceName);
-			final Path absoluteProjectPath = new Path(projectSourceFolder.getAbsolutePath());
+			final IPath absoluteProjectPath = new org.eclipse.core.runtime.Path(projectSourceFolder.getAbsolutePath());
 			newProjectDescription.setLocation(absoluteProjectPath);
 			project.create(newProjectDescription, mon);
 			project.open(mon);
@@ -168,7 +192,7 @@ public class ProjectTestsUtils {
 	}
 
 	private static IProject importProject(File probandsFolder, String projectName, boolean copyIntoWorkspace,
-			boolean prepareDotProject) throws CoreException {
+			boolean prepareDotProject, Collection<String> n4jsLibs) throws CoreException {
 		File projectSourceFolder = new File(probandsFolder, projectName);
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
@@ -198,13 +222,26 @@ public class ProjectTestsUtils {
 			projectTargetFolder = projectSourceFolder;
 		}
 
+		// install n4js-libs (if desired)
+		if (!n4jsLibs.isEmpty()) {
+			try {
+				N4jsLibsAccess.installN4jsLibs(
+						projectTargetFolder.toPath().resolve(N4JSGlobals.NODE_MODULES),
+						true, false, false,
+						n4jsLibs.toArray(new String[0]));
+			} catch (IOException e) {
+				throw new RuntimeException("unable to install n4js-libs from local checkout", e);
+			}
+		}
+
 		// load actual project name from ".project" file (might be different in case of NPM scopes)
 		File dotProjectFile = new File(projectTargetFolder, ".project");
 		if (!dotProjectFile.exists()) {
 			throw new IllegalArgumentException(
 					"project to import does not contain a .project file: " + projectTargetFolder);
 		}
-		IProjectDescription description = workspace.loadProjectDescription(new Path(dotProjectFile.getAbsolutePath()));
+		IProjectDescription description = workspace
+				.loadProjectDescription(new org.eclipse.core.runtime.Path(dotProjectFile.getAbsolutePath()));
 		String projectNameFromDotProjectFile = description.getName();
 
 		IProject project = workspace.getRoot().getProject(projectNameFromDotProjectFile);
@@ -240,6 +277,103 @@ public class ProjectTestsUtils {
 		}, monitor);
 
 		waitForAllJobs();
+		return project;
+	}
+
+	/**
+	 * Same as {@link #importYarnWorkspace(LibraryManager, File, String, Predicate, Collection)}, but imports all
+	 * packages contained in subfolder "packages" of the yarn workspace and does not install any N4JS libraries.
+	 */
+	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName)
+			throws CoreException {
+		return importYarnWorkspace(libraryManager, parentFolder, yarnProjectName, Predicates.alwaysTrue(),
+				Collections.emptyList());
+	}
+
+	/**
+	 * Same as {@link #importYarnWorkspace(LibraryManager, File, String, Predicate, Collection)}, but imports all
+	 * packages contained in subfolder "packages" of the yarn workspace.
+	 */
+	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName,
+			Collection<String> n4jsLibs) throws CoreException {
+		return importYarnWorkspace(libraryManager, parentFolder, yarnProjectName, Predicates.alwaysTrue(), n4jsLibs);
+	}
+
+	/**
+	 * Imports the given yarn workspace project as an Eclipse project into the Eclipse workspace. Also imports (by
+	 * reference) those projects located in the subfolder 'packages' for which the given predicate returns
+	 * <code>true</code>.
+	 *
+	 * @param libraryManager
+	 *            library manager instance.
+	 * @param parentFolder
+	 *            folder containing the test data.
+	 * @param yarnProjectName
+	 *            name of the folder containing the yarn workspace project.
+	 * @param packagesToImport
+	 *            predicate telling whether a given package contained in the 'packages' subfolder of the yarn workspace
+	 *            should be imported as well (the predicate's argument is the package name).
+	 * @param n4jsLibs
+	 *            names of N4JS libraries to install from the local <code>n4js-libs</code> top-level folder (see
+	 *            {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, String...)}).
+	 * @return yarn workspace project
+	 */
+	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName,
+			Predicate<String> packagesToImport, Collection<String> n4jsLibs) throws CoreException {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IProject yarnProject = ProjectTestsUtils.importProject(parentFolder, yarnProjectName);
+
+		IPath yarnPath = yarnProject.getLocation();
+		IPath yarnPackagesPath = yarnPath.append("packages");
+		for (String yarnPackageName : yarnPackagesPath.toFile().list()) {
+			IPath packagePath = yarnPackagesPath.append(yarnPackageName);
+			if (yarnPackageName.startsWith("@")) {
+				for (String scopedPackageName : packagePath.toFile().list()) {
+					IPath scopedPackagePath = packagePath.append(scopedPackageName);
+					if (packagesToImport.apply(yarnPackageName + '/' + scopedPackageName)) {
+						importProjectNotCopy(workspace, scopedPackagePath.toFile(), new NullProgressMonitor());
+					}
+				}
+			} else {
+				if (packagesToImport.apply(yarnPackageName)) {
+					importProjectNotCopy(workspace, packagePath.toFile(), new NullProgressMonitor());
+				}
+			}
+		}
+
+		if (!n4jsLibs.isEmpty()) {
+			try {
+				N4jsLibsAccess.installN4jsLibs(
+						yarnPackagesPath.toFile().toPath(),
+						true, false, false,
+						n4jsLibs.toArray(new String[0]));
+				yarnProject.refreshLocal(IResource.DEPTH_INFINITE, null);
+			} catch (IOException e) {
+				throw new RuntimeException("unable to install n4js-libs from local checkout", e);
+			}
+		}
+
+		if (libraryManager != null) {
+			waitForAllJobs();
+			libraryManager.runNpmYarnInstall(URI.createFileURI(yarnPath.toString()), new NullProgressMonitor());
+		}
+		waitForAllJobs();
+		waitForAutoBuild();
+		return yarnProject;
+	}
+
+	/**
+	 * Imports a project by reference into the workspace
+	 *
+	 * @return the created project
+	 */
+	public static IProject importProjectNotCopy(IWorkspace workspace, File rootFolder, IProgressMonitor progressMonitor)
+			throws CoreException {
+		IPath path = new org.eclipse.core.runtime.Path(new File(rootFolder, "_project").getAbsolutePath());
+		IProjectDescription desc = workspace.loadProjectDescription(path);
+		IProject project = workspace.getRoot().getProject(desc.getName());
+		project.create(desc, progressMonitor);
+		project.open(progressMonitor);
 		return project;
 	}
 
@@ -292,6 +426,54 @@ public class ProjectTestsUtils {
 		return result;
 	}
 
+	/**
+	 * Similar to {@link #createDummyN4JSRuntime(Path)}, this method will create a dummy version of "n4js-runtime" for
+	 * testing purposes, with the following differences:
+	 * <ol>
+	 * <li>the new npm package will be created in the given Eclipse project's <code>node_modules</code> folder.
+	 * <li>the given Eclipse project will be refreshed afterwards, to make the newly created files/folders available in
+	 * the Eclipse workspace.
+	 * </ol>
+	 * Note that this method will *not* issue an update of external libraries via the library manager or a rebuild!
+	 */
+	public static IFolder createDummyN4JSRuntime(IProject project) throws CoreException {
+		IFolder nodeModulesFolder = project.getFolder(N4JSGlobals.NODE_MODULES);
+		createDummyN4JSRuntime(nodeModulesFolder.getLocation().toFile().toPath());
+		project.refreshLocal(IResource.DEPTH_INFINITE, monitor());
+		return nodeModulesFolder.getFolder(N4JSGlobals.N4JS_RUNTIME);
+	}
+
+	/**
+	 * Creates a dummy version of "n4js-runtime" that is sufficient to avoid compilation errors in package.json files
+	 * (i.e. missing dependency to "n4js-runtime") but won't suffice for executing N4JS code. Intended for simple tests
+	 * that only require compilation.
+	 * <p>
+	 * The newly created npm package will have a special dummy version which is available as constant
+	 * {@link #N4JS_RUNTIME_DUMMY_VERSION}, allowing clients to check for this particular version, where needed.
+	 * <p>
+	 * If execution of N4JS code is required for testing, use method
+	 * {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, String...)} instead.
+	 *
+	 * @param location
+	 *            path to a folder that will become the parent folder of the newly created npm package "n4js-runtime".
+	 * @return path to the root folder of the newly created npm package.
+	 */
+	public static Path createDummyN4JSRuntime(Path location) {
+		Path projectPath = location.resolve(N4JSGlobals.N4JS_RUNTIME);
+		Path packageJsonFile = projectPath.resolve(N4JSGlobals.PACKAGE_JSON);
+		try {
+			Files.createDirectories(projectPath);
+			Files.write(packageJsonFile, Lists.newArrayList(
+					"{",
+					"    \"name\": \"" + N4JSGlobals.N4JS_RUNTIME + "\",",
+					"    \"version\": \"" + N4JS_RUNTIME_DUMMY_VERSION + "\"",
+					"}"));
+		} catch (IOException e) {
+			throw new RuntimeException("failed to create dummy n4js-runtime for testing purposes", e);
+		}
+		return projectPath;
+	}
+
 	/***/
 	public static void createProjectDescriptionFile(IProject project) throws CoreException {
 		createProjectDescriptionFile(project, "src", "src-gen", null);
@@ -333,6 +515,24 @@ public class ProjectTestsUtils {
 		waitForAutoBuild();
 		Assert.assertTrue("project description file (package.json) should have been created",
 				projectDescriptionWorkspaceFile.exists());
+	}
+
+	/**
+	 * Add the given dependency to the package.json file of the given project. The version constraint may not be
+	 * <code>null</code> but may be the empty string or <code>"*"</code>.
+	 */
+	public static void addProjectToDependencies(IProject toChange, String projectName, String versionConstraint)
+			throws IOException {
+		URI uri = URI.createPlatformResourceURI(toChange.getFile(N4JSGlobals.PACKAGE_JSON).getFullPath().toString(),
+				true);
+		ResourceSet rs = createResourceSet(toChange);
+		Resource resource = rs.getResource(uri, true);
+
+		JSONObject packageJSONRoot = PackageJSONTestUtils.getPackageJSONRoot(resource);
+		PackageJSONTestUtils.addProjectDependency(packageJSONRoot, projectName, versionConstraint);
+
+		resource.save(null);
+		waitForAutoBuild();
 	}
 
 	// moved here from AbstractBuilderParticipantTest:
@@ -584,6 +784,13 @@ public class ProjectTestsUtils {
 	}
 
 	/**
+	 * Like {@link #assertIssues(String, IResource, String...)}, but without a custom message.
+	 */
+	public static void assertIssues(IResource resource, String... expectedMessages) throws CoreException {
+		assertIssues(null, resource, expectedMessages);
+	}
+
+	/**
 	 * Asserts that the given resource (usually an N4JS file) contains issues with the given messages and no other
 	 * issues. Each message given should be prefixed with the line numer where the issues occurs, e.g.:
 	 *
@@ -592,8 +799,18 @@ public class ProjectTestsUtils {
 	 * </pre>
 	 *
 	 * Column information is not provided, so this method is not intended for several issues within a single line.
+	 *
+	 * @param msg
+	 *            human-readable, informative message prepended to the standard message in case of assertion failure.
+	 * @param resource
+	 *            resource to be validated.
+	 * @param expectedMessages
+	 *            expected issues messages to check or empty array to assert no issues.
+	 * @throws CoreException
+	 *             in case of mishap.
 	 */
-	public static void assertIssues(final IResource resource, String... expectedMessages) throws CoreException {
+	public static void assertIssues(String msg, final IResource resource, String... expectedMessages)
+			throws CoreException {
 		waitForAutoBuild();
 
 		final IMarker[] markers = resource.findMarkers(MarkerTypes.ANY_VALIDATION, true, IResource.DEPTH_INFINITE);
@@ -606,20 +823,54 @@ public class ProjectTestsUtils {
 				new HashSet<>(Arrays.asList(actualMessages)),
 				new HashSet<>(Arrays.asList(expectedMessages)))) {
 			final Joiner joiner = Joiner.on("\n    ");
-			final String msg = "expected these issues:\n"
+			final String actualMsg = (Strings.isNullOrEmpty(msg) ? "" : msg + "; ")
+					+ "expected these issues:\n"
 					+ "    " + joiner.join(expectedMessages) + "\n"
 					+ "but got these:\n"
 					+ "    " + joiner.join(actualMessages);
 			System.out.println("*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*");
-			System.out.println(msg);
+			System.out.println(actualMsg);
 			System.out.println("*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*");
-			Assert.fail(msg);
+			Assert.fail(actualMsg);
 		}
 	}
 
 	/***/
 	public static void deleteProject(IProject project) throws CoreException {
 		project.delete(true, true, new NullProgressMonitor());
+	}
+
+	/**
+	 * Close all projects in workspace. When having a yarn workspace project in the workspace, run this method before
+	 * invoking {@link IResourcesSetupUtil#cleanWorkspace()}. This will remove all projects from the index.
+	 */
+	public static void closeAllProjectsInWorkspace() {
+		try {
+			new WorkspaceModifyOperation() {
+
+				@Override
+				protected void execute(IProgressMonitor monitor)
+						throws CoreException, InvocationTargetException,
+						InterruptedException {
+
+					IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+					IProject[] visibleProjects = root.getProjects();
+					for (IProject visibleProject : visibleProjects) {
+						visibleProject.close(monitor);
+					}
+
+					IProject[] hiddenProjects = root.getProjects(IContainer.INCLUDE_HIDDEN);
+					for (IProject hiddenProject : hiddenProjects) {
+						hiddenProject.close(monitor);
+					}
+
+				}
+			}.run(monitor());
+		} catch (InvocationTargetException e) {
+			Exceptions.sneakyThrow(e.getCause());
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
 	}
 
 	/**

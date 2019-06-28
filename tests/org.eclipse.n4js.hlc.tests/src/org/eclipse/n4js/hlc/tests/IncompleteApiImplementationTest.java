@@ -26,6 +26,7 @@ import org.junit.runners.MethodSorters;
 
 /**
  */
+@Ignore("GH-1291") // when removing this @Ignore: check and maybe remove older @Ignore annotations below too!!
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 
@@ -36,7 +37,7 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException, ExitCodeException {
-		workspace = setupWorkspace(TEST_DATA_SET__API_IMPL);
+		workspace = setupWorkspace(TEST_DATA_SET__API_IMPL, true);
 
 		compileAPI_And_API_Impl();
 	}
@@ -68,7 +69,7 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	 */
 	public void compileAPI_And_API_Impl() throws ExitCodeException {
 
-		proot = workspace.getAbsolutePath().toString();
+		proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		project_one_api_execution = "one.api.execution";
 		pathTo_one_api_execution = proot + "/" + project_one_api_execution;

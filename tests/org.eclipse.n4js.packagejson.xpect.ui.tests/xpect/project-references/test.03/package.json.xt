@@ -39,6 +39,10 @@
 			}
 	}
 
+
+	IssueConfiguration {
+		IssueCode "MISSING_YARN_WORKSPACE" { enabled = false }
+	}
    END_SETUP
  */
 {
@@ -84,8 +88,6 @@
 			"test.data.test.project.one",
 			// XPECT noerrors -->
 			"test.data.rl.project.two"
-		],
-		// XPECT noerrors
-		"initModules": []
+		]
 	}
 }

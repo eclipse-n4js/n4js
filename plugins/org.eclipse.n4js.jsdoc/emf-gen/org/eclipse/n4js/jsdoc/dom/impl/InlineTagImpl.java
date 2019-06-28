@@ -123,6 +123,7 @@ public class InlineTagImpl extends ContentNodeImpl implements InlineTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TagTitle getTitle() {
 		return title;
 	}
@@ -147,6 +148,7 @@ public class InlineTagImpl extends ContentNodeImpl implements InlineTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTitle(TagTitle newTitle) {
 		if (newTitle != title) {
 			NotificationChain msgs = null;
@@ -166,6 +168,7 @@ public class InlineTagImpl extends ContentNodeImpl implements InlineTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TagValue> getValues() {
 		if (values == null) {
 			values = new EObjectContainmentEList<TagValue>(TagValue.class, this, DomPackage.INLINE_TAG__VALUES);
@@ -178,6 +181,7 @@ public class InlineTagImpl extends ContentNodeImpl implements InlineTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ITagDefinition getTagDefinition() {
 		return tagDefinition;
 	}
@@ -187,6 +191,7 @@ public class InlineTagImpl extends ContentNodeImpl implements InlineTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTagDefinition(ITagDefinition newTagDefinition) {
 		ITagDefinition oldTagDefinition = tagDefinition;
 		tagDefinition = newTagDefinition;
@@ -199,6 +204,7 @@ public class InlineTagImpl extends ContentNodeImpl implements InlineTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TagValue getValueByKey(final String theKey) {
 		final Function1<TagValue, Boolean> _function = new Function1<TagValue, Boolean>() {
 			public Boolean apply(final TagValue it) {
@@ -214,6 +220,7 @@ public class InlineTagImpl extends ContentNodeImpl implements InlineTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		return JSDocSerializer.toJSDocString(this);
 	}

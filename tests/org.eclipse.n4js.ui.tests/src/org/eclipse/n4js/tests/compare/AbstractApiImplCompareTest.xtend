@@ -19,6 +19,7 @@ import org.junit.Test
 
 abstract class AbstractApiImplCompareTest extends Assert {
 
+	protected static val YARN_PROJECT = "YarnWorkspaceProject"
 	protected static val PROJECT_ID_API = "org.eclipse.n4js.sample.api"
 	protected static val PROJECT_ID_IMPL = "org.eclipse.n4js.sample.n4js"
 	protected static val PROJECT_ID_UTILS = "org.eclipse.n4js.sample.utils"

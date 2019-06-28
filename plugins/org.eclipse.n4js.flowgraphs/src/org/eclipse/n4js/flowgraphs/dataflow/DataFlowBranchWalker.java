@@ -76,12 +76,11 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 
 	@Override
 	protected void visit(Node lastVisitNodes, Node end, ControlFlowEdge edge) {
-		GuardStructure guardStructure = GuardStructureFactory.create(edge);
+		GuardStructure guardStructure = GuardStructureFactory.create(getSymbolFactory(), edge);
 		if (guardStructure == null) {
 			return;
 		}
 
-		guardStructure.initSymbols(getSymbolFactory());
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
 

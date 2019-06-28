@@ -29,9 +29,7 @@ import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.NpmLogger;
-import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
-import org.eclipse.n4js.generator.IWorkspaceMarkerSupport;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
@@ -52,9 +50,7 @@ import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuilder;
-import org.eclipse.n4js.ui.external.ExternalLibraryErrorMarkerManager;
 import org.eclipse.n4js.ui.external.ExternalProjectProvider;
-import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
@@ -137,6 +133,7 @@ public class ContributingModule implements Module {
 		binder.bind(N4JSModel.class).to(N4JSEclipseModel.class);
 		binder.bind(N4JSEclipseModel.class);
 		binder.bind(MarkerCreator.class);
+		binder.bind(ResourceUIValidatorExtension.class);
 		binder.bind(WildcardPathFilterHelper.class);
 		binder.bind(N4JSProjectsStateHelper.class);
 		binder.bind(MultiCleartriggerCache.class);
@@ -148,7 +145,6 @@ public class ContributingModule implements Module {
 		binder.bind(ShadowingInfoHelper.class);
 
 		binder.bind(ExternalProjectLoader.class);
-		binder.bind(ProjectStateChangeListener.class);
 		binder.bind(ExternalLibraryBuildScheduler.class);
 		binder.bind(ExternalLibraryBuilder.class);
 		binder.bind(ExternalLibraryBuildQueue.class);
@@ -159,7 +155,6 @@ public class ContributingModule implements Module {
 		binder.bind(ExternalProjectsCollector.class);
 		binder.bind(ExternalProjectProvider.class);
 		binder.bind(NodeModulesDiscoveryHelper.class);
-		binder.bind(RebuildWorkspaceProjectsScheduler.class);
 
 		binder.bind(N4JSExternalLibraryStorage2UriMapperContribution.class);
 		binder.bind(ExternalLibraryUriHelper.class);
@@ -221,8 +216,6 @@ public class ContributingModule implements Module {
 		// });
 
 		binder.bind(TypesKeywordProvider.class);
-		binder.bind(ExternalLibraryErrorMarkerManager.class);
-		binder.bind(IWorkspaceMarkerSupport.class).to(WorkspaceMarkerSupport.class);
 
 		// we want to expose the N4JSQuickfixProvider as a shared contribution
 		// To be removed when N4MF does no longer use the quickfix provider of n4js

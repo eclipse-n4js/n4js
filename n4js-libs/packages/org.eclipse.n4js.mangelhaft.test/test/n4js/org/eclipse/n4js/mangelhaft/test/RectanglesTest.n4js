@@ -36,7 +36,7 @@ export public class RectanglesTest{
 
     private area: int;
     private currentRect: Rectangle;
-    private icons: Array<?>;
+    private icons: ?[];
     private environment;
 
     @BeforeAll

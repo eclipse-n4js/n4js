@@ -62,6 +62,7 @@ public abstract class ContentNodeImpl extends JSDocNodeImpl implements ContentNo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Composite getOwner() {
 		if (eContainerFeatureID() != DomPackage.CONTENT_NODE__OWNER) return null;
 		return (Composite)eContainer();
@@ -92,6 +93,7 @@ public abstract class ContentNodeImpl extends JSDocNodeImpl implements ContentNo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOwner(Composite newOwner) {
 		if (newOwner != eInternalContainer() || (eContainerFeatureID() != DomPackage.CONTENT_NODE__OWNER && newOwner != null)) {
 			if (EcoreUtil.isAncestor(this, newOwner))

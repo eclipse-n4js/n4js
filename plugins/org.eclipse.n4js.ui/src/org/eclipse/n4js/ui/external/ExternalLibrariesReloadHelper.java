@@ -16,6 +16,8 @@ import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
@@ -29,8 +31,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
 import org.eclipse.n4js.utils.Cancelable;
+import org.eclipse.xtext.builder.impl.BuilderStateDiscarder;
+import org.eclipse.xtext.builder.impl.IBuildFlag;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -39,6 +42,7 @@ import com.google.inject.Singleton;
  * Helper class for reloading the registered external libraries by recreating the Xtext index for them.
  */
 @Singleton
+@SuppressWarnings("restriction")
 public class ExternalLibrariesReloadHelper {
 
 	private static final Logger LOGGER = Logger.getLogger(ExternalLibrariesReloadHelper.class);
@@ -56,7 +60,7 @@ public class ExternalLibrariesReloadHelper {
 	private ExternalLibraryBuilder externalBuilder;
 
 	@Inject
-	private RebuildWorkspaceProjectsScheduler scheduler;
+	private BuilderStateDiscarder builderStateDiscarder;
 
 	/**
 	 * Reloads the external libraries by re-indexing all registered external projects that are do not exist in the
@@ -116,11 +120,12 @@ public class ExternalLibrariesReloadHelper {
 		final Collection<N4JSExternalProject> toBuild = from(projectProvider.getProjects())
 				.filter(p -> !workspaceProjectNames.contains(p.getName())).toList();
 
-		final Collection<IProject> workspaceProjectsToRebuild = collector
-				.getWSProjectsDependendingOn(toBuild);
+		final Collection<IProject> workspaceProjectsToRebuild = collector.getWSProjectsDependendingOn(toBuild);
 
 		externalBuilder.build(toBuild, subMonitor.newChild(1));
 
-		scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
+		Map<String, String> args = new HashMap<>();
+		IBuildFlag.FORGET_BUILD_STATE_ONLY.addToMap(args);
+		builderStateDiscarder.forgetLastBuildState(workspaceProjectsToRebuild, args);
 	}
 }

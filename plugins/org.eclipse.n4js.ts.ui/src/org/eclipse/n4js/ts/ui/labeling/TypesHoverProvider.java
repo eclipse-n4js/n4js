@@ -10,11 +10,9 @@
  */
 package org.eclipse.n4js.ts.ui.labeling;
 
+import java.net.URL;
+
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
@@ -23,6 +21,9 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
+
+import com.google.inject.Inject;
 
 /**
  */
@@ -35,7 +36,7 @@ public class TypesHoverProvider extends DefaultEObjectHoverProvider {
 	protected String getFirstLine(EObject obj) {
 		final String keyword = keywordProvider.keyword(obj);
 		final String label = getLabel(obj);
-		return composeFirstLine(keyword, label);
+		return composeFirstLine(null, keyword, label);
 	}
 
 	/* Note: raised visibility to public to make this reusable from N4JSHoverProvider. */
@@ -84,14 +85,19 @@ public class TypesHoverProvider extends DefaultEObjectHoverProvider {
 			+ "padding-right:3px;"
 			+ "border-radius:6px;";
 
+	private static final String HTML_IMAGE_PROPERTIES = "style=\"vertical-align: top;\" width=\"16\" height=\"16\"";
+
 	/**
 	 * Combine keyword and label with appropriate HTML formatting.
 	 */
-	public static final String composeFirstLine(String keyword, String label) {
+	public static final String composeFirstLine(URL imageURL, String keyword, String label) {
 		// wrap label in <b> </b> tags (if not containing these tags already!)
-		final String htmlLabel = label != null && !label.contains("<b>") ? "<b>" + label + "</b>" : label;
+		final String htmlKeyword = "<span style=\"" + CSS_STYLE_KEYWORD + "\">" + keyword + "</span>";
+		final String htmlLabel = (label == null) ? "" : ((label.contains("<b>")) ? label : "<b>" + label + "</b>");
+		final String htmlImage = (imageURL == null) ? null
+				: "<image " + HTML_IMAGE_PROPERTIES + " src=\"" + imageURL.toExternalForm() + "\"/>";
+		final String line = ((htmlImage == null) ? htmlKeyword : htmlImage) + " " + htmlLabel;
 
-		return "<span style=\"" + CSS_STYLE_KEYWORD + "\">" + keyword + "</span>"
-				+ (htmlLabel != null ? " " + htmlLabel : "");
+		return line;
 	}
 }

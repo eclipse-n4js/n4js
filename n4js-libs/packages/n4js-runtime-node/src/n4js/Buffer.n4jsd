@@ -12,14 +12,14 @@
 
 export external public class Buffer implements Iterable<number>{
 
-    public constructor(arg: union{string, number, /*Uint8Array,*/ Array<any>}, encoding: string=)
+    public constructor(arg: string | number | /*Uint8Array:*/ any[], encoding: string=)
 
-    public static from(data: [?] | string | Buffer | Object, offsetOrEncoding: int | string =, length: int =): Buffer;
+    public static from(data: ?[] | string | Buffer | Object, offsetOrEncoding: int | string =, length: int =): Buffer;
 
     public static isBuffer(obj: any): boolean;
     public static isEncoding(encoding: string): boolean;
     public static byteLength(string: string, encoding: string=): number;
-    public static concat(list: Array<Buffer>, totalLength: number=): this;
+    public static concat(list: Buffer[], totalLength: number=): this;
     public static compare(buf1: Buffer, buf2: Buffer): number;
     @Override
     public [Symbol.iterator](): Iterator<number>;

@@ -16,7 +16,7 @@
 	modelDirectory="/org.eclipse.n4js.ts.model/emf-gen",
 	forceOverwrite="true",
 	updateClasspath="false",
-	complianceLevel="8.0",
+	complianceLevel="11.0",
 	copyrightFields="false",
 	// both copyrightText and documentation are required to align the output of the MWE2 and incremental builder (see GH-841)
 	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
@@ -26,6 +26,7 @@ package org.eclipse.n4js.ts.typeRefs
 
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TN4Classifier
@@ -36,12 +37,6 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
-
-// due to some bad linking / scoping behavior in Xcore for clean builds,
-// we need to define this data type here even though it's only usages are
-// found in Types.xcore
-type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 
 /*
  * Base class for all things that can provide a version. The returned value will be 0 in any language that does not
@@ -479,7 +474,8 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 class ParameterizedTypeRef extends BaseTypeRef {
 	refers Type declaredType
 	contains TypeArgument[] typeArgs
-	boolean arrayTypeLiteral = "false"
+	boolean arrayTypeExpression = "false"
+	boolean iterableTypeExpression = "false"
 
 	/*
 	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source

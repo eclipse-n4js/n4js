@@ -43,7 +43,7 @@ export public class LowerComponent extends React.Component<~React.ComponentProps
 
 
 /* XPECT scope at 'React.|Component'  ---
-Component, ComponentProps, Element, PropConstraint, PropType, PropTypes,
+Component, ComponentProps, Element, Fragment, PropConstraint, PropType, PropTypes,
 PureComponent, cloneElement, createElement, isValidElement, renderToStaticMarkup,
 renderToString
 --- */
@@ -54,22 +54,21 @@ export public class MyComponent extends React.Component<~React.ComponentProps wi
 		const constText = "some text";
 		/* XPECT scope at 'Lower|Component'  ---
 		Array, Boolean, Component, ComponentProps, Date, Element, Error, EvalError,
-		Function, Generator, Infinity, Iterable, Iterable2, Iterable3, Iterable4, Iterable5,
-		Iterable6, Iterable7, Iterable8, Iterable9, Iterator, IteratorEntry, JSON, LowerComponent,
-		Math, MigrationContext, MigrationController, MyComponent, N4Accessor, N4Annotation, N4ApiNotImplementedError, N4Class,
-		N4Classifier, N4DataField, N4Element, N4Enum, N4EnumType, N4Interface, N4Member,
-		N4Method, N4NamedElement, N4Object, N4Provider, N4StringBasedEnum,
-		N4StringBasedEnumType, N4Type, NaN, Number, Object, Promise, PropConstraint, PropType, PropTypes,
-		PureComponent, RangeError, React, ReferenceError, RegExp, String, Symbol, SyntaxError,
-		TEMP_ReturnTypeOfMatchExec, TypeError, URIError, __proto__, arguments, cloneElement, console, constText,
-		constructor, createElement, decodeURI, decodeURIComponent, encodeURI, encodeURIComponent,
-		eval, hasOwnProperty, isFinite, isNaN, isPrototypeOf, isValidElement,
-		index.Component, index.ComponentProps, index.Element,
-		index.PropConstraint, index.PropType, index.PropTypes,
-		index.PureComponent, index.cloneElement, index.createElement,
-		index.isValidElement, index.renderToStaticMarkup,
-		index.renderToString, null, parseFloat, parseInt, propertyIsEnumerable, renderToStaticMarkup,
-		renderToString, scoping.ClassComponentDescriptions.LowerComponent,
+		Fragment, Function, Generator, Infinity, Iterable, Iterable2, Iterable3, Iterable4,
+		Iterable5, Iterable6, Iterable7, Iterable8, Iterable9, Iterator, IteratorEntry, JSON,
+		LowerComponent, Math, MigrationContext, MigrationController, MyComponent, N4Accessor,
+		N4Annotation, N4ApiNotImplementedError, N4Class, N4Classifier, N4DataField, N4Element,
+		N4Enum, N4EnumType, N4Interface, N4Member, N4Method, N4NamedElement, N4Object,
+		N4Provider, N4StringBasedEnum, N4StringBasedEnumType, N4Type, NaN, Number, Object, Promise,
+		PropConstraint, PropType, PropTypes, PureComponent, RangeError, React, ReferenceError, RegExp,
+		String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec, TypeError, URIError,
+		__proto__, arguments, cloneElement, console, constText, constructor, createElement,
+		decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, eval, hasOwnProperty,
+		index.Component, index.ComponentProps, index.Element, index.Fragment, index.PropConstraint,
+		index.PropType, index.PropTypes, index.PureComponent, index.cloneElement, index.createElement,
+		index.isValidElement, index.renderToStaticMarkup, index.renderToString, isFinite, isNaN,
+		isPrototypeOf, isValidElement, null, parseFloat, parseInt, propertyIsEnumerable,
+		renderToStaticMarkup, renderToString, scoping.ClassComponentDescriptions.LowerComponent,
 		scoping.ClassComponentDescriptions.MyComponent, toLocaleString, toString, undefined, valueOf, void
 --- */
 		return (<LowerComponent whatTextShouldIShow="Hallo">{constText}</LowerComponent>

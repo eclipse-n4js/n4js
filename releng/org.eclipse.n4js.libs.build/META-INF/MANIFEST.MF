@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Eclipse-BundleShape: dir
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.n4js.libs.build;singleton:=true
+Bundle-Name: %pluginName
+Bundle-Vendor: %providerName
+Bundle-Version: 0.0.1.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Require-Bundle: com.google.guava,
+ org.eclipse.emf.mwe2.launch;resolution:=optional,
+ org.eclipse.n4js,
+ org.eclipse.n4js.hlc.base,
+ org.eclipse.n4js.json.model,
+ org.eclipse.n4js.utils
+Export-Package: org.eclipse.n4js.libs.build
+Automatic-Module-Name: org.eclipse.n4js.libs.build

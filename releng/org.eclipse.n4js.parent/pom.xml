@@ -29,13 +29,13 @@ Contributors:
 
 	<properties>
 		<!-- java version -->
-		<java-compile-version>8.0</java-compile-version>
+		<java-compile-version>11</java-compile-version>
 		<!-- keep in sync with n4js/docker-build/Dockerfile -->
-		<jdk-version>1.8</jdk-version>
+		<jdk-version>11</jdk-version>
 		<maven.compiler.source>${jdk-version}</maven.compiler.source>
 		<maven.compiler.target>${jdk-version}</maven.compiler.target>
 		<!-- keep in sync with n4js/docker-build/Dockerfile -->
-		<maven-version>3.5.2</maven-version>
+		<maven-version>3.6.0</maven-version>
 
 		<!-- encoding -->
 		<project.encoding>UTF-8</project.encoding>
@@ -44,10 +44,10 @@ Contributors:
 		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
 
 		<!-- tycho -->
-		<tycho-version>1.2.0</tycho-version>
+		<tycho-version>1.4.0</tycho-version>
 
 		<!-- Xtext, Xtend and their runtime -->
-		<xtext-version>2.15.0</xtext-version>
+		<xtext-version>2.17.1</xtext-version>
 
 		<!-- maven plugins -->
 		<build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
@@ -57,23 +57,23 @@ Contributors:
 		<fornax-oaw-m2-plugin.version>3.6.0</fornax-oaw-m2-plugin.version>
 		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
 		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
-		<maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+		<maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
 		<maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
-		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
-		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-		<maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
-		<maven-failsafe-plugin.version>2.21.0</maven-failsafe-plugin.version>
-		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-		<maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
-		<maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
-		<maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
-		<maven-pmd-plugin.version>3.9.0</maven-pmd-plugin.version>
+		<maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
+		<maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
+		<maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
+		<maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+		<maven-javadoc-plugin.version>3.1.0</maven-javadoc-plugin.version>
+		<maven-jxr-plugin.version>3.0.0</maven-jxr-plugin.version>
+		<maven-pmd-plugin.version>3.12.0</maven-pmd-plugin.version>
 		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
 		<maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
-		<maven-scm-plugin.version>1.10.0</maven-scm-plugin.version>
+		<maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
 		<maven-site-plugin.version>3.7.1</maven-site-plugin.version>
-		<maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
 		<maven-verifier-plugin.version>1.1</maven-verifier-plugin.version>
 		<xslt-generator-maven-plugin.version>1.8</xslt-generator-maven-plugin.version>
 
@@ -83,6 +83,8 @@ Contributors:
 		<!-- headless compiler options, used in tools/org.eclipse.n4js.hlc -->
 		<hlc.name>n4jsc</hlc.name>
 		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
+		
+		<excludeJRE>false</excludeJRE>
 		
 		<!-- some memory -->
 		<memoryArgs>-Xms256M -Xmx1324M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>

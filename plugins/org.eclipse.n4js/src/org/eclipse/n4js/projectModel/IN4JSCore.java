@@ -92,11 +92,6 @@ public interface IN4JSCore {
 	boolean isNoValidate(URI nestedLocation);
 
 	/**
-	 * returns true if for the given URI module wrapping is disabled
-	 */
-	boolean isNoModuleWrapping(URI nestedLocation);
-
-	/**
 	 * returns the project relative path to the folder where the generated files should be placed
 	 */
 	String getOutputPath(URI nestedLocation);
@@ -105,11 +100,6 @@ public interface IN4JSCore {
 	 * returns for the given URI the no-validate module filter
 	 */
 	ModuleFilter getModuleValidationFilter(URI uri);
-
-	/**
-	 * returns for the given URI the no-module-wrapping module filter
-	 */
-	ModuleFilter getNoModuleWrappingFilter(URI nestedLocation);
 
 	/**
 	 * Creates and returns a new resource set that is properly set up for loading resources in the default workspace
@@ -166,14 +156,4 @@ public interface IN4JSCore {
 	TModule loadModuleFromIndex(ResourceSet resourceSet, IResourceDescription resourceDescription,
 			boolean allowFullLoad);
 
-	/**
-	 * Converts a given URI to a platform or file URI so that:
-	 * <ul>
-	 * <li>A URI of a user workspace project becomes a platform URI.
-	 * <li>A URI of an external library becomes a file URI. The folder 'node_modules' itself is only converted to a file
-	 * URI if it is not inside a user workspace project.
-	 * </ul>
-	 * For the headless case only file URIs will be returned.
-	 */
-	URI convertToCorrespondingLocation(URI uri);
 }

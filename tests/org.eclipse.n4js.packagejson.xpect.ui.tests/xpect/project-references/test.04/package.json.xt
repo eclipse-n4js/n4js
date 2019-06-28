@@ -39,6 +39,10 @@
 			}
 	}
 
+
+	IssueConfiguration {
+		IssueCode "MISSING_YARN_WORKSPACE" { enabled = false }
+	}
    END_SETUP
  */
 {
@@ -49,7 +53,7 @@
 		"test.data.test.project.two": "*",
 		/* XPECT issues ---
 		"Duplicate project reference test.data.test.project.two." at ""test.data.test.project.two": "*""
-		"Property test.data.test.project.two duplicates property test.data.test.project.two (line 49)." at ""test.data.test.project.two""
+		"Property test.data.test.project.two duplicates property test.data.test.project.two (line 53)." at ""test.data.test.project.two""
 		--- */
 		"test.data.test.project.two": "*",
 		"test.data.system.project.one": "*",
@@ -76,10 +80,6 @@
 		],
 		// XPECT warnings --> "ImplementedProjects cannot be specified for test projects." at ""implementedProjects": [""]"
 		"implementedProjects": [""],
-		// XPECT warnings --> "InitModules cannot be specified for test projects." at ""initModules": [""]"
-		"initModules": [""],
-		// XPECT warnings --> "ExecModule cannot be specified for test projects." at ""execModule": "some-execution-module""
-		"execModule": "some-execution-module",
 		// XPECT warnings --> "Provided runtime libraries cannot be specified for test projects." at ""providedRuntimeLibraries": [""]"
 		"providedRuntimeLibraries": [""],
 		// XPECT noerrors

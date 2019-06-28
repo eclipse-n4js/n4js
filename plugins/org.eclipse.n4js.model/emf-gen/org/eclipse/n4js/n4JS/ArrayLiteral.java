@@ -34,10 +34,6 @@ public interface ArrayLiteral extends PrimaryExpression {
 	 * Returns the value of the '<em><b>Elements</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.ArrayElement}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Elements</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Elements</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getArrayLiteral_Elements()
@@ -49,10 +45,6 @@ public interface ArrayLiteral extends PrimaryExpression {
 	/**
 	 * Returns the value of the '<em><b>Trailing Comma</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Trailing Comma</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Trailing Comma</em>' attribute.
 	 * @see #setTrailingComma(boolean)

@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.builder.MonitorBasedCancelIndicator;
 import org.eclipse.xtext.builder.builderState.BuilderStateUtil;
@@ -62,7 +62,7 @@ class DoUpdateImplementation {
 	private final IResourceClusteringPolicy clusteringPolicy;
 	private final IResourceLoader crossLinkingResourceLoader;
 	private final IBuildLogger buildLogger;
-	private final BuildDataWithRequestRebuild buildData;
+	private final BuildData buildData;
 	private final ResourceDescriptionsData newData;
 	private final SubMonitor progress;
 	private final CancelIndicator cancelMonitor;
@@ -77,7 +77,7 @@ class DoUpdateImplementation {
 	private LoadOperation loadOperation = null;
 	private Set<URI> allRemainingURIs;
 
-	public DoUpdateImplementation(N4ClusteringBuilderState state, BuildDataWithRequestRebuild buildData,
+	public DoUpdateImplementation(N4ClusteringBuilderState state, BuildData buildData,
 			ResourceDescriptionsData newData, IProgressMonitor monitor, IBuildLogger buildLogger,
 			IResourceLoader crossLinkingResourceLoader, IResourceClusteringPolicy clusteringPolicy) {
 		this.clusteringPolicy = clusteringPolicy;

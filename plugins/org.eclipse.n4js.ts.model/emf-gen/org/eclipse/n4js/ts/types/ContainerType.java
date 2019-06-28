@@ -41,10 +41,6 @@ public interface ContainerType<MT extends TMember> extends Type {
 	/**
 	 * Returns the value of the '<em><b>Owned Members By Name And Access</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Owned Members By Name And Access</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Owned Members By Name And Access</em>' attribute.
 	 * @see #setOwnedMembersByNameAndAccess(Map)
@@ -67,10 +63,6 @@ public interface ContainerType<MT extends TMember> extends Type {
 	/**
 	 * Returns the value of the '<em><b>Owned Members</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Owned Members</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Owned Members</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getContainerType_OwnedMembers()
@@ -82,10 +74,6 @@ public interface ContainerType<MT extends TMember> extends Type {
 	/**
 	 * Returns the value of the '<em><b>Callable Ctor</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Callable Ctor</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Callable Ctor</em>' containment reference.
 	 * @see #setCallableCtor(TMethod)

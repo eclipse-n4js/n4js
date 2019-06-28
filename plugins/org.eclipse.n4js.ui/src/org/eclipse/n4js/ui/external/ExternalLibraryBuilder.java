@@ -56,16 +56,17 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.ui.building.BuildDataWithRequestRebuild;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ui.building.BuildManagerAccess;
 import org.eclipse.n4js.ui.containers.N4JSProjectsStateHelper;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
-import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
+import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
@@ -113,7 +114,7 @@ public class ExternalLibraryBuilder {
 	private ExternalProjectProvider projectProvider;
 
 	@Inject
-	private ExternalLibraryErrorMarkerManager errorMarkerManager;
+	private ResourceUIValidatorExtension validatorExtension;
 
 	@Inject
 	private N4JSProjectsStateHelper projectsStateHelper;
@@ -305,7 +306,7 @@ public class ExternalLibraryBuilder {
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
 
-			errorMarkerManager.clearMarkers(projects);
+			validatorExtension.clearAllMarkersOfExternalProjects(projects);
 
 			VertexOrder<IN4JSProject> buildOrder = builtOrderComputer.getBuildOrder(projects);
 			// wrap as Arrays.asList returns immutable list
@@ -534,7 +535,7 @@ public class ExternalLibraryBuilder {
 						((ResourceSetImpl) resourceSet).setURIResourceMap(newHashMap());
 					}
 
-					BuildDataWithRequestRebuild buildData = new BuildDataWithRequestRebuild(
+					BuildData buildData = new BuildData(
 							project.getName(),
 							resourceSet,
 							toBeBuilt,
@@ -602,7 +603,7 @@ public class ExternalLibraryBuilder {
 		for (URI toWipe : toBeWiped) {
 			toBeWipedStrings.add(toWipe.toString());
 			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(toWipe);
-			errorMarkerManager.clearMarkers(projectName);
+			validatorExtension.clearAllMarkersOfExternalProject(projectName);
 		}
 
 		ResourceSet resourceSet = core.createResourceSet(Optional.absent());

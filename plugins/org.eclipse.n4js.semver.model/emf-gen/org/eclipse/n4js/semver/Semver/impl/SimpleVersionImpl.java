@@ -111,6 +111,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionNumber getNumber() {
 		return number;
 	}
@@ -135,6 +136,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNumber(VersionNumber newNumber) {
 		if (newNumber != number) {
 			NotificationChain msgs = null;
@@ -154,6 +156,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isWithLetterV() {
 		return withLetterV;
 	}
@@ -163,6 +166,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWithLetterV(boolean newWithLetterV) {
 		boolean oldWithLetterV = withLetterV;
 		withLetterV = newWithLetterV;
@@ -175,6 +179,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<VersionComparator> getComparators() {
 		if (comparators == null) {
 			comparators = new EDataTypeEList<VersionComparator>(VersionComparator.class, this, SemverPackage.SIMPLE_VERSION__COMPARATORS);
@@ -187,6 +192,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isWildcard() {
 		return this.getNumber().isWildcard();
 	}
@@ -196,6 +202,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSpecific() {
 		return ((this.getComparators().isEmpty() || this.isWithLetterV()) || this.getComparators().contains(VersionComparator.EQUALS));
 	}
@@ -205,6 +212,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isCaret() {
 		return this.getComparators().contains(VersionComparator.CARET);
 	}
@@ -214,6 +222,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isTilde() {
 		return this.getComparators().contains(VersionComparator.TILDE);
 	}
@@ -223,6 +232,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGreater() {
 		return this.getComparators().contains(VersionComparator.GREATER);
 	}
@@ -232,6 +242,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isGreaterEquals() {
 		return this.getComparators().contains(VersionComparator.GREATER_EQUALS);
 	}
@@ -241,6 +252,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSmaller() {
 		return this.getComparators().contains(VersionComparator.SMALLER);
 	}
@@ -250,6 +262,7 @@ public class SimpleVersionImpl extends SemverToStringableImpl implements SimpleV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSmallerEquals() {
 		return this.getComparators().contains(VersionComparator.SMALLER_EQUALS);
 	}

@@ -11,7 +11,6 @@
 package org.eclipse.n4js.tests.project
 
 import com.google.common.base.Predicate
-import java.util.concurrent.TimeUnit
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IMarker
@@ -30,7 +29,6 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.PackageJSONTestUtils
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
@@ -55,12 +53,19 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	]
 
 	@Before
-	override void setUp() {
-		super.setUp
+	def void setUp2() {
 		firstProjectUnderTest = createJSProject("multiProjectTest.first")
 		secondProjectUnderTest = createJSProject("multiProjectTest.second")
 		src = configureProjectWithXtext(firstProjectUnderTest)
 		src2 = configureProjectWithXtext(secondProjectUnderTest)
+
+		addProjectToDependencies(firstProjectUnderTest, N4JSGlobals.N4JS_RUNTIME, ProjectTestsUtils.N4JS_RUNTIME_DUMMY_VERSION);
+		addProjectToDependencies(secondProjectUnderTest, N4JSGlobals.N4JS_RUNTIME, ProjectTestsUtils.N4JS_RUNTIME_DUMMY_VERSION);
+		createAndRegisterDummyN4JSRuntime(firstProjectUnderTest)
+		createAndRegisterDummyN4JSRuntime(secondProjectUnderTest)
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor())
+		waitForAutoBuild
+
 		projectDescriptionFile = firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
 		assertMarkers("project description file (package.json) of first project file should have no errors",
 			firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON), 0, errorMarkerPredicate);
@@ -68,7 +73,6 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		projectDescriptionFile2 = secondProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
 		assertMarkers("project description file (package.json) file of second project should have no errors",
 			secondProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON), 0, errorMarkerPredicate);
-		waitForAutoBuild
 	}
 
 	private def void addSecondProjectToDependencies() {
@@ -76,14 +80,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	}
 
 	private def void addProjectToDependencies(String projectName) {
-		val uri = URI.createPlatformResourceURI(projectDescriptionFile.fullPath.toString, true);
-		val rs = getResourceSet(firstProjectUnderTest);
-		val resource = rs.getResource(uri, true);
-
-		val JSONObject packageJSONRoot = PackageJSONTestUtils.getPackageJSONRoot(resource);
-		PackageJSONTestUtils.addProjectDependency(packageJSONRoot, projectName, "*");
-
-		resource.save(null)
+		addProjectToDependencies(firstProjectUnderTest, projectName, "*");
 		waitForAutoBuild();
 	}
 
@@ -163,9 +160,13 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testTwoFilesSourceFolderRemovedFromProjectDescriptionFile() throws Exception {
+		val packageJsonOfFirstProject = firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON);
+		assertMarkers("project description file (package.json) should have no errors before adding dependency",
+			packageJsonOfFirstProject, 0, errorMarkerPredicate);
 		addSecondProjectToDependencies
-		assertMarkers("project description file (package.json) should have no errors after adding dependency",
-			firstProjectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON), 0, errorMarkerPredicate);
+		assertIssues("project description file (package.json) should have 1 error after adding dependency",
+			packageJsonOfFirstProject,
+			"line 18: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		val c = createTestFile(
 			src,
 			"C",
@@ -177,18 +178,14 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		createTestFile(src2, "D", "export public class D {}");
 		assertMarkers("file should have no errors", c, 0, errorMarkerPredicate);
 		removeDependency
-		// Cannot resolve import target :: resolving simple module import : found no matching modules
-		// Couldn't resolve reference to IdentifiableElement 'D'.
-		// Couldn't resolve reference to Type 'D'.
-		// Import of D cannot be resolved.
-		assertMarkers("file should have four errors", c, 4);
+		assertIssues("file should have four errors", c,
+			"line 1: Cannot resolve import target :: resolving simple module import : found no matching modules",
+			"line 1: Couldn't resolve reference to TExportableElement 'D'.",
+			"line 2: Couldn't resolve reference to Type 'D'.",
+			"line 1: Import of D cannot be resolved.");
 	}
 	
-//	@Rule
-//	public RepeatedTestRule rule = new RepeatedTestRule();
-
 	@Test
-//	@RepeatTest(times=20)
 	def void testTwoFilesProjectNewlyCreated() throws Exception {
 		addProjectToDependencies("thirdProject")
 		val c = createTestFile(
@@ -266,33 +263,38 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	def void testChangeProjectTypeWithoutOpenedEditors() {
 		changeProjectType(firstProjectUnderTest, ProjectType.LIBRARY);
 		changeProjectType(secondProjectUnderTest, ProjectType.LIBRARY);
-		removeProjectDependencies(secondProjectUnderTest);
 		addProjectToDependencies(secondProjectUnderTest.name);
 
-		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile, 0);
+		assertIssues(projectDescriptionFile,
+			"line 18: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
+			"Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 
+
 		changeProjectType(secondProjectUnderTest, ProjectType.RUNTIME_LIBRARY);
-		assertMarkers('project description file (package.json) file should have one error.', projectDescriptionFile, 0);
+		assertIssues(projectDescriptionFile,
+			"line 18: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
+			"Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 
 		changeProjectType(secondProjectUnderTest, ProjectType.LIBRARY);
-		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile, 0);
+		assertIssues(projectDescriptionFile,
+			"line 18: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +
+			"Either install project multiProjectTest.second or introduce a yarn workspace of both of the projects.");
 		assertMarkers('project description file (package.json) file should have no errors.', projectDescriptionFile2, 0);
 	}
 
-	@Ignore("random") // Disabled due to timing issues. The project description file (package.json) re-validation is not triggered as the part of the build job but from a common job.
 	@Test
 	def void testDeleteExternalFolderValidateProjectDescriptionFileWithoutOpenedEditors() {
-
 		val project = createJSProject('multiProjectTest.third', 'src', 'src-gen', [ builder |
 			builder.withSourceContainer(SourceContainerType.EXTERNAL, "ext");
 		]);
+		createAndRegisterDummyN4JSRuntime(project);
+		addProjectToDependencies(project, N4JSGlobals.N4JS_RUNTIME, "*");
 		configureProjectWithXtext(project);
 		waitForAutoBuild;
 		val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON);
 
-		removeProjectDependencies(project);
 		changeProjectType(project, ProjectType.LIBRARY);
 		val extFolder = project.getFolder('ext');
 		assertTrue('External folder \'ext\' should be missing', !extFolder.exists);
@@ -301,17 +303,17 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		// Wait after resource changes to be able to re-run the validation job.
 		// This is not tracked by the builder.
 		extFolder.create(true, true, null);
-		Thread.sleep(TimeUnit.SECONDS.toMillis(5L));
+		testedWorkspace.build
 		assertTrue('External folder \'ext\' should be missing', extFolder.exists);
 		assertMarkers('project description file (package.json) file should have zero errors.', projectDescriptionFile, 0);
 
 		extFolder.delete(true, null);
-		Thread.sleep(TimeUnit.SECONDS.toMillis(5L));
+		testedWorkspace.build
 		assertTrue('External folder \'ext\' should be missing', !extFolder.exists);
 		assertMarkers('project description file (package.json) file should have exactly one error.', projectDescriptionFile, 1);
 
 		extFolder.create(true, true, null);
-		Thread.sleep(TimeUnit.SECONDS.toMillis(5L));
+		testedWorkspace.build
 		assertTrue('External folder \'ext\' should be missing', extFolder.exists);
 		assertMarkers('project description file (package.json) file should have zero errors.', projectDescriptionFile, 0);
 	}

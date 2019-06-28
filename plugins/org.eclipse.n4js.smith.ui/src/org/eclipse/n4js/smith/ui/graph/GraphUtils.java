@@ -228,7 +228,7 @@ public class GraphUtils {
 	public static void drawArrowHead(GC gc, Point referencePoint, Point p) {
 		final double angle = Math.atan2(p.y - referencePoint.y, p.x - referencePoint.x) * 180.0 / Math.PI;
 		final Transform tf = new Transform(gc.getDevice());
-		tf.rotate(new Double(angle).floatValue());
+		tf.rotate(Double.valueOf(angle).floatValue());
 		tf.scale(7, 3);
 		final float[] pnts = new float[] { -1, 1, -1, -1 };
 		tf.transform(pnts);

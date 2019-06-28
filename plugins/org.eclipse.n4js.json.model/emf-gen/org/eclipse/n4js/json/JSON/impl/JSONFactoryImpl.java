@@ -82,6 +82,7 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONDocument createJSONDocument() {
 		JSONDocumentImpl jsonDocument = new JSONDocumentImpl();
 		return jsonDocument;
@@ -92,6 +93,7 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONObject createJSONObject() {
 		JSONObjectImpl jsonObject = new JSONObjectImpl();
 		return jsonObject;
@@ -102,6 +104,7 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONArray createJSONArray() {
 		JSONArrayImpl jsonArray = new JSONArrayImpl();
 		return jsonArray;
@@ -112,6 +115,7 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NameValuePair createNameValuePair() {
 		NameValuePairImpl nameValuePair = new NameValuePairImpl();
 		return nameValuePair;
@@ -122,6 +126,7 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONStringLiteral createJSONStringLiteral() {
 		JSONStringLiteralImpl jsonStringLiteral = new JSONStringLiteralImpl();
 		return jsonStringLiteral;
@@ -132,6 +137,7 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONNumericLiteral createJSONNumericLiteral() {
 		JSONNumericLiteralImpl jsonNumericLiteral = new JSONNumericLiteralImpl();
 		return jsonNumericLiteral;
@@ -142,6 +148,7 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONBooleanLiteral createJSONBooleanLiteral() {
 		JSONBooleanLiteralImpl jsonBooleanLiteral = new JSONBooleanLiteralImpl();
 		return jsonBooleanLiteral;
@@ -152,6 +159,7 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONNullLiteral createJSONNullLiteral() {
 		JSONNullLiteralImpl jsonNullLiteral = new JSONNullLiteralImpl();
 		return jsonNullLiteral;
@@ -162,6 +170,7 @@ public class JSONFactoryImpl extends EFactoryImpl implements JSONFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public JSONPackage getJSONPackage() {
 		return (JSONPackage)getEPackage();
 	}

@@ -63,7 +63,7 @@ public class ChromeRunner implements IRunner {
 		try {
 			ChromeRunnerRunOptions runOptions = new ChromeRunnerRunOptions();
 
-			runOptions.setExecModule(runConfig.getExecModule());
+			// runOptions.setExecModule(runConfig.getExecModule());
 			runOptions.setCoreProjectPaths(runConfig.getCoreProjectPaths().keySet().stream()
 					.map(Object::toString)
 					.collect(Collectors.joining(NODE_PATH_SEP)));
@@ -72,10 +72,10 @@ public class ChromeRunner implements IRunner {
 
 			final List<Path> paths = new ArrayList<>();
 
-			runOptions.addInitModules(runConfig.getInitModules());
-			if (runConfig.isUseCustomBootstrap()) {
-				throw new UnsupportedOperationException("Using default bootstrap is not supported for Chrome.");
-			}
+			// runOptions.addInitModules(runConfig.getInitModules());
+			// if (runConfig.isUseCustomBootstrap()) {
+			// throw new UnsupportedOperationException("Using default bootstrap is not supported for Chrome.");
+			// }
 
 			NodeEngineCommandBuilder cb = new NodeEngineCommandBuilder();
 			cmds = cb.createCmds(runOptions);

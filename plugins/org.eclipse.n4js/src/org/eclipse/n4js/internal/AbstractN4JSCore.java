@@ -33,9 +33,6 @@ import com.google.inject.Inject;
 public abstract class AbstractN4JSCore implements IN4JSCore {
 
 	@Inject
-	private N4JSModel model;
-
-	@Inject
 	private WildcardPathFilterHelper wildcardHelper;
 
 	@Override
@@ -76,22 +73,7 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 			noValidate |= wildcardHelper.isPathContainedByFilter(nestedLocation, validationFilter);
 		}
 
-		ModuleFilter noModuleWrappingFilter = getNoModuleWrappingFilter(nestedLocation);
-		if (noModuleWrappingFilter != null) {
-			noValidate |= wildcardHelper.isPathContainedByFilter(nestedLocation, noModuleWrappingFilter);
-		}
-
 		return noValidate;
-	}
-
-	@Override
-	public boolean isNoModuleWrapping(URI nestedLocation) {
-		boolean noModuleWrapping = false;
-		ModuleFilter filter = getNoModuleWrappingFilter(nestedLocation);
-		if (filter != null) {
-			noModuleWrapping = wildcardHelper.isPathContainedByFilter(nestedLocation, filter);
-		}
-		return noModuleWrapping;
 	}
 
 	@Override
@@ -110,16 +92,6 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 		Optional<? extends IN4JSSourceContainer> container = findN4JSSourceContainer(nestedLocation);
 		if (container.isPresent()) {
 			moduleFilter = container.get().getProject().getModuleValidationFilter();
-		}
-		return moduleFilter;
-	}
-
-	@Override
-	public ModuleFilter getNoModuleWrappingFilter(URI nestedLocation) {
-		ModuleFilter moduleFilter = null;
-		Optional<? extends IN4JSSourceContainer> container = findN4JSSourceContainer(nestedLocation);
-		if (container.isPresent()) {
-			moduleFilter = container.get().getProject().getNoModuleWrappingFilter();
 		}
 		return moduleFilter;
 	}
@@ -169,9 +141,4 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 		return null;
 	}
 
-	/** see {@link N4JSModel#convertToCorrespondingLocation(URI)} */
-	@Override
-	public URI convertToCorrespondingLocation(URI uri) {
-		return model.convertToCorrespondingLocation(uri);
-	}
 }

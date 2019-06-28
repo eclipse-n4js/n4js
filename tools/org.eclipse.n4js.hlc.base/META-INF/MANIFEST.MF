@@ -14,13 +14,12 @@ Require-Bundle: org.eclipse.n4js,
  org.kohsuke.args4j;bundle-version="2.0.21",
  org.eclipse.n4js.runner,
  org.eclipse.n4js.tester,
- org.eclipse.n4js.external.libraries,
  org.eclipse.core.runtime,
  org.eclipse.n4js.transpiler.es,
  org.eclipse.n4js.runner.nodejs,
  org.eclipse.n4js.tester.nodejs,
  org.eclipse.n4js.json,
  org.eclipse.n4js.smith
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.hlc.base
 Automatic-Module-Name: org.eclipse.n4js.hlc.base

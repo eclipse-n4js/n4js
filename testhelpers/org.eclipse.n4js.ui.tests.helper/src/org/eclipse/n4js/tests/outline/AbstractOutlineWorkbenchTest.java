@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
@@ -42,6 +43,8 @@ import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.IOutlineNodeComparer;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
+import org.junit.After;
+import org.junit.Before;
 
 /**
  * Copied and adapted from http://git.eclipse.org/c/tmf/org.eclipse.xtext.git/plain/tests/
@@ -65,10 +68,9 @@ public abstract class AbstractOutlineWorkbenchTest extends AbstractBuilderPartic
 	protected IPreferenceStore preferenceStore;
 	protected IOutlineNodeComparer comparer;
 
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		preferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, getEditorId());
+	@Before
+	public void setUp2() throws Exception {
+		preferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
 		comparer = new IOutlineNodeComparer.Default();
 
 		// when using in XPECT, XPECT already creates the project structure
@@ -148,15 +150,14 @@ public abstract class AbstractOutlineWorkbenchTest extends AbstractBuilderPartic
 	// the content to be written in N4JS file (resp. that should be in the file)
 	protected abstract String getModelAsText();
 
-	@Override
-	public void tearDown() throws Exception {
+	@After
+	public void tearDown2() throws Exception {
 		if (null != editor) {
 			editor.close(false);
 		}
 		if (null != outlineView) {
 			outlineView.getSite().getPage().hideView(outlineView);
 		}
-		super.tearDown();
 		executeAsyncDisplayJobs();
 	}
 

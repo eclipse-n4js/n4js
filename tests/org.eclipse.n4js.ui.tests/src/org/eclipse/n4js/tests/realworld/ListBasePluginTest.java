@@ -46,7 +46,7 @@ public class ListBasePluginTest extends AbstractBuilderParticipantTest {
 	 * (N4JS identifier recommendations) in the specification. In a nutshell: & (dollar sign) is discouraged to be used
 	 * in field and variable names. See issue IDE-1143 for more details.
 	 */
-	private static final int NUMBER_OF_EXPECTED_ISSUES = 26;
+	private static final int NUMBER_OF_EXPECTED_ISSUES = 27;
 
 	private static final String EXPECTED_NUMBER_OF_ISSUE_TEMPLATE = //
 			"Expected exactly " + NUMBER_OF_EXPECTED_ISSUES + " validation issues but found {0} instead.";
@@ -58,11 +58,12 @@ public class ListBasePluginTest extends AbstractBuilderParticipantTest {
 	 * identifier recommendations) constraint from the specification.
 	 */
 	private static final Predicate<IMarker> EXPECTED_VALIDATION_PREDICATE = //
-			new Predicate<IMarker>() {
+			new Predicate<>() {
 
 				private final List<String> EXPECTED_ERROR_CODES = Arrays.asList(
 						IssueCodes.CFG_LOCAL_VAR_UNUSED,
 						IssueCodes.DFG_NULL_DEREFERENCE,
+						IssueCodes.EXP_CAST_UNNECESSARY,
 						IssueCodes.CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER);
 
 				@Override

@@ -41,12 +41,6 @@ export public class A {
 					"module": "*/T2*",
 					"sourceContainer": "test2"
 				}
-			],
-			"noModuleWrap": [
-				{
-					"module": "c/*",
-					"sourceContainer": "ext2"
-				}
 			]
 		}
 	}

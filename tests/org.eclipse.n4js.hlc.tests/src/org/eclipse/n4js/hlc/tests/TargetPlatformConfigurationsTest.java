@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
@@ -25,29 +26,27 @@ import org.eclipse.n4js.hlc.base.SuccessExitStatus;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import com.google.common.base.Predicates;
 
 /**
  * Downloads, installs, compiles and runs 'express' for different target platform configurations.
  */
 public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	private static final String EXTERNAL_WITH_N4JSD_TPT = "external_with_n4jsd_tpt";
-	private static final String PROJECT_NAME = "external.project";
 	private static final String NODE_MODULES = "node_modules";
 
 	File workspace;
 	String wsRoot;
+	String packages;
 	File node_modules;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(EXTERNAL_WITH_N4JSD_TPT, Predicates.alwaysTrue());
+		workspace = setupWorkspace(EXTERNAL_WITH_N4JSD_TPT, true, N4JSGlobals.N4JS_RUNTIME);
 		wsRoot = workspace.getAbsolutePath().toString();
-		node_modules = new File(wsRoot, PROJECT_NAME + "/" + NODE_MODULES);
+		packages = wsRoot + "/packages";
+		node_modules = new File(wsRoot, NODE_MODULES);
 	}
 
 	/** Delete workspace. */
@@ -63,14 +62,13 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	 *             propagated from compiler in case of issues
 	 */
 	@Test
-	@Ignore("side-by-side-use-case")
 	public void testCompileCreatesInstallLocation() throws IOException, ExitCodeException {
 		// force creating install location
 		FileDeleter.delete(node_modules);
 
 		final String[] args = {
 				"--installMissingDependencies",
-				"--projectlocations", wsRoot,
+				"--projectlocations", packages,
 				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
@@ -88,6 +86,8 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	public void testCompileCheckNodeModulesLocation() throws IOException, ExitCodeException {
 
 		// force creating install location
+		FileDeleter.delete(node_modules);
+
 		Files.createDirectory(node_modules.toPath());
 		File testFile = new File(node_modules, "tst.txt");
 		testFile.createNewFile();
@@ -95,7 +95,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 
 		final String[] args = {
 				"--clean",
-				"--projectlocations", wsRoot,
+				"--projectlocations", packages,
 				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus status = new N4jscBase().doMain(args);
@@ -109,7 +109,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileFailsIfNoDependenciesNotInstalled() {
 		final String[] args = {
-				"--projectlocations", wsRoot,
+				"--projectlocations", packages,
 				"--buildType", BuildType.allprojects.toString()
 		};
 		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
@@ -123,11 +123,10 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	 *             propagated from compiler in case of issues
 	 */
 	@Test
-	@Ignore("side-by-side-use-case")
 	public void testCompileWithInstallPlusCompileSkipInstall() throws ExitCodeException {
 		final String[] argsInstall = {
 				"--installMissingDependencies",
-				"--projectlocations", wsRoot,
+				"--projectlocations", packages,
 				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus statusInstall = new N4jscBase().doMain(argsInstall);
@@ -136,7 +135,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 
 		final String[] argsSkipInstall = {
 				// "--installMissingDependencies",
-				"--projectlocations", wsRoot,
+				"--projectlocations", packages,
 				"--buildType", BuildType.allprojects.toString()
 		};
 		SuccessExitStatus statusSkipInstall = new N4jscBase().doMain(argsSkipInstall);

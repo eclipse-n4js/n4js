@@ -113,9 +113,9 @@ public interface SymbolTableEntryOriginal extends SymbolTableEntry {
 	 * another, remote resource can import it. For elements defined in remote resources, this is the name under which
 	 * this element is exported by the remote resource and can be imported in the resource to compile.
 	 * <!-- end-model-doc -->
-	 * @model unique="false"
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	String exportedName();
+	String getExportedName();
 
 } // SymbolTableEntryOriginal

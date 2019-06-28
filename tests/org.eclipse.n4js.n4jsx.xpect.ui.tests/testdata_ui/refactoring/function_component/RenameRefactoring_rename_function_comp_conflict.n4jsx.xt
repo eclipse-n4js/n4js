@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginUITest
+
+	Workspace {
+		Project "N4JSXXpectTests" {
+			Folder "model" {
+				Folder "refactoring" {
+					ThisFile {}
+				}
+			}
+			File "package.json" { from="../../../package_nv.json" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../../../react-implementations/valid/index.n4jsd" }
+			File "index.js" { from = "../../../react-implementations/valid/index.js" }
+			File "package.json" { from = "../../../react-implementations/valid/package.json" }
+		}
+	}
+
+	END_SETUP
+ */
+
+import * as React from "react"
+
+export function NewFuncComp(props: ~React.ComponentProps): React.Element {
+	return (<div></div>);
+}
+
+export function FuncComp(props: ~React.ComponentProps with {myProp: string}): React.Element {
+	return (<div>{props.myProp}</div>);
+}
+
+export public class MyComponent extends
+	React.Component<~React.ComponentProps with {aProp: string}, String> {
+
+	@Override
+	public render() : React.Element {
+		/* XPECT renameRefactoring at FuncComp to 'NewFuncComp' ---
+		Problem in N4JSXXpectTests/model/refactoring/RenameRefactoring_rename_function_comp_conflict.n4jsx.xt: Another element in the same scope with name 'NewFuncComp' already exists
+		---
+		*/
+		return (<FuncComp myProp="Hallo"></FuncComp>
+		);
+	}
+}
+

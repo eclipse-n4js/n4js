@@ -5,8 +5,19 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
+ * Originally copied from org.eclipse.xtext.ui.preferences.PropertyAndPreferencePage
+ * 		in bundle org.eclipse.xtext.ui
+ * 		available under the terms of the Eclipse Public License 2.0
+ * 		Copyright (c) 2011 itemis AG (http://www.itemis.eu) and others.
+ *
+ *  which has been itself copied from org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage
+ *      in bundle org.eclipse.jdt.ui
+ *      available under the terms of the Eclipse Public License 2.0
+ *      Copyright (c) 2000, 2011 IBM Corporation and others.
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
+ *
  */
 package org.eclipse.n4js.ui.preferences;
 
@@ -34,6 +45,10 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.generator.CompilerProperties;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.ComponentDescriptor;
+import org.eclipse.n4js.utils.IComponentProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -63,11 +78,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
-import org.eclipse.n4js.generator.CompilerProperties;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.ComponentDescriptor;
-import org.eclipse.n4js.utils.IComponentProperties;
 
 /**
  */
@@ -189,7 +199,8 @@ public abstract class AbstractN4JSPreferencePage<DESCR_TYPE extends ComponentDes
 			useProjectSettings = new SelectionButtonDialogField(SWT.CHECK);
 			useProjectSettings.setDialogFieldListener(listener);
 			useProjectSettings
-					.setLabelText(org.eclipse.xtext.ui.preferences.Messages.PropertyAndPreferencePage_useprojectsettings_label);
+					.setLabelText(
+							org.eclipse.xtext.ui.preferences.Messages.PropertyAndPreferencePage_useprojectsettings_label);
 			useProjectSettings.doFillIntoGrid(composite, 1);
 			LayoutUtil.setHorizontalGrabbing(useProjectSettings.getSelectionButton(null));
 

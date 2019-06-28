@@ -37,9 +37,9 @@ import com.google.inject.Provider;
 
 /**
  *
- * we need to use {@link org.eclipse.xtext.testing.XtextRunner} to get dependency injection working we need to use extend
- * {@link org.junit.runners.Suite} the same way {@link org.junit.runners.Parameterized} does to get parameters working
- * following is naive merge between two.
+ * we need to use {@link org.eclipse.xtext.testing.XtextRunner} to get dependency injection working we need to use
+ * extend {@link org.junit.runners.Suite} the same way {@link org.junit.runners.Parameterized} does to get parameters
+ * working following is naive merge between two.
  *
  * marking as final, if you need to extend it, you probably should just implement it from scratch.
  */
@@ -175,7 +175,7 @@ public final class XtextParametrizedRunner extends Suite {
 						+ " @Parameter fields counted: " + annotatedFieldsByParameter.size()
 						+ ", available parameters: " + fParameters.length + ".");
 			}
-			Object testClassInstance = getTestClass().getJavaClass().newInstance();
+			Object testClassInstance = getTestClass().getJavaClass().getConstructor().newInstance();
 			for (FrameworkField each : annotatedFieldsByParameter) {
 				Field field = each.getField();
 				Parameter annotation = field.getAnnotation(Parameter.class);

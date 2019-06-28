@@ -56,6 +56,9 @@ public class N4JSProjectInfo extends DefaultProjectInfo {
 	/** Property to specify to project dependencies */
 	public static final String PROJECT_DEPENDENCIES_PROP_NAME = "projectDependencies";
 
+	/** Property to specify to project devDependencies */
+	public static final String PROJECT_DEV_DEPENDENCIES_PROP_NAME = "projectDevDependencies";
+
 	/** Property to specify the output folder */
 	public static final String OUTPUT_FOLDER_PROP_NAME = "outputFolder";
 
@@ -106,6 +109,9 @@ public class N4JSProjectInfo extends DefaultProjectInfo {
 
 	/** The list of project dependencies */
 	private List<String> projectDependencies = new ArrayList<>();
+
+	/** The list of project devDependencies */
+	private List<String> projectDevDependencies = new ArrayList<>();
 
 	/** The output folder of the project */
 	private String outputFolder;
@@ -298,6 +304,23 @@ public class N4JSProjectInfo extends DefaultProjectInfo {
 	public void setProjectDependencies(List<String> projectDependencies) {
 		firePropertyChange(PROJECT_DEPENDENCIES_PROP_NAME, this.projectDependencies,
 				this.projectDependencies = projectDependencies);
+	}
+
+	/**
+	 * Returns the project devDependencies of the project.
+	 *
+	 * Note: The return value is a mutable reference.
+	 */
+	public List<String> getProjectDevDependencies() {
+		return projectDevDependencies;
+	}
+
+	/**
+	 * Sets the project devDependencies of the project.
+	 */
+	public void setProjectDevDependencies(List<String> projectDevDependencies) {
+		firePropertyChange(PROJECT_DEPENDENCIES_PROP_NAME, this.projectDevDependencies,
+				this.projectDevDependencies = projectDevDependencies);
 	}
 
 	/**

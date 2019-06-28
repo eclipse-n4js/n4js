@@ -13,7 +13,6 @@ package org.eclipse.n4js.runner;
 import static com.google.common.base.Strings.nullToEmpty;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -78,37 +77,30 @@ public class RunConfiguration {
 	/** Key used for attribute specifying the implementation ID. */
 	public final static String IMPLEMENTATION_ID = "IMPLEMENTATION_ID";
 
-	/** Key used for attribute specifying special loader option. */
-	public final static String SYSTEM_LOADER = "SYSTEM_LOADER";
+	/** Key used for attribute specifying the working directory of the spawned process. */
+	public final static String WORKING_DIRECTORY = "WORKING_DIRECTORY";
 
-	/** Key used for the custom execution engine options attribute. */
+	/** Key used for attribute specifying the .js file to execute. */
+	public final static String FILE_TO_RUN = "FILE_TO_RUN";
+
+	/** Key used for attribute specifying the custom execution {@link #getEngineOptions() engine options}. */
 	public final static String ENGINE_OPTIONS = "ENGINE_OPTIONS";
+
+	/** Key used for attribute specifying the custom {@link #getRunOptions() run options}. */
+	public final static String RUN_OPTIONS = "RUN_OPTIONS";
 
 	/** Key used for custom environment variables. */
 	public final static String ENV_VARS = "ENV_VARS";
 
-	/** Key for the custom path attribute. */
-	public final static String CUSTOM_ENGINE_PATH = "CUSTOM_ENGINE_PATH";
-
 	/** Within the execution data passed to the exec module, this key is used to hold the user selection. */
 	public final static String EXEC_DATA_KEY__USER_SELECTION = "userSelection";
 
-	/** Within the execution data passed to the exec module, this key is used to hold the array of init modules. */
-	public final static String EXEC_DATA_KEY__INIT_MODULES = "initModules";
-
 	/** Within the execution data passed to the exec module, this key is used to hold the API/impl project mapping. */
 	public final static String EXEC_DATA_KEY__PROJECT_NAME_MAPPING = "projectNameMapping";
-	/**
-	 * Within the execution data passed to the exec module, this key is used to hold boolean value of true if COMMON_JS
-	 * format should be used in loading.
-	 */
-	public final static String EXEC_DATA_KEY__CJS = "cjs";
 
 	private String name;
 
 	private String runnerId;
-
-	private String customEnginePath;
 
 	private String engineOptions;
 
@@ -125,17 +117,15 @@ public class RunConfiguration {
 	 */
 	private URI userSelection;
 
+	private Path workingDirectory;
+
+	private Path fileToRun;
+
+	private String runOptions;
+
 	private final Map<String, String> environmentVariables = new LinkedHashMap<>();
 
 	private final Map<Path, String> coreProjectPaths = new LinkedHashMap<>();
-
-	private final List<String> initModules = new ArrayList<>();
-
-	private boolean useCustomBootstrap;
-
-	private String execModule;
-
-	private String systemLoader;
 
 	private final LinkedHashSet<String> additionalPaths = new LinkedHashSet<>();
 
@@ -169,53 +159,9 @@ public class RunConfiguration {
 	}
 
 	/**
-	 * Returns with the custom execution engine path that should be appended to the path that is calculated from the
-	 * dependencies defined in the N4JS manifest. Clients should be aware that the given path will be used as is. So for
-	 * instance in case of NodeJs the path should be given as:
-	 *
-	 * <pre>
-	 * some/custom/node/path:yet/another/custom/node/path
-	 * </pre>
-	 *
-	 * then the {@code NODE_PATH} will be assembled in such a way:
-	 *
-	 * <pre>
-	 * NODE_PATH=automatically/calculated/path:another/path/from/the/dependencies:some/custom/node/path:yet/another/custom/node/path
-	 * </pre>
-	 *
-	 * @return the custom node path. Never {@code null}.
-	 */
-	public String getCustomEnginePath() {
-		return nullToEmpty(customEnginePath);
-	}
-
-	/**
-	 * Counterpart of {@link #getCustomEnginePath()}.
-	 *
-	 * @param customEnginePath
-	 *            the custom execution engine path. Can be {@code null}, such cases, it will be ignored.
-	 */
-	public void setCustomEnginePath(final String customEnginePath) {
-		this.customEnginePath = nullToEmpty(customEnginePath);
-	}
-
-	/**
-	 * Returns with the custom options for the execution engine. The options given as a string will be used as is. It is
-	 * the clients responsibility to use the proper formatting. For instance if the options should be given as a key
-	 * value pairs, the it should be stored as
-	 *
-	 * <pre>
-	 * someKey=someValue anotherKey=anotherValue
-	 * </pre>
-	 *
-	 * but if the options are for instance NodeJs options, it should be provided as
-	 *
-	 * <pre>
-	 * --harmony --verbose --etc
-	 * </pre>
-	 *
-	 * furthermore all options should be separated with a {@link CharMatcher#BREAKING_WHITESPACE breaking whitespace}
-	 * character.
+	 * Custom options passed to the execution engine (e.g. node.js), not the executed N4JS code (compare to
+	 * {@link #getRunOptions() run options}). The format of this string depends on the engine being used, but in any
+	 * case options should be separated with a {@link CharMatcher#BREAKING_WHITESPACE breaking whitespace} character.
 	 *
 	 * @return the execution engine options as a string.
 	 */
@@ -295,6 +241,50 @@ public class RunConfiguration {
 	}
 
 	/**
+	 * The {@link ProcessBuilder#directory(java.io.File) working directory} of the process spawned by the runner.
+	 */
+	public Path getWorkingDirectory() {
+		return workingDirectory;
+	}
+
+	/** @see #getWorkingDirectory() */
+	public void setWorkingDirectory(Path workingDirectory) {
+		this.workingDirectory = workingDirectory;
+	}
+
+	/**
+	 * The Javascript file to execute, either as an absolute path or a path relative to the
+	 * {@link #getWorkingDirectory() working directory}. Usually derived from the {@link #getUserSelection() user
+	 * selection} (i.e. file to run will be the file selected by the user), but in some cases the file to run will be
+	 * special, e.g. testers will set this to the main .js file in "n4js-mangelhaft-cli".
+	 */
+	public Path getFileToRun() {
+		return fileToRun;
+	}
+
+	/** @see #getFileToRun() */
+	public void setFileToRun(Path fileToRun) {
+		this.fileToRun = fileToRun;
+	}
+
+	/**
+	 * Custom options passed to the executed N4JS code, not the execution engine (e.g. node.js; compare to
+	 * {@link #getEngineOptions() engine options}). The format of this string depends on the code being executed, but in
+	 * any case options should be separated with a {@link CharMatcher#BREAKING_WHITESPACE breaking whitespace}
+	 * character.
+	 *
+	 * @return the run options as a string.
+	 */
+	public String getRunOptions() {
+		return nullToEmpty(runOptions);
+	}
+
+	/** @see #getRunOptions() */
+	public void setRunOptions(final String runOptions) {
+		this.runOptions = nullToEmpty(runOptions);
+	}
+
+	/**
 	 * The ID of the implementation to use or <code>null</code> if no implementation is selected. Corresponds to the
 	 * value given in an implementation project's manifest file via property '<code>ImplementationId</code>'.
 	 * <p>
@@ -314,18 +304,6 @@ public class RunConfiguration {
 	/** @see #getImplementationId() */
 	public void setImplementationId(String implementationId) {
 		this.implementationId = implementationId;
-	}
-
-	/**
-	 * System loading mechanism. Possible values <code>SYSTEM_JS</code>==default, COMMON_JS or any other mechanism
-	 */
-	public String getSystemLoader() {
-		return systemLoader;
-	}
-
-	/** @see #getSystemLoader() */
-	public void setSystemLoader(String systemLoader) {
-		this.systemLoader = systemLoader;
 	}
 
 	/**
@@ -351,7 +329,7 @@ public class RunConfiguration {
 	}
 
 	/**
-	 * Execution data, derived from user selection and passed on to the execModule, i.e. the low-level start-up code
+	 * Execution data, derived from user selection and passed on to the executed code, i.e. the low-level start-up code
 	 * defined in the runtime environment.
 	 */
 	public Map<String, Object> getExecutionData() {
@@ -405,50 +383,6 @@ public class RunConfiguration {
 	}
 
 	/**
-	 * List of paths to initialization module files, relative to their containing output folder.
-	 */
-	public List<String> getInitModules() {
-		return Collections.unmodifiableList(initModules);
-	}
-
-	/** @see #getInitModules() */
-	public void setInitModules(Collection<String> paths) {
-		this.initModules.clear();
-		this.initModules.addAll(paths);
-	}
-
-	/**
-	 * Flag indicates if custom bootstrap code should be used.
-	 */
-	public boolean isUseCustomBootstrap() {
-		return useCustomBootstrap;
-	}
-
-	/** @see #isUseCustomBootstrap() */
-	public void setUseCustomBootstrap(boolean useCustomBootstrap) {
-		this.useCustomBootstrap = useCustomBootstrap;
-	}
-
-	/**
-	 * Path to the file containing the low-level Javascript start-up code to launch, relative to its containing output
-	 * folder.
-	 * <p>
-	 * IMPORTANT: assuming the user wants to launch an N4JS file <code>A.n4js</code>, this attribute does <b>NOT</b>
-	 * point to the compiled version of that file; instead, this attribute denotes a file provided by the runtime
-	 * environment containing start-up code that will then invoke the compiled version of <code>A.n4js</code>. The
-	 * pointer to file <code>A.n4js</code> is passed to the start-up code via the attribute executionData, see
-	 * {@link #getExecutionData()}.
-	 */
-	public String getExecModule() {
-		return execModule;
-	}
-
-	/** @see #getExecModule() */
-	public void setExecModule(String execModule) {
-		this.execModule = execModule;
-	}
-
-	/**
 	 * Returns a new map containing all values of the receiving run configuration that are to be persisted. Values in
 	 * the returned map may only be of type <code>Boolean</code>, <code>String</code>, or <code>List&lt;String></code>,
 	 * or <code>Map&lt;String,String></code>.
@@ -463,12 +397,9 @@ public class RunConfiguration {
 		result.put(RUNTIME_ENVIRONMENT, this.runtimeEnvironment.getProjectName());
 		result.put(IMPLEMENTATION_ID, this.implementationId);
 		result.put(USER_SELECTION, this.userSelection.toString());
-		result.put(CUSTOM_ENGINE_PATH, getCustomEnginePath());
 		result.put(ENGINE_OPTIONS, getEngineOptions());
+		result.put(RUN_OPTIONS, getRunOptions());
 		result.put(ENV_VARS, this.getEnvironmentVariables());
-		// .entrySet().stream().map(entry -> entry.getKey() + "=" +
-		// entry.getValue()).collect(Collectors.joining("\n")));
-		result.put(SYSTEM_LOADER, getSystemLoader());
 		return result;
 	}
 
@@ -486,12 +417,10 @@ public class RunConfiguration {
 				.fromProjectName(getString(map, RUNTIME_ENVIRONMENT, false));
 		this.implementationId = getString(map, IMPLEMENTATION_ID, true);
 		this.userSelection = getURI(map, USER_SELECTION, false);
-		this.customEnginePath = nullToEmpty(getString(map, CUSTOM_ENGINE_PATH, true));
 		this.engineOptions = nullToEmpty(getString(map, ENGINE_OPTIONS, true));
+		this.runOptions = nullToEmpty(getString(map, RUN_OPTIONS, true));
 
 		this.setEnvironmentVariables(getMap(map, ENV_VARS, true));
-
-		this.systemLoader = nullToEmpty(getString(map, SYSTEM_LOADER, true));
 	}
 
 	/**

@@ -114,13 +114,13 @@ public class ImportsFactory {
 
 		boolean considerProjectName = fromProject != null;
 		switch (ImportSpecifierUtil.computeImportType(qn, considerProjectName, fromProject)) {
-		case PROJECT_IMPORT:
+		case PROJECT:
 			return specifierFactory.apply(usedName,
 					createImportDeclaration(nodelessMarker, fromProject.getProjectName()));
-		case SIMPLE_IMPORT:
+		case PLAIN:
 			return specifierFactory.apply(usedName,
 					createImportDeclaration(nodelessMarker, qualifiedNameConverter.toString(qn)));
-		case COMPLETE_IMPORT:
+		case COMPLETE:
 			return specifierFactory.apply(usedName, createImportDeclaration(nodelessMarker,
 					fromProject.getProjectName() + N4JSQualifiedNameConverter.DELIMITER +
 							qualifiedNameConverter.toString(qn)));
@@ -144,6 +144,7 @@ public class ImportsFactory {
 		importetElement.setName(name);
 		namedImportSpec.setImportedElement(importetElement);
 		importDeclaration.getImportSpecifiers().add(namedImportSpec);
+		importDeclaration.setImportFrom(true);
 		return importDeclaration;
 	}
 
@@ -153,6 +154,7 @@ public class ImportsFactory {
 		importetElement.setName(name);
 		defaultImportSpec.setImportedElement(importetElement);
 		importDeclaration.getImportSpecifiers().add(defaultImportSpec);
+		importDeclaration.setImportFrom(true);
 		return importDeclaration;
 	}
 
@@ -162,6 +164,7 @@ public class ImportsFactory {
 		namespaceImportSpec.setAlias(name);
 		namespaceImportSpec.setDefinedType(namespace);
 		importDeclaration.getImportSpecifiers().add(namespaceImportSpec);
+		importDeclaration.setImportFrom(true);
 		return importDeclaration;
 	}
 

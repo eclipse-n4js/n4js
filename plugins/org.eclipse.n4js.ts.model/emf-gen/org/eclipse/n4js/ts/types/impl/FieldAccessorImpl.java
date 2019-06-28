@@ -119,6 +119,7 @@ public abstract class FieldAccessorImpl extends TMemberWithAccessModifierImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isOptional() {
 		return optional;
 	}
@@ -128,6 +129,7 @@ public abstract class FieldAccessorImpl extends TMemberWithAccessModifierImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOptional(boolean newOptional) {
 		boolean oldOptional = optional;
 		optional = newOptional;
@@ -140,6 +142,7 @@ public abstract class FieldAccessorImpl extends TMemberWithAccessModifierImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isDeclaredAbstract() {
 		return declaredAbstract;
 	}
@@ -149,6 +152,7 @@ public abstract class FieldAccessorImpl extends TMemberWithAccessModifierImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredAbstract(boolean newDeclaredAbstract) {
 		boolean oldDeclaredAbstract = declaredAbstract;
 		declaredAbstract = newDeclaredAbstract;
@@ -161,6 +165,7 @@ public abstract class FieldAccessorImpl extends TMemberWithAccessModifierImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredThisType() {
 		return declaredThisType;
 	}
@@ -185,6 +190,7 @@ public abstract class FieldAccessorImpl extends TMemberWithAccessModifierImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredThisType(TypeRef newDeclaredThisType) {
 		if (newDeclaredThisType != declaredThisType) {
 			NotificationChain msgs = null;
@@ -204,6 +210,7 @@ public abstract class FieldAccessorImpl extends TMemberWithAccessModifierImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredTypeRef() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -215,6 +222,7 @@ public abstract class FieldAccessorImpl extends TMemberWithAccessModifierImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isAbstract() {
 		return (this.isDeclaredAbstract() || ((this.eContainer() instanceof TInterface) && this.isHasNoBody()));
 	}

@@ -42,9 +42,9 @@ infrastructure, e.g. https://wiki.eclipse.org/CBI and https://wiki.eclipse.org/J
 
 Ensure you have
 
-- Java 8
+- Java 11
 - Maven 3.2.x and
-- Node.js 6
+- Node.js 8
 
 installed on your system.
 
@@ -93,21 +93,27 @@ Figure <<img:eclipse-help-doc-process>> shows the generation process for N4JSSpe
 * Another custom tool `EclipseHelpTOCGenerator` takes to Docbook file `N4JSSpec.xml` and generates an XML file describing the table of content (TOC) in the Eclipse format. This TOC file references the chunked HTML files above.
 
 
-== Updating Eclipse, etc.
+== Updating frameworks and dependencies
+
+=== Update of Eclipse, EMF, Xtext, etc.
 
 For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow these steps:
 
 . Create a new branch.
 . Bump versions of all dependencies mentioned in file `N4JS.setup`:
+.. Update all labels that refer to the version of the Ooomph setup (search for "label!" to find them).
 .. Choose a new Eclipse version and define this in `N4JS.setup`.
 .. For those other dependencies _that come with Eclipse_ (e.g. EMF, Xtext) find out which version matches the chosen Eclipse version
    and define that version in `N4JS.setup`. +
-   Tip: one way of doing this is to install the chosen version of Eclipse and check under "About Eclipse > Installation Details > Tab: Features".
+   Tip: use the contents list of the SimRel you are targeting, e.g. https://projects.eclipse.org/releases/2019-03
 .. For those other dependencies _that are available via the Eclipse Orbit_, find out which version is the latest version available in
    the Orbit and define that version in `N4JS.setup`. +
    Tip: contents of the Eclipse Orbit can be found at https://download.eclipse.org/tools/orbit/downloads/ +
    (choose the correct link for the chosen Eclipse version!)
 .. For all remaining dependencies (i.e. unrelated to Eclipse and not in Orbit), choose a version to use and define it in `N4JS.setup`.
+. Check `Require-Bundle` sections of MANIFEST.MF files by searching for related bundle names or for `;bundle-version="`:
+.. There should be at most one version constraint for a specific bundle
+.. There should be no version constraints to our bundles (i.e. `org.eclipse.n4js...`)
 . Review parent pom.xml files, i.e. `releng/org.eclipse.n4js.parent/pom.xml`:
 .. Update property `xtext-version`.
 .. Check all other `*-version` properties and update them where needed.
@@ -125,8 +131,26 @@ For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow t
 .. Ooomph another N4JS development environment with Eclipse Installer.
    This time, after Ooomphing is completed, the target platform file should no longer have any uncommitted changes.
 
-All the above steps need to be performed in the `n4js-n4` repository, accordingly (e.g. file `N4JS-N4.setup`). In addition:
+All the above steps need to be performed in the `n4js-n4` repository, accordingly (e.g. file `N4JS-N4.setup`).
 
-. Update file `redirected_com.enfore.n4js.targetplatform.target` by copying the content of file `com.enfore.n4js.targetplatform.target` and
-  then changing all repository location URLs to point to the n4ide-p2-mirror.
-. Run Jenkins build job `Management/Create_P2_Mirror[_From_Branch]`
+
+=== Update of the embedded JRE
+
+For updating the embedded JRE inside the N4JS IDE follow these steps:
+
+. Given a new JRE download location for Linux, MacOS and Windows with a common new version
+. Update the location related properties in the pom.xml files of
+.. n4js/builds/pom.xml
+.. n4js/builds/org.eclipse.n4js.jre.linux.gtk.x86_64/pom.xml
+.. n4js/builds/org.eclipse.n4js.jre.macosx.cocoa.x86_64/pom.xml
+.. n4js/builds/org.eclipse.n4js.jre.win32.win32.x86_64/pom.xml
+. Update the versions at all following locations:
+.. n4js/builds/org.eclipse.n4js.jre.linux.gtk.x86_64/META-INF/MANIFEST.MF
+.. n4js/builds/org.eclipse.n4js.jre.linux.gtk.x86_64/META-INF/p2.inf
+.. n4js/builds/org.eclipse.n4js.jre.macosx.cocoa.x86_64/META-INF/MANIFEST.MF
+.. n4js/builds/org.eclipse.n4js.jre.macosx.cocoa.x86_64/META-INF/p2.inf
+.. n4js/builds/org.eclipse.n4js.jre.win32.win32.x86_64/META-INF/MANIFEST.MF
+.. n4js/builds/org.eclipse.n4js.jre.win32.win32.x86_64/META-INF/p2.inf
+. Update the openjdk docker image used as base image in the "FROM" line at the top of all docker files:
+.. n4js/docker-build/Dockerfile
+.. n4js-n4/jenkins/docker-build/Dockerfile

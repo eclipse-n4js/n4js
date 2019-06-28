@@ -10,11 +10,13 @@
  */
 package org.eclipse.n4js.smith;
 
+import org.eclipse.n4js.utils.TameAutoClosable;
+
 /**
  * Generic interface for measurements. Obtained instance should be considered {@code started}. Caller can end given
  * measurement by calling {@link #close()}. Concrete implementations will track different data.
  */
-public interface Measurement extends AutoCloseable {
+public interface Measurement extends TameAutoClosable {
 
 	/**
 	 * Ends given measurement. Concrete implementations can do some data processing in this step. Collected data is

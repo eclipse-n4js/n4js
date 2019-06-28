@@ -345,6 +345,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getRegularExpressionLiteral()
   {
     return regularExpressionLiteralEClass;
@@ -355,6 +356,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getRegularExpressionLiteral_Body()
   {
     return (EReference)regularExpressionLiteralEClass.getEStructuralFeatures().get(0);
@@ -365,6 +367,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getRegularExpressionLiteral_Flags()
   {
     return (EReference)regularExpressionLiteralEClass.getEStructuralFeatures().get(1);
@@ -375,6 +378,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getRegularExpressionBody()
   {
     return regularExpressionBodyEClass;
@@ -385,6 +389,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getRegularExpressionBody_Pattern()
   {
     return (EReference)regularExpressionBodyEClass.getEStructuralFeatures().get(0);
@@ -395,6 +400,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPattern()
   {
     return patternEClass;
@@ -405,6 +411,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPattern_Quantifier()
   {
     return (EReference)patternEClass.getEStructuralFeatures().get(0);
@@ -415,6 +422,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAssertion()
   {
     return assertionEClass;
@@ -425,6 +433,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLineStart()
   {
     return lineStartEClass;
@@ -435,6 +444,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLineEnd()
   {
     return lineEndEClass;
@@ -445,6 +455,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWordBoundary()
   {
     return wordBoundaryEClass;
@@ -455,6 +466,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getWordBoundary_Not()
   {
     return (EAttribute)wordBoundaryEClass.getEStructuralFeatures().get(0);
@@ -465,6 +477,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLookAhead()
   {
     return lookAheadEClass;
@@ -475,6 +488,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getLookAhead_Not()
   {
     return (EAttribute)lookAheadEClass.getEStructuralFeatures().get(0);
@@ -485,6 +499,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getLookAhead_Pattern()
   {
     return (EReference)lookAheadEClass.getEStructuralFeatures().get(1);
@@ -495,6 +510,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPatternCharacter()
   {
     return patternCharacterEClass;
@@ -505,6 +521,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getPatternCharacter_Value()
   {
     return (EAttribute)patternCharacterEClass.getEStructuralFeatures().get(0);
@@ -515,6 +532,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWildcard()
   {
     return wildcardEClass;
@@ -525,6 +543,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAtomEscape()
   {
     return atomEscapeEClass;
@@ -535,6 +554,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getCharacterClassEscapeSequence()
   {
     return characterClassEscapeSequenceEClass;
@@ -545,6 +565,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getCharacterClassEscapeSequence_Sequence()
   {
     return (EAttribute)characterClassEscapeSequenceEClass.getEStructuralFeatures().get(0);
@@ -555,6 +576,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getCharacterEscapeSequence()
   {
     return characterEscapeSequenceEClass;
@@ -565,6 +587,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getCharacterEscapeSequence_Sequence()
   {
     return (EAttribute)characterEscapeSequenceEClass.getEStructuralFeatures().get(0);
@@ -575,6 +598,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getControlLetterEscapeSequence()
   {
     return controlLetterEscapeSequenceEClass;
@@ -585,6 +609,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getControlLetterEscapeSequence_Sequence()
   {
     return (EAttribute)controlLetterEscapeSequenceEClass.getEStructuralFeatures().get(0);
@@ -595,6 +620,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getHexEscapeSequence()
   {
     return hexEscapeSequenceEClass;
@@ -605,6 +631,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getHexEscapeSequence_Sequence()
   {
     return (EAttribute)hexEscapeSequenceEClass.getEStructuralFeatures().get(0);
@@ -615,6 +642,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getUnicodeEscapeSequence()
   {
     return unicodeEscapeSequenceEClass;
@@ -625,6 +653,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getUnicodeEscapeSequence_Sequence()
   {
     return (EAttribute)unicodeEscapeSequenceEClass.getEStructuralFeatures().get(0);
@@ -635,6 +664,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getIdentityEscapeSequence()
   {
     return identityEscapeSequenceEClass;
@@ -645,6 +675,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getIdentityEscapeSequence_Sequence()
   {
     return (EAttribute)identityEscapeSequenceEClass.getEStructuralFeatures().get(0);
@@ -655,6 +686,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getDecimalEscapeSequence()
   {
     return decimalEscapeSequenceEClass;
@@ -665,6 +697,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getDecimalEscapeSequence_Sequence()
   {
     return (EAttribute)decimalEscapeSequenceEClass.getEStructuralFeatures().get(0);
@@ -675,6 +708,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getCharacterClass()
   {
     return characterClassEClass;
@@ -685,6 +719,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getCharacterClass_Negated()
   {
     return (EAttribute)characterClassEClass.getEStructuralFeatures().get(0);
@@ -695,6 +730,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getCharacterClass_Elements()
   {
     return (EReference)characterClassEClass.getEStructuralFeatures().get(1);
@@ -705,6 +741,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getCharacterClassElement()
   {
     return characterClassElementEClass;
@@ -715,6 +752,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getCharacterClassAtom()
   {
     return characterClassAtomEClass;
@@ -725,6 +763,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getCharacterClassAtom_Character()
   {
     return (EAttribute)characterClassAtomEClass.getEStructuralFeatures().get(0);
@@ -735,6 +774,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getEscapedCharacterClassAtom()
   {
     return escapedCharacterClassAtomEClass;
@@ -745,6 +785,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getBackspace()
   {
     return backspaceEClass;
@@ -755,6 +796,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getGroup()
   {
     return groupEClass;
@@ -765,6 +807,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getGroup_NonCapturing()
   {
     return (EAttribute)groupEClass.getEStructuralFeatures().get(0);
@@ -775,6 +818,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getGroup_Pattern()
   {
     return (EReference)groupEClass.getEStructuralFeatures().get(1);
@@ -785,6 +829,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getQuantifier()
   {
     return quantifierEClass;
@@ -795,6 +840,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getQuantifier_NonGreedy()
   {
     return (EAttribute)quantifierEClass.getEStructuralFeatures().get(0);
@@ -805,6 +851,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSimpleQuantifier()
   {
     return simpleQuantifierEClass;
@@ -815,6 +862,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getSimpleQuantifier_Quantifier()
   {
     return (EAttribute)simpleQuantifierEClass.getEStructuralFeatures().get(0);
@@ -825,6 +873,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getExactQuantifier()
   {
     return exactQuantifierEClass;
@@ -835,6 +884,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getExactQuantifier_Min()
   {
     return (EAttribute)exactQuantifierEClass.getEStructuralFeatures().get(0);
@@ -845,6 +895,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getExactQuantifier_Max()
   {
     return (EAttribute)exactQuantifierEClass.getEStructuralFeatures().get(1);
@@ -855,6 +906,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getExactQuantifier_UnboundedMax()
   {
     return (EAttribute)exactQuantifierEClass.getEStructuralFeatures().get(2);
@@ -865,6 +917,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getRegularExpressionFlags()
   {
     return regularExpressionFlagsEClass;
@@ -875,6 +928,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getRegularExpressionFlags_Flags()
   {
     return (EAttribute)regularExpressionFlagsEClass.getEStructuralFeatures().get(0);
@@ -885,6 +939,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getDisjunction()
   {
     return disjunctionEClass;
@@ -895,6 +950,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getDisjunction_Elements()
   {
     return (EReference)disjunctionEClass.getEStructuralFeatures().get(0);
@@ -905,6 +961,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSequence()
   {
     return sequenceEClass;
@@ -915,6 +972,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSequence_Elements()
   {
     return (EReference)sequenceEClass.getEStructuralFeatures().get(0);
@@ -925,6 +983,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getCharacterClassRange()
   {
     return characterClassRangeEClass;
@@ -935,6 +994,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getCharacterClassRange_Left()
   {
     return (EReference)characterClassRangeEClass.getEStructuralFeatures().get(0);
@@ -945,6 +1005,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getCharacterClassRange_Right()
   {
     return (EReference)characterClassRangeEClass.getEStructuralFeatures().get(1);
@@ -955,6 +1016,7 @@ public class RegularExpressionPackageImpl extends EPackageImpl implements Regula
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RegularExpressionFactory getRegularExpressionFactory()
   {
     return (RegularExpressionFactory)getEFactoryInstance();

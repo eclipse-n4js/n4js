@@ -18,7 +18,7 @@
       source="http://www.eclipse.org/oomph/setup/BrandingInfo">
     <detail
         key="imageURI">
-      <value>https://raw.githubusercontent.com/eclipse/n4js/master/plugins/org.eclipse.n4js.ui/icons/n4_logo_16.png</value>
+      <value>https://raw.githubusercontent.com/eclipse/n4js/master/plugins/org.eclipse.n4js.ui/icons/n4_logo.png</value>
     </detail>
     <detail
         key="siteURI">
@@ -135,8 +135,8 @@
   </setupTask>
   <setupTask
       xsi:type="jdt:JRETask"
-      version="JavaSE-1.8"
-      location="${jre.location-1.8}">
+      version="JavaSE-11"
+      location="${jre.location-11}">
     <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -150,7 +150,7 @@
   <setupTask
       xsi:type="setup:EclipseIniTask"
       option="-Dosgi.requiredJavaVersion"
-      value="=1.8"
+      value="=11"
       vm="true">
     <description></description>
   </setupTask>
@@ -177,11 +177,11 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="n4js.target.platform"
-      defaultValue="N4JS_2018_09"
-      storageURI="scope://Workspace">
+      defaultValue="N4JS_2019_03_xpect"
+      storageURI="scope://Workspace">    <!-- label! -->
     <choice
-        value="N4JS_2018_09"
-        label="N4JS_2018_09"/>
+        value="N4JS_2019_03_xpect"
+        label="N4JS_2019_03_xpect"/>    <!-- label! -->
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -200,9 +200,9 @@
       label="Xcore">
     <requirement
         name="org.eclipse.emf.ecore.xcore.sdk.feature.group"
-        versionRange="[1.4.0,1.4.1)"/>
+        versionRange="[1.9.0,1.9.1)"/>
     <repository
-        url="http://download.eclipse.org/modeling/emf/emf/updates/2.12"/>
+        url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.17"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -210,12 +210,12 @@
       label="Xtext/Xtend">
     <requirement
         name="org.eclipse.xtend.sdk.feature.group"
-        versionRange="[2.15.0,2.15.1)"/>
+        versionRange="[2.17.1,2.17.2)"/>
     <requirement
         name="org.eclipse.xtext.sdk.feature.group"
-        versionRange="[2.15.0,2.15.1)"/>
+        versionRange="[2.17.1,2.17.2)"/>
     <repository
-        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.15.0"/>
+        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.17.1"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -232,9 +232,9 @@
       label="MWE">
     <requirement
         name="org.eclipse.emf.mwe2.language.sdk.feature.group"
-        versionRange="[2.9.1,2.9.2)"/>
+        versionRange="[2.10.0,2.10.1)"/>
     <repository
-        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.1"/>
+        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.10.0"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -243,7 +243,7 @@
         name="org.eclipse.xpect.sdk.feature.group"
         versionRange="[0.2.0,0.2.1)"/>
     <repository
-        url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
+        url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/20/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -261,6 +261,30 @@
         name="org.eclipse.swtbot.ide.feature.group"/>
     <repository
         url="http://download.eclipse.org/technology/swtbot/releases/2.7.0"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task"
+      label="Bash Editor">
+    <requirement
+        name="de.jcup.basheditor.feature.group"/>
+    <repository
+        url="https://dl.bintray.com/de-jcup/basheditor"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task"
+      label="Jenkins Editor">
+    <requirement
+        name="de.jcup.jenkinseditor.feature.feature.group"/>
+    <repository
+        url="https://dl.bintray.com/de-jcup/jenkinseditor"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task"
+      label="Docker Tooling">
+    <requirement
+        name="org.eclipse.linuxtools.docker.feature.feature.group"/>
+    <repository
+        url="http://download.eclipse.org/releases/2019-03"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -367,33 +391,31 @@
         </predicate>
       </sourceLocator>
       <repositoryList
-          name="N4JS_2018_09">
+          name="N4JS_2019_03_xpect">    <!-- label! -->
         <repository
-            url="http://download.eclipse.org/eclipse/updates/4.9"/>
+            url="http://download.eclipse.org/eclipse/updates/4.11"/>
         <repository
-            url="http://download.eclipse.org/egit/updates-5.1"/>
+            url="http://download.eclipse.org/egit/updates-5.3"/>
         <repository
-            url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.11.v20180605"/>
+            url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.15.v20190215"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.15"/>
+            url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.17"/>
         <repository
-            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.1"/>
+            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.10.0"/>
         <repository
             url="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201605260315"/>
         <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.15.0"/>
+            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.17.1"/>
         <repository
             url="http://download.eclipse.org/technology/swtbot/releases/2.7.0"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository"/>
+            url="https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository"/>
         <repository
-            url="http://boothen.github.io/Json-Eclipse-Plugin"/>
-        <repository
-            url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
+            url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/20/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license/1.0.1.v20140414-1359"/>
         <repository
-            url="http://archive.eclipse.org/webtools/downloads/drops/R3.8/R3.8.1/R-3.8.1-20160912100321/repository"/>
+            url="https://download.eclipse.org/webtools/downloads/drops/R3.13.0/R-3.13.0-20190308131645/repository"/>
         <repository
             url="http://download.eclipse.org/tm/updates/4.5.0/repository"/>
         <repository
@@ -524,7 +546,7 @@
     <description>Launch that creates a config.ini</description>
   </setupTask>
   <stream name="master"
-      label="master (2018-09)"/>
+      label="master (2019_03_xpect)"/>    <!-- label! -->
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>

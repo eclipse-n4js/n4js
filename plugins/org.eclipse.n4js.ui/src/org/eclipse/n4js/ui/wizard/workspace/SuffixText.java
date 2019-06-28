@@ -387,7 +387,7 @@ public class SuffixText extends Composite {
 		 * Return the top margin to vertically center an element of given height in an area with given total height.
 		 */
 		private int marginTopCenter(int height, int totalHeight) {
-			return new Double(Math.floor((totalHeight - height) / 2.0)).intValue();
+			return Double.valueOf(Math.floor((totalHeight - height) / 2.0)).intValue();
 		}
 
 		@Override

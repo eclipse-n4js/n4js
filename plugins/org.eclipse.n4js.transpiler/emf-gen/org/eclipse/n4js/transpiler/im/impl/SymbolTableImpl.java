@@ -76,6 +76,7 @@ public class SymbolTableImpl extends MinimalEObjectImpl.Container implements Sym
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<SymbolTableEntry> getEntries() {
 		if (entries == null) {
 			entries = new EObjectContainmentEList<SymbolTableEntry>(SymbolTableEntry.class, this, ImPackage.SYMBOL_TABLE__ENTRIES);

@@ -93,6 +93,7 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifierRef getElement() {
 		return element;
 	}
@@ -117,6 +118,7 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setElement(IdentifierRef newElement) {
 		if (newElement != element) {
 			NotificationChain msgs = null;
@@ -136,6 +138,7 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getAlias() {
 		return alias;
 	}
@@ -145,6 +148,7 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAlias(String newAlias) {
 		String oldAlias = alias;
 		alias = newAlias;

@@ -357,6 +357,23 @@ method overloading) and adding support for specific N4JS language features (e.g.
 
 For details see the API documentation of class `InferenceContext`.
 
+
+[[sec:Type_Guards_During_Type_Inference_of_AST]]
+=== Type Guards
+
+During AST post-processing, the control and data flow analyses are performed.
+This means, that first a flow graph is created and then traversed.
+During the traversal, a type guard analysis is performed which saves information by evaluating `instanceof` expressions.
+As a result, the analysis provides a reliable set of RHS expressions of `instanceof` expressions for each AST element of type `IdentifierRef`.
+
+
+This set is evaluated in the `TypeJudgments.java` when typing `IdentifierRef` elements.
+In case the set is not empty, the types of all elements is calculated.
+The type of the `IdentifierRef` will then become the intersection of its original type and all types previously calculated. 
+
+
+
+
 [[sec:Structural_Typing]]
 ==  Structural Typing
 

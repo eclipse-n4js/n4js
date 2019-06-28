@@ -85,7 +85,7 @@ public class EcoreUtilN4 {
 		if (eobj == null) {
 			return emptyTreeIterator();
 		}
-		return new AbstractTreeIterator<EObject>(eobj, false) {
+		return new AbstractTreeIterator<>(eobj, false) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -224,7 +224,7 @@ public class EcoreUtilN4 {
 	/**
 	 * Empty tree iterator.
 	 */
-	public final static TreeIterator<?> EMPTY_TREE_ITERATOR = new TreeIterator<Object>() {
+	public final static TreeIterator<?> EMPTY_TREE_ITERATOR = new TreeIterator<>() {
 
 		@Override
 		public boolean hasNext() {

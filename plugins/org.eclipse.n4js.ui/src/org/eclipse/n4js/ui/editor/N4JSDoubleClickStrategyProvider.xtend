@@ -5,6 +5,16 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
+ * Parts originally copied from org.eclipse.xtext.ui.editor.doubleClicking.AbstractPartitionDoubleClickSelector 
+ * 	in bundle  org.eclipse.xtext.ui
+ * 	available under the terms of the Eclipse Public License 2.0
+ * 	Copyright (c) 2011 itemis AG (http://www.itemis.eu) and others.
+ * 
+ * and org.eclipse.jdt.internal.ui.text.java.JavadocDoubleClickStrategy
+ *	in bundle org.eclipse.jdt.ui
+ *	available under the terms of the Eclipse Public License 2.0
+ *  Copyright (c) 2000, 2011 IBM Corporation and others.
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */

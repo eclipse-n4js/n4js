@@ -92,6 +92,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Script_IM createScript_IM() {
 		Script_IMImpl script_IM = new Script_IMImpl();
 		return script_IM;
@@ -102,6 +103,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTable createSymbolTable() {
 		SymbolTableImpl symbolTable = new SymbolTableImpl();
 		return symbolTable;
@@ -112,6 +114,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntryOriginal createSymbolTableEntryOriginal() {
 		SymbolTableEntryOriginalImpl symbolTableEntryOriginal = new SymbolTableEntryOriginalImpl();
 		return symbolTableEntryOriginal;
@@ -122,6 +125,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntryIMOnly createSymbolTableEntryIMOnly() {
 		SymbolTableEntryIMOnlyImpl symbolTableEntryIMOnly = new SymbolTableEntryIMOnlyImpl();
 		return symbolTableEntryIMOnly;
@@ -132,6 +136,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SymbolTableEntryInternal createSymbolTableEntryInternal() {
 		SymbolTableEntryInternalImpl symbolTableEntryInternal = new SymbolTableEntryInternalImpl();
 		return symbolTableEntryInternal;
@@ -142,6 +147,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifierRef_IM createIdentifierRef_IM() {
 		IdentifierRef_IMImpl identifierRef_IM = new IdentifierRef_IMImpl();
 		return identifierRef_IM;
@@ -152,6 +158,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterizedPropertyAccessExpression_IM createParameterizedPropertyAccessExpression_IM() {
 		ParameterizedPropertyAccessExpression_IMImpl parameterizedPropertyAccessExpression_IM = new ParameterizedPropertyAccessExpression_IMImpl();
 		return parameterizedPropertyAccessExpression_IM;
@@ -162,6 +169,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterizedTypeRef_IM createParameterizedTypeRef_IM() {
 		ParameterizedTypeRef_IMImpl parameterizedTypeRef_IM = new ParameterizedTypeRef_IMImpl();
 		return parameterizedTypeRef_IM;
@@ -172,6 +180,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ParameterizedTypeRefStructural_IM createParameterizedTypeRefStructural_IM() {
 		ParameterizedTypeRefStructural_IMImpl parameterizedTypeRefStructural_IM = new ParameterizedTypeRefStructural_IMImpl();
 		return parameterizedTypeRefStructural_IM;
@@ -182,6 +191,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Snippet createSnippet() {
 		SnippetImpl snippet = new SnippetImpl();
 		return snippet;
@@ -192,6 +202,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DelegatingGetterDeclaration createDelegatingGetterDeclaration() {
 		DelegatingGetterDeclarationImpl delegatingGetterDeclaration = new DelegatingGetterDeclarationImpl();
 		return delegatingGetterDeclaration;
@@ -202,6 +213,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DelegatingSetterDeclaration createDelegatingSetterDeclaration() {
 		DelegatingSetterDeclarationImpl delegatingSetterDeclaration = new DelegatingSetterDeclarationImpl();
 		return delegatingSetterDeclaration;
@@ -212,6 +224,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DelegatingMethodDeclaration createDelegatingMethodDeclaration() {
 		DelegatingMethodDeclarationImpl delegatingMethodDeclaration = new DelegatingMethodDeclarationImpl();
 		return delegatingMethodDeclaration;
@@ -222,6 +235,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StringLiteralForSTE createStringLiteralForSTE() {
 		StringLiteralForSTEImpl stringLiteralForSTE = new StringLiteralForSTEImpl();
 		return stringLiteralForSTE;
@@ -232,6 +246,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionedParameterizedTypeRef_IM createVersionedParameterizedTypeRef_IM() {
 		VersionedParameterizedTypeRef_IMImpl versionedParameterizedTypeRef_IM = new VersionedParameterizedTypeRef_IMImpl();
 		return versionedParameterizedTypeRef_IM;
@@ -242,6 +257,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionedParameterizedTypeRefStructural_IM createVersionedParameterizedTypeRefStructural_IM() {
 		VersionedParameterizedTypeRefStructural_IMImpl versionedParameterizedTypeRefStructural_IM = new VersionedParameterizedTypeRefStructural_IMImpl();
 		return versionedParameterizedTypeRefStructural_IM;
@@ -252,6 +268,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionedIdentifierRef_IM createVersionedIdentifierRef_IM() {
 		VersionedIdentifierRef_IMImpl versionedIdentifierRef_IM = new VersionedIdentifierRef_IMImpl();
 		return versionedIdentifierRef_IM;
@@ -262,6 +279,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VersionedNamedImportSpecifier_IM createVersionedNamedImportSpecifier_IM() {
 		VersionedNamedImportSpecifier_IMImpl versionedNamedImportSpecifier_IM = new VersionedNamedImportSpecifier_IMImpl();
 		return versionedNamedImportSpecifier_IM;
@@ -272,6 +290,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ImPackage getImPackage() {
 		return (ImPackage)getEPackage();
 	}

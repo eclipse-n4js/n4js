@@ -37,7 +37,7 @@ import org.hamcrest.Description
 import org.junit.After
 import org.junit.Before
 
-import static com.google.common.collect.ArrayListMultimap.create
+import com.google.common.collect.ArrayListMultimap
 import static com.google.common.collect.Multimaps.synchronizedMultimap
 import static com.jayway.restassured.RestAssured.*
 import static java.util.Collections.*
@@ -71,7 +71,7 @@ abstract class BaseResourcesTest extends AbstractTestTreeTest{
 			queue.dispose();
 		}
 		queue = provider.get();
-		events = synchronizedMultimap(create);
+		events = synchronizedMultimap(ArrayListMultimap.create);
 	}
 
 

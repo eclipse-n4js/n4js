@@ -1,0 +1,6 @@
+
+export public class C {
+	public foo() {
+		console.log("Hello from C in Lib!");
+	}
+}

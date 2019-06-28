@@ -24,6 +24,11 @@
             }
         }
 	}
+
+
+	IssueConfiguration {
+		IssueCode "MISSING_YARN_WORKSPACE" { enabled = false }
+	}
    END_SETUP
  */
 
@@ -31,13 +36,13 @@
 
 {
 	"name": "P",
-	// XPECT hyperlinks at 'ma<|>in' --> file:/.../src/main.n4js
+	// XPECT hyperlinks at '"ma<|>in"' --> file:/.../src/main.n4js
 	"main": "src/main.n4js",
 	"n4js": {
 		"projectType": "definition",
 		// XPECT hyperlinks at 'li<|>b1' --> platform:/resource/lib1/package.json
 		"definesPackage": "lib1",
-		// XPECT hyperlinks at 'ma<|>in' --> platform:/resource/P/src/main.n4js
+		// XPECT hyperlinks at '"ma<|>inModule"' --> platform:/resource/P/src/main.n4js
 		"mainModule": "main",
 		"sources": {
 			"source": [
@@ -59,5 +64,4 @@
 		"lib1": ""
 	}
 }
-
 

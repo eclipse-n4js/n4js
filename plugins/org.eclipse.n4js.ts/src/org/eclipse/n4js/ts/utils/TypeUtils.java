@@ -201,10 +201,7 @@ public class TypeUtils {
 			refTypeArgs.add(TypeUtils.copyIfContained(typeArg));
 		}
 		if (autoCreateTypeArgs) {
-			final int l = declaredType.getTypeVars().size();
-			for (int i = refTypeArgs.size(); i < l; i++) {
-				refTypeArgs.add(createWildcard());
-			}
+			sanitizeRawTypeRef(ref);
 		}
 		return ref;
 	}
@@ -473,10 +470,6 @@ public class TypeUtils {
 				boundThisTypeRef.getActualThisTypeRef().getDeclaredType(),
 				boundThisTypeRef.getTypingStrategy(),
 				targs);
-		if (!boundThisTypeRef.getTypeArgs().isEmpty()) {
-			resolvedTypeRef.getTypeArgs().clear();
-			resolvedTypeRef.getTypeArgs().addAll(TypeUtils.copyAll(boundThisTypeRef.getTypeArgs()));
-		}
 		// set structural typing info
 		if (resolvedTypeRef instanceof ParameterizedTypeRefStructural)
 			copyStructuralTypingInfo((ParameterizedTypeRefStructural) resolvedTypeRef, boundThisTypeRef);

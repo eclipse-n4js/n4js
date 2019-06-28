@@ -5,6 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
+ * Parts originally copied from org.eclipse.draw2d.ChopboxAnchor
+ *	in bundle org.eclipse.draw2d
+ *	available under the terms of the Eclipse Public License 2.0
+ *  Copyright (c) 2000, 2010 IBM Corporation and others.
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */

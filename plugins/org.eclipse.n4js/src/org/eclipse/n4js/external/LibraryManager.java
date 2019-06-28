@@ -42,8 +42,10 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.binaries.Binary;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
+import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -54,10 +56,11 @@ import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.utils.N4JSDataCollectors;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.StatusUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
@@ -84,6 +87,9 @@ public class LibraryManager {
 
 	@Inject
 	private Provider<NpmBinary> npmBinaryProvider;
+
+	@Inject
+	private Provider<YarnBinary> yarnBinaryProvider;
 
 	@Inject
 	private NpmLogger logger;
@@ -152,7 +158,7 @@ public class LibraryManager {
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 
-		IStatus binaryStatus = checkNPM();
+		IStatus binaryStatus = checkBinary(usingYarn);
 		if (!binaryStatus.isOK()) {
 			status.merge(binaryStatus);
 			return status;
@@ -182,11 +188,6 @@ public class LibraryManager {
 		String msg = "Running 'npm/yarn install' on all projects";
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
-		IStatus binaryStatus = checkNPM();
-		if (!binaryStatus.isOK()) {
-			status.merge(binaryStatus);
-			return status;
-		}
 
 		Collection<URI> allProjectLocations = userWorkspace.getAllProjectLocations();
 
@@ -207,10 +208,28 @@ public class LibraryManager {
 			}
 		}
 
+		// 2) check the binaries that are required
+		IStatus binaryStatus;
+		if (!yarnWorkspaceRoots.isEmpty()) {
+			binaryStatus = checkBinary(true);
+			if (!binaryStatus.isOK()) {
+				status.merge(binaryStatus);
+			}
+		}
+		if (!projectsOutsideAnyYarnWorkspace.isEmpty()) {
+			binaryStatus = checkBinary(false);
+			if (!binaryStatus.isOK()) {
+				status.merge(binaryStatus);
+			}
+		}
+		if (!status.isOK()) {
+			return status;
+		}
+
 		SubMonitor subMonitor = SubMonitor.convert(monitor,
 				1 + yarnWorkspaceRoots.size() + projectsOutsideAnyYarnWorkspace.size());
 
-		// 2) run 'npm/yarn install' in workspace roots and non-workspace projects
+		// 3) run 'npm/yarn install' in workspace roots and non-workspace projects
 		for (File yarnWorkspaceRoot : yarnWorkspaceRoots) {
 			msg = "Running 'yarn install' on yarn workspace root " + yarnWorkspaceRoot;
 			SubMonitor subMonitorInstall = subMonitor.split(1);
@@ -335,6 +354,13 @@ public class LibraryManager {
 		return runWithWorkspaceLock(() -> installNPMsInternal(versionedNPMs, forceReloadAll, target, monitor));
 	}
 
+	/**
+	 * NOTE: if the target points to a member project in a yarn workspace, this method will *NOT* switch to the yarn
+	 * workspace root folder for executing yarn! Rationale: in case an explicitly mentioned npm package is installed
+	 * (e.g. "yarn add lodash") it makes a difference whether that command is being executed in the member project's
+	 * root folder or the yarn workspace root folder (i.e. the newly installed npm package will be added to a different
+	 * package.json file in each case) and we want to support both cases.
+	 */
 	private IStatus installNPMsInternal(Map<String, NPMVersionRequirement> versionedNPMs, boolean forceReloadAll,
 			URI target, IProgressMonitor monitor) {
 
@@ -342,7 +368,9 @@ public class LibraryManager {
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 
-		IStatus binaryStatus = checkNPM();
+		boolean usingYarn = npmCli.isYarnUsed(target);
+
+		IStatus binaryStatus = checkBinary(usingYarn);
 		if (!binaryStatus.isOK()) {
 			status.merge(binaryStatus);
 			return status;
@@ -355,15 +383,6 @@ public class LibraryManager {
 
 			SubMonitor subMonitor1 = subMonitor.split(2);
 			subMonitor1.setTaskName("Installing packages... [step 1 of " + steps + "]");
-
-			// Calculate the folder in which npm/yarn should be executed, either local project folder
-			// or yarn root folder
-			// Convert EMF to Java File
-			// http://ssdots.blogspot.com/2015/08/converting-orgeclipseemfcommonutiluri.html
-			// URI resolvedTarget = CommonPlugin.resolve(target);
-			// Path pathToTarget = Paths.get(resolvedTarget.toFileString());
-			// URI folderInWhichToExecuteURI = URI.createFileURI(nodeModulesDiscoveryHelper
-			// .getNodeModulesFolder(pathToTarget).nodeModulesFolder.getParent());
 
 			List<LibraryChange> actualChanges = installNPMs(subMonitor1, status, npmsToInstall,
 					target);
@@ -483,7 +502,11 @@ public class LibraryManager {
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 
-		IStatus binaryStatus = checkNPM();
+		// trim package name and "node_modules" segments from packageURI:
+		URI containingProjectURI = packageURI.trimSegments(packageURI.hasTrailingPathSeparator() ? 3 : 2);
+		boolean usingYarn = npmCli.isYarnUsed(containingProjectURI);
+
+		IStatus binaryStatus = checkBinary(usingYarn);
 		if (!binaryStatus.isOK()) {
 			status.merge(binaryStatus);
 			return status;
@@ -578,14 +601,15 @@ public class LibraryManager {
 	}
 
 	/**
-	 * Checks the npm binary.
+	 * Checks the npm/yarn binary.
 	 */
-	private IStatus checkNPM() {
-		NpmBinary npmBinary = npmBinaryProvider.get();
-		IStatus npmBinaryStatus = npmBinary.validate();
-		if (!npmBinaryStatus.isOK()) {
-			return statusHelper.createError("npm binary invalid",
-					new IllegalBinaryStateException(npmBinary, npmBinaryStatus));
+	private IStatus checkBinary(boolean usingYarn) {
+		Binary binary = (usingYarn ? yarnBinaryProvider : npmBinaryProvider).get();
+		IStatus binaryStatus = binary.validate();
+		if (!binaryStatus.isOK()) {
+			return statusHelper.createError(
+					binary.getLabel() + " binary invalid: " + StatusUtils.getErrorMessage(binaryStatus, false),
+					new IllegalBinaryStateException(binary, binaryStatus));
 		}
 		return statusHelper.OK();
 	}

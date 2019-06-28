@@ -77,6 +77,7 @@ public class PropertyNameValuePairSingleNameImpl extends PropertyNameValuePairIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IdentifierRef getIdentifierRef() {
 		return identifierRef;
 	}
@@ -101,6 +102,7 @@ public class PropertyNameValuePairSingleNameImpl extends PropertyNameValuePairIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIdentifierRef(IdentifierRef newIdentifierRef) {
 		if (newIdentifierRef != identifierRef) {
 			NotificationChain msgs = null;
@@ -120,6 +122,7 @@ public class PropertyNameValuePairSingleNameImpl extends PropertyNameValuePairIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		String _elvis = null;
 		String _name = super.getName();

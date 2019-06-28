@@ -20,8 +20,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
-
 /**
  */
 public class AT_GHOLD_212_transpilecrashTest extends AbstractN4jscTest {
@@ -35,7 +33,7 @@ public class AT_GHOLD_212_transpilecrashTest extends AbstractN4jscTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WSP_212, Predicates.alwaysTrue());
+		workspace = setupWorkspace(WSP_212, true);
 	}
 
 	/** Delete workspace. */
@@ -48,7 +46,7 @@ public class AT_GHOLD_212_transpilecrashTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileOfExtendedIterator_from_RuntimeLibrary() throws ExitCodeException {
 
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		String[] args = { "--projectlocations", proot, "--buildType", "allprojects" };
 
@@ -57,6 +55,5 @@ public class AT_GHOLD_212_transpilecrashTest extends AbstractN4jscTest {
 
 		// Make sure, we get here and have exactly one file compiled:
 		assertFilesCompiledToES(1, proot);
-
 	}
 }

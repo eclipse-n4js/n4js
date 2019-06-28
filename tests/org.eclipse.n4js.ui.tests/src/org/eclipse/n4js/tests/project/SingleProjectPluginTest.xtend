@@ -31,8 +31,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 	IFile projectDescriptionFile
 
 	@Before
-	override void setUp() {
-		super.setUp
+	def void setUp2() {
 		projectUnderTest = createJSProject("singleProjectTest")
 		src = configureProjectWithXtext(projectUnderTest)
 		projectDescriptionFile = projectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
@@ -293,10 +292,9 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 	@Test
 	def void testProjectDescriptionFileRecreated() throws Exception {
 		projectDescriptionFile.delete(false, null)
-		getResourceSet(projectUnderTest.project).resources.clear
 		val file = createTestFile(src, "C", "class C extends Unknown {}");
-		waitForAutoBuild
 		ProjectTestsUtils.createProjectDescriptionFile(projectUnderTest)
+		testedWorkspace.build
 		assertMarkers("file should have an error", file, 1);
 	}
 

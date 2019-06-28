@@ -45,6 +45,7 @@ import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
@@ -55,6 +56,7 @@ import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.PostfixExpression;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
+import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.ShiftExpression;
@@ -261,6 +263,14 @@ import com.google.inject.Inject;
 					return unknown();
 				}
 				// ############################################################################################################
+			} else if (exprPlain instanceof ImportCallExpression) {
+				final ImportCallExpression expr = (ImportCallExpression) exprPlain;
+				final int argIdx = expr.getArguments().indexOf(argument);
+				if (argIdx == 0) {
+					return stringTypeRef(G);
+				} else {
+					return unknown();
+				}
 			} else {
 				return unknown();
 			}
@@ -508,6 +518,11 @@ import com.google.inject.Inject;
 			} else {
 				return topTypeRef(G);
 			}
+		}
+
+		@Override
+		public TypeRef casePropertySpread(PropertySpread object) {
+			return unknown(); // TODO GH-1337 add support for spread operator
 		}
 
 		@Override

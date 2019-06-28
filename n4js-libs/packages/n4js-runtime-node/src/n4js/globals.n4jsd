@@ -12,4 +12,3 @@
 
 export external public const global: Object+;
 
-

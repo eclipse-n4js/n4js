@@ -9,13 +9,14 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.hlc,
  org.eclipse.n4js.hlc.base,
  org.junit,
+ org.eclipse.equinox.app,
  com.google.guava,
- org.eclipse.n4js.external.libraries,
  org.eclipse.n4js.runner,
  org.apache.log4j,
  org.slf4j.api;bundle-version="1.7.2",
  org.eclipse.n4js.utils,
  org.eclipse.xtext.testing,
- org.eclipse.n4js.tests.helper
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+ org.eclipse.n4js.tests.helper,
+ org.eclipse.n4js.json
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.hlc.tests

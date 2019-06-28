@@ -24,17 +24,17 @@ export external public function createHash(algorithm: string): Hash;
 export external public function createHmac(algorithm: string, key: string): Hmac;
 export external public function createSign(algorithm: string): Sign;
 export external public function createVerify(algorithm: string): Verify;
-export external public function getCiphers(): Array<string>;
-export external public function getCurves(): Array<string>;
+export external public function getCiphers(): string[];
+export external public function getCurves(): string[];
 export external public function getDiffieHellman(group_name: string): ~DiffieHellman;
-export external public function getHashes(): Array<string>;
+export external public function getHashes(): string[];
 @Promisifiable export external public function pbkdf2(password: string, salt: string, iterations: int, keylen: int, digest: string=, callback: {function(Error, Buffer)}=): void;
 export external public function pbkdf2Sync(password: string, salt: string, iterations: int, keylen: int, digest: string=): Buffer;
 export external public function privateDecrypt(private_key: union{string, Object}, buffer: Buffer): void;
 export external public function privateEncrypt(private_key: union{string, Object}, buffer: Buffer): void;
 export external public function publicDecrypt(private_key: union{string, Object}, buffer: Buffer): void;
 export external public function publicEncrypt(private_key: union{string, Object}, buffer: Buffer): void;
-@Promisifiable export external public function randomBytes(size: number, callback: {function(Error, Buffer)}=): void;
+@Promisifiable export external public function randomBytes(size: number, callback: {function(Error, Buffer)}=): Buffer;
 export external public function setEngine(engine: string, flags: any=): void;
 
 export external public class Certificate {

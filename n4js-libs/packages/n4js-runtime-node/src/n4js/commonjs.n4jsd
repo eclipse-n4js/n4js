@@ -1,0 +1,20 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@@Global @@ProvidedByRuntime
+import {Module} from "module";
+import {__RequireFn} from "module";
+
+export external public const __dirname: string;
+export external public const __filename: string;
+
+export external public const require: type{__RequireFn};
+
+export external public const module: Module;

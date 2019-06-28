@@ -2,6 +2,7 @@
 	"name": "external.project.mm",
 	"version": "0.0.1",
 	"dependencies": {
+		"n4js-runtime": "0.1.0",
 		"express": "4.13.4",
 		"jade": "1.11.0",
 		"lodash": "4.16.3",
@@ -12,7 +13,6 @@
 		"react": "16.2.0",
 		"react-dom": "16.2.0",
 		"body-parser": "1.18.2",
-		"n4js-runtime-node": "*",
 		"@n4jsd/express": "<=4.13.*",
 		"@n4jsd/lodash": "<=4.16.*",
 		"@n4jsd/next": "<=5.0.*",
@@ -27,9 +27,6 @@
 			"source": [
 				"src"
 			]
-		},
-		"requiredRuntimeLibraries": [
-			"n4js-runtime-node"
-		]
+		}
 	}
 }

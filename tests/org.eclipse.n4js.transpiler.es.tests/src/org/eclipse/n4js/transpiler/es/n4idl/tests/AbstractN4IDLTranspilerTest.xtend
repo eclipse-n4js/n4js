@@ -25,7 +25,7 @@ import org.eclipse.n4js.transpiler.es.tests.AbstractTranspilerTest
 /**
  * Abstract base class for N4IDL-transpiler tests.
  */
-class AbstractN4IDLTranspilerTest extends AbstractTranspilerTest {
+abstract class AbstractN4IDLTranspilerTest extends AbstractTranspilerTest {
 	@Inject private extension N4IDLParseHelper
 	@Inject private N4IDLTranspiler transpiler
 	

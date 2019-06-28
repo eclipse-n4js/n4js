@@ -11,10 +11,12 @@
 package org.eclipse.n4js.n4jsx.ui.tests;
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_RUNTIME;
 import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -94,11 +96,16 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
 		assertTrue(projectDescriptionFile + " client module is not accessible.", projectDescriptionFile.isAccessible());
 
-		assertMarkers("Expected exactly 3 errors in client module.", clientModule, 3);
-		// line 5: Project does not exist with project ID: react.
-		// line 6: Project does not exist with project ID: @n4jsd/react. expected:<1> but was:<2>
-		assertMarkers("Expected exactly 2 error in package.json.", projectDescriptionFile, 2);
+		assertIssues(clientModule,
+				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules",
+				"line 14: Cannot resolve JSX implementation.",
+				"line 15: Couldn't resolve reference to IdentifiableElement 'Component'.");
+		assertIssues(projectDescriptionFile,
+				"line 5: Project does not exist with project ID: n4js-runtime.",
+				"line 6: Project does not exist with project ID: react.",
+				"line 7: Project does not exist with project ID: @n4jsd/react.");
 
+		libManager.installNPM(N4JS_RUNTIME, URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
@@ -113,6 +120,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 
 		libManager.uninstallNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
 		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
+		libManager.uninstallNPM(N4JS_RUNTIME, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 	}
@@ -135,6 +143,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
 		assertTrue(projectDescriptionFile + " B module is not accessible.", projectDescriptionFile.isAccessible());
 
+		libManager.installNPM(N4JS_RUNTIME, URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
@@ -145,6 +154,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 
 		libManager.uninstallNPM(PACKAGE_N4JSD_REACT, new NullProgressMonitor());
 		libManager.uninstallNPM(PACKAGE_REACT, new NullProgressMonitor());
+		libManager.uninstallNPM(N4JS_RUNTIME, new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 	}
@@ -153,7 +163,12 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final String pathToModuleToRun = getResourceName(PA, CLIENT_MODULE);
 		final org.eclipse.emf.common.util.URI moduleToRun = createPlatformResourceURI(pathToModuleToRun, true);
 		final RunConfiguration config = runnerFrontEnd.createConfiguration(ID, null, moduleToRun);
-		final Process process = runnerFrontEndUI.runInUI(config);
+		final Process process;
+		try {
+			process = runnerFrontEndUI.runInUI(config);
+		} catch (ExecutionException e) {
+			throw new RuntimeException("Exception after invoking #runInUI().", e);
+		}
 		final ProcessResult result = processExecutor.execute(process, "", OutputRedirection.REDIRECT);
 		assertTrue("Expected 0 error code for the process. Was: " + result.getExitCode() + "\nError message: "
 				+ result.getStdErr(), result.isOK());

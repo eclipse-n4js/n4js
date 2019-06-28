@@ -75,6 +75,7 @@ public class CatchBlockImpl extends AbstractCatchBlockImpl implements CatchBlock
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CatchVariable getCatchVariable() {
 		return catchVariable;
 	}
@@ -99,6 +100,7 @@ public class CatchBlockImpl extends AbstractCatchBlockImpl implements CatchBlock
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCatchVariable(CatchVariable newCatchVariable) {
 		if (newCatchVariable != catchVariable) {
 			NotificationChain msgs = null;
@@ -118,6 +120,7 @@ public class CatchBlockImpl extends AbstractCatchBlockImpl implements CatchBlock
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return false;
 	}

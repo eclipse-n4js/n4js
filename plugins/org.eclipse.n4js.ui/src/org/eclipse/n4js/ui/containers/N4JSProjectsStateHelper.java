@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSModel;
@@ -138,11 +137,6 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	public void clearProjectCache() {
 		LOGGER.info("Clearing cache.");
 		cache.clear();
-	}
-
-	public void clearProjectCache(IResourceDelta delta) {
-		IProject project = delta.getResource().getProject();
-		clearProjectCache(project);
 	}
 
 	public void clearProjectCache(IProject project) {

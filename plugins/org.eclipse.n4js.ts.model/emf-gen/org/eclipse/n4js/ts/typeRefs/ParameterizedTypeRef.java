@@ -36,7 +36,8 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeLiteral <em>Array Type Literal</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression <em>Iterable Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
@@ -50,10 +51,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	/**
 	 * Returns the value of the '<em><b>Declared Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Declared Type</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Declared Type</em>' reference.
 	 * @see #setDeclaredType(Type)
@@ -77,10 +74,6 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * Returns the value of the '<em><b>Type Args</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.TypeArgument}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Type Args</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type Args</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_TypeArgs()
@@ -90,31 +83,50 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	EList<TypeArgument> getTypeArgs();
 
 	/**
-	 * Returns the value of the '<em><b>Array Type Literal</b></em>' attribute.
+	 * Returns the value of the '<em><b>Array Type Expression</b></em>' attribute.
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Array Type Literal</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Array Type Literal</em>' attribute.
-	 * @see #setArrayTypeLiteral(boolean)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_ArrayTypeLiteral()
+	 * @return the value of the '<em>Array Type Expression</em>' attribute.
+	 * @see #setArrayTypeExpression(boolean)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_ArrayTypeExpression()
 	 * @model default="false" unique="false"
 	 * @generated
 	 */
-	boolean isArrayTypeLiteral();
+	boolean isArrayTypeExpression();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeLiteral <em>Array Type Literal</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Array Type Literal</em>' attribute.
-	 * @see #isArrayTypeLiteral()
+	 * @param value the new value of the '<em>Array Type Expression</em>' attribute.
+	 * @see #isArrayTypeExpression()
 	 * @generated
 	 */
-	void setArrayTypeLiteral(boolean value);
+	void setArrayTypeExpression(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Iterable Type Expression</em>' attribute.
+	 * @see #setIterableTypeExpression(boolean)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_IterableTypeExpression()
+	 * @model default="false" unique="false"
+	 * @generated
+	 */
+	boolean isIterableTypeExpression();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression <em>Iterable Type Expression</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Iterable Type Expression</em>' attribute.
+	 * @see #isIterableTypeExpression()
+	 * @generated
+	 */
+	void setIterableTypeExpression(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Ast Namespace</b></em>' reference.

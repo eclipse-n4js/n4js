@@ -31,10 +31,9 @@ import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
-import org.eclipse.n4js.utils.io.FileCopier;
-import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.testing.GlobalRegistries;
+import org.eclipse.xtext.util.Arrays;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -52,7 +51,9 @@ public abstract class AbstractN4jscTest {
 
 	/** name of workspace sub-folder (inside target folder) */
 	private static final String WSP = "wsp";
-	/** name of package containing the test resources */
+	/** see {@link N4CliHelper#PACKAGES} */
+	protected static final String PACKAGES = N4CliHelper.PACKAGES;
+	/** name of folder containing the test resources */
 	protected static final String FIXTURE = "probands";
 	/** name of default test data set */
 	protected static final String TEST_DATA_SET__BASIC = "basic";
@@ -68,71 +69,70 @@ public abstract class AbstractN4jscTest {
 	 * {@link N4jscBase#doMain(String...)}.
 	 */
 	@Before
-	public void saveGlobalRegistries() {
+	public void clearGlobalRegistries() {
 		GlobalRegistries.clearGlobalRegistries();
 	}
 
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests.
 	 *
+	 * @param createYarnWorkspace
+	 *            see {@link N4CliHelper#setupWorkspace(Path, Path, Predicate, boolean)}.
+	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
-	protected static File setupWorkspace(String testDataSet) throws IOException {
-		return setupWorkspace(testDataSet, Predicates.alwaysFalse());
+	protected static File setupWorkspace(String testDataSet, boolean createYarnWorkspace) throws IOException {
+		return setupWorkspace(testDataSet, Predicates.alwaysFalse(), createYarnWorkspace);
 	}
 
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests.
 	 *
+	 * @param createYarnWorkspace
+	 *            see {@link N4CliHelper#setupWorkspace(Path, Path, Predicate, boolean)}.
+	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
-	protected static File setupWorkspace(String testDataRoot, String testDataSet) throws IOException {
-		return setupWorkspace(testDataRoot, testDataSet, Predicates.alwaysFalse());
+	protected static File setupWorkspace(String testDataRoot, String testDataSet, boolean createYarnWorkspace)
+			throws IOException {
+		return setupWorkspace(testDataRoot, testDataSet, Predicates.alwaysFalse(), createYarnWorkspace);
+	}
+
+	/**
+	 * Same as {@link #setupWorkspace(String, Predicate, boolean)}, but accepts one or more names of libraries to
+	 * install instead of a predicate.
+	 */
+	protected static File setupWorkspace(String testDataSet, boolean createYarnWorkspace, String... libNames)
+			throws IOException {
+		return setupWorkspace(testDataSet, libName -> Arrays.contains(libNames, libName), createYarnWorkspace);
 	}
 
 	/**
 	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests. Also includes all N4JS
 	 * libraries from the {@code n4js} Git repository which name provides {@code true} value for the given predicate.
 	 *
-	 * @returns file indicating the relative path to the copied data set
-	 */
-	protected static File setupWorkspace(String testDataSet,
-			Predicate<String> n4jsLibrariesPredicate)
-			throws IOException {
-		return setupWorkspace(FIXTURE, testDataSet, n4jsLibrariesPredicate);
-	}
-
-	/**
-	 * Copy a fresh fixture to the workspace area. Deleting old leftovers from former tests. Also includes all N4JS
-	 * libraries from the {@code n4js} Git repository which name provides {@code true} value for the given predicate.
+	 * @param createYarnWorkspace
+	 *            see {@link N4CliHelper#setupWorkspace(Path, Path, Predicate, boolean)}.
 	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
-	protected static File setupWorkspace(String testDataRoot, String testDataSet,
-			Predicate<String> n4jsLibrariesPredicate)
-			throws IOException {
-		File root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_").toFile();
+	protected static File setupWorkspace(String testDataSet, Predicate<String> n4jsLibrariesPredicate,
+			boolean createYarnWorkspace) throws IOException {
+		return setupWorkspace(FIXTURE, testDataSet, n4jsLibrariesPredicate, createYarnWorkspace);
+	}
 
-		File wsp = new File(root, WSP);
-		File fixture = new File(testDataRoot, testDataSet);
-		// clean
-		if (wsp.exists()) {
-			FileDeleter.delete(wsp.toPath(), true);
-		}
-
-		// copy fixtures to workspace
-		FileCopier.copy(fixture.toPath(), wsp.toPath(), true);
-
-		// copy required n4js libraries to workspace location
-		N4CliHelper.copyN4jsLibsToLocation(wsp, n4jsLibrariesPredicate);
-
-		return wsp;
+	private static File setupWorkspace(String testDataRoot, String testDataSet,
+			Predicate<String> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
+		Path fixture = new File(testDataRoot, testDataSet).toPath();
+		Path root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_");
+		Path wsp = root.resolve(WSP);
+		N4CliHelper.setupWorkspace(fixture, wsp, n4jsLibrariesPredicate, createYarnWorkspace);
+		return wsp.toFile();
 	}
 
 	/**
 	 * Convince method to call compiler with provided arguments and assert given exception with given exit code is
 	 * thrown. Since it handles thrown error, allow callers to do further assertions.
-	 *
 	 */
 	protected static void expectCompilerException(String[] args, ErrorExitCode expectedExitCode) {
 		try {
@@ -240,13 +240,13 @@ public abstract class AbstractN4jscTest {
 		@Override
 		protected void starting(Description desc) {
 			description = desc;
-			System.out.println("Started of: " + desc.getClassName() + "." + desc.getMethodName());
+			System.out.println("Started: " + desc.getClassName() + "." + desc.getMethodName());
 		}
 
 		@Override
 		protected void finished(Description desc) {
 			description = null;
-			System.out.println("Finished of: " + desc.getClassName() + "." + desc.getMethodName());
+			System.out.println("Finished: " + desc.getClassName() + "." + desc.getMethodName());
 		}
 
 	};
@@ -277,7 +277,7 @@ public abstract class AbstractN4jscTest {
 		final File workspaceRoot = new File(workspaceRootPath);
 
 		final File gitRoot = new File(new File("").getAbsolutePath()).getParentFile().getParentFile();
-		final File n4jsLibrariesRoot = new File(gitRoot, N4JSGlobals.SHIPPED_CODE_SOURCES_FOLDER_NAME);
+		final File n4jsLibrariesRoot = new File(gitRoot, N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
 		final Collection<String> n4jsLibraryNames = newHashSet(n4jsLibrariesRoot.list());
 
 		final AtomicInteger counter = new AtomicInteger();

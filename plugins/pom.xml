@@ -42,9 +42,6 @@ Contributors:
 		<module>org.eclipse.n4js.ui</module>
 		<!-- execution environments -->
 		<module>org.eclipse.n4js.environments</module>
-		<!-- external libraries bundles -->
-		<module>org.eclipse.n4js.external.libraries</module>
-		<module>org.eclipse.n4js.external.libraries.update</module>
 		<!-- runners -->
 		<module>org.eclipse.n4js.runner</module>
 		<module>org.eclipse.n4js.runner.ui</module>

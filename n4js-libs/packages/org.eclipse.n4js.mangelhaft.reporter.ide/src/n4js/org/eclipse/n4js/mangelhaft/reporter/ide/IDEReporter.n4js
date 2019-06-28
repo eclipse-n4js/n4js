@@ -16,6 +16,8 @@ import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
 import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor";
 import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
+import fetch from "deps/node-fetch"
+
 export public class IDEReporter implements ITestReporter {
 
     private endpointValue: string = "MISSING_REQUIRED_ENDPOINT";
@@ -26,13 +28,12 @@ export public class IDEReporter implements ITestReporter {
         this.endpointValue = endpoint.replace(/\/+$/, "");
     }
     public timeoutBuffer: number = 1000 * 30;
-    public fetch = fetch;
 
     @Override
     @Inject
     protected spy: TestSpy;
 
-    public async send(uri: string, method: Method, headers: union{Headers,Array<Array<string>>,Object}, body: Object) {
+    public async send(uri: string, method: Method, headers: Headers|string[][]|Object, body: Object) {
         let ret: Response,
             bodyStr: string;
 
@@ -43,11 +44,11 @@ export public class IDEReporter implements ITestReporter {
                        }
                        return value;
                    }, 2)
-            ret = await Promise.resolve(this.fetch.call(null, this.endpoint + uri, {
+            ret = await fetch(this.endpoint + uri, {
                    Method method: method,
-                   union{Headers,Array<Array<string>>,Object} headers: headers,
+                   union{Headers,string[][],Object} headers: headers,
                    string body: bodyStr
-            }) as Response);
+            });
         }catch(er) {
             let err: Error+ = er as Error;
             console.error(err);

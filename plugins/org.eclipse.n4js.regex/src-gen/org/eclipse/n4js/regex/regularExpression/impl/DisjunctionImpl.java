@@ -78,6 +78,7 @@ public class DisjunctionImpl extends PatternImpl implements Disjunction
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Pattern> getElements()
   {
     if (elements == null)

@@ -450,6 +450,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createPropertySetterDeclarationAdapter();
 			}
 			@Override
+			public Adapter casePropertySpread(PropertySpread object) {
+				return createPropertySpreadAdapter();
+			}
+			@Override
 			public Adapter caseExpression(Expression object) {
 				return createExpressionAdapter();
 			}
@@ -468,6 +472,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseParameterizedCallExpression(ParameterizedCallExpression object) {
 				return createParameterizedCallExpressionAdapter();
+			}
+			@Override
+			public Adapter caseImportCallExpression(ImportCallExpression object) {
+				return createImportCallExpressionAdapter();
 			}
 			@Override
 			public Adapter caseArgument(Argument object) {
@@ -754,8 +762,16 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createJSXSpreadAttributeAdapter();
 			}
 			@Override
+			public Adapter caseJSXAbstractElement(JSXAbstractElement object) {
+				return createJSXAbstractElementAdapter();
+			}
+			@Override
 			public Adapter caseJSXElement(JSXElement object) {
 				return createJSXElementAdapter();
+			}
+			@Override
+			public Adapter caseJSXFragment(JSXFragment object) {
+				return createJSXFragmentAdapter();
 			}
 			@Override
 			public Adapter caseVersionedElement(VersionedElement object) {
@@ -2094,6 +2110,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.PropertySpread <em>Property Spread</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.PropertySpread
+	 * @generated
+	 */
+	public Adapter createPropertySpreadAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.Expression <em>Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -2160,6 +2190,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createParameterizedCallExpressionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ImportCallExpression <em>Import Call Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.ImportCallExpression
+	 * @generated
+	 */
+	public Adapter createImportCallExpressionAdapter() {
 		return null;
 	}
 
@@ -3158,6 +3202,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXAbstractElement <em>JSX Abstract Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.JSXAbstractElement
+	 * @generated
+	 */
+	public Adapter createJSXAbstractElementAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXElement <em>JSX Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -3168,6 +3226,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createJSXElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.JSXFragment <em>JSX Fragment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.JSXFragment
+	 * @generated
+	 */
+	public Adapter createJSXFragmentAdapter() {
 		return null;
 	}
 

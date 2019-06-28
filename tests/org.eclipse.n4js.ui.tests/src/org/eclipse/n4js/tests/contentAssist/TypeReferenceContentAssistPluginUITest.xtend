@@ -150,12 +150,12 @@ class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistPl
 	}
 
 	@Test def void testTypeProposals_aliasProposed() {
-		newBuilder().append("import {MyFirstClass as MyRenamedClass} from 'path/Libs' var varName: my")
+		newBuilder().append("import {MyFirstClass as MyRenamedClass} from 'path/Libs'; var varName: my")
 			.assertText("MyRenamedClass", "MyFirstClass", "MySecondClass");
 	}
 
 	@Test def void testTypeProposals_aliasExplained() {
-		newBuilder().append("import {MyFirstClass as MyRenamedClass} from 'path/Libs' var varName: my")
+		newBuilder().append("import {MyFirstClass as MyRenamedClass} from 'path/Libs'; var varName: my")
 			.assertProposal("MyRenamedClass")
 			.withDisplayString('MyRenamedClass - path/Libs alias for MyFirstClass')
 	}

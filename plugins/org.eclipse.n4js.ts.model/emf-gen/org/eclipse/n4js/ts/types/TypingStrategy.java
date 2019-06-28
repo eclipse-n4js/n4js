@@ -117,10 +117,6 @@ public enum TypingStrategy implements Enumerator {
 	/**
 	 * The '<em><b>Default</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Default</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #DEFAULT
 	 * @model name="default" literal="?~"
@@ -132,10 +128,6 @@ public enum TypingStrategy implements Enumerator {
 	/**
 	 * The '<em><b>Nominal</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Nominal</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #NOMINAL
 	 * @model name="nominal" literal=""
@@ -147,10 +139,6 @@ public enum TypingStrategy implements Enumerator {
 	/**
 	 * The '<em><b>Structural</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Structural</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #STRUCTURAL
 	 * @model name="structural" literal="~"
@@ -162,10 +150,6 @@ public enum TypingStrategy implements Enumerator {
 	/**
 	 * The '<em><b>Structural Fields</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Structural Fields</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #STRUCTURAL_FIELDS
 	 * @model name="structuralFields" literal="~~"
@@ -177,10 +161,6 @@ public enum TypingStrategy implements Enumerator {
 	/**
 	 * The '<em><b>Structural Read Only Fields</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Structural Read Only Fields</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #STRUCTURAL_READ_ONLY_FIELDS
 	 * @model name="structuralReadOnlyFields" literal="~r~"
@@ -192,10 +172,6 @@ public enum TypingStrategy implements Enumerator {
 	/**
 	 * The '<em><b>Structural Write Only Fields</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Structural Write Only Fields</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #STRUCTURAL_WRITE_ONLY_FIELDS
 	 * @model name="structuralWriteOnlyFields" literal="~w~"
@@ -207,10 +183,6 @@ public enum TypingStrategy implements Enumerator {
 	/**
 	 * The '<em><b>Structural Field Initializer</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Structural Field Initializer</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #STRUCTURAL_FIELD_INITIALIZER
 	 * @model name="structuralFieldInitializer" literal="~i~"
@@ -222,10 +194,6 @@ public enum TypingStrategy implements Enumerator {
 	/**
 	 * The '<em><b>Empty</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Empty</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #EMPTY
 	 * @model name="empty" literal="~\u2205~"
@@ -356,6 +324,7 @@ public enum TypingStrategy implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -365,6 +334,7 @@ public enum TypingStrategy implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -374,6 +344,7 @@ public enum TypingStrategy implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

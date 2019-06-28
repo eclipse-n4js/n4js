@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.generator.GeneratorOption;
-import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EditorsUtil;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -367,7 +366,7 @@ public class QuickFixXpectMethod {
 			return transpilerHelper.doCompileAndExecute(resource, init,
 					fileSetupContext,
 					false,
-					resourceTweaker, GeneratorOption.DEFAULT_OPTIONS, SystemLoaderInfo.SYSTEM_JS);
+					resourceTweaker, GeneratorOption.DEFAULT_OPTIONS);
 		} catch (IOException e) {
 			throw new RuntimeException("Error while compiling script.", e);
 		}

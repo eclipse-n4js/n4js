@@ -76,6 +76,7 @@ public abstract class PropertyNameOwnerImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LiteralOrComputedPropertyName getDeclaredName() {
 		return declaredName;
 	}
@@ -100,6 +101,7 @@ public abstract class PropertyNameOwnerImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredName(LiteralOrComputedPropertyName newDeclaredName) {
 		if (newDeclaredName != declaredName) {
 			NotificationChain msgs = null;
@@ -119,6 +121,7 @@ public abstract class PropertyNameOwnerImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		LiteralOrComputedPropertyName _declaredName = this.getDeclaredName();
 		String _name = null;
@@ -133,6 +136,7 @@ public abstract class PropertyNameOwnerImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean hasComputedPropertyName() {
 		final LiteralOrComputedPropertyName declName = this.getDeclaredName();
 		return ((declName != null) && declName.hasComputedPropertyName());
@@ -143,6 +147,7 @@ public abstract class PropertyNameOwnerImpl extends ProxyResolvingEObjectImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isValidName() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT

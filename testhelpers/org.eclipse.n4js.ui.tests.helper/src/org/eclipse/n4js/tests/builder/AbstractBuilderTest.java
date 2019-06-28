@@ -16,6 +16,8 @@ import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -30,15 +32,14 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.ui.building.CloseProjectTaskScheduler;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
-import org.eclipse.n4js.ui.external.ExternalLibraryBuildScheduler;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.AutobuildUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.xtext.builder.impl.QueuedBuildData;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
@@ -48,6 +49,7 @@ import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
@@ -56,6 +58,7 @@ import com.google.inject.Injector;
 /**
  * @author Sven Efftinge - Initial contribution and API
  */
+@SuppressWarnings("restriction")
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 public abstract class AbstractBuilderTest {
@@ -73,14 +76,21 @@ public abstract class AbstractBuilderTest {
 	private IResourceSetProvider resourceSetProvider;
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+
+	/**
+	 * Allows to trigger operations on the workspace that are considered to prevent race conditions, e.g. allows to
+	 * build synchronously.
+	 */
 	@Inject
-	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
+	@Rule
+	public TestedN4JSWorkspace testedWorkspace;
+
 	@Inject
-	private CloseProjectTaskScheduler closedProjectTaskProcessor;
+	private QueuedBuildData queuedBuildData;
 
 	/** Setups workspace by cleaning and waiting for auto builds, asserting index is clean. */
 	@Before
-	public void setUp() throws Exception {
+	final public void setUp() throws Exception {
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();
@@ -179,16 +189,23 @@ public abstract class AbstractBuilderTest {
 	 * index.
 	 */
 	@After
-	public void tearDown() throws Exception {
+	final public void tearDown() throws Exception {
+
 		// save the files as otherwise the projects cannot be deleted
 		libraryManager.deleteAllNodeModulesFolders(new NullProgressMonitor());
 		closeAllEditorsForTearDown();
+		ProjectTestsUtils.closeAllProjectsInWorkspace();
+		testedWorkspace.cleanBuild();
 		IResourcesSetupUtil.cleanWorkspace();
-		IResourcesSetupUtil.cleanBuild();
-		waitForAutoBuild();
-		assertEquals(0, root().getProjects().length);
+		testedWorkspace.cleanBuild();
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
 				countResourcesInIndex());
+
+		final IProject[] projects = root().getProjects();
+		assertTrue("Expected empty workspace. Projects were in workspace: " + Arrays.toString(projects),
+				0 == projects.length);
+
+		queuedBuildData.reset();
 	}
 
 	/***/
@@ -198,8 +215,8 @@ public abstract class AbstractBuilderTest {
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
-		waitForNotReallyBuildButHousekeepingJobs();
-		ProjectTestsUtils.waitForAutoBuild();
+		testedWorkspace.build();
+
 		ProjectTestsUtils.waitForAllJobs();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
@@ -219,7 +236,7 @@ public abstract class AbstractBuilderTest {
 	 * @see #waitForIncrementalBuild()
 	 */
 	public void waitForIncrementalBuild(boolean assertValidityOfXtextIndex) {
-		IResourcesSetupUtil.waitForBuild();
+		testedWorkspace.build();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}
@@ -228,8 +245,7 @@ public abstract class AbstractBuilderTest {
 	 * Waits for the jobs that do the housekeeping after project close or removal.
 	 */
 	protected void waitForNotReallyBuildButHousekeepingJobs() {
-		closedProjectTaskProcessor.joinRemoveProjectJob();
-		externalLibraryBuildJobProvider.joinBuildJob();
+		testedWorkspace.joinJobsBeforeBuild();
 	}
 
 	/***/
@@ -238,10 +254,8 @@ public abstract class AbstractBuilderTest {
 	}
 
 	/** Synchronizes the index, rebuilds externals and workspace */
-	protected void syncExtAndBuild() throws CoreException {
+	protected void syncExtAndBuild() {
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		ProjectTestsUtils.waitForAllJobs();
-		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 	}
 

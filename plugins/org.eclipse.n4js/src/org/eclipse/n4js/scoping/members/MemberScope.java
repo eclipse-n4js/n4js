@@ -50,9 +50,10 @@ public class MemberScope extends AbstractMemberScope {
 		 *            see {@link AbstractMemberScope#structFieldInitMode}.
 		 */
 		public IScope create(IScope parent, ContainerType<?> type,
-				EObject context, boolean staticAccess, boolean structFieldInitMode) {
+				EObject context, boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType) {
+
 			return new MemberScope(containerTypesHelper, parent, type, context, staticAccess, structFieldInitMode,
-					jsVariantHelper);
+					isDynamicType, jsVariantHelper);
 		}
 
 		/**
@@ -62,9 +63,10 @@ public class MemberScope extends AbstractMemberScope {
 		 *            see {@link AbstractMemberScope#structFieldInitMode}.
 		 */
 		public IScope create(ContainerType<?> type,
-				EObject context, boolean staticAccess, boolean structFieldInitMode) {
+				EObject context, boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType) {
+
 			return new MemberScope(containerTypesHelper, type, context, staticAccess, structFieldInitMode,
-					jsVariantHelper);
+					isDynamicType, jsVariantHelper);
 		}
 
 		/**
@@ -75,9 +77,11 @@ public class MemberScope extends AbstractMemberScope {
 		 *            see {@link AbstractMemberScope#structFieldInitMode}.
 		 */
 		public IScope create(IScope parent,
-				List<? extends TMember> members, EObject context, boolean staticAccess, boolean structFieldInitMode) {
+				List<? extends TMember> members, EObject context, boolean staticAccess, boolean structFieldInitMode,
+				boolean isDynamicType) {
+
 			return new MemberScope(containerTypesHelper, parent, members, context, staticAccess, structFieldInitMode,
-					jsVariantHelper);
+					isDynamicType, jsVariantHelper);
 		}
 	}
 
@@ -96,36 +100,42 @@ public class MemberScope extends AbstractMemberScope {
 	final ContainerTypesHelper containerTypesHelper;
 
 	/**
-	 * @see MemberScopeFactory#create(IScope, List, EObject, boolean, boolean)
+	 * @see MemberScopeFactory#create(IScope, List, EObject, boolean, boolean, boolean)
 	 */
 	MemberScope(ContainerTypesHelper containerTypesHelper, IScope parent,
 			List<? extends TMember> members, EObject context,
-			boolean staticAccess, boolean structFieldInitMode, JavaScriptVariantHelper jsVariantHelper) {
-		super(parent, context, staticAccess, structFieldInitMode, jsVariantHelper);
+			boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType,
+			JavaScriptVariantHelper jsVariantHelper) {
+
+		super(parent, context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper);
 		this.containerTypesHelper = containerTypesHelper;
 		this.type = null;
 		this.members = new ArrayList<>(members);
 	}
 
 	/**
-	 * @see MemberScopeFactory#create(IScope, ContainerType, EObject, boolean, boolean)
+	 * @see MemberScopeFactory#create(IScope, ContainerType, EObject, boolean, boolean, boolean)
 	 */
 	MemberScope(ContainerTypesHelper containerTypesHelper, IScope parent, ContainerType<?> type,
 			EObject context,
-			boolean staticAccess, boolean structFieldInitMode, JavaScriptVariantHelper jsVariantHelper) {
-		super(parent, context, staticAccess, structFieldInitMode, jsVariantHelper);
+			boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType,
+			JavaScriptVariantHelper jsVariantHelper) {
+
+		super(parent, context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper);
 		this.containerTypesHelper = containerTypesHelper;
 		this.type = type;
 		this.members = null;
 	}
 
 	/**
-	 * @see MemberScopeFactory#create(ContainerType, EObject, boolean, boolean)
+	 * @see MemberScopeFactory#create(ContainerType, EObject, boolean, boolean, boolean)
 	 */
 	MemberScope(ContainerTypesHelper containerTypesHelper, ContainerType<?> type,
 			EObject context,
-			boolean staticAccess, boolean structFieldInitMode, JavaScriptVariantHelper jsVariantHelper) {
-		super(IScope.NULLSCOPE, context, staticAccess, structFieldInitMode, jsVariantHelper);
+			boolean staticAccess, boolean structFieldInitMode, boolean isDynamicType,
+			JavaScriptVariantHelper jsVariantHelper) {
+
+		super(IScope.NULLSCOPE, context, staticAccess, structFieldInitMode, isDynamicType, jsVariantHelper);
 		this.containerTypesHelper = containerTypesHelper;
 		this.type = type;
 		this.members = null;

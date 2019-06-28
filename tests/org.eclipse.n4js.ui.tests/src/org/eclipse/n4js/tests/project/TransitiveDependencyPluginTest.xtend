@@ -33,7 +33,7 @@ class TransitiveDependencyPluginTest extends AbstractBuilderParticipantTest {
 	IFolder srcA
 
 	@Before
-	override void setUp() {
+	def void setUp2() {
 		super.setUp
 		dProjectUnderTest = createJSProject("multiProjectTest.d")
 		cProjectUnderTest = createJSProject("multiProjectTest.c")

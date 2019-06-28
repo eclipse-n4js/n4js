@@ -47,22 +47,6 @@ class RunnerHelperPluginUITest extends AbstractBuilderParticipantTest {
 	}
 
 	@Test
-	def void testGetInitModulePathsWithClosedProject() {
-		val actual = getInitModulePaths(#[closedProjectRef]);
-		assertTrue(
-			'''Expected empty initializer module paths for closed projects. Was: «actual».''',
-			#[] == actual);
-	}
-
-	@Test
-	def void testGetExecModuleURIWithClosedProject() {
-		val actual = getExecModuleURI(#[closedProjectRef]);
-		assertTrue(
-			'''Expected absent execution module path for closed projects. Was: «actual».''',
-			!actual.present);
-	}
-
-	@Test
 	def void testGetProjectExtendedDepsWithClosedProject() {
 		getProjectExtendedDeps('org.eclipse.n4js.runner.nodejs.NODEJS', MODULE_URI);
 		// expected no runtime exceptions.

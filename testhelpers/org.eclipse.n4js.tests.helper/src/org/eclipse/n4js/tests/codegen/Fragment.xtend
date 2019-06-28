@@ -25,7 +25,7 @@ abstract class Fragment<T extends Fragment<T>> {
 	/**
 	 * Extension methods for enumeration {@link Abstract}.
 	 */
-	public static class AbstractExtensions {
+	public static abstract class AbstractExtensions {
 		/**
 		 * Return a name for the given classifier name and abstractness. The created name
 		 * has the classifier name as a prefix. If the given value indicates an abstract

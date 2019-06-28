@@ -78,6 +78,7 @@ public class SequenceImpl extends PatternImpl implements Sequence
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Pattern> getElements()
   {
     if (elements == null)

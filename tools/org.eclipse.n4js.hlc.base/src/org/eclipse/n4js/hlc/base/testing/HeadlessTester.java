@@ -116,7 +116,7 @@ public class HeadlessTester {
 						"The spawned tester '" + testerDescriptor.getId()
 								+ "' exited with code=" + exit);
 
-		} catch (InterruptedException e1) {
+		} catch (Exception e1) {
 			logger.error(Throwables.getStackTraceAsString(e1));
 			throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
 					"The spawned tester exited by throwing an exception", e1);

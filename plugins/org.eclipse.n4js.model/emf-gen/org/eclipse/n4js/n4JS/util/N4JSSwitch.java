@@ -995,6 +995,19 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.PROPERTY_SPREAD: {
+				PropertySpread propertySpread = (PropertySpread)theEObject;
+				T result = casePropertySpread(propertySpread);
+				if (result == null) result = caseAnnotablePropertyAssignment(propertySpread);
+				if (result == null) result = casePropertyAssignment(propertySpread);
+				if (result == null) result = caseAnnotableElement(propertySpread);
+				if (result == null) result = caseVariableEnvironmentElement(propertySpread);
+				if (result == null) result = casePropertyNameOwner(propertySpread);
+				if (result == null) result = caseTypableElement(propertySpread);
+				if (result == null) result = caseNamedElement(propertySpread);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.EXPRESSION: {
 				Expression expression = (Expression)theEObject;
 				T result = caseExpression(expression);
@@ -1035,6 +1048,15 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseParameterizedAccess(parameterizedCallExpression);
 				if (result == null) result = caseTypableElement(parameterizedCallExpression);
 				if (result == null) result = caseControlFlowElement(parameterizedCallExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.IMPORT_CALL_EXPRESSION: {
+				ImportCallExpression importCallExpression = (ImportCallExpression)theEObject;
+				T result = caseImportCallExpression(importCallExpression);
+				if (result == null) result = caseExpression(importCallExpression);
+				if (result == null) result = caseTypableElement(importCallExpression);
+				if (result == null) result = caseControlFlowElement(importCallExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1829,13 +1851,34 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.JSX_ABSTRACT_ELEMENT: {
+				JSXAbstractElement jsxAbstractElement = (JSXAbstractElement)theEObject;
+				T result = caseJSXAbstractElement(jsxAbstractElement);
+				if (result == null) result = caseExpression(jsxAbstractElement);
+				if (result == null) result = caseTypableElement(jsxAbstractElement);
+				if (result == null) result = caseControlFlowElement(jsxAbstractElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.JSX_ELEMENT: {
 				JSXElement jsxElement = (JSXElement)theEObject;
 				T result = caseJSXElement(jsxElement);
-				if (result == null) result = caseExpression(jsxElement);
 				if (result == null) result = caseJSXChild(jsxElement);
+				if (result == null) result = caseJSXAbstractElement(jsxElement);
+				if (result == null) result = caseExpression(jsxElement);
 				if (result == null) result = caseTypableElement(jsxElement);
 				if (result == null) result = caseControlFlowElement(jsxElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_FRAGMENT: {
+				JSXFragment jsxFragment = (JSXFragment)theEObject;
+				T result = caseJSXFragment(jsxFragment);
+				if (result == null) result = caseJSXChild(jsxFragment);
+				if (result == null) result = caseJSXAbstractElement(jsxFragment);
+				if (result == null) result = caseExpression(jsxFragment);
+				if (result == null) result = caseTypableElement(jsxFragment);
+				if (result == null) result = caseControlFlowElement(jsxFragment);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -3256,6 +3299,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Property Spread</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Property Spread</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePropertySpread(PropertySpread object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -3327,6 +3385,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseParameterizedCallExpression(ParameterizedCallExpression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Import Call Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Import Call Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseImportCallExpression(ImportCallExpression object) {
 		return null;
 	}
 
@@ -4396,6 +4469,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Abstract Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Abstract Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXAbstractElement(JSXAbstractElement object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>JSX Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -4407,6 +4495,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseJSXElement(JSXElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Fragment</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Fragment</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXFragment(JSXFragment object) {
 		return null;
 	}
 

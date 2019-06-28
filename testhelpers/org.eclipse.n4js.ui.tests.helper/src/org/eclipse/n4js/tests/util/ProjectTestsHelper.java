@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tests.util;
 
+import java.util.concurrent.ExecutionException;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
@@ -42,7 +44,7 @@ public class ProjectTestsHelper {
 	 * @param moduleToRun
 	 *            a platform resource URI pointing to the module to run.
 	 */
-	public ProcessResult runWithNodeRunnerUI(URI moduleToRun) {
+	public ProcessResult runWithNodeRunnerUI(URI moduleToRun) throws ExecutionException {
 		return runWithRunnerUI(NodeRunner.ID, null, moduleToRun);
 	}
 
@@ -55,7 +57,8 @@ public class ProjectTestsHelper {
 	 * @param moduleToRun
 	 *            a platform resource URI pointing to the module to run.
 	 */
-	public ProcessResult runWithRunnerUI(String runnerId, String implementationId, URI moduleToRun) {
+	public ProcessResult runWithRunnerUI(String runnerId, String implementationId, URI moduleToRun)
+			throws ExecutionException {
 		RunConfiguration config = runnerFrontEnd.createConfiguration(runnerId, implementationId, moduleToRun);
 		Process process = runnerFrontEndUI.runInUI(config);
 		ProcessResult result = processExecutor.execute(process, "", OutputRedirection.REDIRECT);

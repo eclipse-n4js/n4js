@@ -13,7 +13,7 @@ import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
 import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
 import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
 export public class NoOpReporter implements ITestReporter {
-    static argCalls: Array<any> = [];
+    static argCalls: any[] = [];
     @Override @Inject protected spy: TestSpy;
     @Override public async register(): any {
        this.spy.testingStarted.add(function (numAllGroups: number, sessionId: string, numAllTests: number) {

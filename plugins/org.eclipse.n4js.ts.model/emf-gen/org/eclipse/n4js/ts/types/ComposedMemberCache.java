@@ -44,10 +44,6 @@ public interface ComposedMemberCache extends EObject {
 	 * Returns the value of the '<em><b>Cached Composed Members</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TMember}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Cached Composed Members</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Cached Composed Members</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getComposedMemberCache_CachedComposedMembers()
@@ -59,10 +55,6 @@ public interface ComposedMemberCache extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Composed Type Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Composed Type Ref</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Composed Type Ref</em>' containment reference.
 	 * @see #setComposedTypeRef(TypeRef)

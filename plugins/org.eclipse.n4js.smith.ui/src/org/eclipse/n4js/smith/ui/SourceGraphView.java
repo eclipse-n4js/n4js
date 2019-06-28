@@ -35,7 +35,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.resource.XtextResource;
@@ -67,7 +69,9 @@ public class SourceGraphView extends ViewPart {
 	}
 
 	private void updateActiveEditor() {
-		final IEditorPart eddy = getSite().getPage().getActiveEditor();
+		final IWorkbenchPartSite site = getSite();
+		final IWorkbenchPage page = site != null ? site.getPage() : null;
+		final IEditorPart eddy = page != null ? page.getActiveEditor() : null;
 		final XtextEditor xeddy = eddy instanceof XtextEditor ? (XtextEditor) eddy : null;
 		if (activeEditor != xeddy) {
 			activeEditor = xeddy;

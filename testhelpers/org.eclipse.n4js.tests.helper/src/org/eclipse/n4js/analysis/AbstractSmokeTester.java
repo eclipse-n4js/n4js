@@ -37,7 +37,7 @@ import com.google.inject.Provider;
  */
 public abstract class AbstractSmokeTester {
 
-	private final Provider<? extends Lexer> lexerProvider = new Provider<Lexer>() {
+	private final Provider<? extends Lexer> lexerProvider = new Provider<>() {
 		@Override
 		public Lexer get() {
 			return new InternalN4JSLexer(null);

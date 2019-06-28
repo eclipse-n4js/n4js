@@ -5,6 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
+ * Originally copied from org.eclipse.ui.dialogs.WizardNewProjectCreationPage
+ *	in bundle org.eclipse.ui.ide
+ *	available under the terms of the Eclipse Public License 2.0
+ *  Copyright (c) 2000, 2015 IBM Corporation and others.
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */

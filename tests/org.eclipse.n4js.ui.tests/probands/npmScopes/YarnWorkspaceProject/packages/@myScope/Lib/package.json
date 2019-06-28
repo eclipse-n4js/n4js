@@ -1,0 +1,19 @@
+{
+	"name": "@myScope/Lib",
+	"version": "0.0.1",
+	"dependencies": {
+		"n4js-runtime": "0.1.0"
+	},
+	"main": "src-gen/D.js",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"output": "src-gen",
+		"mainModule": "D"
+	}
+}

@@ -12,6 +12,7 @@ package org.eclipse.n4js.runner;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * All concrete runners for executing N4JS code are expected to implement this interface (for example, the node.js
@@ -46,5 +47,5 @@ public interface IRunner {
 	 * Actually launch the code, based on the given configuration by calling method
 	 * {@link IExecutor#exec(String[], File, Map) exec()} on the given executor.
 	 */
-	public Process run(RunConfiguration config, IExecutor executor);
+	public Process run(RunConfiguration config, IExecutor executor) throws ExecutionException;
 }

@@ -41,6 +41,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IfStatement
+import org.eclipse.n4js.n4JS.ImportCallExpression
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IterationStatement
 import org.eclipse.n4js.n4JS.LabelRef
@@ -325,6 +326,20 @@ class ASTStructureValidator {
 	}
 
 	def private dispatch void validateASTStructure(
+		EObject model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
+	}
+
+	def private dispatch void validateASTStructure(
 		Script model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -336,6 +351,32 @@ class ASTStructureValidator {
 			validLabels,
 			constraints.strict(false).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false)
 		);
+	}
+
+	def private dispatch void validateASTStructure(
+		ExportDeclaration model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		if (model.isDefaultExport) {
+			val exportedElement = model.exportedElement;
+			if (exportedElement instanceof VariableStatement) {
+// TODO GH-47: re-enable this validation when default export of values is supported
+// NOTE: tests already exist for this; search for files DefaultExportWith*.n4js.xt
+//				val nodes = NodeModelUtils.findNodesForFeature(exportedElement, N4JSPackage.eINSTANCE.variableDeclarationContainer_VarStmtKeyword);
+//				producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(exportedElement);
+//				producer.addDiagnostic(
+//					new DiagnosticMessage(IssueCodes.messageForIMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST,
+//						IssueCodes.getDefaultSeverity(IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST), IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST))
+			}
+		}
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
 	}
 
 	def private dispatch void validateASTStructure(
@@ -390,20 +431,6 @@ class ASTStructureValidator {
 			validLabels,
 			// according to ecma6 spec, class bodies are always strict
 			constraints.strict(true).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false)
-		)
-	}
-
-	def private dispatch void validateASTStructure(
-		EObject model,
-		ASTStructureDiagnosticProducer producer,
-		Set<LabelledStatement> validLabels,
-		Constraints constraints
-	) {
-		recursiveValidateASTStructure(
-			model,
-			producer,
-			validLabels,
-			constraints
 		)
 	}
 
@@ -570,6 +597,35 @@ class ASTStructureValidator {
 						IssueCodes.AST_EXP_INVALID_LHS_ASS))
 			}
 		}
+	}
+
+	def private dispatch void validateASTStructure(
+		ImportCallExpression model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		if (model.arguments.size !== 1) {
+			val target = NodeModelUtils.findActualNodeFor(model);
+			producer.node = target;
+			producer.addDiagnostic(
+				new DiagnosticMessage(IssueCodes.messageForAST_IMPORT_CALL_WRONG_NUM_OF_ARGS,
+					IssueCodes.getDefaultSeverity(IssueCodes.AST_IMPORT_CALL_WRONG_NUM_OF_ARGS), IssueCodes.AST_IMPORT_CALL_WRONG_NUM_OF_ARGS));
+		}
+		if (!model.arguments.empty && model.argument.isSpread) {
+			val target = NodeModelUtils.findActualNodeFor(model.argument);
+			producer.node = target;
+			producer.addDiagnostic(
+				new DiagnosticMessage(IssueCodes.messageForAST_IMPORT_CALL_SPREAD,
+					IssueCodes.getDefaultSeverity(IssueCodes.AST_IMPORT_CALL_SPREAD), IssueCodes.AST_IMPORT_CALL_SPREAD));
+		}
+
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
 	}
 
 	def private dispatch void validateASTStructure(

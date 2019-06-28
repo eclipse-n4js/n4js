@@ -13,14 +13,13 @@ package org.eclipse.n4js.hlc.tests;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.base.Predicates;
 
 /**
  */
@@ -35,7 +34,8 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WSP_532, Predicates.alwaysTrue());
+		workspace = setupWorkspace(WSP_532, true,
+				N4JSGlobals.N4JS_RUNTIME, "n4js-runtime-es2015", "org.eclipse.n4js.mangelhaft");
 	}
 
 	/** Delete workspace. */
@@ -48,7 +48,7 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileOfExtendedIterator_from_RuntimeLibrary() throws ExitCodeException {
 
-		String proot = workspace.getAbsolutePath().toString();
+		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
 
 		String[] args = { "--projectlocations", proot, "--buildType", "allprojects" };
 
@@ -56,7 +56,7 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 		new N4jscBase().doMain(args);
 
 		// Make sure, we get here and have exactly one file compiled:
-		assertFilesCompiledToES(1, proot);
-
+		assertFilesCompiledToES(0, proot + "/" + "APIx");
+		assertFilesCompiledToES(1, proot + "/" + "IMPLx");
 	}
 }

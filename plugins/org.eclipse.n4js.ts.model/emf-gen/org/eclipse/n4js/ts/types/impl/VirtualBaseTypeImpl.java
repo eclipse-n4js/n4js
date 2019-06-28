@@ -91,6 +91,7 @@ public class VirtualBaseTypeImpl extends ContainerTypeImpl<TMember> implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypeRef getDeclaredElementType() {
 		return declaredElementType;
 	}
@@ -115,6 +116,7 @@ public class VirtualBaseTypeImpl extends ContainerTypeImpl<TMember> implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDeclaredElementType(TypeRef newDeclaredElementType) {
 		if (newDeclaredElementType != declaredElementType) {
 			NotificationChain msgs = null;
@@ -134,6 +136,7 @@ public class VirtualBaseTypeImpl extends ContainerTypeImpl<TMember> implements V
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<TMember> getDeclaredOwnedMembers() {
 		if (declaredOwnedMembers == null) {
 			declaredOwnedMembers = new EObjectContainmentEList<TMember>(TMember.class, this, TypesPackage.VIRTUAL_BASE_TYPE__DECLARED_OWNED_MEMBERS);

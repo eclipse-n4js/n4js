@@ -17,9 +17,12 @@ import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.packagejson.PackageJsonUtils;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IAcceptor;
@@ -48,13 +51,35 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	@Override
 	public List<Issue> validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
+		// QUICK EXIT #1: in case of invalid file type (e.g. js file in a project with project type definition)
+		final IN4JSProject project = n4jsCore.findProject(resource.getURI()).orNull();
+		if (project != null && !isValidFileTypeForProjectType(resource, project)) {
+			final Issue issue = createInvalidFileTypeError(resource, project);
+			return Collections.singletonList(issue);
+		}
+
+		// QUICK EXIT #2: for files that match a "noValidate" module filter from package.json
+		if (n4jsCore.isNoValidate(resource.getURI())) {
+			return Collections.emptyList();
+		}
+
 		if (resource instanceof N4JSResource) {
 			final N4JSResource resourceCasted = (N4JSResource) resource;
+
+			// QUICK EXIT #3: for "opaque" modules (e.g. js files)
+			// (pure performance tweak, because those resources have an empty AST anyway; see N4JSResource#doLoad())
+			if (resourceCasted.isOpaque()) {
+				return Collections.emptyList();
+			}
+
+			// trigger post-processing of N4JS resource (won't harm if post-processing has already taken place)
 			try {
 				resourceCasted.performPostProcessing(cancelIndicator);
 			} catch (Throwable th) {
 				// ignore this exception/error (we will create an issue for it below)
 			}
+
+			// QUICK EXIT #4: if post-processing failed
 			if (resourceCasted.isFullyProcessed()
 					&& resourceCasted.getPostProcessingThrowable() != null) {
 				// When getting here, we have an attempt to validate a resource that was post-processed but the
@@ -84,9 +109,6 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	protected void validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator,
 			IAcceptor<Issue> acceptor) {
 		operationCanceledManager.checkCanceled(cancelIndicator);
-		if (n4jsCore.isNoValidate(resource.getURI())) {
-			return;
-		}
 		List<EObject> contents = resource.getContents();
 		if (!contents.isEmpty()) {
 			EObject firstElement = contents.get(0);
@@ -100,18 +122,46 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		}
 	}
 
-	private Issue createPostProcessingFailedError(N4JSResource res, Throwable th) {
+	private boolean isValidFileTypeForProjectType(Resource resource, IN4JSProject project) {
+		final ResourceType resourceType = ResourceType.getResourceType(resource);
+		final ProjectType projectType = project.getProjectType();
+		if (resourceType == ResourceType.JS
+				|| resourceType == ResourceType.JSX
+				|| resourceType == ResourceType.N4JS
+				|| resourceType == ResourceType.N4JSX) {
+			// we have a .js or .n4js file ...
+			if (projectType == ProjectType.RUNTIME_LIBRARY
+					|| projectType == ProjectType.DEFINITION) {
+				// in a project of type 'definition' or 'runtime library'
+				// --> invalid!
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static Issue createInvalidFileTypeError(Resource res, IN4JSProject project) {
+		final String projectTypeStr = PackageJsonUtils.getProjectTypeStringRepresentation(project.getProjectType());
+		final String msg = IssueCodes.getMessageForINVALID_FILE_TYPE_FOR_PROJECT_TYPE(projectTypeStr);
+		return createFileIssue(res, msg, IssueCodes.INVALID_FILE_TYPE_FOR_PROJECT_TYPE);
+	}
+
+	private static Issue createPostProcessingFailedError(Resource res, Throwable th) {
 		final String thKind = th instanceof Error ? "error" : (th instanceof Exception ? "exception" : "throwable");
 		final String thName = th.getClass().getSimpleName();
 		final String trace = "\n" + Stream.of(th.getStackTrace())
 				.map(ste -> ste.toString())
 				.collect(Collectors.joining("\n")); // cannot add indentation, because Xtext would reformat the message
 		final String msg = IssueCodes.getMessageForPOST_PROCESSING_FAILED(thKind, thName, th.getMessage() + trace);
+		return createFileIssue(res, msg, IssueCodes.POST_PROCESSING_FAILED);
+	}
+
+	private static Issue createFileIssue(Resource res, String message, String issueCode) {
 		final Issue.IssueImpl issue = new Issue.IssueImpl();
-		issue.setCode(IssueCodes.POST_PROCESSING_FAILED);
-		issue.setSeverity(IssueCodes.getDefaultSeverity(IssueCodes.POST_PROCESSING_FAILED));
-		issue.setMessage(msg);
-		issue.setUriToProblem(EcoreUtil.getURI(res.getScript()));
+		issue.setCode(issueCode);
+		issue.setSeverity(IssueCodes.getDefaultSeverity(issueCode));
+		issue.setMessage(message);
+		issue.setUriToProblem(res.getURI());
 		issue.setType(CheckType.FAST); // using CheckType.FAST is important to get proper marker update behavior in ...
 		// ... the editor between persisted and dirty states!
 		issue.setOffset(0);

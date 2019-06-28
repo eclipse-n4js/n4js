@@ -44,7 +44,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
  * <!-- end-model-doc -->
  * @see org.eclipse.n4js.transpiler.im.ImFactory
  * @model kind="package"
- *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4js_im' modelDirectory='/org.eclipse.n4js.transpiler/emf-gen' forceOverwrite='true' updateClasspath='false' literalsInterface='true' loadInitialization='false' complianceLevel='8.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.transpiler'"
+ *        annotation="http://www.eclipse.org/emf/2002/GenModel fileExtensions='n4js_im' modelDirectory='/org.eclipse.n4js.transpiler/emf-gen' forceOverwrite='true' updateClasspath='false' literalsInterface='true' loadInitialization='false' complianceLevel='11.0' copyrightFields='false' copyrightText='Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation' language='' basePackage='org.eclipse.n4js.transpiler'"
  * @generated
  */
 public interface ImPackage extends EPackage {
@@ -337,13 +337,13 @@ public interface ImPackage extends EPackage {
 	int SYMBOL_TABLE_ENTRY_ORIGINAL_FEATURE_COUNT = SYMBOL_TABLE_ENTRY_FEATURE_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SYMBOL_TABLE_ENTRY_ORIGINAL___EXPORTED_NAME = SYMBOL_TABLE_ENTRY_OPERATION_COUNT + 0;
+	int SYMBOL_TABLE_ENTRY_ORIGINAL___GET_EXPORTED_NAME = SYMBOL_TABLE_ENTRY_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Symbol Table Entry Original</em>' class.
@@ -911,13 +911,22 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS = TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
+	int PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -1272,13 +1281,22 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -3079,13 +3097,22 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -3467,13 +3494,22 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
@@ -4226,14 +4262,14 @@ public interface ImPackage extends EPackage {
 	EReference getSymbolTableEntryOriginal_ImportSpecifier();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal#exportedName() <em>Exported Name</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal#getExportedName() <em>Get Exported Name</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Exported Name</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal#exportedName()
+	 * @return the meta object for the '<em>Get Exported Name</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal#getExportedName()
 	 * @generated
 	 */
-	EOperation getSymbolTableEntryOriginal__ExportedName();
+	EOperation getSymbolTableEntryOriginal__GetExportedName();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly <em>Symbol Table Entry IM Only</em>}'.
@@ -4857,12 +4893,12 @@ public interface ImPackage extends EPackage {
 		EReference SYMBOL_TABLE_ENTRY_ORIGINAL__IMPORT_SPECIFIER = eINSTANCE.getSymbolTableEntryOriginal_ImportSpecifier();
 
 		/**
-		 * The meta object literal for the '<em><b>Exported Name</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Exported Name</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation SYMBOL_TABLE_ENTRY_ORIGINAL___EXPORTED_NAME = eINSTANCE.getSymbolTableEntryOriginal__ExportedName();
+		EOperation SYMBOL_TABLE_ENTRY_ORIGINAL___GET_EXPORTED_NAME = eINSTANCE.getSymbolTableEntryOriginal__GetExportedName();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.SymbolTableEntryIMOnlyImpl <em>Symbol Table Entry IM Only</em>}' class.

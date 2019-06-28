@@ -84,6 +84,7 @@ public abstract class ValidationMarkerImpl extends MinimalEObjectImpl.Container 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Resource getDelegateResource() {
 		return delegateResource;
 	}
@@ -93,6 +94,7 @@ public abstract class ValidationMarkerImpl extends MinimalEObjectImpl.Container 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDelegateResource(Resource newDelegateResource) {
 		Resource oldDelegateResource = delegateResource;
 		delegateResource = newDelegateResource;
@@ -105,6 +107,7 @@ public abstract class ValidationMarkerImpl extends MinimalEObjectImpl.Container 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Resource eResource() {
 		return this.getDelegateResource();
 	}

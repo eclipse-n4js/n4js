@@ -31,6 +31,24 @@ Contributors:
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
 			</plugin>
+			<!--
+				The following adds the JavaSE-11 module "java.xml" to the set of explicitly used modules.
+				The reason to add it is that otherwise the compilation in Maven/Tycho _sometimes_ fails saying:
+				"The type org.w3c.dom.Document is not accessible".
+				The cause for Java11/Maven/Tycho being unable to access a type of a Java module (which is part of
+				the implicitly included modules) is unclear.
+			-->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<compilerArgs>
+			            <arg>--add-modules</arg>
+			            <arg>java.xml</arg>
+			        </compilerArgs>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>

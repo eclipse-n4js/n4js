@@ -105,6 +105,9 @@ class N4JSNewProjectFileTemplates {
 		projectInfo.projectDependencies.forEach[dep |
 			builder.withDependency(dep);
 		]
+		projectInfo.projectDevDependencies.forEach[dep |
+			builder.withDevDependency(dep);
+		]
 		
 	
 		// finally build textual JSON project description (package.json content)

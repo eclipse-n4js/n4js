@@ -29,7 +29,7 @@ import org.eclipse.xtext.validation.ValidationMessageAcceptor
 
 /**
  */
-public class AbstractMessageAdjustingN4JSValidator extends AbstractN4JSValidator {
+public abstract class AbstractMessageAdjustingN4JSValidator extends AbstractN4JSValidator {
 
 	def boolean createTypeError(Result result, EObject source) {
 		if (result.failure) {

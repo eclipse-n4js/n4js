@@ -41,10 +41,6 @@ public interface ModuleFilter extends EObject {
 	 * Returns the value of the '<em><b>Module Filter Type</b></em>' attribute.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.projectDescription.ModuleFilterType}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Module Filter Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module Filter Type</em>' attribute.
 	 * @see org.eclipse.n4js.projectDescription.ModuleFilterType
@@ -70,10 +66,6 @@ public interface ModuleFilter extends EObject {
 	 * Returns the value of the '<em><b>Module Specifiers</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.projectDescription.ModuleFilterSpecifier}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Module Specifiers</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module Specifiers</em>' containment reference list.
 	 * @see org.eclipse.n4js.projectDescription.ProjectDescriptionPackage#getModuleFilter_ModuleSpecifiers()

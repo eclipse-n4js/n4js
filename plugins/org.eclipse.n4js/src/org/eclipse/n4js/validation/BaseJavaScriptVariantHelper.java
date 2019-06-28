@@ -135,10 +135,6 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	 */
 	public static final ValidationFeature<Boolean> CONSTANT_HAS_INITIALIZER = new ValidationFeature<>(false);
 	/**
-	 * No N4JS in runtime or lib should be checked?
-	 */
-	public static final ValidationFeature<Boolean> CHECK_NO_N4JS_IN_RUNTIME_ENV_OR_LIB = new ValidationFeature<>(false);
-	/**
 	 * Wrong read/write should be allowed?
 	 */
 	public static final ValidationFeature<Boolean> ALLOW_WRONG_READ_WRITE = new ValidationFeature<>(true);
@@ -438,17 +434,6 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	@Override
 	public boolean constantHasInitializer(EObject eobj) {
 		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), CONSTANT_HAS_INITIALIZER);
-	}
-
-	/**
-	 * Return true if it should be check that no N4JS in runtime environment or lib.
-	 *
-	 * @param eobj
-	 *            The EObject providing the context for the check.
-	 */
-	@Override
-	public boolean requirecheckNoN4jsInRuntimeEnvOrLib(EObject eobj) {
-		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), CHECK_NO_N4JS_IN_RUNTIME_ENV_OR_LIB);
 	}
 
 	/**

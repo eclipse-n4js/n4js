@@ -13,30 +13,30 @@
 
 
 // XPECT type of 'v01' --> Array<String>
-var v01 : [String]
+var v01 : String[]
 
 
 // XPECT type of 'v02' --> Array<Array<String>>
-var v02 : [[String]]
+var v02 : String[][]
 
 
 // XPECT type of 'v03' --> Array<Array<Array<String>>>
-var v03 : [[[String]]]
+var v03 : String[][][]
 
 
 // XPECT type of 'v04' --> Array<Array<String>>
-var v04 : [Array<String>]
+var v04 : Array<String>[]
 
 
 // XPECT type of 'foo' --> {function():Array<String>}
-function foo(): [String] { return null }
+function foo(): String[] { return null }
 
 
 class C {
 
 	// XPECT type of 'f' --> Array<String>
-	f : [String]
+	f : String[]
 
 	// XPECT type of 'm' --> {function():Array<String>}
-	m(): [String] { return null }
+	m(): String[] { return null }
 }

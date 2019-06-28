@@ -33,10 +33,6 @@ public interface ObjectLiteral extends PrimaryExpression, ThisTarget, TypeDefini
 	 * Returns the value of the '<em><b>Property Assignments</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.PropertyAssignment}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Property Assignments</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Property Assignments</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getObjectLiteral_PropertyAssignments()

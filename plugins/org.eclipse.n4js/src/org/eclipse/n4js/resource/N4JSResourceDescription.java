@@ -97,7 +97,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 				}
 			}
 			final List<IEObjectDescription> exportedEObjects = newArrayList();
-			IAcceptor<IEObjectDescription> acceptor = new IAcceptor<IEObjectDescription>() {
+			IAcceptor<IEObjectDescription> acceptor = new IAcceptor<>() {
 				@Override
 				public void accept(IEObjectDescription eObjectDescription) {
 					exportedEObjects.add(eObjectDescription);
@@ -199,7 +199,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 	}
 
 	private IAcceptor<EObject> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypesAddHere) {
-		IAcceptor<EObject> acceptor = new IAcceptor<EObject>() {
+		IAcceptor<EObject> acceptor = new IAcceptor<>() {
 			@Override
 			public void accept(EObject to) {
 				if (to instanceof Type || to instanceof TVariable || to instanceof TEnumLiteral) {

@@ -52,27 +52,25 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 	private Path externalLibrariesRoot;
 	private Path projectsRoot;
 
-	@Override
+	/** */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp2() throws Exception {
 		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = false;
 
-		super.setUp();
 		waitForAutoBuild();
 		externalLibrariesRoot = FileUtils.createTempDirectory();
 		projectsRoot = new File(getResourceUri(PROBANDS_DIR)).toPath();
 	}
 
-	@Override
+	/** */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown2() throws Exception {
 		ExternalProjectMappings.REDUCE_REGISTERED_NPMS = true;
 
 		if (externalLibrariesRoot != null) {
 			FileDeleter.delete(externalLibrariesRoot);
 			externalLibrariesRoot = null;
 		}
-		super.tearDown();
 	}
 
 	/**
@@ -84,6 +82,8 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 		ProjectTestsUtils.importProject(projectsRoot.toFile(), PROBAND_CLIENT);
 		copyProjectsToLocation(projectsRoot, externalLibrariesRoot, PROBAND_LIBFOO);
 		ProjectTestsUtils.importDependencies(PROBAND_CLIENT, externalLibrariesRoot.toUri(), libraryManager);
+
+		waitForAutoBuild();
 
 		Collection<String> expected = collectIndexableFiles(externalLibrariesRoot);
 		// add user workspace project files
@@ -102,6 +102,8 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 		ProjectTestsUtils.importProject(projectsRoot.toFile(), PROBAND_CLIENT);
 		copyProjectsToLocation(projectsRoot, externalLibrariesRoot, PROBAND_LIBFOO, PROBAND_LIBBAR, PROBAND_LIBBAZ);
 		ProjectTestsUtils.importDependencies(PROBAND_CLIENT, externalLibrariesRoot.toUri(), libraryManager);
+
+		waitForAutoBuild();
 
 		Collection<String> expected = collectIndexableFiles(externalLibrariesRoot);
 		// add user workspace project files

@@ -16,7 +16,7 @@
 	modelDirectory="/org.eclipse.n4js.ts.model/emf-gen",
 	forceOverwrite="true",
 	updateClasspath="false",
-	complianceLevel="8.0",
+	complianceLevel="11.0",
 	copyrightFields="false",
 	// both copyrightText and documentation are required to align the output of the MWE2 and incremental builder (see GH-841)
 	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
@@ -32,14 +32,14 @@ import org.eclipse.emf.ecore.EMap
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
+import org.eclipse.n4js.ts.versions.MigratableUtils
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.n4js.ts.versions.MigratableUtils
 
+type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
 
@@ -70,12 +70,6 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * The vendorId of the project containing this module.
 	 */
 	String vendorID
-	/**
-	 * The module loader supported by this module as defined in the containing project's package.json.
-	 * Value will be an EMF enum literal, i.e. something like <code>org.eclipse.n4js.projectDescription.ModuleLoader.COMMONJS.getLiteral()</code>.
-	 * See <code>PackageJsonUtils#parseModuleLoader()</code> for how to convert from String to values of enum ModuleLoader.
-	 */
-	String moduleLoader
 	/**
 	 * Flag indicating a module defined in an <code>.n4jsd</code> file.
 	 */
@@ -354,6 +348,13 @@ class TypeVariable extends Type {
 	boolean declaredCovariant
 	boolean declaredContravariant
 	contains TypeRef declaredUpperBound
+
+	/*
+	 * If and only if this TypeVariable is an AST node (note: instances of TypeVariable are used for both the AST
+	 * and in the TModule), then this property will point to the corresponding TypeVariable instance created in the
+	 * TModule, similar to {@code TypeDefiningElement#definedType}.
+	 */
+	refers transient TypeVariable definedTypeVariable
 
 	/*
 	 * Returns this type variable's {@link org.eclipse.n4js.ts.types.util.Variance variance}. Always returns

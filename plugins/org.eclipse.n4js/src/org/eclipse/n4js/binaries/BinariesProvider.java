@@ -12,6 +12,10 @@ package org.eclipse.n4js.binaries;
 
 import static com.google.common.collect.FluentIterable.from;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 
@@ -48,4 +52,24 @@ public class BinariesProvider {
 		return from(REGISTERED_BINARIES).transform(clazz -> (Binary) injector.getInstance(clazz)).toList();
 	}
 
+	/**
+	 * Validates all binaries (including children) and returns a list of error messages. Returns an empty list in case
+	 * everything is ok.
+	 */
+	public List<String> validateBinaries() {
+		final List<String> errorMessages = new ArrayList<>();
+		collectBinariesErrors(getRegisteredBinaries(), errorMessages);
+		return errorMessages;
+	}
+
+	private void collectBinariesErrors(Iterable<Binary> binaries, List<String> addErrorsHere) {
+		for (Binary binary : binaries) {
+			final IStatus status = binary.validate();
+			if (!status.isOK()) {
+				addErrorsHere.add(status.getMessage());
+				continue; // in case of error: do not validate children to avoid follow-up errors
+			}
+			collectBinariesErrors(binary.getChildren(), addErrorsHere);
+		}
+	}
 }

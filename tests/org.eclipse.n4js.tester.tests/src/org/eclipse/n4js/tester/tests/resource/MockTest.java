@@ -323,7 +323,7 @@ public class MockTest {
 	}
 
 	private Matcher<Integer> equalTo(final int expected) {
-		return new BaseMatcher<Integer>() {
+		return new BaseMatcher<>() {
 
 			@Override
 			public boolean matches(final Object actual) {

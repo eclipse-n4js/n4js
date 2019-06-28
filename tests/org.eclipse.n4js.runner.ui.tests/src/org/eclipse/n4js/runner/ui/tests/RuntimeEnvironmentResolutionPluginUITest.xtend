@@ -11,29 +11,26 @@
 package org.eclipse.n4js.runner.ui.tests
 
 import com.google.common.base.Throwables
+import com.google.inject.Inject
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
-import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IWorkspace
 import org.eclipse.core.runtime.CoreException
-import org.eclipse.core.runtime.OperationCanceledException
 import org.eclipse.core.runtime.Platform
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.runner.tests.RuntimeEnvironmentResolutionTest
+import org.eclipse.n4js.tests.builder.TestedN4JSWorkspace
+import org.eclipse.xtext.testing.InjectWith
 import org.junit.BeforeClass
+import org.junit.Rule
 
 import static org.apache.log4j.Logger.getLogger
-import static org.eclipse.core.resources.IContainer.INCLUDE_HIDDEN
-import static org.eclipse.core.resources.ResourcesPlugin.FAMILY_AUTO_BUILD
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace
 import static org.eclipse.core.runtime.Platform.isRunning
-import static org.eclipse.core.runtime.jobs.Job.getJobManager
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
-
-import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -42,23 +39,19 @@ import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
  * {@link RuntimeEnvironmentResolutionTest super class} but this implementation uses the {@link IWorkspace Eclipse workspace}
  * so it requires a running {@link Platform platform}.
  */
+@InjectWith(N4JSUiInjectorProvider)
 class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolutionTest {
 
 	static val LOGGER = getLogger(RuntimeEnvironmentResolutionPluginUITest)
 	static val NATURE_ID = "org.eclipse.xtext.ui.shared.xtextNature"; //$NON-NLS-1$
 
+	@Inject
+	@Rule
+	public TestedN4JSWorkspace testedWorkspace 
+
 	@BeforeClass
 	public static def beforeClass() {
 		assertTrue('Platform is not running. These tests should be executed as JUnit Plug-in Test.', isRunning)
-	}
-
-	override createInjector() {
-		new N4JSUiInjectorProvider().injector;
-	}
-
-	override before() {
-		super.before()
-		clearWorkspace()
 	}
 
 	override protected createProjectWithPackageJson(String projectName, String packageJsonContent) {
@@ -80,7 +73,7 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 		}
 
 		try {
-			project.addNature(NATURE_ID)
+			testedWorkspace.addNature(project, NATURE_ID)
 		} catch (CoreException e) {
 			LOGGER.error('Error while trying to adding Xtext nature to the project.', e)
 		}
@@ -117,36 +110,8 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 		}
 
 		assertTrue(packageJsonFile.exists)
-		waitForAutoBuild
-		createPlatformResourceURI(project.fullPath.toString, true);
-	}
-
-	private def waitForAutoBuild() {
-		var interrupted = false;
-		do {
-			try {
-				getJobManager().join(FAMILY_AUTO_BUILD, null);
-				interrupted = false;
-			} catch (OperationCanceledException e) {
-				LOGGER.warn('Operation was canceled while waiting for auto build job.', e)
-			} catch (InterruptedException e) {
-				interrupted = true;
-			}
-		} while (interrupted);
-	}
-
-	private def clearWorkspace() {
-		workspace.root.projects.forEach[tryDelete]
-		workspace.root.getProjects(INCLUDE_HIDDEN).forEach[tryDelete]
-	}
-
-	private def tryDelete(IProject it) {
-		try {
-			delete(true, true, null)
-		} catch (CoreException e) {
-			LOGGER.error('Error while cleaning workspace content.', e)
-			throw new RuntimeException(e)
-		}
+		testedWorkspace.build
+		return createPlatformResourceURI(project.fullPath.toString, true);
 	}
 
 }

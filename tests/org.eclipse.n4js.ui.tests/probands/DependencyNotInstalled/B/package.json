@@ -1,0 +1,16 @@
+{
+	"name": "B",
+	"n4js": {
+		"projectType": "validation",
+		"vendorId": "org.eclipse.n4js",
+		"sources": {
+			"source": [
+				"."
+			]
+		},
+		"output": "src-gen"
+	},
+	"dependencies": {
+		"A": ""
+	}
+}

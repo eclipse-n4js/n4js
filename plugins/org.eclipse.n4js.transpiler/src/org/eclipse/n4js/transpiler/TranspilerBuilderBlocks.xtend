@@ -106,12 +106,14 @@ public class TranspilerBuilderBlocks
 		val result = N4JSFactory.eINSTANCE.createImportDeclaration;
 		result.module = null; // must always be null, because we are in the intermediate model
 		result.importSpecifiers += importSpecifiers.filterNull;
+		result.importFrom = importSpecifiers.length > 0;
 		return result;
 	}
 
-	public static def NamedImportSpecifier _NamedImportSpecifier(String alias, boolean usedInCode) {
+	public static def NamedImportSpecifier _NamedImportSpecifier(String importedElementName, String alias, boolean usedInCode) {
 		val result = N4JSFactory.eINSTANCE.createNamedImportSpecifier;
 		result.importedElement = null; // must always be null, because we are in the intermediate model
+		result.importedElementAsText = importedElementName;
 		result.alias = alias;
 		result.flaggedUsedInCode = usedInCode;
 		return result;
@@ -125,10 +127,14 @@ public class TranspilerBuilderBlocks
 	}
 
 	public static def VariableStatement _VariableStatement(boolean exported, VariableDeclaration... varDecls) {
+		return _VariableStatement(exported, VariableStatementKeyword.VAR, varDecls);
+	}
+
+	public static def VariableStatement _VariableStatement(boolean exported, VariableStatementKeyword keyword, VariableDeclaration... varDecls) {
 		if(exported) {
-			return _ExportedVariableStatement(varDecls);
+			return _ExportedVariableStatement(keyword, varDecls);
 		} else {
-			return _VariableStatement(varDecls);
+			return _VariableStatement(keyword, varDecls);
 		}
 	}
 	public static def VariableStatement _VariableStatement(VariableDeclaration... varDecls) {
@@ -142,9 +148,9 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
-	public static def ExportedVariableStatement _ExportedVariableStatement(VariableDeclaration... varDecls) {
+	public static def ExportedVariableStatement _ExportedVariableStatement(VariableStatementKeyword keyword, VariableDeclaration... varDecls) {
 		val result = N4JSFactory.eINSTANCE.createExportedVariableStatement;
-		result.varStmtKeyword = VariableStatementKeyword.VAR;
+		result.varStmtKeyword = keyword;
 		result.varDeclsOrBindings += varDecls.filterNull;
 		return result;
 	}
@@ -674,23 +680,6 @@ public class TranspilerBuilderBlocks
 	public static def _emptyStatement() {
 		return N4JSFactory.eINSTANCE.createEmptyStatement
 	}
-
-	/** generic export where the {@code steExportedElement} is exported under its name. */
-	public static def _N4ExportExpr(SymbolTableEntry steExportedElement, SymbolTableEntry symbolFor_n4Export )
-	{
-		return _N4ExportExpr(steExportedElement, _IdentRef( steExportedElement ), symbolFor_n4Export)
-	}
-
-	/** export of {@code expression}-to-be-evaluated under the name of {@code steExportedElement} */
-	public static def _N4ExportExpr(SymbolTableEntry steExportedElement, Expression expression, SymbolTableEntry symbolFor_n4Export )
-	{
-		return _CallExpr => [
-			target = _IdentRef(symbolFor_n4Export)
-			arguments += _Argument(_StringLiteralForSTE( steExportedElement, true ))
-			arguments += _Argument(expression)
-		]
-	}
-
 
 	public static def N4EnumDeclaration _EnumDeclaration(String name, List<N4EnumLiteral> literals) {
 		val result = N4JSFactory.eINSTANCE.createN4EnumDeclaration;

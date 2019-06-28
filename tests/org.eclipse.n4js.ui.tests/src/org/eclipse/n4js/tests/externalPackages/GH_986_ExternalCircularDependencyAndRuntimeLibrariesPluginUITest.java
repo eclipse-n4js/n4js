@@ -10,18 +10,11 @@
  */
 package org.eclipse.n4js.tests.externalPackages;
 
-import static org.eclipse.n4js.tests.builder.BuilderUtil.countResourcesInIndex;
-import static org.eclipse.n4js.tests.builder.BuilderUtil.getAllResourceDescriptionsAsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -32,10 +25,7 @@ import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.base.Optional;
@@ -65,8 +55,7 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest ex
 	private static final String CLIENT_DEPS_PROJECT_NAME = "client-dependencies";
 	private static final String CLIENT_DEV_DEPS_PROJECT_NAME = "client-devDependencies";
 
-	@Inject
-	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
+	private static final String RUNTIME_ENVIRONMENT_NAME = "n4js-es5";
 
 	@Inject
 	private RuntimeEnvironmentsHelper runtimeEnvironmentsHelper;
@@ -74,33 +63,14 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest ex
 	@Inject
 	private IN4JSCore n4jsCore;
 
-	@Before
-	@Override
-	synchronized public void setUp() throws Exception {
-		super.setUp();
-		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
-
-		shippedCodeInitializeTestHelper.setupBuiltIns();
-
-		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		assertTrue("Expected empty workspace. Projects were in workspace: " + Arrays.toString(projects),
-				0 == projects.length);
-		waitForAutoBuild();
-	}
-
-	@After
-	@Override
-	synchronized public void tearDown() throws Exception {
-		shippedCodeInitializeTestHelper.tearDownBuiltIns();
-		super.tearDown();
-	}
-
 	/** Compute compatible runtime environment of project that references a dependency cycle (via dependencies) */
 	@Test
 	public void testRunWithCycleInDependencyGraph() throws CoreException, IOException {
 		// import project to workspace
 		final File projectsRoot = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, WS_LOC));
 		final IProject testProject = ProjectTestsUtils.importProject(projectsRoot, CLIENT_DEPS_PROJECT_NAME);
+
+		ProjectTestsUtils.importProject(projectsRoot, RUNTIME_ENVIRONMENT_NAME);
 
 		java.net.URI externalRootLocation = getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, EXT_LOC);
 		ProjectTestsUtils.importDependencies(CLIENT_DEPS_PROJECT_NAME, externalRootLocation, libraryManager);
@@ -140,6 +110,8 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest ex
 		// import project to workspace
 		final File projectsRoot = new File(getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, WS_LOC));
 		final IProject testProject = ProjectTestsUtils.importProject(projectsRoot, CLIENT_DEV_DEPS_PROJECT_NAME);
+
+		ProjectTestsUtils.importProject(projectsRoot, RUNTIME_ENVIRONMENT_NAME);
 
 		java.net.URI externalRootLocation = getResourceUri(PROBANDS, PROBANDS_SUBFOLDER, EXT_LOC);
 		ProjectTestsUtils.importDependencies(CLIENT_DEV_DEPS_PROJECT_NAME, externalRootLocation, libraryManager);

@@ -72,6 +72,7 @@ public abstract class MemberAccessImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ComposedMemberCache getComposedMemberCache() {
 		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
 			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
@@ -98,6 +99,7 @@ public abstract class MemberAccessImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
 		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
 		composedMemberCache = newComposedMemberCache;

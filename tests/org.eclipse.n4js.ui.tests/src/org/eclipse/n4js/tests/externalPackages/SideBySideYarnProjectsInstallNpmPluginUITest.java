@@ -30,8 +30,6 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.io.FileCopier;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.io.Files;
@@ -47,13 +45,6 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 
 	@Inject
 	private ProjectDescriptionLoader prjDescLoader;
-
-	@Before
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		setupShippedLibraries();
-	}
 
 	/**
 	 * Installs an npm in a local project of yarn workspace will install it in the node_modules folder of yarn root
@@ -74,7 +65,7 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 		ProjectTestsUtils.createProjectWithLocation(tmpDir,
 				"R/packages/P2", "P2");
 
-		// Project root und node_modules in root
+		// Project root and node_modules in root
 		Path prjRoot = tmpDir.toPath().resolve("R");
 		File prjRootFile = prjRoot.toFile();
 		assertFalse(Arrays.stream(prjRootFile.listFiles())
@@ -85,6 +76,7 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 				.createFileURI(projP1.getLocation().toString());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
 		libraryManager.installNPM("lodash", lodashVersion, prjP1URI, new NullProgressMonitor());
+		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 
 		assertTrue(Arrays.stream(prjRootFile.listFiles())
 				.filter((subFolder) -> subFolder.getName().equals(N4JSGlobals.NODE_MODULES))
@@ -94,14 +86,6 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 		// Assert that lodash is not installed in node_modules of the root folder
 		IFile pkgJsonP1 = projP1.getFile(getResourceName(N4JSGlobals.PACKAGE_JSON));
 		assertIssues(pkgJsonP1, "line 16: Project does not exist with project ID: lodash.");
-	}
-
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		tearDownShippedLibraries();
-		super.tearDown();
-
 	}
 
 	private String getDependencyVersion(org.eclipse.emf.common.util.URI prjURI, String dependencyName) {

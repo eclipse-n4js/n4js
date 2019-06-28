@@ -67,14 +67,4 @@ public interface IN4JSEclipseCore extends IN4JSCore {
 	@Override
 	Optional<? extends IN4JSEclipseProject> findProject(URI nestedLocation);
 
-	/**
-	 * Maps a file URI from a resource of the external workspace project to a platform URI of a user-space workspace
-	 * project.
-	 *
-	 * @param fileUri
-	 *            a file URI of an external workspace project
-	 * @return the platform URI for a given file URI
-	 */
-	Optional<URI> mapExternalResourceToUserWorkspaceLocalResource(URI fileUri);
-
 }

@@ -77,6 +77,7 @@ public class TagVersionRequirementImpl extends NPMVersionRequirementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTagName() {
 		return tagName;
 	}
@@ -86,6 +87,7 @@ public class TagVersionRequirementImpl extends NPMVersionRequirementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTagName(String newTagName) {
 		String oldTagName = tagName;
 		tagName = newTagName;

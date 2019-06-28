@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tester.ui;
 
+import java.util.concurrent.ExecutionException;
+
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tester.TestConfiguration;
@@ -37,7 +39,7 @@ public class TesterFrontEndUI {
 	 * <p>
 	 * This method may be invoked from non-UI threads.
 	 */
-	public Process runInUI(TestConfiguration config) {
+	public Process runInUI(TestConfiguration config) throws ExecutionException {
 
 		// prepare UI
 		Display.getDefault().asyncExec(new Runnable() {

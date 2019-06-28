@@ -81,6 +81,7 @@ public class CharacterClassAtomImpl extends CharacterClassElementImpl implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getCharacter()
   {
     return character;
@@ -91,6 +92,7 @@ public class CharacterClassAtomImpl extends CharacterClassElementImpl implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCharacter(String newCharacter)
   {
     String oldCharacter = character;

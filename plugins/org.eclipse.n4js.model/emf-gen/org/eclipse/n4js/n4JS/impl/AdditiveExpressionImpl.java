@@ -103,6 +103,7 @@ public class AdditiveExpressionImpl extends ExpressionImpl implements AdditiveEx
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getLhs() {
 		return lhs;
 	}
@@ -127,6 +128,7 @@ public class AdditiveExpressionImpl extends ExpressionImpl implements AdditiveEx
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLhs(Expression newLhs) {
 		if (newLhs != lhs) {
 			NotificationChain msgs = null;
@@ -146,6 +148,7 @@ public class AdditiveExpressionImpl extends ExpressionImpl implements AdditiveEx
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AdditiveOperator getOp() {
 		return op;
 	}
@@ -155,6 +158,7 @@ public class AdditiveExpressionImpl extends ExpressionImpl implements AdditiveEx
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOp(AdditiveOperator newOp) {
 		AdditiveOperator oldOp = op;
 		op = newOp == null ? OP_EDEFAULT : newOp;
@@ -167,6 +171,7 @@ public class AdditiveExpressionImpl extends ExpressionImpl implements AdditiveEx
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Expression getRhs() {
 		return rhs;
 	}
@@ -191,6 +196,7 @@ public class AdditiveExpressionImpl extends ExpressionImpl implements AdditiveEx
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRhs(Expression newRhs) {
 		if (newRhs != rhs) {
 			NotificationChain msgs = null;

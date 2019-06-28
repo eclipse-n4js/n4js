@@ -23,7 +23,7 @@ import org.eclipse.xtext.validation.Issue
 
 /**
  */
-public class AbstractN4JSQuickfixProvider extends TypesQuickfixProvider {
+public abstract class AbstractN4JSQuickfixProvider extends TypesQuickfixProvider {
 
 	@Inject
 	private ChangeManager changeManager

@@ -27,6 +27,7 @@ Contributors:
 		<module>org.eclipse.n4js.targetplatform</module>
 		<module>org.eclipse.n4js.releng.utils</module>
 		<module>org.eclipse.n4js.parent</module>
+		<module>org.eclipse.n4js.libs.build</module>
 	</modules>
 
 </project>

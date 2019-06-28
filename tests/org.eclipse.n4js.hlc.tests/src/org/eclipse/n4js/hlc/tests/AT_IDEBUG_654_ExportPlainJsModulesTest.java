@@ -13,6 +13,7 @@ package org.eclipse.n4js.hlc.tests;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -33,7 +34,7 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractN4jscTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace(WS_IDEBUG_654);
+		workspace = setupWorkspace(WS_IDEBUG_654, false, N4JSGlobals.N4JS_RUNTIME);
 	}
 
 	/** Delete workspace. */
