@@ -1,0 +1,2 @@
+
+export external public function foo(): string;

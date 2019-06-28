@@ -45,11 +45,16 @@ TypeRef returns TypeRef:
 	IntersectionTypeExpression ({UnionTypeExpression.typeRefs+=current} ("|" typeRefs+=IntersectionTypeExpression)+)?;
 
 IntersectionTypeExpression returns TypeRef:
-	PrimaryTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=PrimaryTypeExpression)+)?;
+	ArrayTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=ArrayTypeExpression)+)?;
+
+ArrayTypeExpression returns TypeRef:
+	  ({ParameterizedTypeRef} typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*)
+	| ({ParameterizedTypeRef} '(' typeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*)
+	| PrimaryTypeExpression =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*;
 
 PrimaryTypeExpression returns TypeRef:
 	( ArrowFunctionTypeExpression
-	| ArrayTypeRef
+	| IterableTypeExpression
 	| TypeRefWithModifiers
 	| "(" TypeRef ")"
 	);
@@ -60,24 +65,21 @@ TypeRefWithModifiers returns StaticBaseTypeRef:
 TypeRefWithoutModifiers returns StaticBaseTypeRef:
 	  ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
 	| TypeTypeRef
-
 	| FunctionTypeExpressionOLD
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
 
 TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
 	  ParameterizedTypeRef
-	| ArrayTypeRef
+	| IterableTypeExpression
 	| TypeTypeRef
-
 	| UnionTypeExpressionOLD
-	| IntersectionTypeExpressionOLD
-	;
+	| IntersectionTypeExpressionOLD;
 
 TypeArgInTypeTypeRef returns TypeArgument:
 	  ParameterizedTypeRefNominal
 	| ThisTypeRefNominal
-	| Wildcard;
+	| WildcardOldNotation;
 
 
 ThisTypeRef returns ThisTypeRef:
@@ -136,11 +138,11 @@ fragment DefaultFormalParameter*:
 
 UnionTypeExpressionOLD returns UnionTypeExpression:
 	{UnionTypeExpression}
-	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	'union' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 
 IntersectionTypeExpressionOLD returns IntersectionTypeExpression:
 	{IntersectionTypeExpression}
-	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
+	'intersection' '{' typeRefs+=TypeRef (',' typeRefs+=TypeRef)* '}';
 
 ParameterizedTypeRef returns ParameterizedTypeRef:
 	ParameterizedTypeRefNominal | ParameterizedTypeRefStructural;
@@ -164,8 +166,15 @@ ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
 	('with' TStructMemberList)?
 ;
 
-ArrayTypeRef returns ParameterizedTypeRef:
-	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
+IterableTypeExpression returns ParameterizedTypeRef:
+	iterableTypeExpression?='['
+	(
+		typeArgs+=EmptyIterableTypeExpressionTail
+	|	typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'
+	);
+
+EmptyIterableTypeExpressionTail returns Wildcard:
+	{Wildcard} ']';
 
 fragment VersionRequest*: requestedVersion=VERSION;
 
@@ -255,11 +264,18 @@ TypeReferenceName:
 	IDENTIFIER ('.' IDENTIFIER)*;
 
 TypeArgument returns TypeArgument:
-	Wildcard | WildcardNewNotation | TypeRef;
+	Wildcard | TypeRef;
 
-Wildcard returns Wildcard:
+Wildcard:
+	WildcardOldNotation
+|	WildcardNewNotation;
+
+WildcardOldNotation returns Wildcard:
 	=> ({Wildcard} '?') (('extends' declaredUpperBound=TypeRef) | ('super'
 	declaredLowerBound=TypeRef))?;
+
+WildcardOldNotationWithoutBound returns Wildcard:
+	{Wildcard} '?';
 
 WildcardNewNotation returns Wildcard:
 	(usingInOutNotation?='out' declaredUpperBound=TypeRef)

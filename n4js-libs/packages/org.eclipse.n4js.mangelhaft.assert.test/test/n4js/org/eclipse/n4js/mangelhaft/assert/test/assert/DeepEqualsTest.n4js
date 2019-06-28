@@ -146,8 +146,8 @@ export public class DeepEqualsTest {
 
     @Test
     deep_equal_array_cycle_SLBUG_40___equal_cyclic_refs_to_same_fields() {
-        let arrA: Array<Array<?>> = [];
-        let arrB: Array<Array<?>> = [];
+        let arrA: ?[][] = [];
+        let arrB: ?[][] = [];
         arrA.push([]);
         arrA.push(arrA);
         arrB.push([]);
@@ -156,8 +156,8 @@ export public class DeepEqualsTest {
     }
     @Test
     deep_equal_array_cycle_SLBUG_40___equal_cyclic_refs_to_same_fields_val_change() {
-        let arrA: Array<Array<?>> = [];
-        let arrB: Array<Array<?>> = [];
+        let arrA: ?[][] = [];
+        let arrB: ?[][] = [];
         arrA.push([[]]);
         arrA.push(arrA);
         arrB.push([]);
@@ -169,8 +169,8 @@ export public class DeepEqualsTest {
     }
     @Test
     deep_equal_array_cycle_SLBUG_40___equal_cyclic_refs_to_same_fields_out_of_order() {
-        let arrA: Array<Array<?>> = [];
-        let arrB: Array<Array<?>> = [];
+        let arrA: ?[][] = [];
+        let arrB: ?[][] = [];
         arrA.push([]);
         arrA.push(arrA);
         arrB.push(arrB);

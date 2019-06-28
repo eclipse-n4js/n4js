@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.ui.workbench;resolution:=optional,
  org.objectweb.asm;resolution:=optional
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.regex.tests,
  org.eclipse.n4js.regex
 Automatic-Module-Name: org.eclipse.n4js.regex.tests

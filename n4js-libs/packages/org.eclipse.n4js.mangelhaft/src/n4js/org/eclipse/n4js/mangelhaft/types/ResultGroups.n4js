@@ -16,13 +16,13 @@ import {ResultGroup} from "org/eclipse/n4js/mangelhaft/types/ResultGroup";
 import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult";
 import {aggregateTestStatuses} from "org/eclipse/n4js/mangelhaft/types/TestStatus";
 export public class ResultGroups {
-    public results: Array<ResultGroup>;
+    public results: ResultGroup[];
     public successes: number = 0;
     public failures: number = 0;
     public skipped: number = 0;
     public errors: number = 0;
 
-    public constructor(results: Array<ResultGroup>) {
+    public constructor(results: ResultGroup[]) {
         this.results = results;
         ResultGroups.accumulateResults(this, results);
     }
@@ -51,7 +51,7 @@ export public class ResultGroups {
         result = new ResultGroup(Array.from(trMap.values()), description);
         return result;
     }
-    private static accumulateResults(target:ResultGroups, results:Array<? extends ~~ResultGroup>): ResultGroups {
+    private static accumulateResults(target:ResultGroups, results:(? extends ~~ResultGroup)[]): ResultGroups {
         for (let result of results) {
             target.successes += result.successes;
             target.failures += result.failures;
@@ -75,7 +75,7 @@ export public class ResultGroups {
     /**
      * same as concat but takes a whole array
      */
-    public static concatArray(resultGroupss: Array<ResultGroups>): ResultGroups {
-        return this.accumulateResults(new ResultGroups([]), (resultGroupss as Object) as Array<? extends ~~ResultGroup>); // joe TODO consider refactoring of ResultGroup and ResultGroups
+    public static concatArray(resultGroupss: ResultGroups[]): ResultGroups {
+        return this.accumulateResults(new ResultGroups([]), (resultGroupss as Object) as (? extends ~~ResultGroup)[]); // joe TODO consider refactoring of ResultGroup and ResultGroups
     }
 }

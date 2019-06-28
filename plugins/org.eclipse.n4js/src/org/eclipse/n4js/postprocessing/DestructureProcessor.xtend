@@ -62,6 +62,7 @@ package class DestructureProcessor extends AbstractProcessor {
 		if (node instanceof ObjectLiteral) {
 			// poly expressions in property name/value pairs expect to be processed as part of the outer poly expression
 			// -> invoke poly processor for them
+			// TODO GH-1337 add support for spread operator
 			node.propertyAssignments //
 			.filter(PropertyNameValuePair) //
 			.map[expression] //

@@ -588,6 +588,15 @@ public interface N4JSFactory extends EFactory {
 	PropertySetterDeclaration createPropertySetterDeclaration();
 
 	/**
+	 * Returns a new object of class '<em>Property Spread</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Property Spread</em>'.
+	 * @generated
+	 */
+	PropertySpread createPropertySpread();
+
+	/**
 	 * Returns a new object of class '<em>New Target</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -613,6 +622,15 @@ public interface N4JSFactory extends EFactory {
 	 * @generated
 	 */
 	ParameterizedCallExpression createParameterizedCallExpression();
+
+	/**
+	 * Returns a new object of class '<em>Import Call Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Import Call Expression</em>'.
+	 * @generated
+	 */
+	ImportCallExpression createImportCallExpression();
 
 	/**
 	 * Returns a new object of class '<em>Argument</em>'.

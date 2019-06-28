@@ -27,7 +27,7 @@ export external public class ServerResponse extends events.EventEmitter implemen
     public writeHead(statusCode: number, headers: any=): void;
     statusCode: number;
     statusMessage: string;
-    public setHeader(name: string, value: string | Array<string>): void;
+    public setHeader(name: string, value: string | string[]): void;
     sendDate: boolean;
     public getHeader(name: string): string;
     public removeHeader(name: string): void;
@@ -45,7 +45,7 @@ export external public class ClientRequest implements events.IEventEmitter, stre
     @Override public removeListener(event: string, listener: Function): this;
     @Override public removeAllListeners(event: string=): this;
     @Override public setMaxListeners(n: number): void;
-    @Override public listeners(event: string): Array<Function>;
+    @Override public listeners(event: string): Function[];
     @Override public emit(event: string, ...args: any): boolean;
 
     @Override public end(chunk: any=, encoding: string=, cb: Function=): void;
@@ -53,7 +53,7 @@ export external public class ClientRequest implements events.IEventEmitter, stre
 export external public class IncomingMessage implements events.IEventEmitter, stream.IReadableStream {
     public httpVersion: string;
     public headers: any;
-    public rawHeaders: Array<string>;
+    public rawHeaders: string[];
     public trailers: any;
     public rawTrailers: any;
     public setTimeout(msecs: number, callback: Function): this;
@@ -71,7 +71,7 @@ export external public class IncomingMessage implements events.IEventEmitter, st
     @Override public removeListener(event: string, listener: Function): this;
     @Override public removeAllListeners(event: string=): this;
     @Override public setMaxListeners(n: number): void;
-    @Override public listeners(event: string): Array<Function>;
+    @Override public listeners(event: string): Function[];
     @Override public emit(event: string, ...args: any): boolean;
     @Override public read(size: number=): union{string, Buffer};
     @Override public setEncoding(encoding: string): void;

@@ -17,10 +17,10 @@
  * see https://dom.spec.whatwg.org/#mutation-observers
  */
 export external public class MutationObserver {
-    public constructor(callback: {function(Array<MutationRecord>, instance:MutationObserver /*this*/)});
+    public constructor(callback: {function(MutationRecord[], instance:MutationObserver /*this*/)});
     public observe(target:Node, options: MutationObserverInit=): void;
     public disconnect(): void;
-    public takeRecords(): Array<MutationRecord>
+    public takeRecords(): MutationRecord[]
 }
 
 /**
@@ -33,7 +33,7 @@ export external public interface ~MutationObserverInit {
   public subtree?: boolean;
   public attributeOldValue?: boolean;
   public characterDataOldValue?: boolean;
-  public attributeFilter?: Array<string>;
+  public attributeFilter?: string[];
 }
 
 /**

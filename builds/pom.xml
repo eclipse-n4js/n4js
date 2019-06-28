@@ -26,6 +26,192 @@ Contributors:
 	<modules>
 		<module>org.eclipse.n4js.product.build</module>
 		<module>org.eclipse.n4js.headless.product.build</module>
+		<!-- Optional and platform specific bundles that provide the JRE -->
+		<module>org.eclipse.n4js.jre.linux.gtk.x86_64</module>
+		<module>org.eclipse.n4js.jre.macosx.cocoa.x86_64</module>
+		<module>org.eclipse.n4js.jre.win32.win32.x86_64</module>
 	</modules>
 
+
+	<!-- When updating the JRE: Refer to n4js/docs/org.eclipse.n4js.design/chapters/03_releng/releng.adoc: "Update of the embedded JRE" -->
+	<properties>
+		<download.url.base>https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/</download.url.base>
+		<!-- Override the following properties in the poms of the platform specific bundles -->
+		<download.url.path>somePath/</download.url.path>
+		<download.url.file>someFile.zip-</download.url.file>
+		<download.unzippedFolder>${download.url.file}</download.unzippedFolder>
+		<download.type>tar.gz</download.type>
+	</properties>
+
+
+	<!-- Ignore error due to specific versions for JRE -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<strictVersions>false</strictVersions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+    <!--
+    	The following will do:
+    	(1) Download the JRE
+    	(2) Uncompress the downloaded files
+    	(3) Package the platform specific bundle including the downloaded JRE
+    	Note:
+    	Step (3) does neither preserve file permissions nor symbolic links.
+    	Hence, touchpoint actions are used and specified in the p2.inf files.
+    	These restore file permissions and symbolic links where necessary.  
+    -->
+	<!-- Disabled when maven is called with '-DexcludeJRE' -->
+	<profiles>
+		<profile>
+			<id>buildProduct</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.eclipse.tycho</groupId>
+							<artifactId>target-platform-configuration</artifactId>
+							<version>${tycho-version}</version>
+							<configuration>
+								<!-- Disabled when maven is called with '-DexcludeJRE' -->
+								<skip>${excludeJRE}</skip>
+								<resolver>p2</resolver>
+								<pomDependencies>consider</pomDependencies>
+							</configuration>
+						</plugin>
+						
+						<plugin>
+							<artifactId>maven-antrun-plugin</artifactId>
+							<version>${maven-antrun-plugin.version}</version>
+							<configuration>
+								<!-- Disabled when maven is called with '-DexcludeJRE' -->
+								<skip>${excludeJRE}</skip>
+							</configuration>
+							<executions>
+								<execution>
+									<id>Download/unpack JRE and copy p2.inf</id>
+									<phase>process-resources</phase>
+									<goals>
+										<goal>run</goal>
+									</goals>
+									<configuration>
+										<target>
+											<echo message="Download JRE: ${download.url.file}"/>
+											<exec executable="curl">
+												<arg value="-L" />
+												<arg value="-#" />
+												<arg value="--create-dirs" />
+												<arg value="--output" />
+												<arg value="${project.build.directory}/downloads/${download.url.file}" />
+												<arg value="${download.url.base}${download.url.path}${download.url.file}" />
+											</exec>
+											
+											<echo message="Unzip: ${project.build.directory}/downloads/${download.url.file}"/>
+											<ac:if xmlns:ac="antlib:net.sf.antcontrib">
+												<equals arg1="${download.type}" arg2="zip"/> 
+												<then>
+													<unzip dest="${project.build.directory}/downloads/" src="${project.build.directory}/downloads/${download.url.file}"/>
+												</then>
+												<else>
+													<ac:if xmlns:ac="antlib:net.sf.antcontrib">
+														<equals arg1="${download.type}" arg2="tar"/> 
+														<then>
+															<untar dest="${project.build.directory}/downloads/" src="${project.build.directory}/downloads/${download.url.file}"/>
+														</then>
+														<else>
+															<untar compression="gzip" dest="${project.build.directory}/downloads/" src="${project.build.directory}/downloads/${download.url.file}"/>
+														</else>
+													</ac:if>
+												</else>
+											</ac:if>
+											
+											<echo message="Copy p2.inf file to META-INF dir"/>
+											<copy file="${project.basedir}/p2.inf" tofile="${project.build.directory}/META-INF/p2.inf"/>
+										
+										</target>
+									</configuration>
+								</execution>
+							</executions>
+							<dependencies>
+			      			    <dependency>
+			            			<groupId>ant-contrib</groupId>
+			            			<artifactId>ant-contrib</artifactId>
+			            			<version>1.0b3</version>
+			            			<exclusions>
+										<exclusion>
+											<groupId>ant</groupId>
+											<artifactId>ant</artifactId>
+										</exclusion>
+									</exclusions>
+								</dependency>
+							</dependencies>
+						</plugin>
+
+
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>maven-resources-plugin</artifactId>
+							<version>${maven-resources-plugin.version}</version>
+							<configuration>
+								<!-- Disabled when maven is called with '-DexcludeJRE' -->
+								<skip>${excludeJRE}</skip>
+							</configuration>
+							<executions>
+								<execution>
+									<id>Copy p2.inf file to META-INF dir</id>
+									<phase>process-resources</phase>
+									<goals>
+										<goal>copy-resources</goal>
+									</goals>
+									<configuration>
+										<outputDirectory>${project.build.directory}/META-INF</outputDirectory>
+										<resources>
+											<resource>
+												<directory>${project.build.directory}</directory>
+												<includes>
+													<include>p2.inf</include>
+												</includes>
+											</resource>
+										</resources>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+
+						<plugin>
+							<groupId>org.eclipse.tycho</groupId>
+							<artifactId>tycho-packaging-plugin</artifactId>
+							<configuration>
+								<!-- Disabled when maven is called with '-DexcludeJRE' -->
+								<skip>${excludeJRE}</skip>
+								<additionalFileSets>
+									<!-- include jre -->
+									<fileSet>
+										<directory>${project.build.directory}/downloads/${download.unzippedFolder}/</directory>
+										<includes>
+											<include>**/*</include>
+										</includes>
+									</fileSet>
+									<!-- filter p2.inf w/ correct version info -->
+									<fileSet>
+										<directory>${project.build.directory}/</directory>
+										<includes>
+											<include>META-INF/p2.inf</include>
+										</includes>
+									</fileSet>
+								</additionalFileSets>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 </project>

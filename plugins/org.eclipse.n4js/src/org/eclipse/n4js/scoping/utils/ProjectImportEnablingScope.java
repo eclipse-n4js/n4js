@@ -23,9 +23,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -60,8 +62,7 @@ import com.google.common.collect.Iterables;
  * In both cases, <code>projectName</code>> stands for the N4JS project name of the project containing the module to
  * import from. The last case is only allowed if the containing project has defined the <code>MainModule</code> property
  * in its manifest and means that this main module will then be imported.
- *
- *
+ * <p>
  * Since there may exist multiple <code>MainModule</code> instances in the workspace with the same name (but not in one
  * project!) this scope uses two external sources of elements. In case of imports not specifying target project project
  * ID we use provided <code>parent</code> as source of elements in scope. In case of imports specifying target project
@@ -163,18 +164,18 @@ public class ProjectImportEnablingScope implements IScope {
 		// handle error cases to help user fix the issue
 		StringBuilder sbErrrorMessage = new StringBuilder("Cannot resolve import target ::");
 
-		ImportType importType = computeImportType(name, this.contextProject);
+		ModuleSpecifierForm importType = computeImportType(name, this.contextProject);
 		switch (importType) {
-		case PROJECT_IMPORT:
+		case PROJECT:
 			sbErrrorMessage.append(" resolving project import :");
 			break;
-		case COMPLETE_IMPORT:
+		case COMPLETE:
 			sbErrrorMessage.append(" resolving full module import :");
 			break;
-		case SIMPLE_IMPORT:
+		case PLAIN:
 			sbErrrorMessage.append(" resolving simple module import :");
 			break;
-		case PROJECT_IMPORT_NO_MAIN:
+		case PROJECT_NO_MAIN:
 			sbErrrorMessage.append(" no main module in target project");
 			break;
 		default:
@@ -182,7 +183,7 @@ public class ProjectImportEnablingScope implements IScope {
 			break;
 		}
 
-		if (!importType.equals(ImportType.PROJECT_IMPORT_NO_MAIN)) {
+		if (!importType.equals(ModuleSpecifierForm.PROJECT_NO_MAIN)) {
 			if (size == 0) {
 				sbErrrorMessage.append(" found no matching modules");
 			} else {
@@ -200,22 +201,25 @@ public class ProjectImportEnablingScope implements IScope {
 	@Override
 	public Iterable<IEObjectDescription> getElements(QualifiedName name) {
 
-		switch (computeImportType(name, this.contextProject)) {
-		case PROJECT_IMPORT: {
+		ModuleSpecifierForm moduleSpecifierForm = computeImportType(name, this.contextProject);
+
+		storeModuleSpecifierFormInAST(moduleSpecifierForm);
+
+		switch (moduleSpecifierForm) {
+		case PROJECT: {
 			final String firstSegment = name.getFirstSegment();
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
 			final QualifiedName mainModule = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
 			return getElementsWithDesiredProjectName(mainModule, targetProject.getProjectName());
 		}
-		case COMPLETE_IMPORT: {
+		case COMPLETE: {
 			final String firstSegment = name.getFirstSegment();
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
 			return getElementsWithDesiredProjectName(name.skipFirst(1), targetProject.getProjectName());
 		}
-		case SIMPLE_IMPORT: {
+		case PLAIN: {
 			return parent.getElements(name);
 		}
-
 		default:
 			return Collections.emptyList();
 		}
@@ -278,11 +282,25 @@ public class ProjectImportEnablingScope implements IScope {
 	/**
 	 * Convenience method over {@link ImportSpecifierUtil#computeImportType(QualifiedName, boolean, IN4JSProject)}
 	 */
-	private ImportType computeImportType(QualifiedName name, IN4JSProject project) {
+	private ModuleSpecifierForm computeImportType(QualifiedName name, IN4JSProject project) {
 		final String firstSegment = name.getFirstSegment();
 		final IN4JSProject targetProject = findProject(firstSegment, project);
 		final boolean firstSegmentIsProjectName = targetProject != null;
 		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectName, targetProject);
 	}
 
+	/**
+	 * Stores the given module specifier form in the AST iff 1) {@link #importDeclaration} is present and 2) it was not
+	 * set already; otherwise invoking this method has no effect.
+	 */
+	private void storeModuleSpecifierFormInAST(ModuleSpecifierForm moduleSpecifierForm) {
+		if (importDeclaration.isPresent()) {
+			ImportDeclaration impDecl = importDeclaration.get();
+			if (impDecl.getModuleSpecifierForm() == ModuleSpecifierForm.UNKNOWN) {
+				EcoreUtilN4.doWithDeliver(false, () -> {
+					impDecl.setModuleSpecifierForm(moduleSpecifierForm);
+				}, impDecl);
+			}
+		}
+	}
 }

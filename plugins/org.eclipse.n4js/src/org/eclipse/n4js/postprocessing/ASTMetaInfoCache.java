@@ -51,29 +51,31 @@ public final class ASTMetaInfoCache {
 
 	private final N4JSResource resource;
 	private final boolean hasBrokenAST;
+	private final ASTFlowInfo flowInfo;
 	private final Map<TypableElement, TypeRef> actualTypes = new HashMap<>();
 	private final Map<ParameterizedCallExpression, List<TypeRef>> inferredTypeArgs = new HashMap<>();
 	private final Map<Expression, CompileTimeValue> compileTimeValue = new HashMap<>();
-
 	private final Map<VariableDeclaration, List<EObject>> localVariableReferences = new HashMap<>();
 
-	/* package */ ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST) {
+	/* package */ ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST, ASTFlowInfo flowInfo) {
 		this.resource = resource;
 		this.hasBrokenAST = hasBrokenAST;
+		this.flowInfo = flowInfo;
 	}
 
-	/**
-	 * Returns the {@link N4JSResource} the receiving cache belongs to.
-	 */
+	/** @return the {@link N4JSResource} the receiving cache belongs to. */
 	public N4JSResource getResource() {
 		return resource;
 	}
 
-	/**
-	 * Tells if the resource of this cache has a broken AST.
-	 */
+	/** @return if the resource of this cache has a broken AST. */
 	public boolean hasBrokenAST() {
 		return hasBrokenAST;
+	}
+
+	/** @return the flow information for this resource */
+	public ASTFlowInfo getFlowInfo() {
+		return flowInfo;
 	}
 
 	/**

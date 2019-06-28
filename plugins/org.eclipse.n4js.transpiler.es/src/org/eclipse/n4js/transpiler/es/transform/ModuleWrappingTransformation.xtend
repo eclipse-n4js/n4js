@@ -18,21 +18,19 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModifiableElement
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.scoping.utils.ImportSpecifierUtil
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.ResourceNameComputer
-import org.eclipse.xtext.naming.IQualifiedNameProvider
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension com.google.common.base.Strings.repeat
 
 /**
  * This transformation will prepare the output code for module loading. Since dropping support for commonjs and SystemJS
@@ -45,9 +43,6 @@ class ModuleWrappingTransformation extends Transformation {
 
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
-
-	@Inject
-	private IQualifiedNameProvider qualifiedNameProvider;
 
 	private String[] localModuleSpecifierSegments = null; // will be set in #analyze()
 
@@ -85,40 +80,63 @@ class ModuleWrappingTransformation extends Transformation {
 	}
 
 	def private void transformImportDecl(ImportDeclaration importDeclIM) {
-		val module = state.info.getImportedModule(importDeclIM);
-		val actualModuleSpecifier = computeActualModuleSpecifier(module);
-		val actualModuleSpecifierNormalized = actualModuleSpecifier.replace("/./", "/");
-		importDeclIM.moduleSpecifierAsText = actualModuleSpecifierNormalized;
+		val moduleSpecifier = computeModuleSpecifierForOutputCode(importDeclIM);
+		val moduleSpecifierNormalized = moduleSpecifier.replace("/./", "/");
+		importDeclIM.moduleSpecifierAsText = moduleSpecifierNormalized;
 	}
 
-	def private String computeActualModuleSpecifier(TModule targetModule) {
+	/**
+	 * For the following reasons, we cannot simply reuse the module specifier from the N4JS source code
+	 * in the generated output code:
+	 * <ol>
+	 * <li>in N4JS, module specifiers are always absolute whereas in plain Javascript module specifiers
+	 * must be relative (i.e. start with a segment '.' or '..') when importing from a module within the
+	 * same npm package. N4JS does not even support relative module specifiers.
+	 * <li>in N4JS, the project name as the first segment of an absolute module specifier is optional
+	 * (see {@link ModuleSpecifierForm#PLAIN} vs. {@link ModuleSpecifierForm#COMPLETE}); this is not
+	 * supported by plain Javascript.
+	 * <li>in N4JS, module specifiers do not contain the path to the output folder, whereas in plain
+	 * Javascript absolute module specifiers must always contain the full path from a project's root
+	 * folder to the module.
+	 * </ol>
+	 * Importing from a runtime library is an exception to the above: in this case we must never include
+	 * the runtime library's project name nor its path to the output folder in the module specifier.
+	 */
+	def private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
+		val targetModule = state.info.getImportedModule(importDeclIM);
+
+		val targetProject = n4jsCore.findProject(targetModule.eResource.URI).orNull;
+
+		if (targetProject.projectType === ProjectType.RUNTIME_LIBRARY) {
+			// SPECIAL CASE #1
+			// pointing to a module in a runtime library
+			// --> always use plain module specifier
+			return targetModule.moduleSpecifier;
+		}
+
+		val importingFromModuleInSameProject = targetProject.location == state.project.location;
+		if (importingFromModuleInSameProject) {
+			// SPECIAL CASE #2
+			// module specifiers are always absolute in N4JS, but Javascript requires relative module
+			// specifiers when importing from a module within the same npm package
+			// --> need to create a relative module specifier here:
+			return createRelativeModuleSpecifier(targetModule);
+		}
+
+		val moduleSpecifierForm = importDeclIM.moduleSpecifierForm;
+		if (moduleSpecifierForm === ModuleSpecifierForm.PROJECT
+			|| moduleSpecifierForm === ModuleSpecifierForm.PROJECT_NO_MAIN) {
+			// SPECIAL CASE #3
+			// in case of project imports (a.k.a. bare imports) we simply use
+			// the target project's name as module specifier:
+			return getActualProjectName(targetProject);
+		}
+
+		return createAbsoluteModuleSpecifier(targetProject, targetModule);
+	}
+
+	def private String createRelativeModuleSpecifier(TModule targetModule) {
 		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(targetModule);
-
-		var targetProject = n4jsCore.findProject(targetModule.eResource.URI).orNull;
-		if (targetProject !== null && targetProject.projectType === ProjectType.DEFINITION) {
-			val definedPackageName = targetProject.definesPackageName;
-			if (definedPackageName !== null) {
-				targetProject = n4jsCore.findAllProjectMappings.get(definedPackageName);
-			}
-		}
-		if (targetProject !== null) {
-			if (targetProject.projectType === ProjectType.RUNTIME_LIBRARY) {
-				// pointing to a module in a runtime library
-				// --> always use plain module specifier
-				return targetModule.moduleSpecifier;
-			} else if (targetProject.location == state.project.location) {
-				// pointing to a target module in same project
-				return createRelativeModuleSpecifier(targetProject, targetModuleSpecifier);
-			} else {
-				// pointing to a target module in another project
-				return createAbsoluteModuleSpecifier(targetProject, targetModule, targetModuleSpecifier);
-			}
-		}
-
-		return targetModuleSpecifier;
-	}
-
-	def private String createRelativeModuleSpecifier(IN4JSProject targetProject, String targetModuleSpecifier) {
 		val targetSegments = targetModuleSpecifier.split("/", -1);
 		val l = Math.min(targetSegments.length, localModuleSpecifierSegments.length);
 		var i = 0;
@@ -131,36 +149,46 @@ class ModuleWrappingTransformation extends Transformation {
 		return result;
 	}
 
-	def private String createAbsoluteModuleSpecifier(IN4JSProject targetProject, TModule targetModule,
-		String targetModuleSpecifier) {
+	def private String createAbsoluteModuleSpecifier(IN4JSProject targetProject, TModule targetModule) {
+		val sb = new StringBuilder();
+		
+		// first segment is the project name
+		val targetProjectName = getActualProjectName(targetProject);
+		if (!targetProjectName.isNullOrEmpty) {
+			sb.append(targetProjectName);
+		}
 
-		// 1) check if a project import (a.k.a. "bare import") to the target project's main module can be used
-		if (targetProject.mainModule !== null) {
-			val targetProjectMainModuleFQN = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
-			val targetModuleFQN = qualifiedNameProvider.getFullyQualifiedName(targetModule);
-			if (targetProjectMainModuleFQN !== null && targetProjectMainModuleFQN == targetModuleFQN) {
-				// use a project import 
-				return targetProject.projectName;
-			}
-		}
-		// 2) construct a complete module specifier (a.k.a. "deep import")
-		val targetProjectName = targetProject.projectName;
-		if (targetProjectName.isNullOrEmpty) {
-			return targetModuleSpecifier;
-		}
+		// followed by the path to the output folder
 		var outputPath = targetProject.outputPath;
-		// normalize outputPath: should be non-null and start/end with a '/'
-		if (outputPath.isNullOrEmpty) {
-			outputPath = '/';
-		} else {
+		if (!outputPath.isNullOrEmpty) {
 			if (!outputPath.startsWith('/')) {
-				outputPath = '/' + outputPath;
+				sb.append('/');
 			}
+			sb.append(outputPath);
 			if (!outputPath.endsWith('/')) {
-				outputPath = outputPath + '/';
+				sb.append('/');
+			}
+		} else {
+			if (sb.length > 0) {
+				sb.append('/');
 			}
 		}
-		return targetProjectName + outputPath + targetModuleSpecifier;
+
+		// and finally the target module's FQN (i.e. the path-to-module)
+		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(targetModule);
+		sb.append(targetModuleSpecifier);
+
+		return sb.toString();
+	}
+
+	def private String getActualProjectName(IN4JSProject project) {
+		if (project.projectType === ProjectType.DEFINITION) {
+			val definedProjectName = project.definesPackageName;
+			if (!definedProjectName.isNullOrEmpty) {
+				return definedProjectName;
+			}
+		}
+		return project.projectName;
 	}
 
 	/**

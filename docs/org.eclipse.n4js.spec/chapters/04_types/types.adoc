@@ -1386,6 +1386,8 @@ The type `N4Class` is used for extended reflection in N4JS.
 [.todo]
 Add further docs for this type
 
+
+[[IterableN]]
 === IterableN
 
 [.todo]
@@ -1406,8 +1408,9 @@ Type modifiers can not be used in type arguments.
 The general type modifiers $nullable$, $nonnull$ and $dynamic$ can be used for variables, attributes, method parameters and method types.
 Optional and variadic modifiers can only be applied for formal parameters.
 
-=== Dynamic
 
+[[Type_Modifiers_Dynamic]]
+=== Dynamic
 
 The dynamic type modifier marks a type as being dynamic.
 A dynamic type behaves like a normal JavaScript object, so you can read/write any property and call any method on it.
@@ -2974,3 +2977,79 @@ public function process(req: XMLHttpRequest) : void {
 ====
 
 --
+
+
+[.language-n4js]
+== Short-Hand Syntax
+
+Short-hand syntax is available for a number of built-in types.
+
+
+=== Array Short-Hand Syntax
+
+For the built-in type `Array` a convenience short form is available. Thus, writing
+
+[source,n4js]
+----
+let arr: string[];
+----
+
+is equivalent to
+
+[source,n4js]
+----
+let arr: Array<string>;
+----
+
+Multi-dimensional arrays can be declared as such:
+
+[source,n4js]
+----
+let arr: string[][][];
+----
+
+which is equivalent to
+
+[source,n4js]
+----
+let arr: Array<Array<Array<string>>>;
+----
+
+
+=== IterableN Short-Hand Syntax
+
+The built-in IterableN types (i.e. `Iterable2`, `Iterable3`, ... `Iterable9`, see <<IterableN>>) are
+also provided with a short-hand syntax. For example, writing
+
+[source,n4js]
+----
+let i3: [string,number,string[]];
+----
+
+would be equivalent to
+
+[source,n4js]
+----
+let i3: Iterable3<string,number,Array<string>>;
+----
+
+Note the following special cases:
+
+[source,n4js]
+----
+let i0: [];
+let i1: [string];
+let union: string|number[];
+----
+
+which is equivalent to
+
+[source,n4js]
+----
+let i0: Iterable<?>;
+let i1: Iterable<string>;
+let union: union{string,Array<number>}; // not: Array<union{string,number}>
+----
+
+Further note: while this syntax is very similar to TypeScript's tuple syntax, the semantics
+of tuples and IterableN are very different.

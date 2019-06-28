@@ -163,7 +163,7 @@ public final class ScopeManager implements Scope {
 		if (scope == null)
 			throw new IllegalArgumentException(
 					"not a scoped class (i.e. does not have a scope annotation): " + clsToBeInjected.getName());
-		return new Provider<T>() {
+		return new Provider<>() {
 			@Override
 			public T get() {
 				final ScopeRegistry reg = getRegistry();

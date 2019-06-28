@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.GeneratorOption;
+import org.eclipse.n4js.generator.ISubGenerator;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
+import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
+import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.XtextResource;
@@ -54,7 +56,7 @@ public class XpectN4JSES5GeneratorHelper {
 	public String compile(Script depRoot, GeneratorOption[] options, boolean replaceQuotes) {
 		final Resource resource = depRoot.eResource();
 		EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
-		final AbstractSubGenerator generator = getGeneratorForResource(resource);
+		final ISubGenerator generator = getGeneratorForResource(resource);
 		String compileResultStr = generator.getCompileResultAsText(depRoot, options);
 		if (replaceQuotes) {
 			// Windows Node.js has problems with " as it interprets it as ending of script to execute
@@ -73,7 +75,7 @@ public class XpectN4JSES5GeneratorHelper {
 	 * @return {@code true} if there are no validation issues for resource and it can be compiled
 	 */
 	public boolean isCompilable(Resource resource, StringBuilder errorResult) {
-		final AbstractSubGenerator generator = getGeneratorForResource(resource);
+		final ISubGenerator generator = getGeneratorForResource(resource);
 		// shouldBeCompiled already calls the resource validator, so
 		// registerErrors should only be called when there have been errors found before
 		return generator.shouldBeCompiled(resource, CancelIndicator.NullImpl) || !registerErrors(resource, errorResult);
@@ -101,11 +103,22 @@ public class XpectN4JSES5GeneratorHelper {
 
 	/**
 	 * Returns the desired generator instance for the resource argument. For now, will always return an instance of
-	 * {@link EcmaScriptSubGenerator}.
+	 * {@link EcmaScriptSubGenerator}, except for N4IDL resources an instance of {@link N4IDLSubGenerator} will be
+	 * returned.
+	 * <p>
+	 * NOTE: it would be good to use {@link org.eclipse.n4js.generator.SubGeneratorRegistry}, here, but this registry is
+	 * not available in this code.
 	 */
-	private AbstractSubGenerator getGeneratorForResource(Resource resource) {
+	private ISubGenerator getGeneratorForResource(Resource resource) {
 		checkState(resource instanceof XtextResource, "Expected XtextResource was " + resource);
-		return ((XtextResource) resource).getResourceServiceProvider().get(EcmaScriptSubGenerator.class);
+		ResourceType resourceType = ResourceType.getResourceType(resource);
+		Class<? extends ISubGenerator> generatorType;
+		if (resourceType == ResourceType.N4IDL) {
+			generatorType = N4IDLSubGenerator.class;
+		} else {
+			generatorType = EcmaScriptSubGenerator.class;
+		}
+		return ((XtextResource) resource).getResourceServiceProvider().get(generatorType);
 	}
 
 }

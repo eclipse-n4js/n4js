@@ -2,8 +2,8 @@
  * https://github.com/visionmedia/debug
  */
 
-export external public var names: Array<string>;
-export external public var skips: Array<string>;
+export external public var names: string[];
+export external public var skips: string[];
 export external public var formatters: Object;
 export external public function coerce(val: any): void;
 export external public function enable(namespace: string): void;

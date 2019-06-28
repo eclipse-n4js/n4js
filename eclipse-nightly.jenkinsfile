@@ -24,13 +24,14 @@ pipeline {
 
     environment {
         NODEJS_PATH= '/shared/common/node-v10.15.3-linux-x64/bin'
-        YARN_PATH = '/shared/common/yarn/1.15.2/bin'
+        YARN_PATH  = '/shared/common/yarn/1.15.2/bin'
         PATH       = "${PATH}"                                          +
                      ":/shared/common/apache-ant-1.9.6/bin"             +
-                     ":/shared/common/maven/apache-maven-3.5.2/bin/"    +
+                     ":/shared/common/maven/apache-maven-3.6.0/bin/"    +
                      ":/shared/common/node-v10.15.3-linux-x64/bin"      +
-                     ":/shared/common/java/oracle/jdk1.8.0_162_x64/bin"
+                     ":/shared/common/java/openjdk/jdk11-x64/bin"
         MAVEN_OPTS = '-Xmx4G'
+        JAVA_HOME  = '/shared/common/java/openjdk/jdk11-x64'
         TIMESTAMP  = new Date().format("yyyyMMddHHmm")
     }
 
@@ -52,7 +53,8 @@ pipeline {
                                 '--show-version',
                                 '-Dtycho.localArtifacts=ignore',
                                 '-Dmaven.test.failure.ignore',
-                                '-DWORKSPACE=' + env.WORKSPACE
+                                '-DWORKSPACE=' + env.WORKSPACE,
+                                '-DexcludeJRE'
                             ].join(' ')
                             def profiles = [
                                 'buildProduct',

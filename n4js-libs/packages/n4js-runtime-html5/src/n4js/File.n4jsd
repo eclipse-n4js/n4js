@@ -11,7 +11,7 @@
 @@Global @@ProvidedByRuntime
 
 export external public class ~File extends Blob {
-    public constructor(content: Array<union{string, Blob/*, ArrayBuffer, ArrayBufferView*/}>, fileName: string, options: ~Object with {
+    public constructor(content: union{string, Blob/*, ArrayBuffer, ArrayBufferView*/}[], fileName: string, options: ~Object with {
         type?: string;
         endings?: string;
     });

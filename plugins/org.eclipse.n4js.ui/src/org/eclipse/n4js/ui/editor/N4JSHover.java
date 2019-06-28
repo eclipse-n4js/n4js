@@ -19,6 +19,9 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.xtext.nodemodel.ILeafNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledError;
 import org.eclipse.xtext.ui.editor.hover.DispatchingEObjectTextHover;
@@ -61,6 +64,48 @@ public class N4JSHover extends DispatchingEObjectTextHover {
 					}
 				}
 			}, (IRegion) null);
+		} catch (OperationCanceledException e) {
+			return null;
+		} catch (OperationCanceledError e) {
+			return null;
+		}
+	}
+
+	@Override
+	public Object getHoverInfo2(final ITextViewer textViewer, final IRegion hoverRegion) {
+		if (hoverRegion == null)
+			return null;
+		IXtextDocument xtextDocument = XtextDocumentUtil.get(textViewer);
+		if (xtextDocument == null)
+			return null;
+		try {
+			return xtextDocument.readOnly(new IUnitOfWork<Object, XtextResource>() {
+				@Override
+				public Object exec(XtextResource state) throws Exception {
+					// resource can be null e.g. read only zip/jar entry
+					if (state == null) {
+						return null;
+					}
+
+					// to support type guard information in hover text, pass the cross-reference itself
+					IParseResult parseResult = state.getParseResult();
+					if (parseResult != null) {
+						ILeafNode leaf = NodeModelUtils.findLeafNodeAtOffset(parseResult.getRootNode(),
+								hoverRegion.getOffset());
+						EObject semanticElement = leaf.getSemanticElement();
+						if (semanticElement != null) {
+							return getHoverInfo(semanticElement, textViewer, hoverRegion);
+						}
+					}
+
+					// fall-back in case the node for the cross-reference could not be passed
+					Pair<EObject, IRegion> element = getXtextElementAt(state, hoverRegion.getOffset());
+					if (element != null && element.getFirst() != null) {
+						return getHoverInfo(element.getFirst(), textViewer, hoverRegion);
+					}
+					return null;
+				}
+			});
 		} catch (OperationCanceledException e) {
 			return null;
 		} catch (OperationCanceledError e) {
