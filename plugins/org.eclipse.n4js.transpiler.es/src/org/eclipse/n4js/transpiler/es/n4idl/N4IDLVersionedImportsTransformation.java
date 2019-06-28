@@ -10,9 +10,13 @@
  */
 package org.eclipse.n4js.transpiler.es.n4idl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
@@ -62,9 +66,22 @@ public class N4IDLVersionedImportsTransformation extends Transformation {
 
 	@Override
 	public void transform() {
-		EcoreUtil2.getAllContentsOfType(getState().im, VersionedNamedImportSpecifier_IM.class)
-				.stream().filter(VersionedNamedImportSpecifier_IM::isVersionedTypeImport)
-				.forEach(this::transformVersionedImportSpecifier);
+		EcoreUtil2.getAllContentsOfType(getState().im, ImportDeclaration.class)
+				.forEach(this::transformVersionedImportSpecifiers);
+	}
+
+	private void transformVersionedImportSpecifiers(ImportDeclaration impDecl) {
+		for (ImportSpecifier impSpec : new ArrayList<>(impDecl.getImportSpecifiers())) {
+			if (impSpec instanceof VersionedNamedImportSpecifier_IM) {
+				VersionedNamedImportSpecifier_IM impSpecCasted = (VersionedNamedImportSpecifier_IM) impSpec;
+				if (impSpecCasted.isVersionedTypeImport()) {
+					transformVersionedImportSpecifier(impSpecCasted);
+				}
+			}
+		}
+		if (impDecl.getImportSpecifiers().isEmpty()) {
+			remove(impDecl);
+		}
 	}
 
 	/**
@@ -84,7 +101,10 @@ public class N4IDLVersionedImportsTransformation extends Transformation {
 			// add new import for this specific version
 			addNamedImport(ste, null);
 			// obtain newly created specifier via STE
-			ImportSpecifier createdSpecifier = ste.getImportSpecifier();
+			NamedImportSpecifier createdSpecifier = (NamedImportSpecifier) ste.getImportSpecifier();
+			// set the name of the imported element including the version number, e.g. C$2
+			createdSpecifier.setImportedElementAsText(
+					N4IDLTranspilerUtils.getVersionedInternalName(ste.getOriginalTarget()));
 			// make sure to retain trace of the original IM specifier
 			getState().tracer.copyTrace(importSpecifier, createdSpecifier);
 		});
