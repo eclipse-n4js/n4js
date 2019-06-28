@@ -13,6 +13,6 @@
 docker build -t n4js-build docker-build/
 
 docker run -ti --rm      \
-    -v ~/.m2:/root/.m2/  \
-    -v $(pwd):/workspace \
+    -v ~/.m2:/root/.m2/:cached  \
+    -v $(pwd):/workspace:cached \
     n4js-build $@
