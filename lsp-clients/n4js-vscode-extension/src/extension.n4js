@@ -1,34 +1,38 @@
-'use strict';
-
+ 
+//import * as net from 'net';
 //import * as net+ from '@types/node';
-import * as net+ from 'net';
 
-import * as VSCodeJRCP+ from 'vscode-jsonrpc';
-//import { Trace } from 'vscode-jsonrpc';
-
-import * as VSCode+ from 'n4js-vscode-extension/vscode';
+//import * as VSCode+ from 'n4js-vscode-extension/vscode';
 //import { workspace, ExtensionContext } from 'vscode';
 
-import * as VSCodeLC+ from 'vscode-languageclient';
+//import * as VSCodeJRCP+ from 'vscode-jsonrpc';
+//import { Trace } from 'vscode-jsonrpc';
+
+//import * as VSCodeLC+ from 'vscode-languageclient';
 //import { LanguageClient, LanguageClientOptions, StreamInfo } from 'vscode-languageclient';
 
 
-export function activate(context: any+ /*VSCode.ExtensionContext*/) {
+const net : any+ = require("net");
+const VSCode : any+ = require("vscode");
+const VSCodeJRCP : any+ = require("vscode-jsonrpc");
+const VSCodeLC : any+ = require("vscode-languageclient");
+
+// TODO remove generated in output code: import 'n4js-runtime'
+// TODO Object.defineProperty(exports, "__esModule", { value: true });
+
+function activate(context: any+ /*VSCode.ExtensionContext*/) {
     // The server is a started as a separate app and listens on port 5007
-    let connectionInfo = {
-        port: 5007
-    };
     let serverOptions = () => {
         // Connect to language server via socket
-        let socket = net.connect(connectionInfo);
-        let result: VSCodeLC.StreamInfo = {
+        let socket = net.connect({port:5007});
+        let result = {
             writer: socket,
             reader: socket
         };
         return Promise.resolve(result);
     };
     
-    let clientOptions: VSCodeLC.LanguageClientOptions = {
+    let clientOptions = {
         documentSelector: ['n4js'],
         synchronize: {
             fileEvents: VSCode.workspace.createFileSystemWatcher('**/*.*')
@@ -45,3 +49,8 @@ export function activate(context: any+ /*VSCode.ExtensionContext*/) {
     // client can be deactivated on extension deactivation
     context.subscriptions.push(disposable);
 }
+
+
+
+// TODO exports.activate = activate;
+

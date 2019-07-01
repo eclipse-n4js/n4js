@@ -51,6 +51,7 @@
 	},
 	"dependencies": {
 		"n4js-runtime": "",
+		"n4js-runtime-node": "0.14.5",
 		"vsce": "^1.59.0",
 		"vscode": "^1.1.33",
 		"@types/node": "^11.13.0",
@@ -71,6 +72,9 @@
 				"src"
 			]
 		},
-		"output": "src-gen"
+		"output": "src-gen",
+		"requiredRuntimeLibraries": [
+			"n4js-runtime-node"
+		]
 	}
 }
