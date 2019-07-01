@@ -23,3 +23,9 @@ function foo() {}
 
 // XPECT errors --> "Not a reference to a constructor: {function():void}." at "foo"
 new foo();
+
+
+const cnst :any+ = {};
+// XPECT noerrors -->
+new cnst();
+
