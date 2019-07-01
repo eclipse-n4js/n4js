@@ -18,7 +18,7 @@ const VSCodeJRCP : any+ = require("vscode-jsonrpc");
 const VSCodeLC : any+ = require("vscode-languageclient");
 
 // TODO remove generated in output code: import 'n4js-runtime'
-// TODO Object.defineProperty(exports, "__esModule", { value: true });
+// TODO add in output code: Object.defineProperty(exports, "__esModule", { value: true });
 
 function activate(context: any+ /*VSCode.ExtensionContext*/) {
     // The server is a started as a separate app and listens on port 5007
@@ -52,5 +52,5 @@ function activate(context: any+ /*VSCode.ExtensionContext*/) {
 
 
 
-// TODO exports.activate = activate;
+// TODO add in output code: exports.activate = activate;
 
