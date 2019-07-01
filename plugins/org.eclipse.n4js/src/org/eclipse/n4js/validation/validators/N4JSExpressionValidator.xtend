@@ -566,14 +566,18 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (typeRef instanceof UnknownTypeRef)
 			return; // suppress error message in case of UnknownTypeRef
 
+		val G = newExpression.newRuleEnvironment;
 		// not even a TypeTypeRef?
 		if (! (typeRef instanceof TypeTypeRef)) {
+			if (typeRef.isDynamic && RuleEnvironmentExtensions.isAny(G, typeRef)) {
+				// don't bother on any+ types
+				return;
+			}
 			issueNotACtor(typeRef, newExpression);
 			return;
 		}
 		// at least we have a TypeTypeRef, but there are still many cases in which
 		// 'new' is not allowed --> check for those error cases now, showing more specific error messages ...
-		val G = newExpression.newRuleEnvironment;
 		val TypeTypeRef classifierTypeRef = typeRef as TypeTypeRef;
 		val typeArg = classifierTypeRef.typeArg;
 		val staticType = tsh.getStaticType(G, classifierTypeRef).changeToCovariantUpperBoundIfTypeVar;
