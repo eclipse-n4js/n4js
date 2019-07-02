@@ -74,6 +74,7 @@ import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.HashMultimap;
@@ -85,6 +86,7 @@ import com.google.inject.Inject;
  * Class for testing the project navigator behavior regarding the selectAll shortcut, context menu contributions and
  * mixed element selections.
  */
+@Ignore("GH-1366") // this UI test is failing when executed on Eclipse build infrastructure
 public class SelectAllProjectExplorer_PluginUITest extends AbstractPluginUITest {
 
 	private static final List<String> LIBRARY_PROJECTS = Arrays.asList("L1", "ClosedL2");

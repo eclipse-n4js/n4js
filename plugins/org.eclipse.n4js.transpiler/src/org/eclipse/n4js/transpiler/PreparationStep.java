@@ -57,6 +57,7 @@ import org.eclipse.n4js.transpiler.operations.SymbolTableManagement;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
@@ -338,6 +339,9 @@ public class PreparationStep {
 					final String propName = getPropertyAsString((ParameterizedPropertyAccessExpression) eObject);
 					((ParameterizedPropertyAccessExpression_IM) copyEObject).setAnyPlusAccess(true);
 					((ParameterizedPropertyAccessExpression_IM) copyEObject).setNameOfAnyPlusProperty(propName);
+				} else if (isDynamicNamespaceReference(eObject)) {
+					// type references via dynamic namespace imports can still be transpiled
+					// (no additional properties to set in ParameterizedTypeRef_IM)
 				} else if (eObject instanceof IdentifierRef && eObject.eContainer() instanceof JSXElementName) {
 					// name of a JSX element, e.g. the "div" in something like: <div prop='value'></div>
 					String tagName = ((IdentifierRef) eObject).getIdAsText();
@@ -351,6 +355,17 @@ public class PreparationStep {
 							eObject.eResource(), pos.getLine(), pos.getColumn());
 				}
 			}
+		}
+
+		private boolean isDynamicNamespaceReference(EObject eObject) {
+			if (eObject instanceof ParameterizedTypeRef) {
+				ParameterizedTypeRef ptr = (ParameterizedTypeRef) eObject;
+				ModuleNamespaceVirtualType astNamespace = ptr.getAstNamespace();
+				if (astNamespace != null) {
+					return astNamespace.isDeclaredDynamic();
+				}
+			}
+			return false;
 		}
 
 		private SymbolTableEntryOriginal getSymbolTableEntry(IdentifiableElement elem, boolean create) {
