@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+ 	ResourceSet {
+		ThisFile {}
+		File "JS1.js" {}
+		File "JS2.js" {}
+		File "N4JS1.n4js" {}
+		File "N4JS2.n4js" {}
+		File "N4JSD1.n4jsd" {}
+		File "N4JSD2.n4jsd" {}
+	}
+
+END_SETUP */
+
+
+
+// XPECT noerrors -->
+import * as JSDynamic+ from "Ch09_02_04__ImportStatements/JS2"
+
+// XPECT warnings --> "N4JSD module Ch09_02_04__ImportStatements/N4JSD2 should not be imported dynamically." at "* as N4JSDDynamic+"
+import * as N4JSDDynamic+ from "Ch09_02_04__ImportStatements/N4JSD2"
+
+
+// XPECT noerrors -->
+let a: JSDynamic.X;
+a;
+
+
+// XPECT noerrors -->
+let b: N4JSDDynamic.X;
+b;
+
+
+console.log("Invoke transpiler to trigger UnresolvedProxyInSubGeneratorException generation");
+/*  XPECT output  ---
+<==
+stdout:
+Invoke transpiler to trigger UnresolvedProxyInSubGeneratorException generation
+stderr:
+==>
+--- */
