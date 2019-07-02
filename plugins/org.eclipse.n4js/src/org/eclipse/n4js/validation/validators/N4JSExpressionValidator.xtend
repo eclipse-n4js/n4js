@@ -569,7 +569,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val G = newExpression.newRuleEnvironment;
 		// not even a TypeTypeRef?
 		if (! (typeRef instanceof TypeTypeRef)) {
-			if (typeRef.isDynamic && RuleEnvironmentExtensions.isAny(G, typeRef)) {
+			if (RuleEnvironmentExtensions.isAny(G, typeRef)) {
 				// don't bother on any+ types
 				return;
 			}
