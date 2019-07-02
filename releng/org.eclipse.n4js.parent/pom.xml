@@ -30,11 +30,11 @@ Contributors:
 	<properties>
 		<!-- java version -->
 		<java-compile-version>11</java-compile-version>
-		<!-- keep in sync with n4js/docker-build/Dockerfile -->
+		<!-- keep in sync with n4js-n4/docker-build/Dockerfile -->
 		<jdk-version>11</jdk-version>
 		<maven.compiler.source>${jdk-version}</maven.compiler.source>
 		<maven.compiler.target>${jdk-version}</maven.compiler.target>
-		<!-- keep in sync with n4js/docker-build/Dockerfile -->
+		<!-- keep in sync with n4js-n4/docker-build/Dockerfile -->
 		<maven-version>3.6.0</maven-version>
 
 		<!-- encoding -->
