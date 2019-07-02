@@ -25,12 +25,7 @@ function foo() {}
 new foo();
 
 
-const cnst1 :any = {};
+const cnst :any+ = {};
 // XPECT noerrors -->
-new cnst1();
-
-
-const cnst2 :any+ = {};
-// XPECT noerrors -->
-new cnst2();
+new cnst();
 
