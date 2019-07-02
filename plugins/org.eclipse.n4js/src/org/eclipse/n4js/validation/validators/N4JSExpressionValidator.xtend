@@ -569,9 +569,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val G = newExpression.newRuleEnvironment;
 		// not even a TypeTypeRef?
 		if (! (typeRef instanceof TypeTypeRef)) {
-			if (typeRef.isDynamic && RuleEnvironmentExtensions.isAny(G, typeRef)) {
-				// don't bother on any+ types
-				return;
+			if (typeRef.isDynamic) {
+				val constrOfWildcard = TypeUtils.createTypeTypeRef(TypeUtils.createWildcard, true);
+				if (ts.subtypeSucceeded(G, typeRef, constrOfWildcard) || ts.subtypeSucceeded(G, constrOfWildcard, typeRef)) {
+					// don't bother on dynamic types that are either a sub- or supertype of function
+					return;
+				}
 			}
 			issueNotACtor(typeRef, newExpression);
 			return;
