@@ -34,7 +34,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 	private final FileBasedWorkspace workspace;
 
 	/***/
-	protected FileBasedProjectModelSetup(AbstractProjectModelTest host, FileBasedWorkspace workspace) {
+	public FileBasedProjectModelSetup(AbstractProjectModelTest host, FileBasedWorkspace workspace) {
 		super(host);
 		this.workspace = workspace;
 	}

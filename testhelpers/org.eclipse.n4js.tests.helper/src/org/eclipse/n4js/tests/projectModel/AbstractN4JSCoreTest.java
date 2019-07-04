@@ -85,21 +85,4 @@ public abstract class AbstractN4JSCoreTest extends AbstractProjectModelTest {
 		assertEquals(myProjectName, project.getProjectName());
 	}
 
-	@SuppressWarnings("javadoc")
-	@Test
-	public void testGetDepthOfLocation() {
-		String[] emptySegments = { "", "", "" };
-		URI uri0 = myProjectURI;
-		URI uri1 = myProjectURI.appendSegment("someFile.txt");
-		URI uri2 = myProjectURI.appendSegment("someFolder").appendSegment("someFile.txt");
-		URI uriBad = myProjectURI.trimSegments(1).appendSegment("DoesNotExist").appendSegment("someFile.txt");
-		assertEquals(0, getN4JSCore().getDepthOfLocation(uri0));
-		assertEquals(0, getN4JSCore().getDepthOfLocation(uri0.appendSegments(emptySegments)));
-		assertEquals(1, getN4JSCore().getDepthOfLocation(uri1));
-		assertEquals(1, getN4JSCore().getDepthOfLocation(uri1.appendSegments(emptySegments)));
-		assertEquals(2, getN4JSCore().getDepthOfLocation(uri2));
-		assertEquals(2, getN4JSCore().getDepthOfLocation(uri2.appendSegments(emptySegments)));
-		assertEquals(-1, getN4JSCore().getDepthOfLocation(uriBad));
-		assertEquals(-1, getN4JSCore().getDepthOfLocation(uriBad.appendSegments(emptySegments)));
-	}
 }

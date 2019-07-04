@@ -16,7 +16,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -64,22 +63,6 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	}
 
 	/**
-	 * Given a nested location inside an existing(!) {@link IN4JSProject}, this method will return the "depth" of this
-	 * location, i.e. 0 if the location points to the project folder itself, 1 if it points to a file or folder in the
-	 * project's root folder, 2 if it points to a file or folder in a direct sub folder of the project's root folder,
-	 * etc.
-	 * <p>
-	 * Returns -1 if the given location is not a nested location in one of the registered, existing
-	 * {@code IN4JSProject}s.
-	 */
-	int getDepthOfLocation(URI nestedLocation);
-
-	/**
-	 * Tells if the two given nested locations are contained in the same N4JS project.
-	 */
-	boolean isInSameProject(URI nestedLocation1, URI nestedLocation2);
-
-	/**
 	 * Returns list of the N4JS projects that are in current working scope (IWorkspace or registered projects).
 	 *
 	 * @return List containing n4js projects in scope
@@ -115,11 +98,6 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	 * returns the project relative path to the folder where the generated files should be placed
 	 */
 	String getOutputPath(URI nestedLocation);
-
-	/**
-	 * returns for the given URI the no-validate module filter
-	 */
-	ModuleFilter getModuleValidationFilter(URI uri);
 
 	/**
 	 * Creates and returns a new resource set that is properly set up for loading resources in the default workspace
