@@ -13,3 +13,5 @@ Require-Bundle: org.eclipse.n4js.regex,
  com.google.gson
 Export-Package: org.eclipse.n4js.regex.ide,
  org.eclipse.n4js.regex.ide.contentassist.antlr
+Automatic-Module-Name: org.eclipse.n4js.regex.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-11

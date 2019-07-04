@@ -15,8 +15,6 @@ class RunServer {
 		val serverSocket = AsynchronousServerSocketChannel.open.bind(new InetSocketAddress("localhost", 5007))
 		val threadPool = Executors.newCachedThreadPool()
 
-
-
 		while (true) {
 			var languageServer = injector.getInstance(N4JSLanguageServerImpl)
 

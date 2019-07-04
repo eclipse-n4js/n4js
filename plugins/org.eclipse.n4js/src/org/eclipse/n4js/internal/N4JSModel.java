@@ -53,7 +53,7 @@ import com.google.inject.Singleton;
 
 /**
  */
-@SuppressWarnings({ "javadoc" })
+@SuppressWarnings({ "javadoc", "restriction" })
 @Singleton
 public class N4JSModel implements IWorkspaceConfig {
 
@@ -85,17 +85,14 @@ public class N4JSModel implements IWorkspaceConfig {
 	public Set<? extends IProjectConfig> getProjects() {
 		Set<IProjectConfig> prjConfs = new HashSet<>();
 		for (URI prjLoc : workspace.getAllProjectLocations()) {
-			IProjectConfig prjConf = new N4JSProject(prjLoc, false, this);
-			prjConfs.add(prjConf);
+			prjConfs.add(getN4JSProject(prjLoc));
 		}
 		return prjConfs;
 	}
 
 	@Override
 	public IProjectConfig findProjectContaining(URI member) {
-		URI projectWithMemberLoc = workspace.findProjectWith(member);
-		IProjectConfig projectWithMember = new N4JSProject(projectWithMemberLoc, false, this);
-		return projectWithMember;
+		return findProjectWith(member);
 	}
 
 	@Override

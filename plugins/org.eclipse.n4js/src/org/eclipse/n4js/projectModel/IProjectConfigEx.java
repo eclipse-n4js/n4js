@@ -20,6 +20,7 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 /**
  *
  */
+@SuppressWarnings("restriction")
 public interface IProjectConfigEx extends IProjectConfig {
 
 	@Override
@@ -35,17 +36,30 @@ public interface IProjectConfigEx extends IProjectConfig {
 		return null;
 	}
 
-	URI getOutputFolder();
+	/**
+	 * TODO ADD JAVADOC
+	 */
+	Iterable<URI> getOutputFolders();
 
+	/**
+	 * TODO ADD JAVADOC
+	 */
 	default boolean isInSourceFolder(URI member) {
 		return findSourceFolderContaining(member) != null;
 	}
 
+	/**
+	 * TODO ADD JAVADOC
+	 */
 	default boolean isInOutputFolder(URI member) {
 		Path memberPath = Paths.get(member.path());
-		Path outputPath = Paths.get(getOutputFolder().path());
-
-		return memberPath.startsWith(outputPath);
+		for (URI outputFolder : getOutputFolders()) {
+			Path outputPath = Paths.get(outputFolder.path());
+			if (memberPath.startsWith(outputPath)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

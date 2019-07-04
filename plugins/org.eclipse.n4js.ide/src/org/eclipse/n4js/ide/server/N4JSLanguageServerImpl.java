@@ -19,17 +19,20 @@ import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.projectModel.IProjectConfigEx;
 import org.eclipse.xtext.ide.server.LanguageServerImpl;
 import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
  */
 @SuppressWarnings("restriction")
+@Singleton
 public class N4JSLanguageServerImpl extends LanguageServerImpl {
 
 	@Inject
@@ -37,6 +40,19 @@ public class N4JSLanguageServerImpl extends LanguageServerImpl {
 
 	@Inject
 	private IWorkspaceConfig workspaceConfig;
+
+	// TODO we should probably use the DisposableRegistry here
+	/**
+	 * Called by Guice to initialize the languages. This way it is guaranteed that the registration happends exactly
+	 * once.
+	 *
+	 * @param helper
+	 *            the registrar
+	 */
+	@Inject
+	public void registerExtensions(HeadlessExtensionRegistrationHelper helper) {
+		helper.registerExtensions();
+	}
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
