@@ -66,6 +66,25 @@ mvn clean verify
 
 You may have to increase the memory for maven via `export MAVEN_OPTS="-Xmx2048m"` (Unix) or `set MAVEN_OPTS="-Xmx2048m"` (Windows).
 
+Available optional maven profiles are:
+
+[horizontal]
+buildProduct::                  create IDE products (Windows, macOS, Linux) and a jar for headless compilation
+execute-plugin-tests::          run OSGi tests (without UI)
+execute-plugin-ui-tests::       run UI-based OSGi tests
+execute-ecmas-tests::           run ECMA test suite
+execute-smoke-tests::           run generated tests using corrupted source code as input
+execute-accesscontrol-tests::   run generated tests for checking accessibility of class/interface members
+execute-hlc-integration-tests:: run integration tests using the headless jar (requires docker!)
+
+Available system properties:
+
+[horizontal]
+noTests::               suppress execution of all tests
+startAndKeepVerdaccio:: enfore starting and suppress stopping of the test verdaccio (see <<sec:test-verdaccio>>)
+
+
+
 === Publish maven-tooling `org.eclipse.n4js.releng.util`
 
 NOTE: For extending the N4JS-language in a different project, the `org.eclipse.n4js.releng.util` module needs to be published as a maven-plugin. You can deploy this SNAPSHOT-artifact to a local folder by providing the `local-snapshot-deploy-folder`-property pointing to an absolute path in the local file system:
@@ -75,6 +94,21 @@ mvn clean deploy -Dlocal-snapshot-deploy-folder=/var/lib/my/folder/local-mvn-dep
 ----
 
 The existence of `local-snapshot-deploy-folder` will trigger a profile enabling the deploy-goal for the project `org.eclipse.n4js.releng.util`
+
+
+
+[[sec:test-verdaccio]]
+=== Test Verdaccio containing n4js-libs
+
+If profile `execute-hlc-integration-tests` is active, a local verdaccio instance is started and populated with
+freshly-compiled n4js-libs (the libraries located under top-level folder `/n4js-libs`) and is stopped at the
+end of the build. The verdaccio instance is started as a docker container called `n4js-test-verdaccio`.
+
+When giving `-DstartAndKeepVerdaccio` on the command line, such a test verdaccio will always be started/populated but
+never stopped, regardless of whether profile `execute-hlc-integration-tests` is active or not. This is useful to enforce
+starting of the test verdaccio (even without running integration tests) and then reusing it in subsequent builds.
+
+
 
 === Generation of Eclipse help for spec and design document
 
@@ -91,6 +125,7 @@ Figure <<img:eclipse-help-doc-process>> shows the generation process for N4JSSpe
 
 * Our custom tool `Chunker` splits `N4JSSpec.html` into multiple chunked HTML files, each of which corresponds to either the `index` file or a chapter.
 * Another custom tool `EclipseHelpTOCGenerator` takes to Docbook file `N4JSSpec.xml` and generates an XML file describing the table of content (TOC) in the Eclipse format. This TOC file references the chunked HTML files above.
+
 
 
 == Updating frameworks and dependencies
