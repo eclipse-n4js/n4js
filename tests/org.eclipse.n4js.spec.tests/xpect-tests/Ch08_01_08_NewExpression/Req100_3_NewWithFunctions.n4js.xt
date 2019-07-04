@@ -34,14 +34,18 @@ const cnst2 :Object+ = {};
 new cnst2();
 
 
-interface I {}
-const cnst3 :I+ = null;
-// XPECT errors --> "Not a reference to a constructor: I+." at "cnst3"
-new cnst3();
-
-
-class C {}
-const cnst4 :constructor{C} = null;
+const cnst3 :Function+ = ()=>{};
 // XPECT noerrors -->
+new cnst3(); // value of cnst3 might be a ctor
+
+
+interface I {}
+const cnst4 :I+ = null;
+// XPECT errors --> "Not a reference to a constructor: I+." at "cnst4"
 new cnst4();
 
+
+class C5 {}
+const cnst5 :constructor{C5} = null;
+// XPECT noerrors -->
+new cnst5();

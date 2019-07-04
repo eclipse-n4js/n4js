@@ -572,7 +572,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			if (typeRef.isDynamic) {
 				val constrOfWildcard = TypeUtils.createTypeTypeRef(TypeUtils.createWildcard, true);
 				if (ts.subtypeSucceeded(G, typeRef, constrOfWildcard) || ts.subtypeSucceeded(G, constrOfWildcard, typeRef)) {
-					// don't bother on dynamic types that are either a sub- or supertype of function
+					// don't bother with dynamic types that are either a sub- or supertype of constructor{?}
 					return;
 				}
 			}
