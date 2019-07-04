@@ -11,6 +11,12 @@
 package org.eclipse.n4js.ide.server;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.BuildSetComputer;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
@@ -62,15 +69,12 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 
 			// TODO copied from N4jscBase
 			File workspaceRoot = new File(workspaceBaseURI.toFileString());
-			BuildSet buildSet = buildSetComputer.createAllProjectsBuildSet(
-					Collections.singletonList(workspaceRoot),
-					Collections.emptySet());
+			List<URI> allProjects = collectAllProjectDirs(workspaceRoot);
 
-			headlessHelper.registerProjects(buildSet, workspace);
-			final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet(buildSet.getAllProjects());
-			// make sure all newly installed dependencies are registered with the workspace
+			headlessHelper.registerProjectsToFileBasedWorkspace(allProjects, workspace);
+			final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet(allProjects);
+			// make sure all installed dependencies are registered with the workspace
 			headlessHelper.registerProjects(targetPlatformBuildSet, workspace);
-
 			return n4jsCore;
 		} catch (N4JSCompileException e) {
 			// TODO exception handling
@@ -79,15 +83,16 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 		}
 	}
 
-	// TODO copied from N4jscBase.computeTargetPlatformBuildSet(Collection<? extends IN4JSProject>)
-	private BuildSet computeTargetPlatformBuildSet(Collection<? extends IN4JSProject> workspaceProjects)
+	// TODO adapted from N4jscBase.computeTargetPlatformBuildSet(Collection<? extends IN4JSProject>)
+	private BuildSet computeTargetPlatformBuildSet(Collection<? extends URI> workspaceProjects)
 			throws N4JSCompileException {
 
 		Set<String> namesOfWorkspaceProjects = new LinkedHashSet<>();
 		List<java.nio.file.Path> n4jsProjectPaths = new LinkedList<>();
-		for (IN4JSProject prj : workspaceProjects) {
-			n4jsProjectPaths.add(prj.getLocationPath());
-			namesOfWorkspaceProjects.add(prj.getProjectName());
+		for (URI uri : workspaceProjects) {
+			IN4JSProject project = n4jsCore.create(uri);
+			n4jsProjectPaths.add(project.getLocationPath());
+			namesOfWorkspaceProjects.add(project.getProjectName());
 		}
 
 		List<File> toBuild = new ArrayList<>();
@@ -97,6 +102,55 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 
 		return buildSetComputer.createBuildSet(toBuild, Collections.emptyList(), Collections.emptyList(),
 				namesOfWorkspaceProjects);
+	}
+
+	private List<URI> collectAllProjectDirs(File workspaceRoot) {
+		final List<URI> result = new ArrayList<>();
+
+		Path start = workspaceRoot.toPath();
+
+		try {
+			Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+				int nodeModuleFolderCounter = 0;
+
+				@Override
+				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
+						if (nodeModuleFolderCounter > 0) {
+							return FileVisitResult.SKIP_SUBTREE;
+						}
+						nodeModuleFolderCounter++;
+					}
+
+					return super.preVisitDirectory(dir, attrs);
+				}
+
+				@Override
+				public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
+						nodeModuleFolderCounter--;
+					}
+
+					Path pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON);
+					if (pckJson.toFile().isFile()) {
+						URI emfURI = URI.createFileURI(dir.toString());
+						emfURI = addEmptyAuthority(emfURI);
+						result.add(emfURI);
+					}
+					return FileVisitResult.CONTINUE;
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	/** Adds empty authority to the given URI. Necessary for windows platform. */
+	static public URI addEmptyAuthority(URI uri) {
+		uri = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(), uri.fragment());
+		return uri;
 	}
 
 }
