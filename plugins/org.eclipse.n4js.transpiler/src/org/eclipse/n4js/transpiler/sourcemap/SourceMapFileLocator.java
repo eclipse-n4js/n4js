@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 public class SourceMapFileLocator {
 
 	@Inject
-	IN4JSCore n4jsCore;
+	private IN4JSCore n4jsCore;
 
 	/**
 	 * Resolves the source map for a given source (N4JS) file.
@@ -39,7 +39,7 @@ public class SourceMapFileLocator {
 		Optional<? extends IN4JSSourceContainer> optSrcContainer = n4jsCore.findN4JSSourceContainer(uri);
 		if (optSrcContainer.isPresent()) {
 			IN4JSSourceContainer srcContainer = optSrcContainer.get();
-			Path projectPath = srcContainer.getProject().getLocationPath();
+			Path projectPath = srcContainer.getProject().getSafeLocation().toFileSystemPath();
 			Path srcPath = projectPath.resolve(srcContainer.getRelativeLocation());
 			Path modulePath = srcPath.relativize(srcLocation).getParent();
 			String nameWithoutExt = extractSimpleFilenameWithoutExtension(srcLocation);

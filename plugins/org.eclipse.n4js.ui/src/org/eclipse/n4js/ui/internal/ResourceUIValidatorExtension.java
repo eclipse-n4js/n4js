@@ -21,11 +21,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -139,8 +139,8 @@ public class ResourceUIValidatorExtension extends MarkerEraser implements IResou
 
 	/** Deletes all markers of all external projects. */
 	public void clearAllMarkersOfAllExternalProjects() {
-		Collection<URI> locations = externalLibraryPreferenceStore.getLocations();
-		for (URI location : locations) {
+		Collection<FileURI> locations = externalLibraryPreferenceStore.getLocations();
+		for (FileURI location : locations) {
 			deleteMarkersRecursively(location);
 		}
 	}
@@ -152,25 +152,17 @@ public class ResourceUIValidatorExtension extends MarkerEraser implements IResou
 		}
 
 		for (N4JSExternalProject prj : projects) {
-			URI location = prj.getLocationURI();
-			deleteMarkersRecursively(location);
+			deleteMarkersRecursively(prj.getSafeLocation());
 		}
 	}
 
-	private void deleteMarkersRecursively(URI location) {
+	private void deleteMarkersRecursively(FileURI location) {
 		if (location == null) {
 			return;
 		}
 
-		String fileString = location.getPath();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IPath iPath = org.eclipse.core.runtime.Path.fromOSString(fileString);
-
-		if (iPath == null) {
-			return;
-		}
-
-		IContainer[] containers = root.findContainersForLocationURI(location);
+		IContainer[] containers = root.findContainersForLocationURI(URI.create(location.toString()));
 		if (containers == null || containers.length == 0) {
 			return;
 		}

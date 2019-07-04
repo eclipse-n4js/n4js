@@ -10,14 +10,13 @@
  */
 package org.eclipse.n4js.projectModel;
 
-import java.nio.file.Path;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.N4JSModel;
-import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -65,12 +64,19 @@ public interface IN4JSProject extends IProjectConfigEx {
 	 * The project's location. Also available if the project does not exist. This will return a platform URI when
 	 * running within Eclipse, and a file URI in headless mode.
 	 */
-	URI getLocation();
+	URI _getLocation();
+
+	SafeURI getSafeLocation();
 
 	/**
 	 * The source containers of this container structure, possibly empty.
 	 */
 	ImmutableList<? extends IN4JSSourceContainer> getSourceContainers();
+
+	@Override
+	IN4JSSourceContainer findSourceFolderContaining(URI member);
+
+	IN4JSSourceContainer findSourceFolderContaining(SafeURI member);
 
 	/**
 	 * All direct dependencies for this structure.
@@ -139,7 +145,7 @@ public interface IN4JSProject extends IProjectConfigEx {
 	 *
 	 * @return the extended RE. Could be absent but never {@code null}.
 	 */
-	Optional<IN4JSProject> getExtendedRuntimeEnvironment();
+	Optional<? extends IN4JSProject> getExtendedRuntimeEnvironment();
 
 	/**
 	 * The vendor ID. It is not available, if the project does not exist.
@@ -149,7 +155,7 @@ public interface IN4JSProject extends IProjectConfigEx {
 	/**
 	 * The project's location in the local file system.
 	 */
-	Path getLocationPath();
+	// Path _getLocationPath();
 
 	/**
 	 * The declared version of the project. It is not available, if the project does not exist.
@@ -182,14 +188,11 @@ public interface IN4JSProject extends IProjectConfigEx {
 	ImmutableList<? extends IN4JSProject> getImplementedProjects();
 
 	/**
-	 * Returns with the URI of the file that contains the project description of this project.
+	 * Returns the location of the file that contains the project description of this project.
 	 *
-	 * Optional, could return with an absent instance if the project description file does not exist in the project.
-	 * Never {@code null}.
-	 *
-	 * @return the URI of the project description file. Optional, may be missing but never {@code null}.
+	 * @return the location of the project description file or null if it does not exist.
 	 */
-	Optional<URI> getProjectDescriptionLocation();
+	SafeURI getProjectDescriptionLocation();
 
 	/**
 	 * Returns with a collection of the tested projects for the current project. May return with an empty collection if:
@@ -203,10 +206,10 @@ public interface IN4JSProject extends IProjectConfigEx {
 	 *
 	 * @return a collection of tested projects for the current test project.
 	 */
-	Collection<IN4JSProject> getTestedProjects();
+	Collection<? extends IN4JSProject> getTestedProjects();
 
 	/**
-	 * Returns {@code true} if this {@link N4JSProject} was explicitly configured to be of the N4JS nature.
+	 * Returns {@code true} if this {@link IN4JSProject} was explicitly configured to be of the N4JS nature.
 	 *
 	 * @See {@link ProjectDescription#isHasN4JSNature()}
 	 */

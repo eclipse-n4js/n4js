@@ -31,6 +31,7 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.tester.TestDiscoveryHelper;
 import org.eclipse.n4js.tester.TesterModule;
@@ -91,9 +92,9 @@ public class HeadlessTestDiscoveryTest extends AbstractTestTreeTest {
 	/***/
 	@Before
 	public void prepareIN4JSCore() {
-		fbWorkspace.registerProject(URI.createFileURI(TEST_PROJECT.getAbsolutePath()));
-		fbWorkspace.registerProject(URI.createFileURI(TEST_PROJECT_IDEBUG_572.getAbsolutePath()));
-		fbWorkspace.registerProject(URI.createFileURI(TEST_N4JSX_PROJECT.getAbsolutePath()));
+		fbWorkspace.registerProject(new FileURI(TEST_PROJECT));
+		fbWorkspace.registerProject(new FileURI(TEST_PROJECT_IDEBUG_572));
+		fbWorkspace.registerProject(new FileURI(TEST_N4JSX_PROJECT));
 		// Register extensions
 		headlessExtensionRegistrationHelper.registerExtensions();
 	}

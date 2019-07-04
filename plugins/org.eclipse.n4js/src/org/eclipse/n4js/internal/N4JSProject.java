@@ -10,15 +10,12 @@
  */
 package org.eclipse.n4js.internal;
 
-import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.fromNullable;
 import static java.util.Collections.emptyList;
 import static org.eclipse.emf.common.util.URI.createFileURI;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -27,6 +24,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -36,7 +34,6 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.ISourceFolderEx;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.generator.URIBasedFileSystemAccess;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
@@ -49,12 +46,13 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings({ "javadoc", "restriction" })
 public class N4JSProject implements IN4JSProject {
 
-	private final N4JSModel model;
-	private final URI location;
+	private final N4JSModel<? extends SafeURI> model;
+	private final SafeURI location;
 	private Boolean exists;
 	private final boolean external;
 
-	protected N4JSProject(URI location, boolean external, N4JSModel model) {
+	protected N4JSProject(SafeURI location, boolean external,
+			N4JSModel<? extends SafeURI> model) {
 		this.location = location;
 		this.external = external;
 		this.model = model;
@@ -73,14 +71,20 @@ public class N4JSProject implements IN4JSProject {
 			if (external && otherP.external) {
 				return location == otherP.location;
 			}
-			return URIUtils.equals(location, otherP.location);
+			return location.equals(otherP.location);
+			// return URIUtils.equals(location, otherP.location);
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return URIUtils.hashCode(getLocation());
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((exists == null) ? 0 : exists.hashCode());
+		result = prime * result + (external ? 1231 : 1237);
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		return result;
 	}
 
 	/// IProjectConfig
@@ -100,7 +104,7 @@ public class N4JSProject implements IN4JSProject {
 	 */
 	@Override
 	public URI getPath() {
-		URI locationURI = this.getLocation();
+		URI locationURI = this.location.toURI();
 		if (!locationURI.lastSegment().isEmpty()) {
 			locationURI = locationURI.appendSegment("");
 		}
@@ -135,6 +139,16 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
+	public IN4JSSourceContainer findSourceFolderContaining(URI member) {
+		return model.findN4JSSourceContainerInProject(this, member).orNull();
+	}
+
+	@Override
+	public IN4JSSourceContainer findSourceFolderContaining(SafeURI member) {
+		return model.findN4JSSourceContainerInProject(this, member.toURI()).orNull();
+	}
+
+	@Override
 	public List<URI> getOutputFolders() {
 		String outputPath = this.getOutputPath();
 		URI projectURI = this.getPath();
@@ -150,7 +164,7 @@ public class N4JSProject implements IN4JSProject {
 
 	/// END: IProjectConfig
 
-	protected N4JSModel getModel() {
+	protected N4JSModel<? extends SafeURI> getModel() {
 		return model;
 	}
 
@@ -163,12 +177,8 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public Optional<URI> getProjectDescriptionLocation() {
-		final File projectDescriptionFile = getProjectDescriptionFile(location).orNull();
-		if (null == projectDescriptionFile) {
-			return absent();
-		}
-		return fromNullable(getFileUri(projectDescriptionFile));
+	public SafeURI getProjectDescriptionLocation() {
+		return getProjectDescriptionFile();
 	}
 
 	/**
@@ -194,7 +204,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	protected boolean checkExists() {
-		return getProjectDescriptionFile(location).isPresent();
+		return getProjectDescriptionFile() != null;
 	}
 
 	@Override
@@ -226,7 +236,7 @@ public class N4JSProject implements IN4JSProject {
 		if (!exists()) {
 			return Optional.absent();
 		}
-		final ProjectDescription pd = model.getProjectDescription(getLocation());
+		final ProjectDescription pd = model.getProjectDescription(this);
 		if (pd == null) {
 			return Optional.absent();
 		}
@@ -269,7 +279,7 @@ public class N4JSProject implements IN4JSProject {
 	public String getVendorID() {
 		if (!exists())
 			return null;
-		ProjectDescription pd = model.getProjectDescription(getLocation());
+		ProjectDescription pd = model.getProjectDescription(this);
 		if (pd == null) {
 			return null;
 		}
@@ -277,15 +287,19 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public URI getLocation() {
-		return location;
+	public URI _getLocation() {
+		return location.toURI();
 	}
 
 	@Override
-	public Path getLocationPath() {
-		final String pathStr = location.toFileString(); // pathStr will be null if location is not a file URI
-		return pathStr != null ? Paths.get(pathStr) : null;
+	public SafeURI getSafeLocation() {
+		return location;
 	}
+
+	// public Path _getLocationPath() {
+	// final String pathStr = location.toFileString(); // pathStr will be null if location is not a file URI
+	// return pathStr != null ? Paths.get(pathStr) : null;
+	// }
 
 	@Override
 	public ImmutableList<? extends IN4JSSourceContainer> getSourceContainers() {
@@ -299,7 +313,7 @@ public class N4JSProject implements IN4JSProject {
 	public VersionNumber getVersion() {
 		if (!exists())
 			return null;
-		ProjectDescription pd = model.getProjectDescription(getLocation());
+		ProjectDescription pd = model.getProjectDescription(this);
 		if (pd == null) {
 			return null;
 		}
@@ -310,7 +324,7 @@ public class N4JSProject implements IN4JSProject {
 	public String getOutputPath() {
 		if (!exists())
 			return null;
-		ProjectDescription pd = model.getProjectDescription(getLocation());
+		ProjectDescription pd = model.getProjectDescription(this);
 		if (pd == null) {
 			return null;
 		}
@@ -332,7 +346,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	private List<ModuleFilter> getModuleFilters() {
-		ProjectDescription pd = model.getProjectDescription(getLocation());
+		ProjectDescription pd = model.getProjectDescription(this);
 		if (pd == null) {
 			return emptyList();
 		}
@@ -344,7 +358,7 @@ public class N4JSProject implements IN4JSProject {
 		if (!exists())
 			return null;
 
-		ProjectDescription pd = model.getProjectDescription(getLocation());
+		ProjectDescription pd = model.getProjectDescription(this);
 		if (pd == null) {
 			return null;
 		}
@@ -355,7 +369,7 @@ public class N4JSProject implements IN4JSProject {
 	public String getMainModule() {
 		if (!exists())
 			return null;
-		ProjectDescription pd = model.getProjectDescription(getLocation());
+		ProjectDescription pd = model.getProjectDescription(this);
 		if (pd == null) {
 			return null;
 		}
@@ -364,7 +378,7 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public Optional<String> getExtendedRuntimeEnvironmentId() {
-		return fromNullable(model.getExtendedRuntimeEnvironmentName(this.location).orNull());
+		return fromNullable(model.getExtendedRuntimeEnvironmentName(this).orNull());
 	}
 
 	@Override
@@ -389,42 +403,33 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public boolean isExternal() {
-		boolean result = getLocation().segmentsList().contains(N4JSGlobals.NODE_MODULES);
-		return result;
+		return external;
+		// boolean result = getLocation().segmentsList().contains(N4JSGlobals.NODE_MODULES);
+		// return result;
 	}
 
-	/**
-	 * Indicates whether {@code directory} may be regarded as valid N4JS project directory.
-	 */
-	public static boolean isN4JSProjectDirectory(URI location) {
-		return getProjectDescriptionFile(location).isPresent();
-	}
-
-	private static Optional<File> getProjectDescriptionFile(URI projectLocation) {
-		final File locationAsFile = new File(projectLocation.toFileString());
-		if (locationAsFile.isDirectory()) {
+	private SafeURI getProjectDescriptionFile() {
+		if (location.isDirectory()) {
 			// first check for a 'package.json' file
-			final File packageJSON = new File(locationAsFile, IN4JSProject.PACKAGE_JSON);
-			if (packageJSON.isFile()) {
-				return fromNullable(packageJSON);
+			SafeURI packageJson = location.appendSegment(IN4JSProject.PACKAGE_JSON);
+			if (packageJson.isFile()) {
+				return packageJson;
 			}
 			// next check for an XPECT 'package.json.xt' file
-			final File packageJSONXpect = new File(locationAsFile,
-					IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION);
-
-			if (packageJSONXpect.isFile()) {
-				return fromNullable(packageJSONXpect);
+			SafeURI packageJsonXpect = location
+					.appendSegment(IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION);
+			if (packageJsonXpect.isFile()) {
+				return packageJsonXpect;
 			}
 		}
-
-		return absent();
+		return null;
 	}
 
 	@Override
 	public boolean hasN4JSNature() {
 		if (!exists())
 			return false;
-		final ProjectDescription pd = model.getProjectDescription(getLocation());
+		final ProjectDescription pd = model.getProjectDescription(this);
 		if (pd == null) {
 			return false;
 		}

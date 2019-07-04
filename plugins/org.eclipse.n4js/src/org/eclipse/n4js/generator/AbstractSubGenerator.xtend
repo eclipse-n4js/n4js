@@ -190,7 +190,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	private def isInNodeModules(URI n4jsSourceURI){
 		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
 		if (project !== null) {
-			val locationStr = project.location.toFileString;
+			val locationStr = project.safeLocation.toString;
 			if (locationStr.contains(N4JSGlobals.NODE_MODULES)) {
 				return true;
 			}
@@ -347,9 +347,9 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		val project = projectctContainer.get;
 
 		// /home/user/workspace/Project/
-		val projectPath = project.locationPath
+		val projectPath = project.safeLocation.toFileSystemPath
 		// platform:/resource/Project/
-		val projectLocURI = project.location.appendSegment("")
+		val projectLocURI = project._getLocation.appendSegment("")
 
 		// --- output locations ---
 		// src-gen
@@ -363,7 +363,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		var completetSource = completetSourceURI.toFileString
 
 		// Handling case when source container is the project root itself. (Sources { source { '.' } })
-		if (null === completetSource && project.location === input.URI.trimSegments(1)) {
+		if (null === completetSource && project._getLocation === input.URI.trimSegments(1)) {
 			completetSource = projectPath.toFile.absolutePath;
 		}
 

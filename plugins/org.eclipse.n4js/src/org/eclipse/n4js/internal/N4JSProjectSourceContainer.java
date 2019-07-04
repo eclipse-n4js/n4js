@@ -15,12 +15,11 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.ISourceFolderEx;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.util.Strings;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
@@ -67,7 +66,7 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 
 	@Override
 	public List<URI> getAllResources() {
-		return FluentIterable.from(this).transform(ISourceFolderEx::addEmptyAuthority).toList();
+		return FluentIterable.from(this).toList();
 	}
 	/// END ISourceFolder
 
@@ -77,24 +76,23 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	}
 
 	@Override
-	public Iterator<URI> iterator() {
-		return project.getModel().iterator(this);
+	public Iterator<? extends SafeURI> safeIterator() {
+		return getSafeLocation().getAllChildren();
 	}
 
 	@Override
-	public URI findArtifact(QualifiedName name, Optional<String> fileExtension) {
+	public SafeURI findArtifact(QualifiedName name, Optional<String> fileExtension) {
 		return project.getModel().findArtifact(this, name, fileExtension);
 	}
 
 	@Override
 	public URI getLocation() {
-		List<String> segmentList = Strings.split(getRelativeLocation(), '/');
-		String[] segments = segmentList.toArray(new String[segmentList.size()]);
-		if (!URI.validSegments(segments)) {
-			return null;
-		}
-		URI result = project.getLocation().appendSegments(segments);
-		return result;
+		return getSafeLocation().toURI();
+	}
+
+	@Override
+	public SafeURI getSafeLocation() {
+		return project.getSafeLocation().appendPath(getRelativeLocation());
 	}
 
 	@Override

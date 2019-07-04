@@ -55,15 +55,15 @@ public class RuntimeEnvironmentsHelper {
 	/**
 	 * Returns the project in the current workspace for the given runtime environment ID.
 	 */
-	public Optional<IN4JSProject> findRuntimeEnvironmentProject(RuntimeEnvironment runtimeEnvironment) {
+	public Optional<? extends IN4JSProject> findRuntimeEnvironmentProject(RuntimeEnvironment runtimeEnvironment) {
 		return findRuntimeEnvironmentProject(runtimeEnvironment, getAllProjects());
 	}
 
 	/**
 	 * Returns the project from the provided iterable of projects for the given runtime environment ID.
 	 */
-	public Optional<IN4JSProject> findRuntimeEnvironmentProject(RuntimeEnvironment runtimeEnvironment,
-			Iterable<IN4JSProject> projects) {
+	public Optional<? extends IN4JSProject> findRuntimeEnvironmentProject(RuntimeEnvironment runtimeEnvironment,
+			Iterable<? extends IN4JSProject> projects) {
 		return from(projects)
 				.filter(p -> isRuntimeEnvironment(p))
 				.filter(p -> runtimeEnvironment.getProjectName().equals(p.getProjectName()))
@@ -243,7 +243,7 @@ public class RuntimeEnvironmentsHelper {
 
 		boolean result = true;
 
-		List<IN4JSProject> allRuntimeEnvironments = from(getAllProjects())
+		List<? extends IN4JSProject> allRuntimeEnvironments = from(getAllProjects())
 				.filter(p -> isRuntimeEnvironment(p)).toList();
 
 		Map<IN4JSProject, List<String>> reExtendedEnvironments = allRuntimeEnvironments.stream()
@@ -289,7 +289,7 @@ public class RuntimeEnvironmentsHelper {
 	 */
 	private List<String> getExtendedRuntimeEnvironmentsIds(
 			IN4JSProject runtimeEnv,
-			List<IN4JSProject> allRuntimeEnv) {
+			List<? extends IN4JSProject> allRuntimeEnv) {
 		return getExtendedRuntimeEnvironments(runtimeEnv).stream()
 				.map(p -> p.getProjectName()).collect(Collectors.toList());
 	}
@@ -307,7 +307,8 @@ public class RuntimeEnvironmentsHelper {
 
 		while (extended.isPresent()) {
 			String id = extended.get();
-			List<IN4JSProject> extendedRE = from(getAllProjects()).filter(p -> id.equals(p.getProjectName())).toList();
+			List<? extends IN4JSProject> extendedRE = from(getAllProjects()).filter(p -> id.equals(p.getProjectName()))
+					.toList();
 
 			if (extendedRE.isEmpty()) {
 				break;
@@ -336,7 +337,7 @@ public class RuntimeEnvironmentsHelper {
 		return ProjectType.RUNTIME_LIBRARY.equals(project.getProjectType());
 	}
 
-	private Iterable<IN4JSProject> getAllProjects() {
+	private Iterable<? extends IN4JSProject> getAllProjects() {
 		return in4jscore.findAllProjects();
 	}
 

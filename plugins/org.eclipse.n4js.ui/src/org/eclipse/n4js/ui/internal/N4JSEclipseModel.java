@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +27,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
@@ -43,6 +44,7 @@ import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 
 import com.google.common.base.Optional;
@@ -55,7 +57,7 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings("javadoc")
 @Singleton
-public class N4JSEclipseModel extends N4JSModel {
+public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSEclipseModel.class);
 
@@ -99,7 +101,7 @@ public class N4JSEclipseModel extends N4JSModel {
 					.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
 			project = workspace.getProject(eclipseProjectName);
 		}
-		return doGetN4JSProject(project, location);
+		return doGetN4JSProject(project, toProjectLocation(location));
 	}
 
 	@Override
@@ -107,7 +109,7 @@ public class N4JSEclipseModel extends N4JSModel {
 		final URI uri = URI.createPlatformResourceURI(projectName, false);
 		final String eclipseProjectName = ProjectDescriptionUtils
 				.convertN4JSProjectNameToEclipseProjectName(projectName);
-		return new N4JSEclipseProject(workspace.getProject(eclipseProjectName), uri, this);
+		return new N4JSEclipseProject(workspace.getProject(eclipseProjectName), new PlatformResourceURI(uri), this);
 	}
 
 	@Override
@@ -141,28 +143,29 @@ public class N4JSEclipseModel extends N4JSModel {
 			if (location.isFile()) {
 				final IN4JSEclipseProject eclipseProject = findProjectWith(location);
 				if (null != eclipseProject && eclipseProject.exists()) {
-					if (eclipseProject.getProject() instanceof ExternalProject) {
-						final IResource resource = externalLibraryWorkspace.getResource(location);
-						if (null != resource) {
-							n4jsContainer = getN4JSSourceContainer(resource);
-						}
-					} else { // in case of locating a project from source maps:
-						String locString = location.toFileString();
-
-						String projPathString = eclipseProject.getLocationPath().toString();
-						if (locString.startsWith(projPathString)) {
-							locString = eclipseProject.getLocation().toString()
-									+ locString.substring(projPathString.length());
-						}
-
-						for (IN4JSEclipseSourceContainer sc : eclipseProject.getSourceContainers()) {
-							String scLoc = sc.getLocation().toString();
-							if (locString.startsWith(scLoc)) {
-								return Optional.of(sc);
-
-							}
-						}
-					}
+					n4jsContainer = Optional.fromNullable(eclipseProject.findSourceFolderContaining(location));
+					// if (eclipseProject.getProject() instanceof N4JSExternalProject) {
+					// final IResource resource = externalLibraryWorkspace.getResource(location);
+					// if (null != resource) {
+					// n4jsContainer = getN4JSSourceContainer(resource);
+					// }
+					// } else { // in case of locating a project from source maps:
+					// String locString = location.toFileString();
+					//
+					// String projPathString = eclipseProject.getLocationPath().toString();
+					// if (locString.startsWith(projPathString)) {
+					// locString = eclipseProject.getLocation().toString()
+					// + locString.substring(projPathString.length());
+					// }
+					//
+					// for (IN4JSEclipseSourceContainer sc : eclipseProject.getSourceContainers()) {
+					// String scLoc = sc.getLocation().toString();
+					// if (locString.startsWith(scLoc)) {
+					// return Optional.of(sc);
+					//
+					// }
+					// }
+					// }
 				}
 			}
 
@@ -171,32 +174,37 @@ public class N4JSEclipseModel extends N4JSModel {
 
 		final IN4JSEclipseProject project = findProjectWith(location);
 		if (null != project && project.exists()) {
-			final Path path = new Path(location.toPlatformString(true));
-			final IResource resource;
-			if (1 == path.segmentCount()) {
-				resource = workspace.getProject(path.segment(0));
-			} else {
-				resource = workspace.getFile(path);
-			}
-			n4jsContainer = getN4JSSourceContainer(resource);
+			n4jsContainer = Optional.fromNullable(project.findSourceFolderContaining(location));
+			// final Path path = new Path(location.toPlatformString(true));
+			// final IResource resource;
+			// if (1 == path.segmentCount()) {
+			// resource = workspace.getProject(path.segment(0));
+			// } else {
+			// resource = workspace.getFile(path);
+			// }
+			// n4jsContainer = getN4JSSourceContainer(resource);
 		}
 
 		return n4jsContainer;
 	}
 
 	public N4JSEclipseProject getN4JSProject(IProject project) {
-		return doGetN4JSProject(project, URIUtils.convert(project));
+		if (project instanceof IExternalResource) {
+			File file = ((IExternalResource) project).getExternalResource();
+			return doGetN4JSProject(project, new FileURI(file));
+		}
+		return doGetN4JSProject(project, new PlatformResourceURI(project));
 	}
 
-	private N4JSEclipseProject doGetN4JSProject(IProject project, URI location) {
+	private N4JSEclipseProject doGetN4JSProject(IProject project, SafeURI location) {
 		return new N4JSEclipseProject(project, location, this);
 	}
 
 	@Override
 	public ImmutableList<? extends IN4JSEclipseSourceContainer> getN4JSSourceContainers(N4JSProject project) {
 		ImmutableList.Builder<IN4JSEclipseSourceContainer> result = ImmutableList.builder();
-		URI location = project.getLocation();
-		ProjectDescription description = getProjectDescription(location);
+		SafeURI location = project.getSafeLocation();
+		ProjectDescription description = getProjectDescription(location.toURI());
 		if (description != null) {
 			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
 			sourceFragments.sort((f1, f2) -> ProjectDescriptionUtils.compareBySourceContainerType(f1, f2));
@@ -212,10 +220,10 @@ public class N4JSEclipseModel extends N4JSModel {
 		return result.build();
 	}
 
-	@Override
-	protected String getLocationPath(URI location) {
-		return CommonPlugin.asLocalURI(location).toFileString();
-	}
+	// @Override
+	// protected String getLocationPath(URI location) {
+	// return CommonPlugin.asLocalURI(location).toFileString();
+	// }
 
 	@SuppressWarnings("unchecked")
 	@Override

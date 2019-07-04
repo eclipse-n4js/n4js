@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 
 import com.google.common.collect.Sets;
 
@@ -46,14 +46,14 @@ public class BuildSet {
 	 * The projects which the user explicitly requested to be compiled. If the user requested compilation of specific
 	 * single files, then this list contains the projects containing the files.
 	 */
-	final Set<N4JSProject> requestedProjects;
+	final Set<IN4JSProject> requestedProjects;
 
 	/**
 	 * The projects which were discovered as dependencies of the above projects, without having been requested to be
 	 * compiled by the user. In other words, these projects are only being compiled because a requested project depends
 	 * on them.
 	 */
-	final Set<N4JSProject> discoveredProjects;
+	final Set<IN4JSProject> discoveredProjects;
 
 	/**
 	 * A predicate that indicates whether or not a given resource, identified by its URI, should be processed. If the
@@ -63,20 +63,20 @@ public class BuildSet {
 	final Predicate<URI> resourceFilter;
 
 	/**
-	 * Returns a set of all {@link N4JSProject}s this build set contains.
+	 * Returns a set of all {@link IN4JSProject N4JS projects} this build set contains.
 	 */
-	public Set<N4JSProject> getAllProjects() {
+	public Set<IN4JSProject> getAllProjects() {
 		return Sets.union(this.requestedProjects, this.discoveredProjects);
 	}
 
-	BuildSet(Collection<N4JSProject> requestedProjects, Collection<N4JSProject> discoveredProjects,
+	BuildSet(Collection<IN4JSProject> requestedProjects, Collection<IN4JSProject> discoveredProjects,
 			Predicate<URI> projectFilter) {
 		this.requestedProjects = Collections.unmodifiableSet(new LinkedHashSet<>(requestedProjects));
 		this.discoveredProjects = Collections.unmodifiableSet(new LinkedHashSet<>(discoveredProjects));
 		this.resourceFilter = projectFilter;
 	}
 
-	BuildSet(Set<N4JSProject> requestedProjects, Set<N4JSProject> discoveredProjects,
+	BuildSet(Set<IN4JSProject> requestedProjects, Set<IN4JSProject> discoveredProjects,
 			Predicate<URI> projectFilter) {
 		this.requestedProjects = Collections.unmodifiableSet(requestedProjects);
 		this.discoveredProjects = Collections.unmodifiableSet(discoveredProjects);

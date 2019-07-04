@@ -17,12 +17,12 @@ import java.util.function.Supplier;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.UIUtils;
@@ -76,7 +76,7 @@ public class UninstallNpmDependencyButtonListener extends SelectionAdapter {
 			IN4JSProject npmProject = getSelectedNpm.get();
 			new ProgressMonitorDialog(UIUtils.getShell()).run(true, true, monitor -> {
 				try {
-					URI location = npmProject.getLocation();
+					FileURI location = (FileURI) npmProject.getSafeLocation();
 					IStatus status = libManager.uninstallNPM(location, monitor);
 					multistatus.merge(status);
 				} finally {

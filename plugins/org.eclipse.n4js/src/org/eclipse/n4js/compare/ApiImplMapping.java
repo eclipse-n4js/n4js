@@ -104,7 +104,8 @@ public class ApiImplMapping {
 	 * <code>implProjects</code>, so the given lists serve as a kind of filter. The two given lists may contain
 	 * unrelated projects that are neither API nor implementation projects and they may intersect.
 	 */
-	public static ApiImplMapping of(Iterable<IN4JSProject> apiProjects, Iterable<IN4JSProject> implProjects) {
+	public static ApiImplMapping of(Iterable<? extends IN4JSProject> apiProjects,
+			Iterable<? extends IN4JSProject> implProjects) {
 		return new ApiImplMapping().enhance(apiProjects, implProjects);
 	}
 
@@ -118,7 +119,8 @@ public class ApiImplMapping {
 	 *            list of likely implementations.
 	 * @return this
 	 */
-	public ApiImplMapping enhance(Iterable<IN4JSProject> apiProjects, Iterable<IN4JSProject> implProjects) {
+	public ApiImplMapping enhance(Iterable<? extends IN4JSProject> apiProjects,
+			Iterable<? extends IN4JSProject> implProjects) {
 		final Set<String> apiProjectsIds = StreamSupport.stream(apiProjects.spliterator(), false)
 				.map(p -> p.getProjectName()).collect(Collectors.toSet());
 

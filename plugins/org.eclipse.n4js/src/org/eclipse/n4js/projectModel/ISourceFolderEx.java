@@ -51,7 +51,6 @@ public interface ISourceFolderEx extends ISourceFolder {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				URI uri = URI.createFileURI(file.toString());
-				uri = addEmptyAuthority(uri);
 				uris.add(uri);
 				return FileVisitResult.CONTINUE;
 			}
@@ -66,13 +65,4 @@ public interface ISourceFolderEx extends ISourceFolder {
 		return uris;
 	}
 
-	/** Adds empty authority to the given URI. Necessary for windows platform. */
-	static public URI addEmptyAuthority(URI uri) {
-		if (uri.hasAuthority()) {
-			return uri;
-		}
-		URI result = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(),
-				uri.fragment());
-		return result;
-	}
 }

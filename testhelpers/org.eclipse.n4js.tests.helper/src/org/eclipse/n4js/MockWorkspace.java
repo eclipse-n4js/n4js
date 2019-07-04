@@ -29,7 +29,7 @@ import com.google.common.collect.UnmodifiableIterator;
 
 /**
  */
-public class MockWorkspace extends InternalN4JSWorkspace {
+public class MockWorkspace extends InternalN4JSWorkspace<MockURIWrapper> {
 
 	/** Default {@code projectName} used for the {@link MockProject}s in {@link MockWorkspace}. */
 	public static final String TEST_PROJECT__PROJECT_NAME = "test";
@@ -50,32 +50,37 @@ public class MockWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public ProjectDescription getProjectDescription(URI location) {
+	public MockURIWrapper fromURI(URI uri) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public ProjectDescription getProjectDescription(MockURIWrapper location) {
 		return projectDescription;
 	}
 
 	@Override
-	public URI getLocation(URI projectURI, ProjectReference reference) {
+	public MockURIWrapper getLocation(ProjectReference reference) {
 		return MockProject.MOCK_URI;
 	}
 
 	@Override
-	public UnmodifiableIterator<URI> getFolderIterator(URI folderLocation) {
+	public UnmodifiableIterator<MockURIWrapper> getFolderIterator(MockURIWrapper folderLocation) {
 		return Iterators.unmodifiableIterator(Collections.emptyIterator());
 	}
 
 	@Override
-	public URI findArtifactInFolder(URI folderLocation, String folderRelativePath) {
+	public MockURIWrapper findArtifactInFolder(MockURIWrapper folderLocation, String folderRelativePath) {
 		return null;
 	}
 
 	@Override
-	public URI findProjectWith(URI nestedLocation) {
+	public MockURIWrapper findProjectWith(MockURIWrapper nestedLocation) {
 		return MockProject.MOCK_URI;
 	}
 
 	@Override
-	public Collection<URI> getAllProjectLocations() {
+	public Collection<MockURIWrapper> getAllProjectLocations() {
 		return emptyList();
 	}
 

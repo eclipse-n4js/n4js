@@ -29,8 +29,8 @@ import org.junit.Rule
 import static org.apache.log4j.Logger.getLogger
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace
 import static org.eclipse.core.runtime.Platform.isRunning
-import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
+import org.eclipse.n4js.ui.internal.PlatformResourceURI
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -111,7 +111,7 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 
 		assertTrue(packageJsonFile.exists)
 		testedWorkspace.build
-		return createPlatformResourceURI(project.fullPath.toString, true);
+		return new PlatformResourceURI(project);
 	}
 
 }

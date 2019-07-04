@@ -40,7 +40,7 @@ public interface IN4JSEclipseProject extends IN4JSProject {
 	 * Returns a platform resource URI of the form {@code platform:/resource/projectName}.
 	 */
 	@Override
-	URI getLocation();
+	URI _getLocation();
 
 	@Override
 	ImmutableList<? extends IN4JSEclipseSourceContainer> getSourceContainers();
@@ -59,7 +59,7 @@ public interface IN4JSEclipseProject extends IN4JSProject {
 	/**
 	 * Returns the dependencies including the unresolved deps. This is used by the builder to keep track of pending
 	 * project dependencies.
-	 * 
+	 *
 	 * @param includeAbsentProjects
 	 *            true if unresolved deps should be included.
 	 * @return the dependencies.

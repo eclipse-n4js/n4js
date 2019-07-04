@@ -31,6 +31,8 @@ import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
+import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceModel;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
@@ -44,6 +46,7 @@ import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
+import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -82,6 +85,9 @@ public class NpmCLI {
 
 	@Inject
 	private SemverHelper semverHelper;
+
+	@Inject
+	private UriExtensions uriExtensions;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(String packageName) {
@@ -150,7 +156,7 @@ public class NpmCLI {
 		String msg = "Uninstalling npm package '" + requestedChange.name + "'";
 		MultiStatus resultStatus = statusHelper.createMultiStatus(msg);
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
-		java.net.URI nodeModulesLocationURI = externalLibraryWorkspace
+		SafeURI nodeModulesLocationURI = externalLibraryWorkspace
 				.getRootLocationForResource(requestedChange.location);
 
 		List<String> packageNames = new ArrayList<>();
@@ -159,7 +165,7 @@ public class NpmCLI {
 			packageNames.add(requestedChange.name);
 		}
 
-		File nodeModulesLocation = new File(nodeModulesLocationURI).getParentFile();
+		File nodeModulesLocation = nodeModulesLocationURI.getParent().toFileSystemPath().toFile();
 		// Assume that the parent of node_modules folder is the root of the project which contains package.json
 		// We call npm uninstall in this root folder
 		IStatus installStatus = uninstall(packageNames, nodeModulesLocation);
@@ -169,7 +175,7 @@ public class NpmCLI {
 		if (installStatus == null || !installStatus.isOK()) {
 			resultStatus.merge(installStatus);
 		} else {
-			File npmDirectory = new File(requestedChange.location.toFileString());
+			File npmDirectory = requestedChange.location.toFileSystemPath().toFile();
 			String actualVersion = getActualVersion(npmDirectory.toPath());
 			if (actualVersion.isEmpty()) {
 				actualChanges.add(new LibraryChange(LibraryChangeType.Removed, requestedChange.location,
@@ -267,7 +273,8 @@ public class NpmCLI {
 					IStatus packJsonError = statusHelper.createError(msg);
 					mergeStatusHere.merge(packJsonError);
 				} else {
-					URI actualLocation = URI.createFileURI(completePath.toString());
+					FileURI actualLocation = new FileURI(
+							uriExtensions.withEmptyAuthority(URI.createFileURI(completePath.toString())));
 					LibraryChange actualChange = new LibraryChange(LibraryChangeType.Added, actualLocation,
 							reqChg.name, actualVersion);
 					result.add(actualChange);
@@ -279,7 +286,9 @@ public class NpmCLI {
 
 	private String getActualVersion(Path completePath) {
 		URI location = URI.createFileURI(completePath.toString());
-		String versionStr = projectDescriptionLoader.loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(location)
+		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(location);
+		String versionStr = projectDescriptionLoader
+				.loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(new FileURI(withEmptyAuthority))
 				.getFirst();
 
 		return Strings.nullToEmpty(versionStr);

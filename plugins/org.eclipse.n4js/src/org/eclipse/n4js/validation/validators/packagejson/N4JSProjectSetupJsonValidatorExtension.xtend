@@ -97,6 +97,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.internal.locations.FileURI
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -843,7 +844,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		try {
 			val treeWalker = new ModuleSpecifierFileVisitor(this, project, checkedFilterSpecifiers);
-			Files.walkFileTree(project.locationPath, treeWalker);
+			Files.walkFileTree(project.safeLocation.toFileSystemPath, treeWalker);
 		} catch (IOException e) {
 			LOGGER.error("Failed to check module filter section of package.json file " + document.eResource.URI + ".");
 			e.printStackTrace;
@@ -914,10 +915,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 
 		def private URI getFileInSources(IN4JSProject project, ModuleFilterSpecifier filterSpecifier, Path filePath) {
-			val lPath = project.locationPath;
+			val lPath = project.safeLocation.toFileSystemPath;
 			val filePathString = lPath.relativize(filePath);
-			val projectRelativeURI = URI.createURI(filePathString.toString);
-			return project.location.appendSegments(projectRelativeURI.segments);
+			return project.safeLocation.appendPath(filePathString.toString).toURI;
 		}
 
 		def private boolean isN4JSFile(String fileSpecifier) {
@@ -1168,9 +1168,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 
 		if (!currentProject.isExternal) {
-			if (project.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
-				val pdl = project.projectDescriptionLocation.orNull;
-				indexSynchronizer.isInIndex(pdl);
+			if (project.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation)) {
 				val msg = getMessageForNON_REGISTERED_PROJECT(id);
 				addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
 				return;
@@ -1385,9 +1383,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			findAllProjects.forEach[p | res.put(p.projectName, p)];
 
 			// also add those unnecessary projects that are not shadowed
-			for (org.eclipse.xtext.util.Pair<URI, ProjectDescription> pair: extWS.projectsIncludingUnnecessary) {
+			for (org.eclipse.xtext.util.Pair<FileURI, ProjectDescription> pair: extWS.projectsIncludingUnnecessary) {
 				val location = pair.first;
-				val project = findProject(location).orNull;
+				val project = findProject(location.toURI).orNull;
 				if (!shadowingInfoHelper.isShadowedProject(project) && !res.containsKey(project.projectName)) {
 					res.put(project.projectName, project);
 				}

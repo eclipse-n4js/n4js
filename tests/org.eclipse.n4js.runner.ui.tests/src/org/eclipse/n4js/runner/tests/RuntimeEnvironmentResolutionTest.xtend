@@ -42,7 +42,6 @@ import org.junit.rules.TemporaryFolder
 import org.junit.rules.TestName
 import org.junit.runner.RunWith
 
-import static com.google.common.base.Preconditions.checkNotNull
 import static java.nio.file.Files.createDirectory
 import static java.nio.file.Files.createFile
 import static java.nio.file.Files.write
@@ -50,11 +49,12 @@ import static java.nio.file.Paths.get
 import static org.apache.log4j.Level.*
 import static org.apache.log4j.Logger.getLogger
 import static org.apache.log4j.Logger.getRootLogger
-import static org.eclipse.emf.common.util.URI.createFileURI
 import static org.eclipse.n4js.runner.^extension.RuntimeEnvironment.*
 import static org.hamcrest.core.IsCollectionContaining.*
 import static org.hamcrest.core.IsNot.not
 import static org.junit.Assert.*
+import org.eclipse.n4js.internal.locations.SafeURI
+import org.eclipse.n4js.internal.locations.FileURI
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -674,21 +674,14 @@ class RuntimeEnvironmentResolutionTest {
 	 * @param packageJsonContent the content of the new package.json file.
 	 * @return returns with the URI referencing the brand new project.
 	 */
-	protected def createProjectWithPackageJson(String projectName, String packageJsonContent) {
+	protected def SafeURI createProjectWithPackageJson(String projectName, String packageJsonContent) {
 		val projectFolder = createProjectFolder(projectName)
 		writePackageJsonContent(createPackageJsonFile(projectFolder), packageJsonContent)
-		toUri(projectFolder);
+		val result = new FileURI(projectFolder);
+		workspace.registerProject(result) // Registers the project.
+		return result
 	}
 
-	private def URI toUri(File file) {
-		try {
-			return createFileURI(checkNotNull(file).getCanonicalFile.getAbsolutePath)
-		} catch (IOException e) {
-			LOGGER.error('''Error while creating file URI for file: '«file»'.''', e)
-			Throwables.throwIfUnchecked(e);
-			throw new RuntimeException(e)
-		}
-	}
 
 	private def IN4JSProject createProject(PackageJsonBuilder builder, RuntimeEnvironment re) {
 		createProject(builder, '''«re.getProjectName»''')
@@ -703,10 +696,9 @@ class RuntimeEnvironmentResolutionTest {
 			LOGGER.debug('--------------------END OF NEW PROJECT---------------------')
 		}
 		val uri = createProjectWithPackageJson(projectName, content)
-		val project = core.create(uri)
+		val project = core.create(uri.toURI)
 		assertTrue(project.exists)
-		workspace.registerProject(uri) // Registers the project.
-		assertTrue(core.findProject(project.getLocation).present)
+		assertTrue(core.findProject(project._getLocation).present)
 		return project
 	}
 

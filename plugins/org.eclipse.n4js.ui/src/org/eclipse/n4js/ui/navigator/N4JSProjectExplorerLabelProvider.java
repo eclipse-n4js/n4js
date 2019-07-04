@@ -29,16 +29,18 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.workingsets.WorkingSet;
 import org.eclipse.n4js.ui.workingsets.WorkingSetLabelProvider;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManager;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkingSet;
@@ -63,6 +65,9 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 
 	@Inject
 	private N4JSProjectExplorerHelper helper;
+
+	@Inject
+	private IN4JSEclipseCore n4jsCore;
 
 	@Inject
 	private WorkingSetManagerBroker workingSetManagerBroker;
@@ -185,9 +190,12 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 
 				IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(eclipseProjectName);
 				if (iProject != null && iProject.exists()) {
+
 					Styler stylerName = StyledString.QUALIFIER_STYLER;
 					if (iProject.isAccessible()) {
-						URI prjPckJson = URIUtils.convert(iProject).appendSegment(N4JSGlobals.PACKAGE_JSON);
+						IN4JSEclipseProject n4jsProject = n4jsCore.create(iProject).orNull();
+						SafeURI prjPckJson = n4jsProject.getSafeLocation()
+								.appendSegment(N4JSGlobals.PACKAGE_JSON);
 						if (indexSynchronizer.isInIndex(prjPckJson)) {
 							stylerName = null;
 						}

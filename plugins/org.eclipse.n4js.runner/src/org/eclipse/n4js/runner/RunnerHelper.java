@@ -71,13 +71,10 @@ public class RunnerHelper {
 		final String name = project.getProjectName();
 		if (name == null)
 			return null;
-		final Path path = project.getLocationPath();
+		final Path path = project.getSafeLocation().toFileSystemPath();
 		if (path == null)
 			return null;
-		final Path pathNormalized = path.normalize().toAbsolutePath();
-		if (pathNormalized.toString().isEmpty())
-			return null;
-		return Pair.of(pathNormalized, name);
+		return Pair.of(path, name);
 	}
 
 	/**
@@ -118,7 +115,7 @@ public class RunnerHelper {
 	 * Collects transitive collection of project extended RuntimeEnvironemnts
 	 */
 	public void recursiveExtendedREsCollector(IN4JSProject project,
-			Collection<IN4JSProject> addHere, Iterable<IN4JSProject> projects) {
+			Collection<IN4JSProject> addHere, Iterable<? extends IN4JSProject> projects) {
 		if (project.getProjectType().equals(ProjectType.RUNTIME_ENVIRONMENT)) {
 			addHere.add(project);
 			// TODO RLs can extend each other, should we use recursive RL deps collector?
@@ -129,7 +126,7 @@ public class RunnerHelper {
 			Optional<String> ep = project.getExtendedRuntimeEnvironmentId();
 			Optional<IN4JSProject> extendedRE = Optional.absent();
 			if (ep.isPresent()) {
-				extendedRE = findRuntimeEnvironemtnWithName(ep.get(), projects);
+				extendedRE = findRuntimeEnvironmentWithName(ep.get(), projects);
 			}
 			if (extendedRE.isPresent()) {
 				IN4JSProject e = extendedRE.get();
@@ -159,7 +156,7 @@ public class RunnerHelper {
 		}
 
 		for (final IN4JSProject dep : project.getAllDirectDependencies()) {
-			if (guard.tryNext(dep.getLocation())) {
+			if (guard.tryNext(dep._getLocation())) {
 				recursiveDependencyCollector(dep, addHere, guard);
 			}
 		}
@@ -185,8 +182,8 @@ public class RunnerHelper {
 	 *            of the project that servers as the desired environment.
 	 * @return optional with project if found, empty optional otherwise.
 	 */
-	public Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectName,
-			Iterable<IN4JSProject> projects) {
+	public Optional<IN4JSProject> findRuntimeEnvironmentWithName(final String projectName,
+			Iterable<? extends IN4JSProject> projects) {
 		for (IN4JSProject project : projects) {
 			if (project.getProjectType() == ProjectType.RUNTIME_ENVIRONMENT
 					&& project.getProjectName().equals(projectName)) {
@@ -204,7 +201,7 @@ public class RunnerHelper {
 	 * @return optional with project if found, empty optional otherwise.
 	 */
 	private Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectName) {
-		return findRuntimeEnvironemtnWithName(projectName, n4jsCore.findAllProjects());
+		return findRuntimeEnvironmentWithName(projectName, n4jsCore.findAllProjects());
 	}
 
 	/**

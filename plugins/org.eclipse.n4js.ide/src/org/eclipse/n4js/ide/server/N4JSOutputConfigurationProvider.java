@@ -14,11 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -31,7 +30,7 @@ import com.google.inject.Inject;
 public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider {
 
 	@Inject
-	FileBasedWorkspace workspace;
+	private IN4JSCore n4jsCore;
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(ResourceSet context) {
@@ -42,12 +41,9 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(Resource context) {
 		String outputPath = null;
-		URI project = workspace.findProjectWith(context.getURI());
+		IN4JSProject project = n4jsCore.findProject(context.getURI()).orNull();
 		if (project != null) {
-			ProjectDescription projectDescription = workspace.getProjectDescription(project);
-			if (projectDescription != null) {
-				outputPath = projectDescription.getOutputPath();
-			}
+			outputPath = project.getOutputPath();
 		}
 
 		OutputConfiguration defaultOutputConfig = EcmaScriptSubGenerator.createDefaultOutputConfiguration();

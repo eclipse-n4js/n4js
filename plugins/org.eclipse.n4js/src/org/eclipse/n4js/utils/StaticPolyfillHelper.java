@@ -16,6 +16,7 @@ import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -120,9 +121,9 @@ public final class StaticPolyfillHelper {
 			final IN4JSSourceContainer filledSrcContainer = n4jsCore.findN4JSSourceContainer(res.getURI()).get();
 			for (IN4JSSourceContainer srcConti : project.getSourceContainers()) {
 				if (!Objects.equals(filledSrcContainer, srcConti)) {
-					final URI uri = srcConti.findArtifact(fqn, fileExtension);
+					final SafeURI uri = srcConti.findArtifact(fqn, fileExtension);
 					if (uri != null) {
-						return uri;
+						return uri.toURI();
 					}
 				}
 			}

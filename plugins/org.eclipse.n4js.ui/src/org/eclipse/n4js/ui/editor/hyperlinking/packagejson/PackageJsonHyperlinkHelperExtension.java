@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.editor.hyperlinking.packagejson;
 
-import java.nio.file.Path;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -18,18 +17,19 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.ui.editor.hyperlinking.IJSONHyperlinkHelperExtension;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
-import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
-import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.INode;
@@ -52,7 +52,7 @@ import com.google.inject.Provider;
 public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelperExtension {
 
 	@Inject
-	private N4JSEclipseModel model;
+	private IN4JSCore model;
 
 	@Inject
 	private EclipseExternalLibraryWorkspace extWS;
@@ -76,12 +76,12 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 	@Override
 	public IHyperlink[] getHyperlinks(XtextResource resource, int offset) {
 		EObject eObject = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
-		Pair<URI, Region> linkedProjectWithRegion = getUriRegionPair(eObject);
+		Pair<SafeURI, Region> linkedProjectWithRegion = getUriRegionPair(eObject);
 
 		if (linkedProjectWithRegion != null) {
-			URI uri = linkedProjectWithRegion.getFirst();
+			URI uri = linkedProjectWithRegion.getFirst().toURI();
 			Region region = linkedProjectWithRegion.getSecond();
-			N4JSEclipseProject uriProject = model.findProjectWith(uri);
+			IN4JSProject uriProject = model.findProject(uri).orNull();
 
 			String lnkName = uriProject == null ? ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri)
 					: uriProject.getProjectName();
@@ -97,7 +97,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		return null;
 	}
 
-	private Pair<URI, Region> getUriRegionPair(EObject eObject) {
+	private Pair<SafeURI, Region> getUriRegionPair(EObject eObject) {
 		PackageJsonProperties nearestKnownPJP = findNearestKnownPJP(eObject);
 		if (nearestKnownPJP == null) {
 			return null;
@@ -155,19 +155,18 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		return null;
 	}
 
-	private Pair<URI, Region> hyperlinkToMain(JSONStringLiteral mainModuleJsonLiteral) {
+	private Pair<SafeURI, Region> hyperlinkToMain(JSONStringLiteral mainModuleJsonLiteral) {
 		String mainPath = mainModuleJsonLiteral.getValue();
 		if (!Strings.isNullOrEmpty(mainPath)) {
 			URI packageJsonLoc = mainModuleJsonLiteral.eResource().getURI();
-			N4JSEclipseProject project = model.findProjectWith(packageJsonLoc);
+			IN4JSProject project = model.findProjectContaining(packageJsonLoc);
 			INode node = NodeModelUtils.getNode(mainModuleJsonLiteral);
 
 			if (project != null && node != null) {
 				Region region = new Region(node.getOffset() + 1, node.getLength() - 2);
-				Path mainResolvedPath = project.getLocationPath().resolve(mainPath);
-				if (mainResolvedPath.toFile().exists()) {
-					URI mainResolvedUri = URI.createFileURI(mainResolvedPath.toString());
-					return Tuples.pair(mainResolvedUri, region);
+				SafeURI mainResolvedPath = project.getSafeLocation().resolve(mainPath);
+				if (mainResolvedPath.exists()) {
+					return Tuples.pair(mainResolvedPath, region);
 				}
 			}
 		}
@@ -175,19 +174,20 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		return null;
 	}
 
-	private Pair<URI, Region> hyperlinkToMainModule(JSONStringLiteral mainModuleJsonLiteral) {
+	private Pair<SafeURI, Region> hyperlinkToMainModule(JSONStringLiteral mainModuleJsonLiteral) {
 		String mainModule = mainModuleJsonLiteral.getValue();
 		if (!Strings.isNullOrEmpty(mainModule)) {
 			URI packageJsonLoc = mainModuleJsonLiteral.eResource().getURI();
-			N4JSEclipseProject project = model.findProjectWith(packageJsonLoc);
+			IN4JSProject project = model.findProjectContaining(packageJsonLoc);
 			INode node = NodeModelUtils.getNode(mainModuleJsonLiteral);
 
 			if (project != null && node != null) {
 				Region region = new Region(node.getOffset() + 1, node.getLength() - 2);
 
-				for (IN4JSEclipseSourceContainer sc : project.getSourceContainers()) {
+				for (IN4JSSourceContainer sc : project.getSourceContainers()) {
 					QualifiedName qualifiedName = QualifiedName.create(mainModule);
-					URI mainModuleURI = sc.findArtifact(qualifiedName, Optional.of(N4JSGlobals.N4JS_FILE_EXTENSION));
+					SafeURI mainModuleURI = sc.findArtifact(qualifiedName,
+							Optional.of(N4JSGlobals.N4JS_FILE_EXTENSION));
 					if (mainModuleURI == null) {
 						mainModuleURI = sc.findArtifact(qualifiedName, Optional.of(N4JSGlobals.N4JSX_FILE_EXTENSION));
 					}
@@ -201,10 +201,10 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		return null;
 	}
 
-	private Pair<URI, Region> hyperlinkToRequiredRTLibs(JSONStringLiteral mainModuleJsonLiteral) {
+	private Pair<SafeURI, Region> hyperlinkToRequiredRTLibs(JSONStringLiteral mainModuleJsonLiteral) {
 		String projectName = mainModuleJsonLiteral.getValue();
 		if (!Strings.isNullOrEmpty(projectName)) {
-			URI pdu = getProjectDescriptionLocationForName(projectName);
+			SafeURI pdu = getProjectDescriptionLocationForName(projectName);
 			INode node = NodeModelUtils.getNode(mainModuleJsonLiteral);
 
 			if (pdu != null && node != null) {
@@ -217,9 +217,9 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		return null;
 	}
 
-	private Pair<URI, Region> hyperlinkToProjectProperty(NameValuePair nvpDependency) {
+	private Pair<SafeURI, Region> hyperlinkToProjectProperty(NameValuePair nvpDependency) {
 		String projectName = nvpDependency.getName();
-		URI pdu = getProjectDescriptionLocationForName(projectName);
+		SafeURI pdu = getProjectDescriptionLocationForName(projectName);
 		if (pdu != null) {
 			List<INode> node = NodeModelUtils.findNodesForFeature(nvpDependency,
 					JSONPackage.Literals.NAME_VALUE_PAIR__NAME);
@@ -235,10 +235,10 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		return null;
 	}
 
-	private Pair<URI, Region> hyperlinkToDependencySection(NameValuePair projectNameInValue) {
+	private Pair<SafeURI, Region> hyperlinkToDependencySection(NameValuePair projectNameInValue) {
 		JSONStringLiteral jsonValue = (JSONStringLiteral) projectNameInValue.getValue();
 		String projectName = jsonValue.getValue();
-		URI pdu = getProjectDescriptionLocationForName(projectName);
+		SafeURI pdu = getProjectDescriptionLocationForName(projectName);
 
 		if (pdu != null) {
 			INode valueNode = NodeModelUtils.getNode(jsonValue);
@@ -249,22 +249,22 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		return null;
 	}
 
-	private URI getProjectDescriptionLocationForName(String projectName) {
+	private SafeURI getProjectDescriptionLocationForName(String projectName) {
 		IN4JSProject project = model.findAllProjectMappings().get(projectName);
-		URI rootLocation = null;
+		SafeURI rootLocation = null;
 		if (project == null) {
-			for (Pair<URI, ProjectDescription> pair : extWS.getProjectsIncludingUnnecessary()) {
+			for (Pair<FileURI, ProjectDescription> pair : extWS.getProjectsIncludingUnnecessary()) {
 				String name = pair.getSecond().getProjectName();
 				if (Objects.equal(projectName, name)) {
 					rootLocation = pair.getFirst();
 				}
 			}
 		} else {
-			rootLocation = project.getLocation();
+			rootLocation = project.getSafeLocation();
 		}
 
 		if (rootLocation != null) {
-			URI pckjsonUri = rootLocation.appendSegment(IN4JSProject.PACKAGE_JSON);
+			SafeURI pckjsonUri = rootLocation.appendSegment(IN4JSProject.PACKAGE_JSON);
 			return pckjsonUri;
 		}
 		return null;

@@ -12,9 +12,6 @@ package org.eclipse.n4js.ui.external;
 
 import static com.google.common.collect.Maps.newHashMap;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,26 +21,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
 /**
@@ -53,7 +47,7 @@ public class ExternalProjectMappings {
 	/** True: Only compile those projects that are referenced by N4JS projects */
 	public static boolean REDUCE_REGISTERED_NPMS = true;
 
-	final private EclipseBasedN4JSWorkspace userWorkspace;
+	final private IN4JSCore userWorkspace;
 	final private ExternalLibraryPreferenceStore preferenceStore;
 
 	/*
@@ -61,17 +55,17 @@ public class ExternalProjectMappings {
 	 * set does neither contain shadowed nor unnecessary projects. An unnecessary project is a dependency of one (or
 	 * more) plain-JS projects.
 	 */
-	final Map<URI, Pair<N4JSExternalProject, ProjectDescription>> completeCache;
-	final List<Pair<URI, ProjectDescription>> completeList;
+	final Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> completeCache;
+	final List<Pair<FileURI, ProjectDescription>> completeList;
 	final Map<String, List<N4JSExternalProject>> completeProjectNameMapping;
-	final Map<URI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMapping;
-	final Map<java.net.URI, List<N4JSExternalProject>> reducedProjectsLocationMapping;
+	final Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMapping;
+	final Map<FileURI, List<N4JSExternalProject>> reducedProjectsLocationMapping;
 	final Set<N4JSExternalProject> reducedSet;
 	final boolean initialized;
 
-	ExternalProjectMappings(EclipseBasedN4JSWorkspace userWorkspace,
+	ExternalProjectMappings(IN4JSCore userWorkspace,
 			ExternalLibraryPreferenceStore preferenceStore,
-			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> completeCache) {
+			Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> completeCache) {
 
 		this(userWorkspace, preferenceStore, completeCache, true);
 	}
@@ -83,9 +77,9 @@ public class ExternalProjectMappings {
 	 * @param preferenceStore
 	 *            the preference store to get the registered external library locations.
 	 */
-	protected ExternalProjectMappings(EclipseBasedN4JSWorkspace userWorkspace,
+	protected ExternalProjectMappings(IN4JSCore userWorkspace,
 			ExternalLibraryPreferenceStore preferenceStore,
-			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> completeCache, boolean initialized) {
+			Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> completeCache, boolean initialized) {
 
 		this.userWorkspace = userWorkspace;
 		this.preferenceStore = preferenceStore;
@@ -118,15 +112,13 @@ public class ExternalProjectMappings {
 
 		// prepare list of locations of all projects in workspace
 		// (note: also include locations of close projects!)
-		Set<Path> locationsOfWorkspaceProjects = Stream.of(userWorkspace.getWorkspace().getProjects())
-				.map(p -> getCanonicalFile(p.getLocation().toFile()).toPath())
-				.collect(Collectors.toSet());
+		Set<SafeURI> locationsOfWorkspaceProjects = FluentIterable.from(userWorkspace.findAllProjects())
+				.transform(p -> p.getSafeLocation()).toSet();
 
-		List<URI> allPrjLocs = new LinkedList<>(completeCache.keySet());
-		for (URI projectLocation : allPrjLocs) {
+		List<SafeURI> allPrjLocs = new LinkedList<>(completeCache.keySet());
+		for (SafeURI projectLocation : allPrjLocs) {
 			if (projectLocation.isFile()) {
-				Path projectLocationPath = getCanonicalFile(URIUtils.toFile(projectLocation)).toPath();
-				if (projectLocationPath != null && locationsOfWorkspaceProjects.contains(projectLocationPath)) {
+				if (locationsOfWorkspaceProjects.contains(projectLocation)) {
 					completeCache.remove(projectLocation);
 				}
 			}
@@ -134,10 +126,10 @@ public class ExternalProjectMappings {
 	}
 
 	private static class Mappings {
-		List<Pair<URI, ProjectDescription>> completeList;
+		List<Pair<FileURI, ProjectDescription>> completeList;
 		Map<String, List<N4JSExternalProject>> completeProjectNameMapping;
-		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMapping;
-		Map<java.net.URI, List<N4JSExternalProject>> reducedProjectsLocationMapping;
+		Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMapping;
+		Map<FileURI, List<N4JSExternalProject>> reducedProjectsLocationMapping;
 		Set<N4JSExternalProject> reducedSet;
 	}
 
@@ -149,9 +141,9 @@ public class ExternalProjectMappings {
 	 */
 	private Mappings computeMappings() {
 		Map<String, List<N4JSExternalProject>> completeProjectNameMappingTmp = newHashMap();
-		Map<URI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMappingTmp = newHashMap();
-		Map<java.net.URI, List<N4JSExternalProject>> reducedProjectsLocationMappingTmp = newHashMap();
-		List<Pair<URI, ProjectDescription>> completeListTmp = new LinkedList<>();
+		Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMappingTmp = newHashMap();
+		Map<FileURI, List<N4JSExternalProject>> reducedProjectsLocationMappingTmp = newHashMap();
+		List<Pair<FileURI, ProjectDescription>> completeListTmp = new LinkedList<>();
 		if (completeCache.isEmpty()) {
 			Mappings mappings = new Mappings();
 			mappings.completeList = Collections.emptyList();
@@ -163,22 +155,22 @@ public class ExternalProjectMappings {
 		}
 
 		// step 1: compute all projects
-		List<URI> allPrjLocsReversed = new LinkedList<>(completeCache.keySet());
+		List<FileURI> allPrjLocsReversed = new LinkedList<>(completeCache.keySet());
 		// Collections.reverse(allPrjLocsReversed);
-		for (URI projectLocation : allPrjLocsReversed) {
+		for (FileURI projectLocation : allPrjLocsReversed) {
 			Pair<N4JSExternalProject, ProjectDescription> pair = completeCache.get(projectLocation);
 			N4JSExternalProject project = pair.getFirst();
 			ProjectDescription prjDescr = pair.getSecond();
 			completeListTmp.add(Tuples.pair(projectLocation, prjDescr));
 
 			// shadowing is done here by checking if an npm is already in the mapping
-			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation);
+			String projectName = project.getName(); // ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation);
 			if (!completeProjectNameMappingTmp.containsKey(projectName)) {
 
 				completeProjectNameMappingTmp.put(projectName, Lists.newArrayList(project));
 				reducedProjectUriMappingTmp.put(projectLocation, pair);
 
-				java.net.URI rootLoc = ExternalLibraryWorkspace
+				FileURI rootLoc = ExternalLibraryWorkspace
 						.getRootLocationForResource(preferenceStore.getLocations(), projectLocation);
 
 				reducedProjectsLocationMappingTmp.putIfAbsent(rootLoc, new LinkedList<>());
@@ -190,10 +182,10 @@ public class ExternalProjectMappings {
 		}
 
 		// step 2: compute necessary projects
-		Set<URI> reducedSetURIs = computeUserWorkspaceDependencies(completeProjectNameMappingTmp,
+		Set<SafeURI> reducedSetURIs = computeUserWorkspaceDependencies(completeProjectNameMappingTmp,
 				reducedProjectUriMappingTmp);
 		Set<N4JSExternalProject> reducedSetTmps = new HashSet<>();
-		for (URI prjLoc : reducedSetURIs) {
+		for (SafeURI prjLoc : reducedSetURIs) {
 			Pair<N4JSExternalProject, ProjectDescription> pair = reducedProjectUriMappingTmp.get(prjLoc);
 			if (pair != null) {
 				N4JSExternalProject project = pair.getFirst();
@@ -203,13 +195,13 @@ public class ExternalProjectMappings {
 
 		// step 3: reduce to necessary projects
 		if (REDUCE_REGISTERED_NPMS) {
-			for (java.net.URI nodeModuleLocation : preferenceStore.getNodeModulesLocations()) {
+			for (FileURI nodeModuleLocation : preferenceStore.getNodeModulesLocations()) {
 				List<N4JSExternalProject> nodeModuleProjects = reducedProjectsLocationMappingTmp
 						.get(nodeModuleLocation);
 
 				if (nodeModuleProjects != null) {
 					for (Iterator<N4JSExternalProject> iter = nodeModuleProjects.iterator(); iter.hasNext();) {
-						URI location = iter.next().getIProject().getLocation();
+						FileURI location = iter.next().getSafeLocation();
 						if (!reducedSetURIs.contains(location)) {
 							iter.remove();
 						}
@@ -234,44 +226,35 @@ public class ExternalProjectMappings {
 		return mappings;
 	}
 
-	Set<URI> computeUserWorkspaceDependencies(
+	Set<SafeURI> computeUserWorkspaceDependencies(
 			Map<String, List<N4JSExternalProject>> completeProjectNameMappingTmp,
-			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMappingTmp) {
+			Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMappingTmp) {
 
-		Set<URI> uwsDeps = new HashSet<>();
+		Set<SafeURI> uwsDeps = new HashSet<>();
 		// respect closed workspace projects by omitting them
-		Collection<URI> projectsInUserWSopen = new LinkedList<>();
-		for (URI projectInUserWS : userWorkspace.getAllProjectLocations()) {
-			String locStr = projectInUserWS.toPlatformString(true);
-			IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(locStr);
-			if (iProject != null && iProject.isAccessible()) {
-				projectsInUserWSopen.add(projectInUserWS);
-			}
+		Collection<SafeURI> projectsInUserWSopen = new LinkedList<>();
+		for (IN4JSProject projectInUserWS : userWorkspace.findAllProjects()) {
+			projectsInUserWSopen.add(projectInUserWS.getSafeLocation());
 		}
 
 		computeNecessaryDependenciesRek(completeProjectNameMappingTmp, reducedProjectUriMappingTmp,
 				projectsInUserWSopen, uwsDeps);
 		uwsDeps.removeAll(projectsInUserWSopen);
 
-		Set<String> depNames = new HashSet<>();
-		for (URI uwsDep : uwsDeps) {
-			String name = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uwsDep);
-			depNames.add(name);
-		}
-
 		return uwsDeps;
 	}
 
 	private void computeNecessaryDependenciesRek(Map<String, List<N4JSExternalProject>> projectNameMappingTmp,
-			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp, Collection<URI> locs,
-			Set<URI> necessaryDeps) {
+			Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp,
+			Collection<SafeURI> locs,
+			Set<SafeURI> necessaryDeps) {
 
-		Set<URI> depUris = new HashSet<>();
-		for (URI loc : locs) {
+		Set<SafeURI> depUris = new HashSet<>();
+		for (SafeURI loc : locs) {
 			ProjectDescription pd = getProjectDescription(projectUriMappingTmp, loc);
 			if (pd != null && pd.getProjectType() != ProjectType.PLAINJS) {
 				for (ProjectDependency pDep : pd.getProjectDependencies()) {
-					URI depLoc = getProjectLocation(projectNameMappingTmp, pDep);
+					SafeURI depLoc = getProjectLocation(projectNameMappingTmp, pDep);
 
 					if (depLoc != null && !necessaryDeps.contains(depLoc)) {
 						depUris.add(depLoc);
@@ -286,33 +269,34 @@ public class ExternalProjectMappings {
 		}
 	}
 
-	private URI getProjectLocation(Map<String, List<N4JSExternalProject>> projectNameMappingTmp,
+	private SafeURI getProjectLocation(Map<String, List<N4JSExternalProject>> projectNameMappingTmp,
 			ProjectDependency pDep) {
 
 		String projectName = pDep.getProjectName();
-		URI depLoc = userWorkspace.findProjectForName(projectName);
-		if (depLoc != null) {
-			// respect closed workspace projects by omitting them
-			String locStr = depLoc.toPlatformString(true);
-			IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(locStr);
-			if (iProject == null || !iProject.isAccessible()) {
-				depLoc = null;
-			}
-		}
+		SafeURI depLoc = userWorkspace.findProjectByName(projectName).getSafeLocation();
+		// if (depLoc != null) {
+		// // respect closed workspace projects by omitting them
+		// String locStr = depLoc.toPlatformString(true);
+		// IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(locStr);
+		// if (iProject == null || !iProject.isAccessible()) {
+		// depLoc = null;
+		// }
+		// }
 		if (depLoc == null) {
 			List<N4JSExternalProject> prjsOfName = projectNameMappingTmp.get(projectName);
 			N4JSExternalProject project = (prjsOfName == null || prjsOfName.isEmpty()) ? null : prjsOfName.get(0);
 			if (project != null) {
-				depLoc = project.getIProject().getLocation();
+				depLoc = project.getSafeLocation();
 			}
 		}
 		return depLoc;
 	}
 
 	private ProjectDescription getProjectDescription(
-			Map<URI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp, URI loc) {
+			Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp,
+			SafeURI loc) {
 
-		ProjectDescription pd = userWorkspace.getProjectDescription(loc);
+		ProjectDescription pd = userWorkspace.internalGetProjectDescription(loc);
 		if (pd == null) {
 			Pair<N4JSExternalProject, ProjectDescription> pair = projectUriMappingTmp.get(loc);
 			if (pair != null) {
@@ -322,11 +306,4 @@ public class ExternalProjectMappings {
 		return pd;
 	}
 
-	private File getCanonicalFile(File file) {
-		try {
-			return file.getCanonicalFile();
-		} catch (IOException e) {
-			return file;
-		}
-	}
 }

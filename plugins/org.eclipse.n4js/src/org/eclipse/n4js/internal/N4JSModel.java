@@ -21,18 +21,16 @@ import static org.eclipse.n4js.projectDescription.ProjectType.TEST;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.HlcExternalLibraryWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -42,7 +40,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.base.Optional;
@@ -55,9 +52,9 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings({ "javadoc", "restriction" })
 @Singleton
-public class N4JSModel implements IWorkspaceConfig {
+public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 
-	private final InternalN4JSWorkspace workspace;
+	private final InternalN4JSWorkspace<Loc> workspace;
 
 	@Inject
 	protected ExternalLibraryWorkspace externalLibraryWorkspace;
@@ -69,35 +66,62 @@ public class N4JSModel implements IWorkspaceConfig {
 	private MultiCleartriggerCache cache;
 
 	@Inject
-	public N4JSModel(InternalN4JSWorkspace workspace) {
+	public N4JSModel(InternalN4JSWorkspace<Loc> workspace) {
 		this.workspace = workspace;
 	}
 
 	public N4JSProject getN4JSProject(URI location) {
 		checkArgument(location.isFile(), "Expecting file URI. Was: " + location);
-		boolean external = (externalLibraryWorkspace != null && externalLibraryWorkspace.getProject(location) != null);
+		boolean external = isExternal(location);
+		if (external) {
+			return getN4JSProject(externalLibraryWorkspace.fromURI(location), external);
+		}
+		return getN4JSProject(workspace.fromURI(location), external);
+	}
+
+	public SafeURI toProjectLocation(URI location) {
+		boolean external = isExternal(location);
+		if (external) {
+			return externalLibraryWorkspace.fromURI(location);
+		}
+		return workspace.fromURI(location);
+	}
+
+	public N4JSProject getN4JSProject(SafeURI location) {
+		return getN4JSProject(location, isExternal(location.toURI()));
+	}
+
+	/**
+	 * @param location
+	 * @return
+	 */
+	protected boolean isExternal(URI location) {
+		return externalLibraryWorkspace != null && externalLibraryWorkspace.getProject(location) != null;
+	}
+
+	protected N4JSProject getN4JSProject(SafeURI location, boolean external) {
 		return new N4JSProject(location, external, this);
 	}
 
 	/// IWorkspaceConfig
 
 	@Override
-	public Set<? extends IProjectConfig> getProjects() {
-		Set<IProjectConfig> prjConfs = new HashSet<>();
-		for (URI prjLoc : workspace.getAllProjectLocations()) {
-			prjConfs.add(getN4JSProject(prjLoc));
+	public Set<? extends IN4JSProject> getProjects() {
+		Set<IN4JSProject> prjConfs = new HashSet<>();
+		for (Loc prjLoc : workspace.getAllProjectLocations()) {
+			prjConfs.add(getN4JSProject(prjLoc, false));
 		}
 		return prjConfs;
 	}
 
 	@Override
-	public IProjectConfig findProjectContaining(URI member) {
+	public IN4JSProject findProjectContaining(URI member) {
 		return findProjectWith(member);
 	}
 
 	@Override
-	public IProjectConfig findProjectByName(String name) {
-		for (IProjectConfig prjConf : getProjects()) {
+	public IN4JSProject findProjectByName(String name) {
+		for (IN4JSProject prjConf : getProjects()) {
 			if (prjConf.getName().equals(name)) {
 				return prjConf;
 			}
@@ -107,34 +131,33 @@ public class N4JSModel implements IWorkspaceConfig {
 
 	/// END IWorkspaceConfig
 
-	public N4JSProject findProjectWith(URI nestedLocation) {
+	public IN4JSProject findProjectWith(URI nestedLocation) {
 		// FIXME: mm
 		// URI correctNestedLocation = convertToCorrespondingLocation(nestedLocation);
-		URI location = workspace.findProjectWith(nestedLocation);
+		SafeURI location = fromURI(workspace, nestedLocation);
 		if (location != null) {
-			return getN4JSProject(location);
+			return getN4JSProject(location, false);
 		}
 
-		location = externalLibraryWorkspace.findProjectWith(nestedLocation);
-		if (null != location) {
-			return getN4JSProject(location);
+		SafeURI externalLocation = fromURI(externalLibraryWorkspace, nestedLocation);
+		if (null != externalLocation) {
+			return getN4JSProject(externalLocation, true);
 		}
 
 		return null;
 	}
 
+	private <PL extends SafeURI> PL fromURI(InternalN4JSWorkspace<PL> ws, URI uri) {
+		return ws.findProjectWith(ws.fromURI(uri));
+	}
+
 	public Optional<? extends IN4JSSourceContainer> findN4JSSourceContainer(URI nestedLocation) {
 		Optional<? extends IN4JSSourceContainer> foundN4JSSourceContainer = Optional.absent();
 
-		N4JSProject project = findProjectWith(nestedLocation);
+		IN4JSProject project = findProjectWith(nestedLocation);
 		foundN4JSSourceContainer = findN4JSSourceContainerInProject(project, nestedLocation);
 
 		return foundN4JSSourceContainer;
-	}
-
-	public Optional<? extends IN4JSSourceContainer> findN4JSExternalSourceContainer(IN4JSProject extPackage,
-			URI nestedLocation) {
-		return findN4JSSourceContainerInProject(extPackage, nestedLocation);
 	}
 
 	protected Optional<? extends IN4JSSourceContainer> findN4JSSourceContainerInProject(IN4JSProject project,
@@ -171,7 +194,7 @@ public class N4JSModel implements IWorkspaceConfig {
 		return false;
 	}
 
-	protected InternalN4JSWorkspace getInternalWorkspace() {
+	protected InternalN4JSWorkspace<Loc> getInternalWorkspace() {
 		return workspace;
 	}
 
@@ -179,17 +202,28 @@ public class N4JSModel implements IWorkspaceConfig {
 	 * This delegates to {@link InternalN4JSWorkspace#getProjectDescription(URI)} to allow caching.
 	 */
 	public ProjectDescription getProjectDescription(URI location) {
-		ProjectDescription description = workspace.getProjectDescription(location);
+		ProjectDescription description = getProjectDescription(workspace, location);
 		if (null == description) {
-			description = externalLibraryWorkspace.getProjectDescription(location);
+			description = getProjectDescription(externalLibraryWorkspace, location);
 		}
 		return description;
 	}
 
+	private <PL extends SafeURI> ProjectDescription getProjectDescription(InternalN4JSWorkspace<PL> ws,
+			URI location) {
+		return ws.getProjectDescription(ws.fromURI(location));
+	}
+
+	public ProjectDescription getProjectDescription(IN4JSProject project) {
+		if (project.isExternal()) {
+			return getProjectDescription(externalLibraryWorkspace, project._getLocation());
+		}
+		return getProjectDescription(workspace, project._getLocation());
+	}
+
 	public ImmutableList<? extends IN4JSSourceContainer> getN4JSSourceContainers(N4JSProject project) {
 		ImmutableList.Builder<IN4JSSourceContainer> result = ImmutableList.builder();
-		URI location = project.getLocation();
-		ProjectDescription description = getProjectDescription(location);
+		ProjectDescription description = getProjectDescription(project);
 		if (description != null) {
 			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
 			sourceFragments.sort((f1, fDIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT) -> ProjectDescriptionUtils
@@ -208,16 +242,17 @@ public class N4JSModel implements IWorkspaceConfig {
 		return result.build();
 	}
 
-	protected String getLocationPath(URI location) {
-		return location.toFileString();
-	}
+	// protected String getLocationPath(URI location) {
+	// return location.toFileString();
+	// }
 
 	protected IN4JSSourceContainer createProjectN4JSSourceContainer(N4JSProject project, SourceContainerType type,
 			String relativeLocation) {
 		return new N4JSProjectSourceContainer(project, type, relativeLocation);
 	}
 
-	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project, boolean includeAbsentProjects) {
+	public ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project,
+			boolean includeAbsentProjects) {
 		return getDependencies(project, false, includeAbsentProjects);
 	}
 
@@ -229,8 +264,7 @@ public class N4JSModel implements IWorkspaceConfig {
 	private ImmutableList<? extends IN4JSProject> getDependencies(N4JSProject project, boolean includeApis,
 			boolean includeAbsentProjects) {
 		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
-		URI location = project.getLocation();
-		ProjectDescription description = getProjectDescription(location);
+		ProjectDescription description = getProjectDescription(project);
 		if (description != null) {
 			result.addAll(
 					resolveProjectReferences(project, description.getProjectDependencies(), includeAbsentProjects));
@@ -243,8 +277,7 @@ public class N4JSModel implements IWorkspaceConfig {
 	}
 
 	public Optional<IN4JSProject> getExtendedRuntimeEnvironment(N4JSProject project) {
-		final URI location = project.getLocation();
-		final ProjectDescription description = getProjectDescription(location);
+		ProjectDescription description = getProjectDescription(project);
 		if (null == description) {
 			return absent();
 		}
@@ -254,8 +287,7 @@ public class N4JSModel implements IWorkspaceConfig {
 
 	public ImmutableList<? extends IN4JSProject> getImplementedProjects(N4JSProject project) {
 		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
-		URI location = project.getLocation();
-		ProjectDescription description = getProjectDescription(location);
+		ProjectDescription description = getProjectDescription(project);
 		if (description != null) {
 			result.addAll(resolveProjectReferences(project, description.getImplementedProjects(), false));
 		}
@@ -264,18 +296,14 @@ public class N4JSModel implements IWorkspaceConfig {
 
 	public ImmutableList<? extends IN4JSProject> getProvidedRuntimeLibraries(N4JSProject project) {
 		ImmutableList.Builder<IN4JSProject> providedRuntimes = ImmutableList.builder();
-
-		EList<ProjectReference> runtimeLibraries = getAllProvidedRuntimeLibraries(project);
-		URI projectLocation = project.getLocation();
-
+		List<ProjectReference> runtimeLibraries = getAllProvidedRuntimeLibraries(project);
 		for (ProjectReference runtimeLibrary : runtimeLibraries) {
-			URI location = workspace.getLocation(projectLocation, runtimeLibrary);
-			if (null == location) {
-				location = externalLibraryWorkspace.getLocation(projectLocation, runtimeLibrary);
-			}
-
-			if (null != location) {
-				providedRuntimes.add(getN4JSProject(location));
+			Loc location = workspace.getLocation(runtimeLibrary);
+			if (location != null) {
+				providedRuntimes.add(getN4JSProject(location, false));
+			} else {
+				SafeURI external = externalLibraryWorkspace.getLocation(runtimeLibrary);
+				providedRuntimes.add(getN4JSProject(external, true));
 			}
 		}
 
@@ -283,11 +311,7 @@ public class N4JSModel implements IWorkspaceConfig {
 	}
 
 	private EList<ProjectReference> getAllProvidedRuntimeLibraries(N4JSProject project) {
-		URI projectLocation = project.getLocation();
-		if (projectLocation == null)
-			return ECollections.emptyEList();
-
-		ProjectDescription description = getProjectDescription(projectLocation);
+		ProjectDescription description = getProjectDescription(project);
 		if (description == null)
 			return ECollections.emptyEList();
 
@@ -298,42 +322,29 @@ public class N4JSModel implements IWorkspaceConfig {
 		return runtimeLibraries;
 	}
 
-	public Iterator<URI> iterator(IN4JSSourceContainer sourceContainer) {
-		if (sourceContainer.getProject().isExternal() && Platform.isRunning()) {
-			// The `Platform.isRunning()` is not valid check for the OSGI headless compiler
-			// it may still be valid in some scenarios (maybe some test scenarios)
-			if (externalLibraryWorkspace instanceof HlcExternalLibraryWorkspace
-					&& workspace instanceof FileBasedWorkspace
-					&& workspace.findProjectWith(sourceContainer.getLocation()) != null) {
-				return workspace.getFolderIterator(sourceContainer.getLocation());
-			}
-
-			return externalLibraryWorkspace.getFolderIterator(sourceContainer.getLocation());
-		}
-		return workspace.getFolderIterator(sourceContainer.getLocation());
-	}
-
 	/**
 	 * @see IN4JSSourceContainer#findArtifact(QualifiedName, Optional)
 	 */
-	public URI findArtifact(IN4JSSourceContainer sourceContainer, QualifiedName name, Optional<String> fileExtension) {
+	public SafeURI findArtifact(IN4JSSourceContainer sourceContainer, QualifiedName name,
+			Optional<String> fileExtension) {
 		final String ext = fileExtension.or("").trim();
 		final String extWithDot = !ext.isEmpty() && !ext.startsWith(".") ? "." + ext : ext;
 		final String pathStr = name.toString("/") + extWithDot; // no need for IQualifiedNameConverter here!
 
-		URI artifactLocation = workspace.findArtifactInFolder(sourceContainer.getLocation(), pathStr);
+		SafeURI artifactLocation = findArtifactInFolder(workspace, sourceContainer.getLocation(), pathStr);
 		if (null == artifactLocation) {
-			artifactLocation = externalLibraryWorkspace.findArtifactInFolder(sourceContainer.getLocation(),
-					pathStr);
+			artifactLocation = findArtifactInFolder(externalLibraryWorkspace, sourceContainer.getLocation(), pathStr);
 		}
 		return artifactLocation;
 	}
 
-	public Optional<String> getExtendedRuntimeEnvironmentName(URI location) {
-		if (null == location) {
-			return absent();
-		}
-		final ProjectDescription description = getProjectDescription(location);
+	private <PL extends SafeURI> PL findArtifactInFolder(InternalN4JSWorkspace<PL> ws,
+			URI location, String pathStr) {
+		return ws.findArtifactInFolder(ws.fromURI(location), pathStr);
+	}
+
+	public Optional<String> getExtendedRuntimeEnvironmentName(N4JSProject project) {
+		final ProjectDescription description = getProjectDescription(project);
 		if (null == description) {
 			return absent();
 		}
@@ -355,22 +366,21 @@ public class N4JSModel implements IWorkspaceConfig {
 		}
 
 		final Builder<IN4JSProject> builder = ImmutableList.builder();
-		final URI location = project.getLocation();
-		final ProjectDescription description = getProjectDescription(location);
-
+		final ProjectDescription description = getProjectDescription(project);
 		if (null != description) {
 			for (ProjectReference testedProject : description.getTestedProjects()) {
-				URI hostLocation = workspace.getLocation(location, testedProject);
-
-				if (null == hostLocation) {
-					hostLocation = externalLibraryWorkspace.getLocation(location, testedProject);
-				}
-
+				SafeURI hostLocation = workspace.getLocation(testedProject);
+				IN4JSProject tested = null;
 				if (hostLocation != null) {
-					final N4JSProject tested = getN4JSProject(hostLocation);
-					if (null != tested && tested.exists()) {
-						builder.add(tested);
+					tested = getN4JSProject(hostLocation, false);
+				} else {
+					hostLocation = externalLibraryWorkspace.getLocation(testedProject);
+					if (hostLocation != null) {
+						tested = getN4JSProject(hostLocation, true);
 					}
+				}
+				if (null != tested && tested.exists()) {
+					builder.add(tested);
 				}
 			}
 		}
@@ -391,29 +401,21 @@ public class N4JSModel implements IWorkspaceConfig {
 	 */
 	public Optional<IN4JSProject> resolveProjectReference(final IN4JSProject project,
 			final ProjectReference reference, boolean includeAbsentProjects) {
-
 		if (null == project || null == reference) {
 			return absent();
 		}
-
-		final URI location = project.getLocation();
-		if (null == location) {
-			return absent();
-		}
-
-		URI dependencyLocation = workspace.getLocation(location, reference);
+		SafeURI dependencyLocation = workspace.getLocation(reference);
 		if (null != dependencyLocation) {
 			return fromNullable(getN4JSProject(dependencyLocation));
 		}
 
-		dependencyLocation = externalLibraryWorkspace.getLocation(location, reference);
+		dependencyLocation = externalLibraryWorkspace.getLocation(reference);
 		if (null != dependencyLocation) {
 			return fromNullable(getN4JSProject(dependencyLocation));
 		}
 		if (includeAbsentProjects) {
 			return fromNullable(newAbsentProject(reference.getProjectName()));
 		}
-
 		return absent();
 	}
 
@@ -423,7 +425,7 @@ public class N4JSModel implements IWorkspaceConfig {
 	 */
 	protected IN4JSProject newAbsentProject(String projectName) {
 		final URI absent = URI.createFileURI(projectName);
-		return new N4JSProject(absent, false, this);
+		return getN4JSProject(workspace.fromURI(absent), false);
 	}
 
 	/**
@@ -465,7 +467,7 @@ public class N4JSModel implements IWorkspaceConfig {
 		if (null == project) {
 			return null;
 		}
-		final ProjectDescription projectDescription = getProjectDescription(project.getLocation());
+		final ProjectDescription projectDescription = getProjectDescription(project);
 		if (null != projectDescription) {
 			return projectDescription.getDefinesPackage();
 		}
@@ -478,7 +480,7 @@ public class N4JSModel implements IWorkspaceConfig {
 	public Iterable<IN4JSProject> getSortedDependencies(IN4JSProject project) {
 		SortedDependenciesProvider sdProvider = new SortedDependenciesProvider(project);
 		Iterable<IN4JSProject> existing = cache.get(sdProvider, MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES,
-				project.getLocation());
+				project._getLocation());
 		return existing;
 	}
 
@@ -520,7 +522,7 @@ public class N4JSModel implements IWorkspaceConfig {
 			Set<URI> triggerURIs = new HashSet<>();
 			for (IN4JSProject dep : sortedDeps) {
 				if (dep.getDefinesPackageName() != null) {
-					URI uri = dep.getLocation();
+					URI uri = dep._getLocation();
 					triggerURIs.add(uri);
 				}
 			}

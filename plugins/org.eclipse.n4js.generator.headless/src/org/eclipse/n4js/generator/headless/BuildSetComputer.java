@@ -13,7 +13,6 @@ package org.eclipse.n4js.generator.headless;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,12 +23,15 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.internal.locations.AbstractUriWrapper;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.collections.Collections2;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicates;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -202,7 +204,7 @@ public class BuildSetComputer {
 	/**
 	 * Collects the projects to compile and finds their dependencies in the given search paths.
 	 *
-	 * Does not register the collected {@link N4JSProject}s with any workspace yet.
+	 * Does not register the collected {@link IN4JSProject N4JS projects} with any workspace yet.
 	 *
 	 * @param searchPaths
 	 *            where to search for dependent projects.
@@ -234,35 +236,36 @@ public class BuildSetComputer {
 				singleSourceProjectLocations);
 
 		// Convert absolute locations to file URIs.
-		List<URI> requestedProjectURIs = headlessHelper.createFileURIs(absRequestedProjectLocations);
-		List<URI> discoveredProjectURIs = headlessHelper.createFileURIs(discoveredProjectLocations);
+		List<FileURI> requestedProjectURIs = headlessHelper.createFileURIs(absRequestedProjectLocations);
+		List<FileURI> discoveredProjectURIs = headlessHelper.createFileURIs(discoveredProjectLocations);
 
 		// Obtain the projects and store them.
-		List<N4JSProject> requestedProjects = headlessHelper.getN4JSProjects(requestedProjectURIs);
-		List<N4JSProject> discoveredProjects = headlessHelper.getN4JSProjects(discoveredProjectURIs);
+		List<IN4JSProject> requestedProjects = headlessHelper.getN4JSProjects(requestedProjectURIs);
+		List<IN4JSProject> discoveredProjects = headlessHelper.getN4JSProjects(discoveredProjectURIs);
 
 		// Resolve shadowing among discovered and requested projects
-		LinkedHashMap<String, N4JSProject> discoveredResolvedMap = new LinkedHashMap<>();
-		for (N4JSProject prj : discoveredProjects) {
+		LinkedHashMap<String, IN4JSProject> discoveredResolvedMap = new LinkedHashMap<>();
+		for (IN4JSProject prj : discoveredProjects) {
 			discoveredResolvedMap.put(prj.getProjectName(), prj);
 		}
-		for (N4JSProject prj : requestedProjects) {
+		for (IN4JSProject prj : requestedProjects) {
 			discoveredResolvedMap.remove(prj.getProjectName());
 		}
-		List<N4JSProject> discoveredResolvedList = new LinkedList<>(discoveredResolvedMap.values());
+		List<IN4JSProject> discoveredResolvedList = new LinkedList<>(discoveredResolvedMap.values());
 
 		// Filter out shadowed projects
-		Predicate<N4JSProject> pred = p -> shadowedProjectNames.contains(p.getProjectName());
+		Predicate<IN4JSProject> pred = p -> shadowedProjectNames.contains(p.getProjectName());
 		requestedProjects.removeIf(pred);
 		discoveredResolvedList.removeIf(pred);
 
 		// Create a filter that applies only to the given single source files if any were requested to be compiled.
 		Predicate<URI> resourceFilter;
 		if (absSingleSourceFiles.isEmpty()) {
-			resourceFilter = u -> true;
+			resourceFilter = Predicates.alwaysTrue();
 		} else {
-			Set<URI> singleSourceURIs = new HashSet<>(headlessHelper.createFileURIs(absSingleSourceFiles));
-			resourceFilter = u -> singleSourceURIs.contains(u);
+			Set<URI> singleSourceURIs = FluentIterable.from(headlessHelper.createFileURIs(absSingleSourceFiles))
+					.transform(AbstractUriWrapper::toURI).toSet();
+			resourceFilter = Predicates.in(singleSourceURIs);
 		}
 
 		return new BuildSet(requestedProjects, discoveredResolvedList, resourceFilter);

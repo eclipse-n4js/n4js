@@ -14,10 +14,12 @@ import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
+import org.eclipse.xtext.util.UriExtensions;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
@@ -27,7 +29,7 @@ import com.google.inject.Injector;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSInjectorProvider.class)
-public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest {
+public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest<FileURI> {
 
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
@@ -40,7 +42,7 @@ public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest {
 	private N4JSRuntimeCore testMe;
 
 	@Override
-	protected AbstractProjectModelSetup createSetup() {
+	protected AbstractProjectModelSetup<FileURI> createSetup() {
 		return new FileBasedProjectModelSetup(this, workspace);
 	}
 
@@ -51,8 +53,8 @@ public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest {
 
 	@Override
 	public void setUp() {
-		workspace = new FileBasedWorkspace(projectDescriptionLoader);
-		N4JSModel model = new N4JSModel(workspace);
+		workspace = new FileBasedWorkspace(projectDescriptionLoader, new UriExtensions());
+		N4JSModel<FileURI> model = new N4JSModel<>(workspace);
 		injector.injectMembers(model);
 		testMe = new N4JSRuntimeCore(workspace, model);
 		super.setUp();

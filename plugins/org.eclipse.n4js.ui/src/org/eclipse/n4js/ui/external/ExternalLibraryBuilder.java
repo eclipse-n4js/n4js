@@ -51,6 +51,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.DataCollector;
@@ -64,7 +65,6 @@ import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
@@ -584,9 +584,9 @@ public class ExternalLibraryBuilder {
 	 *            The projects to be wiped.
 	 */
 	public void wipeProjectFromIndex(IProgressMonitor monitor, Collection<N4JSExternalProject> projectsToBeWiped) {
-		final Set<URI> toBeWiped = new HashSet<>();
+		final Set<FileURI> toBeWiped = new HashSet<>();
 		for (N4JSExternalProject project : projectsToBeWiped) {
-			toBeWiped.add(URIUtils.toFileUri(project.getLocationURI()));
+			toBeWiped.add(project.getSafeLocation());
 		}
 		this.wipeURIsFromIndex(monitor, toBeWiped);
 	}
@@ -598,9 +598,9 @@ public class ExternalLibraryBuilder {
 	 * @param toBeWiped
 	 *            URIs of project roots
 	 */
-	public void wipeURIsFromIndex(IProgressMonitor monitor, Collection<URI> toBeWiped) {
+	public void wipeURIsFromIndex(IProgressMonitor monitor, Collection<FileURI> toBeWiped) {
 		Set<String> toBeWipedStrings = new HashSet<>();
-		for (URI toWipe : toBeWiped) {
+		for (FileURI toWipe : toBeWiped) {
 			toBeWipedStrings.add(toWipe.toString());
 			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(toWipe);
 			validatorExtension.clearAllMarkersOfExternalProject(projectName);

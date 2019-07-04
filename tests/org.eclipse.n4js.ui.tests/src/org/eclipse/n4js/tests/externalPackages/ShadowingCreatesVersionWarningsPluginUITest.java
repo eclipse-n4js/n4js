@@ -24,7 +24,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
-import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -50,7 +50,7 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 	private EclipseBasedN4JSWorkspace userWS;
 
 	@Inject
-	private N4JSModel model;
+	private IN4JSCore n4jsCore;
 
 	@Inject
 	private ShadowingInfoHelper shadowingInfoHelper;
@@ -85,7 +85,7 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 
 		URI userN4LangUri = userWS.findProjectForName(PROJECT_N4JSLANG);
 		assertNotNull(userN4LangUri);
-		IN4JSProject n4jsLangUserWS = model.getN4JSProject(userN4LangUri);
+		IN4JSProject n4jsLangUserWS = n4jsCore.findProject(userN4LangUri).get();
 		assertTrue(shadowingInfoHelper.isShadowingProject(n4jsLangUserWS));
 		assertFalse(shadowingInfoHelper.isShadowedProject(n4jsLangUserWS));
 		assertTrue(shadowingInfoHelper.findShadowedProjects(n4jsLangUserWS).size() == 1);

@@ -15,14 +15,13 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
 /**
@@ -165,9 +164,9 @@ class MarkedProject {
 
 	private void unloadManifestResource(ResourceSet resourceSet, ResourceDescriptionsData index,
 			N4ProgressStateRecorder recorder) {
-		Optional<URI> manifestLocation = project.getProjectDescriptionLocation();
-		if (manifestLocation.isPresent()) {
-			Resource resource = resourceSet.getResource(manifestLocation.get(), false);
+		SafeURI manifestLocation = project.getProjectDescriptionLocation();
+		if (manifestLocation != null) {
+			Resource resource = resourceSet.getResource(manifestLocation.toURI(), false);
 			if (resource != null)
 				unloadResource(resource, resourceSet, index, recorder);
 		}

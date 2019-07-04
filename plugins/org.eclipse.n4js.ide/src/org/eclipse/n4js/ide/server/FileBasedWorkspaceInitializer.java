@@ -32,6 +32,7 @@ import org.eclipse.n4js.generator.headless.BuildSetComputer;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
@@ -69,7 +70,7 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 
 			// TODO copied from N4jscBase
 			File workspaceRoot = new File(workspaceBaseURI.toFileString());
-			List<URI> allProjects = collectAllProjectDirs(workspaceRoot);
+			List<FileURI> allProjects = collectAllProjectDirs(workspaceRoot);
 
 			headlessHelper.registerProjectsToFileBasedWorkspace(allProjects, workspace);
 			final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet(allProjects);
@@ -84,14 +85,14 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 	}
 
 	// TODO adapted from N4jscBase.computeTargetPlatformBuildSet(Collection<? extends IN4JSProject>)
-	private BuildSet computeTargetPlatformBuildSet(Collection<? extends URI> workspaceProjects)
+	private BuildSet computeTargetPlatformBuildSet(Collection<? extends FileURI> workspaceProjects)
 			throws N4JSCompileException {
 
 		Set<String> namesOfWorkspaceProjects = new LinkedHashSet<>();
 		List<java.nio.file.Path> n4jsProjectPaths = new LinkedList<>();
-		for (URI uri : workspaceProjects) {
-			IN4JSProject project = n4jsCore.create(uri);
-			n4jsProjectPaths.add(project.getLocationPath());
+		for (FileURI location : workspaceProjects) {
+			IN4JSProject project = n4jsCore.create(location.toURI());
+			n4jsProjectPaths.add(project.getSafeLocation().toFileSystemPath());
 			namesOfWorkspaceProjects.add(project.getProjectName());
 		}
 
@@ -104,8 +105,8 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 				namesOfWorkspaceProjects);
 	}
 
-	private List<URI> collectAllProjectDirs(File workspaceRoot) {
-		final List<URI> result = new ArrayList<>();
+	private List<FileURI> collectAllProjectDirs(File workspaceRoot) {
+		final List<FileURI> result = new ArrayList<>();
 
 		Path start = workspaceRoot.toPath();
 
@@ -131,11 +132,10 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 						nodeModuleFolderCounter--;
 					}
 
-					Path pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON);
-					if (pckJson.toFile().isFile()) {
-						URI emfURI = URI.createFileURI(dir.toString());
-						emfURI = addEmptyAuthority(emfURI);
-						result.add(emfURI);
+					File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
+
+					if (pckJson.isFile()) {
+						result.add(new FileURI(dir.toFile()));
 					}
 					return FileVisitResult.CONTINUE;
 				}
@@ -145,12 +145,6 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 		}
 
 		return result;
-	}
-
-	/** Adds empty authority to the given URI. Necessary for windows platform. */
-	static public URI addEmptyAuthority(URI uri) {
-		uri = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(), uri.fragment());
-		return uri;
 	}
 
 }

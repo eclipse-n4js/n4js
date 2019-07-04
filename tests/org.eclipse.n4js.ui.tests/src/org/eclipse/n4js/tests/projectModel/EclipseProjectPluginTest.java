@@ -17,6 +17,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.N4JSEclipseCore;
 import org.eclipse.n4js.ui.internal.N4JSEclipseModel;
+import org.eclipse.n4js.ui.internal.PlatformResourceURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -29,7 +30,7 @@ import com.google.inject.Injector;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
-public class EclipseProjectPluginTest extends AbstractN4JSProjectTest {
+public class EclipseProjectPluginTest extends AbstractN4JSProjectTest<PlatformResourceURI> {
 
 	@Inject
 	private IWorkspaceRoot workspace;
@@ -48,7 +49,7 @@ public class EclipseProjectPluginTest extends AbstractN4JSProjectTest {
 	private N4JSEclipseCore testMe;
 
 	@Override
-	protected AbstractProjectModelSetup createSetup() {
+	protected AbstractProjectModelSetup<PlatformResourceURI> createSetup() {
 		return new EclipseBasedProjectModelSetup(this, workspace);
 	}
 

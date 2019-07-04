@@ -16,11 +16,12 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.internal.locations.SafeURI;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.base.Optional;
@@ -47,6 +48,8 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	 */
 	IN4JSProject create(URI location);
 
+	SafeURI toProjectLocation(URI uri);
+
 	/**
 	 * Returns the N4JS project that contains the element at the given location. The returned instance might be created
 	 * on the fly to wrap another project instance. Consequently, it should not be used for identity comparisons.
@@ -58,7 +61,7 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	Optional<? extends IN4JSProject> findProject(URI nestedLocation);
 
 	@Override
-	default IProjectConfig findProjectContaining(URI member) {
+	default IN4JSProject findProjectContaining(URI member) {
 		return findProject(member).orNull();
 	}
 
@@ -67,10 +70,10 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	 *
 	 * @return List containing n4js projects in scope
 	 */
-	Iterable<IN4JSProject> findAllProjects();
+	Iterable<? extends IN4JSProject> findAllProjects();
 
 	@Override
-	default Set<? extends IProjectConfig> getProjects() {
+	default Set<? extends IN4JSProject> getProjects() {
 		return ImmutableSet.copyOf(findAllProjects());
 	}
 
@@ -80,7 +83,7 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	Map<String, IN4JSProject> findAllProjectMappings();
 
 	@Override
-	default IProjectConfig findProjectByName(String name) {
+	default IN4JSProject findProjectByName(String name) {
 		return findAllProjectMappings().get(name);
 	}
 
@@ -153,5 +156,7 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	 */
 	TModule loadModuleFromIndex(ResourceSet resourceSet, IResourceDescription resourceDescription,
 			boolean allowFullLoad);
+
+	ProjectDescription internalGetProjectDescription(SafeURI loc);
 
 }

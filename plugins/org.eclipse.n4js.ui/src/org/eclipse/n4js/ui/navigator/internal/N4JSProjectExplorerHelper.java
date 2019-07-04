@@ -17,9 +17,7 @@ import static org.eclipse.n4js.projectDescription.ProjectType.API;
 import static org.eclipse.xtext.util.Strings.toFirstUpper;
 
 import java.io.File;
-import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -33,6 +31,7 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -185,7 +184,7 @@ public class N4JSProjectExplorerHelper {
 	public boolean isNodeModulesFolder(IContainer container) {
 		if ("node_modules".equals(container.getName()) && container instanceof IFolder) {
 			IPath path = container.getLocation();
-			URI locURI = path.toFile().toURI();
+			FileURI locURI = new FileURI(path.toFile());
 			if (prefStore.getNodeModulesLocations().contains(locURI)) {
 				return true;
 			}
@@ -203,7 +202,7 @@ public class N4JSProjectExplorerHelper {
 		// for better visual representation MyProject @1.2.3 -> MyProject v1.2.3
 		String version = SemverSerializer.serialize(project.getVersion()).replaceFirst("@", "v");
 		String typeLabel = getProjectTypeLabel(type);
-		boolean inIndex = indexSynchronizer.isInIndex(project.getProjectDescriptionLocation().orNull());
+		boolean inIndex = indexSynchronizer.isInIndex(project.getProjectDescriptionLocation());
 		String rootLocationName = getRootLocationName(project);
 
 		Styler stylerName = inIndex ? null : StyledString.QUALIFIER_STYLER;
@@ -222,10 +221,10 @@ public class N4JSProjectExplorerHelper {
 		if (!shadowingProjects.isEmpty()) {
 			IN4JSProject shadowedProject = shadowingProjects.get(0);
 			if (shadowedProject.isExternal()) {
-				org.eclipse.emf.common.util.URI location = shadowedProject.getLocation();
-				URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(location);
+				FileURI location = (FileURI) shadowedProject.getSafeLocation();
+				FileURI rootLocation = externalLibraryWorkspace.getRootLocationForResource(location);
 				if (rootLocation != null) {
-					Path rootPath = Paths.get(rootLocation.getPath());
+					Path rootPath = rootLocation.toFileSystemPath();
 					Path subpath = rootPath.subpath(rootPath.getNameCount() - 2, rootPath.getNameCount());
 					rootLocationName = subpath.toString();
 				} else {

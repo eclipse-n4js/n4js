@@ -233,7 +233,7 @@ public class ProjectCompareHelper {
 		public Collection<URI> getCleartriggers() {
 			Collection<URI> allPckjsons = new LinkedList<>();
 			for (IN4JSProject prj : n4jsCore.findAllProjects()) {
-				URI pckjsonUri = prj.getLocation();
+				URI pckjsonUri = prj._getLocation();
 				if (pckjsonUri != null) {
 					allPckjsons.add(pckjsonUri);
 				}

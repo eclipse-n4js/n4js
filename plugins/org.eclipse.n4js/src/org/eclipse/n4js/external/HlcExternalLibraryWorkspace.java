@@ -21,15 +21,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
+import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
@@ -49,12 +49,12 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	private FileBasedExternalPackageManager packageManager;
 
 	@Override
-	public RegisterResult registerProjects(IProgressMonitor monitor, Set<URI> toBeUpdated) {
+	public RegisterResult registerProjects(IProgressMonitor monitor, Set<FileURI> toBeUpdated) {
 		return new RegisterResult();
 	}
 
 	@Override
-	public RegisterResult deregisterProjects(IProgressMonitor monitor, Set<URI> toBeDeleted) {
+	public RegisterResult deregisterProjects(IProgressMonitor monitor, Set<FileURI> toBeDeleted) {
 		return new RegisterResult();
 	}
 
@@ -64,12 +64,12 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<URI> toBeScheduled) {
+	public void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<SafeURI> toBeScheduled) {
 		// NOOP
 	}
 
 	@Override
-	public List<Pair<URI, ProjectDescription>> computeProjectsIncludingUnnecessary() {
+	public List<Pair<FileURI, ProjectDescription>> computeProjectsIncludingUnnecessary() {
 		return emptyList();
 	}
 
@@ -79,7 +79,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public boolean isNecessary(URI location) {
+	public boolean isNecessary(SafeURI location) {
 		return true;
 	}
 
@@ -89,17 +89,17 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Collection<N4JSExternalProject> getProjectsIn(final java.net.URI rootLocation) {
+	public Collection<N4JSExternalProject> getProjectsIn(FileURI rootLocation) {
 		return emptyList();
 	}
 
 	@Override
-	public Collection<N4JSExternalProject> getProjectsIn(final Collection<java.net.URI> rootLocations) {
+	public Collection<N4JSExternalProject> getProjectsIn(Collection<FileURI> rootLocations) {
 		return emptyList();
 	}
 
 	@Override
-	public N4JSExternalProject getProject(final String projectName) {
+	public N4JSExternalProject getProject(String projectName) {
 		return null;
 	}
 
@@ -109,9 +109,14 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public IResource getResource(final URI location) {
+	public N4JSExternalProject getProject(FileURI projectName) {
 		return null;
 	}
+
+	// @Override
+	// public IResource getResource(final URI location) {
+	// return null;
+	// }
 
 	@Override
 	public void updateState() {
@@ -119,41 +124,40 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public ProjectDescription getProjectDescription(final URI location) {
+	public ProjectDescription getProjectDescription(FileURI location) {
 		ProjectDescription projectDescription = packageManager.loadProjectDescriptionFromProjectRoot(location);
 		return projectDescription;
 	}
 
 	@Override
-	public URI getLocation(final URI projectURI, final ProjectReference reference) {
+	public FileURI getLocation(ProjectReference reference) {
 		return null;
 	}
 
 	@Override
-	public Iterator<URI> getFolderIterator(final URI folderLocation) {
+	public Iterator<FileURI> getFolderIterator(FileURI folderLocation) {
 		return emptyIterator();
 	}
 
 	@Override
-	public URI findArtifactInFolder(final URI folderLocation, final String folderRelativePath) {
+	public FileURI findArtifactInFolder(FileURI folderLocation,
+			final String folderRelativePath) {
 		return null;
 	}
 
 	@Override
-	public URI findProjectWith(final URI nestedLocation) {
+	public FileURI findProjectWith(FileURI nestedLocation) {
 		return null;
 	}
 
 	@Override
-	public List<Pair<URI, ProjectDescription>> getProjectsIncludingUnnecessary() {
-		Iterable<java.net.URI> projectLocations = externalLibraryPreferenceStore.getNodeModulesLocations();
-		List<Pair<URI, ProjectDescription>> projects = new LinkedList<>();
-		for (java.net.URI npmLibraryLocation : projectLocations) {
-			URI location = URIUtils.toFileUri(npmLibraryLocation);
-
-			ProjectDescription pd = getProjectDescription(location);
+	public List<Pair<FileURI, ProjectDescription>> getProjectsIncludingUnnecessary() {
+		Iterable<FileURI> projectLocations = externalLibraryPreferenceStore.getNodeModulesLocations();
+		List<Pair<FileURI, ProjectDescription>> projects = new LinkedList<>();
+		for (FileURI npmLibraryLocation : projectLocations) {
+			ProjectDescription pd = getProjectDescription(npmLibraryLocation);
 			if (pd != null) {
-				projects.add(Tuples.pair(location, pd));
+				projects.add(Tuples.pair(npmLibraryLocation, pd));
 			}
 		}
 
@@ -166,7 +170,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Collection<URI> getAllProjectLocations() {
+	public Collection<FileURI> getAllProjectLocations() {
 		return emptyList();
 	}
 

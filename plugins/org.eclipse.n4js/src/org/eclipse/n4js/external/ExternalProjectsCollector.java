@@ -30,7 +30,6 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 
@@ -91,7 +90,7 @@ public class ExternalProjectsCollector {
 	 *
 	 * <p>
 	 * This method neither considers, nor modifies the {@link IProjectDescription#getDynamicReferences() dynamic
-	 * references} of the workspace projects. Instead it gathers the dependency information from the {@link N4JSProject
+	 * references} of the workspace projects. Instead it gathers the dependency information from the {@link IN4JSProject
 	 * N4JS project} using the {@link IN4JSCore N4JS core} service.
 	 *
 	 * <p>
@@ -188,7 +187,7 @@ public class ExternalProjectsCollector {
 	 *
 	 * <p>
 	 * This method neither considers, nor modifies the {@link IProjectDescription#getDynamicReferences() dynamic
-	 * references} of the workspace projects. Instead it gathers the dependency information from the {@link N4JSProject
+	 * references} of the workspace projects. Instead it gathers the dependency information from the {@link IN4JSProject
 	 * N4JS project} using the {@link IN4JSCore N4JS core} service.
 	 *
 	 * <p>

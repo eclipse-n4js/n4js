@@ -100,10 +100,11 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 
 		// make lost dependencies very explicit
 		if (orderedDependencies.size() != dependencies.size()) {
-			throw new IllegalStateException("Failed to compute dependency order for project " + project.getLocation()
-					+ ": Ordered list of dependencies does not match original dependencies list in length.\n"
-					+ "Length " + orderedDependencies.size() + ": " + orderedDependencies.toString() + " vs. "
-					+ "Length " + dependencies.size() + ": " + dependencies.toString());
+			throw new IllegalStateException(
+					"Failed to compute dependency order for project " + project.getSafeLocation()
+							+ ": Ordered list of dependencies does not match original dependencies list in length.\n"
+							+ "Length " + orderedDependencies.size() + ": " + orderedDependencies.toString() + " vs. "
+							+ "Length " + dependencies.size() + ": " + dependencies.toString());
 		}
 
 		return orderedDependencies;

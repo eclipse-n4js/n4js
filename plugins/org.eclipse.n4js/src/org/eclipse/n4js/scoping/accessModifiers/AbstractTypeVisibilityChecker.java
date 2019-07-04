@@ -231,7 +231,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		}
 
 		for (final IN4JSProject testedProject : getTestedProjects(contextModule.eResource().getURI())) {
-			final URI testProjectLocation = testedProject.getLocation();
+			final URI testProjectLocation = testedProject._getLocation();
 			if (null != testProjectLocation) {
 				final Resource eResource = elementModule.eResource();
 				if (null != eResource) {
@@ -278,7 +278,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 *            the URI of the context resource to retrieve its container project's host.
 	 * @return a collection of tested projects. May be empty but never {@code null}.
 	 */
-	public Collection<IN4JSProject> getTestedProjects(final URI contextResourceUri) {
+	public Collection<? extends IN4JSProject> getTestedProjects(final URI contextResourceUri) {
 		if (null == contextResourceUri) {
 			return emptyList();
 		}

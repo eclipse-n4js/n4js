@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
-import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
@@ -54,8 +53,8 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	@Inject
 	private IN4JSEclipseCore core;
 
-	@Inject
-	private N4JSModel model;
+	// @Inject
+	// private N4JSModel model;
 
 	@Inject
 	private MultiCleartriggerCache cache;
@@ -68,7 +67,7 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 		} else {
 			Optional<? extends IN4JSEclipseProject> projectOpt = core.findProject(uri);
 			if (projectOpt.isPresent()) {
-				handle = PROJECT_CONTAINER_PREFIX + projectOpt.get().getLocation();
+				handle = PROJECT_CONTAINER_PREFIX + projectOpt.get().getSafeLocation();
 			}
 		}
 
@@ -104,7 +103,7 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	private void fullCollectLocationHandles(List<String> result, IN4JSProject project) {
 		collectLocationHandles(project, result);
 
-		for (IN4JSProject dependency : model.getSortedDependencies(project)) {
+		for (IN4JSProject dependency : project.getSortedDependencies()) {
 			collectLocationHandles(dependency, result);
 		}
 	}

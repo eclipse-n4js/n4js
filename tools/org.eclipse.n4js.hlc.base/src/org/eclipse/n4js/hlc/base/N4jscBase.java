@@ -61,7 +61,6 @@ import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
@@ -859,7 +858,7 @@ public class N4jscBase implements IApplication {
 		Set<String> namesOfWorkspaceProjects = new LinkedHashSet<>();
 		List<java.nio.file.Path> n4jsProjectPaths = new LinkedList<>();
 		for (IN4JSProject prj : workspaceProjects) {
-			n4jsProjectPaths.add(prj.getLocationPath());
+			n4jsProjectPaths.add(prj.getSafeLocation().toFileSystemPath());
 			namesOfWorkspaceProjects.add(prj.getProjectName());
 		}
 
@@ -908,8 +907,8 @@ public class N4jscBase implements IApplication {
 
 				LinkedList<Path> projectPaths = new LinkedList<>();
 				LinkedList<String> additionalPaths = new LinkedList<>();
-				for (N4JSProject prj : buildSet.getAllProjects()) {
-					projectPaths.add(prj.getLocationPath());
+				for (IN4JSProject prj : buildSet.getAllProjects()) {
+					projectPaths.add(prj.getSafeLocation().toFileSystemPath());
 				}
 				List<Path> modulesFolders = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectPaths);
 				for (Path nmFolder : modulesFolders) {

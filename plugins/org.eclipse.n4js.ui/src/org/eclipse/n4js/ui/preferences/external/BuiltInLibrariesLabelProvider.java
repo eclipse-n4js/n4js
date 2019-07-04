@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceModel;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
@@ -45,7 +46,7 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 
 	private StyledString getCategoryText(final URI location) {
 		File file = new File(location);
-		if (ExternalLibraryPreferenceModel.isNodeModulesLocation(location)) {
+		if (ExternalLibraryPreferenceModel.isNodeModulesLocation(new FileURI(file))) {
 			Path path = file.toPath();
 			int pCount = path.getNameCount();
 			StyledString styledString = new StyledString(path.getName(pCount - 1).toString());

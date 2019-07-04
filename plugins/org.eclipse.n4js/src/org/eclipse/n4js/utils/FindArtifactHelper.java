@@ -11,6 +11,7 @@
 package org.eclipse.n4js.utils;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -44,9 +45,9 @@ public final class FindArtifactHelper {
 	 */
 	public URI findArtifact(IN4JSProject project, QualifiedName fqn, Optional<String> fileExtension) {
 		for (IN4JSSourceContainer srcConti : project.getSourceContainers()) {
-			final URI uri = srcConti.findArtifact(fqn, fileExtension);
+			final SafeURI uri = srcConti.findArtifact(fqn, fileExtension);
 			if (uri != null)
-				return uri;
+				return uri.toURI();
 		}
 		return null;
 	}

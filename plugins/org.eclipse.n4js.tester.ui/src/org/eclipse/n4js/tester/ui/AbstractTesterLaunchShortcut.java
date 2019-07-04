@@ -103,7 +103,7 @@ public abstract class AbstractTesterLaunchShortcut implements ILaunchShortcut {
 			IN4JSProject n4jsProject = project.get();
 			if (n4jsProject instanceof IN4JSEclipseProject) {
 				try {
-					final String projectLocation = ((IN4JSEclipseProject) n4jsProject).getLocation()
+					final String projectLocation = ((IN4JSEclipseProject) n4jsProject)._getLocation()
 							.toPlatformString(true);
 					java.util.Optional<ILaunchConfiguration> projectLaunchConfig = Arrays
 							.stream(launchManager.getLaunchConfigurations(type))

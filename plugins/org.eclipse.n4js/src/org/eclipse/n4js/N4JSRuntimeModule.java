@@ -23,6 +23,7 @@ import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.naming.N4JSImportedNamesAdapter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
@@ -368,7 +369,7 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	/**
 	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link java.io.File files}.
 	 */
-	public Class<? extends InternalN4JSWorkspace> bindInternalN4JSWorkspace() {
+	public Class<? extends InternalN4JSWorkspace<? extends SafeURI>> bindInternalN4JSWorkspace() {
 		return FileBasedWorkspace.class;
 	}
 

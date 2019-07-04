@@ -26,6 +26,7 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.eclipse.n4js.internal.locations.FileURI
 
 /**
  * Unit test of {@link TypeDefinitionsAwareDependenciesSupplier}. 
@@ -299,8 +300,7 @@ class MockTypeDefinitionsProject extends N4JSProject {
 	 * The returned location is guaranteed to be distinct from all other locations returned
 	 * by this method (passing the same project ID twice, will yield two distinct locations). 
 	 */
-	private static def URI newLocation(String projectName) {
-		return URI.createFileURI("container" + containerCounter++ + "/" + projectName
-		)
+	private static def FileURI newLocation(String projectName) {
+		return new FileURI(URI.createFileURI("container" + containerCounter++ + "/" + projectName))
 	}
 }

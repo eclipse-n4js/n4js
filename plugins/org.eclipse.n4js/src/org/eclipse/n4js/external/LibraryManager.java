@@ -42,12 +42,14 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.Binary;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -61,8 +63,6 @@ import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.StatusUtils;
-import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -106,8 +106,8 @@ public class LibraryManager {
 	@Inject
 	private IN4JSCore n4jsCore;
 
-	@Inject
-	private InternalN4JSWorkspace userWorkspace;
+	// @Inject
+	// private InternalN4JSWorkspace<?> userWorkspace;
 
 	@Inject
 	private ExternalLibraryPreferenceStore extLibPreferenceStore;
@@ -126,18 +126,17 @@ public class LibraryManager {
 	/** Deletes all 'node_modules' folders (and their npm projects). Afterwards, the ext. library state is updated. */
 	public IStatus deleteAllNodeModulesFolders(IProgressMonitor monitor) {
 		MultiStatus multistatus = statusHelper.createMultiStatus("Delete all node_modules folders");
-		for (java.net.URI nodeModulesLoc : extLibPreferenceStore.getNodeModulesLocations()) {
-			File nodeModulesFile = new File(nodeModulesLoc.getPath());
+		for (SafeURI nodeModulesLoc : extLibPreferenceStore.getNodeModulesLocations()) {
 			// delete whole target platform folder
-			if (nodeModulesFile.exists()) {
-				FileDeleter.delete(nodeModulesFile, (IOException ioe) -> multistatus.merge(
+			if (nodeModulesLoc.exists()) {
+				nodeModulesLoc.delete((IOException ioe) -> multistatus.merge(
 						statusHelper.createError("Exception during deletion of the npm folder.", ioe)));
 			}
 
-			if (nodeModulesFile.exists()) {
+			if (nodeModulesLoc.exists()) {
 				// should never happen
 				multistatus.merge(statusHelper
-						.createError("Could not verify deletion of " + nodeModulesFile.getAbsolutePath()));
+						.createError("Could not verify deletion of " + nodeModulesLoc.getAbsolutePath()));
 			}
 		}
 
@@ -150,7 +149,7 @@ public class LibraryManager {
 	/** Runs 'npm/yarn install' in a given folder. Afterwards, re-registers all npms. */
 	public IStatus runNpmYarnInstall(URI target, IProgressMonitor monitor) {
 		IN4JSProject project = n4jsCore.findProject(target).orNull();
-		File projectFolder = project.getLocationPath().toFile();
+		File projectFolder = project.getSafeLocation().toFileSystemPath().toFile();
 
 		boolean usingYarn = npmCli.isYarnUsed(projectFolder);
 
@@ -189,17 +188,16 @@ public class LibraryManager {
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 
-		Collection<URI> allProjectLocations = userWorkspace.getAllProjectLocations();
+		Iterable<? extends IN4JSProject> allProjects = n4jsCore.findAllProjects();
 
 		// 1) collect workspace roots for projects contained in a yarn workspace
 		Set<File> yarnWorkspaceRoots = new LinkedHashSet<>();
 		List<IN4JSProject> projectsOutsideAnyYarnWorkspace = new ArrayList<>();
-		for (URI prjLocation : allProjectLocations) {
-			IN4JSProject project = n4jsCore.findProject(prjLocation).orNull();
-			if (project == null || !project.exists()) {
+		for (IN4JSProject project : allProjects) {
+			if (!project.exists()) {
 				continue;
 			}
-			Path projectPath = project.getLocationPath();
+			Path projectPath = project.getSafeLocation().toFileSystemPath();
 			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
 			if (nodeModulesFolder.isYarnWorkspace) {
 				yarnWorkspaceRoots.add(nodeModulesFolder.nodeModulesFolder.getParentFile());
@@ -239,7 +237,7 @@ public class LibraryManager {
 			status.merge(currStatus);
 		}
 		for (IN4JSProject project : projectsOutsideAnyYarnWorkspace) {
-			File projectFolder = project.getLocationPath().toFile();
+			File projectFolder = project.getSafeLocation().toFileSystemPath().toFile();
 			boolean usingYarn = npmCli.isYarnUsed(projectFolder);
 			msg = "Running '" + (usingYarn ? "yarn" : "npm") + " install' on " + project.getProjectName();
 			SubMonitor subMonitorInstall = subMonitor.split(1);
@@ -469,24 +467,24 @@ public class LibraryManager {
 		List<N4JSExternalProject> npmProjects = externalLibraryWorkspace.getProjectsForName(npmName);
 		MultiStatus multiStatus = statusHelper.createMultiStatus("Uninstall all npms with the name: " + npmName);
 		for (N4JSExternalProject npm : npmProjects) {
-			IStatus status = uninstallNPM(URIUtils.toFileUri(npm), monitor);
+			IStatus status = uninstallNPM(npm.getSafeLocation(), monitor);
 			multiStatus.merge(status);
 		}
 		return multiStatus;
 	}
-
-	/**
-	 * Uninstalls the given npm package in a blocking fashion.
-	 *
-	 * @param npmProject
-	 *            the npm project that has to be uninstalled via package manager.
-	 * @param monitor
-	 *            the monitor for the blocking uninstall process.
-	 * @return a status representing the outcome of the uninstall process.
-	 */
-	public IStatus uninstallNPM(IProject npmProject, IProgressMonitor monitor) {
-		return uninstallNPM(URIUtils.toFileUri(npmProject), monitor);
-	}
+	//
+	// /**
+	// * Uninstalls the given npm package in a blocking fashion.
+	// *
+	// * @param npmProject
+	// * the npm project that has to be uninstalled via package manager.
+	// * @param monitor
+	// * the monitor for the blocking uninstall process.
+	// * @return a status representing the outcome of the uninstall process.
+	// */
+	// public IStatus uninstallNPM(IProject npmProject, IProgressMonitor monitor) {
+	// return uninstallNPM(URIUtils.toFileUri(npmProject), monitor);
+	// }
 
 	/**
 	 * Uninstalls the given npm package in a blocking fashion.
@@ -497,14 +495,14 @@ public class LibraryManager {
 	 *            the monitor for the blocking uninstall process.
 	 * @return a status representing the outcome of the uninstall process.
 	 */
-	public IStatus uninstallNPM(URI packageURI, IProgressMonitor monitor) {
+	public IStatus uninstallNPM(FileURI packageURI, IProgressMonitor monitor) {
 		String msg = "Uninstalling NPM: " + packageURI;
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 
 		// trim package name and "node_modules" segments from packageURI:
-		URI containingProjectURI = packageURI.trimSegments(packageURI.hasTrailingPathSeparator() ? 3 : 2);
-		boolean usingYarn = npmCli.isYarnUsed(containingProjectURI);
+		SafeURI containingProjectURI = packageURI.getParentOf(name -> N4JSGlobals.NODE_MODULES.equals(name));
+		boolean usingYarn = npmCli.isYarnUsed(containingProjectURI.toFileSystemPath().toFile());
 
 		IStatus binaryStatus = checkBinary(usingYarn);
 		if (!binaryStatus.isOK()) {

@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.core.resources.IBuildConfiguration;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 
 import com.google.common.collect.ImmutableList;
@@ -64,6 +65,10 @@ public class N4JSExternalProject extends ExternalProject {
 	/** @return the underlying instance of {@link IN4JSProject} */
 	public IN4JSProject getIProject() {
 		return externalPackage;
+	}
+
+	public FileURI getSafeLocation() {
+		return (FileURI) externalPackage.getSafeLocation();
 	}
 
 	/**

@@ -149,7 +149,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 		if (containingProject === null || !containingProject.exists()) {
 			return -1;
 		}
-		var containingProjectLocation = containingProject.getLocation();
+		var containingProjectLocation = containingProject._getLocation();
 		var locationToUse = nestedLocation
 		// trim trailing empty segments in both location URIs (if any)
 		while (Objects.equals(locationToUse.lastSegment(), "")) {

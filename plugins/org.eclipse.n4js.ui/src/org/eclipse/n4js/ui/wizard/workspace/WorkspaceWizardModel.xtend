@@ -62,7 +62,7 @@ class WorkspaceWizardModel {
 
 			if (null !== n4jsProject && n4jsProject.exists) {
 				// If project exists set the project property of the model
-				val projectUri = n4jsProject.location;
+				val projectUri = n4jsProject._getLocation;
 				val projectPath = new Path(projectUri.deresolve(rootURI).toString());
 				model.setProject(projectPath);
 

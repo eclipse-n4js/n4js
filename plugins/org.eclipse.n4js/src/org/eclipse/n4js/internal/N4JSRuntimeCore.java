@@ -15,7 +15,6 @@ import static java.lang.Boolean.TRUE;
 import static org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +26,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.internal.locations.SafeURI;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -38,7 +40,6 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
-import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -48,13 +49,12 @@ import com.google.inject.Singleton;
 
 /**
  */
-@SuppressWarnings("restriction")
 @Singleton
 public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCore {
 
 	private final FileBasedWorkspace workspace;
 
-	private final N4JSModel model;
+	private final N4JSModel<? extends SafeURI> model;
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
@@ -69,7 +69,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	 * Public for testing purpose.
 	 */
 	@Inject
-	public N4JSRuntimeCore(FileBasedWorkspace workspace, N4JSModel model) {
+	public N4JSRuntimeCore(FileBasedWorkspace workspace, N4JSModel<? extends SafeURI> model) {
 		this.workspace = workspace;
 		this.model = model;
 	}
@@ -83,6 +83,11 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	}
 
 	@Override
+	public SafeURI toProjectLocation(URI uri) {
+		return model.toProjectLocation(uri);
+	}
+
+	@Override
 	public Optional<? extends IN4JSProject> findProject(URI nestedLocation) {
 		if (nestedLocation == null) {
 			return Optional.absent();
@@ -92,20 +97,17 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	}
 
 	@Override
-	public IProjectConfig findProjectContaining(URI member) {
+	public IN4JSProject findProjectContaining(URI member) {
 		return model.findProjectContaining(member);
 	}
 
 	@Override
-	public Iterable<IN4JSProject> findAllProjects() {
-		List<IN4JSProject> projects = new ArrayList<>();
-		this.workspace.getAllProjectLocationsIterator().forEachRemaining(
-				location -> projects.add(model.getN4JSProject(location)));
-		return projects;
+	public Iterable<? extends IN4JSProject> findAllProjects() {
+		return model.getProjects();
 	}
 
 	@Override
-	public Set<? extends IProjectConfig> getProjects() {
+	public Set<? extends IN4JSProject> getProjects() {
 		return model.getProjects();
 	}
 
@@ -119,7 +121,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	}
 
 	@Override
-	public IProjectConfig findProjectByName(String name) {
+	public IN4JSProject findProjectByName(String name) {
 		return model.findProjectByName(name);
 	}
 
@@ -135,8 +137,8 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	@Override
 	public void registerProject(File file) {
 		if (file.isDirectory()) {
-			URI uri = URI.createURI(file.toURI().toString()).trimSegments(1);
-			workspace.registerProject(uri);
+			URI uri = URI.createFileURI(file.toString());
+			workspace.registerProject((FileURI) toProjectLocation(uri));
 		} else {
 			throw new IllegalArgumentException(file.getAbsolutePath() + " is not a valid project location");
 		}
@@ -234,4 +236,8 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 		}
 	}
 
+	@Override
+	public ProjectDescription internalGetProjectDescription(SafeURI loc) {
+		return model.getProjectDescription(loc.toURI());
+	}
 }
