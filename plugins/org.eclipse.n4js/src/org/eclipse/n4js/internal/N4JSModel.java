@@ -472,6 +472,9 @@ public class N4JSModel implements IWorkspaceConfig {
 		return null;
 	}
 
+	/**
+	 * @see SortedDependenciesProvider
+	 */
 	public Iterable<IN4JSProject> getSortedDependencies(IN4JSProject project) {
 		SortedDependenciesProvider sdProvider = new SortedDependenciesProvider(project);
 		Iterable<IN4JSProject> existing = cache.get(sdProvider, MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES,

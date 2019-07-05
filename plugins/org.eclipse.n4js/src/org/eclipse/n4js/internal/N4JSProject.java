@@ -241,14 +241,13 @@ public class N4JSProject implements IN4JSProject {
 		return model.getImplementedProjects(this);
 	}
 
+	// TODO appears to be redundant
 	@Override
 	public ImmutableList<? extends IN4JSProject> getAllDirectDependencies() {
 		if (!exists()) {
 			return ImmutableList.of();
 		}
-		ImmutableList.Builder<IN4JSProject> result = ImmutableList.builder();
-		result.addAll(getDependencies());
-		return result.build();
+		return getDependencies();
 	}
 
 	@Override
