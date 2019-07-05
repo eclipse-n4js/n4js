@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.ide.server.DefaultProjectDescriptionFactory;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 
 /**
  *
@@ -28,9 +28,13 @@ public class N4JSProjectDescriptionFactory extends DefaultProjectDescriptionFact
 	public ProjectDescription getProjectDescription(IProjectConfig config) {
 		ProjectDescription projectDescription = super.getProjectDescription(config);
 		IN4JSProject casted = (IN4JSProject) config;
-		ImmutableList<String> dependencies = FluentIterable.from(
-				casted.getDependencies()).transform(IN4JSProject::getProjectName).toList();
-		projectDescription.setDependencies(dependencies);
+		if (casted.getProjectType() == ProjectType.PLAINJS) {
+			return projectDescription;
+		}
+		FluentIterable
+				.from(casted.getDependencies())
+				.transform(IN4JSProject::getProjectName)
+				.copyInto(projectDescription.getDependencies());
 		return projectDescription;
 	}
 
