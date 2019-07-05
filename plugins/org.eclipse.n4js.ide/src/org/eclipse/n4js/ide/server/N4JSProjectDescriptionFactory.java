@@ -31,13 +31,13 @@ public class N4JSProjectDescriptionFactory extends DefaultProjectDescriptionFact
 		if (casted.getProjectType() == ProjectType.PLAINJS) {
 			return projectDescription;
 		}
+		FluentIterable
+				.from(casted.getSortedDependencies())
+				.transform(IN4JSProject::getProjectName)
+				.copyInto(projectDescription.getDependencies());
 		if (casted.getProjectType() == ProjectType.DEFINITION) {
 			projectDescription.getDependencies().add(casted.getDefinesPackageName());
 		}
-		FluentIterable
-				.from(casted.getDependencies())
-				.transform(IN4JSProject::getProjectName)
-				.copyInto(projectDescription.getDependencies());
 		return projectDescription;
 	}
 

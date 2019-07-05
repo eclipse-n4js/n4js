@@ -206,6 +206,14 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
+	public ImmutableList<? extends IN4JSProject> getSortedDependencies() {
+		if (!exists()) {
+			return ImmutableList.of();
+		}
+		return ImmutableList.copyOf(model.getSortedDependencies(this));
+	}
+
+	@Override
 	public ImmutableList<? extends IN4JSProject> getDependenciesAndImplementedApis() {
 		if (!exists()) {
 			return ImmutableList.of();

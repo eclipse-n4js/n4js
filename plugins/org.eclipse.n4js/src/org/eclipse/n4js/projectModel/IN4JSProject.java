@@ -16,6 +16,7 @@ import java.util.Collection;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -102,6 +103,17 @@ public interface IN4JSProject extends IProjectConfigEx {
 	 * does not exist.
 	 */
 	ImmutableList<? extends IN4JSProject> getDependencies();
+
+	/**
+	 * Return the dependencies of this project in a well defined order.
+	 *
+	 * The sorting allows the use definition projects and their implementation counterparts side by side in a meaningful
+	 * way. In a nutshell: Implementation projects may contribute modules to the index that are not available as n4jsd
+	 * files yet. All other modules should be shadowed by the definition project.
+	 *
+	 * @see N4JSModel#getSortedDependencies(IN4JSProject)
+	 */
+	ImmutableList<? extends IN4JSProject> getSortedDependencies();
 
 	/**
 	 * Similar to {@link #getDependencies()} but including implemented APIs. Note: Implemented APIs are not a real
