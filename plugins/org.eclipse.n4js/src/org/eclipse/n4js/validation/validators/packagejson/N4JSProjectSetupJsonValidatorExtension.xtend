@@ -1168,14 +1168,13 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 
 		if (!currentProject.isExternal) {
-//			Deactivate for LSP-testing
-//			if (project.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
-//				val pdl = project.projectDescriptionLocation.orNull;
-//				indexSynchronizer.isInIndex(pdl);
-//				val msg = getMessageForNON_REGISTERED_PROJECT(id);
-//				addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
-//				return;
-//			}
+			if (project.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation.orNull)) {
+				val pdl = project.projectDescriptionLocation.orNull;
+				indexSynchronizer.isInIndex(pdl);
+				val msg = getMessageForNON_REGISTERED_PROJECT(id);
+				addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id);
+				return;
+			}
 
 			val currNodeModulesFolder = allNodeModuleFolders.get(currentProjectName)?.toPath;
 			val currNPM = currNodeModulesFolder?.resolve(id);

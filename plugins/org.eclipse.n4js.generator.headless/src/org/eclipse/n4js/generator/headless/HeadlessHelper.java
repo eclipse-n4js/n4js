@@ -87,13 +87,11 @@ public class HeadlessHelper {
 		Map<String, URI> registeredProjects = new HashMap<>();
 		workspace.getAllProjectLocationsIterator().forEachRemaining(uri -> {
 			String projectName = workspace.getProjectDescription(uri).getProjectName();
-			registeredProjects.put(projectName, addEmptyAuthority(URIUtils.normalize(uri)));
+			registeredProjects.put(projectName, uri);
 		});
 
 		// register all projects with the file based workspace.
 		for (URI projectURI : projectURIs) {
-			// URI projectURI = URIUtils.normalize(uri);
-
 			final ProjectDescription projectDescription = projectDescriptionLoader
 					.loadProjectDescriptionAtLocation(projectURI);
 
@@ -230,6 +228,8 @@ public class HeadlessHelper {
 	 * @return the list of URIs
 	 */
 	public List<URI> createFileURIs(List<File> files) {
+		// TODO this looks a little over the top here.
+		// URIUtils#normalize is smth that's better done directly with the available file
 		return files.stream().map(f -> URI.createFileURI(f.getPath())).map(URIUtils::normalize)
 				.map(this::addEmptyAuthority)
 				.collect(Collectors.toList());
@@ -239,6 +239,7 @@ public class HeadlessHelper {
 		if (uri.hasAuthority()) {
 			return uri;
 		}
+
 		URI result = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(),
 				uri.fragment());
 		return result;
@@ -281,10 +282,9 @@ public class HeadlessHelper {
 					+ ", trying to register project at " + projectLocation + ".");
 
 		// duplicate is in new location, so new project with the same name -> stop compilation
-		// throw new N4JSCompileException("Duplicate project id [" + projectName
-		// + "]. Already registered project at " + registeredProjectLocation
-		// + ", trying to register project at " + projectLocation + ".");
-		return true;
+		throw new N4JSCompileException("Duplicate project id [" + projectName
+				+ "]. Already registered project at " + registeredProjectLocation
+				+ ", trying to register project at " + projectLocation + ".");
 	}
 
 	/**
