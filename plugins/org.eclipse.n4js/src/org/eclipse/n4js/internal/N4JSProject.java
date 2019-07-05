@@ -46,7 +46,7 @@ import com.google.common.collect.ImmutableList;
 
 /**
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings({ "javadoc", "restriction" })
 public class N4JSProject implements IN4JSProject {
 
 	private final N4JSModel model;
@@ -135,12 +135,12 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public URI getOutputFolder() {
+	public List<URI> getOutputFolders() {
 		String outputPath = this.getOutputPath();
 		URI projectURI = this.getPath();
 		URI outputURI = URI.createFileURI(outputPath);
 		URI completeOutputURI = projectURI.appendSegments(outputURI.segments());
-		return completeOutputURI;
+		return Collections.singletonList(completeOutputURI);
 	}
 
 	@Override
@@ -203,6 +203,14 @@ public class N4JSProject implements IN4JSProject {
 			return ImmutableList.of();
 		}
 		return model.getDependencies(this, false);
+	}
+
+	@Override
+	public ImmutableList<? extends IN4JSProject> getSortedDependencies() {
+		if (!exists()) {
+			return ImmutableList.of();
+		}
+		return ImmutableList.copyOf(model.getSortedDependencies(this));
 	}
 
 	@Override
@@ -382,8 +390,8 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public boolean isExternal() {
-		boolean external = getLocation().segmentsList().contains(N4JSGlobals.NODE_MODULES);
-		return external;
+		boolean result = getLocation().segmentsList().contains(N4JSGlobals.NODE_MODULES);
+		return result;
 	}
 
 	/**

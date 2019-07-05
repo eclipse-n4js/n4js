@@ -19,7 +19,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.ParserRule;
-import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
@@ -34,6 +33,9 @@ import com.google.inject.Inject;
  */
 public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 
+	/**
+	 * TODO ADD JAVADOC
+	 */
 	static public class N4JSCandidateFilter implements Predicate<IEObjectDescription> {
 		@Override
 		public boolean apply(IEObjectDescription candidate) {
@@ -88,6 +90,9 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 	/**
 	 * For type proposals, use a dedicated proposal creator that will query the scope, filter it and apply the proposal
 	 * factory to all applicable {@link IEObjectDescription descriptions}.
+	 *
+	 * @param crossReference
+	 *            unused for now
 	 */
 	protected void lookupCrossReference(CrossReference crossReference, EReference reference,
 			ContentAssistContext context, IIdeContentProposalAcceptor acceptor, Predicate<IEObjectDescription> filter) {
@@ -102,10 +107,10 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 			// if we complete a reference to something that is aware of imports, enable automatic import insertion by
 			// using the
 			// importAwareReferenceProposalCreator
-			String ruleName = null;
-			if (crossReference.getTerminal() instanceof RuleCall) {
-				ruleName = ((RuleCall) crossReference.getTerminal()).getRule().getName();
-			}
+			// String ruleName = null;
+			// if (crossReference.getTerminal() instanceof RuleCall) {
+			// ruleName = ((RuleCall) crossReference.getTerminal()).getRule().getName();
+			// }
 
 			importsAwareReferenceProposalCreator.lookupCrossReference(
 					context.getCurrentModel(),

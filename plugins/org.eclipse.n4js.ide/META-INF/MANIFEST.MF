@@ -20,3 +20,5 @@ Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.contentassist.antlr,
  org.eclipse.n4js.ide.contentassist.antlr.internal,
  org.eclipse.n4js.ide.contentassist.antlr.lexer
+Automatic-Module-Name: org.eclipse.n4js.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-11

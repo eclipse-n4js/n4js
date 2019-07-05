@@ -13,3 +13,5 @@ Require-Bundle: org.eclipse.n4js.ts,
  com.google.gson
 Export-Package: org.eclipse.n4js.ts.ide,
  org.eclipse.n4js.ts.ide.contentassist.antlr
+Automatic-Module-Name: org.eclipse.n4js.ts.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-11

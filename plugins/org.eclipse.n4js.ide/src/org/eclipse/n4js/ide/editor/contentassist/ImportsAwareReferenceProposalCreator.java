@@ -41,6 +41,7 @@ import com.google.inject.Inject;
 
 /**
  */
+@SuppressWarnings("unused")
 public class ImportsAwareReferenceProposalCreator {
 
 	@Inject

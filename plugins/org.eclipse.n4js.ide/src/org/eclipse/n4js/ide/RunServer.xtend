@@ -7,6 +7,7 @@ import java.util.concurrent.Executors
 import org.eclipse.lsp4j.jsonrpc.Launcher
 import org.eclipse.lsp4j.services.LanguageClient
 import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl
+import com.google.common.util.concurrent.Futures
 
 class RunServer {
 
@@ -14,8 +15,6 @@ class RunServer {
 		val injector = new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
 		val serverSocket = AsynchronousServerSocketChannel.open.bind(new InetSocketAddress("localhost", 5007))
 		val threadPool = Executors.newCachedThreadPool()
-
-
 
 		while (true) {
 			var languageServer = injector.getInstance(N4JSLanguageServerImpl)
@@ -25,7 +24,11 @@ class RunServer {
 			val out = Channels.newOutputStream(socketChannel)
 			val launcher = Launcher.createIoLauncher(languageServer, LanguageClient, in, out, threadPool, [it])
 			languageServer.connect(launcher.remoteProxy)
-			launcher.startListening
+			Futures.getUnchecked(launcher.startListening)
+			languageServer.requestManager.shutdown
+			in.close
+			out.close
+			socketChannel.close
 		}
 	}
 }	

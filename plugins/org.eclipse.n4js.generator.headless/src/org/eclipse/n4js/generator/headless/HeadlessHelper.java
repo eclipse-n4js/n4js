@@ -87,7 +87,7 @@ public class HeadlessHelper {
 		Map<String, URI> registeredProjects = new HashMap<>();
 		workspace.getAllProjectLocationsIterator().forEachRemaining(uri -> {
 			String projectName = workspace.getProjectDescription(uri).getProjectName();
-			registeredProjects.put(projectName, URIUtils.normalize(uri));
+			registeredProjects.put(projectName, addEmptyAuthority(URIUtils.normalize(uri)));
 		});
 
 		// register all projects with the file based workspace.
@@ -202,7 +202,7 @@ public class HeadlessHelper {
 	 * @return a list of projects at the given URIs
 	 */
 	public List<N4JSProject> getN4JSProjects(List<URI> projectURIs) {
-		return projectURIs.stream().map(URIUtils::normalize)
+		return projectURIs.stream().map(URIUtils::normalize).map(this::addEmptyAuthority)
 				.map(u -> n4jsModel.getN4JSProject(u))
 				.filter(p -> isProjectToBeBuilt(p))
 				.collect(Collectors.toList());
@@ -230,8 +230,18 @@ public class HeadlessHelper {
 	 * @return the list of URIs
 	 */
 	public List<URI> createFileURIs(List<File> files) {
-		return files.stream().map(f -> URI.createFileURI(f.toString())).map(URIUtils::normalize)
+		return files.stream().map(f -> URI.createFileURI(f.getPath())).map(URIUtils::normalize)
+				.map(this::addEmptyAuthority)
 				.collect(Collectors.toList());
+	}
+
+	private URI addEmptyAuthority(URI uri) {
+		if (uri.hasAuthority()) {
+			return uri;
+		}
+		URI result = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(),
+				uri.fragment());
+		return result;
 	}
 
 	/**

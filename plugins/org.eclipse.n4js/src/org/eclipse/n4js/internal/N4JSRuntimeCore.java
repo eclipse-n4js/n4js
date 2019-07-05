@@ -38,6 +38,7 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -47,6 +48,7 @@ import com.google.inject.Singleton;
 
 /**
  */
+@SuppressWarnings("restriction")
 @Singleton
 public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCore {
 
@@ -90,11 +92,21 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	}
 
 	@Override
+	public IProjectConfig findProjectContaining(URI member) {
+		return model.findProjectContaining(member);
+	}
+
+	@Override
 	public Iterable<IN4JSProject> findAllProjects() {
 		List<IN4JSProject> projects = new ArrayList<>();
 		this.workspace.getAllProjectLocationsIterator().forEachRemaining(
 				location -> projects.add(model.getN4JSProject(location)));
 		return projects;
+	}
+
+	@Override
+	public Set<? extends IProjectConfig> getProjects() {
+		return model.getProjects();
 	}
 
 	@Override
@@ -104,6 +116,11 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 			allProjectMappings.put(project.getProjectName(), project);
 		}
 		return allProjectMappings;
+	}
+
+	@Override
+	public IProjectConfig findProjectByName(String name) {
+		return model.findProjectByName(name);
 	}
 
 	@Override

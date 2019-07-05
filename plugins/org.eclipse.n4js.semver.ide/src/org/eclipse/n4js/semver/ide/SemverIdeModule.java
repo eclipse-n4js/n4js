@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.semver.ide;
 
-
 /**
  * Use this class to register ide components.
  */
 public class SemverIdeModule extends AbstractSemverIdeModule {
+	// dummy comment
 }

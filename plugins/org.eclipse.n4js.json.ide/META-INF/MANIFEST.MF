@@ -14,3 +14,5 @@ Require-Bundle: org.eclipse.n4js.json,
 Export-Package: org.eclipse.n4js.json.ide.contentassist.antlr,
  org.eclipse.n4js.json.ide.contentassist.antlr.internal,
  org.eclipse.n4js.json.ide
+Automatic-Module-Name: org.eclipse.n4js.json.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-11

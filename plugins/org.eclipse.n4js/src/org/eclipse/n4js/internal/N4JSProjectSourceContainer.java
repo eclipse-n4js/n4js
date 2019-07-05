@@ -10,16 +10,7 @@
  */
 package org.eclipse.n4js.internal;
 
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -32,6 +23,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.Strings;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.FluentIterable;
 
 /**
  */
@@ -75,36 +67,7 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 
 	@Override
 	public List<URI> getAllResources() {
-		final List<URI> uris = new LinkedList<>();
-
-		FileVisitor<Path> fv = new SimpleFileVisitor<Path>() {
-			@Override
-			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-				if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
-					return FileVisitResult.SKIP_SUBTREE;
-				}
-				return FileVisitResult.CONTINUE;
-			}
-
-			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				URI uri = URI.createFileURI(file.toString());
-				uri = ISourceFolderEx.addEmptyAuthority(uri);
-				uris.add(uri);
-				return FileVisitResult.CONTINUE;
-			}
-		};
-
-		try {
-			Path srcPath = Paths.get(getPath().toFileString());
-			if (srcPath.toFile().isDirectory()) {
-				Files.walkFileTree(srcPath, fv);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return uris;
+		return FluentIterable.from(this).transform(ISourceFolderEx::addEmptyAuthority).toList();
 	}
 	/// END ISourceFolder
 

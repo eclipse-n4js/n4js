@@ -11,6 +11,7 @@
 package org.eclipse.n4js.projectModel;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
@@ -20,8 +21,11 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * The runtime facade for the n4js model containing the core (UI-free) support for n4js projects.
@@ -29,7 +33,8 @@ import com.google.common.base.Optional;
  * The single instance of this interface can be accessed via dependency injection.
  * </p>
  */
-public interface IN4JSCore {
+@SuppressWarnings("restriction")
+public interface IN4JSCore extends IWorkspaceConfig {
 
 	/**
 	 * Returns the N4JS project at the given location.
@@ -52,6 +57,11 @@ public interface IN4JSCore {
 	 * @return the n4js project corresponding to the given project.
 	 */
 	Optional<? extends IN4JSProject> findProject(URI nestedLocation);
+
+	@Override
+	default IProjectConfig findProjectContaining(URI member) {
+		return findProject(member).orNull();
+	}
 
 	/**
 	 * Given a nested location inside an existing(!) {@link IN4JSProject}, this method will return the "depth" of this
@@ -76,10 +86,20 @@ public interface IN4JSCore {
 	 */
 	Iterable<IN4JSProject> findAllProjects();
 
+	@Override
+	default Set<? extends IProjectConfig> getProjects() {
+		return ImmutableSet.copyOf(findAllProjects());
+	}
+
 	/**
 	 * @return a map that maps {@link IProject#getName()} to {@link IProject}.
 	 */
 	Map<String, IN4JSProject> findAllProjectMappings();
+
+	@Override
+	default IProjectConfig findProjectByName(String name) {
+		return findAllProjectMappings().get(name);
+	}
 
 	/**
 	 * returns the source container that covers the given location.

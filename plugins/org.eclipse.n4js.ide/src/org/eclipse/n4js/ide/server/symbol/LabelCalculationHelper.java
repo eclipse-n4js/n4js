@@ -29,8 +29,8 @@ import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TypesPackage;
-import org.eclipse.n4js.utils.StringUtils;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /** */
 public class LabelCalculationHelper {
@@ -84,7 +84,7 @@ public class LabelCalculationHelper {
 		if (obj instanceof ExportedVariableStatement) {
 			// comma separated list of all contained variable names
 			ExportedVariableStatement exportedVariableStatement = (ExportedVariableStatement) obj;
-			String text = StringUtils.join(", ", exportedVariableStatement.getVarDecl(), vd -> vd.getName());
+			String text = IterableExtensions.join(exportedVariableStatement.getVarDecl(), ", ", vd -> vd.getName());
 			return text;
 		}
 		if (obj instanceof NamedElement) {
@@ -126,7 +126,7 @@ public class LabelCalculationHelper {
 
 	private String getTypeVarDescriptions(TClassifier tClassifier) {
 		if (tClassifier.getTypeVars().size() > 0) {
-			String text = StringUtils.join(", ", tClassifier.getTypeVars(), tv -> tv.getName());
+			String text = IterableExtensions.join(tClassifier.getTypeVars(), ", ", tv -> tv.getName());
 			return "<" + text + ">";
 		}
 		return "";

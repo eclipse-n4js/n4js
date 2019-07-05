@@ -30,6 +30,9 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 @SuppressWarnings("restriction")
 public interface ISourceFolderEx extends ISourceFolder {
 
+	/**
+	 * TODO ADD JAVADOC
+	 */
 	default boolean contains(URI uri) {
 		URI path = getPath();
 		path = path.hasTrailingPathSeparator() ? path : path.appendSegment("");
@@ -37,11 +40,14 @@ public interface ISourceFolderEx extends ISourceFolder {
 		return uri.toFileString().startsWith(uri.toFileString());
 	}
 
+	/**
+	 * TODO ADD JAVADOC
+	 */
 	default List<URI> getAllResources() {
 		List<URI> uris = new LinkedList<>();
 		Path srcPath = Paths.get(getPath().toFileString());
 
-		FileVisitor<Path> fv = new SimpleFileVisitor<Path>() {
+		FileVisitor<Path> fv = new SimpleFileVisitor<>() {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				URI uri = URI.createFileURI(file.toString());
@@ -62,7 +68,11 @@ public interface ISourceFolderEx extends ISourceFolder {
 
 	/** Adds empty authority to the given URI. Necessary for windows platform. */
 	static public URI addEmptyAuthority(URI uri) {
-		uri = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(), uri.fragment());
-		return uri;
+		if (uri.hasAuthority()) {
+			return uri;
+		}
+		URI result = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(),
+				uri.fragment());
+		return result;
 	}
 }
