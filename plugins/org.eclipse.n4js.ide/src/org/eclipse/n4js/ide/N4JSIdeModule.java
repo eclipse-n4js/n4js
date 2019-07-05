@@ -23,6 +23,7 @@ import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
+import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.IProjectDescriptionFactory;
 import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
 import org.eclipse.xtext.ide.server.ProjectManager;
@@ -43,6 +44,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends IWorkspaceConfig> bindIWorkspaceConfig() {
 		return IN4JSCore.class;
+	}
+
+	public Class<? extends ILanguageServerShutdownAndExitHandler> bindILanguageServerShutdownAndExitHandler() {
+		return ILanguageServerShutdownAndExitHandler.NullImpl.class;
 	}
 
 	public Class<? extends WorkspaceManager> bindWorkspaceManager() {

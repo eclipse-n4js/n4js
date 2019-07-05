@@ -7,6 +7,7 @@ import java.util.concurrent.Executors
 import org.eclipse.lsp4j.jsonrpc.Launcher
 import org.eclipse.lsp4j.services.LanguageClient
 import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl
+import com.google.common.util.concurrent.Futures
 
 class RunServer {
 
@@ -23,7 +24,10 @@ class RunServer {
 			val out = Channels.newOutputStream(socketChannel)
 			val launcher = Launcher.createIoLauncher(languageServer, LanguageClient, in, out, threadPool, [it])
 			languageServer.connect(launcher.remoteProxy)
-			launcher.startListening
+			Futures.getUnchecked(launcher.startListening)
+			in.close
+			out.close
+			socketChannel.close
 		}
 	}
 }	

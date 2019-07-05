@@ -26,13 +26,11 @@ import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  *
  */
 @SuppressWarnings("restriction")
-@Singleton
 public class N4JSLanguageServerImpl extends LanguageServerImpl {
 
 	@Inject
@@ -51,6 +49,7 @@ public class N4JSLanguageServerImpl extends LanguageServerImpl {
 	 */
 	@Inject
 	public void registerExtensions(HeadlessExtensionRegistrationHelper helper) {
+		helper.unregisterExtensions();
 		helper.registerExtensions();
 	}
 
