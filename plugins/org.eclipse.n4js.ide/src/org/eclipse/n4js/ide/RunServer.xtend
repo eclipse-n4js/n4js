@@ -25,6 +25,7 @@ class RunServer {
 			val launcher = Launcher.createIoLauncher(languageServer, LanguageClient, in, out, threadPool, [it])
 			languageServer.connect(launcher.remoteProxy)
 			Futures.getUnchecked(launcher.startListening)
+			languageServer.requestManager.shutdown
 			in.close
 			out.close
 			socketChannel.close

@@ -31,6 +31,9 @@ public class N4JSProjectDescriptionFactory extends DefaultProjectDescriptionFact
 		if (casted.getProjectType() == ProjectType.PLAINJS) {
 			return projectDescription;
 		}
+		if (casted.getProjectType() == ProjectType.DEFINITION) {
+			projectDescription.getDependencies().add(casted.getDefinesPackageName());
+		}
 		FluentIterable
 				.from(casted.getDependencies())
 				.transform(IN4JSProject::getProjectName)
