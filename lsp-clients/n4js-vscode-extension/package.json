@@ -41,8 +41,8 @@
 		"grammars": [
 			{
 				"language": "n4js",
-				"scopeName": "text.n4js",
-				"path": "./syntaxes/n4js.tmLanguage"
+				"scopeName": "source.n4js",
+				"path": "./syntaxes/n4js.tmLanguage.json"
 			}
 		]
 	},
