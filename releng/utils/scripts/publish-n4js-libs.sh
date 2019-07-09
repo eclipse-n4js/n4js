@@ -74,6 +74,8 @@ rm -rf $(find . -type d -name "node_modules")
 # make sure to not publish any dirty state in the working copy.
 # Thus, we reset the working copy here:
 git checkout HEAD -- .
+# obtain commit ID of folder 'n4js-libs' in the local git working copy:
+N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" -- .`
 
 echo "==== STEP 2/9: install dependencies and prepare npm task scripts"
 yarn install
@@ -99,8 +101,6 @@ if [ "$DESTINATION" = "public" ]; then
         N4JS_LIBS_COMMIT_ID_PUBLIC=unknown
     fi
     echo "  - commit ID of latest published n4js-libs     : $N4JS_LIBS_COMMIT_ID_PUBLIC"
-
-    N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" ${N4JS_LIBS_ROOT}`
     echo "  - commit ID of local n4js-libs                : $N4JS_LIBS_COMMIT_ID_LOCAL"
 
     # Stop if the local ID equals public ID
