@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.n4js.ts;visibility:=reexport,
  org.antlr.runtime,
  org.eclipse.compare,
  org.eclipse.n4js.environments,
- org.eclipse.n4js.utils
+ org.eclipse.n4js.utils,
+ org.eclipse.n4js.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.ts.ui,
  org.eclipse.n4js.ts.ui.contentassist,
