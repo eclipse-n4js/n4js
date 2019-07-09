@@ -35,6 +35,7 @@ import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
 
 import com.google.inject.Inject;
@@ -134,7 +135,7 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 					Path pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON);
 					if (pckJson.toFile().isFile()) {
 						URI emfURI = URI.createFileURI(dir.toString());
-						emfURI = addEmptyAuthority(emfURI);
+						emfURI = URIUtils.addEmptyAuthority(emfURI);
 						result.add(emfURI);
 					}
 					return FileVisitResult.CONTINUE;
@@ -145,12 +146,6 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 		}
 
 		return result;
-	}
-
-	/** Adds empty authority to the given URI. Necessary for windows platform. */
-	static public URI addEmptyAuthority(URI uri) {
-		uri = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(), uri.fragment());
-		return uri;
 	}
 
 }

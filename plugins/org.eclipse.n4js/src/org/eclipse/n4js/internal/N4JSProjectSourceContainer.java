@@ -18,7 +18,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.ISourceFolderEx;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.Strings;
 
@@ -67,7 +67,7 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 
 	@Override
 	public List<URI> getAllResources() {
-		return FluentIterable.from(this).transform(ISourceFolderEx::addEmptyAuthority).toList();
+		return FluentIterable.from(this).transform(URIUtils::addEmptyAuthority).toList();
 	}
 	/// END ISourceFolder
 

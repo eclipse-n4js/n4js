@@ -256,4 +256,10 @@ public class URIUtils {
 		}
 		return fileUri;
 	}
+
+	/** Adds empty authority to the given URI. Necessary for windows platform. */
+	public static URI addEmptyAuthority(URI uri) {
+		uri = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(), uri.fragment());
+		return uri;
+	}
 }
