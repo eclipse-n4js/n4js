@@ -55,7 +55,7 @@ public class N4JSProject implements IN4JSProject {
 	private final boolean external;
 
 	protected N4JSProject(URI location, boolean external, N4JSModel model) {
-		this.location = location;
+		this.location = URIUtils.addEmptyAuthority(location);
 		this.external = external;
 		this.model = model;
 	}

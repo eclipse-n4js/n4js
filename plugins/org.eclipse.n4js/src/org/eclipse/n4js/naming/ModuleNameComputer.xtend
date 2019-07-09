@@ -19,6 +19,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IResourceDescription
+import org.eclipse.xtext.util.UriExtensions
 
 /**
  * Utility class to calculate the qualified name of the resource depending on the project configuration.
@@ -35,6 +36,9 @@ class ModuleNameComputer {
 
 	@Inject
 	private extension IN4JSCore core
+
+	@Inject
+	private UriExtensions uriExtensions
 
 
 	/**
@@ -63,7 +67,9 @@ class ModuleNameComputer {
 	 * Please note there is also a special treatment for Xpect test files that may have a file extension
 	 * like {@code ".n4js.xt"}. The calculation will handle this as a hole file extension, so {@code ".n4js"} will be pruned, too.
 	 */
-	def getQualifiedModuleName(URI uri){
+	def getQualifiedModuleName(URI pUri) {
+		val uri = uriExtensions.withEmptyAuthority(pUri);
+		
 		val maybeSourceContainer = findN4JSSourceContainer(uri)
 		if (maybeSourceContainer.present) {
 			val sourceContainer = maybeSourceContainer.get
