@@ -225,7 +225,7 @@ public class ProjectDescriptionUtils {
 	 * <p>
 	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
 	 */
-	public static String deriveN4JSProjectNameFromURI(SafeURI location) {
+	public static String deriveN4JSProjectNameFromURI(SafeURI<?> location) {
 		if (location == null) {
 			return null;
 		}

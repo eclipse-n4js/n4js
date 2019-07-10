@@ -27,7 +27,7 @@ import org.eclipse.n4js.projectDescription.ProjectReference;
  * It's not meant to be used by clients different from the {@link N4JSModel} since the contract for URI schemes etc is
  * implemented there and shared with the used implementation of the {@link InternalN4JSWorkspace}.
  */
-public abstract class InternalN4JSWorkspace<Loc extends SafeURI> {
+public abstract class InternalN4JSWorkspace<Loc extends SafeURI<Loc>> {
 
 	public abstract Loc fromURI(URI uri);
 

@@ -11,7 +11,7 @@
 package org.eclipse.n4js.internal;
 
 import org.eclipse.n4js.external.ExternalLibraryHelper;
-import org.eclipse.n4js.internal.locations.SafeURI;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IExternalPackageManager;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
@@ -31,7 +31,7 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 	private ExternalLibraryHelper externalLibraryHelper;
 
 	@Override
-	public boolean isN4ProjectRoot(SafeURI rootLocation) {
+	public boolean isN4ProjectRoot(FileURI rootLocation) {
 		if (null != rootLocation && rootLocation.exists()) {
 			return externalLibraryHelper.isExternalProjectDirectory(rootLocation);
 		}
@@ -44,7 +44,7 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 	 * Returns {@code null} if no valid project description can be read from the given project location.
 	 */
 	@Override
-	public ProjectDescription loadProjectDescriptionFromProjectRoot(SafeURI rootLocation) {
+	public ProjectDescription loadProjectDescriptionFromProjectRoot(FileURI rootLocation) {
 		if (null != rootLocation && rootLocation.isDirectory()) {
 			return projectDescriptionLoader.loadProjectDescriptionAtLocation(rootLocation);
 		}

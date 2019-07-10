@@ -45,9 +45,9 @@ public class BuildOrderComputer {
 
 	private final UriToProjectMapper uri2PrjMapper = new UriToProjectMapper();
 
-	private class UriToProjectMapper implements VertexMapper<SafeURI, IN4JSProject> {
+	private class UriToProjectMapper implements VertexMapper<SafeURI<?>, IN4JSProject> {
 		@Override
-		public IN4JSProject get(SafeURI projectURI) {
+		public IN4JSProject get(SafeURI<?> projectURI) {
 			IN4JSProject project = core.findProject(projectURI.toURI()).orNull();
 			return project;
 		}
@@ -58,15 +58,15 @@ public class BuildOrderComputer {
 		}
 	}
 
-	static private class FilterUnrequestedOut implements VertexFilter<SafeURI> {
-		final private Set<SafeURI> requestedProjectNames;
+	static private class FilterUnrequestedOut implements VertexFilter<SafeURI<?>> {
+		final private Set<SafeURI<?>> requestedProjectNames;
 
-		FilterUnrequestedOut(SafeURI[] requestedProjectNames) {
+		FilterUnrequestedOut(SafeURI<?>[] requestedProjectNames) {
 			this.requestedProjectNames = new HashSet<>(Arrays.asList(requestedProjectNames));
 		}
 
 		@Override
-		public boolean matches(SafeURI vertex) {
+		public boolean matches(SafeURI<?> vertex) {
 			boolean filterOut = !requestedProjectNames.contains(vertex);
 			return filterOut;
 		}
@@ -105,29 +105,29 @@ public class BuildOrderComputer {
 	 * @return result describing the global active build configuration order
 	 */
 	public VertexOrder<IN4JSProject> getBuildOrder(IN4JSProject[] requestedProjects) {
-		SafeURI[] requestedProjectURIs = new SafeURI[requestedProjects.length];
+		SafeURI<?>[] requestedProjectURIs = new SafeURI[requestedProjects.length];
 		for (int i = 0; i < requestedProjectURIs.length; i++) {
 			requestedProjectURIs[i] = requestedProjects[i].getSafeLocation();
 		}
 
-		VertexOrder<SafeURI> completeOrder = getBuildOrderOfURIs(requestedProjectURIs);
+		VertexOrder<SafeURI<?>> completeOrder = getBuildOrderOfURIs(requestedProjectURIs);
 		VertexOrder<IN4JSProject> requestedOrder = ComputeProjectOrder.mapVertexOrder(completeOrder, uri2PrjMapper);
 
 		return requestedOrder;
 	}
 
-	private VertexOrder<SafeURI> getBuildOrderOfURIs(SafeURI[] requestedProjectURIs) {
+	private VertexOrder<SafeURI<?>> getBuildOrderOfURIs(SafeURI<?>[] requestedProjectURIs) {
 		FilterUnrequestedOut filter = new FilterUnrequestedOut(requestedProjectURIs);
-		VertexOrder<SafeURI> completeOrder = computeVertexOrder(requestedProjectURIs);
-		VertexOrder<SafeURI> requestedOrder = ComputeProjectOrder.filterVertexOrder(completeOrder, filter);
+		VertexOrder<SafeURI<?>> completeOrder = computeVertexOrder(requestedProjectURIs);
+		VertexOrder<SafeURI<?>> requestedOrder = ComputeProjectOrder.filterVertexOrder(completeOrder, filter);
 
 		return requestedOrder;
 	}
 
-	private VertexOrder<SafeURI> computeVertexOrder(SafeURI[] requestedProjectURIs) {
+	private VertexOrder<SafeURI<?>> computeVertexOrder(SafeURI<?>[] requestedProjectURIs) {
 		// init worklist with existing projects
-		TreeSet<SafeURI> worklist = new TreeSet<>(Comparator.comparing(Object::toString));
-		for (SafeURI projectURI : requestedProjectURIs) {
+		TreeSet<SafeURI<?>> worklist = new TreeSet<>(Comparator.comparing(Object::toString));
+		for (SafeURI<?> projectURI : requestedProjectURIs) {
 			IN4JSProject project = uri2PrjMapper.get(projectURI);
 			if (project != null && project.exists()) {
 				worklist.add(projectURI);
@@ -135,19 +135,19 @@ public class BuildOrderComputer {
 		}
 
 		// find dependency edges and project closure
-		Multimap<SafeURI, SafeURI> edges = HashMultimap.create();
-		TreeSet<SafeURI> projectsClosure = new TreeSet<>(Comparator.comparing(Object::toString));
+		Multimap<SafeURI<?>, SafeURI<?>> edges = HashMultimap.create();
+		TreeSet<SafeURI<?>> projectsClosure = new TreeSet<>(Comparator.comparing(Object::toString));
 		while (!worklist.isEmpty()) {
-			SafeURI projectURI = worklist.pollFirst();
+			SafeURI<?> projectURI = worklist.pollFirst();
 			projectsClosure.add(projectURI);
 
 			IN4JSProject project = uri2PrjMapper.get(projectURI);
 			Set<IN4JSProject> prjDependencies = getDependencies(project);
-			Set<SafeURI> prjDependencyURIs = new HashSet<>();
+			Set<SafeURI<?>> prjDependencyURIs = new HashSet<>();
 
 			// add edges
 			for (IN4JSProject prjDependency : prjDependencies) {
-				SafeURI depURI = prjDependency.getSafeLocation();
+				SafeURI<?> depURI = prjDependency.getSafeLocation();
 				edges.put(projectURI, depURI);
 				prjDependencyURIs.add(depURI);
 			}
@@ -158,14 +158,14 @@ public class BuildOrderComputer {
 		}
 
 		// transform dependency edges
-		List<SafeURI[]> edges2 = new ArrayList<>();
-		for (Map.Entry<SafeURI, SafeURI> dependency : edges.entries()) {
-			SafeURI prj = dependency.getKey();
-			SafeURI depOn = dependency.getValue();
+		List<SafeURI<?>[]> edges2 = new ArrayList<>();
+		for (Map.Entry<SafeURI<?>, SafeURI<?>> dependency : edges.entries()) {
+			SafeURI<?> prj = dependency.getKey();
+			SafeURI<?> depOn = dependency.getValue();
 			edges2.add(new SafeURI[] { prj, depOn });
 		}
 
-		VertexOrder<SafeURI> orderedObjects = ComputeProjectOrder.computeVertexOrder(projectsClosure, edges2);
+		VertexOrder<SafeURI<?>> orderedObjects = ComputeProjectOrder.computeVertexOrder(projectsClosure, edges2);
 		return orderedObjects;
 	}
 

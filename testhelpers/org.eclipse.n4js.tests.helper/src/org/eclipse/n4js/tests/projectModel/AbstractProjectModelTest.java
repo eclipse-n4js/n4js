@@ -35,7 +35,7 @@ import com.google.inject.Provider;
 
 /**
  */
-public abstract class AbstractProjectModelTest<Loc extends SafeURI> {
+public abstract class AbstractProjectModelTest<Loc extends SafeURI<Loc>> {
 
 	@Inject
 	private ValidationTestHelper validationTestHelper;
@@ -97,10 +97,10 @@ public abstract class AbstractProjectModelTest<Loc extends SafeURI> {
 	 * @throws IOException
 	 *             If loading the project description resource fails
 	 */
-	private void validateProjectDescription(SafeURI projectLocation, String... expectedIssues)
+	private void validateProjectDescription(SafeURI<?> projectLocation, String... expectedIssues)
 			throws IOException {
 		final ResourceSet resourceSet = resourceSetProvider.get();
-		final SafeURI projectDescriptionURI = projectLocation
+		final SafeURI<?> projectDescriptionURI = projectLocation
 				.appendSegment(AbstractProjectModelSetup.PROJECT_DESCRIPTION_FILENAME);
 		// obtain resource for file project description file
 		final Resource projectDescriptionResource = resourceSet

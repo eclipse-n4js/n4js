@@ -196,14 +196,14 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 		return doGetN4JSProject(project, new PlatformResourceURI(project));
 	}
 
-	private N4JSEclipseProject doGetN4JSProject(IProject project, SafeURI location) {
+	private N4JSEclipseProject doGetN4JSProject(IProject project, SafeURI<?> location) {
 		return new N4JSEclipseProject(project, location, this);
 	}
 
 	@Override
 	public ImmutableList<? extends IN4JSEclipseSourceContainer> getN4JSSourceContainers(N4JSProject project) {
 		ImmutableList.Builder<IN4JSEclipseSourceContainer> result = ImmutableList.builder();
-		SafeURI location = project.getSafeLocation();
+		SafeURI<?> location = project.getSafeLocation();
 		ProjectDescription description = getProjectDescription(location.toURI());
 		if (description != null) {
 			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));

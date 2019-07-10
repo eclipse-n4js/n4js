@@ -52,7 +52,7 @@ public interface IN4JSSourceContainer extends Iterable<URI>, ISourceFolderEx {
 		return Iterators.transform(safeIterator(), pl -> pl.toURI());
 	}
 
-	Iterator<? extends SafeURI> safeIterator();
+	Iterator<? extends SafeURI<?>> safeIterator();
 
 	/**
 	 * If the source container contains an file for the given fully qualified name and file extension, this method will
@@ -64,7 +64,7 @@ public interface IN4JSSourceContainer extends Iterable<URI>, ISourceFolderEx {
 	 * Implementations are expected to be optimized for fast look-up (in particular, they should avoid iterating over
 	 * all URIs returned by method {@link #iterator()}).
 	 */
-	SafeURI findArtifact(QualifiedName name, Optional<String> fileExtension);
+	SafeURI<?> findArtifact(QualifiedName name, Optional<String> fileExtension);
 
 	/**
 	 * The relative location under the project root.
@@ -76,7 +76,7 @@ public interface IN4JSSourceContainer extends Iterable<URI>, ISourceFolderEx {
 	 */
 	URI getLocation();
 
-	SafeURI getSafeLocation();
+	SafeURI<?> getSafeLocation();
 
 	/**
 	 * Returns <code>true</code> if the source container exists.

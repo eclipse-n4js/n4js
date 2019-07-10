@@ -126,7 +126,7 @@ public class LibraryManager {
 	/** Deletes all 'node_modules' folders (and their npm projects). Afterwards, the ext. library state is updated. */
 	public IStatus deleteAllNodeModulesFolders(IProgressMonitor monitor) {
 		MultiStatus multistatus = statusHelper.createMultiStatus("Delete all node_modules folders");
-		for (SafeURI nodeModulesLoc : extLibPreferenceStore.getNodeModulesLocations()) {
+		for (SafeURI<?> nodeModulesLoc : extLibPreferenceStore.getNodeModulesLocations()) {
 			// delete whole target platform folder
 			if (nodeModulesLoc.exists()) {
 				nodeModulesLoc.delete((IOException ioe) -> multistatus.merge(
@@ -501,7 +501,7 @@ public class LibraryManager {
 		logger.logInfo(msg);
 
 		// trim package name and "node_modules" segments from packageURI:
-		SafeURI containingProjectURI = packageURI.getParentOf(name -> N4JSGlobals.NODE_MODULES.equals(name));
+		FileURI containingProjectURI = packageURI.getParentOf(name -> N4JSGlobals.NODE_MODULES.equals(name));
 		boolean usingYarn = npmCli.isYarnUsed(containingProjectURI.toFileSystemPath().toFile());
 
 		IStatus binaryStatus = checkBinary(usingYarn);

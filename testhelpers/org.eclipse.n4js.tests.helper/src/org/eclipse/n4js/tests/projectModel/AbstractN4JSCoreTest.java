@@ -24,7 +24,7 @@ import org.junit.Test;
 
 /**
  */
-public abstract class AbstractN4JSCoreTest<Loc extends SafeURI> extends AbstractProjectModelTest<Loc> {
+public abstract class AbstractN4JSCoreTest<Loc extends SafeURI<Loc>> extends AbstractProjectModelTest<Loc> {
 
 	/***/
 	protected abstract IN4JSCore getN4JSCore();

@@ -50,7 +50,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 		/** All external projects that were built/cleaned */
 		final public Set<FileURI> externalProjectsDone;
 		/** All workspace projects that were affected */
-		final public Set<SafeURI> affectedWorkspaceProjects;
+		final public Set<SafeURI<?>> affectedWorkspaceProjects;
 		/** All projects that were wiped from index */
 		final public Set<FileURI> wipedProjects;
 
@@ -61,12 +61,12 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 		}
 
 		/** Constructor */
-		public RegisterResult(Collection<FileURI> extPrjsDone, Collection<SafeURI> wsPrjsAffected) {
+		public RegisterResult(Collection<FileURI> extPrjsDone, Collection<? extends SafeURI<?>> wsPrjsAffected) {
 			this(extPrjsDone, wsPrjsAffected, null);
 		}
 
 		/** Constructor */
-		public RegisterResult(Collection<FileURI> extPrjsDone, Collection<SafeURI> wsPrjsAffected,
+		public RegisterResult(Collection<FileURI> extPrjsDone, Collection<? extends SafeURI<?>> wsPrjsAffected,
 				Collection<FileURI> prjsWiped) {
 			this.externalProjectsDone = freeze(extPrjsDone);
 			this.affectedWorkspaceProjects = freeze(wsPrjsAffected);
@@ -85,7 +85,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 		// this.wipedProjects = freeze(prjsWiped);
 		// }
 
-		static private <E extends SafeURI> Set<E> freeze(Collection<E> prjs) {
+		static private <E extends SafeURI<?>> Set<E> freeze(Collection<? extends E> prjs) {
 			if (prjs == null) {
 				return Collections.unmodifiableSet(Collections.emptySet());
 			}
@@ -147,7 +147,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	 * @param toBeScheduled
 	 *            the workspace projects that should be rebuild.
 	 */
-	public abstract void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<SafeURI> toBeScheduled);
+	public abstract void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<SafeURI<?>> toBeScheduled);
 
 	/**
 	 * Returns with all available external projects.
@@ -247,8 +247,8 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	public abstract void updateState();
 
 	/**
-	 * Like {@link #getRootLocationForResource(FileURI)} but in case it finds nothing, a root location is
-	 * computed based on the given URI and the built-in shipped code locations.
+	 * Like {@link #getRootLocationForResource(FileURI)} but in case it finds nothing, a root location is computed based
+	 * on the given URI and the built-in shipped code locations.
 	 * <p>
 	 * Method can be used for instance to find root locations of projects which are closed or removed from workspace.
 	 *
@@ -280,7 +280,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 
 	/** @return the matching root location for a set of root locations and a resource or project */
 	static final public FileURI getRootLocationForResource(Collection<FileURI> rootLocations,
-			SafeURI nestedLocation) {
+			SafeURI<?> nestedLocation) {
 
 		if (nestedLocation == null || nestedLocation.isEmpty() || !nestedLocation.isFile()) {
 			return null;
@@ -301,6 +301,6 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	}
 
 	/** @return true iff the project at the given location is a necessary (see ExternalProjectMappings) project. */
-	public abstract boolean isNecessary(SafeURI location);
+	public abstract boolean isNecessary(SafeURI<?> location);
 
 }

@@ -37,7 +37,7 @@ import com.google.common.collect.Lists;
 /**
  *
  */
-public class PlatformResourceURI extends SafeURI {
+public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 
 	private IResource cachedResource;
 
@@ -48,6 +48,11 @@ public class PlatformResourceURI extends SafeURI {
 	public PlatformResourceURI(IResource resource) {
 		super(URI.createPlatformResourceURI(resource.getFullPath().toString(), true));
 		this.cachedResource = resource;
+	}
+
+	@Override
+	protected PlatformResourceURI self() {
+		return this;
 	}
 
 	@Override
@@ -117,7 +122,7 @@ public class PlatformResourceURI extends SafeURI {
 	}
 
 	@Override
-	public SafeURI resolve(String relativePath) {
+	public PlatformResourceURI resolve(String relativePath) {
 		URI result = URI.createURI(relativePath).resolve(toURI());
 		return new PlatformResourceURI(result);
 	}
@@ -138,7 +143,7 @@ public class PlatformResourceURI extends SafeURI {
 	}
 
 	@Override
-	public SafeURI appendSegments(String[] segments) {
+	public PlatformResourceURI appendSegments(String[] segments) {
 		return new PlatformResourceURI(toURI().appendSegments(segments));
 	}
 
@@ -152,12 +157,12 @@ public class PlatformResourceURI extends SafeURI {
 	}
 
 	@Override
-	public SafeURI resolveSymLinks() {
+	public FileURI resolveSymLinks() {
 		Path path = toFileSystemPath();
 		try {
 			return new FileURI(path.toFile().getCanonicalFile());
 		} catch (IOException e) {
-			return this;
+			return new FileURI(path.toFile());
 		}
 	}
 

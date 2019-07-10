@@ -51,7 +51,7 @@ class InstallNpmDependencyButtonListener extends SelectionAdapter {
 	final private SemverHelper semverHelper;
 	final private StatusHelper statusHelper;
 	final private Runnable updateLocations;
-	final private Supplier<SafeURI> getSelectedNodeModulesURI;
+	final private Supplier<SafeURI<?>> getSelectedNodeModulesURI;
 
 	/**
 	 * Constructor
@@ -74,7 +74,7 @@ class InstallNpmDependencyButtonListener extends SelectionAdapter {
 	 */
 	public InstallNpmDependencyButtonListener(Runnable updateLocations, LibraryManager libManager,
 			NpmNameAndVersionValidatorHelper validatorHelper, SemverHelper semverHelper, StatusHelper statusHelper,
-			Supplier<SafeURI> getSelectedNodeModulesURI) {
+			Supplier<SafeURI<?>> getSelectedNodeModulesURI) {
 
 		this.updateLocations = updateLocations;
 		this.libManager = libManager;

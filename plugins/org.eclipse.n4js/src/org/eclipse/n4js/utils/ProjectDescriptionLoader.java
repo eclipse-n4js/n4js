@@ -66,7 +66,7 @@ public class ProjectDescriptionLoader {
 	 * <p>
 	 * Returns {@code null} if the project description cannot be loaded successfully (e.g. missing package.json).
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(SafeURI location) {
+	public ProjectDescription loadProjectDescriptionAtLocation(SafeURI<?> location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON == null) {
 			return null;
@@ -95,7 +95,7 @@ public class ProjectDescriptionLoader {
 	 * Loads the project description of the N4JS project at the given {@code location} and returns the version string or
 	 * <code>null</code> if undefined or in case of error.
 	 */
-	public Pair<String, Boolean> loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(SafeURI location) {
+	public Pair<String, Boolean> loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(SafeURI<?> location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		JSONValue versionValue = null;
 		boolean hasN4JSNature = false;
@@ -111,7 +111,7 @@ public class ProjectDescriptionLoader {
 	 * Loads the project description of the N4JS project at the given {@code location} and returns the value of the
 	 * "workspaces" property or <code>null</code> if undefined or in case of error.
 	 */
-	public List<String> loadWorkspacesFromProjectDescriptionAtLocation(SafeURI location) {
+	public List<String> loadWorkspacesFromProjectDescriptionAtLocation(SafeURI<?> location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON != null) {
 			JSONValue value = JSONModelUtils.getProperty(packageJSON, WORKSPACES.name).orElse(null);
@@ -177,7 +177,7 @@ public class ProjectDescriptionLoader {
 		target.setHasNestedNodeModulesFolder(hasNestedNodeModulesFolder);
 	}
 
-	private JSONDocument loadPackageJSONAtLocation(SafeURI location) {
+	private JSONDocument loadPackageJSONAtLocation(SafeURI<?> location) {
 		JSONDocument packageJSON = loadXtextFileAtLocation(location, IN4JSProject.PACKAGE_JSON, JSONDocument.class);
 
 		if (packageJSON == null) {
@@ -189,7 +189,7 @@ public class ProjectDescriptionLoader {
 		return packageJSON;
 	}
 
-	private <T extends EObject> T loadXtextFileAtLocation(SafeURI location, String name,
+	private <T extends EObject> T loadXtextFileAtLocation(SafeURI<?> location, String name,
 			Class<T> expectedTypeOfRoot) {
 		final T result;
 		if (location.exists()) {
@@ -201,7 +201,7 @@ public class ProjectDescriptionLoader {
 		return result;
 	}
 
-	private <T extends EObject> T loadXtextFile(SafeURI location, Class<T> expectedTypeOfRoot) {
+	private <T extends EObject> T loadXtextFile(SafeURI<?> location, Class<T> expectedTypeOfRoot) {
 		try {
 			// check whether a file exists at the given URI
 			if (!location.exists()) {

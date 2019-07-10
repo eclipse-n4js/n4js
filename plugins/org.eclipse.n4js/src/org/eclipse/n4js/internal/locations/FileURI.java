@@ -30,7 +30,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
 
 @SuppressWarnings("javadoc")
-public class FileURI extends SafeURI {
+public class FileURI extends SafeURI<FileURI> {
 
 	private File cachedFile;
 
@@ -49,6 +49,11 @@ public class FileURI extends SafeURI {
 					fileURI.query(), fileURI.fragment());
 		}
 		return fileURI;
+	}
+
+	@Override
+	protected FileURI self() {
+		return this;
 	}
 
 	@Override
@@ -116,7 +121,7 @@ public class FileURI extends SafeURI {
 	}
 
 	@Override
-	public SafeURI appendSegments(String[] segments) {
+	public FileURI appendSegments(String[] segments) {
 		return new FileURI(toURI().appendSegments(segments));
 	}
 
@@ -162,13 +167,13 @@ public class FileURI extends SafeURI {
 	}
 
 	@Override
-	public SafeURI resolve(String relativePath) {
+	public FileURI resolve(String relativePath) {
 		URI result = URI.createURI(relativePath).resolve(toURI());
 		return new FileURI(result);
 	}
 
 	@Override
-	public SafeURI resolveSymLinks() {
+	public FileURI resolveSymLinks() {
 		try {
 			return new FileURI(getCachedFile().getCanonicalFile());
 		} catch (IOException e) {

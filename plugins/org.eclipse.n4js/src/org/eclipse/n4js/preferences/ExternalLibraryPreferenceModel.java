@@ -140,7 +140,7 @@ public class ExternalLibraryPreferenceModel {
 	 *
 	 * @return a list of external library folder locations.
 	 */
-	public List<SafeURI> getExternalLibraryLocations() {
+	public List<SafeURI<?>> getExternalLibraryLocations() {
 		return Collections.unmodifiableList(externalLibraryLocations);
 	}
 
@@ -173,7 +173,7 @@ public class ExternalLibraryPreferenceModel {
 	 *            the location to remove.
 	 * @return {@code true} if the location was removed, otherwise {@code false}.
 	 */
-	synchronized public boolean remove(final SafeURI location) {
+	synchronized public boolean remove(final SafeURI<?> location) {
 		if (null == location) {
 			return false;
 		}
@@ -215,8 +215,7 @@ public class ExternalLibraryPreferenceModel {
 	}
 
 	/**
-	 * Returns with a view to the external library folder locations given as absolute file {@link SafeURI
-	 * locations}.
+	 * Returns with a view to the external library folder locations given as absolute file {@link SafeURI locations}.
 	 *
 	 * @return a list of external library folder location URIs.
 	 */
@@ -246,7 +245,7 @@ public class ExternalLibraryPreferenceModel {
 	/**
 	 * @return true of the URI points to a {@code node_modules} folder and false otherwise
 	 */
-	static public boolean isNodeModulesLocation(SafeURI location) {
+	static public boolean isNodeModulesLocation(SafeURI<?> location) {
 		String locStr = location.toString();
 		if (locStr.endsWith("/")) {
 			return locStr.endsWith(ExternalLibraryHelper.NPM_CATEGORY + "/");
@@ -256,8 +255,7 @@ public class ExternalLibraryPreferenceModel {
 	}
 
 	/**
-	 * Returns with a view to the external library folder locations given as absolute file {@link SafeURI
-	 * locations}.
+	 * Returns with a view to the external library folder locations given as absolute file {@link SafeURI locations}.
 	 *
 	 * @return a list of external library folder location URIs.
 	 */

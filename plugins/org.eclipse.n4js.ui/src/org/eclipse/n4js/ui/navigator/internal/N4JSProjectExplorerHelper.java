@@ -202,7 +202,8 @@ public class N4JSProjectExplorerHelper {
 		// for better visual representation MyProject @1.2.3 -> MyProject v1.2.3
 		String version = SemverSerializer.serialize(project.getVersion()).replaceFirst("@", "v");
 		String typeLabel = getProjectTypeLabel(type);
-		boolean inIndex = indexSynchronizer.isInIndex(project.getProjectDescriptionLocation());
+		boolean inIndex = project.isExternal()
+				&& indexSynchronizer.isInIndex((FileURI) project.getProjectDescriptionLocation());
 		String rootLocationName = getRootLocationName(project);
 
 		Styler stylerName = inIndex ? null : StyledString.QUALIFIER_STYLER;

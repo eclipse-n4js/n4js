@@ -219,7 +219,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/**
 	 * Delegate to shared injector and obtain a contributed instance that is not a direct object in the shared injector
 	 */
-	public Provider<InternalN4JSWorkspace<? extends SafeURI>> provideInternalN4JSWorkspace() {
+	public Provider<InternalN4JSWorkspace<? extends SafeURI<?>>> provideInternalN4JSWorkspace() {
 		return Access.contributedProvider(InternalN4JSWorkspace.class);
 	}
 

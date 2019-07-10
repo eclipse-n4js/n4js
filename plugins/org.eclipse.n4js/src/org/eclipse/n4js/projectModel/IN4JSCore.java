@@ -48,7 +48,9 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	 */
 	IN4JSProject create(URI location);
 
-	SafeURI toProjectLocation(URI uri);
+	SafeURI<?> toProjectLocation(URI uri);
+
+	ProjectDescription internalGetProjectDescription(SafeURI<?> loc);
 
 	/**
 	 * Returns the N4JS project that contains the element at the given location. The returned instance might be created
@@ -156,7 +158,5 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	 */
 	TModule loadModuleFromIndex(ResourceSet resourceSet, IResourceDescription resourceDescription,
 			boolean allowFullLoad);
-
-	ProjectDescription internalGetProjectDescription(SafeURI loc);
 
 }

@@ -15,7 +15,7 @@ import org.eclipse.n4js.internal.locations.SafeURI;
 
 /**
  */
-public abstract class AbstractProjectModelSetup<Loc extends SafeURI> {
+public abstract class AbstractProjectModelSetup<Loc extends SafeURI<Loc>> {
 	/***/
 	public static final String LIB_FOLDER_NAME = "lib";
 

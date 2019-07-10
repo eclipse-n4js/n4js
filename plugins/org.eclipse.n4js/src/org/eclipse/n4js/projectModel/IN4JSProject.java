@@ -66,7 +66,7 @@ public interface IN4JSProject extends IProjectConfigEx {
 	 */
 	URI _getLocation();
 
-	SafeURI getSafeLocation();
+	SafeURI<?> getSafeLocation();
 
 	/**
 	 * The source containers of this container structure, possibly empty.
@@ -76,7 +76,7 @@ public interface IN4JSProject extends IProjectConfigEx {
 	@Override
 	IN4JSSourceContainer findSourceFolderContaining(URI member);
 
-	IN4JSSourceContainer findSourceFolderContaining(SafeURI member);
+	IN4JSSourceContainer findSourceFolderContaining(SafeURI<?> member);
 
 	/**
 	 * All direct dependencies for this structure.
@@ -192,7 +192,7 @@ public interface IN4JSProject extends IProjectConfigEx {
 	 *
 	 * @return the location of the project description file or null if it does not exist.
 	 */
-	SafeURI getProjectDescriptionLocation();
+	SafeURI<?> getProjectDescriptionLocation();
 
 	/**
 	 * Returns with a collection of the tested projects for the current project. May return with an empty collection if:

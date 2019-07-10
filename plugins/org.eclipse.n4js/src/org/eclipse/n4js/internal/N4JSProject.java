@@ -46,13 +46,13 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings({ "javadoc", "restriction" })
 public class N4JSProject implements IN4JSProject {
 
-	private final N4JSModel<? extends SafeURI> model;
-	private final SafeURI location;
+	private final N4JSModel<? extends SafeURI<?>> model;
+	private final SafeURI<?> location;
 	private Boolean exists;
 	private final boolean external;
 
-	protected N4JSProject(SafeURI location, boolean external,
-			N4JSModel<? extends SafeURI> model) {
+	protected N4JSProject(SafeURI<?> location, boolean external,
+			N4JSModel<? extends SafeURI<?>> model) {
 		this.location = location;
 		this.external = external;
 		this.model = model;
@@ -144,7 +144,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public IN4JSSourceContainer findSourceFolderContaining(SafeURI member) {
+	public IN4JSSourceContainer findSourceFolderContaining(SafeURI<?> member) {
 		return model.findN4JSSourceContainerInProject(this, member.toURI()).orNull();
 	}
 
@@ -164,7 +164,7 @@ public class N4JSProject implements IN4JSProject {
 
 	/// END: IProjectConfig
 
-	protected N4JSModel<? extends SafeURI> getModel() {
+	protected N4JSModel<? extends SafeURI<?>> getModel() {
 		return model;
 	}
 
@@ -177,7 +177,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public SafeURI getProjectDescriptionLocation() {
+	public SafeURI<?> getProjectDescriptionLocation() {
 		return getProjectDescriptionFile();
 	}
 
@@ -292,7 +292,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public SafeURI getSafeLocation() {
+	public SafeURI<?> getSafeLocation() {
 		return location;
 	}
 
@@ -408,15 +408,15 @@ public class N4JSProject implements IN4JSProject {
 		// return result;
 	}
 
-	private SafeURI getProjectDescriptionFile() {
+	private SafeURI<?> getProjectDescriptionFile() {
 		if (location.isDirectory()) {
 			// first check for a 'package.json' file
-			SafeURI packageJson = location.appendSegment(IN4JSProject.PACKAGE_JSON);
+			SafeURI<?> packageJson = location.appendSegment(IN4JSProject.PACKAGE_JSON);
 			if (packageJson.isFile()) {
 				return packageJson;
 			}
 			// next check for an XPECT 'package.json.xt' file
-			SafeURI packageJsonXpect = location
+			SafeURI<?> packageJsonXpect = location
 					.appendSegment(IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION);
 			if (packageJsonXpect.isFile()) {
 				return packageJsonXpect;

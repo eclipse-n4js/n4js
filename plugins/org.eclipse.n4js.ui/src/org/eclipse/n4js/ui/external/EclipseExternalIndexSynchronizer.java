@@ -119,7 +119,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(subMonitor.split(9), toBeUpdated);
 			printRegisterResults(buildResult, "built");
 
-			Set<SafeURI> toBeScheduled = new HashSet<>();
+			Set<SafeURI<?>> toBeScheduled = new HashSet<>();
 			toBeScheduled.addAll(cleanResults.affectedWorkspaceProjects);
 			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
 			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor.split(1), toBeScheduled);

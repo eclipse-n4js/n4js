@@ -52,7 +52,7 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings({ "javadoc", "restriction" })
 @Singleton
-public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
+public class N4JSModel<Loc extends SafeURI<Loc>> implements IWorkspaceConfig {
 
 	private final InternalN4JSWorkspace<Loc> workspace;
 
@@ -79,7 +79,7 @@ public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 		return getN4JSProject(workspace.fromURI(location), external);
 	}
 
-	public SafeURI toProjectLocation(URI location) {
+	public SafeURI<?> toProjectLocation(URI location) {
 		boolean external = isExternal(location);
 		if (external) {
 			return externalLibraryWorkspace.fromURI(location);
@@ -87,7 +87,7 @@ public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 		return workspace.fromURI(location);
 	}
 
-	public N4JSProject getN4JSProject(SafeURI location) {
+	public N4JSProject getN4JSProject(SafeURI<?> location) {
 		return getN4JSProject(location, isExternal(location.toURI()));
 	}
 
@@ -99,7 +99,7 @@ public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 		return externalLibraryWorkspace != null && externalLibraryWorkspace.getProject(location) != null;
 	}
 
-	protected N4JSProject getN4JSProject(SafeURI location, boolean external) {
+	protected N4JSProject getN4JSProject(SafeURI<?> location, boolean external) {
 		return new N4JSProject(location, external, this);
 	}
 
@@ -134,12 +134,12 @@ public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 	public IN4JSProject findProjectWith(URI nestedLocation) {
 		// FIXME: mm
 		// URI correctNestedLocation = convertToCorrespondingLocation(nestedLocation);
-		SafeURI location = fromURI(workspace, nestedLocation);
+		SafeURI<?> location = fromURI(workspace, nestedLocation);
 		if (location != null) {
 			return getN4JSProject(location, false);
 		}
 
-		SafeURI externalLocation = fromURI(externalLibraryWorkspace, nestedLocation);
+		SafeURI<?> externalLocation = fromURI(externalLibraryWorkspace, nestedLocation);
 		if (null != externalLocation) {
 			return getN4JSProject(externalLocation, true);
 		}
@@ -147,7 +147,7 @@ public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 		return null;
 	}
 
-	private <PL extends SafeURI> PL fromURI(InternalN4JSWorkspace<PL> ws, URI uri) {
+	private <PL extends SafeURI<PL>> PL fromURI(InternalN4JSWorkspace<PL> ws, URI uri) {
 		return ws.findProjectWith(ws.fromURI(uri));
 	}
 
@@ -209,7 +209,7 @@ public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 		return description;
 	}
 
-	private <PL extends SafeURI> ProjectDescription getProjectDescription(InternalN4JSWorkspace<PL> ws,
+	private <PL extends SafeURI<PL>> ProjectDescription getProjectDescription(InternalN4JSWorkspace<PL> ws,
 			URI location) {
 		return ws.getProjectDescription(ws.fromURI(location));
 	}
@@ -302,7 +302,7 @@ public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 			if (location != null) {
 				providedRuntimes.add(getN4JSProject(location, false));
 			} else {
-				SafeURI external = externalLibraryWorkspace.getLocation(runtimeLibrary);
+				SafeURI<?> external = externalLibraryWorkspace.getLocation(runtimeLibrary);
 				providedRuntimes.add(getN4JSProject(external, true));
 			}
 		}
@@ -325,20 +325,20 @@ public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 	/**
 	 * @see IN4JSSourceContainer#findArtifact(QualifiedName, Optional)
 	 */
-	public SafeURI findArtifact(IN4JSSourceContainer sourceContainer, QualifiedName name,
+	public SafeURI<?> findArtifact(IN4JSSourceContainer sourceContainer, QualifiedName name,
 			Optional<String> fileExtension) {
 		final String ext = fileExtension.or("").trim();
 		final String extWithDot = !ext.isEmpty() && !ext.startsWith(".") ? "." + ext : ext;
 		final String pathStr = name.toString("/") + extWithDot; // no need for IQualifiedNameConverter here!
 
-		SafeURI artifactLocation = findArtifactInFolder(workspace, sourceContainer.getLocation(), pathStr);
+		SafeURI<?> artifactLocation = findArtifactInFolder(workspace, sourceContainer.getLocation(), pathStr);
 		if (null == artifactLocation) {
 			artifactLocation = findArtifactInFolder(externalLibraryWorkspace, sourceContainer.getLocation(), pathStr);
 		}
 		return artifactLocation;
 	}
 
-	private <PL extends SafeURI> PL findArtifactInFolder(InternalN4JSWorkspace<PL> ws,
+	private <PL extends SafeURI<PL>> PL findArtifactInFolder(InternalN4JSWorkspace<PL> ws,
 			URI location, String pathStr) {
 		return ws.findArtifactInFolder(ws.fromURI(location), pathStr);
 	}
@@ -369,7 +369,7 @@ public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 		final ProjectDescription description = getProjectDescription(project);
 		if (null != description) {
 			for (ProjectReference testedProject : description.getTestedProjects()) {
-				SafeURI hostLocation = workspace.getLocation(testedProject);
+				SafeURI<?> hostLocation = workspace.getLocation(testedProject);
 				IN4JSProject tested = null;
 				if (hostLocation != null) {
 					tested = getN4JSProject(hostLocation, false);
@@ -404,7 +404,7 @@ public class N4JSModel<Loc extends SafeURI> implements IWorkspaceConfig {
 		if (null == project || null == reference) {
 			return absent();
 		}
-		SafeURI dependencyLocation = workspace.getLocation(reference);
+		SafeURI<?> dependencyLocation = workspace.getLocation(reference);
 		if (null != dependencyLocation) {
 			return fromNullable(getN4JSProject(dependencyLocation));
 		}

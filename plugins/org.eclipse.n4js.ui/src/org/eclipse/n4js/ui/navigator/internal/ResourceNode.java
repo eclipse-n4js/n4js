@@ -44,14 +44,14 @@ import com.google.common.collect.FluentIterable;
 	private static final Image FOLDER_IMG = getWorkbench().getSharedImages().getImage(IMG_OBJ_FOLDER);
 	private static final Image FILE_IMG = getWorkbench().getSharedImages().getImage(IMG_OBJ_FILE);
 
-	private final SafeURI file;
+	private final SafeURI<?> file;
 	private final String label;
 
-	static public ResourceNode create(final Node parent, final SafeURI file) {
+	static public ResourceNode create(final Node parent, final SafeURI<?> file) {
 		return create(parent, file, file.getName());
 	}
 
-	static public ResourceNode create(final Node parent, final SafeURI file, final String label) {
+	static public ResourceNode create(final Node parent, final SafeURI<?> file, final String label) {
 		if (file == null || !file.exists()) {
 			return null;
 		}
@@ -67,7 +67,7 @@ import com.google.common.collect.FluentIterable;
 	 * @param file
 	 *            the wrapped file that the new node instance represents.
 	 */
-	private ResourceNode(final Node parent, final SafeURI file, final String label) {
+	private ResourceNode(final Node parent, final SafeURI<?> file, final String label) {
 		super(parent);
 		this.file = file;
 		this.label = label;
@@ -81,13 +81,13 @@ import com.google.common.collect.FluentIterable;
 	@Override
 	public Object[] getChildren() {
 		if (file.isDirectory()) {
-			final FluentIterable<? extends SafeURI> subFiles = from(file.getChildren());
+			final FluentIterable<? extends SafeURI<?>> subFiles = from(file.getChildren());
 			return subFiles.transform(f -> create(this, f)).toArray(ResourceNode.class);
 		}
 		return EMPTY_ARRAY;
 	}
 
-	public SafeURI getLocation() {
+	public SafeURI<?> getLocation() {
 		return file;
 	}
 

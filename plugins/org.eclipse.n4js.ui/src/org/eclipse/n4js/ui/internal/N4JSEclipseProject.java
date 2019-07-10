@@ -27,7 +27,7 @@ public class N4JSEclipseProject extends N4JSProject implements IN4JSEclipseProje
 
 	private final IProject project;
 
-	N4JSEclipseProject(IProject project, SafeURI location, N4JSEclipseModel model) {
+	N4JSEclipseProject(IProject project, SafeURI<?> location, N4JSEclipseModel model) {
 		super(location, project instanceof ExternalProject, model);
 		this.project = project;
 	}

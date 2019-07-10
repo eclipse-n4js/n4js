@@ -45,7 +45,7 @@ public final class FindArtifactHelper {
 	 */
 	public URI findArtifact(IN4JSProject project, QualifiedName fqn, Optional<String> fileExtension) {
 		for (IN4JSSourceContainer srcConti : project.getSourceContainers()) {
-			final SafeURI uri = srcConti.findArtifact(fqn, fileExtension);
+			final SafeURI<?> uri = srcConti.findArtifact(fqn, fileExtension);
 			if (uri != null)
 				return uri.toURI();
 		}

@@ -180,11 +180,11 @@ public abstract class ExternalIndexSynchronizer {
 
 	/** @return true iff the given project (i.e. its package.json) is contained in the index */
 	public boolean isInIndex(N4JSExternalProject project) {
-		return isInIndex(project.getIProject().getProjectDescriptionLocation());
+		return isInIndex(project.getProjectDescriptionLocation());
 	}
 
 	/** @return true iff the given project (i.e. its package.json) is contained in the index */
-	public boolean isInIndex(SafeURI projectLocation) {
+	public boolean isInIndex(FileURI projectLocation) {
 		if (projectLocation == null) {
 			return false;
 		}
@@ -295,8 +295,8 @@ public abstract class ExternalIndexSynchronizer {
 		}
 	}
 
-	private String getVersion(IResourceDescription resourceDescription, SafeURI nestedLocation, String name,
-			SafeURI packageLocation) {
+	private String getVersion(IResourceDescription resourceDescription, SafeURI<?> nestedLocation, String name,
+			SafeURI<?> packageLocation) {
 
 		if (!isProjectDescriptionFile(nestedLocation, packageLocation)) {
 			return null;
@@ -325,7 +325,7 @@ public abstract class ExternalIndexSynchronizer {
 	 * More specifically, this method checks the name of the specified resource and its direct containment in the
 	 * package location.
 	 */
-	private boolean isProjectDescriptionFile(SafeURI resourceLocation, final SafeURI packageLocation) {
+	private boolean isProjectDescriptionFile(SafeURI<?> resourceLocation, final SafeURI<?> packageLocation) {
 		boolean isProjectDescriptionFile = true;
 		// URI points to file named 'package.json'
 		isProjectDescriptionFile &= resourceLocation.getName().equals(N4JSGlobals.PACKAGE_JSON);
@@ -338,7 +338,7 @@ public abstract class ExternalIndexSynchronizer {
 	 * Infers the name of the package that contains the given nested location, relative to the given
 	 * {@code workspaceLocation}
 	 */
-	private String getPackageName(SafeURI nestedLocation, SafeURI workspaceLocation) {
+	private <U extends SafeURI<U>> String getPackageName(U nestedLocation, U workspaceLocation) {
 		if (!workspaceLocation.isParent(nestedLocation)) {
 			throw new IllegalArgumentException("Cannot determine package name of " + nestedLocation
 					+ ": The nested location is not contained in the given workspace location " + workspaceLocation);
@@ -381,7 +381,7 @@ public abstract class ExternalIndexSynchronizer {
 
 		if (!rr.wipedProjects.isEmpty()) {
 			SortedSet<String> prjNames = new TreeSet<>();
-			for (SafeURI location : rr.wipedProjects) {
+			for (SafeURI<?> location : rr.wipedProjects) {
 				String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 				prjNames.add(projectName);
 			}
@@ -394,9 +394,9 @@ public abstract class ExternalIndexSynchronizer {
 		}
 	}
 
-	private SortedSet<String> getProjectNamesFromLocations(Collection<? extends SafeURI> projectLocations) {
+	private SortedSet<String> getProjectNamesFromLocations(Collection<? extends SafeURI<?>> projectLocations) {
 		SortedSet<String> prjNames = new TreeSet<>();
-		for (SafeURI location : projectLocations) {
+		for (SafeURI<?> location : projectLocations) {
 			IN4JSProject p = core.findProject(location.toURI()).orNull();
 			prjNames.add(p.getProjectName());
 		}

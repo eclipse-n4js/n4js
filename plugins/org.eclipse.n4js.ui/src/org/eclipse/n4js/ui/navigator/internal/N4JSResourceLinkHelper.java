@@ -59,7 +59,7 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 		if (null != selection && !selection.isEmpty()) {
 			final Object firstElement = selection.getFirstElement();
 			if (firstElement instanceof ResourceNode) {
-				SafeURI nodeLocation = ((ResourceNode) firstElement).getLocation();
+				SafeURI<?> nodeLocation = ((ResourceNode) firstElement).getLocation();
 				if (nodeLocation.isFile()) {
 					final URI uri = nodeLocation.toURI();
 					final IEditorInput editorInput = EditorUtils.createEditorInput(new URIBasedStorage(uri));

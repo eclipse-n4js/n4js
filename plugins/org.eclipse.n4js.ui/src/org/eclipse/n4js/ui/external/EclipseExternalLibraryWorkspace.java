@@ -247,8 +247,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 				toBeWiped);
 	}
 
-	static private Collection<SafeURI> getURIs(IProject[] projects) {
-		HashSet<SafeURI> uris = new HashSet<>();
+	static private Collection<PlatformResourceURI> getURIs(IProject[] projects) {
+		HashSet<PlatformResourceURI> uris = new HashSet<>();
 		for (IProject project : projects) {
 			uris.add(new PlatformResourceURI(project));
 		}
@@ -308,9 +308,9 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	}
 
 	@Override
-	public void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<SafeURI> toBeScheduled) {
+	public void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<SafeURI<?>> toBeScheduled) {
 		Set<IProject> scheduledProjects = newHashSet();
-		for (SafeURI scheduledURI : toBeScheduled) {
+		for (SafeURI<?> scheduledURI : toBeScheduled) {
 			IN4JSProject wsProject = core.findProject(scheduledURI.toURI()).orNull();
 			if (wsProject instanceof N4JSEclipseProject) {
 				N4JSEclipseProject n4EclProject = (N4JSEclipseProject) wsProject;
@@ -324,7 +324,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 
 	private Collection<N4JSExternalProject> getExternalProjects(Set<FileURI> toBeUpdated) {
 		Set<N4JSExternalProject> projectsToBeUpdated = new HashSet<>();
-		for (SafeURI tbu : toBeUpdated) {
+		for (SafeURI<?> tbu : toBeUpdated) {
 			N4JSExternalProject n4Prj = projectProvider.getProject(tbu);
 			projectsToBeUpdated.add(n4Prj);
 		}
@@ -339,7 +339,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	}
 
 	@Override
-	public boolean isNecessary(SafeURI location) {
+	public boolean isNecessary(SafeURI<?> location) {
 		return projectProvider.getAllProjectLocations().contains(location);
 	}
 

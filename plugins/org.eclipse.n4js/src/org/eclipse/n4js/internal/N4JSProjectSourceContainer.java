@@ -76,12 +76,12 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	}
 
 	@Override
-	public Iterator<? extends SafeURI> safeIterator() {
+	public Iterator<? extends SafeURI<?>> safeIterator() {
 		return getSafeLocation().getAllChildren();
 	}
 
 	@Override
-	public SafeURI findArtifact(QualifiedName name, Optional<String> fileExtension) {
+	public SafeURI<?> findArtifact(QualifiedName name, Optional<String> fileExtension) {
 		return project.getModel().findArtifact(this, name, fileExtension);
 	}
 
@@ -91,7 +91,7 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	}
 
 	@Override
-	public SafeURI getSafeLocation() {
+	public SafeURI<?> getSafeLocation() {
 		return project.getSafeLocation().appendPath(getRelativeLocation());
 	}
 

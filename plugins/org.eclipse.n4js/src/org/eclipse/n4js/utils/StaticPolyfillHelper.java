@@ -14,7 +14,6 @@ import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfi
 
 import java.util.Objects;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -92,7 +91,7 @@ public final class StaticPolyfillHelper {
 					}
 				} else {
 					// 2. query all source-containers for file with same QN
-					final URI fillingURI = findStaticPolyfiller(res);
+					final SafeURI<?> fillingURI = findStaticPolyfiller(res);
 					if (null != fillingURI)
 						return true;
 				}
@@ -105,7 +104,7 @@ public final class StaticPolyfillHelper {
 	 * Find the corresponding static-polyfill to this {@code @@PolyfillAware} resource in the same project. returns null
 	 * if not found or this resource has no {@code @@PolyfillAware} annotation.
 	 */
-	public URI findStaticPolyfiller(Resource resource) {
+	public SafeURI<?> findStaticPolyfiller(Resource resource) {
 		// ensure right resource
 		if (resource instanceof N4JSResource) {
 			final N4JSResource res = (N4JSResource) resource;
@@ -121,9 +120,9 @@ public final class StaticPolyfillHelper {
 			final IN4JSSourceContainer filledSrcContainer = n4jsCore.findN4JSSourceContainer(res.getURI()).get();
 			for (IN4JSSourceContainer srcConti : project.getSourceContainers()) {
 				if (!Objects.equals(filledSrcContainer, srcConti)) {
-					final SafeURI uri = srcConti.findArtifact(fqn, fileExtension);
+					final SafeURI<?> uri = srcConti.findArtifact(fqn, fileExtension);
 					if (uri != null) {
-						return uri.toURI();
+						return uri;
 					}
 				}
 			}
@@ -136,9 +135,9 @@ public final class StaticPolyfillHelper {
 	 * {@code N4JSResource}. Returns the filling resource if any or {@code null}
 	 */
 	public N4JSResource getStaticPolyfillResource(Resource res) {
-		final URI uri = findStaticPolyfiller(res);
+		final SafeURI<?> uri = findStaticPolyfiller(res);
 		if (null != uri) {
-			return (N4JSResource) res.getResourceSet().getResource(uri, true);
+			return (N4JSResource) res.getResourceSet().getResource(uri.toURI(), true);
 		}
 		return null;
 	}

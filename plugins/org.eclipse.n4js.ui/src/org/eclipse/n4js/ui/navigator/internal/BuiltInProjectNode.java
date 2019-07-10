@@ -65,7 +65,7 @@ import org.eclipse.swt.graphics.Image;
 
 		final List<ResourceNode> childrenList = new LinkedList<>();
 		for (IN4JSSourceContainer srcContainer : project.getSourceContainers()) {
-			SafeURI location = srcContainer.getSafeLocation();
+			SafeURI<?> location = srcContainer.getSafeLocation();
 			String label = srcContainer.getRelativeLocation();
 			ResourceNode resourceNode = ResourceNode.create(this, location, label);
 			if (resourceNode != null) {
@@ -83,7 +83,7 @@ import org.eclipse.swt.graphics.Image;
 		ResourceNode manifestNode = null;
 		// Does nothing if the project root is a source container as well.
 		if (!from(project.getSourceContainers()).transform(src -> src.getRelativeLocation()).contains("")) {
-			final SafeURI manifestLocation = project.getProjectDescriptionLocation();
+			final SafeURI<?> manifestLocation = project.getProjectDescriptionLocation();
 			if (manifestLocation != null && manifestLocation.isFile()) {
 				manifestNode = ResourceNode.create(this, manifestLocation);
 			}

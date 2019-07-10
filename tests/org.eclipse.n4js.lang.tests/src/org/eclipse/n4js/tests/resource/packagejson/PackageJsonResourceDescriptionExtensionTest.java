@@ -54,10 +54,10 @@ public class PackageJsonResourceDescriptionExtensionTest extends AbstractProject
 	public void testGetDepthOfLocation() {
 		// new PackageJsonResourceDescriptionExtension()
 		String[] emptySegments = { "", "", "" };
-		SafeURI uri0 = myProjectURI;
-		SafeURI uri1 = myProjectURI.appendSegment("someFile.txt");
-		SafeURI uri2 = myProjectURI.appendSegment("someFolder").appendSegment("someFile.txt");
-		SafeURI uriBad = myProjectURI.getParent().appendSegment("DoesNotExist").appendSegment("someFile.txt");
+		SafeURI<?> uri0 = myProjectURI;
+		SafeURI<?> uri1 = myProjectURI.appendSegment("someFile.txt");
+		SafeURI<?> uri2 = myProjectURI.appendSegment("someFolder").appendSegment("someFile.txt");
+		SafeURI<?> uriBad = myProjectURI.getParent().appendSegment("DoesNotExist").appendSegment("someFile.txt");
 		assertEquals(0, packageJsonExtension.getDepthOfLocation(uri0.toURI()));
 		assertEquals(0, packageJsonExtension.getDepthOfLocation(uri0.toURI().appendSegments(emptySegments)));
 		assertEquals(1, packageJsonExtension.getDepthOfLocation(uri1.toURI()));

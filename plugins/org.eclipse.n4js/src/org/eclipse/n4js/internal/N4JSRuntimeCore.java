@@ -54,7 +54,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 
 	private final FileBasedWorkspace workspace;
 
-	private final N4JSModel<? extends SafeURI> model;
+	private final N4JSModel<? extends SafeURI<?>> model;
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
@@ -69,7 +69,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	 * Public for testing purpose.
 	 */
 	@Inject
-	public N4JSRuntimeCore(FileBasedWorkspace workspace, N4JSModel<? extends SafeURI> model) {
+	public N4JSRuntimeCore(FileBasedWorkspace workspace, N4JSModel<? extends SafeURI<?>> model) {
 		this.workspace = workspace;
 		this.model = model;
 	}
@@ -83,7 +83,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	}
 
 	@Override
-	public SafeURI toProjectLocation(URI uri) {
+	public SafeURI<?> toProjectLocation(URI uri) {
 		return model.toProjectLocation(uri);
 	}
 
@@ -237,7 +237,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	}
 
 	@Override
-	public ProjectDescription internalGetProjectDescription(SafeURI loc) {
+	public ProjectDescription internalGetProjectDescription(SafeURI<?> loc) {
 		return model.getProjectDescription(loc.toURI());
 	}
 }

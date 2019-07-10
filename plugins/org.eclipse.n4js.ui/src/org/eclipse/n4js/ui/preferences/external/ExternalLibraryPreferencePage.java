@@ -173,8 +173,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		if (!Arrays2.isEmpty(selection) && 1 == selection.length) {
 			Object data = selection[0].getData();
 
-			if (data instanceof SafeURI) {
-				SafeURI uri = (SafeURI) data;
+			if (data instanceof SafeURI<?>) {
+				SafeURI<?> uri = (SafeURI<?>) data;
 				if (ExternalLibraryPreferenceModel.isNodeModulesLocation(uri)) {
 					return data;
 				}
@@ -191,8 +191,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		return (IN4JSProject) getSelectedItem();
 	}
 
-	private SafeURI getSelectedNodeModulesURI() {
-		return (SafeURI) getSelectedItem();
+	private SafeURI<?> getSelectedNodeModulesURI() {
+		return (SafeURI<?>) getSelectedItem();
 	}
 
 	@Override

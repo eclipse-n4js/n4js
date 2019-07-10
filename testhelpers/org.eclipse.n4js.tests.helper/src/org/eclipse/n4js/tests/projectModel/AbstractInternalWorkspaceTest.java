@@ -27,7 +27,7 @@ import com.google.common.collect.Sets;
 
 /**
  */
-public abstract class AbstractInternalWorkspaceTest<Loc extends SafeURI> extends AbstractProjectModelTest<Loc> {
+public abstract class AbstractInternalWorkspaceTest<Loc extends SafeURI<Loc>> extends AbstractProjectModelTest<Loc> {
 
 	/***/
 	protected abstract InternalN4JSWorkspace<Loc> getWorkspace();
@@ -48,10 +48,10 @@ public abstract class AbstractInternalWorkspaceTest<Loc extends SafeURI> extends
 		assertEquals(libProjectName, description.getProjectName());
 	}
 
-	@SuppressWarnings({ "javadoc", "unchecked" })
+	@SuppressWarnings({ "javadoc" })
 	@Test
 	public void testGetProjectDescription_04() {
-		final Loc doesNotExist = (Loc) myProjectURI.getParent().appendSegment(myProjectName + "doesNotExist");
+		final Loc doesNotExist = myProjectURI.getParent().appendSegment(myProjectName + "doesNotExist");
 		final ProjectDescription description = getWorkspace().getProjectDescription(doesNotExist);
 		assertNull("Expecting null project description for non-existing project. Was: " + description, description);
 	}
@@ -77,21 +77,21 @@ public abstract class AbstractInternalWorkspaceTest<Loc extends SafeURI> extends
 	@Test
 	public void testGetFolderIterator_01() {
 		Set<Loc> containedURIs = Sets.newHashSet(getWorkspace().getFolderIterator(
-				(Loc) myProjectURI.appendSegment("src")));
+				myProjectURI.appendSegment("src")));
 		Set<Loc> expectation = Sets.newHashSet(
-				(Loc) myProjectURI.appendSegments(new String[] { "src", "A.js" }),
-				(Loc) myProjectURI.appendSegments(new String[] { "src", "B.js" }),
-				(Loc) myProjectURI.appendSegments(new String[] { "src", "sub", "B.js" }),
-				(Loc) myProjectURI.appendSegments(new String[] { "src", "sub", "C.js" }),
-				(Loc) myProjectURI.appendSegments(new String[] { "src", "sub", "leaf", "D.js" }));
+				myProjectURI.appendSegments(new String[] { "src", "A.js" }),
+				myProjectURI.appendSegments(new String[] { "src", "B.js" }),
+				myProjectURI.appendSegments(new String[] { "src", "sub", "B.js" }),
+				myProjectURI.appendSegments(new String[] { "src", "sub", "C.js" }),
+				myProjectURI.appendSegments(new String[] { "src", "sub", "leaf", "D.js" }));
 		assertEquals(expectation, containedURIs);
 	}
 
-	@SuppressWarnings({ "javadoc", "unchecked" })
+	@SuppressWarnings({ "javadoc" })
 	@Test
 	public void testGetFolderIterator_02() {
 		Set<Loc> containedURIs = Sets.newHashSet(getWorkspace().getFolderIterator(
-				(Loc) myProjectURI.appendSegment("doesNotExist")));
+				myProjectURI.appendSegment("doesNotExist")));
 		Set<Loc> expectation = Sets.newHashSet();
 		assertEquals(expectation, containedURIs);
 	}
@@ -100,11 +100,11 @@ public abstract class AbstractInternalWorkspaceTest<Loc extends SafeURI> extends
 	@Test
 	public void testGetFolderIterator_03() {
 		Set<Loc> containedURIs = Sets.newHashSet(getWorkspace().getFolderIterator(
-				(Loc) myProjectURI.appendSegments(new String[] { "src", "sub" })));
+				myProjectURI.appendSegments(new String[] { "src", "sub" })));
 		Set<Loc> expectation = Sets.newHashSet(
-				(Loc) myProjectURI.appendSegments(new String[] { "src", "sub", "B.js" }),
-				(Loc) myProjectURI.appendSegments(new String[] { "src", "sub", "C.js" }),
-				(Loc) myProjectURI.appendSegments(new String[] { "src", "sub", "leaf", "D.js" }));
+				myProjectURI.appendSegments(new String[] { "src", "sub", "B.js" }),
+				myProjectURI.appendSegments(new String[] { "src", "sub", "C.js" }),
+				myProjectURI.appendSegments(new String[] { "src", "sub", "leaf", "D.js" }));
 		assertEquals(expectation, containedURIs);
 	}
 }

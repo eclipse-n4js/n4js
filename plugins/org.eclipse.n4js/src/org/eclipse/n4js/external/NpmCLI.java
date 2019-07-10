@@ -156,7 +156,7 @@ public class NpmCLI {
 		String msg = "Uninstalling npm package '" + requestedChange.name + "'";
 		MultiStatus resultStatus = statusHelper.createMultiStatus(msg);
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
-		SafeURI nodeModulesLocationURI = externalLibraryWorkspace
+		SafeURI<?> nodeModulesLocationURI = externalLibraryWorkspace
 				.getRootLocationForResource(requestedChange.location);
 
 		List<String> packageNames = new ArrayList<>();

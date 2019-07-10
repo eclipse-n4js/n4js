@@ -674,7 +674,7 @@ class RuntimeEnvironmentResolutionTest {
 	 * @param packageJsonContent the content of the new package.json file.
 	 * @return returns with the URI referencing the brand new project.
 	 */
-	protected def SafeURI createProjectWithPackageJson(String projectName, String packageJsonContent) {
+	protected def SafeURI<?> createProjectWithPackageJson(String projectName, String packageJsonContent) {
 		val projectFolder = createProjectFolder(projectName)
 		writePackageJsonContent(createPackageJsonFile(projectFolder), packageJsonContent)
 		val result = new FileURI(projectFolder);

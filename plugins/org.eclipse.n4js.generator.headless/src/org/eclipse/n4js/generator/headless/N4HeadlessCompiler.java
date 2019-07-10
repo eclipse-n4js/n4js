@@ -793,7 +793,7 @@ public class N4HeadlessCompiler {
 		}
 
 		// Index manifest file, too. Index artifact names among project types and library dependencies.
-		SafeURI manifestUri = markedProject.project.getProjectDescriptionLocation();
+		SafeURI<?> manifestUri = markedProject.project.getProjectDescriptionLocation();
 		if (manifestUri != null) {
 			final Resource manifestResource = resourceSet.getResource(manifestUri.toURI(), true);
 			if (manifestResource != null) {

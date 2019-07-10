@@ -44,7 +44,7 @@ public final class ExternalLibraryHelper {
 	 * This excludes packages that have been installed to the external workspace as transitive dependency of a package
 	 * that has been explicitly installed on user request.
 	 */
-	public boolean isExternalProjectDirectory(SafeURI projectDirectory) {
+	public boolean isExternalProjectDirectory(SafeURI<?> projectDirectory) {
 		if (!projectDirectory.isDirectory()) {
 			return false;
 		}

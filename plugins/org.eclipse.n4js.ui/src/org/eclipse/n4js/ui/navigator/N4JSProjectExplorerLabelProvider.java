@@ -26,10 +26,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
@@ -194,9 +192,7 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 					Styler stylerName = StyledString.QUALIFIER_STYLER;
 					if (iProject.isAccessible()) {
 						IN4JSEclipseProject n4jsProject = n4jsCore.create(iProject).orNull();
-						SafeURI prjPckJson = n4jsProject.getSafeLocation()
-								.appendSegment(N4JSGlobals.PACKAGE_JSON);
-						if (indexSynchronizer.isInIndex(prjPckJson)) {
+						if (n4jsProject.isExternal()) {
 							stylerName = null;
 						}
 					}

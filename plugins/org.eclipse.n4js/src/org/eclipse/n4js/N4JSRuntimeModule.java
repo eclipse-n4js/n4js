@@ -369,7 +369,7 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	/**
 	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link java.io.File files}.
 	 */
-	public Class<? extends InternalN4JSWorkspace<? extends SafeURI>> bindInternalN4JSWorkspace() {
+	public Class<? extends InternalN4JSWorkspace<? extends SafeURI<?>>> bindInternalN4JSWorkspace() {
 		return FileBasedWorkspace.class;
 	}
 

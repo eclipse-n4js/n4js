@@ -23,23 +23,68 @@ import org.eclipse.emf.common.util.URI;
 import com.google.common.base.Preconditions;
 
 /**
- * A project location is a URI that does not end with an empty segment, e.g it points to the name of a directory.
+ * A data type that denotes a location based on a URI. The structure of the wrapped URI is asserted by
+ * {@link #validate(URI)}.
  */
-public abstract class SafeURI extends AbstractUriWrapper {
+public abstract class SafeURI<U extends SafeURI<U>> {
 
 	/**
-	 * Constructor.
+	 * The bare wrapped URI.
 	 */
-	protected SafeURI(URI location) {
-		super(location);
+	private final URI wrapped;
+
+	/**
+	 * Wraps the given URI.
+	 *
+	 * @param wrapped
+	 *            the bare URI.
+	 */
+	protected SafeURI(URI wrapped) {
+		this.wrapped = validate(wrapped);
+	}
+
+	/**
+	 * Validate the given URI to be of the correct shape.
+	 *
+	 * @param given
+	 *            the URI.
+	 * @return the URI if it
+	 */
+	protected URI validate(URI given) throws IllegalArgumentException, NullPointerException {
+		// Preconditions.checkArgument(!given.hasTrailingPathSeparator(), "%s must have a trailing path separator",
+		// given);
+		return Preconditions.checkNotNull(given);
+	}
+
+	/**
+	 * Returns the bare URI.
+	 *
+	 * @return the wrapped uri.
+	 */
+	public URI toURI() {
+		return wrapped;
 	}
 
 	@Override
-	protected URI validate(URI given) throws IllegalArgumentException, NullPointerException {
-		super.validate(given);
-		// Preconditions.checkArgument(!given.hasTrailingPathSeparator(), "%s must have a trailing path separator",
-		// given);
-		return given;
+	public int hashCode() {
+		return wrapped.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SafeURI<?> other = (SafeURI<?>) obj;
+		return wrapped.equals(other.wrapped);
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "[" + toURI() + "]";
 	}
 
 	public abstract boolean isFile();
@@ -50,41 +95,41 @@ public abstract class SafeURI extends AbstractUriWrapper {
 
 	public abstract boolean isDirectory();
 
-	public abstract Iterable<? extends SafeURI> getChildren();
+	public abstract Iterable<? extends U> getChildren();
 
 	public abstract InputStream getContents() throws IOException;
 
 	public abstract String getAbsolutePath();
 
-	public abstract SafeURI resolve(String relativePath);
+	public abstract U resolve(String relativePath);
 
 	/*
 	 * // make sure workspace location has trailing path separator (for correct resolution) if
 	 * (!workspaceLocation.hasTrailingPathSeparator()) { workspaceLocation = workspaceLocation.appendSegment(""); }
 	 */
-	public List<String> deresolve(SafeURI base) {
+	public List<String> deresolve(U base) {
 		Preconditions.checkArgument(base.getClass().equals(getClass()));
 		URI result = toURI().deresolve(base.toURI());
 		return result.segmentsList();
 	}
 
-	public abstract SafeURI appendPath(String path);
+	public abstract U appendPath(String path);
 
-	public abstract SafeURI appendSegment(String segment);
+	public abstract U appendSegment(String segment);
 
-	public abstract SafeURI appendSegments(String[] segments);
+	public abstract U appendSegments(String[] segments);
 
 	public boolean isEmpty() {
 		return toURI().isEmpty();
 	}
 
-	public abstract SafeURI getParent();
+	public abstract U getParent();
 
-	public abstract SafeURI resolveSymLinks();
+	public abstract FileURI resolveSymLinks();
 
-	public abstract Iterator<? extends SafeURI> getAllChildren();
+	public abstract Iterator<? extends U> getAllChildren();
 
-	public boolean isParent(SafeURI nestedLocation) {
+	public boolean isParent(U nestedLocation) {
 		return toFileSystemPath().startsWith(nestedLocation.toFileSystemPath());
 	}
 
@@ -92,8 +137,10 @@ public abstract class SafeURI extends AbstractUriWrapper {
 
 	public abstract Path toFileSystemPath();
 
-	public SafeURI getParentOf(Predicate<? super String> predicate) {
-		SafeURI result = this;
+	protected abstract U self();
+
+	public U getParentOf(Predicate<? super String> predicate) {
+		U result = self();
 		while (result != null && !predicate.test(result.getName())) {
 			result = result.getParent();
 		}

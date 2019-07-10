@@ -64,7 +64,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<SafeURI> toBeScheduled) {
+	public void scheduleWorkspaceProjects(IProgressMonitor monitor, Set<SafeURI<?>> toBeScheduled) {
 		// NOOP
 	}
 
@@ -79,7 +79,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public boolean isNecessary(SafeURI location) {
+	public boolean isNecessary(SafeURI<?> location) {
 		return true;
 	}
 

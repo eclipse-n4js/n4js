@@ -17,15 +17,21 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.internal.locations.SafeURI;
 
 /**
  *
  */
-public class MockURIWrapper extends SafeURI {
+public class MockURIWrapper extends SafeURI<MockURIWrapper> {
 
-	public MockURIWrapper() {
+	MockURIWrapper() {
 		super(URI.createURI("mock://should.be.never.used"));
+	}
+
+	@Override
+	protected MockURIWrapper self() {
+		return this;
 	}
 
 	@Override
@@ -54,7 +60,7 @@ public class MockURIWrapper extends SafeURI {
 	}
 
 	@Override
-	public Iterable<? extends SafeURI> getChildren() {
+	public Iterable<? extends MockURIWrapper> getChildren() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -69,37 +75,37 @@ public class MockURIWrapper extends SafeURI {
 	}
 
 	@Override
-	public SafeURI resolve(String relativePath) {
+	public MockURIWrapper resolve(String relativePath) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SafeURI appendSegment(String packageJson) {
+	public MockURIWrapper appendSegment(String packageJson) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SafeURI appendSegments(String[] segments) {
+	public MockURIWrapper appendSegments(String[] segments) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SafeURI appendPath(String path) {
+	public MockURIWrapper appendPath(String path) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SafeURI getParent() {
+	public MockURIWrapper getParent() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public SafeURI resolveSymLinks() {
+	public FileURI resolveSymLinks() {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Iterator<? extends SafeURI> getAllChildren() {
+	public Iterator<? extends MockURIWrapper> getAllChildren() {
 		throw new UnsupportedOperationException();
 	}
 

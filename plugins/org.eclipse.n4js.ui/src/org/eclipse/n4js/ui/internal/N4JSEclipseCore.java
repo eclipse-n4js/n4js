@@ -59,7 +59,7 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 	}
 
 	@Override
-	public SafeURI toProjectLocation(URI uri) {
+	public SafeURI<?> toProjectLocation(URI uri) {
 		return model.toProjectLocation(uri);
 	}
 
@@ -157,7 +157,7 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 	}
 
 	@Override
-	public ProjectDescription internalGetProjectDescription(SafeURI loc) {
+	public ProjectDescription internalGetProjectDescription(SafeURI<?> loc) {
 		return model.getProjectDescription(loc.toURI());
 	}
 

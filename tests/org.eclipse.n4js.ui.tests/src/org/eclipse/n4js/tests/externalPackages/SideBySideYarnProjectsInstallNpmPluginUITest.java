@@ -89,7 +89,7 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 		assertIssues(pkgJsonP1, "line 16: Project does not exist with project ID: lodash.");
 	}
 
-	private String getDependencyVersion(SafeURI loc, String dependencyName) {
+	private String getDependencyVersion(SafeURI<?> loc, String dependencyName) {
 		ProjectDescription prjDesc1 = prjDescLoader.loadProjectDescriptionAtLocation(loc);
 		Optional<ProjectDependency> depPrj = prjDesc1.getProjectDependencies().stream()
 				.filter(prjDep -> prjDep.getProjectName().equals(dependencyName))

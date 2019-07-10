@@ -81,13 +81,13 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 
 	@Override
 	public void storeUpdated(ExternalLibraryPreferenceStore store, IProgressMonitor monitor) {
-		Set<SafeURI> oldLocations = new HashSet<>(getRootLocationsInReversedShadowingOrder());
-		Set<SafeURI> newLocations = new HashSet<>(store.getLocations());
+		Set<SafeURI<?>> oldLocations = new HashSet<>(getRootLocationsInReversedShadowingOrder());
+		Set<SafeURI<?>> newLocations = new HashSet<>(store.getLocations());
 
-		Set<SafeURI> removedLocations = new HashSet<>(oldLocations);
+		Set<SafeURI<?>> removedLocations = new HashSet<>(oldLocations);
 		removedLocations.removeAll(newLocations);
 
-		Set<SafeURI> addedLocations = new HashSet<>(newLocations);
+		Set<SafeURI<?>> addedLocations = new HashSet<>(newLocations);
 		addedLocations.removeAll(oldLocations);
 	}
 
@@ -181,7 +181,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return Collections.unmodifiableList(prjList);
 	}
 
-	N4JSExternalProject getProject(SafeURI projectLocation) {
+	N4JSExternalProject getProject(SafeURI<?> projectLocation) {
 		ensureInitialized();
 		Pair<N4JSExternalProject, ProjectDescription> pair = mappings.completeCache.get(projectLocation);
 		if (pair != null) {
@@ -190,7 +190,7 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return null;
 	}
 
-	Pair<N4JSExternalProject, ProjectDescription> getProjectWithDescription(SafeURI location) {
+	Pair<N4JSExternalProject, ProjectDescription> getProjectWithDescription(SafeURI<?> location) {
 		ensureInitialized();
 		return mappings.completeCache.get(location);
 	}

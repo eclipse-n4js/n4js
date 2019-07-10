@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableList;
 
 /**
  */
-public abstract class AbstractN4JSProjectTest<Loc extends SafeURI> extends AbstractProjectModelTest<Loc> {
+public abstract class AbstractN4JSProjectTest<Loc extends SafeURI<Loc>> extends AbstractProjectModelTest<Loc> {
 
 	/***/
 	protected abstract IN4JSCore getN4JSCore();
