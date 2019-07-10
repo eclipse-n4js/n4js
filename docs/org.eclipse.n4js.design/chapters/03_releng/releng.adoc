@@ -81,7 +81,7 @@ Available system properties:
 
 [horizontal]
 noTests::               suppress execution of all tests
-startAndKeepVerdaccio:: enfore starting and suppress stopping of the test verdaccio (see <<sec:test-verdaccio>>)
+startAndKeepVerdaccio:: enforce starting and suppress stopping of the test verdaccio (see <<sec:test-verdaccio>>)
 
 
 
@@ -101,7 +101,7 @@ The existence of `local-snapshot-deploy-folder` will trigger a profile enabling 
 === Test Verdaccio containing n4js-libs
 
 If profile `execute-hlc-integration-tests` is active, a local verdaccio instance is started and populated with
-freshly-compiled n4js-libs (the libraries located under top-level folder `/n4js-libs`) and is stopped at the
+freshly-compiled n4js-libs (the libraries located under top-level folder `/n4js-libs`) and is stopped before the
 end of the build. The verdaccio instance is started as a docker container called `n4js-test-verdaccio`.
 
 When giving `-DstartAndKeepVerdaccio` on the command line, such a test verdaccio will always be started/populated but
