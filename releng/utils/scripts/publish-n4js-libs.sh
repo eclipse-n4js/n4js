@@ -168,10 +168,6 @@ lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/e
 lerna exec -- rm package.json_TEMP
 
 echo "==== STEP 9/9: Now publishing with version: ${PUBLISH_VERSION} and dist-tag ${NPM_TAG}"
-if [ "$DESTINATION" = "public" ]; then
-    echo "NOT PUBLISHING TO PUBLIC NPM REGISTRY FROM BRANCH IDE-3276"
-else
-    lerna publish --loglevel info --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --npm-tag="${NPM_TAG}"
-fi
+lerna publish --loglevel info --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --npm-tag="${NPM_TAG}"
 
 echo "==== DONE publishing n4js-libs (including n4js-cli)"
