@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
 /**
@@ -53,6 +54,7 @@ public interface ISourceFolderEx extends ISourceFolder {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				URI uri = URI.createFileURI(file.toString());
+				uri = URIUtils.addEmptyAuthority(uri);
 				uris.add(uri);
 				return FileVisitResult.CONTINUE;
 			}
@@ -66,5 +68,4 @@ public interface ISourceFolderEx extends ISourceFolder {
 
 		return uris;
 	}
-
 }

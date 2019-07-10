@@ -133,9 +133,7 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
 						nodeModuleFolderCounter--;
 					}
-
 					File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
-
 					if (pckJson.isFile()) {
 						result.add(new FileURI(dir.toFile()));
 					}

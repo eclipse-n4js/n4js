@@ -12,10 +12,7 @@ package org.eclipse.n4js.internal;
 
 import static com.google.common.base.Optional.fromNullable;
 import static java.util.Collections.emptyList;
-import static org.eclipse.emf.common.util.URI.createFileURI;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -101,28 +98,6 @@ public class N4JSProject implements IN4JSProject {
 	@Override
 	public SafeURI<?> getProjectDescriptionLocation() {
 		return getProjectDescriptionFile();
-	}
-
-	/**
-	 * Returns with the {@link org.eclipse.emf.common.util.URI} of the file. Returns with {@code null} if the file
-	 * argument is {@code null} or the file does not exist. This method may throw runtime exception if the canonical
-	 * file cannot be retrieved of the argument.
-	 *
-	 * @param file
-	 *            the file to get the URI of.
-	 * @return the URI of the file.
-	 */
-	protected URI getFileUri(final File file) {
-		if (null == file || !file.exists()) {
-			return null;
-		}
-		try {
-			final File canonicalFile = file.getCanonicalFile();
-			return createFileURI(canonicalFile.getAbsolutePath());
-		} catch (final IOException e) {
-			throw new RuntimeException(
-					"Error while resolving the canonical File of package.json file " + file.getPath() + ".", e);
-		}
 	}
 
 	protected boolean checkExists() {

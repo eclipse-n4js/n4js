@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ide
 Bundle-SymbolicName: org.eclipse.n4js.ts.ide
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.0.1.qualifier
 Require-Bundle: org.eclipse.n4js.ts,
  org.eclipse.xtext,
  org.eclipse.xtext.ide,
@@ -12,6 +12,8 @@ Require-Bundle: org.eclipse.n4js.ts,
  com.google.inject,
  com.google.gson
 Export-Package: org.eclipse.n4js.ts.ide,
- org.eclipse.n4js.ts.ide.contentassist.antlr
+ org.eclipse.n4js.ts.ide.contentassist.antlr,
+ org.eclipse.n4js.ts.ide.contentassist.antlr.internal,
+ org.eclipse.n4js.ts.ide.contentassist.antlr.lexer
 Automatic-Module-Name: org.eclipse.n4js.ts.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-11
