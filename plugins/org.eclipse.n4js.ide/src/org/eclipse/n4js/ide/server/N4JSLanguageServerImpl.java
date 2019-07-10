@@ -36,9 +36,6 @@ public class N4JSLanguageServerImpl extends LanguageServerImpl {
 	@Inject
 	UriExtensions uriUtils;
 
-	@Inject
-	private IWorkspaceConfig workspaceConfig;
-
 	// TODO we should probably use the DisposableRegistry here
 	/**
 	 * Called by Guice to initialize the languages. This way it is guaranteed that the registration happends exactly
@@ -93,6 +90,8 @@ public class N4JSLanguageServerImpl extends LanguageServerImpl {
 
 	private boolean isInOutputFolder(String uriString) {
 		URI uri = uriUtils.toUri(uriString);
+		N4JSWorkspaceManager workspaceManager = (N4JSWorkspaceManager) getWorkspaceManager();
+		IWorkspaceConfig workspaceConfig = workspaceManager.getWorkspaceConfig();
 		IProjectConfigEx projectConfig = (IProjectConfigEx) workspaceConfig.findProjectContaining(uri);
 		boolean isInOutputFolder = projectConfig != null && projectConfig.isInOutputFolder(uri);
 		return isInOutputFolder;

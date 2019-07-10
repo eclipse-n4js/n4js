@@ -13,6 +13,7 @@ package org.eclipse.n4js.projectModel.lsp;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.lsp.ex.IProjectConfigEx;
 
 public interface IN4JSProjectConfig extends IProjectConfigEx {
@@ -24,4 +25,6 @@ public interface IN4JSProjectConfig extends IProjectConfigEx {
 
 	@Override
 	IN4JSWorkspaceConfig getWorkspaceConfig();
+
+	IN4JSProject toProject();
 }

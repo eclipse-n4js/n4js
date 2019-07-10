@@ -17,6 +17,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.util.Strings;
 
 import com.google.common.base.Optional;
 
@@ -49,7 +50,11 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 
 	@Override
 	public SafeURI<?> getSafeLocation() {
-		return project.getSafeLocation().appendPath(getRelativeLocation());
+		String location = getRelativeLocation();
+		if (!Strings.isEmpty(location)) {
+			return project.getSafeLocation().appendPath(getRelativeLocation());
+		}
+		return project.getSafeLocation();
 	}
 
 	@Override

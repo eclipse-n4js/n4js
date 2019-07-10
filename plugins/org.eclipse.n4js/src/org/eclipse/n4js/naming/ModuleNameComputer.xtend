@@ -100,7 +100,10 @@ class ModuleNameComputer {
 	}
 
 	private def boolean uriStartsWith(URI resourceLocation, URI containerLocation) {
-		val maxSegments = containerLocation.segmentCount();
+		val maxSegments = if (containerLocation.hasTrailingPathSeparator)
+			containerLocation.segmentCount() - 1
+		else 
+			containerLocation.segmentCount();
 		if (resourceLocation.segmentCount < maxSegments) {
 			return false;
 		}

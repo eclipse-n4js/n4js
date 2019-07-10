@@ -39,6 +39,11 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 		return delegate.getProjectName();
 	}
 
+	@Override
+	public IN4JSProject toProject() {
+		return delegate;
+	}
+
 	/**
 	 * FIXME: MISSING JAVA-DOC<br/>
 	 * THIS METHOD MUST RETURN AN URI THAT ENDS WITH '/'.<br/>
@@ -76,8 +81,13 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 		}
 
 		@Override
+		public boolean contains(URI uri) {
+			return getAllResources().contains(uri);
+		}
+
+		@Override
 		public URI getPath() {
-			return N4JSProjectConfig.this.getPath();
+			return delegate.getSafeLocation().toURI();
 		}
 	}
 

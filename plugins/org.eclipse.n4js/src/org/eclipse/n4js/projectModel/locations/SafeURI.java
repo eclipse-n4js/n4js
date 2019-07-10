@@ -84,7 +84,7 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[" + toURI() + "]";
+		return toURI().toString();
 	}
 
 	public abstract boolean isFile();

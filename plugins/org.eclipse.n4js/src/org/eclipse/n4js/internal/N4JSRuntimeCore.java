@@ -33,6 +33,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -89,7 +90,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 
 	@Override
 	public Optional<? extends IN4JSProject> findProject(URI nestedLocation) {
-		if (nestedLocation == null) {
+		if (nestedLocation == null || N4Scheme.isN4Scheme(nestedLocation)) {
 			return Optional.absent();
 		}
 		IN4JSProject result = model.findProjectWith(nestedLocation);
