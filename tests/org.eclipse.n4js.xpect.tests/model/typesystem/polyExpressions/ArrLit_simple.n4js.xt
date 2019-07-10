@@ -56,20 +56,54 @@ var v14 : Array<? extends B> = [ ,,, b,,, c,,, ];
 
 
 // ------------------------------------------------------------------
+// with spread of a literal
+
+// XPECT type of '[ b, ...[c] ]' --> Array<union{B,C}>
+var v21 = [ b, ...[c] ];
+
+// XPECT type of '[ b, ...[c] ]' --> Array<B>
+var v22 : Array<B> = [ b, ...[c] ];
+
+// XPECT type of '[ b, ...[c] ]' --> Array<A>
+var v23 : Array<A> = [ b, ...[c] ];
+
+// XPECT type of '[ b, ...[c] ]' --> Array<union{B,C}>
+var v24 : Array<? extends B> = [ b, ...[c] ];
+
+
+// ------------------------------------------------------------------
+// with spread of some other expression
+
+function getArrOfC(): C[] { return null; }
+
+// XPECT type of '[ b, ...getArrOfC() ]' --> Array<union{B,C}>
+var v31 = [ b, ...getArrOfC() ];
+
+// XPECT type of '[ b, ...getArrOfC() ]' --> Array<B>
+var v32 : Array<B> = [ b, ...getArrOfC() ];
+
+// XPECT type of '[ b, ...getArrOfC() ]' --> Array<A>
+var v33 : Array<A> = [ b, ...getArrOfC() ];
+
+// XPECT type of '[ b, ...getArrOfC() ]' --> Array<union{B,C}>
+var v34 : Array<? extends B> = [ b, ...getArrOfC() ];
+
+
+// ------------------------------------------------------------------
 // empty
 
 
 // XPECT type of '[]' --> Array<any>
-var v21 = [];
+var v41 = [];
 
 // XPECT type of '[]' --> Array<B>
-var v22 : Array<B> = [];
+var v42 : Array<B> = [];
 
 // XPECT type of '[]' --> Array<any>
-var v23 : Array<?> = [];
+var v43 : Array<?> = [];
 
 // XPECT type of '[]' --> Array<B>
-var v24 : Array<? extends B> = [];
+var v44 : Array<? extends B> = [];
 
 
 // ------------------------------------------------------------------
@@ -79,16 +113,16 @@ var v24 : Array<? extends B> = [];
 
 
 // XPECT type of '[ b, c ]' --> Array<union{B,C}>
-var v31 = [ b, c ];
+var v51 = [ b, c ];
 
 // XPECT type of '[ b, c ]' --> Array<union{B,C}>
-var v32 : Iterable<B> = [ b, c ];
+var v52 : Iterable<B> = [ b, c ];
 
 // XPECT type of '[ b, c ]' --> Array<union{B,C}>
-var v33 : Iterable<A> = [ b, c ];
+var v53 : Iterable<A> = [ b, c ];
 
 // XPECT type of '[ b, c ]' --> Array<union{B,C}>
-var v34 : Iterable<? extends B> = [ b, c ];
+var v54 : Iterable<? extends B> = [ b, c ];
 
 
 // ------------------------------------------------------------------
