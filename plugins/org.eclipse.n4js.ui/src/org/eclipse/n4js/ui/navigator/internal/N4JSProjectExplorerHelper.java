@@ -150,9 +150,7 @@ public class N4JSProjectExplorerHelper {
 	 *         {@code false}.
 	 */
 	public N4JSExternalProject getNodeModulesNpmProjectOrNull(IFolder folder) {
-		String npmPckJson = folder.getLocation().toOSString();
-		org.eclipse.emf.common.util.URI folderURI = org.eclipse.emf.common.util.URI.createFileURI(npmPckJson);
-		return externalLibraryWorkspace.getProject(folderURI);
+		return externalLibraryWorkspace.getProject(new FileURI(folder.getLocation().toFile()));
 	}
 
 	/**

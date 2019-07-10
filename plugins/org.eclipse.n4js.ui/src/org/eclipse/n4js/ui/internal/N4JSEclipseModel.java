@@ -113,6 +113,15 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 	}
 
 	@Override
+	protected N4JSEclipseProject getN4JSProject(SafeURI<?> location, boolean external) {
+		N4JSEclipseProject result = getN4JSProject(location.toURI());
+		if (result.isExternal() != external) {
+			return null;
+		}
+		return result;
+	}
+
+	@Override
 	public N4JSEclipseProject findProjectWith(URI nestedLocation) {
 		return (N4JSEclipseProject) super.findProjectWith(nestedLocation);
 	}

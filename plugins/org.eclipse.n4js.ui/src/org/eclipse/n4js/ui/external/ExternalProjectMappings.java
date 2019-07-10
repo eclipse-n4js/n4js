@@ -33,6 +33,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
@@ -164,7 +165,7 @@ public class ExternalProjectMappings {
 			completeListTmp.add(Tuples.pair(projectLocation, prjDescr));
 
 			// shadowing is done here by checking if an npm is already in the mapping
-			String projectName = project.getName(); // ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation);
+			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation);
 			if (!completeProjectNameMappingTmp.containsKey(projectName)) {
 
 				completeProjectNameMappingTmp.put(projectName, Lists.newArrayList(project));
@@ -273,7 +274,9 @@ public class ExternalProjectMappings {
 			ProjectDependency pDep) {
 
 		String projectName = pDep.getProjectName();
-		SafeURI<?> depLoc = userWorkspace.findProject(projectName).transform(p -> p.getSafeLocation()).orNull();
+		String workspaceProjectName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(projectName);
+		SafeURI<?> depLoc = userWorkspace.findProject(workspaceProjectName).transform(p -> p.getSafeLocation())
+				.orNull();
 		// if (depLoc != null) {
 		// // respect closed workspace projects by omitting them
 		// String locStr = depLoc.toPlatformString(true);

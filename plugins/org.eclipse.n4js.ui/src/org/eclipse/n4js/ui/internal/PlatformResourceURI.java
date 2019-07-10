@@ -58,7 +58,7 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 	@Override
 	protected URI validate(URI given) throws IllegalArgumentException, NullPointerException {
 		super.validate(given);
-		Preconditions.checkArgument(given.isPlatformResource());
+		Preconditions.checkArgument(given.isPlatformResource(), "%s", given);
 		return given;
 	}
 
@@ -86,7 +86,8 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 
 	@Override
 	public boolean isDirectory() {
-		return getCachedResource().getType() == IResource.FOLDER;
+		int type = getCachedResource().getType();
+		return type == IResource.FOLDER || type == IResource.PROJECT;
 	}
 
 	@Override
@@ -123,7 +124,11 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 
 	@Override
 	public PlatformResourceURI resolve(String relativePath) {
-		URI result = URI.createURI(relativePath).resolve(toURI());
+		URI base = toURI();
+		if (!base.hasTrailingPathSeparator()) {
+			base = base.appendSegment("");
+		}
+		URI result = URI.createURI(relativePath).resolve(base);
 		return new PlatformResourceURI(result);
 	}
 
@@ -133,7 +138,11 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 		if (!URI.validSegments(relativeURI.segments())) {
 			return null;
 		}
-		URI result = relativeURI.resolve(toURI());
+		URI base = toURI();
+		if (!base.hasTrailingPathSeparator()) {
+			base = base.appendSegment("");
+		}
+		URI result = relativeURI.resolve(base);
 		return new PlatformResourceURI(result);
 	}
 
@@ -175,7 +184,8 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 				container.accept(new IResourceVisitor() {
 					@Override
 					public boolean visit(IResource resource) throws CoreException {
-						result.add(new PlatformResourceURI(resource));
+						if (resource.getType() == IResource.FILE)
+							result.add(new PlatformResourceURI(resource));
 						// do not iterate over contents of nested node_modules folders
 						if (resource.getType() == IResource.FOLDER
 								&& resource.getName().equals(N4JSGlobals.NODE_MODULES)) {

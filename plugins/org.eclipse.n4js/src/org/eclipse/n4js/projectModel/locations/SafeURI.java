@@ -116,7 +116,11 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	 */
 	public List<String> deresolve(U base) {
 		Preconditions.checkArgument(base.getClass().equals(getClass()));
-		URI result = toURI().deresolve(base.toURI());
+		URI baseURI = base.toURI();
+		if (!baseURI.hasTrailingPathSeparator()) {
+			baseURI = baseURI.appendSegment("");
+		}
+		URI result = toURI().deresolve(baseURI.appendSegment(""), false, true, true);
 		return result.segmentsList();
 	}
 
@@ -137,7 +141,7 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	public abstract Iterator<? extends U> getAllChildren();
 
 	public boolean isParent(U nestedLocation) {
-		return toFileSystemPath().startsWith(nestedLocation.toFileSystemPath());
+		return nestedLocation.toFileSystemPath().startsWith(toFileSystemPath());
 	}
 
 	public abstract void delete(Consumer<? super IOException> errorHandler);

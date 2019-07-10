@@ -287,7 +287,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	static final public FileURI getRootLocationForResource(Collection<FileURI> rootLocations,
 			SafeURI<?> nestedLocation) {
 
-		if (nestedLocation == null || nestedLocation.isEmpty() || !nestedLocation.isFile()) {
+		if (nestedLocation == null || nestedLocation.isEmpty() || !nestedLocation.exists()) {
 			return null;
 		}
 

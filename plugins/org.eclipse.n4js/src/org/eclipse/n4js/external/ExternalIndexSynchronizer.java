@@ -24,6 +24,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
@@ -38,6 +39,7 @@ import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -144,7 +146,7 @@ public abstract class ExternalIndexSynchronizer {
 			FileURI location = pair.getFirst();
 			IN4JSProject project = core.findProject(location.toURI()).orNull();
 
-			if (project == null || !shadowingInfoHelper.isShadowedProject(project)) {
+			if (project != null && !shadowingInfoHelper.isShadowedProject(project)) {
 				ProjectDescription projectDescription = pair.getSecond();
 				VersionNumber version = projectDescription.getProjectVersion();
 				String name = projectDescription.getProjectName();
@@ -279,7 +281,8 @@ public abstract class ExternalIndexSynchronizer {
 
 	private void addToIndex(Map<String, Pair<FileURI, String>> npmsIndex,
 			IResourceDescription resourceDescription) {
-		FileURI nestedLocation = new FileURI(resourceDescription.getURI());
+		URI uri = URIUtils.addEmptyAuthority(resourceDescription.getURI());
+		FileURI nestedLocation = new FileURI(uri);
 		FileURI rootLocation = externalLibraryWorkspace.getRootLocationForResourceOrInfer(nestedLocation);
 		if (rootLocation == null) {
 			logger.logInfo("Could not find location for: " + nestedLocation.toString()

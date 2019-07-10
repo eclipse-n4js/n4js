@@ -92,7 +92,11 @@ public class FileURI extends SafeURI<FileURI> {
 		if (!URI.validSegments(relativeURI.segments())) {
 			return null;
 		}
-		URI result = relativeURI.resolve(toURI());
+		URI base = toURI();
+		if (!base.hasTrailingPathSeparator()) {
+			base = base.appendSegment("");
+		}
+		URI result = relativeURI.resolve(base);
 		return new FileURI(result);
 		// String relativePathWithForwardSlashes = path.replace(File.separatorChar, '/');
 		// String[] segments = relativePathWithForwardSlashes.split("/");
@@ -168,7 +172,11 @@ public class FileURI extends SafeURI<FileURI> {
 
 	@Override
 	public FileURI resolve(String relativePath) {
-		URI result = URI.createURI(relativePath).resolve(toURI());
+		URI base = toURI();
+		if (!base.hasTrailingPathSeparator()) {
+			base = base.appendSegment("");
+		}
+		URI result = URI.createURI(relativePath).resolve(base);
 		return new FileURI(result);
 	}
 
@@ -201,7 +209,9 @@ public class FileURI extends SafeURI<FileURI> {
 					return Collections.emptyIterator();
 				}
 			};
-			return FluentIterable.from(() -> treeIterator).transform(FileURI::new).iterator();
+			return FluentIterable.from(() -> treeIterator)
+					.filter(File::isFile)
+					.transform(FileURI::new).iterator();
 		}
 		return Collections.emptyIterator();
 	}

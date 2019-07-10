@@ -127,17 +127,19 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 
 	public IN4JSProject findProjectWith(URI nestedLocation) {
 		// FIXME: mm
-		// URI correctNestedLocation = convertToCorrespondingLocation(nestedLocation);
-		SafeURI<?> location = fromURI(workspace, nestedLocation);
-		if (location != null) {
-			return getN4JSProject(location, false);
+		if (nestedLocation.isPlatformResource()) {
+			SafeURI<?> location = fromURI(workspace, nestedLocation);
+			if (location != null) {
+				return getN4JSProject(location, false);
+			}
 		}
 
-		SafeURI<?> externalLocation = fromURI(externalLibraryWorkspace, nestedLocation);
-		if (null != externalLocation) {
-			return getN4JSProject(externalLocation, true);
+		if (nestedLocation.isFile()) {
+			SafeURI<?> externalLocation = fromURI(externalLibraryWorkspace, nestedLocation);
+			if (null != externalLocation) {
+				return getN4JSProject(externalLocation, true);
+			}
 		}
-
 		return null;
 	}
 
@@ -196,11 +198,13 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	 * This delegates to {@link InternalN4JSWorkspace#getProjectDescription(URI)} to allow caching.
 	 */
 	public ProjectDescription getProjectDescription(URI location) {
-		ProjectDescription description = getProjectDescription(workspace, location);
-		if (null == description) {
-			description = getProjectDescription(externalLibraryWorkspace, location);
+		if (location.isPlatformResource()) {
+			return getProjectDescription(workspace, location);
 		}
-		return description;
+		if (location.isFile()) {
+			return getProjectDescription(externalLibraryWorkspace, location);
+		}
+		return null;
 	}
 
 	private <PL extends SafeURI<PL>> ProjectDescription getProjectDescription(InternalN4JSWorkspace<PL> ws,

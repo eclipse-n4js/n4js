@@ -66,6 +66,7 @@ import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.ui.internal.PlatformResourceURI;
 import org.eclipse.n4js.ui.utils.TimeoutRuntimeException;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
@@ -355,7 +356,7 @@ public class ProjectTestsUtils {
 
 		if (libraryManager != null) {
 			waitForAllJobs();
-			libraryManager.runNpmYarnInstall(URI.createFileURI(yarnPath.toString()), new NullProgressMonitor());
+			libraryManager.runNpmYarnInstall(new PlatformResourceURI(yarnProject).toURI(), new NullProgressMonitor());
 		}
 		waitForAllJobs();
 		waitForAutoBuild();

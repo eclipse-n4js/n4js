@@ -1386,7 +1386,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			for (org.eclipse.xtext.util.Pair<FileURI, ProjectDescription> pair: extWS.projectsIncludingUnnecessary) {
 				val location = pair.first;
 				val project = findProject(location.toURI).orNull;
-				if (!shadowingInfoHelper.isShadowedProject(project) && !res.containsKey(project.projectName)) {
+				if (project !== null && !shadowingInfoHelper.isShadowedProject(project) && !res.containsKey(project.projectName)) {
 					res.put(project.projectName, project);
 				}
 			}

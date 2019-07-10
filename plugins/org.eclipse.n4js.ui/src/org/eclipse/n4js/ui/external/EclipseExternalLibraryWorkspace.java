@@ -42,9 +42,10 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.internal.PlatformResourceURI;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.builder.impl.BuilderStateDiscarder;
 import org.eclipse.xtext.builder.impl.IBuildFlag;
 import org.eclipse.xtext.util.Pair;
@@ -140,42 +141,52 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	}
 
 	public FileURI findProjectWith(URI nestedLocation) {
-		FileURI location = (FileURI) core.toProjectLocation(nestedLocation);
+		FileURI location = new FileURI(nestedLocation);
 		return findProjectWith(location);
 	}
 
 	@Override
 	public FileURI findProjectWith(FileURI nestedLocation) {
 		FileURI rootLoc = getRootLocationForResource(nestedLocation);
-
 		if (rootLoc != null) {
-			if (projectProvider.getProject(rootLoc) != null) {
-				return rootLoc;
+			FileURI uriCandidate = computeProjectURI(nestedLocation, rootLoc);
+			if (projectProvider.getProject(uriCandidate) != null) {
+				return uriCandidate;
 			}
 		}
-
 		return null;
 	}
 
-	private URI computeProjectURI(URI nestedLocation, java.net.URI rootLoc) {
-		String rootLocStr = rootLoc.toString();
-		URI loc = URI.createURI(rootLocStr);
-		URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
-		int oldSegmentCount = nestedLocation.segmentCount();
-		int newSegmentCount = prefix.segmentCount()
-				- 1 // -1 because of the trailing empty segment
-				+ 1; // +1 to include the project folder
-		if (newSegmentCount - 1 >= oldSegmentCount) {
-			return null; // can happen if the URI of an external library location is passed in
+	private FileURI computeProjectURI(FileURI nestedLocation, FileURI rootLoc) {
+		List<String> path = nestedLocation.deresolve(rootLoc);
+		Iterator<String> iterator = path.iterator();
+		FileURI result = rootLoc;
+		while (iterator.hasNext()) {
+			String segment = iterator.next();
+			result = result.appendSegment(segment);
+			if (!segment.startsWith("@")) {
+				return result;
+			}
 		}
-		String projectNameCandidate = nestedLocation.segment(newSegmentCount - 1);
-		if (projectNameCandidate.startsWith("@")) {
-			// last segment is a folder representing an npm scope, not a project folder
-			// --> add 1 to include the actual project folder
-			++newSegmentCount;
-		}
-		URI uriCandidate = nestedLocation.trimSegments(oldSegmentCount - newSegmentCount).trimFragment();
-		return uriCandidate;
+		return result;
+		// String rootLocStr = rootLoc.toString();
+		// URI loc = URI.createURI(rootLocStr);
+		// URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
+		// int oldSegmentCount = nestedLocation.segmentCount();
+		// int newSegmentCount = prefix.segmentCount()
+		// - 1 // -1 because of the trailing empty segment
+		// + 1; // +1 to include the project folder
+		// if (newSegmentCount - 1 >= oldSegmentCount) {
+		// return null; // can happen if the URI of an external library location is passed in
+		// }
+		// String projectNameCandidate = nestedLocation.segment(newSegmentCount - 1);
+		// if (projectNameCandidate.startsWith("@")) {
+		// // last segment is a folder representing an npm scope, not a project folder
+		// // --> add 1 to include the actual project folder
+		// ++newSegmentCount;
+		// }
+		// URI uriCandidate = nestedLocation.trimSegments(oldSegmentCount - newSegmentCount).trimFragment();
+		// return uriCandidate;
 	}
 
 	@Override
@@ -312,8 +323,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 		Set<IProject> scheduledProjects = newHashSet();
 		for (SafeURI<?> scheduledURI : toBeScheduled) {
 			IN4JSProject wsProject = core.findProject(scheduledURI.toURI()).orNull();
-			if (wsProject instanceof N4JSEclipseProject) {
-				N4JSEclipseProject n4EclProject = (N4JSEclipseProject) wsProject;
+			if (wsProject instanceof IN4JSEclipseProject) {
+				IN4JSEclipseProject n4EclProject = (IN4JSEclipseProject) wsProject;
 				scheduledProjects.add(n4EclProject.getProject());
 			}
 		}
@@ -381,12 +392,16 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 
 	@Override
 	public N4JSExternalProject getProject(String projectName) {
-		return projectProvider.getProject(projectName);
+		return projectProvider
+				.getProject(ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(projectName));
 	}
 
 	@Override
 	public N4JSExternalProject getProject(URI projectLocation) {
-		return projectProvider.getProject(core.toProjectLocation(projectLocation));
+		if (projectLocation.isFile()) {
+			return projectProvider.getProject(new FileURI(projectLocation));
+		}
+		return null;
 	}
 
 	@Override
