@@ -143,7 +143,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 			ExternalProject project = projectProvider.getProject(projectName);
 			if (null != project) {
 				String projectPath = new File(project.getLocationURI()).getAbsolutePath();
-				String folderPath = folderLocation.toFileString();
+				String folderPath = URIUtils.removeAuthority(folderLocation).toFileString();
 				IContainer container = projectPath.equals(folderPath) ? project
 						: project.getFolder(folderPath.substring(projectPath.length() + 1));
 				Collection<URI> result = Lists.newLinkedList();
