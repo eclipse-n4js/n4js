@@ -61,12 +61,12 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSEclipseModel.class);
 
-	private final IWorkspaceRoot workspace;
+	private final IWorkspaceRoot workspaceRoot;
 
 	@Inject
 	public N4JSEclipseModel(EclipseBasedN4JSWorkspace workspace) {
 		super(workspace);
-		this.workspace = workspace.getWorkspace();
+		this.workspaceRoot = workspace.getWorkspace();
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 			if (project == null) { // via source map
 				String eclipseProjectName = ProjectDescriptionUtils
 						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
-				project = workspace.getProject(eclipseProjectName);
+				project = workspaceRoot.getProject(eclipseProjectName);
 				if (project != null) { // get location newly from project to make it a platform URI
 					return getN4JSProject(project);
 				}
@@ -99,7 +99,7 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 		} else {
 			final String eclipseProjectName = ProjectDescriptionUtils
 					.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
-			project = workspace.getProject(eclipseProjectName);
+			project = workspaceRoot.getProject(eclipseProjectName);
 		}
 		return doGetN4JSProject(project, toProjectLocation(location));
 	}
@@ -109,7 +109,7 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 		final URI uri = URI.createPlatformResourceURI(projectName, false);
 		final String eclipseProjectName = ProjectDescriptionUtils
 				.convertN4JSProjectNameToEclipseProjectName(projectName);
-		return new N4JSEclipseProject(workspace.getProject(eclipseProjectName), new PlatformResourceURI(uri), this);
+		return new N4JSEclipseProject(workspaceRoot.getProject(eclipseProjectName), new PlatformResourceURI(uri), this);
 	}
 
 	@Override
@@ -122,8 +122,22 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 	}
 
 	@Override
-	public N4JSEclipseProject findProjectWith(URI nestedLocation) {
-		return (N4JSEclipseProject) super.findProjectWith(nestedLocation);
+	public IN4JSEclipseProject findProjectWith(URI nestedLocation) {
+		// FIXME: mm
+		if (nestedLocation.isPlatformResource()) {
+			SafeURI<?> location = fromURI(getInternalWorkspace(), nestedLocation);
+			if (location != null) {
+				return getN4JSProject(location, false);
+			}
+		}
+
+		if (nestedLocation.isFile()) {
+			SafeURI<?> externalLocation = fromURI(externalLibraryWorkspace, nestedLocation);
+			if (null != externalLocation) {
+				return getN4JSProject(externalLocation, true);
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -315,7 +329,7 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 
 	public Map<String, IN4JSProject> findAllProjectMappings() {
 		final Map<String, IN4JSProject> workspaceProjectMapping = new LinkedHashMap<>();
-		for (IProject project : workspace.getProjects()) {
+		for (IProject project : workspaceRoot.getProjects()) {
 			if (isRelevantToN4JS(project)) {
 				N4JSProject n4jsProject = getN4JSProject(project);
 				workspaceProjectMapping.put(n4jsProject.getProjectName(), n4jsProject);
