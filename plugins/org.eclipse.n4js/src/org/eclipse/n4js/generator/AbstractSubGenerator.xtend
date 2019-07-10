@@ -193,8 +193,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	private def isInNodeModules(URI n4jsSourceURI){
 		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
 		if (project !== null) {
-			val locationStr = project.location.toFileString;
-			if (locationStr.contains(N4JSGlobals.NODE_MODULES)) {
+			if (project.location.segmentsList.contains(N4JSGlobals.NODE_MODULES)) {
 				return true;
 			}
 		}
