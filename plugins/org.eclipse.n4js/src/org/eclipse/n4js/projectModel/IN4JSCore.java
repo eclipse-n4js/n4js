@@ -11,21 +11,18 @@
 package org.eclipse.n4js.projectModel;
 
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
-import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * The runtime facade for the n4js model containing the core (UI-free) support for n4js projects.
@@ -33,8 +30,7 @@ import com.google.common.collect.ImmutableSet;
  * The single instance of this interface can be accessed via dependency injection.
  * </p>
  */
-@SuppressWarnings("restriction")
-public interface IN4JSCore extends IWorkspaceConfig {
+public interface IN4JSCore {
 
 	/**
 	 * Returns the N4JS project at the given location.
@@ -62,10 +58,7 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	 */
 	Optional<? extends IN4JSProject> findProject(URI nestedLocation);
 
-	@Override
-	default IN4JSProject findProjectContaining(URI member) {
-		return findProject(member).orNull();
-	}
+	Optional<? extends IN4JSProject> findProject(String projectName);
 
 	/**
 	 * Returns list of the N4JS projects that are in current working scope (IWorkspace or registered projects).
@@ -74,20 +67,10 @@ public interface IN4JSCore extends IWorkspaceConfig {
 	 */
 	Iterable<? extends IN4JSProject> findAllProjects();
 
-	@Override
-	default Set<? extends IN4JSProject> getProjects() {
-		return ImmutableSet.copyOf(findAllProjects());
-	}
-
 	/**
 	 * @return a map that maps {@link IProject#getName()} to {@link IProject}.
 	 */
 	Map<String, IN4JSProject> findAllProjectMappings();
-
-	@Override
-	default IN4JSProject findProjectByName(String name) {
-		return findAllProjectMappings().get(name);
-	}
 
 	/**
 	 * returns the source container that covers the given location.

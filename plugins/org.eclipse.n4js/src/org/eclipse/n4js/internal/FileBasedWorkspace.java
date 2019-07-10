@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.util.UriExtensions;
@@ -33,6 +33,12 @@ import com.google.inject.Singleton;
 @SuppressWarnings("javadoc")
 @Singleton
 public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
+
+	/** container-prefix for file-based projects */
+	public final static String N4FBPRJ = "n4fbprj:";
+
+	private final Map<FileURI, LazyProjectDescriptionHandle> projectElementHandles = Maps.newConcurrentMap();
+	private final Map<String, FileURI> nameToLocation = Maps.newConcurrentMap();
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
 
@@ -54,12 +60,6 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 		return new FileURI(uriExtensions.withEmptyAuthority(uri));
 	}
 
-	private final Map<FileURI, LazyProjectDescriptionHandle> projectElementHandles = Maps
-			.newConcurrentMap();
-
-	/** container-prefix for file-based projects */
-	public final static String N4FBPRJ = "n4fbprj:";
-
 	/**
 	 *
 	 * @param location
@@ -71,6 +71,12 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location);
 			projectElementHandles.put(location, lazyDescriptionHandle);
 		}
+		nameToLocation.putIfAbsent(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location), location);
+	}
+
+	@Override
+	public FileURI getProjectLocation(String name) {
+		return nameToLocation.get(name);
 	}
 
 	/**

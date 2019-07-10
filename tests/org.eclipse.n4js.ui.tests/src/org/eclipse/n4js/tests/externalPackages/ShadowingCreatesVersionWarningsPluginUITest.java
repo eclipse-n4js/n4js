@@ -83,7 +83,7 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 		assertTrue(shadowingInfoHelper.findShadowedProjects(n4jsLangShipped).isEmpty());
 		assertTrue(shadowingInfoHelper.findShadowingProjects(n4jsLangShipped).size() == 1);
 
-		URI userN4LangUri = userWS.findProjectForName(PROJECT_N4JSLANG);
+		URI userN4LangUri = userWS.getProjectLocation(PROJECT_N4JSLANG).toURI();
 		assertNotNull(userN4LangUri);
 		IN4JSProject n4jsLangUserWS = n4jsCore.findProject(userN4LangUri).get();
 		assertTrue(shadowingInfoHelper.isShadowingProject(n4jsLangUserWS));

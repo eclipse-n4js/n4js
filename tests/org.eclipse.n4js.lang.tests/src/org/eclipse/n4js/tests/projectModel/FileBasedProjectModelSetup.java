@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 
 import com.google.common.base.Charsets;

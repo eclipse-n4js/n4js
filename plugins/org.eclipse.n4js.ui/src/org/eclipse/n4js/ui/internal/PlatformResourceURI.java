@@ -26,8 +26,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.internal.locations.FileURI;
-import org.eclipse.n4js.internal.locations.SafeURI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;

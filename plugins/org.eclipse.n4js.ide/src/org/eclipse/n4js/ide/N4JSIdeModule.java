@@ -18,7 +18,6 @@ import org.eclipse.n4js.ide.server.N4JSProjectManager;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -30,20 +29,15 @@ import org.eclipse.xtext.ide.server.ProjectManager;
 import org.eclipse.xtext.ide.server.WorkspaceManager;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
-import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 /**
  * Use this class to register ide components.
  */
-@SuppressWarnings({ "restriction", "javadoc" })
+@SuppressWarnings({ "javadoc" })
 public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public ClassLoader bindClassLoaderToInstance() {
 		return getClass().getClassLoader();
-	}
-
-	public Class<? extends IWorkspaceConfig> bindIWorkspaceConfig() {
-		return IN4JSCore.class;
 	}
 
 	public Class<? extends ILanguageServerShutdownAndExitHandler> bindILanguageServerShutdownAndExitHandler() {

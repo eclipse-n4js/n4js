@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel;
+package org.eclipse.n4js.projectModel.lsp.ex;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -29,6 +29,8 @@ import org.eclipse.xtext.workspace.ISourceFolder;
  */
 @SuppressWarnings("restriction")
 public interface ISourceFolderEx extends ISourceFolder {
+
+	IProjectConfigEx getProject();
 
 	/**
 	 * TODO ADD JAVADOC

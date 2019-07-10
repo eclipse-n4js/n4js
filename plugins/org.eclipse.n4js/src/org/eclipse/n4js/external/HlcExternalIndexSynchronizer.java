@@ -13,7 +13,7 @@ package org.eclipse.n4js.external;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.inject.Singleton;
 

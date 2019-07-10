@@ -20,7 +20,7 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Before
 import org.junit.runner.RunWith
-import org.eclipse.n4js.internal.locations.FileURI
+import org.eclipse.n4js.projectModel.locations.FileURI
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)

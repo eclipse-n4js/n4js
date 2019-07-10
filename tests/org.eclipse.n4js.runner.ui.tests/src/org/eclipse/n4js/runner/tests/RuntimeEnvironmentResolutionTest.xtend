@@ -53,8 +53,8 @@ import static org.eclipse.n4js.runner.^extension.RuntimeEnvironment.*
 import static org.hamcrest.core.IsCollectionContaining.*
 import static org.hamcrest.core.IsNot.not
 import static org.junit.Assert.*
-import org.eclipse.n4js.internal.locations.SafeURI
-import org.eclipse.n4js.internal.locations.FileURI
+import org.eclipse.n4js.projectModel.locations.SafeURI
+import org.eclipse.n4js.projectModel.locations.FileURI
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -465,7 +465,7 @@ class RuntimeEnvironmentResolutionTest {
 		val v8re = newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
 
 		// URI to a concrete Module to run
-		val URI clientModule = client.sourceContainers.get(0).location.appendSegment("ClientA.n4js");
+		val URI clientModule = client.sourceContainers.get(0).safeLocation.appendSegment("ClientA.n4js").toURI;
 
 		val dep_map = V8.getProjectExtendedDepsAndApiImplMapping(clientModule,'id1',true)
 		val deps = dep_map.projects
@@ -525,7 +525,7 @@ class RuntimeEnvironmentResolutionTest {
 		newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
 
 		// URI to a concrete Module to run
-		val URI clientModule = client.sourceContainers.get(0).location.appendSegment("ClientA.n4js");
+		val URI clientModule = client.sourceContainers.get(0).safeLocation.appendSegment("ClientA.n4js").toURI;
 
 
 		V8.getProjectExtendedDepsAndApiImplMapping(clientModule,'id1',true)
@@ -573,7 +573,7 @@ class RuntimeEnvironmentResolutionTest {
 		val v8re = newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
 
 		// URI to a concrete Module to run
-		val URI clientModule = client.sourceContainers.get(0).location.appendSegment("ClientA.n4js");
+		val URI clientModule = client.sourceContainers.get(0).safeLocation.appendSegment("ClientA.n4js").toURI;
 
 
 
@@ -642,7 +642,7 @@ class RuntimeEnvironmentResolutionTest {
 		val v8re = newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
 
 		// URI to a concrete Module to run
-		val URI clientModule = client.sourceContainers.get(0).location.appendSegment("ClientA.n4js");
+		val URI clientModule = client.sourceContainers.get(0).safeLocation.appendSegment("ClientA.n4js").toURI;
 
 
 		val apiUsage = V8.getProjectExtendedDepsAndApiImplMapping(clientModule,'id1',true)

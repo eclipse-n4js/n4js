@@ -21,6 +21,7 @@ import static org.eclipse.n4js.projectDescription.ProjectType.TEST;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +31,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -38,9 +38,9 @@ import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -50,9 +50,9 @@ import com.google.inject.Singleton;
 
 /**
  */
-@SuppressWarnings({ "javadoc", "restriction" })
+@SuppressWarnings({ "javadoc" })
 @Singleton
-public class N4JSModel<Loc extends SafeURI<Loc>> implements IWorkspaceConfig {
+public class N4JSModel<Loc extends SafeURI<Loc>> {
 
 	private final InternalN4JSWorkspace<Loc> workspace;
 
@@ -103,33 +103,27 @@ public class N4JSModel<Loc extends SafeURI<Loc>> implements IWorkspaceConfig {
 		return new N4JSProject(location, external, this);
 	}
 
-	/// IWorkspaceConfig
-
-	@Override
-	public Set<? extends IN4JSProject> getProjects() {
-		Set<IN4JSProject> prjConfs = new HashSet<>();
+	public Set<? extends IN4JSProject> getAllProjects() {
+		Set<IN4JSProject> prjConfs = new LinkedHashSet<>();
 		for (Loc prjLoc : workspace.getAllProjectLocations()) {
 			prjConfs.add(getN4JSProject(prjLoc, false));
 		}
 		return prjConfs;
 	}
 
-	@Override
-	public IN4JSProject findProjectContaining(URI member) {
-		return findProjectWith(member);
-	}
-
-	@Override
-	public IN4JSProject findProjectByName(String name) {
-		for (IN4JSProject prjConf : getProjects()) {
-			if (prjConf.getName().equals(name)) {
-				return prjConf;
-			}
+	public IN4JSProject findProject(String name) {
+		Loc loc = workspace.getProjectLocation(name);
+		if (loc != null) {
+			return getN4JSProject(loc, false);
 		}
 		return null;
+		// for (IN4JSProject prjConf : getProjects()) {
+		// if (prjConf.getName().equals(name)) {
+		// return prjConf;
+		// }
+		// }
+		// return null;
 	}
-
-	/// END IWorkspaceConfig
 
 	public IN4JSProject findProjectWith(URI nestedLocation) {
 		// FIXME: mm
@@ -167,7 +161,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> implements IWorkspaceConfig {
 		if (project != null) {
 			for (IN4JSSourceContainer n4jsSourceContainer : project.getSourceContainers()) {
 				if (isLocationInNestedInContainer(nestedLocation, n4jsSourceContainer)) {
-					int segmentCount = n4jsSourceContainer.getLocation().segmentCount();
+					int segmentCount = n4jsSourceContainer.getSafeLocation().toURI().segmentCount();
 					if (segmentCount > matchingSegmentCount) {
 						matchingContainer = n4jsSourceContainer;
 						matchingSegmentCount = segmentCount;
@@ -179,7 +173,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> implements IWorkspaceConfig {
 	}
 
 	private boolean isLocationInNestedInContainer(URI nestedLocation, IN4JSSourceContainer container) {
-		URI containerLocation = container.getLocation();
+		URI containerLocation = container.getSafeLocation().toURI();
 		if (containerLocation == null || nestedLocation == null)
 			return false;
 		int maxSegments = containerLocation.segmentCount();
@@ -331,9 +325,11 @@ public class N4JSModel<Loc extends SafeURI<Loc>> implements IWorkspaceConfig {
 		final String extWithDot = !ext.isEmpty() && !ext.startsWith(".") ? "." + ext : ext;
 		final String pathStr = name.toString("/") + extWithDot; // no need for IQualifiedNameConverter here!
 
-		SafeURI<?> artifactLocation = findArtifactInFolder(workspace, sourceContainer.getLocation(), pathStr);
+		SafeURI<?> artifactLocation = findArtifactInFolder(workspace, sourceContainer.getSafeLocation().toURI(),
+				pathStr);
 		if (null == artifactLocation) {
-			artifactLocation = findArtifactInFolder(externalLibraryWorkspace, sourceContainer.getLocation(), pathStr);
+			artifactLocation = findArtifactInFolder(externalLibraryWorkspace, sourceContainer.getSafeLocation().toURI(),
+					pathStr);
 		}
 		return artifactLocation;
 	}

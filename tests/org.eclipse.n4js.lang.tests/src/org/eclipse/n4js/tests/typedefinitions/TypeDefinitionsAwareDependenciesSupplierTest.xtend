@@ -26,7 +26,7 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.internal.locations.FileURI
+import org.eclipse.n4js.projectModel.locations.FileURI
 
 /**
  * Unit test of {@link TypeDefinitionsAwareDependenciesSupplier}. 

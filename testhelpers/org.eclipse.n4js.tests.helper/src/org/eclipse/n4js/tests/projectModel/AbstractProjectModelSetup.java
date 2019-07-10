@@ -11,7 +11,7 @@
 package org.eclipse.n4js.tests.projectModel;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.internal.locations.SafeURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 /**
  */

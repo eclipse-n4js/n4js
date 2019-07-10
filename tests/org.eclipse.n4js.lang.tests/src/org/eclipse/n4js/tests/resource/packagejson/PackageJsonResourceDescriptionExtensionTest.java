@@ -14,8 +14,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.locations.FileURI;
-import org.eclipse.n4js.internal.locations.SafeURI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.tests.projectModel.AbstractProjectModelSetup;
 import org.eclipse.n4js.tests.projectModel.AbstractProjectModelTest;

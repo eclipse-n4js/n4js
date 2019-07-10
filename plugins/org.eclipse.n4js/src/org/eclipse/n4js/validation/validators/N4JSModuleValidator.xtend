@@ -190,8 +190,8 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 								// the same project, MainModule is hidden within the project
 								//if other file with the same source container relative path
 								//(also across different containers)
-								val baseModuleSrcCon = n4jscore.findN4JSSourceContainer(module.eResource.URI).get.location.toString;
-								val otherModuleSrcCon = n4jscore.findN4JSSourceContainer(u).get.location.toString;
+								val baseModuleSrcCon = n4jscore.findN4JSSourceContainer(module.eResource.URI).get.safeLocation.toString;
+								val otherModuleSrcCon = n4jscore.findN4JSSourceContainer(u).get.safeLocation.toString;
 
 								val baseModuleSrcContainerRelativePath = module.eResource.URI.toString.substring(baseModuleSrcCon.length);
 								val otherModuleSrcContainerRelativePath = u.toString.substring(otherModuleSrcCon.length);

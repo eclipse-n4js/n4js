@@ -15,9 +15,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 import com.google.inject.Inject;
 
@@ -70,8 +70,8 @@ public class ShadowingInfoHelper {
 			}
 		}
 
-		IN4JSProject shadowingProject = n4jsCore.findProjectByName(projectName);
-		if (shadowingProject.exists() && !shadowingProject.isExternal()) {
+		IN4JSProject shadowingProject = n4jsCore.findProject(projectName).orNull();
+		if (shadowingProject != null && shadowingProject.exists() && !shadowingProject.isExternal()) {
 			shadowingProjects.add(shadowingProject);
 		}
 		return shadowingProjects;

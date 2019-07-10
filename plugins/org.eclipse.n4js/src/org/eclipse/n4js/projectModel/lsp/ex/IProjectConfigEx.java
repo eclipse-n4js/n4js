@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel;
+package org.eclipse.n4js.projectModel.lsp.ex;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,6 +22,9 @@ import org.eclipse.xtext.workspace.IProjectConfig;
  */
 @SuppressWarnings("restriction")
 public interface IProjectConfigEx extends IProjectConfig {
+
+	@Override
+	IWorkspaceConfigEx getWorkspaceConfig();
 
 	@Override
 	Set<? extends ISourceFolderEx> getSourceFolders();

@@ -21,10 +21,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.internal.AbstractN4JSCore;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -88,6 +88,12 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 			return Optional.absent();
 		}
 		IN4JSEclipseProject result = model.findProjectWith(nestedLocation);
+		return Optional.fromNullable(result);
+	}
+
+	@Override
+	public Optional<? extends IN4JSProject> findProject(String projectName) {
+		IN4JSProject result = model.findProject(projectName);
 		return Optional.fromNullable(result);
 	}
 

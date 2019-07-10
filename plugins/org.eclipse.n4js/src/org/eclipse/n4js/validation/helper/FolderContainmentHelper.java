@@ -13,10 +13,10 @@ package org.eclipse.n4js.validation.helper;
 import java.nio.file.Path;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;

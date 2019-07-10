@@ -31,8 +31,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
-import org.eclipse.n4js.internal.locations.FileURI;
-import org.eclipse.n4js.internal.locations.SafeURI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 
 import com.google.common.collect.Iterables;

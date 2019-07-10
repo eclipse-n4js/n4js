@@ -25,14 +25,14 @@ import java.util.Set;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.internal.locations.FileURI;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
@@ -273,7 +273,7 @@ public class ExternalProjectMappings {
 			ProjectDependency pDep) {
 
 		String projectName = pDep.getProjectName();
-		SafeURI<?> depLoc = userWorkspace.findProjectByName(projectName).getSafeLocation();
+		SafeURI<?> depLoc = userWorkspace.findProject(projectName).transform(p -> p.getSafeLocation()).orNull();
 		// if (depLoc != null) {
 		// // respect closed workspace projects by omitting them
 		// String locStr = depLoc.toPlatformString(true);

@@ -75,6 +75,11 @@ public class MockWorkspace extends InternalN4JSWorkspace<MockURIWrapper> {
 	}
 
 	@Override
+	public MockURIWrapper getProjectLocation(String name) {
+		return MockProject.MOCK_URI;
+	}
+
+	@Override
 	public MockURIWrapper findProjectWith(MockURIWrapper nestedLocation) {
 		return MockProject.MOCK_URI;
 	}

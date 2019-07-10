@@ -292,15 +292,15 @@ public class XpectN4JSES5TranspilerHelper {
 			for (IN4JSSourceContainer c : project.getSourceContainers()) {
 				if (c.isExternal()) {
 					String sourceRelativePath = dep.getURI().toString()
-							.replace(source.getLocation().toString(), "");
+							.replace(source.getSafeLocation().toString(), "");
 					String[] potentialExternalSourceRelativeURISegments = null;
 					String potentialExternalSourceRelativePath = sourceRelativePath.replace(".n4jsd", ".js");
 					potentialExternalSourceRelativeURISegments = URI.createURI(potentialExternalSourceRelativePath)
 							.segments();
 
 					if (potentialExternalSourceRelativeURISegments != null) {
-						URI potentialExternalSourceURI = c.getLocation().appendSegments(
-								potentialExternalSourceRelativeURISegments);
+						URI potentialExternalSourceURI = c.getSafeLocation().appendSegments(
+								potentialExternalSourceRelativeURISegments).toURI();
 						try {
 							Resource externalDep = dep.getResourceSet().getResource(potentialExternalSourceURI, true);
 							script = (Script) externalDep.getContents().get(0);

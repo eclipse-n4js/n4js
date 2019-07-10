@@ -191,7 +191,7 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 		final IN4JSProject project = n4jsCore.findProject(folderUri).orNull();
 		if (null != project && project.exists()) {
 			return from(project.getSourceContainers())
-					.transform(container -> container.getLocation())
+					.transform(container -> container._getLocation())
 					.filter(uri -> uri.isPlatformResource())
 					.transform(uri -> uri.toPlatformString(true))
 					.firstMatch(uri -> uri.equals(fullPathStr))

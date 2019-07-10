@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.internal.locations;
+package org.eclipse.n4js.projectModel.locations;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -100,6 +100,13 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	public abstract InputStream getContents() throws IOException;
 
 	public abstract String getAbsolutePath();
+
+	public U withTrailingPathDelimiter() {
+		if (toURI().hasTrailingPathSeparator()) {
+			return self();
+		}
+		return appendSegment("");
+	}
 
 	public abstract U resolve(String relativePath);
 

@@ -23,11 +23,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.locations.FileURI;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.UriExtensions;
@@ -223,7 +223,12 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	 */
 	public abstract N4JSExternalProject getProject(URI projectLocation);
 
-	public abstract N4JSExternalProject getProject(FileURI projectName);
+	public abstract N4JSExternalProject getProject(FileURI location);
+
+	@Override
+	public FileURI getProjectLocation(String name) {
+		return getProject(name).getSafeLocation();
+	}
 
 	// /**
 	// * Returns with the file given with the file location URI argument. This method returns with {@code null} if the

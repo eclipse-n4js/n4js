@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectModel.IProjectConfigEx;
-import org.eclipse.n4js.projectModel.ISourceFolderEx;
+import org.eclipse.n4js.projectModel.lsp.ex.IProjectConfigEx;
+import org.eclipse.n4js.projectModel.lsp.ex.ISourceFolderEx;
 import org.eclipse.xtext.build.BuildRequest;
 import org.eclipse.xtext.build.IncrementalBuilder.Result;
 import org.eclipse.xtext.ide.server.ProjectManager;

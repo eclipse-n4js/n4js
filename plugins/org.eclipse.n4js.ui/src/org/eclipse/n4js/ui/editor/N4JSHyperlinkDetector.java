@@ -22,7 +22,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.XtextResource;

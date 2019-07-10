@@ -32,9 +32,11 @@ import org.eclipse.n4js.generator.headless.BuildSetComputer;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfig;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
 
@@ -63,7 +65,7 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 	private NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
 
 	@Override
-	public IN4JSCore getWorkspaceConfig(URI workspaceBaseURI) {
+	public IN4JSWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI) {
 		try {
 			// TODO is this correct if we have multiple workspace URIs?
 			workspace.clear();
@@ -76,7 +78,7 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 			final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet(allProjects);
 			// make sure all installed dependencies are registered with the workspace
 			headlessHelper.registerProjects(targetPlatformBuildSet, workspace);
-			return n4jsCore;
+			return new N4JSWorkspaceConfig(n4jsCore);
 		} catch (N4JSCompileException e) {
 			// TODO exception handling
 			e.printStackTrace();

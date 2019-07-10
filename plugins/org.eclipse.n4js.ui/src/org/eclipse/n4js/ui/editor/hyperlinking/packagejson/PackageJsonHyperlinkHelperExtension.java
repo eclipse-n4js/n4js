@@ -17,8 +17,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.internal.locations.FileURI;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.NameValuePair;
@@ -28,6 +26,8 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -159,7 +159,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		String mainPath = mainModuleJsonLiteral.getValue();
 		if (!Strings.isNullOrEmpty(mainPath)) {
 			URI packageJsonLoc = mainModuleJsonLiteral.eResource().getURI();
-			IN4JSProject project = model.findProjectContaining(packageJsonLoc);
+			IN4JSProject project = model.findProject(packageJsonLoc).orNull();
 			INode node = NodeModelUtils.getNode(mainModuleJsonLiteral);
 
 			if (project != null && node != null) {
@@ -178,7 +178,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		String mainModule = mainModuleJsonLiteral.getValue();
 		if (!Strings.isNullOrEmpty(mainModule)) {
 			URI packageJsonLoc = mainModuleJsonLiteral.eResource().getURI();
-			IN4JSProject project = model.findProjectContaining(packageJsonLoc);
+			IN4JSProject project = model.findProject(packageJsonLoc).orNull();
 			INode node = NodeModelUtils.getNode(mainModuleJsonLiteral);
 
 			if (project != null && node != null) {

@@ -11,18 +11,14 @@
 package org.eclipse.n4js.internal;
 
 import java.util.Iterator;
-import java.util.List;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.FluentIterable;
 
 /**
  */
@@ -35,40 +31,6 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 		super(type, relativeLocation);
 		this.project = project;
 	}
-
-	/// ISourceFolder
-
-	@Override
-	public String getName() {
-		return this.getRelativeLocation();
-	}
-
-	@Override
-	public URI getPath() {
-		return this.getLocation();
-	}
-
-	@Override
-	public boolean contains(URI uri) {
-		URI path = getPath();
-		path = path.hasTrailingPathSeparator() ? path : path.appendSegment("");
-		uri = uri.hasTrailingPathSeparator() ? uri : uri.appendSegment("");
-		if (!uri.toFileString().startsWith(path.toFileString())) {
-			return false;
-		}
-		URI relUri = uri.deresolve(path);
-		if (relUri.segmentCount() > 0) {
-			boolean uriInsideNodeModules = relUri.segment(0).equals(N4JSGlobals.NODE_MODULES);
-			return !uriInsideNodeModules;
-		}
-		return true;
-	}
-
-	@Override
-	public List<URI> getAllResources() {
-		return FluentIterable.from(this).toList();
-	}
-	/// END ISourceFolder
 
 	@Override
 	public IN4JSProject getProject() {
@@ -83,11 +45,6 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	@Override
 	public SafeURI<?> findArtifact(QualifiedName name, Optional<String> fileExtension) {
 		return project.getModel().findArtifact(this, name, fileExtension);
-	}
-
-	@Override
-	public URI getLocation() {
-		return getSafeLocation().toURI();
 	}
 
 	@Override

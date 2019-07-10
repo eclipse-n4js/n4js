@@ -15,12 +15,12 @@ import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfi
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.TClass;

@@ -13,7 +13,7 @@ package org.eclipse.n4js.projectModel;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.locations.SafeURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Optional;
@@ -22,7 +22,7 @@ import com.google.common.collect.Iterators;
 /**
  * The project model representation of a configured source folder in a project.
  */
-public interface IN4JSSourceContainer extends Iterable<URI>, ISourceFolderEx {
+public interface IN4JSSourceContainer extends Iterable<URI> {
 
 	/**
 	 * Returns the project this source container belongs to.
@@ -52,6 +52,8 @@ public interface IN4JSSourceContainer extends Iterable<URI>, ISourceFolderEx {
 		return Iterators.transform(safeIterator(), pl -> pl.toURI());
 	}
 
+	SafeURI<?> getSafeLocation();
+
 	Iterator<? extends SafeURI<?>> safeIterator();
 
 	/**
@@ -74,9 +76,9 @@ public interface IN4JSSourceContainer extends Iterable<URI>, ISourceFolderEx {
 	/**
 	 * The absolute location of this source container.
 	 */
-	URI getLocation();
-
-	SafeURI<?> getSafeLocation();
+	default URI _getLocation() {
+		return getSafeLocation().toURI();
+	}
 
 	/**
 	 * Returns <code>true</code> if the source container exists.

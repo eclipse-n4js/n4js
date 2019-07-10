@@ -23,13 +23,13 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
-import org.eclipse.n4js.internal.locations.FileURI;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableMap;

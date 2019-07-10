@@ -26,12 +26,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.internal.locations.FileURI;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -97,18 +97,13 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	}
 
 	@Override
-	public IN4JSProject findProjectContaining(URI member) {
-		return model.findProjectContaining(member);
+	public Set<? extends IN4JSProject> findAllProjects() {
+		return model.getAllProjects();
 	}
 
 	@Override
-	public Iterable<? extends IN4JSProject> findAllProjects() {
-		return model.getProjects();
-	}
-
-	@Override
-	public Set<? extends IN4JSProject> getProjects() {
-		return model.getProjects();
+	public Optional<? extends IN4JSProject> findProject(String name) {
+		return Optional.fromNullable(model.findProject(name));
 	}
 
 	@Override
@@ -118,11 +113,6 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 			allProjectMappings.put(project.getProjectName(), project);
 		}
 		return allProjectMappings;
-	}
-
-	@Override
-	public IN4JSProject findProjectByName(String name) {
-		return model.findProjectByName(name);
 	}
 
 	@Override

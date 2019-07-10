@@ -16,10 +16,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.N4JSModel;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
@@ -39,7 +39,7 @@ import com.google.common.collect.ImmutableList;
  * This is modeled similar to {@code org.eclipse.jdt.core.JavaCore} works, e.g. instances of {@link IN4JSProject} are
  * obtained via {@link IN4JSCore#create(URI)}.
  */
-public interface IN4JSProject extends IProjectConfigEx {
+public interface IN4JSProject {
 
 	/**
 	 * The name of the package.json file.
@@ -73,10 +73,7 @@ public interface IN4JSProject extends IProjectConfigEx {
 	 */
 	ImmutableList<? extends IN4JSSourceContainer> getSourceContainers();
 
-	@Override
 	IN4JSSourceContainer findSourceFolderContaining(URI member);
-
-	IN4JSSourceContainer findSourceFolderContaining(SafeURI<?> member);
 
 	/**
 	 * All direct dependencies for this structure.

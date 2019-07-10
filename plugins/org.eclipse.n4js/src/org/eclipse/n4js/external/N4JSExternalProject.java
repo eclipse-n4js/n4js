@@ -18,8 +18,8 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.core.resources.IBuildConfiguration;
-import org.eclipse.n4js.internal.locations.FileURI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;

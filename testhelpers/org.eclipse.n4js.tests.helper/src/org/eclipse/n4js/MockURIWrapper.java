@@ -17,8 +17,8 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.locations.FileURI;
-import org.eclipse.n4js.internal.locations.SafeURI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 /**
  *

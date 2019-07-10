@@ -34,12 +34,12 @@ import org.eclipse.n4js.generator.GeneratorException;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
-import org.eclipse.n4js.internal.locations.FileURI;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.utils.Lazy;
@@ -680,7 +680,7 @@ public class N4HeadlessCompiler {
 			// Conditionally filter test resources if not desired
 			if (shouldLoadSourceContainer(container)) {
 				if (logger.isCreateDebugOutput()) {
-					logger.debug("Collecting resources from source container " + container.getLocation());
+					logger.debug("Collecting resources from source container " + container.getSafeLocation());
 				}
 
 				Iterables.filter(container, uri -> shouldLoadResource(uri)).forEach(uri -> {

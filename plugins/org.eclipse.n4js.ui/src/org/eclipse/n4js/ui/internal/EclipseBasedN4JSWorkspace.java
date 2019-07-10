@@ -24,7 +24,6 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -33,6 +32,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformResourceURI> {
+
 	private final IWorkspaceRoot workspace;
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
@@ -98,19 +98,19 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformRes
 	}
 
 	/** @return the {@link URI} for a project with the given n4js project name */
-	public URI findProjectForName(String projectName) {
-		if (projectName == null) {
-			return null;
-		}
-		for (IProject prj : workspace.getProjects()) {
-			URI uri = URIUtils.convert(prj);
-			String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri);
-			if (projectName.equals(n4jsProjectName)) {
-				return uri;
-			}
-		}
-		return null;
-	}
+	// public URI findProjectForName(String projectName) {
+	// if (projectName == null) {
+	// return null;
+	// }
+	// for (IProject prj : workspace.getProjects()) {
+	// URI uri = URIUtils.convert(prj);
+	// String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri);
+	// if (projectName.equals(n4jsProjectName)) {
+	// return uri;
+	// }
+	// }
+	// return null;
+	// }
 
 	@Override
 	public ProjectDescription getProjectDescription(PlatformResourceURI location) {
@@ -118,6 +118,15 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformRes
 		ProjectDescription existing = cache.get(supplier, MultiCleartriggerCache.CACHE_KEY_PROJECT_DESCRIPTIONS,
 				location.toURI());
 		return existing;
+	}
+
+	@Override
+	public PlatformResourceURI getProjectLocation(String name) {
+		IProject project = workspace.getProject(name);
+		if (project.exists()) {
+			return new PlatformResourceURI(project);
+		}
+		return null;
 	}
 
 	@Override

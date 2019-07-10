@@ -18,9 +18,9 @@ import static org.junit.Assert.assertSame;
 import java.util.Set;
 
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;

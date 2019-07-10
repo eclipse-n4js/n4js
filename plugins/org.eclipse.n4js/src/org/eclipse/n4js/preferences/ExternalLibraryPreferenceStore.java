@@ -16,7 +16,7 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 /**
  * Representation of a preference store for external libraries.

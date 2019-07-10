@@ -21,9 +21,9 @@ import java.util.TreeSet;
 
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexFilter;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexMapper;
 import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;

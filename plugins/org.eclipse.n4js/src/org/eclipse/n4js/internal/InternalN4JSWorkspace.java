@@ -16,9 +16,9 @@ import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 /**
  * Internal representation of the known projects. At runtime, it's implemented based on registered project locations, in
@@ -69,4 +69,6 @@ public abstract class InternalN4JSWorkspace<Loc extends SafeURI<Loc>> {
 	 * Returns the location of the project that contains the given nested location.
 	 */
 	public abstract Collection<Loc> getAllProjectLocations();
+
+	public abstract Loc getProjectLocation(String name);
 }

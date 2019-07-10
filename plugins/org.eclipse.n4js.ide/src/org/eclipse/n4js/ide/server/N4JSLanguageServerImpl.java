@@ -20,7 +20,7 @@ import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
-import org.eclipse.n4js.projectModel.IProjectConfigEx;
+import org.eclipse.n4js.projectModel.lsp.ex.IProjectConfigEx;
 import org.eclipse.xtext.ide.server.LanguageServerImpl;
 import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;

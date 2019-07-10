@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.external;
 
-import org.eclipse.n4js.internal.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xtext.util.Strings;
 
 import com.google.common.base.Objects;

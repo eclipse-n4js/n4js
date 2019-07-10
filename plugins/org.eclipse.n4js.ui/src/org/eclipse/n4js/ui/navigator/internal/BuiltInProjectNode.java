@@ -17,9 +17,9 @@ import static com.google.common.collect.FluentIterable.from;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.internal.locations.SafeURI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.graphics.Image;

@@ -208,7 +208,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 		final IN4JSProject project = core.findProject(folderUri).orNull();
 		if (null != project && project.exists()) {
 			return from(project.getSourceContainers())
-					.transform(container -> container.getLocation())
+					.transform(container -> container._getLocation())
 					.filter(uri -> uri.isPlatformResource())
 					.transform(uri -> uri.toString())
 					.transform(uri -> uri.replaceFirst(PLATFORM_RESOURCE_SCHEME, ""))
