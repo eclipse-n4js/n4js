@@ -279,7 +279,8 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 
 		TreeMap<String, java.net.URI> rootLocationMap = new TreeMap<>();
 		for (java.net.URI loc : rootLocations) {
-			String locStr = loc.toString();
+			URI rootLocationFileUri = URIUtils.toFileUri(loc);
+			String locStr = rootLocationFileUri.toString();
 			rootLocationMap.put(locStr, loc);
 		}
 

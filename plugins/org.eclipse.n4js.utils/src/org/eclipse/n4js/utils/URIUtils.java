@@ -85,7 +85,7 @@ public class URIUtils {
 		} else {
 			uri = org.eclipse.emf.common.util.URI.createFileURI(fullPathString);
 		}
-		return uri;
+		return addEmptyAuthority(uri);
 	}
 
 	/** Converts the given IResource to a file emf Uri */
@@ -135,7 +135,7 @@ public class URIUtils {
 		File file = new File(jnUri);
 		String path = file.getAbsolutePath();
 		org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createFileURI(path);
-		return uri;
+		return addEmptyAuthority(uri);
 	}
 
 	/**
@@ -205,13 +205,13 @@ public class URIUtils {
 
 	/** Creates new URI from the provided one, with symlinks resolved. */
 	static public org.eclipse.emf.common.util.URI normalize(org.eclipse.emf.common.util.URI uri) {
-		return URI.createURI(toString(uri));
+		return addEmptyAuthority(URI.createURI(toString(uri)));
 	}
 
 	/** @return a complete URI for a given project */
 	public static URI toFileUri(IProject project) {
 		String pathStr = project.getLocation().toString();
-		return URI.createFileURI(pathStr);
+		return addEmptyAuthority(URI.createFileURI(pathStr));
 	}
 
 	/** @return absolute file URI for the given path. */
@@ -222,7 +222,7 @@ public class URIUtils {
 	/** @return absolute file URI for the given file. */
 	static public URI toFileUri(File file) {
 		String pathStr = file.getAbsolutePath();
-		return URI.createFileURI(pathStr);
+		return addEmptyAuthority(URI.createFileURI(pathStr));
 	}
 
 	/** @return a complete URI for a given emf resource */
@@ -237,7 +237,7 @@ public class URIUtils {
 			return rUri;
 		}
 		URI resolvedFile = CommonPlugin.resolve(rUri);
-		return resolvedFile;
+		return addEmptyAuthority(resolvedFile);
 	}
 
 	/** Converts any emf file URI to an accessible platform local URI. Otherwise returns given URI. */
@@ -259,7 +259,20 @@ public class URIUtils {
 
 	/** Adds empty authority to the given URI. Necessary for windows platform. */
 	public static URI addEmptyAuthority(URI uri) {
-		uri = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(), uri.fragment());
+		if (uri.isFile() && !uri.hasAuthority()) {
+			uri = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(),
+					uri.fragment());
+		}
+		return uri;
+	}
+
+	/** Removes the authority from given URI iff it exists. */
+	public static URI removeAuthority(URI uri) {
+		if (uri.hasAuthority()) {
+			uri = URI.createHierarchicalURI(uri.scheme(), null, uri.device(), uri.segments(), uri.query(),
+					uri.fragment());
+			return uri;
+		}
 		return uri;
 	}
 }

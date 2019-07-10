@@ -208,6 +208,7 @@ public class ProjectDescriptionLoader {
 				return null;
 			}
 
+			uri = URIUtils.addEmptyAuthority(uri);
 			Resource resource = resourceSet.getResource(uri, true);
 			if (resource != null) {
 				List<EObject> contents = resource.getContents();

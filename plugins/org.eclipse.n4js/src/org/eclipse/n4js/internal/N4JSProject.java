@@ -13,7 +13,6 @@ package org.eclipse.n4js.internal;
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.fromNullable;
 import static java.util.Collections.emptyList;
-import static org.eclipse.emf.common.util.URI.createFileURI;
 
 import java.io.File;
 import java.io.IOException;
@@ -186,7 +185,7 @@ public class N4JSProject implements IN4JSProject {
 		}
 		try {
 			final File canonicalFile = file.getCanonicalFile();
-			return createFileURI(canonicalFile.getAbsolutePath());
+			return URIUtils.toFileUri(canonicalFile);
 		} catch (final IOException e) {
 			throw new RuntimeException(
 					"Error while resolving the canonical File of package.json file " + file.getPath() + ".", e);

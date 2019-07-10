@@ -187,7 +187,9 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 					}), new Function<File, URI>() {
 						@Override
 						public URI apply(File input) {
-							return URI.createURI(input.toURI().toString());
+							java.net.URI uri = input.toURI();
+							URI emfUri = URIUtils.addEmptyAuthority(URI.createURI(uri.toString()));
+							return emfUri;
 						}
 					}));
 		}
