@@ -431,8 +431,8 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	 */
 	def public TypeRef createTypeRefFromStaticType(RuleEnvironment G, TypeTypeRef ctr, TypeArgument... typeArgs) {
 		 val typeRef = getStaticTypeRef(G, ctr);
-		 val type = typeRef.declaredType;
-		 if (type !== null ) {
+		 val type = typeRef?.declaredType;
+		 if (type !== null) {
 		 	 var resultTypeRef = TypeExtensions.ref(type,typeArgs);
 		 	 return versionResolver.resolveVersion(resultTypeRef, typeRef);
 		 }

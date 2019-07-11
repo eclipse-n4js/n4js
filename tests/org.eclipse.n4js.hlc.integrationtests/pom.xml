@@ -23,9 +23,6 @@ Contributors:
 	<packaging>eclipse-test-plugin</packaging>
 	<description>Test the headless N4js compiler bundled into one jar.</description>
 
-	<properties>
-		<npmLocalRegistry>http://localhost:4873</npmLocalRegistry>
-	</properties>
 	<dependencies>
 	<!-- pull jar for integration tests on the jar -->
 		<dependency>
@@ -38,7 +35,7 @@ Contributors:
 
 	<build>
 		<plugins>
-			<!-- Copy the executable jar to tools/targer folder of this bundle so that the integration tests can use it -->
+			<!-- Copy the executable jar to tools/target folder of this bundle so that the integration tests can use it -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -105,6 +102,29 @@ Contributors:
 				</executions>
 			</plugin>
 
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven-antrun-plugin.version}</version>
+				<executions>
+					<!-- Stop test verdaccio -->
+					<execution>
+						<id>stop-verdaccio</id>
+						<phase>${internal_stopVerdaccioPhase}</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<exec executable="docker" spawn="false">
+									<arg value="rm"/>
+									<arg value="-f"/>
+									<arg value="n4js-test-verdaccio"/>
+								</exec>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -141,98 +161,6 @@ Contributors:
 							<goals>
 								<goal>verify</goal>
 							</goals>
-						</execution>
-					</executions>
-				</plugin>
-
-				<plugin>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<version>${maven-antrun-plugin.version}</version>
-					<executions>
-						<!-- Stop verdaccio if exists to free port -->
-						<execution>
-							<id>stop-verdaccio-before-start</id>
-							<phase>pre-integration-test</phase>
-							<goals>
-								<goal>run</goal>
-							</goals>
-							<configuration>
-								<target>
-									<exec executable="docker" spawn="false">
-										<arg value="rm"/>
-										<arg value="-f"/>
-										<arg value="verdaccio"/>
-									</exec>
-								</target>
-							</configuration>
-						</execution>
-						
-						<!-- Start verdaccio -->
-						<execution>
-							<id>start-verdaccio</id>
-							<phase>pre-integration-test</phase>
-							<goals>
-								<goal>run</goal>
-							</goals>
-							<configuration>
-								<target>
-									<exec executable="docker" spawn="false">
-										<arg value="run"/>
-										<arg value="-d"/>
-										<arg value="-it"/>
-										<arg value="--rm"/>
-										<arg value="--name"/>
-										<arg value="verdaccio"/>
-										<arg value="-p"/>
-										<arg value="4873:4873"/>
-										<arg value="-v"/>
-										<arg value="${project.basedir}/verdaccioConfig/config.yaml:/verdaccio/conf/config.yaml"/>
-										<!-- verdaccio/verdaccio:3.12 -->
-										<arg value="verdaccio/verdaccio@sha256:e64056b6aa104197dbac07e77a1fbcf8f5c67d9b443e0ed2a191d41a1da7a944"/>
-									</exec>
-								</target>
-							</configuration>
-						</execution>
-
-						<!-- Stop verdaccio -->
-						<execution>
-							<id>stop-verdaccio</id>
-							<phase>post-integration-test</phase>
-							<goals>
-								<goal>run</goal>
-							</goals>
-							<configuration>
-								<target>
-									<exec executable="docker" spawn="false">
-										<arg value="rm"/>
-										<arg value="-f"/>
-										<arg value="verdaccio"/>
-									</exec>
-								</target>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-					<version>${codehaus-exec-maven-plugin.version}</version>
-					<executions>
-						<!-- Publish n4js-libs before integration test -->
-						<execution>
-							<id>publish-n4js-libs</id>
-							<phase>pre-integration-test</phase>
-							<goals>
-								<goal>exec</goal>
-							</goals>
-							<configuration>
-								<executable>bash</executable>
-								<arguments>
-									<argument>${project.basedir}/../../releng/utils/scripts/publish-n4js-libs.sh</argument>
-									<argument>local</argument>
-									<argument>${npmLocalRegistry}</argument>
-								</arguments>
-							</configuration>
 						</execution>
 					</executions>
 				</plugin>
