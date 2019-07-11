@@ -513,8 +513,8 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		// replace bound type variables with type arguments
 		val G_left = G.wrap;
 		val G_right = G.wrap;
-		G_left.addSubstitutions(info.left);
-		G_right.addSubstitutions(info.right);
+		tsh.addSubstitutions(G_left, info.left);
+		tsh.addSubstitutions(G_right, info.right);
 
 		// this is only a prototype implementation (see IDE-1256)
 		val reopen = newArrayList;

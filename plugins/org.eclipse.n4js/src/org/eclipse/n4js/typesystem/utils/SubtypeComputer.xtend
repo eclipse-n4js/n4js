@@ -121,7 +121,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 			// the following is required in a method override scenario where 'left' is the overriding
 			// and 'right' the overridden method
 			if (left.declaredType?.eContainer instanceof TClassifier)
-				addSubstitutions(G2, TypeUtils.createTypeRef(left.declaredType.eContainer as TClassifier));
+				tsh.addSubstitutions(G2, TypeUtils.createTypeRef(left.declaredType.eContainer as TClassifier));
 
 			return isMatchingTypeVariableBounds(G2, leftTypeVars, rightTypeVars);
 		}

@@ -17,6 +17,6 @@ import com.google.inject.Inject
  */
 package class TypeSystemHelperStrategy {
 
-	@Inject protected extension TypeSystemHelper
+	@Inject protected TypeSystemHelper tsh;
 
 }
