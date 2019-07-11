@@ -37,12 +37,14 @@ This installer is to be downloaded from https://wiki.eclipse.org/Eclipse_Install
 Run the installer and apply the following steps:
 
 1. change to "Advance Mode" via the menu (upper-right corner) (no need to move the installer)
-2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "Oxygen"
+2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with latest version (2019-06)
 3. double-click the entry **Eclipse Projects/N4JS** so that it is shown in the catalog view below
-4. on the next page, configure paths accordingly. You only have to configure the installation and workspace folder.
+4. on the next page, configure paths accordingly. You only have to configure the installation and workspace folder. You may want to show all variables and change git access to https (instead of git) to avoid problems with ssh keys (but you can do that later on as well if you run into any problems).
 5. start installation
 
-The installer will then guide you through the rest of the installation. All plug-ins are downloaded and configured automatically, so is the workspace including downloading the git repository and setting up the workspace.
+The installer will then guide you through the rest of the installation. All plug-ins are downloaded and configured automatically, so is the workspace including downloading the git repository and setting up the workspace. There might be compile errors at the very end (cf. link:https://github.com/eclipse/n4js/issues/1373[#1373]). 
+
+On the https://www.eclipse.org/n4js/downloads.html[Eclipse N4JS download page] we have described this set up with screenshots.
 
 === Manual IDE Configuration
 
