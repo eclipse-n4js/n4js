@@ -23,3 +23,29 @@ function foo() {}
 
 // XPECT errors --> "Not a reference to a constructor: {function():void}." at "foo"
 new foo();
+
+
+const cnst1 :any+ = {};
+// XPECT noerrors -->
+new cnst1();
+
+const cnst2 :Object+ = {};
+// XPECT noerrors -->
+new cnst2();
+
+
+const cnst3 :Function+ = ()=>{};
+// XPECT noerrors -->
+new cnst3(); // value of cnst3 might be a ctor
+
+
+interface I {}
+const cnst4 :I+ = null;
+// XPECT errors --> "Not a reference to a constructor: I+." at "cnst4"
+new cnst4();
+
+
+class C5 {}
+const cnst5 :constructor{C5} = null;
+// XPECT noerrors -->
+new cnst5();

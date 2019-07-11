@@ -25,7 +25,6 @@ import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NewTarget
 import org.eclipse.n4js.n4JS.PropertySpread
 import org.eclipse.n4js.n4JS.TaggedTemplateString
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.validation.ASTStructureValidator
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
@@ -141,18 +140,6 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def void checkSpreadOperatorInObjectLiteral(PropertySpread propertySpread) {
 		unsupported("spread operator in object literals (only allowed in array destructuring patterns)", propertySpread)
-	}
-
-
-	// FIXME GH-1299 remove the following
-	@Check
-	def void checkOldShortHandSyntaxForArrayType(ParameterizedTypeRef typeRef) {
-		if (typeRef.isIterableTypeExpression && typeRef.typeArgs.size === 1) {
-			addIssue(
-				IssueCodes.messageForTEMP_DEPRECATED_OLD_ARRAY_SYNTAX,
-				typeRef,
-				IssueCodes.TEMP_DEPRECATED_OLD_ARRAY_SYNTAX);
-		}
 	}
 
 

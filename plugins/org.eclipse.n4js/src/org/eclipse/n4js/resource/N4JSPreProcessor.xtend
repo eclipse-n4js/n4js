@@ -61,9 +61,7 @@ package final class N4JSPreProcessor {
 		} else if (typeRef.isIterableTypeExpression) {
 			val n = typeRef.typeArgs.size;
 			if (n < 2) {
-// FIXME GH-1299 change back to type Iterable
-typeRef.declaredType = builtInTypes.arrayType;
-//				typeRef.declaredType = builtInTypes.iterableType;
+				typeRef.declaredType = builtInTypes.iterableType;
 			} else if (n <= BuiltInTypeScope.ITERABLE_N__MAX_LEN) {
 				typeRef.declaredType = builtInTypes.getIterableNType(n);
 			} else {
