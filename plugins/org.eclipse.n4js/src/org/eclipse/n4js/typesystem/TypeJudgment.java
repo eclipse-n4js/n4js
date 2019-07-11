@@ -314,7 +314,6 @@ import com.google.inject.Inject;
 		// AST nodes: declarations
 		// ----------------------------------------------------------------------
 
-		// FIXME use sanitization utility method in next two methods!!
 		@Override
 		public TypeRef casePropertyNameValuePair(PropertyNameValuePair property) {
 			// note: keep this rule aligned with rules caseN4FieldDeclaration and caseVariableDeclaration
@@ -373,7 +372,7 @@ import com.google.inject.Inject;
 					final RuleEnvironment G2 = wrap(G);
 					G2.put(guardKey, Boolean.TRUE);
 					final TypeRef ofPartTypeRef = ts.type(G2, forOfStmnt.getExpression());
-					final TypeArgument elemType = destructureHelper.extractIterableElementType(G2, ofPartTypeRef);
+					final TypeArgument elemType = tsh.extractIterableElementType(G2, ofPartTypeRef);
 					if (elemType != null) {
 						T = ts.upperBound(G2, elemType);
 					} else {

@@ -30,7 +30,6 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
-import org.eclipse.n4js.utils.DestructureHelper
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -48,8 +47,6 @@ package class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
-	@Inject
-	private DestructureHelper destructureHelper;
 
 	/**
 	 * BEFORE CHANGING THIS METHOD, READ THIS:
@@ -119,7 +116,7 @@ if(isValueToBeDestructured) {
 	 */
 	private def List<TypeRef> getExpectedElemTypeRefs(RuleEnvironment G, TypeRef expectedTypeRef) {
 		if (expectedTypeRef !== null) {
-			val extractedTypeRefs = destructureHelper.extractIterableElementTypesUBs(G, expectedTypeRef);
+			val extractedTypeRefs = tsh.extractIterableElementTypesUBs(G, expectedTypeRef);
 			return extractedTypeRefs.toList // will have len>1 only if expectation is IterableN
 		} else {
 			return newArrayList // no or invalid type expectation

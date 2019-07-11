@@ -96,6 +96,7 @@ class TypeSystemHelper {
 	@Inject private ExpectedTypeComputer expectedTypeCompuer;
 	@Inject private StructuralTypingComputer structuralTypingComputer;
 	@Inject private ThisTypeComputer thisTypeComputer;
+	@Inject private IterableComputer iterableComputer;
 
 
 @Inject private StructuralTypesHelper structuralTypesHelper;
@@ -212,6 +213,26 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	/** @see ThisTypeComputer#getThisTypeAtLocation(RuleEnvironment,EObject) */
 	def TypeRef getThisTypeAtLocation(RuleEnvironment G, EObject location) {
 		return thisTypeComputer.getThisTypeAtLocation(G, location);
+	}
+
+	/** @see IterableComputer#extractIterableElementTypesUBs(RuleEnvironment, TypeRef) */
+	public def Iterable<TypeRef> extractIterableElementTypesUBs(RuleEnvironment G, TypeRef typeRef) {
+		return iterableComputer.extractIterableElementTypesUBs(G, typeRef);
+	}
+
+	/** @see IterableComputer#extractIterableElementTypes(RuleEnvironment, TypeRef) */
+	public def Iterable<? extends TypeArgument> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
+		return iterableComputer.extractIterableElementTypes(G, typeRef);
+	}
+
+	/** @see IterableComputer#extractIterableElementTypeUB(RuleEnvironment, TypeRef) */
+	public def TypeRef extractIterableElementTypeUB(RuleEnvironment G, TypeRef typeRef) {
+		return iterableComputer.extractIterableElementTypeUB(G, typeRef);
+	}
+
+	/** @see IterableComputer#extractIterableElementType(RuleEnvironment, TypeRef) */
+	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef) {
+		return iterableComputer.extractIterableElementType(G, typeRef);
 	}
 
 
