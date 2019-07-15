@@ -76,17 +76,30 @@ var v24 : Array<? extends B> = [ b, ...[c] ];
 
 function getArrOfC(): C[] { return null; }
 
+class ~MyIterable<T> {
+	public [Symbol.iterator](): Iterator<T> { return null; }
+}
+let myIterableOfC: MyIterable<C>;
+
 // XPECT type of '[ b, ...getArrOfC() ]' --> Array<union{B,C}>
-var v31 = [ b, ...getArrOfC() ];
+var v31a = [ b, ...getArrOfC() ];
+// XPECT type of '[ b, ...myIterableOfC ]' --> Array<union{B,C}>
+var v31b = [ b, ...myIterableOfC ];
 
 // XPECT type of '[ b, ...getArrOfC() ]' --> Array<B>
-var v32 : Array<B> = [ b, ...getArrOfC() ];
+var v32a : Array<B> = [ b, ...getArrOfC() ];
+// XPECT type of '[ b, ...myIterableOfC ]' --> Array<B>
+var v32b : Array<B> = [ b, ...myIterableOfC ];
 
 // XPECT type of '[ b, ...getArrOfC() ]' --> Array<A>
-var v33 : Array<A> = [ b, ...getArrOfC() ];
+var v33a : Array<A> = [ b, ...getArrOfC() ];
+// XPECT type of '[ b, ...myIterableOfC ]' --> Array<A>
+var v33b : Array<A> = [ b, ...myIterableOfC ];
 
 // XPECT type of '[ b, ...getArrOfC() ]' --> Array<union{B,C}>
-var v34 : Array<? extends B> = [ b, ...getArrOfC() ];
+var v34a : Array<? extends B> = [ b, ...getArrOfC() ];
+// XPECT type of '[ b, ...myIterableOfC ]' --> Array<union{B,C}>
+var v34b : Array<? extends B> = [ b, ...myIterableOfC ];
 
 
 // ------------------------------------------------------------------

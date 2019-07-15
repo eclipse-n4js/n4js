@@ -26,8 +26,6 @@ function <T> foo(p : T) : T {return null;}
 function <T> fooArr(p : Array<T>) : G<T> {return null;}
 
 
-
-
 // XPECT typeArgs of fooArr --> union{B,C}
 // XPECT type of '[ b, c ]' --> Array<union{B,C}>
 var v01 = fooArr( [ b, c ] );
@@ -39,3 +37,11 @@ var v02 : G<A> = fooArr( [ b, c ] );
 // XPECT typeArgs of fooArr --> A
 // XPECT type of '[ b, c ]' --> Array<A>
 var v03 : G<A> = foo(foo(foo(fooArr( [ b, c ] ))));
+
+// XPECT typeArgs of fooArr --> A
+// XPECT type of '[ b, c ]' --> Array<A>
+let v11: Array<G<A>> = [ ...[ fooArr( [ b, c ] ) ] ];
+
+// XPECT typeArgs of fooArr --> A
+// XPECT type of '[ b, c ]' --> Array<A>
+let v12: Array<G<A>> = foo([ ...foo([ fooArr( [ b, c ] ) ]) ]);
