@@ -528,7 +528,8 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseArrayElement(ArrayElement arrElem) {
-			if (arrElem.isSpread()) {
+			if (arrElem.isSpread()
+					&& !DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(arrElem.eContainer())) {
 				// NOTE: string (lower case!) is not a subtype of Iterable<?> and no auto-boxing happening here, so we
 				// have to explicitly allow type 'string' (conversely, type 'String' is a subtype of Iterable<?> and
 				// need not be mentioned explicitly).
