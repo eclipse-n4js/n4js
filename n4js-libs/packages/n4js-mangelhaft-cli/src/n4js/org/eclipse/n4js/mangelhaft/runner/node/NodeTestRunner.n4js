@@ -29,6 +29,7 @@ import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
 import * as cli_color_+ from "cli-color";
+import {parse} from "url";
 
 class NodeTestRunner  {
     @Inject
@@ -104,8 +105,11 @@ class NodeTestRunner  {
             if (!isHTTP_re.test(ideReportEndpoint)) {
                 throw new Error(`no report URL: ${ideReportEndpoint}`);
             }
-            this.ideReporter.endpoint = ideReportEndpoint;
-            reporters.push(this.ideReporter);
+            // make sure IDE reporting hostname matches the one used when fetching the catalog:
+            if (!isHTTP_re.test(options.testCatalog) || parse(options.testCatalog).hostname === parse(ideReportEndpoint).hostname) {
+                this.ideReporter.endpoint = ideReportEndpoint;
+                reporters.push(this.ideReporter);
+            }
         }
 
         this.controller.reporters = reporters;
