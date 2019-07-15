@@ -221,7 +221,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	}
 
 	/** @see IterableComputer#extractIterableElementTypes(RuleEnvironment, TypeRef) */
-	public def Iterable<? extends TypeArgument> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
+	public def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
 		return iterableComputer.extractIterableElementTypes(G, typeRef);
 	}
 

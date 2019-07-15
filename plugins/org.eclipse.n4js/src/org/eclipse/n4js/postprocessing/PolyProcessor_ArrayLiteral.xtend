@@ -14,12 +14,15 @@ import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.Arrays
+import java.util.Collection
 import java.util.List
 import java.util.Map
+import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.ArrayPadding
 import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.InferenceVariable
@@ -83,7 +86,12 @@ if(isValueToBeDestructured) {
 			val elemTypeRefs = newArrayList;
 			val nonNullElems = arrLit.elements.filter[expression !== null];
 			for (arrElem : nonNullElems) {
-				elemTypeRefs += polyProcessor.processExpr(G, arrElem.expression, null, infCtx, cache);
+				val arrElemTypeRef = polyProcessor.processExpr(G, arrElem.expression, null, infCtx, cache);
+				if (arrElem.spread) {
+					elemTypeRefs += extractSpreadTypeRefs(G, arrElemTypeRef); // more than one in case of IterableN; none in case of invalid value after spread operator
+				} else {
+					elemTypeRefs += arrElemTypeRef;
+				}
 			}
 
 			infCtx.onSolved [ solution | handleOnSolvedPerformanceTweak(G, cache, arrLit, expectedElemTypeRefs) ];
@@ -249,8 +257,21 @@ if(isValueToBeDestructured) {
 				// -> add constraint currElemTypeRef <: Ti (Ti being the corresponding inf. variable in resultTypeRef)
 				val idxResult = Math.min(idxElem, resultLen - 1);
 				val currResultInfVar = resultInfVars.get(idxResult);
-				val currElemTypeRef = polyProcessor.processExpr(G, currElem.expression, TypeUtils.createTypeRef(currResultInfVar), infCtx, cache);
-				infCtx.addConstraint(currElemTypeRef, TypeUtils.createTypeRef(currResultInfVar), Variance.CO);
+				val currResultInfVarTypeRef = TypeUtils.createTypeRef(currResultInfVar);
+				val currExpectedTypeRef = if (currElem.spread) G.iterableTypeRef(TypeUtils.createWildcardExtends(currResultInfVarTypeRef)) else currResultInfVarTypeRef;
+				val currElemTypeRef = polyProcessor.processExpr(G, currElem.expression, currExpectedTypeRef, infCtx, cache);
+				val currElemTypeRefs = if (currElem.spread) extractSpreadTypeRefs(G, currElemTypeRef) else #[ currElemTypeRef ];
+				if (!currElemTypeRefs.empty) {
+					// TODO IDE-1653 this if-case is only required because re-opened ExistentialTypeRefs are
+					// ignored in Reducer#reduceStructuralTypeRef(TypeRef,TypeRef,Variance) (otherwise the
+					// code in the else-block could probably be used in all cases and #extractSpreadTypeRefs()
+					// would not be required here)
+					for (currTypeRef : currElemTypeRefs) {
+						infCtx.addConstraint(currTypeRef, TypeUtils.createTypeRef(currResultInfVar), Variance.CO);
+					}
+				} else {
+					infCtx.addConstraint(currElemTypeRef, currExpectedTypeRef, Variance.CO);
+				}
 			}
 		}
 	}
@@ -280,9 +301,7 @@ if(isValueToBeDestructured) {
 			cache.storeType(arrLit, typeRef);
 		} else {
 			// failure case (unsolvable constraint system)
-			val betterElemTypeRefs = arrLit.elements.map [
-				if (expression !== null) getFinalResultTypeOfNestedPolyExpression(expression) else G.anyTypeRef
-			];
+			val betterElemTypeRefs = arrLit.elements.map[getFinalResultTypeOfArrayElement(G, it, Optional.absent)];
 			val typeRef = buildFallbackTypeForArrayLiteral(isIterableN, resultLen, betterElemTypeRefs, expectedElemTypeRefs, G);
 			cache.storeType(arrLit, typeRef);
 		}
@@ -295,20 +314,38 @@ if(isValueToBeDestructured) {
 	// (note: compare this with similar handling of 'Argument' nodes in PolyProcessor_CallExpression)
 	private def List<TypeRef> storeTypesOfArrayElements(RuleEnvironment G, ASTMetaInfoCache cache, ArrayLiteral arrLit) {
 		val List<TypeRef> storedElemTypeRefs = newArrayList;
-		for (arrElem : arrLit.elements) {
-			if (arrElem instanceof ArrayPadding) {
-				cache.storeType(arrElem, G.undefinedTypeRef);
+		for (currElem : arrLit.elements) {
+			if (currElem instanceof ArrayPadding) {
+				cache.storeType(currElem, G.undefinedTypeRef);
 			} else {
-				val expr = arrElem?.expression;
-				val exprType = if (expr!==null) getFinalResultTypeOfNestedPolyExpression(expr);
-				if (exprType!==null) {
-					cache.storeType(arrElem, exprType);
-					storedElemTypeRefs += exprType;
-				} else {
-					cache.storeType(arrElem, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
-				}
+				val currElemTypeRef = getFinalResultTypeOfArrayElement(G, currElem, Optional.of(storedElemTypeRefs));
+				cache.storeType(currElem, currElemTypeRef);
 			}
 		}
 		return storedElemTypeRefs;
+	}
+
+	private def TypeRef getFinalResultTypeOfArrayElement(RuleEnvironment G, ArrayElement currElem, Optional<Collection<TypeRef>> addTypeRefsHere) {
+		val currExpr = currElem?.expression;
+		val currElemTypeRef = if (currExpr!==null) getFinalResultTypeOfNestedPolyExpression(currExpr);
+		if (currElemTypeRef !== null) {
+			val currElemTypeRefs = if (currElem.spread) extractSpreadTypeRefs(G, currElemTypeRef) else #[ currElemTypeRef ];
+			if (addTypeRefsHere.present) {
+				addTypeRefsHere.get += currElemTypeRefs;
+			}
+			return tsh.createUnionType(G, currElemTypeRefs);
+		}
+		return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
+	}
+
+	private def Iterable<? extends TypeRef> extractSpreadTypeRefs(RuleEnvironment G, TypeRef typeRef) {
+		// case 1: built-in type string
+		if (typeRef instanceof ParameterizedTypeRef) {
+			if (typeRef.declaredType === G.stringType) {
+				return #[ G.stringTypeRef ]; // spreading a string yields zero or more strings
+			}
+		}
+		// case 2: Iterable or IterableN
+		return tsh.extractIterableElementTypes(G, typeRef)
 	}
 }

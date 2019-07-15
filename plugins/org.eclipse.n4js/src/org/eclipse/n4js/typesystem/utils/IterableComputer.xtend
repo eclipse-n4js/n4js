@@ -55,7 +55,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 	 * Iterable or IterableN interfaces. Usually never returns a result longer than {@link BuiltInTypeScope#ITERABLE_N__MAX_LEN},
 	 * but if there are invalid type references with too many arguments, this might happen.
 	 */
-	public def Iterable<? extends TypeArgument> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
+	public def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
 		return extractIterableElementTypes(G, typeRef, true);
 	}
 

@@ -719,6 +719,10 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				// information; but otherwise we would have to deal with this all throughout InferenceContext,
 				// Reducer, BoundSet
 				// TODO reconsider handling of re-opened ExistentialTypeRefs in InferenceContext, IDE-1653
+				if (DEBUG) {
+					log("!!!WARNING!!! ignoring constraint due to re-opened ExistentialTypeRef (IDE-1653): "
+							+ constraint);
+				}
 				continue;
 			}
 			wasAdded |= reduce(constraint);
