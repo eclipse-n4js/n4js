@@ -146,6 +146,24 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			}
 			return false;
 		}
+		if (left instanceof ExistentialTypeRef) {
+			ExistentialTypeRef leftCasted = (ExistentialTypeRef) left;
+			if (RuleEnvironmentExtensions.isExistentialTypeToBeReopened(G, leftCasted)) {
+				Wildcard wildcard = leftCasted.getWildcard();
+				if (wildcard != null && !wildcard.eIsProxy()) {
+					return reduce(wildcard, right, variance);
+				}
+			}
+		}
+		if (right instanceof ExistentialTypeRef) {
+			ExistentialTypeRef rightCasted = (ExistentialTypeRef) right;
+			if (RuleEnvironmentExtensions.isExistentialTypeToBeReopened(G, rightCasted)) {
+				Wildcard wildcard = rightCasted.getWildcard();
+				if (wildcard != null && !wildcard.eIsProxy()) {
+					return reduce(left, wildcard, variance);
+				}
+			}
+		}
 		if ((left instanceof TypeRef) && (right instanceof TypeRef)) {
 			// both TypeRefs
 			return reduceTypeRef((TypeRef) left, (TypeRef) right, variance);
@@ -153,10 +171,14 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		// at least one wildcard
 		if ((left instanceof Wildcard) && (right instanceof Wildcard)) {
 			// both wildcards
-			return reduceWildcard((Wildcard) left, (Wildcard) right, variance);
+			return reduceWildcardBoth((Wildcard) left, (Wildcard) right, variance);
 		}
 		// a wildcard and a TypeRef, in any order
-		return giveUp(left, right, variance); // TODO probably wrong like this? cf. IDE-1653
+		if (right instanceof Wildcard) {
+			return reduceWildcardRight((TypeRef) left, (Wildcard) right, variance);
+		} else {
+			return reduceWildcardRight((TypeRef) right, (Wildcard) left, variance.inverse());
+		}
 	}
 
 	/**
@@ -375,7 +397,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	}
 
 	// TODO IDE-1653 reconsider handling of wildcards in Reducer#reduceWildcard()
-	private boolean reduceWildcard(Wildcard left, Wildcard right, @SuppressWarnings("unused") Variance variance) {
+	private boolean reduceWildcardBoth(Wildcard left, Wildcard right, @SuppressWarnings("unused") Variance variance) {
 		if (left == right) {
 			// trivial ==, <:, and :> of a wildcard to itself.
 			return false;
@@ -400,6 +422,24 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			final TypeRef ubLeftOrTop = (ubLeft != null) ? ubLeft : top();
 			final TypeRef ubRightOrTop = (ubRight != null) ? ubRight : top();
 			wasAdded |= reduce(ubLeftOrTop, ubRightOrTop, INV);
+		}
+		return wasAdded;
+	}
+
+	private boolean reduceWildcardRight(TypeRef left, Wildcard right, Variance variance) {
+		boolean wasAdded = false;
+		if (variance == CO) {
+			final TypeRef ubRight = right.getDeclaredOrImplicitUpperBound();
+			if (ubRight != null) {
+				// ⟨ L <: ? extends UB ⟩ implies ⟨ L <: UB ⟩
+				wasAdded |= reduce(left, ubRight, CO);
+			}
+		} else if (variance == CONTRA) {
+			final TypeRef lbRight = right.getDeclaredLowerBound();
+			if (lbRight != null) {
+				// ⟨ L :> ? super LB ⟩ implies ⟨ L :> LB ⟩
+				wasAdded |= reduce(left, lbRight, CONTRA);
+			}
 		}
 		return wasAdded;
 	}
@@ -695,7 +735,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		// now, variance is either CO or INV
 
 		final StructuralTypingComputer stc = tsh.getStructuralTypingComputer();
-		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
+		final RuleEnvironment G2 = G; // RuleEnvironmentExtensions.wrap(G); // FIXME!!!!
 		final StructTypingInfo infoFaked = new StructTypingInfo(G2, left, right, // <- G2 will be changed!
 				left.getTypingStrategy(), right.getTypingStrategy());
 
