@@ -232,9 +232,9 @@
       label="MWE">
     <requirement
         name="org.eclipse.emf.mwe2.language.sdk.feature.group"
-        versionRange="[2.11.0,2.11.1)"/>
+        versionRange="[2.10.0,2.10.1)"/>
     <repository
-        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.11.0"/>
+        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.10.0"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -401,7 +401,7 @@
         <repository
             url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.18"/>
         <repository
-            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.11.0"/>
+            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.10.0"/>
         <repository
             url="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201605260315"/>
         <repository
