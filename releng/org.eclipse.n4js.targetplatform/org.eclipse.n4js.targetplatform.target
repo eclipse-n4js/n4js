@@ -70,7 +70,6 @@
       <unit id="ch.qos.logback.classic" version="1.1.2.v20171220-1825"/>
       <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.9.2.v20180207-1730"/>
       <unit id="com.google.guava" version="21.0.0.v20170206-1425"/>
-      <unit id="com.google.guava" version="27.1.0.v20190517-1946"/>
       <unit id="com.google.inject" version="3.0.0.v201605172100"/>
       <unit id="io.github.classgraph" version="4.8.35.v20190528-1517"/>
       <unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
