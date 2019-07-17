@@ -125,12 +125,13 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	 * Returns a represenation of this URI that has a trailing path delimiter.
 	 */
 	public final U withTrailingPathDelimiter() {
-		if (toURI().hasTrailingPathSeparator()) {
+		URI uri = toURI();
+		if (uri.hasTrailingPathSeparator()) {
 			@SuppressWarnings("unchecked")
 			U result = (U) this;
 			return result;
 		}
-		return appendSegment("");
+		return createFrom(uri.appendSegment(""));
 	}
 
 	/**
