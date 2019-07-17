@@ -40,6 +40,7 @@ public class FileURI extends SafeURI<FileURI> {
 
 	public FileURI(File file) {
 		super(toFileURI(file));
+		this.cachedFile = file;
 	}
 
 	private static URI toFileURI(File file) {
@@ -56,6 +57,8 @@ public class FileURI extends SafeURI<FileURI> {
 		super.validate(given);
 		Preconditions.checkNotNull(given.authority());
 		Preconditions.checkArgument(given.isFile());
+		// String asString = given.toString();
+		// Preconditions.checkArgument(asString.lastIndexOf(':') == asString.indexOf(':'), given);
 		return given;
 	}
 

@@ -23,6 +23,7 @@ public class N4JSProjectName implements Comparable<N4JSProjectName> {
 
 	public N4JSProjectName(String name) {
 		this.name = Preconditions.checkNotNull(name);
+		Preconditions.checkArgument(name.indexOf(':') < 0, name);
 	}
 
 	public String getName() {

@@ -606,7 +606,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		val description = getProjectDescription();
 		val projectName = description.projectName;
 		val projectType = description.projectType;
-		if (projectName == N4JSGlobals.N4JS_RUNTIME) {
+		if (projectName == N4JSGlobals.N4JS_RUNTIME.rawName) {
 			return; // not applicable ("n4js-runtime" does not need to have a dependency to "n4js-runtime"!)
 		}
 		if (!N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(projectType)) {
@@ -614,9 +614,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 
 		val dependencies = getDocumentValues(DEPENDENCIES).filter(JSONObject).flatMap[nameValuePairs].toList;
-		if (!dependencies.exists[name == N4JSGlobals.N4JS_RUNTIME]) {
+		if (!dependencies.exists[name == N4JSGlobals.N4JS_RUNTIME.rawName]) {
 			val devDependencies = getDocumentValues(DEV_DEPENDENCIES).filter(JSONObject).flatMap[nameValuePairs].toList;
-			val matchingDevDep = devDependencies.findFirst[name == N4JSGlobals.N4JS_RUNTIME];
+			val matchingDevDep = devDependencies.findFirst[name == N4JSGlobals.N4JS_RUNTIME.rawName];
 			if (matchingDevDep === null) {
 				// dependency to 'n4js-runtime' missing entirely
 				val msg = IssueCodes.getMessageForPKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME;
@@ -1319,10 +1319,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	 *
 	 * @See {@link #getProjectDescription()}. 
 	 */
-	protected def Map<String, ProjectDependency> getDeclaredProjectDependencies() {
+	protected def Map<N4JSProjectName, ProjectDependency> getDeclaredProjectDependencies() {
 		return contextMemoize(DECLARED_DEPENDENCIES_CACHE, [
 			val description = getProjectDescription();
-			return description.projectDependencies.toMap[d | d.projectName];
+			return description.projectDependencies.toMap[d | new N4JSProjectName(d.projectName)];
 		]);
 	}
 

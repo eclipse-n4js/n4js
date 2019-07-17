@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -93,7 +94,7 @@ public class ExternalLibraryPreferenceModel {
 		ExternalLibraryPreferenceModel result = new ExternalLibraryPreferenceModel();
 		synchronized (result) {
 			for (String extLibLoc : extLibLocs) {
-				result.externalLibraryLocations.add(new FileURI(new File(extLibLoc)));
+				result.externalLibraryLocations.add(new FileURI(URI.createURI(extLibLoc)));
 			}
 		}
 		return result;

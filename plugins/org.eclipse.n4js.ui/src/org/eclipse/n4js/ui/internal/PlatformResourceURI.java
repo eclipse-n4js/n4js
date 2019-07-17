@@ -79,7 +79,11 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 
 	@Override
 	public boolean isFile() {
-		return getCachedResource().getType() == IResource.FILE;
+		IResource r = getCachedResource();
+		if (r == null) {
+			return false;
+		}
+		return r.getType() == IResource.FILE;
 	}
 
 	@Override
@@ -89,12 +93,17 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 
 	@Override
 	public boolean exists() {
-		return getCachedResource().exists();
+		IResource r = getCachedResource();
+		return r != null && r.exists();
 	}
 
 	@Override
 	public boolean isDirectory() {
-		int type = getCachedResource().getType();
+		IResource r = getCachedResource();
+		if (r == null) {
+			return false;
+		}
+		int type = r.getType();
 		return type == IResource.FOLDER || type == IResource.PROJECT;
 	}
 
