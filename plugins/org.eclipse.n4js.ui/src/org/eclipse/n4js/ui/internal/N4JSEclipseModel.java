@@ -163,36 +163,36 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 				return n4jsContainer;
 			}
 
-			if (location.isFile()) {
-				final IN4JSEclipseProject eclipseProject = findProjectWith(location);
-				if (null != eclipseProject && eclipseProject.exists()) {
-					n4jsContainer = Optional.fromNullable(eclipseProject.findSourceFolderContaining(location));
-					// if (eclipseProject.getProject() instanceof N4JSExternalProject) {
-					// final IResource resource = externalLibraryWorkspace.getResource(location);
-					// if (null != resource) {
-					// n4jsContainer = getN4JSSourceContainer(resource);
-					// }
-					// } else { // in case of locating a project from source maps:
-					// String locString = location.toFileString();
-					//
-					// String projPathString = eclipseProject.getLocationPath().toString();
-					// if (locString.startsWith(projPathString)) {
-					// locString = eclipseProject.getLocation().toString()
-					// + locString.substring(projPathString.length());
-					// }
-					//
-					// for (IN4JSEclipseSourceContainer sc : eclipseProject.getSourceContainers()) {
-					// String scLoc = sc.getLocation().toString();
-					// if (locString.startsWith(scLoc)) {
-					// return Optional.of(sc);
-					//
-					// }
-					// }
-					// }
-				}
-			}
-
-			return n4jsContainer;
+			// if (location.isFile()) {
+			// final IN4JSEclipseProject eclipseProject = findProjectWith(location);
+			// if (null != eclipseProject && eclipseProject.exists()) {
+			// n4jsContainer = Optional.fromNullable(eclipseProject.findSourceFolderContaining(location));
+			// // if (eclipseProject.getProject() instanceof N4JSExternalProject) {
+			// // final IResource resource = externalLibraryWorkspace.getResource(location);
+			// // if (null != resource) {
+			// // n4jsContainer = getN4JSSourceContainer(resource);
+			// // }
+			// // } else { // in case of locating a project from source maps:
+			// // String locString = location.toFileString();
+			// //
+			// // String projPathString = eclipseProject.getLocationPath().toString();
+			// // if (locString.startsWith(projPathString)) {
+			// // locString = eclipseProject.getLocation().toString()
+			// // + locString.substring(projPathString.length());
+			// // }
+			// //
+			// // for (IN4JSEclipseSourceContainer sc : eclipseProject.getSourceContainers()) {
+			// // String scLoc = sc.getLocation().toString();
+			// // if (locString.startsWith(scLoc)) {
+			// // return Optional.of(sc);
+			// //
+			// // }
+			// // }
+			// // }
+			// }
+			// }
+			//
+			// return n4jsContainer;
 		}
 
 		final IN4JSEclipseProject project = findProjectWith(location);
