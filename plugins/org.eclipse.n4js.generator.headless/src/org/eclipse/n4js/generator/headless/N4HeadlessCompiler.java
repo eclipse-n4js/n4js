@@ -680,7 +680,7 @@ public class N4HeadlessCompiler {
 			// Conditionally filter test resources if not desired
 			if (shouldLoadSourceContainer(container)) {
 				if (logger.isCreateDebugOutput()) {
-					logger.debug("Collecting resources from source container " + container.getSafeLocation());
+					logger.debug("Collecting resources from source container " + container.getLocation());
 				}
 
 				Iterables.filter(container, uri -> shouldLoadResource(uri)).forEach(uri -> {

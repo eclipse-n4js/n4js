@@ -42,7 +42,7 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	}
 
 	@Override
-	public SafeURI<?> getSafeLocation() {
+	public SafeURI<?> getLocation() {
 		String location = getRelativeLocation();
 		if (!Strings.isEmpty(location)) {
 			return project.getLocation().appendPath(getRelativeLocation());

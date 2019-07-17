@@ -91,7 +91,7 @@ public class ProjectResolveHelper {
 			throw new RuntimeException(msg);
 		}
 
-		return uri.deresolve(sourceContainer.getSafeLocation().withTrailingPathDelimiter().toURI())
+		return uri.deresolve(sourceContainer.getLocation().withTrailingPathDelimiter().toURI())
 				.trimFileExtension()
 				.toString();
 	}

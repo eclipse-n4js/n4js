@@ -74,7 +74,7 @@ class WorkspaceWizardModel {
 						model.setSourceFolder(new Path(sourceFolderPath));
 
 						// Finally parse the module specifier
-						val sourceFolderURI = new Path(sourceFolder.safeLocation.toURI.deresolve(rootURI).toString());
+						val sourceFolderURI = new Path(sourceFolder.location.toURI.deresolve(rootURI).toString());
 						val moduleSpecifierPath = new Path(pathURI.deresolve(rootURI).toString());
 						val moduleSpecifier = moduleSpecifierPath.makeRelativeTo(sourceFolderURI).toString();
 

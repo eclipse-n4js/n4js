@@ -65,7 +65,7 @@ import org.eclipse.swt.graphics.Image;
 
 		final List<ResourceNode> childrenList = new LinkedList<>();
 		for (IN4JSSourceContainer srcContainer : project.getSourceContainers()) {
-			SafeURI<?> location = srcContainer.getSafeLocation();
+			SafeURI<?> location = srcContainer.getLocation();
 			String label = srcContainer.getRelativeLocation();
 			ResourceNode resourceNode = ResourceNode.create(this, location, label);
 			if (resourceNode != null) {

@@ -73,7 +73,7 @@ class ModuleNameComputer {
 		val maybeSourceContainer = findN4JSSourceContainer(uri)
 		if (maybeSourceContainer.present) {
 			val sourceContainer = maybeSourceContainer.get
-			val location = sourceContainer.safeLocation.withTrailingPathDelimiter.toURI
+			val location = sourceContainer.location.withTrailingPathDelimiter.toURI
 			if(uri.uriStartsWith(location)) {
 				var relativeURI = uri.deresolve(location)
 				if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == uri.fileExtension.toLowerCase)) {

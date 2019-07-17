@@ -63,7 +63,7 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 		String handle = null;
 		Optional<? extends IN4JSSourceContainer> containerOpt = core.findN4JSSourceContainer(uri);
 		if (containerOpt.isPresent()) {
-			handle = SOURCE_CONTAINER_PREFIX + containerOpt.get().getSafeLocation();
+			handle = SOURCE_CONTAINER_PREFIX + containerOpt.get().getLocation();
 		} else {
 			Optional<? extends IN4JSEclipseProject> projectOpt = core.findProject(uri);
 			if (projectOpt.isPresent()) {
@@ -110,7 +110,7 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 
 	private void collectLocationHandles(IN4JSProject project, List<String> result) {
 		for (IN4JSSourceContainer container : project.getSourceContainers()) {
-			result.add(SOURCE_CONTAINER_PREFIX + container.getSafeLocation());
+			result.add(SOURCE_CONTAINER_PREFIX + container.getLocation());
 		}
 	}
 

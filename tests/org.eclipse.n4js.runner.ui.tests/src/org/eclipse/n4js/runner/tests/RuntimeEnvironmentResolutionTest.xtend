@@ -465,7 +465,7 @@ class RuntimeEnvironmentResolutionTest {
 		val v8re = newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
 
 		// URI to a concrete Module to run
-		val URI clientModule = client.sourceContainers.get(0).safeLocation.appendSegment("ClientA.n4js").toURI;
+		val URI clientModule = client.sourceContainers.get(0).location.appendSegment("ClientA.n4js").toURI;
 
 		val dep_map = V8.getProjectExtendedDepsAndApiImplMapping(clientModule,'id1',true)
 		val deps = dep_map.projects
@@ -525,7 +525,7 @@ class RuntimeEnvironmentResolutionTest {
 		newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
 
 		// URI to a concrete Module to run
-		val URI clientModule = client.sourceContainers.get(0).safeLocation.appendSegment("ClientA.n4js").toURI;
+		val URI clientModule = client.sourceContainers.get(0).location.appendSegment("ClientA.n4js").toURI;
 
 
 		V8.getProjectExtendedDepsAndApiImplMapping(clientModule,'id1',true)
@@ -573,7 +573,7 @@ class RuntimeEnvironmentResolutionTest {
 		val v8re = newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
 
 		// URI to a concrete Module to run
-		val URI clientModule = client.sourceContainers.get(0).safeLocation.appendSegment("ClientA.n4js").toURI;
+		val URI clientModule = client.sourceContainers.get(0).location.appendSegment("ClientA.n4js").toURI;
 
 
 
@@ -642,7 +642,7 @@ class RuntimeEnvironmentResolutionTest {
 		val v8re = newBuilderForRE.withProvidedRL('v8.re.lib').createProject(V8)
 
 		// URI to a concrete Module to run
-		val URI clientModule = client.sourceContainers.get(0).safeLocation.appendSegment("ClientA.n4js").toURI;
+		val URI clientModule = client.sourceContainers.get(0).location.appendSegment("ClientA.n4js").toURI;
 
 
 		val apiUsage = V8.getProjectExtendedDepsAndApiImplMapping(clientModule,'id1',true)

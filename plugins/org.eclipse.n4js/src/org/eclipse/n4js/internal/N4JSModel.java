@@ -162,7 +162,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		if (project != null) {
 			for (IN4JSSourceContainer n4jsSourceContainer : project.getSourceContainers()) {
 				if (isLocationInNestedInContainer(nestedLocation, n4jsSourceContainer)) {
-					int segmentCount = n4jsSourceContainer.getSafeLocation().toURI().segmentCount();
+					int segmentCount = n4jsSourceContainer.getLocation().toURI().segmentCount();
 					if (segmentCount > matchingSegmentCount) {
 						matchingContainer = n4jsSourceContainer;
 						matchingSegmentCount = segmentCount;
@@ -174,7 +174,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	}
 
 	private boolean isLocationInNestedInContainer(URI nestedLocation, IN4JSSourceContainer container) {
-		URI containerLocation = container.getSafeLocation().toURI();
+		URI containerLocation = container.getLocation().toURI();
 		if (containerLocation == null || nestedLocation == null)
 			return false;
 		int maxSegments = containerLocation.segmentCount();
@@ -332,10 +332,10 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		final String extWithDot = !ext.isEmpty() && !ext.startsWith(".") ? "." + ext : ext;
 		final String pathStr = name.toString("/") + extWithDot; // no need for IQualifiedNameConverter here!
 
-		SafeURI<?> artifactLocation = findArtifactInFolder(workspace, sourceContainer.getSafeLocation().toURI(),
+		SafeURI<?> artifactLocation = findArtifactInFolder(workspace, sourceContainer.getLocation().toURI(),
 				pathStr);
 		if (null == artifactLocation) {
-			artifactLocation = findArtifactInFolder(externalLibraryWorkspace, sourceContainer.getSafeLocation().toURI(),
+			artifactLocation = findArtifactInFolder(externalLibraryWorkspace, sourceContainer.getLocation().toURI(),
 					pathStr);
 		}
 		return artifactLocation;

@@ -48,7 +48,7 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 
 	@Override
 	public URI getPath() {
-		return delegate.getSafeLocation().withTrailingPathDelimiter().toURI();
+		return delegate.getLocation().withTrailingPathDelimiter().toURI();
 	}
 
 	@Override
