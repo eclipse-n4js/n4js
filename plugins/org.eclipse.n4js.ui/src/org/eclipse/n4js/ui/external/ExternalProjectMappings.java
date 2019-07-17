@@ -29,16 +29,15 @@ import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
+import org.eclipse.n4js.ui.internal.PlatformResourceURI;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
 /**
@@ -48,7 +47,7 @@ public class ExternalProjectMappings {
 	/** True: Only compile those projects that are referenced by N4JS projects */
 	public static boolean REDUCE_REGISTERED_NPMS = true;
 
-	final private IN4JSCore userWorkspace;
+	final private EclipseBasedN4JSWorkspace userWorkspace;
 	final private ExternalLibraryPreferenceStore preferenceStore;
 
 	/*
@@ -64,7 +63,7 @@ public class ExternalProjectMappings {
 	final Set<N4JSExternalProject> reducedSet;
 	final boolean initialized;
 
-	ExternalProjectMappings(IN4JSCore userWorkspace,
+	ExternalProjectMappings(EclipseBasedN4JSWorkspace userWorkspace,
 			ExternalLibraryPreferenceStore preferenceStore,
 			Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> completeCache) {
 
@@ -78,7 +77,7 @@ public class ExternalProjectMappings {
 	 * @param preferenceStore
 	 *            the preference store to get the registered external library locations.
 	 */
-	protected ExternalProjectMappings(IN4JSCore userWorkspace,
+	protected ExternalProjectMappings(EclipseBasedN4JSWorkspace userWorkspace,
 			ExternalLibraryPreferenceStore preferenceStore,
 			Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> completeCache, boolean initialized) {
 
@@ -113,8 +112,7 @@ public class ExternalProjectMappings {
 
 		// prepare list of locations of all projects in workspace
 		// (note: also include locations of close projects!)
-		Set<? extends SafeURI<?>> locationsOfWorkspaceProjects = FluentIterable.from(userWorkspace.findAllProjects())
-				.transform(p -> p.getSafeLocation()).toSet();
+		Set<? extends SafeURI<?>> locationsOfWorkspaceProjects = new HashSet<>(userWorkspace.getAllProjectLocations());
 
 		List<SafeURI<?>> allPrjLocs = new LinkedList<>(completeCache.keySet());
 		for (SafeURI<?> projectLocation : allPrjLocs) {
@@ -234,8 +232,8 @@ public class ExternalProjectMappings {
 		Set<SafeURI<?>> uwsDeps = new HashSet<>();
 		// respect closed workspace projects by omitting them
 		Collection<SafeURI<?>> projectsInUserWSopen = new LinkedList<>();
-		for (IN4JSProject projectInUserWS : userWorkspace.findAllProjects()) {
-			projectsInUserWSopen.add(projectInUserWS.getSafeLocation());
+		for (PlatformResourceURI projectInUserWS : userWorkspace.getAllProjectLocations()) {
+			projectsInUserWSopen.add(projectInUserWS);
 		}
 
 		computeNecessaryDependenciesRek(completeProjectNameMappingTmp, reducedProjectUriMappingTmp,
@@ -275,8 +273,7 @@ public class ExternalProjectMappings {
 
 		String projectName = pDep.getProjectName();
 		String workspaceProjectName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(projectName);
-		SafeURI<?> depLoc = userWorkspace.findProject(workspaceProjectName).transform(p -> p.getSafeLocation())
-				.orNull();
+		SafeURI<?> depLoc = userWorkspace.getProjectLocation(workspaceProjectName);
 		// if (depLoc != null) {
 		// // respect closed workspace projects by omitting them
 		// String locStr = depLoc.toPlatformString(true);
@@ -299,7 +296,9 @@ public class ExternalProjectMappings {
 			Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp,
 			SafeURI<?> loc) {
 
-		ProjectDescription pd = userWorkspace.internalGetProjectDescription(loc);
+		ProjectDescription pd = loc instanceof PlatformResourceURI
+				? userWorkspace.getProjectDescription((PlatformResourceURI) loc)
+				: null;
 		if (pd == null) {
 			Pair<N4JSExternalProject, ProjectDescription> pair = projectUriMappingTmp.get(loc);
 			if (pair != null) {

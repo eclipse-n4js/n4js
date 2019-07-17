@@ -27,9 +27,9 @@ import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.ExternalProjectLoader;
 import org.eclipse.xtext.util.Pair;
 
@@ -48,8 +48,9 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
+	/* Internal type is used to avoid cyclic dependencies */
 	@Inject
-	private IN4JSCore userWorkspace;
+	private EclipseBasedN4JSWorkspace userWorkspace;
 
 	@Inject
 	private NpmLogger npmLogger;
