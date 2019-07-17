@@ -108,7 +108,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 						if (containingProject == null) {
 							return statusHelper.createError("cannot find containing project");
 						}
-						URI targetLocation = containingProject.getSafeLocation().toURI();
+						URI targetLocation = containingProject.getLocation().toURI();
 						Map<String, NPMVersionRequirement> installedNpms = new HashMap<>();
 						NPMVersionRequirement versionReq = semverHelper.parse(versionRequirement);
 						installedNpms.put(packageName, versionReq);

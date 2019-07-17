@@ -184,7 +184,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public SafeURI<?> getSafeLocation() {
+	public SafeURI<?> getLocation() {
 		return location;
 	}
 

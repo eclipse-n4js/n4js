@@ -231,7 +231,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		}
 
 		for (final IN4JSProject testedProject : getTestedProjects(contextModule.eResource().getURI())) {
-			final URI testProjectLocation = testedProject.getSafeLocation().toURI();
+			final URI testProjectLocation = testedProject.getLocation().toURI();
 			if (null != testProjectLocation) {
 				final Resource eResource = elementModule.eResource();
 				if (null != eResource) {

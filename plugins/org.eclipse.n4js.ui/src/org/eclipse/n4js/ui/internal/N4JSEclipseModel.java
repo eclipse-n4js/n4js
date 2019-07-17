@@ -118,7 +118,7 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 
 	@Override
 	public ProjectDescription getProjectDescription(IN4JSProject project) {
-		SafeURI<?> loc = project.getSafeLocation();
+		SafeURI<?> loc = project.getLocation();
 		if (loc instanceof PlatformResourceURI) {
 			if (project.isExternal()) {
 				throw new IllegalArgumentException("External projects are supposed to have a file URI but was "
@@ -251,7 +251,7 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 	@Override
 	public ImmutableList<? extends IN4JSEclipseSourceContainer> getN4JSSourceContainers(N4JSProject project) {
 		ImmutableList.Builder<IN4JSEclipseSourceContainer> result = ImmutableList.builder();
-		SafeURI<?> location = project.getSafeLocation();
+		SafeURI<?> location = project.getLocation();
 		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
 			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));

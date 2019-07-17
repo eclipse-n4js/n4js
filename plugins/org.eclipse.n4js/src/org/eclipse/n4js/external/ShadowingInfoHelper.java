@@ -53,7 +53,7 @@ public class ShadowingInfoHelper {
 
 		List<N4JSExternalProject> projectsForName = externalLibraryWorkspace.getProjectsForName(projectName);
 		if (projectsForName != null && !projectsForName.isEmpty()) {
-			SafeURI<?> prjLoc = project.getSafeLocation();
+			SafeURI<?> prjLoc = project.getLocation();
 
 			List<N4JSExternalProject> projectsForNameReversed = new LinkedList<>(projectsForName);
 			Collections.reverse(projectsForNameReversed);
@@ -92,13 +92,13 @@ public class ShadowingInfoHelper {
 		}
 
 		List<N4JSExternalProject> shadowedProjects = new LinkedList<>();
-		SafeURI<?> prjLoc = project.getSafeLocation();
+		SafeURI<?> prjLoc = project.getLocation();
 
 		projectsForName = new LinkedList<>(projectsForName);
 		Iterator<N4JSExternalProject> sameNamedPrjsIter = projectsForName.iterator();
 		while (sameNamedPrjsIter.hasNext()) {
 			N4JSExternalProject sameNamePrj = sameNamedPrjsIter.next();
-			SafeURI<?> otherPrjLoc = sameNamePrj.getIProject().getSafeLocation();
+			SafeURI<?> otherPrjLoc = sameNamePrj.getIProject().getLocation();
 			if (prjLoc.equals(otherPrjLoc)) {
 				break;
 			}

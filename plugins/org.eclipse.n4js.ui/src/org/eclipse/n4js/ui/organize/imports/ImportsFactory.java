@@ -99,7 +99,7 @@ public class ImportsFactory {
 			IN4JSProject projectByEObject = core.findProject(te.eResource().getURI()).orNull();
 
 			if (projectByNamespace != null && projectByEObject != null
-					&& projectByNamespace.getSafeLocation().equals(projectByEObject.getSafeLocation()))
+					&& projectByNamespace.getLocation().equals(projectByEObject.getLocation()))
 				project = projectByNamespace;
 		}
 		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamespaceImport);

@@ -85,7 +85,7 @@ public class ResourceLoadingStatistics {
 
 		static void printReport(IN4JSProject project, List<FileLoadInfo> results, PrintStream out, String elapsedTime) {
 			out.println("------------------------------------------------------------------------------------");
-			out.println("Resource loading per file for project: " + project.getSafeLocation().getName() + " took "
+			out.println("Resource loading per file for project: " + project.getLocation().getName() + " took "
 					+ elapsedTime);
 			out.println();
 			final List<FileLoadInfo> othersFromAST = results.stream().filter(result -> result.countLoadedFromAST > 0)

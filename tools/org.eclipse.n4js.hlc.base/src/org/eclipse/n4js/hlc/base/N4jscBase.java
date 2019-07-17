@@ -858,7 +858,7 @@ public class N4jscBase implements IApplication {
 		Set<String> namesOfWorkspaceProjects = new LinkedHashSet<>();
 		List<java.nio.file.Path> n4jsProjectPaths = new LinkedList<>();
 		for (IN4JSProject prj : workspaceProjects) {
-			n4jsProjectPaths.add(prj.getSafeLocation().toFileSystemPath());
+			n4jsProjectPaths.add(prj.getLocation().toFileSystemPath());
 			namesOfWorkspaceProjects.add(prj.getProjectName());
 		}
 
@@ -908,7 +908,7 @@ public class N4jscBase implements IApplication {
 				LinkedList<Path> projectPaths = new LinkedList<>();
 				LinkedList<String> additionalPaths = new LinkedList<>();
 				for (IN4JSProject prj : buildSet.getAllProjects()) {
-					projectPaths.add(prj.getSafeLocation().toFileSystemPath());
+					projectPaths.add(prj.getLocation().toFileSystemPath());
 				}
 				List<Path> modulesFolders = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectPaths);
 				for (Path nmFolder : modulesFolders) {

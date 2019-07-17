@@ -94,7 +94,7 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 		List<java.nio.file.Path> n4jsProjectPaths = new LinkedList<>();
 		for (FileURI location : workspaceProjects) {
 			IN4JSProject project = n4jsCore.create(location.toURI());
-			n4jsProjectPaths.add(project.getSafeLocation().toFileSystemPath());
+			n4jsProjectPaths.add(project.getLocation().toFileSystemPath());
 			namesOfWorkspaceProjects.add(project.getProjectName());
 		}
 

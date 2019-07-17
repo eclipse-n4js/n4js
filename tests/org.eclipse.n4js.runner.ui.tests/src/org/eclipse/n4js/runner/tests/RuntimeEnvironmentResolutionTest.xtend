@@ -698,7 +698,7 @@ class RuntimeEnvironmentResolutionTest {
 		val uri = createProjectWithPackageJson(projectName, content)
 		val project = core.create(uri.toURI)
 		assertTrue(project.exists)
-		assertTrue(core.findProject(project.getSafeLocation.toURI).present)
+		assertTrue(core.findProject(project.getLocation.toURI).present)
 		return project
 	}
 

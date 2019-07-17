@@ -97,7 +97,7 @@ public class FolderContainmentHelper {
 	private static SafeURI<?> getOutputURI(IN4JSProject project) {
 		final String outputPathName = project.getOutputPath();
 		if (outputPathName != null) {
-			return project.getSafeLocation().resolve(outputPathName);
+			return project.getLocation().resolve(outputPathName);
 		}
 		return null;
 	}

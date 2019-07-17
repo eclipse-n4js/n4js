@@ -324,8 +324,8 @@ public abstract class WorkspaceWizardModelValidator<M extends WorkspaceWizardMod
 			throw new ValidationException(ErrorMessages.PROJECT_DOES_NOT_EXIST, WorkspaceWizardModel.PROJECT_PROPERTY);
 		} else {
 			// The path points to a resource inside the project
-			if (!n4jsProject.get().getSafeLocation().toURI().equals(projectURI)) {
-				throw new ValidationException(ErrorMessages.INVALID_PROJECT + n4jsProject.get().getSafeLocation(),
+			if (!n4jsProject.get().getLocation().toURI().equals(projectURI)) {
+				throw new ValidationException(ErrorMessages.INVALID_PROJECT + n4jsProject.get().getLocation(),
 						WorkspaceWizardModel.PROJECT_PROPERTY);
 			}
 		}

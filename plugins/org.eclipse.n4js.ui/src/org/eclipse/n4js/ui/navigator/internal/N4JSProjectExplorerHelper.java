@@ -220,7 +220,7 @@ public class N4JSProjectExplorerHelper {
 		if (!shadowingProjects.isEmpty()) {
 			IN4JSProject shadowedProject = shadowingProjects.get(0);
 			if (shadowedProject.isExternal()) {
-				FileURI location = (FileURI) shadowedProject.getSafeLocation();
+				FileURI location = (FileURI) shadowedProject.getLocation();
 				FileURI rootLocation = externalLibraryWorkspace.getRootLocationForResource(location);
 				if (rootLocation != null) {
 					Path rootPath = rootLocation.toFileSystemPath();

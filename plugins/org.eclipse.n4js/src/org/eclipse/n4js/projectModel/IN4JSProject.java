@@ -64,7 +64,7 @@ public interface IN4JSProject {
 	 * The project's location. Also available if the project does not exist. This will return a platform URI when
 	 * running within Eclipse, and a file URI in headless mode.
 	 */
-	SafeURI<?> getSafeLocation();
+	SafeURI<?> getLocation();
 
 	/**
 	 * The source containers of this container structure, possibly empty.

@@ -150,7 +150,7 @@ public class LibraryManager {
 	/** Runs 'npm/yarn install' in a given folder. Afterwards, re-registers all npms. */
 	public IStatus runNpmYarnInstall(URI target, IProgressMonitor monitor) {
 		IN4JSProject project = n4jsCore.findProject(target).orNull();
-		File projectFolder = project.getSafeLocation().toFileSystemPath().toFile();
+		File projectFolder = project.getLocation().toFileSystemPath().toFile();
 
 		boolean usingYarn = npmCli.isYarnUsed(projectFolder);
 
@@ -198,7 +198,7 @@ public class LibraryManager {
 			if (!project.exists()) {
 				continue;
 			}
-			Path projectPath = project.getSafeLocation().toFileSystemPath();
+			Path projectPath = project.getLocation().toFileSystemPath();
 			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
 			if (nodeModulesFolder.isYarnWorkspace) {
 				yarnWorkspaceRoots.add(nodeModulesFolder.nodeModulesFolder.getParentFile());
@@ -238,7 +238,7 @@ public class LibraryManager {
 			status.merge(currStatus);
 		}
 		for (IN4JSProject project : projectsOutsideAnyYarnWorkspace) {
-			File projectFolder = project.getSafeLocation().toFileSystemPath().toFile();
+			File projectFolder = project.getLocation().toFileSystemPath().toFile();
 			boolean usingYarn = npmCli.isYarnUsed(projectFolder);
 			msg = "Running '" + (usingYarn ? "yarn" : "npm") + " install' on " + project.getProjectName();
 			SubMonitor subMonitorInstall = subMonitor.split(1);

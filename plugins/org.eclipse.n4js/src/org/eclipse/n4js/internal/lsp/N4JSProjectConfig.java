@@ -61,7 +61,7 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 	 */
 	@Override
 	public URI getPath() {
-		return delegate.getSafeLocation().withTrailingPathDelimiter().toURI();
+		return delegate.getLocation().withTrailingPathDelimiter().toURI();
 		// URI locationURI = this.location.toURI();
 		// if (!locationURI.lastSegment().isEmpty()) {
 		// locationURI = locationURI.appendSegment("");
@@ -78,7 +78,7 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 		@Override
 		public List<URI> getAllResources() {
 			return Collections
-					.singletonList(delegate.getSafeLocation().appendSegment(N4JSGlobals.PACKAGE_JSON).toURI());
+					.singletonList(delegate.getLocation().appendSegment(N4JSGlobals.PACKAGE_JSON).toURI());
 		}
 
 		@Override
@@ -93,7 +93,7 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 
 		@Override
 		public URI getPath() {
-			return delegate.getSafeLocation().toURI();
+			return delegate.getLocation().toURI();
 		}
 	}
 
@@ -116,7 +116,7 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 
 	@Override
 	public List<URI> getOutputFolders() {
-		return Collections.singletonList(delegate.getSafeLocation().appendPath(delegate.getOutputPath()).toURI());
+		return Collections.singletonList(delegate.getLocation().appendPath(delegate.getOutputPath()).toURI());
 	}
 
 	@Override

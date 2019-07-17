@@ -182,7 +182,7 @@ public class TestDiscoveryHelper {
 	public TestTree collectAllTestsFromWorkspace() {
 		List<URI> testableProjectURIs = new LinkedList<>();
 		for (IN4JSProject project : n4jsCore.findAllProjects()) {
-			URI location = project.getSafeLocation().toURI();
+			URI location = project.getLocation().toURI();
 			if (project.exists() && isTestable(location)) {
 				testableProjectURIs.add(location);
 			}

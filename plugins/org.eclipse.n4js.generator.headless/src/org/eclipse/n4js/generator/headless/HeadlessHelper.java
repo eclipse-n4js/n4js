@@ -69,7 +69,7 @@ public class HeadlessHelper {
 	public void registerProjects(BuildSet buildSet, FileBasedWorkspace workspace) throws N4JSCompileException {
 		List<FileURI> projectUris = new ArrayList<>();
 		for (IN4JSProject project : buildSet.getAllProjects()) {
-			SafeURI<?> location = project.getSafeLocation();
+			SafeURI<?> location = project.getLocation();
 			if (location instanceof FileURI) {
 				projectUris.add((FileURI) location);
 			} else {
@@ -225,7 +225,7 @@ public class HeadlessHelper {
 			return false;
 		}
 		if (project.isExternal()) {
-			return externalLibraryHelper.isExternalProjectDirectory(project.getSafeLocation());
+			return externalLibraryHelper.isExternalProjectDirectory(project.getLocation());
 		}
 		return true;
 	}

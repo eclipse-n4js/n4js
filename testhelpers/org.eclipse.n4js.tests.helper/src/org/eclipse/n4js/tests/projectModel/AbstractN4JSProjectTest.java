@@ -32,7 +32,7 @@ public abstract class AbstractN4JSProjectTest<Loc extends SafeURI<Loc>> extends 
 	@Test
 	public void testGetLocation_01() {
 		IN4JSProject project = getN4JSCore().create(myProjectURI.toURI());
-		assertEquals(myProjectURI, project.getSafeLocation());
+		assertEquals(myProjectURI, project.getLocation());
 	}
 
 	@SuppressWarnings("javadoc")
@@ -40,7 +40,7 @@ public abstract class AbstractN4JSProjectTest<Loc extends SafeURI<Loc>> extends 
 	public void testGetLocation_02() {
 		URI doesNotExist = myProjectURI.getParent().appendSegment("doesNotExist").toURI();
 		IN4JSProject project = getN4JSCore().create(doesNotExist);
-		assertEquals(doesNotExist, project.getSafeLocation().toURI());
+		assertEquals(doesNotExist, project.getLocation().toURI());
 	}
 
 	@SuppressWarnings("javadoc")
@@ -76,7 +76,7 @@ public abstract class AbstractN4JSProjectTest<Loc extends SafeURI<Loc>> extends 
 		IN4JSProject project = getN4JSCore().create(myProjectURI.toURI());
 		ImmutableList<? extends IN4JSProject> dependencies = project.getDependencies();
 		assertEquals(2, dependencies.size());
-		assertEquals(libProjectURI.getName(), dependencies.get(1).getSafeLocation().getName());
+		assertEquals(libProjectURI.getName(), dependencies.get(1).getLocation().getName());
 	}
 
 	@SuppressWarnings("javadoc")

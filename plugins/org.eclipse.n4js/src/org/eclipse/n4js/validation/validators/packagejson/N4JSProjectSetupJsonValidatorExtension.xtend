@@ -844,7 +844,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 
 		try {
 			val treeWalker = new ModuleSpecifierFileVisitor(this, project, checkedFilterSpecifiers);
-			Files.walkFileTree(project.safeLocation.toFileSystemPath, treeWalker);
+			Files.walkFileTree(project.location.toFileSystemPath, treeWalker);
 		} catch (IOException e) {
 			LOGGER.error("Failed to check module filter section of package.json file " + document.eResource.URI + ".");
 			e.printStackTrace;
@@ -915,9 +915,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 		}
 
 		def private URI getFileInSources(IN4JSProject project, ModuleFilterSpecifier filterSpecifier, Path filePath) {
-			val lPath = project.safeLocation.toFileSystemPath;
+			val lPath = project.location.toFileSystemPath;
 			val filePathString = lPath.relativize(filePath);
-			return project.safeLocation.appendPath(filePathString.toString).toURI;
+			return project.location.appendPath(filePathString.toString).toURI;
 		}
 
 		def private boolean isN4JSFile(String fileSpecifier) {

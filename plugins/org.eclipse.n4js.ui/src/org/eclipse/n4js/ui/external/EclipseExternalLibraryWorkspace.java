@@ -116,7 +116,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 			return null;
 		}
 
-		FileURI refLocation = (FileURI) project.getIProject().getSafeLocation();
+		FileURI refLocation = (FileURI) project.getIProject().getLocation();
 		Pair<N4JSExternalProject, ProjectDescription> pair = projectProvider.getProjectWithDescription(refLocation);
 		if (null != pair) {
 			return refLocation;

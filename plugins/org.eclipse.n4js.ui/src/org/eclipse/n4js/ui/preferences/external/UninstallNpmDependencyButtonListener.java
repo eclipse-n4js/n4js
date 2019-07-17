@@ -76,7 +76,7 @@ public class UninstallNpmDependencyButtonListener extends SelectionAdapter {
 			IN4JSProject npmProject = getSelectedNpm.get();
 			new ProgressMonitorDialog(UIUtils.getShell()).run(true, true, monitor -> {
 				try {
-					FileURI location = (FileURI) npmProject.getSafeLocation();
+					FileURI location = (FileURI) npmProject.getLocation();
 					IStatus status = libManager.uninstallNPM(location, monitor);
 					multistatus.merge(status);
 				} finally {

@@ -40,7 +40,7 @@ public class N4JSExternalProject extends ExternalProject {
 	/** Constructor */
 	public N4JSExternalProject(final File file, final IN4JSProject externalPackage) {
 		super(file, NATURE_ID, BUILDER_ID);
-		Preconditions.checkArgument(externalPackage.getSafeLocation() instanceof FileURI);
+		Preconditions.checkArgument(externalPackage.getLocation() instanceof FileURI);
 		Preconditions.checkArgument(externalPackage.isExternal());
 		this.externalPackage = externalPackage;
 		referencedBuildConfigs = newHashSet();
@@ -74,7 +74,7 @@ public class N4JSExternalProject extends ExternalProject {
 	 * Returns the location of this external project.
 	 */
 	public FileURI getSafeLocation() {
-		return (FileURI) externalPackage.getSafeLocation();
+		return (FileURI) externalPackage.getLocation();
 	}
 
 	/**

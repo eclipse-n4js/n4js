@@ -67,7 +67,7 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 		} else {
 			Optional<? extends IN4JSEclipseProject> projectOpt = core.findProject(uri);
 			if (projectOpt.isPresent()) {
-				handle = PROJECT_CONTAINER_PREFIX + projectOpt.get().getSafeLocation();
+				handle = PROJECT_CONTAINER_PREFIX + projectOpt.get().getLocation();
 			}
 		}
 

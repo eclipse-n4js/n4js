@@ -41,7 +41,7 @@ public interface IN4JSEclipseProject extends IN4JSProject {
 	 * external project.
 	 */
 	@Override
-	SafeURI<?> getSafeLocation();
+	SafeURI<?> getLocation();
 
 	@Override
 	ImmutableList<? extends IN4JSEclipseSourceContainer> getSourceContainers();

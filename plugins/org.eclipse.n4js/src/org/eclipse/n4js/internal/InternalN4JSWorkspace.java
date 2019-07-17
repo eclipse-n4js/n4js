@@ -77,7 +77,7 @@ public abstract class InternalN4JSWorkspace<Loc extends SafeURI<Loc>> {
 	/**
 	 * Returns the location of the project with the given name.
 	 *
-	 * The name is supposed to be a valid eclipse project name.
+	 * The name is the real project name and not necessarily a valid eclipse project name.
 	 *
 	 * @see ProjectDescriptionUtils#convertN4JSProjectNameToEclipseProjectName(String)
 	 */

@@ -220,7 +220,7 @@ public class N4HeadlessCompiler {
 
 	private void cleanProject(IN4JSProject project) {
 		String outputFolder = project.getOutputPath();
-		Path outputPath = project.getSafeLocation().resolve(outputFolder).toFileSystemPath();
+		Path outputPath = project.getLocation().resolve(outputFolder).toFileSystemPath();
 		FileUtils.cleanFolder(outputPath.toFile());
 	}
 
@@ -250,7 +250,7 @@ public class N4HeadlessCompiler {
 		Multimap<String, URI> container2Uris = HashMultimap.create();
 
 		for (IN4JSProject project : allProjects) {
-			String container = FileBasedWorkspace.N4FBPRJ + project.getSafeLocation();
+			String container = FileBasedWorkspace.N4FBPRJ + project.getLocation();
 			container2project.put(container, project);
 			containers.add(container);
 

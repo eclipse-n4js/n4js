@@ -164,7 +164,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 
 			if (project != null && node != null) {
 				Region region = new Region(node.getOffset() + 1, node.getLength() - 2);
-				SafeURI<?> mainResolvedPath = project.getSafeLocation().resolve(mainPath);
+				SafeURI<?> mainResolvedPath = project.getLocation().resolve(mainPath);
 				if (mainResolvedPath.exists()) {
 					return Tuples.pair(mainResolvedPath, region);
 				}
@@ -260,7 +260,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 				}
 			}
 		} else {
-			rootLocation = project.getSafeLocation();
+			rootLocation = project.getLocation();
 		}
 
 		if (rootLocation != null) {

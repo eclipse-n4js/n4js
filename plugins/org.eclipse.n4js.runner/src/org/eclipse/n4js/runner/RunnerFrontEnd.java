@@ -210,7 +210,7 @@ public class RunnerFrontEnd {
 		final URI userSelection = config.getUserSelection();
 		if (userSelection != null) {
 			IN4JSProject containingProject = resolveProject(userSelection);
-			Path workingDirectory = containingProject.getSafeLocation().toFileSystemPath();
+			Path workingDirectory = containingProject.getLocation().toFileSystemPath();
 			config.setWorkingDirectory(workingDirectory);
 		}
 	}

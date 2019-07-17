@@ -79,7 +79,7 @@ public class BuildOrderComputer {
 		IN4JSProject[] n4jsPrjs = new IN4JSProject[projects.length];
 		for (int i = 0; i < projects.length; i++) {
 			N4JSExternalProject project = projects[i];
-			n4jsPrjs[i] = uri2PrjMapper.get(project.getIProject().getSafeLocation());
+			n4jsPrjs[i] = uri2PrjMapper.get(project.getIProject().getLocation());
 		}
 		return getBuildOrder(n4jsPrjs);
 	}
@@ -107,7 +107,7 @@ public class BuildOrderComputer {
 	public VertexOrder<IN4JSProject> getBuildOrder(IN4JSProject[] requestedProjects) {
 		SafeURI<?>[] requestedProjectURIs = new SafeURI[requestedProjects.length];
 		for (int i = 0; i < requestedProjectURIs.length; i++) {
-			requestedProjectURIs[i] = requestedProjects[i].getSafeLocation();
+			requestedProjectURIs[i] = requestedProjects[i].getLocation();
 		}
 
 		VertexOrder<SafeURI<?>> completeOrder = getBuildOrderOfURIs(requestedProjectURIs);
@@ -147,7 +147,7 @@ public class BuildOrderComputer {
 
 			// add edges
 			for (IN4JSProject prjDependency : prjDependencies) {
-				SafeURI<?> depURI = prjDependency.getSafeLocation();
+				SafeURI<?> depURI = prjDependency.getLocation();
 				edges.put(projectURI, depURI);
 				prjDependencyURIs.add(depURI);
 			}
@@ -173,7 +173,7 @@ public class BuildOrderComputer {
 		Set<IN4JSProject> prjDependencies = new HashSet<>();
 		ImmutableList<? extends IN4JSProject> deps = project.getAllDirectDependencies();
 		for (IN4JSProject dep : deps) {
-			IN4JSProject pDep = core.findProject(dep.getSafeLocation().toURI()).orNull();
+			IN4JSProject pDep = core.findProject(dep.getLocation().toURI()).orNull();
 
 			boolean isValidDep = true;
 			isValidDep &= pDep != null && pDep.exists();

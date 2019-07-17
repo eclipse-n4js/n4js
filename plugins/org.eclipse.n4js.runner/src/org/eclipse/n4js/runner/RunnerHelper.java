@@ -71,7 +71,7 @@ public class RunnerHelper {
 		final String name = project.getProjectName();
 		if (name == null)
 			return null;
-		final Path path = project.getSafeLocation().toFileSystemPath();
+		final Path path = project.getLocation().toFileSystemPath();
 		if (path == null)
 			return null;
 		return Pair.of(path, name);
@@ -156,7 +156,7 @@ public class RunnerHelper {
 		}
 
 		for (final IN4JSProject dep : project.getAllDirectDependencies()) {
-			if (guard.tryNext(dep.getSafeLocation().toURI())) {
+			if (guard.tryNext(dep.getLocation().toURI())) {
 				recursiveDependencyCollector(dep, addHere, guard);
 			}
 		}

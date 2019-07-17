@@ -209,7 +209,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	}
 
 	public ProjectDescription getProjectDescription(IN4JSProject project) {
-		SafeURI<?> location = project.getSafeLocation();
+		SafeURI<?> location = project.getLocation();
 		if (!(location instanceof FileURI)) {
 			throw new IllegalArgumentException(
 					"Unexpected location of external project " + project.getProjectName() + " at " + location);
@@ -483,7 +483,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	public Iterable<IN4JSProject> getSortedDependencies(IN4JSProject project) {
 		SortedDependenciesProvider sdProvider = new SortedDependenciesProvider(project);
 		Iterable<IN4JSProject> existing = cache.get(sdProvider, MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES,
-				project.getSafeLocation().toURI());
+				project.getLocation().toURI());
 		return existing;
 	}
 
@@ -525,7 +525,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 			Set<URI> triggerURIs = new HashSet<>();
 			for (IN4JSProject dep : sortedDeps) {
 				if (dep.getDefinesPackageName() != null) {
-					URI uri = dep.getSafeLocation().toURI();
+					URI uri = dep.getLocation().toURI();
 					triggerURIs.add(uri);
 				}
 			}

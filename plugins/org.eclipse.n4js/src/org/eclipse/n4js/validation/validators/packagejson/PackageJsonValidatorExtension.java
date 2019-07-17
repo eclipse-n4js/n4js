@@ -1045,11 +1045,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return true;
 		}
 
-		final URI projectLocation = n4jsProject.get().getSafeLocation().toURI();
+		final URI projectLocation = n4jsProject.get().getLocation().toURI();
 		// resolve against project uri with trailing slash
 		final URI projectRelativeResourceURI = resourceURI.deresolve(projectLocation.appendSegment(""));
 
-		final Path absoluteProjectPath = n4jsProject.get().getSafeLocation().toFileSystemPath();
+		final Path absoluteProjectPath = n4jsProject.get().getLocation().toFileSystemPath();
 		if (absoluteProjectPath == null) {
 			throw new IllegalStateException(
 					"Failed to compute project path for package.json at " + resourceURI.toString());
@@ -1114,7 +1114,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (!n4jsProject.isPresent()) {
 			return null;
 		}
-		return n4jsProject.get().getSafeLocation().toFileSystemPath();
+		return n4jsProject.get().getLocation().toFileSystemPath();
 	}
 
 	/**
