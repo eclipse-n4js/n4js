@@ -23,6 +23,7 @@
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.400.v20190515-0925"/>
       <unit id="org.eclipse.equinox.p2.discovery.feature.feature.group" version="1.2.200.v20190129-1112"/>
+      <unit id="org.eclipse.equinox.ds" version="1.6.0.v20190122-0806"/>
       <unit id="org.eclipse.jdt" version="3.18.0.v20190605-1800"/>
       <unit id="org.eclipse.jdt.junit4.runtime" version="1.1.1000.v20190510-0840"/>
       <unit id="org.eclipse.pde.ui" version="3.11.0.v20190520-2013"/>
