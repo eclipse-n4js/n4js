@@ -311,6 +311,14 @@
         url="http://download.eclipse.org/usssdk/drops/release/1.1.0"/>
   </setupTask>
   <setupTask
+      xsi:type="setup.p2:P2Task"
+      label="LSP4J">
+    <requirement
+        name="org.eclipse.lsp4j.sdk.feature.group"/>
+    <repository
+        url="http://download.eclipse.org/lsp4j/updates/releases/0.7.0"/>
+  </setupTask>
+  <setupTask
       xsi:type="git:GitCloneTask"
       id="git.clone.n4js"
       remoteURI="eclipse/n4js">
@@ -424,6 +432,8 @@
             url="http://download.eclipse.org/mpc/releases/1.7.2"/>
         <repository
             url="http://download.eclipse.org/usssdk/drops/release/1.1.0"/>
+        <repository
+            url="http://download.eclipse.org/lsp4j/updates/releases/0.7.0"/>
       </repositoryList>
     </targlet>
   </setupTask>
