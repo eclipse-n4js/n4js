@@ -28,6 +28,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.UriExtensions;
@@ -141,7 +142,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	 *
 	 * @return map of name and version of the external projects.
 	 */
-	public abstract Map<String, VersionNumber> getProjectNameVersionMap();
+	public abstract Map<N4JSProjectName, VersionNumber> getProjectNameVersionMap();
 
 	/**
 	 * Returns with all external projects including those that are dependencies of plain-JS projects.
@@ -163,7 +164,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	 *
 	 * @return the external projects that have the given name.
 	 */
-	public abstract List<N4JSExternalProject> getProjectsForName(String projectName);
+	public abstract List<N4JSExternalProject> getProjectsForName(N4JSProjectName projectName);
 
 	/**
 	 * Returns with all existing external projects that are contained in the given external library root location.
@@ -190,7 +191,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	 *            the unique name of the project.
 	 * @return the project, or {@code null} if does not exist.
 	 */
-	public abstract N4JSExternalProject getProject(String projectName);
+	public abstract N4JSExternalProject getProject(N4JSProjectName projectName);
 
 	/**
 	 * Returns with the project with the given location. Or {@code null} if the project does not exist.
@@ -204,7 +205,7 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	public abstract N4JSExternalProject getProject(FileURI location);
 
 	@Override
-	public FileURI getProjectLocation(String name) {
+	public FileURI getProjectLocation(N4JSProjectName name) {
 		return getProject(name).getSafeLocation();
 	}
 

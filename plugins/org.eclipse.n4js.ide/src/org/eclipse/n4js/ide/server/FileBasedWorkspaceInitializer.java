@@ -37,6 +37,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
 
@@ -90,7 +91,7 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 	private BuildSet computeTargetPlatformBuildSet(Collection<? extends FileURI> workspaceProjects)
 			throws N4JSCompileException {
 
-		Set<String> namesOfWorkspaceProjects = new LinkedHashSet<>();
+		Set<N4JSProjectName> namesOfWorkspaceProjects = new LinkedHashSet<>();
 		List<java.nio.file.Path> n4jsProjectPaths = new LinkedList<>();
 		for (FileURI location : workspaceProjects) {
 			IN4JSProject project = n4jsCore.create(location.toURI());

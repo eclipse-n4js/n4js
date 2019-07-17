@@ -42,7 +42,7 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 
 	@Override
 	public String getName() {
-		return delegate.getProjectName();
+		return delegate.getProjectName().getRawName();
 	}
 
 	@Override

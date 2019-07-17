@@ -26,6 +26,7 @@ import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.collections.Collections2;
 
@@ -75,7 +76,7 @@ public class BuildSetComputer {
 	 * @throws N4JSCompileException
 	 *             if one or multiple errors occur during compilation
 	 */
-	public BuildSet createSingleFileBuildSet(File singleSourceFile, Set<String> shadowedProjectNames)
+	public BuildSet createSingleFileBuildSet(File singleSourceFile, Set<N4JSProjectName> shadowedProjectNames)
 			throws N4JSCompileException {
 		return createSingleFilesBuildSet(Arrays.asList(singleSourceFile), shadowedProjectNames);
 	}
@@ -88,7 +89,7 @@ public class BuildSetComputer {
 	 * @throws N4JSCompileException
 	 *             if one or multiple errors occur during compilation
 	 */
-	public BuildSet createSingleFilesBuildSet(List<File> singleSourceFiles, Set<String> shadowedProjectNames)
+	public BuildSet createSingleFilesBuildSet(List<File> singleSourceFiles, Set<N4JSProjectName> shadowedProjectNames)
 			throws N4JSCompileException {
 		return createSingleFilesBuildSet(Collections.emptyList(), singleSourceFiles, shadowedProjectNames);
 	}
@@ -104,7 +105,7 @@ public class BuildSetComputer {
 	 *             if one or multiple errors occur during compilation
 	 */
 	public BuildSet createSingleFilesBuildSet(List<File> searchPaths, List<File> singleSourceFiles,
-			Set<String> shadowedProjectNames) throws N4JSCompileException {
+			Set<N4JSProjectName> shadowedProjectNames) throws N4JSCompileException {
 		return createBuildSet(searchPaths, Collections.emptyList(), singleSourceFiles, shadowedProjectNames);
 	}
 
@@ -117,7 +118,7 @@ public class BuildSetComputer {
 	 * @throws N4JSCompileException
 	 *             if one or multiple errors occur during compilation
 	 */
-	public BuildSet createProjectsBuildSet(List<File> projectPaths, Set<String> shadowedProjectNames)
+	public BuildSet createProjectsBuildSet(List<File> projectPaths, Set<N4JSProjectName> shadowedProjectNames)
 			throws N4JSCompileException {
 		return createProjectsBuildSet(Arrays.asList(new File(".")), projectPaths, shadowedProjectNames);
 	}
@@ -134,7 +135,7 @@ public class BuildSetComputer {
 	 *             if one or multiple errors occur during compilation
 	 */
 	public BuildSet createProjectsBuildSet(List<File> searchPaths, List<File> projectPaths,
-			Set<String> shadowedProjectNames) throws N4JSCompileException {
+			Set<N4JSProjectName> shadowedProjectNames) throws N4JSCompileException {
 		return createBuildSet(searchPaths, projectPaths, Collections.emptyList(), shadowedProjectNames);
 	}
 
@@ -146,7 +147,7 @@ public class BuildSetComputer {
 	 * @throws N4JSCompileException
 	 *             if one or multiple errors occur during compilation
 	 */
-	public BuildSet createAllProjectsBuildSet(List<File> searchPaths, Set<String> shadowedProjectNames)
+	public BuildSet createAllProjectsBuildSet(List<File> searchPaths, Set<N4JSProjectName> shadowedProjectNames)
 			throws N4JSCompileException {
 		// make absolute, since downstream URI conversion doesn't work if relative directory only.
 		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(searchPaths);
@@ -173,7 +174,7 @@ public class BuildSetComputer {
 	 *             if one or multiple errors occur during compilation
 	 */
 	public BuildSet createBuildSet(List<File> searchPaths, List<File> projectPaths, List<File> singleSourceFiles,
-			Set<String> shadowedProjectNames) throws N4JSCompileException {
+			Set<N4JSProjectName> shadowedProjectNames) throws N4JSCompileException {
 		logBuildSetComputerConfiguration(searchPaths, projectPaths, singleSourceFiles);
 		return collectProjects(searchPaths, projectPaths, singleSourceFiles, shadowedProjectNames);
 	}
@@ -218,7 +219,7 @@ public class BuildSetComputer {
 	 *             if an error occurs while registering the projects
 	 */
 	private BuildSet collectProjects(List<File> searchPaths, List<File> projectPaths,
-			List<File> singleSourceFiles, Set<String> shadowedProjectNames) throws N4JSCompileException {
+			List<File> singleSourceFiles, Set<N4JSProjectName> shadowedProjectNames) throws N4JSCompileException {
 
 		// Make absolute, since downstream URI conversion doesn't work if relative dir only.
 		List<File> absSearchPaths = headlessHelper.toAbsoluteFileList(searchPaths);
@@ -244,7 +245,7 @@ public class BuildSetComputer {
 		List<IN4JSProject> discoveredProjects = headlessHelper.getN4JSProjects(discoveredProjectURIs);
 
 		// Resolve shadowing among discovered and requested projects
-		LinkedHashMap<String, IN4JSProject> discoveredResolvedMap = new LinkedHashMap<>();
+		LinkedHashMap<N4JSProjectName, IN4JSProject> discoveredResolvedMap = new LinkedHashMap<>();
 		for (IN4JSProject prj : discoveredProjects) {
 			discoveredResolvedMap.put(prj.getProjectName(), prj);
 		}

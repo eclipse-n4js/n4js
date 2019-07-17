@@ -40,6 +40,8 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.EclipseProjectName;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
@@ -83,14 +85,14 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 							+ location.segmentCount());
 		}
 
-		final String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+		final N4JSProjectName n4jsProjectName = new N4JSProjectName(
+				ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location));
 		IProject project;
 		if (location.isFile()) {
 			project = externalLibraryWorkspace.getProject(n4jsProjectName);
 			if (project == null) { // via source map
-				String eclipseProjectName = ProjectDescriptionUtils
-						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
-				project = workspaceRoot.getProject(eclipseProjectName);
+				EclipseProjectName eclipseProjectName = n4jsProjectName.toEclipseProjectName();
+				project = workspaceRoot.getProject(eclipseProjectName.getRawName());
 				if (project != null) { // get location newly from project to make it a platform URI
 					return getN4JSProject(project);
 				}
@@ -98,9 +100,8 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 			checkNotNull(project, "Project does not exist in external workspace. URI: " + location);
 
 		} else {
-			final String eclipseProjectName = ProjectDescriptionUtils
-					.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
-			project = workspaceRoot.getProject(eclipseProjectName);
+			final EclipseProjectName eclipseProjectName = n4jsProjectName.toEclipseProjectName();
+			project = workspaceRoot.getProject(eclipseProjectName.getRawName());
 		}
 		return doGetN4JSProject(project, toProjectLocation(location));
 	}
@@ -303,8 +304,8 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 		return findAllProjectMappings().values();
 	}
 
-	public Map<String, IN4JSProject> findAllProjectMappings() {
-		final Map<String, IN4JSProject> workspaceProjectMapping = new LinkedHashMap<>();
+	public Map<N4JSProjectName, IN4JSProject> findAllProjectMappings() {
+		final Map<N4JSProjectName, IN4JSProject> workspaceProjectMapping = new LinkedHashMap<>();
 		for (IProject project : workspaceRoot.getProjects()) {
 			if (isRelevantToN4JS(project)) {
 				N4JSProject n4jsProject = getN4JSProject(project);

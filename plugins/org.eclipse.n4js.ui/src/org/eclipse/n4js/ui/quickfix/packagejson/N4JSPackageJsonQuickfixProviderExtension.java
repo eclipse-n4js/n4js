@@ -32,6 +32,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.changes.IChange;
@@ -109,10 +110,12 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 							return statusHelper.createError("cannot find containing project");
 						}
 						URI targetLocation = containingProject.getLocation().toURI();
-						Map<String, NPMVersionRequirement> installedNpms = new HashMap<>();
+						Map<N4JSProjectName, NPMVersionRequirement> installedNpms = new HashMap<>();
 						NPMVersionRequirement versionReq = semverHelper.parse(versionRequirement);
-						installedNpms.put(packageName, versionReq);
-						return libraryManager.installNPM(packageName, versionRequirement, targetLocation, monitor);
+						N4JSProjectName typesafePackageName = new N4JSProjectName(packageName);
+						installedNpms.put(typesafePackageName, versionReq);
+						return libraryManager.installNPM(typesafePackageName, versionRequirement, targetLocation,
+								monitor);
 					}
 				};
 				wrapWithMonitor(label, errMsg, registerFunction);

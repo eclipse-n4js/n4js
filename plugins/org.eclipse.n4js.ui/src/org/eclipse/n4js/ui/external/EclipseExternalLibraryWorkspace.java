@@ -40,11 +40,12 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.EclipseProjectName;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.ui.internal.PlatformResourceURI;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.utils.UIUtils;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.builder.impl.BuilderStateDiscarder;
 import org.eclipse.xtext.builder.impl.IBuildFlag;
 import org.eclipse.xtext.util.Pair;
@@ -109,7 +110,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 
 	@Override
 	public FileURI getLocation(ProjectReference reference) {
-		String name = reference.getProjectName();
+		N4JSProjectName name = new N4JSProjectName(reference.getProjectName());
 		N4JSExternalProject project = projectProvider.getProject(name);
 
 		if (null == project) {
@@ -244,7 +245,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 
 		Set<FileURI> cleaned = Sets.newHashSet();
 		for (IProject cleanedExternal : extPrjCleaned) {
-			cleaned.add(getProject(cleanedExternal.getName()).getSafeLocation());
+			cleaned.add(getProject(new EclipseProjectName(cleanedExternal.getName()).toN4JSProjectName())
+					.getSafeLocation());
 		}
 		return new RegisterResult(
 				cleaned,
@@ -307,7 +309,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 
 		Set<FileURI> built = Sets.newHashSet();
 		for (IProject cleanedExternal : extPrjBuilt) {
-			built.add(getProject(cleanedExternal.getName()).getSafeLocation());
+			built.add(getProject(new EclipseProjectName(cleanedExternal.getName()).toN4JSProjectName())
+					.getSafeLocation());
 		}
 		return new RegisterResult(built, getURIs(wsPrjAffected.toArray(new IProject[0])));
 	}
@@ -359,10 +362,10 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	}
 
 	@Override
-	public Map<String, VersionNumber> getProjectNameVersionMap() {
-		Map<String, VersionNumber> externalLibs = new HashMap<>();
+	public Map<N4JSProjectName, VersionNumber> getProjectNameVersionMap() {
+		Map<N4JSProjectName, VersionNumber> externalLibs = new HashMap<>();
 		for (N4JSExternalProject pd : getProjects()) {
-			String name = pd.getIProject().getProjectName();
+			N4JSProjectName name = pd.getIProject().getProjectName();
 			VersionNumber version = pd.getIProject().getVersion();
 			externalLibs.put(name, version);
 		}
@@ -385,9 +388,8 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	}
 
 	@Override
-	public N4JSExternalProject getProject(String projectName) {
-		return projectProvider
-				.getProject(ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(projectName));
+	public N4JSExternalProject getProject(N4JSProjectName projectName) {
+		return projectProvider.getProject(projectName);
 	}
 
 	@Override
@@ -412,7 +414,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	}
 
 	@Override
-	public List<N4JSExternalProject> getProjectsForName(String projectName) {
+	public List<N4JSExternalProject> getProjectsForName(N4JSProjectName projectName) {
 		return projectProvider.getProjectsForName(projectName);
 	}
 

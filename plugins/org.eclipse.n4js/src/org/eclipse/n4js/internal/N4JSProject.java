@@ -25,6 +25,7 @@ import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -128,7 +129,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public Optional<String> getImplementationId() {
+	public Optional<N4JSProjectName> getImplementationId() {
 		if (!exists()) {
 			return Optional.absent();
 		}
@@ -136,7 +137,7 @@ public class N4JSProject implements IN4JSProject {
 		if (pd == null) {
 			return Optional.absent();
 		}
-		return Optional.fromNullable(pd.getImplementationId());
+		return Optional.fromNullable(pd.getImplementationId()).transform(N4JSProjectName::new);
 	}
 
 	@Override
@@ -165,10 +166,10 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public String getProjectName() {
+	public N4JSProjectName getProjectName() {
 		// because the projectName must be available even if the project does not exist, we do not read from the
 		// ProjectDescription, here, but instead derive the projectName from the location URI
-		return ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+		return new N4JSProjectName(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location));
 	}
 
 	@Override
@@ -263,8 +264,8 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public Optional<String> getExtendedRuntimeEnvironmentId() {
-		return fromNullable(model.getExtendedRuntimeEnvironmentName(this).orNull());
+	public Optional<N4JSProjectName> getExtendedRuntimeEnvironmentId() {
+		return model.getExtendedRuntimeEnvironmentName(this).transform(N4JSProjectName::new);
 	}
 
 	@Override
@@ -282,7 +283,7 @@ public class N4JSProject implements IN4JSProject {
 
 	@Override
 	public String toString() {
-		String str = getProjectName();
+		String str = getProjectName().getRawName();
 		str += " (" + (exists() ? getProjectType() : "doesn't exist") + ")";
 		return str;
 	}
@@ -323,7 +324,11 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public String getDefinesPackageName() {
-		return getModel().getDefinesPackage(this);
+	public N4JSProjectName getDefinesPackageName() {
+		String raw = getModel().getDefinesPackage(this);
+		if (raw == null) {
+			return null;
+		}
+		return new N4JSProjectName(raw);
 	}
 }

@@ -27,6 +27,7 @@ import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.RunnerHelper.ApiUsage;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
@@ -146,7 +147,7 @@ public class RunnerFrontEnd {
 	 */
 	public RunConfiguration createXpectOutputTestConfiguration(String runnerId,
 			String userSelectionNodePathResolvableTargetFileName, Path additionalProjectPath,
-			String additionalProjectName) {
+			N4JSProjectName additionalProjectName) {
 
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
@@ -245,7 +246,7 @@ public class RunnerFrontEnd {
 		// from the projectName of the API project to the projectName of the implementation project to be used
 		final ApiUsage apiUsage = runnerHelper
 				.getProjectExtendedDepsAndApiImplMapping(config.getRuntimeEnvironment(),
-						config.getUserSelection(), config.getImplementationId(), true);
+						config.getUserSelection(), new N4JSProjectName(config.getImplementationId()), true);
 
 		final List<IN4JSProject> deps = apiUsage.projects;
 		final Map<IN4JSProject, IN4JSProject> apiImplProjectMapping = apiUsage.concreteApiImplProjectMapping;
@@ -259,7 +260,7 @@ public class RunnerFrontEnd {
 			final IN4JSProject p3 = p2 != null ? p2 : p;
 			return p3;
 		}).collect(Collectors.toCollection(() -> Sets.newLinkedHashSet()));
-		final Map<Path, String> coreProjectPaths = runnerHelper.getCoreProjectPaths(depsImpl);
+		final Map<Path, N4JSProjectName> coreProjectPaths = runnerHelper.getCoreProjectPaths(depsImpl);
 		config.setCoreProjectPaths(coreProjectPaths);
 	}
 

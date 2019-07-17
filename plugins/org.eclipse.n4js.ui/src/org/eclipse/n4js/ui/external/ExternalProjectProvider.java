@@ -29,6 +29,7 @@ import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedL
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.ExternalProjectLoader;
 import org.eclipse.xtext.util.Pair;
@@ -168,14 +169,14 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 		return projects;
 	}
 
-	N4JSExternalProject getProject(String projectName) {
+	N4JSExternalProject getProject(N4JSProjectName projectName) {
 		ensureInitialized();
 		List<N4JSExternalProject> prjsOfName = mappings.completeProjectNameMapping.get(projectName);
 		N4JSExternalProject activePrj = (prjsOfName == null || prjsOfName.isEmpty()) ? null : prjsOfName.get(0);
 		return activePrj;
 	}
 
-	List<N4JSExternalProject> getProjectsForName(String projectName) {
+	List<N4JSExternalProject> getProjectsForName(N4JSProjectName projectName) {
 		ensureInitialized();
 		List<N4JSExternalProject> prjList = mappings.completeProjectNameMapping.getOrDefault(projectName,
 				Collections.emptyList());

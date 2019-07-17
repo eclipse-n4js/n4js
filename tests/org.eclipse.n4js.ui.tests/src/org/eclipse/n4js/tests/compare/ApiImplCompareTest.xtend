@@ -21,6 +21,7 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.eclipse.n4js.projectModel.locations.FileURI
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -55,7 +56,7 @@ class ApiImplCompareTest extends AbstractApiImplCompareTest {
 	// note: main test contained in super class (common for UI and headless cases)
 
 
-	private def registerProject(String name) {
+	private def registerProject(N4JSProjectName name) {
 		fbWorkspace.registerProject(new FileURI(new File("probands/ApiImplCompare/YarnWorkspaceProject/packages/"+name)))
 	}
 }

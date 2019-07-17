@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
@@ -40,10 +41,10 @@ import com.google.inject.Inject;
  */
 public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest {
 
-	private static final String NPM_SNAFU = "snafu";
+	private static final N4JSProjectName NPM_SNAFU = new N4JSProjectName("snafu");
 	private static final String PROBANDS = "probands";
 	private static final String SUBFOLDER = "IndexSynchronizer";
-	private static final String PROJECT_NAME = "IndexSynchronizer";
+	private static final N4JSProjectName PROJECT_NAME = new N4JSProjectName("IndexSynchronizer");
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;

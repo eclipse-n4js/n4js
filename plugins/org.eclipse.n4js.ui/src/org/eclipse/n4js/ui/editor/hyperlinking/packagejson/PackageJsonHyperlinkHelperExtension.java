@@ -28,6 +28,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -84,7 +85,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 			IN4JSProject uriProject = model.findProject(uri).orNull();
 
 			String lnkName = uriProject == null ? ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri)
-					: uriProject.getProjectName();
+					: uriProject.getProjectName().getRawName();
 
 			XtextHyperlink hyperlink = hyperlinkProvider.get();
 			hyperlink.setHyperlinkRegion(region);
@@ -204,7 +205,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 	private Pair<SafeURI<?>, Region> hyperlinkToRequiredRTLibs(JSONStringLiteral mainModuleJsonLiteral) {
 		String projectName = mainModuleJsonLiteral.getValue();
 		if (!Strings.isNullOrEmpty(projectName)) {
-			SafeURI<?> pdu = getProjectDescriptionLocationForName(projectName);
+			SafeURI<?> pdu = getProjectDescriptionLocationForName(new N4JSProjectName(projectName));
 			INode node = NodeModelUtils.getNode(mainModuleJsonLiteral);
 
 			if (pdu != null && node != null) {
@@ -219,7 +220,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 
 	private Pair<SafeURI<?>, Region> hyperlinkToProjectProperty(NameValuePair nvpDependency) {
 		String projectName = nvpDependency.getName();
-		SafeURI<?> pdu = getProjectDescriptionLocationForName(projectName);
+		SafeURI<?> pdu = getProjectDescriptionLocationForName(new N4JSProjectName(projectName));
 		if (pdu != null) {
 			List<INode> node = NodeModelUtils.findNodesForFeature(nvpDependency,
 					JSONPackage.Literals.NAME_VALUE_PAIR__NAME);
@@ -238,7 +239,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 	private Pair<SafeURI<?>, Region> hyperlinkToDependencySection(NameValuePair projectNameInValue) {
 		JSONStringLiteral jsonValue = (JSONStringLiteral) projectNameInValue.getValue();
 		String projectName = jsonValue.getValue();
-		SafeURI<?> pdu = getProjectDescriptionLocationForName(projectName);
+		SafeURI<?> pdu = getProjectDescriptionLocationForName(new N4JSProjectName(projectName));
 
 		if (pdu != null) {
 			INode valueNode = NodeModelUtils.getNode(jsonValue);
@@ -249,7 +250,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		return null;
 	}
 
-	private SafeURI<?> getProjectDescriptionLocationForName(String projectName) {
+	private SafeURI<?> getProjectDescriptionLocationForName(N4JSProjectName projectName) {
 		IN4JSProject project = model.findAllProjectMappings().get(projectName);
 		SafeURI<?> rootLocation = null;
 		if (project == null) {

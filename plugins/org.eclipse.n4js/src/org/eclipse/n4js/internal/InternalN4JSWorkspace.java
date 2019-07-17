@@ -19,6 +19,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 /**
@@ -81,5 +82,5 @@ public abstract class InternalN4JSWorkspace<Loc extends SafeURI<Loc>> {
 	 *
 	 * @see ProjectDescriptionUtils#convertN4JSProjectNameToEclipseProjectName(String)
 	 */
-	public abstract Loc getProjectLocation(String name);
+	public abstract Loc getProjectLocation(N4JSProjectName name);
 }

@@ -31,6 +31,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.PlatformResourceURI;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -57,7 +58,7 @@ public class ExternalProjectMappings {
 	 */
 	final Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> completeCache;
 	final List<Pair<FileURI, ProjectDescription>> completeList;
-	final Map<String, List<N4JSExternalProject>> completeProjectNameMapping;
+	final Map<N4JSProjectName, List<N4JSExternalProject>> completeProjectNameMapping;
 	final Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMapping;
 	final Map<FileURI, List<N4JSExternalProject>> reducedProjectsLocationMapping;
 	final Set<N4JSExternalProject> reducedSet;
@@ -126,7 +127,7 @@ public class ExternalProjectMappings {
 
 	private static class Mappings {
 		List<Pair<FileURI, ProjectDescription>> completeList;
-		Map<String, List<N4JSExternalProject>> completeProjectNameMapping;
+		Map<N4JSProjectName, List<N4JSExternalProject>> completeProjectNameMapping;
 		Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMapping;
 		Map<FileURI, List<N4JSExternalProject>> reducedProjectsLocationMapping;
 		Set<N4JSExternalProject> reducedSet;
@@ -139,7 +140,7 @@ public class ExternalProjectMappings {
 	 * yet, hence not available when injecting this instance.
 	 */
 	private Mappings computeMappings() {
-		Map<String, List<N4JSExternalProject>> completeProjectNameMappingTmp = newHashMap();
+		Map<N4JSProjectName, List<N4JSExternalProject>> completeProjectNameMappingTmp = newHashMap();
 		Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMappingTmp = newHashMap();
 		Map<FileURI, List<N4JSExternalProject>> reducedProjectsLocationMappingTmp = newHashMap();
 		List<Pair<FileURI, ProjectDescription>> completeListTmp = new LinkedList<>();
@@ -163,7 +164,8 @@ public class ExternalProjectMappings {
 			completeListTmp.add(Tuples.pair(projectLocation, prjDescr));
 
 			// shadowing is done here by checking if an npm is already in the mapping
-			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation);
+			N4JSProjectName projectName = new N4JSProjectName(
+					ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation));
 			if (!completeProjectNameMappingTmp.containsKey(projectName)) {
 
 				completeProjectNameMappingTmp.put(projectName, Lists.newArrayList(project));
@@ -226,7 +228,7 @@ public class ExternalProjectMappings {
 	}
 
 	Set<SafeURI<?>> computeUserWorkspaceDependencies(
-			Map<String, List<N4JSExternalProject>> completeProjectNameMappingTmp,
+			Map<N4JSProjectName, List<N4JSExternalProject>> completeProjectNameMappingTmp,
 			Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> reducedProjectUriMappingTmp) {
 
 		Set<SafeURI<?>> uwsDeps = new HashSet<>();
@@ -243,7 +245,7 @@ public class ExternalProjectMappings {
 		return uwsDeps;
 	}
 
-	private void computeNecessaryDependenciesRek(Map<String, List<N4JSExternalProject>> projectNameMappingTmp,
+	private void computeNecessaryDependenciesRek(Map<N4JSProjectName, List<N4JSExternalProject>> projectNameMappingTmp,
 			Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> projectUriMappingTmp,
 			Collection<SafeURI<?>> locs,
 			Set<SafeURI<?>> necessaryDeps) {
@@ -268,10 +270,10 @@ public class ExternalProjectMappings {
 		}
 	}
 
-	private SafeURI<?> getProjectLocation(Map<String, List<N4JSExternalProject>> projectNameMappingTmp,
+	private SafeURI<?> getProjectLocation(Map<N4JSProjectName, List<N4JSExternalProject>> projectNameMappingTmp,
 			ProjectDependency pDep) {
 
-		String projectName = pDep.getProjectName();
+		N4JSProjectName projectName = new N4JSProjectName(pDep.getProjectName());
 		SafeURI<?> depLoc = userWorkspace.getProjectLocation(projectName);
 		// if (depLoc != null) {
 		// // respect closed workspace projects by omitting them

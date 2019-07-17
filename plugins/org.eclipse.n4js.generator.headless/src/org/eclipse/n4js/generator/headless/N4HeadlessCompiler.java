@@ -40,6 +40,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.utils.Lazy;
@@ -971,7 +972,7 @@ public class N4HeadlessCompiler {
 	 * @throws N4JSCompileErrorException
 	 *             if the given issues contain errors
 	 */
-	private void failOnErrors(List<Issue> errors, String projectName)
+	private void failOnErrors(List<Issue> errors, N4JSProjectName projectName)
 			throws N4JSCompileErrorException {
 
 		if (!errors.isEmpty()) {
@@ -1009,7 +1010,7 @@ public class N4HeadlessCompiler {
 			Predicate<URI> compileFilter, N4ProgressStateRecorder rec) throws N4JSCompileException {
 		rec.markStartCompiling(markedProject);
 
-		final String projectName = markedProject.project.getProjectName();
+		final N4JSProjectName projectName = markedProject.project.getProjectName();
 		if (logger.isVerbose()) {
 			logger.info("Generating " + projectName);
 		}

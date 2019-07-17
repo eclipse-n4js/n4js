@@ -34,6 +34,7 @@ import org.junit.Test
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 /**
  * Testing the use of npm scopes as part of N4JS project names, i.e. project names of
@@ -43,7 +44,7 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";
 	private static final String YARN_WORKSPACE_BASE = "npmScopes";
-	private static final String YARN_WORKSPACE_PROJECT = "YarnWorkspaceProject";
+	private static final N4JSProjectName YARN_WORKSPACE_PROJECT = new N4JSProjectName("YarnWorkspaceProject");
 
 	private IProject yarnProject;
 	private IProject scopedProject;

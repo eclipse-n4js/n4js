@@ -36,6 +36,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -46,6 +47,7 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
@@ -124,8 +126,8 @@ public abstract class ExternalIndexSynchronizer {
 	 * @param operation
 	 *            configuration. see {@link ProjectStateOperation}
 	 */
-	final public Map<String, Pair<FileURI, String>> findNpmsInFolder(ProjectStateOperation operation) {
-		Map<String, Pair<FileURI, String>> npmsFolder = new HashMap<>();
+	final public Map<N4JSProjectName, Pair<FileURI, String>> findNpmsInFolder(ProjectStateOperation operation) {
+		Map<N4JSProjectName, Pair<FileURI, String>> npmsFolder = new HashMap<>();
 
 		List<org.eclipse.xtext.util.Pair<FileURI, ProjectDescription>> prjs = Collections.emptyList();
 		switch (operation) {
@@ -149,7 +151,7 @@ public abstract class ExternalIndexSynchronizer {
 			if (project != null && !shadowingInfoHelper.isShadowedProject(project)) {
 				ProjectDescription projectDescription = pair.getSecond();
 				VersionNumber version = projectDescription.getProjectVersion();
-				String name = projectDescription.getProjectName();
+				N4JSProjectName name = new N4JSProjectName(projectDescription.getProjectName());
 
 				if (version != null) {
 					npmsFolder.putIfAbsent(name, Pair.of(location, version.toString()));
@@ -163,9 +165,9 @@ public abstract class ExternalIndexSynchronizer {
 	/**
 	 * Returns a map that maps the names of projects as they can be found in the index to their locations and versions.
 	 */
-	public Map<String, Pair<FileURI, String>> findNpmsInIndex() {
+	public Map<N4JSProjectName, Pair<FileURI, String>> findNpmsInIndex() {
 		// keep map of all NPMs that were discovered in the index
-		Map<String, Pair<FileURI, String>> discoveredNpmsInIndex = new HashMap<>();
+		Map<N4JSProjectName, Pair<FileURI, String>> discoveredNpmsInIndex = new HashMap<>();
 
 		final ResourceSet resourceSet = core.createResourceSet(Optional.absent());
 		final IResourceDescriptions index = core.getXtextIndex(resourceSet);
@@ -230,17 +232,17 @@ public abstract class ExternalIndexSynchronizer {
 
 		Collection<LibraryChange> changes = new LinkedHashSet<>(forcedChangeSet);
 
-		Map<String, Pair<FileURI, String>> npmsOfIndex = findNpmsInIndex();
-		Map<String, Pair<FileURI, String>> npmsOfFolder = findNpmsInFolder(operation);
+		Map<N4JSProjectName, Pair<FileURI, String>> npmsOfIndex = findNpmsInIndex();
+		Map<N4JSProjectName, Pair<FileURI, String>> npmsOfFolder = findNpmsInFolder(operation);
 
-		Set<String> differences = new HashSet<>();
+		Set<N4JSProjectName> differences = new HashSet<>();
 		differences.addAll(npmsOfIndex.keySet());
 		differences.addAll(npmsOfFolder.keySet());
-		SetView<String> intersection = Sets.intersection(npmsOfIndex.keySet(), npmsOfFolder.keySet());
+		SetView<N4JSProjectName> intersection = Sets.intersection(npmsOfIndex.keySet(), npmsOfFolder.keySet());
 		differences.removeAll(intersection);
 
-		for (String diff : differences) {
-			String name = diff;
+		for (N4JSProjectName diff : differences) {
+			N4JSProjectName name = diff;
 			LibraryChange change = null;
 
 			if (npmsOfFolder.containsKey(diff)) {
@@ -262,7 +264,7 @@ public abstract class ExternalIndexSynchronizer {
 			}
 		}
 
-		for (String name : intersection) {
+		for (N4JSProjectName name : intersection) {
 			String versionIndex = npmsOfIndex.get(name).getValue();
 			String versionFolder = npmsOfFolder.get(name).getValue();
 			FileURI locationIndex = npmsOfIndex.get(name).getKey();
@@ -279,7 +281,7 @@ public abstract class ExternalIndexSynchronizer {
 		return changes;
 	}
 
-	private void addToIndex(Map<String, Pair<FileURI, String>> npmsIndex,
+	private void addToIndex(Map<N4JSProjectName, Pair<FileURI, String>> npmsIndex,
 			IResourceDescription resourceDescription) {
 		URI uri = URIUtils.addEmptyAuthority(resourceDescription.getURI());
 		FileURI nestedLocation = new FileURI(uri);
@@ -289,7 +291,7 @@ public abstract class ExternalIndexSynchronizer {
 					+ ".\n Please rebuild external libraries!");
 			return;
 		}
-		String name = getPackageName(nestedLocation, rootLocation);
+		N4JSProjectName name = getPackageName(nestedLocation, rootLocation);
 		FileURI packageLocation = createProjectLocation(rootLocation, name);
 		String version = getVersion(resourceDescription, nestedLocation, name, packageLocation);
 
@@ -298,7 +300,7 @@ public abstract class ExternalIndexSynchronizer {
 		}
 	}
 
-	private String getVersion(IResourceDescription resourceDescription, SafeURI<?> nestedLocation, String name,
+	private String getVersion(IResourceDescription resourceDescription, SafeURI<?> nestedLocation, N4JSProjectName name,
 			SafeURI<?> packageLocation) {
 
 		if (!isProjectDescriptionFile(nestedLocation, packageLocation)) {
@@ -312,7 +314,7 @@ public abstract class ExternalIndexSynchronizer {
 		if (pdsIter.hasNext()) {
 			IEObjectDescription pDescription = pdsIter.next();
 			String nameFromPackageJSON = PackageJsonResourceDescriptionExtension.getProjectName(pDescription);
-			if (nameFromPackageJSON == null || name.equals(nameFromPackageJSON)) {
+			if (nameFromPackageJSON == null || name.equals(new N4JSProjectName(nameFromPackageJSON))) {
 				// consistency check
 				String version = pDescription.getUserData(PackageJsonResourceDescriptionExtension.PROJECT_VERSION_KEY);
 				return version;
@@ -341,7 +343,7 @@ public abstract class ExternalIndexSynchronizer {
 	 * Infers the name of the package that contains the given nested location, relative to the given
 	 * {@code workspaceLocation}
 	 */
-	private <U extends SafeURI<U>> String getPackageName(U nestedLocation, U workspaceLocation) {
+	private <U extends SafeURI<U>> N4JSProjectName getPackageName(U nestedLocation, U workspaceLocation) {
 		if (!isParentOf(workspaceLocation, nestedLocation)) {
 			throw new IllegalArgumentException("Cannot determine package name of " + nestedLocation
 					+ ": The nested location is not contained in the given workspace location " + workspaceLocation);
@@ -359,10 +361,10 @@ public abstract class ExternalIndexSynchronizer {
 				throw new IllegalArgumentException("Malformed package location: " + nestedLocation);
 			}
 
-			return path.get(0) // scope segment
-					+ File.separator + path.get(1); // package name
+			return new N4JSProjectName(path.get(0) // scope segment
+					+ File.separator + path.get(1)); // package name
 		} else {
-			return path.get(0); // package name
+			return new N4JSProjectName(path.get(0)); // package name
 		}
 	}
 
@@ -374,15 +376,15 @@ public abstract class ExternalIndexSynchronizer {
 	 * Creates a URI that points to the location of a project with the given {@code projectName} in the given
 	 * {@code workspaceLocation}.
 	 */
-	private FileURI createProjectLocation(FileURI workspaceLocation, String projectName) {
-		return workspaceLocation.appendPath(projectName);
+	private FileURI createProjectLocation(FileURI workspaceLocation, N4JSProjectName projectName) {
+		return workspaceLocation.appendPath(projectName.getRawName());
 	}
 
 	/** Prints the given results to the npm logger */
 	protected void printRegisterResults(RegisterResult rr, String jobName) {
 		if (!rr.externalProjectsDone.isEmpty()) {
-			SortedSet<String> prjNames = getProjectNamesFromLocations(rr.externalProjectsDone);
-			logger.logInfo("External libraries " + jobName + ": " + String.join(", ", prjNames));
+			SortedSet<N4JSProjectName> prjNames = getProjectNamesFromLocations(rr.externalProjectsDone);
+			logger.logInfo("External libraries " + jobName + ": " + Joiner.on(", ").join(prjNames));
 		}
 
 		if (!rr.wipedProjects.isEmpty()) {
@@ -395,13 +397,13 @@ public abstract class ExternalIndexSynchronizer {
 		}
 
 		if (!rr.affectedWorkspaceProjects.isEmpty()) {
-			SortedSet<String> prjNames = getProjectNamesFromLocations(rr.affectedWorkspaceProjects);
-			logger.logInfo("Workspace projects affected: " + String.join(", ", prjNames));
+			SortedSet<N4JSProjectName> prjNames = getProjectNamesFromLocations(rr.affectedWorkspaceProjects);
+			logger.logInfo("Workspace projects affected: " + Joiner.on(", ").join(prjNames));
 		}
 	}
 
-	private SortedSet<String> getProjectNamesFromLocations(Collection<? extends SafeURI<?>> projectLocations) {
-		SortedSet<String> prjNames = new TreeSet<>();
+	private SortedSet<N4JSProjectName> getProjectNamesFromLocations(Collection<? extends SafeURI<?>> projectLocations) {
+		SortedSet<N4JSProjectName> prjNames = new TreeSet<>();
 		for (SafeURI<?> location : projectLocations) {
 			IN4JSProject p = core.findProject(location.toURI()).orNull();
 			prjNames.add(p.getProjectName());

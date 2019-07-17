@@ -79,6 +79,7 @@ import org.eclipse.xtext.validation.Issue
 import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 /**
  * N4JS quick fixes.
@@ -680,7 +681,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 			def Collection<? extends IChange> invokeLibraryManager(EObject element) throws Exception {
 				val dependency = element as ProjectReference;
-				val packageName = dependency.projectName;
+				val packageName = new N4JSProjectName(dependency.projectName);
 				val packageVersion = if (dependency instanceof ProjectDependency) {
 						dependency.versionRequirement
 					} else {
@@ -692,7 +693,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
-						val Map<String, NPMVersionRequirement> package = Collections.singletonMap(packageName, packageVersion);
+						val Map<N4JSProjectName, NPMVersionRequirement> package = Collections.singletonMap(packageName, packageVersion);
 						multiStatus.merge(libraryManager.installNPMs(package, false, issue.uriToProblem, monitor));
 
 					} catch (IllegalBinaryStateException e) {

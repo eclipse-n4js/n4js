@@ -298,7 +298,7 @@ class WizardGeneratorHelper {
 		val modifications = new ArrayList<IJSONDocumentModification>();
 		
 		// remove the containing project from the dependencies
-		val referencedProjectsExceptContainer = referencedProjects.filter[ !it.projectName.equals(model.project.lastSegment) ];
+		val referencedProjectsExceptContainer = referencedProjects.filter[ !it.projectName.rawName.equals(model.project.lastSegment) ];
 
 		// remove duplicates
 		val referencedProjectsSet = new HashSet<IN4JSProject>();
@@ -306,12 +306,12 @@ class WizardGeneratorHelper {
 
 		// add project dependency changes (includes added runtime libraries)
 		modifications.add(PackageJsonModificationProvider.insertProjectDependencies(referencedProjectsSet
-			.map[projectName].toList));
+			.map[projectName.rawName].toList));
 				
 		// add required runtime library changes
 		modifications.add(PackageJsonModificationProvider.insertRequiredRuntimeLibraries(referencedProjectsSet.filter [
 			projectType == ProjectType.RUNTIME_LIBRARY
-		].map[projectName].toList));
+		].map[projectName.rawName].toList));
 	
 		return modifications;
 	}

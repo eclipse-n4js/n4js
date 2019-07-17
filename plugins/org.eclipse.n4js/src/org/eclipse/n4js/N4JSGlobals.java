@@ -20,6 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -74,16 +75,16 @@ public final class N4JSGlobals {
 	/**
 	 * Mangelhaft
 	 */
-	public static final String MANGELHAFT = VENDOR_ID + ".mangelhaft";
+	public static final N4JSProjectName MANGELHAFT = new N4JSProjectName(VENDOR_ID + ".mangelhaft");
 	/**
 	 * Mangelhaft Assert
 	 */
-	public static final String MANGELHAFT_ASSERT = MANGELHAFT + ".assert";
+	public static final N4JSProjectName MANGELHAFT_ASSERT = new N4JSProjectName(MANGELHAFT + ".assert");
 
 	/**
 	 * Name of the npm package containing the mangelhaft command-line interface.
 	 */
-	public static final String MANGELHAFT_CLI = "n4js-mangelhaft-cli";
+	public static final N4JSProjectName MANGELHAFT_CLI = new N4JSProjectName("n4js-mangelhaft-cli");
 
 	/**
 	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
@@ -125,7 +126,7 @@ public final class N4JSGlobals {
 	 * It is expected that this npm package lives in the N4JS Git repository at path {@value #N4JS_LIBS_SOURCES_PATH},
 	 * cf. {@link #N4JS_LIBS_SOURCES_PATH}.
 	 */
-	public static final String N4JS_RUNTIME = "n4js-runtime";
+	public static final N4JSProjectName N4JS_RUNTIME = new N4JSProjectName("n4js-runtime");
 
 	/**
 	 * Project types for which a dependency to the {@link #N4JS_RUNTIME n4js-runtime} is mandatory.

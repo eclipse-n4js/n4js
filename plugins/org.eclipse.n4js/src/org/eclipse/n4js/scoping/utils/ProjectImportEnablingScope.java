@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
@@ -205,13 +206,13 @@ public class ProjectImportEnablingScope implements IScope {
 
 		switch (moduleSpecifierForm) {
 		case PROJECT: {
-			final String firstSegment = name.getFirstSegment();
+			final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
 			final QualifiedName mainModule = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
 			return getElementsWithDesiredProjectName(mainModule, targetProject.getProjectName());
 		}
 		case COMPLETE: {
-			final String firstSegment = name.getFirstSegment();
+			final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
 			return getElementsWithDesiredProjectName(name.skipFirst(1), targetProject.getProjectName());
 		}
@@ -243,7 +244,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 * are filtered by expected {@link IN4JSProject#getProjectName()}.
 	 */
 	private Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
-			String projectName) {
+			N4JSProjectName projectName) {
 
 		final Iterable<IEObjectDescription> moduleSpecifierMatchesWithPossibleDuplicates = delegate
 				.getElements(moduleSpecifier);
@@ -260,7 +261,7 @@ public class ProjectImportEnablingScope implements IScope {
 		return result.values();
 	}
 
-	private IN4JSProject findProject(String projectName, IN4JSProject project) {
+	private IN4JSProject findProject(N4JSProjectName projectName, IN4JSProject project) {
 		if (Objects.equals(project.getProjectName(), projectName)) {
 			return project;
 		}
@@ -282,7 +283,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 */
 	private ModuleSpecifierForm computeImportType(QualifiedName name, IN4JSProject project) {
 		final String firstSegment = name.getFirstSegment();
-		final IN4JSProject targetProject = findProject(firstSegment, project);
+		final IN4JSProject targetProject = findProject(new N4JSProjectName(firstSegment), project);
 		final boolean firstSegmentIsProjectName = targetProject != null;
 		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectName, targetProject);
 	}

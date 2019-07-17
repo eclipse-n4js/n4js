@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.n4js.json.ui.internal.JsonActivator;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.regex.ui.internal.RegularExpressionActivator;
 import org.eclipse.n4js.tester.internal.TesterActivator;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
@@ -68,7 +69,7 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 	 */
 	@Test
 	public void identifyMultipleSingletons() throws Exception {
-		ProjectTestsUtils.importProject(new File("probands"), "ListBase");
+		ProjectTestsUtils.importProject(new File("probands"), new N4JSProjectName("ListBase"));
 		IResourcesSetupUtil.waitForBuild();
 
 		@SuppressWarnings("unused")

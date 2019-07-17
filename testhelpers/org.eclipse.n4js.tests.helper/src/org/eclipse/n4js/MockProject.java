@@ -11,6 +11,7 @@
 package org.eclipse.n4js;
 
 import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 
 /**
  */
@@ -30,8 +31,9 @@ public final class MockProject extends N4JSProject {
 	}
 
 	@Override
-	public String getProjectName() {
-		return ((MockN4JSModel) getModel()).getInternalWorkspaceForMocks().getProjectDescription(MOCK_URI)
+	public N4JSProjectName getProjectName() {
+		String rawName = ((MockN4JSModel) getModel()).getInternalWorkspaceForMocks().getProjectDescription(MOCK_URI)
 				.getProjectName();
+		return new N4JSProjectName(rawName);
 	}
 }

@@ -37,6 +37,7 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
@@ -194,8 +195,9 @@ public class N4JSProjectExplorerHelper {
 	 * @return a styled string for a given external project. Respects name, type, version, and information about
 	 *         shadowing and whether it is available in the xtext index
 	 */
-	public StyledString getStyledTextForExternalProject(final IN4JSProject project, String overrideProjectName) {
-		String name = (overrideProjectName == null) ? project.getProjectName() : overrideProjectName;
+	public StyledString getStyledTextForExternalProject(final IN4JSProject project,
+			N4JSProjectName overrideProjectName) {
+		N4JSProjectName name = (overrideProjectName == null) ? project.getProjectName() : overrideProjectName;
 		ProjectType type = project.getProjectType();
 		// for better visual representation MyProject @1.2.3 -> MyProject v1.2.3
 		String version = SemverSerializer.serialize(project.getVersion()).replaceFirst("@", "v");

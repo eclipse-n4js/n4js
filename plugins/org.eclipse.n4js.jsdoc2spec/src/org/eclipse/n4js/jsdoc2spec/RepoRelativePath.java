@@ -21,6 +21,7 @@ import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.utils.Log;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -68,7 +69,7 @@ public class RepoRelativePath {
 		File repoFolder = getRepoFolder(file);
 		String repoName = getRepoName(repoFolder);
 		String cloneFolder = repoFolder == null ? "NO_FOLDER" : repoFolder.getName();
-		String projName = project.getProjectName();
+		N4JSProjectName projName = project.getProjectName();
 		String repoPath = getRepoPath(absFileName, projName, cloneFolder);
 
 		String projPath = fileRelString;
@@ -142,10 +143,10 @@ public class RepoRelativePath {
 		return null;
 	}
 
-	private static String getRepoPath(String absFileName, String projName, String repoCloneName) {
+	private static String getRepoPath(String absFileName, N4JSProjectName projName, String repoCloneName) {
 		int startIdx = -1;
 		String repoNameSlashes = "/" + repoCloneName + "/";
-		String projNameSlashes = "/" + projName + "/";
+		String projNameSlashes = "/" + projName.getRawName() + "/";
 		startIdx = absFileName.indexOf(repoNameSlashes) + repoNameSlashes.length();
 		int endIdx = absFileName.indexOf(projNameSlashes);
 		if (startIdx == -1 || endIdx == -1 || endIdx < startIdx) {
@@ -167,7 +168,7 @@ public class RepoRelativePath {
 	/**
 	 * Name of the Eclipse project.
 	 */
-	public final String projectName;
+	public final N4JSProjectName projectName;
 	/**
 	 * Absolute path in Eclipse project.
 	 */
@@ -177,7 +178,8 @@ public class RepoRelativePath {
 	 */
 	public final int lineNumber;
 
-	private RepoRelativePath(String repositoryName, String pathInRepository, String projectName, String pathInProject,
+	private RepoRelativePath(String repositoryName, String pathInRepository, N4JSProjectName projectName,
+			String pathInProject,
 			int lineNumber) {
 		this.repositoryName = repositoryName;
 		this.pathInRepository = pathInRepository;

@@ -31,6 +31,7 @@ import org.eclipse.n4js.projectModel.IN4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.utils.ResourceType;
@@ -102,13 +103,13 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	}
 
 	@Override
-	public Optional<? extends IN4JSProject> findProject(String name) {
+	public Optional<? extends IN4JSProject> findProject(N4JSProjectName name) {
 		return Optional.fromNullable(model.findProject(name));
 	}
 
 	@Override
-	public Map<String, IN4JSProject> findAllProjectMappings() {
-		Map<String, IN4JSProject> allProjectMappings = new HashMap<>();
+	public Map<N4JSProjectName, IN4JSProject> findAllProjectMappings() {
+		Map<N4JSProjectName, IN4JSProject> allProjectMappings = new HashMap<>();
 		for (IN4JSProject project : findAllProjects()) {
 			allProjectMappings.put(project.getProjectName(), project);
 		}

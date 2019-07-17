@@ -39,7 +39,7 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 		if (element instanceof URI) {
 			return getCategoryText((URI) element).getString();
 		} else if (element instanceof IN4JSProject) {
-			return ((IN4JSProject) element).getProjectName();
+			return ((IN4JSProject) element).getProjectName().getRawName();
 		}
 		return super.getText(element);
 	}

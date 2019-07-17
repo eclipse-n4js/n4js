@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.lsp.IN4JSProjectConfig;
 import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 
 import com.google.common.collect.FluentIterable;
 
@@ -35,7 +36,7 @@ public class N4JSWorkspaceConfig implements IN4JSWorkspaceConfig {
 
 	@Override
 	public IN4JSProjectConfig findProjectByName(String name) {
-		return delegate.findProject(name).transform(p -> new N4JSProjectConfig(this, p)).orNull();
+		return delegate.findProject(new N4JSProjectName(name)).transform(p -> new N4JSProjectConfig(this, p)).orNull();
 	}
 
 	@Override

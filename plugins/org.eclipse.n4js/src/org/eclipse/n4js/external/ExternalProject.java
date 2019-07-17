@@ -46,6 +46,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.n4js.projectModel.names.EclipseProjectName;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -64,7 +66,7 @@ public class ExternalProject extends Project implements IExternalResource {
 
 	private final File file;
 	private final java.net.URI uri;
-	private final String eclipseProjectName;
+	private final EclipseProjectName eclipseProjectName;
 	private final Collection<String> natureIds;
 	private final Collection<String> builderIds;
 
@@ -115,8 +117,8 @@ public class ExternalProject extends Project implements IExternalResource {
 		this.builderIds = newHashSet(builderIds);
 
 		org.eclipse.emf.common.util.URI emfURI = URIUtils.deriveProjectURIFromFileLocation(file);
-		String n4jsName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(emfURI);
-		this.eclipseProjectName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(n4jsName);
+		N4JSProjectName n4jsName = new N4JSProjectName(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(emfURI));
+		this.eclipseProjectName = n4jsName.toEclipseProjectName();
 	}
 
 	@Override
@@ -130,7 +132,7 @@ public class ExternalProject extends Project implements IExternalResource {
 
 	@Override
 	public String getName() {
-		return eclipseProjectName;
+		return eclipseProjectName.getRawName();
 	}
 
 	@Override

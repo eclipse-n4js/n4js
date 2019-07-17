@@ -63,6 +63,8 @@ import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
+import org.eclipse.n4js.projectModel.names.EclipseProjectName;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -116,8 +118,8 @@ public class ProjectTestsUtils {
 		return true;
 	}
 
-	/** Same as {@link #importProject(File, String, Collection)}, but without installing any n4js libraries. */
-	public static IProject importProject(File probandsFolder, String projectName) throws CoreException {
+	/** Same as {@link #importProject(File, N4JSProjectName, Collection)}, but without installing any n4js libraries. */
+	public static IProject importProject(File probandsFolder, N4JSProjectName projectName) throws CoreException {
 		return importProject(probandsFolder, projectName, Collections.emptyList());
 	}
 
@@ -134,23 +136,24 @@ public class ProjectTestsUtils {
 	 *            the name of the test project, must be folder contained in probandsFolder
 	 * @param n4jsLibs
 	 *            names of N4JS libraries to install from the local <code>n4js-libs</code> top-level folder (see
-	 *            {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, String...)}).
+	 *            {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, N4JSProjectName...)}).
 	 * @return the imported project
 	 * @see <a href=
 	 *      "http://stackoverflow.com/questions/12484128/how-do-i-import-an-eclipse-project-from-a-zip-file-programmatically">
 	 *      stackoverflow: from zip</a>
 	 */
-	public static IProject importProject(File probandsFolder, String projectName, Collection<String> n4jsLibs)
+	public static IProject importProject(File probandsFolder, N4JSProjectName projectName,
+			Collection<N4JSProjectName> n4jsLibs)
 			throws CoreException {
 		return importProject(probandsFolder, projectName, true, true, n4jsLibs);
 	}
 
 	/**
-	 * Same as {@link #importProject(File, String)}, but won't enforce the convention that ".project" files should be
-	 * named "_project" in the proband folder. This should only be used as a rare exception when tests import projects
-	 * from Git repositories other than the N4JS or N4JS-N4 source repositories (e.g. for integration tests).
+	 * Same as {@link #importProject(File, N4JSProjectName)}, but won't enforce the convention that ".project" files
+	 * should be named "_project" in the proband folder. This should only be used as a rare exception when tests import
+	 * projects from Git repositories other than the N4JS or N4JS-N4 source repositories (e.g. for integration tests).
 	 */
-	public static IProject importProjectFromExternalSource(File probandsFolder, String projectName,
+	public static IProject importProjectFromExternalSource(File probandsFolder, N4JSProjectName projectName,
 			boolean copyIntoWorkspace) throws Exception {
 		return importProject(probandsFolder, projectName, copyIntoWorkspace, false, Collections.emptyList());
 	}
@@ -192,9 +195,9 @@ public class ProjectTestsUtils {
 
 	}
 
-	private static IProject importProject(File probandsFolder, String projectName, boolean copyIntoWorkspace,
-			boolean prepareDotProject, Collection<String> n4jsLibs) throws CoreException {
-		File projectSourceFolder = new File(probandsFolder, projectName);
+	private static IProject importProject(File probandsFolder, N4JSProjectName projectName, boolean copyIntoWorkspace,
+			boolean prepareDotProject, Collection<N4JSProjectName> n4jsLibs) throws CoreException {
+		File projectSourceFolder = new File(probandsFolder, projectName.getRawName());
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
 		}
@@ -211,7 +214,7 @@ public class ProjectTestsUtils {
 		final File projectTargetFolder;
 		if (copyIntoWorkspace) {
 			File workspaceFolder = workspace.getRoot().getLocation().toFile();
-			projectTargetFolder = new File(workspaceFolder, projectName);
+			projectTargetFolder = new File(workspaceFolder, projectName.getRawName());
 			try {
 				projectTargetFolder.mkdirs();
 				FileCopier.copy(projectSourceFolder.toPath(), projectTargetFolder.toPath());
@@ -229,7 +232,7 @@ public class ProjectTestsUtils {
 				N4jsLibsAccess.installN4jsLibs(
 						projectTargetFolder.toPath().resolve(N4JSGlobals.NODE_MODULES),
 						true, false, false,
-						n4jsLibs.toArray(new String[0]));
+						n4jsLibs.toArray(new N4JSProjectName[0]));
 			} catch (IOException e) {
 				throw new RuntimeException("unable to install n4js-libs from local checkout", e);
 			}
@@ -282,21 +285,23 @@ public class ProjectTestsUtils {
 	}
 
 	/**
-	 * Same as {@link #importYarnWorkspace(LibraryManager, File, String, Predicate, Collection)}, but imports all
-	 * packages contained in subfolder "packages" of the yarn workspace and does not install any N4JS libraries.
+	 * Same as {@link #importYarnWorkspace(LibraryManager, File, N4JSProjectName, Predicate, Collection)}, but imports
+	 * all packages contained in subfolder "packages" of the yarn workspace and does not install any N4JS libraries.
 	 */
-	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName)
+	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder,
+			N4JSProjectName yarnProjectName)
 			throws CoreException {
 		return importYarnWorkspace(libraryManager, parentFolder, yarnProjectName, Predicates.alwaysTrue(),
 				Collections.emptyList());
 	}
 
 	/**
-	 * Same as {@link #importYarnWorkspace(LibraryManager, File, String, Predicate, Collection)}, but imports all
-	 * packages contained in subfolder "packages" of the yarn workspace.
+	 * Same as {@link #importYarnWorkspace(LibraryManager, File, N4JSProjectName, Predicate, Collection)}, but imports
+	 * all packages contained in subfolder "packages" of the yarn workspace.
 	 */
-	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName,
-			Collection<String> n4jsLibs) throws CoreException {
+	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder,
+			N4JSProjectName yarnProjectName,
+			Collection<N4JSProjectName> n4jsLibs) throws CoreException {
 		return importYarnWorkspace(libraryManager, parentFolder, yarnProjectName, Predicates.alwaysTrue(), n4jsLibs);
 	}
 
@@ -316,11 +321,12 @@ public class ProjectTestsUtils {
 	 *            should be imported as well (the predicate's argument is the package name).
 	 * @param n4jsLibs
 	 *            names of N4JS libraries to install from the local <code>n4js-libs</code> top-level folder (see
-	 *            {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, String...)}).
+	 *            {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, N4JSProjectName...)}).
 	 * @return yarn workspace project
 	 */
-	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder, String yarnProjectName,
-			Predicate<String> packagesToImport, Collection<String> n4jsLibs) throws CoreException {
+	public static IProject importYarnWorkspace(LibraryManager libraryManager, File parentFolder,
+			N4JSProjectName yarnProjectName,
+			Predicate<N4JSProjectName> packagesToImport, Collection<N4JSProjectName> n4jsLibs) throws CoreException {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject yarnProject = ProjectTestsUtils.importProject(parentFolder, yarnProjectName);
 
@@ -331,12 +337,12 @@ public class ProjectTestsUtils {
 			if (yarnPackageName.startsWith("@")) {
 				for (String scopedPackageName : packagePath.toFile().list()) {
 					IPath scopedPackagePath = packagePath.append(scopedPackageName);
-					if (packagesToImport.apply(yarnPackageName + '/' + scopedPackageName)) {
+					if (packagesToImport.apply(new N4JSProjectName(yarnPackageName + '/' + scopedPackageName))) {
 						importProjectNotCopy(workspace, scopedPackagePath.toFile(), new NullProgressMonitor());
 					}
 				}
 			} else {
-				if (packagesToImport.apply(yarnPackageName)) {
+				if (packagesToImport.apply(new N4JSProjectName(yarnPackageName))) {
 					importProjectNotCopy(workspace, packagePath.toFile(), new NullProgressMonitor());
 				}
 			}
@@ -347,7 +353,7 @@ public class ProjectTestsUtils {
 				N4jsLibsAccess.installN4jsLibs(
 						yarnPackagesPath.toFile().toPath(),
 						true, false, false,
-						n4jsLibs.toArray(new String[0]));
+						n4jsLibs.toArray(new N4JSProjectName[0]));
 				yarnProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 			} catch (IOException e) {
 				throw new RuntimeException("unable to install n4js-libs from local checkout", e);
@@ -441,7 +447,7 @@ public class ProjectTestsUtils {
 		IFolder nodeModulesFolder = project.getFolder(N4JSGlobals.NODE_MODULES);
 		createDummyN4JSRuntime(nodeModulesFolder.getLocation().toFile().toPath());
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor());
-		return nodeModulesFolder.getFolder(N4JSGlobals.N4JS_RUNTIME);
+		return nodeModulesFolder.getFolder(N4JSGlobals.N4JS_RUNTIME.toEclipseProjectName().getRawName());
 	}
 
 	/**
@@ -453,14 +459,14 @@ public class ProjectTestsUtils {
 	 * {@link #N4JS_RUNTIME_DUMMY_VERSION}, allowing clients to check for this particular version, where needed.
 	 * <p>
 	 * If execution of N4JS code is required for testing, use method
-	 * {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, String...)} instead.
+	 * {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, N4JSProjectName...)} instead.
 	 *
 	 * @param location
 	 *            path to a folder that will become the parent folder of the newly created npm package "n4js-runtime".
 	 * @return path to the root folder of the newly created npm package.
 	 */
 	public static Path createDummyN4JSRuntime(Path location) {
-		Path projectPath = location.resolve(N4JSGlobals.N4JS_RUNTIME);
+		Path projectPath = location.resolve(N4JSGlobals.N4JS_RUNTIME.getRawName());
 		Path packageJsonFile = projectPath.resolve(N4JSGlobals.PACKAGE_JSON);
 		try {
 			Files.createDirectories(projectPath);
@@ -522,7 +528,8 @@ public class ProjectTestsUtils {
 	 * Add the given dependency to the package.json file of the given project. The version constraint may not be
 	 * <code>null</code> but may be the empty string or <code>"*"</code>.
 	 */
-	public static void addProjectToDependencies(IProject toChange, String projectName, String versionConstraint)
+	public static void addProjectToDependencies(IProject toChange, N4JSProjectName projectName,
+			String versionConstraint)
 			throws IOException {
 		URI uri = URI.createPlatformResourceURI(toChange.getFile(N4JSGlobals.PACKAGE_JSON).getFullPath().toString(),
 				true);
@@ -530,7 +537,7 @@ public class ProjectTestsUtils {
 		Resource resource = rs.getResource(uri, true);
 
 		JSONObject packageJSONRoot = PackageJSONTestUtils.getPackageJSONRoot(resource);
-		PackageJSONTestUtils.addProjectDependency(packageJSONRoot, projectName, versionConstraint);
+		PackageJSONTestUtils.addProjectDependency(packageJSONRoot, projectName.getRawName(), versionConstraint);
 
 		resource.save(null);
 		waitForAutoBuild();
@@ -882,8 +889,8 @@ public class ProjectTestsUtils {
 	 *            the name of the desired project.
 	 * @return the project we are looking for. Could be non-{@link IProject#isAccessible() accessible} project.
 	 */
-	public static IProject getProjectByName(final String projectName) {
-		return ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+	public static IProject getProjectByName(final EclipseProjectName projectName) {
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(projectName.getRawName());
 	}
 
 	/**
@@ -897,9 +904,9 @@ public class ProjectTestsUtils {
 	 *            additional names of desired projects.
 	 * @return an array of projects, could contain non-accessible project.
 	 */
-	public static IProject[] getProjectsByName(final String projectName, final String otherName,
-			final String... rest) {
-		final List<String> projectNames = Lists.asList(projectName, otherName, rest);
+	public static IProject[] getProjectsByName(final EclipseProjectName projectName, final EclipseProjectName otherName,
+			final EclipseProjectName... rest) {
+		final List<EclipseProjectName> projectNames = Lists.asList(projectName, otherName, rest);
 		final IProject[] projects = new IProject[projectNames.size()];
 		for (int i = 0; i < projects.length; i++) {
 			projects[i] = getProjectByName(projectNames.get(i));
@@ -910,10 +917,10 @@ public class ProjectTestsUtils {
 	/**
 	 * Copies projects from the given location to the node_modules folder of the given project
 	 */
-	public static void importDependencies(String projectName, java.net.URI externalRootLocation,
+	public static void importDependencies(N4JSProjectName projectName, java.net.URI externalRootLocation,
 			LibraryManager libraryManager) throws IOException, CoreException {
 
-		IProject clientProject = getProjectByName(projectName);
+		IProject clientProject = getProjectByName(projectName.toEclipseProjectName());
 		java.net.URI clientLocation = clientProject.getLocationURI();
 		File nodeModulesDir = new File(clientLocation.getPath(), N4JSGlobals.NODE_MODULES);
 		if (!nodeModulesDir.isDirectory()) {

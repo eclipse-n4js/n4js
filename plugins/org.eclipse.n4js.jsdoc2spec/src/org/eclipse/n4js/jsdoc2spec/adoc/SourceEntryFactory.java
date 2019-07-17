@@ -152,7 +152,7 @@ public class SourceEntryFactory {
 	}
 
 	static private String getProject(RepoRelativePath rrp) {
-		String tProject = trim(rrp.projectName);
+		String tProject = trim(rrp.projectName.getRawName());
 		return tProject;
 	}
 

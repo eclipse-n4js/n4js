@@ -55,7 +55,7 @@ import org.eclipse.swt.graphics.Image;
 
 	@Override
 	public String getText() {
-		return project.getProjectName();
+		return project.getProjectName().getRawName();
 	}
 
 	@Override

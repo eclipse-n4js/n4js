@@ -29,6 +29,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException;
 import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
@@ -246,7 +247,7 @@ public class RuntimeEnvironmentsHelper {
 		List<? extends IN4JSProject> allRuntimeEnvironments = from(getAllProjects())
 				.filter(p -> isRuntimeEnvironment(p)).toList();
 
-		Map<IN4JSProject, List<String>> reExtendedEnvironments = allRuntimeEnvironments.stream()
+		Map<IN4JSProject, List<N4JSProjectName>> reExtendedEnvironments = allRuntimeEnvironments.stream()
 				.collect(Collectors.toMap(e -> e, e -> getExtendedRuntimeEnvironmentsIds(e, allRuntimeEnvironments)));
 
 		// if runnerEnvironments (first param) would be single IN4JSProject (instead of collection)
@@ -261,18 +262,18 @@ public class RuntimeEnvironmentsHelper {
 				LOGGER.debug("Multiple projects with name "
 						+ re.getProjectName()
 						+ " : "
-						+ listExtendedEnvironments.stream().map(p -> p.getProjectName())
+						+ listExtendedEnvironments.stream().map(p -> p.getProjectName().getRawName())
 								.reduce(new String(), (String r, String e) -> r += ", " + e));
 				LOGGER.error("Cannot obtain project for name " + re.getProjectName());
 				return false;
 			}
 
 			IN4JSProject extendedRuntimeEnvironment = listExtendedEnvironments.get(0);
-			List<String> listExtendedEnvironemntsNames = reExtendedEnvironments.get(extendedRuntimeEnvironment);
-			result = result
-					&& requiredEnvironments.stream().map(bre -> {
-						return bre.getProjectName();
-					}).allMatch(breName -> listExtendedEnvironemntsNames.contains(breName));
+			List<N4JSProjectName> listExtendedEnvironmentsNames = reExtendedEnvironments
+					.get(extendedRuntimeEnvironment);
+			result = result && requiredEnvironments.stream().map(bre -> {
+				return bre.getProjectName();
+			}).allMatch(breName -> listExtendedEnvironmentsNames.contains(breName));
 		}
 		return result;
 	}
@@ -287,7 +288,7 @@ public class RuntimeEnvironmentsHelper {
 	 *            collection of REs for which are taken into account
 	 * @return map entry of mapping between RE and REs it extends
 	 */
-	private List<String> getExtendedRuntimeEnvironmentsIds(
+	private List<N4JSProjectName> getExtendedRuntimeEnvironmentsIds(
 			IN4JSProject runtimeEnv,
 			List<? extends IN4JSProject> allRuntimeEnv) {
 		return getExtendedRuntimeEnvironments(runtimeEnv).stream()
@@ -303,10 +304,10 @@ public class RuntimeEnvironmentsHelper {
 	 */
 	private List<IN4JSProject> getExtendedRuntimeEnvironments(IN4JSProject runtimeEnvironment) {
 		final List<IN4JSProject> runtimeEnvironments = new ArrayList<>();
-		Optional<String> extended = runtimeEnvironment.getExtendedRuntimeEnvironmentId();
+		Optional<N4JSProjectName> extended = runtimeEnvironment.getExtendedRuntimeEnvironmentId();
 
 		while (extended.isPresent()) {
-			String id = extended.get();
+			N4JSProjectName id = extended.get();
 			List<? extends IN4JSProject> extendedRE = from(getAllProjects()).filter(p -> id.equals(p.getProjectName()))
 					.toList();
 

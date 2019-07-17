@@ -24,6 +24,7 @@ import org.eclipse.n4js.internal.AbstractN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -91,7 +92,7 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 	}
 
 	@Override
-	public Optional<? extends IN4JSProject> findProject(String projectName) {
+	public Optional<? extends IN4JSProject> findProject(N4JSProjectName projectName) {
 		IN4JSProject result = model.findProject(projectName);
 		return Optional.fromNullable(result);
 	}
@@ -102,7 +103,7 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 	}
 
 	@Override
-	public Map<String, IN4JSProject> findAllProjectMappings() {
+	public Map<N4JSProjectName, IN4JSProject> findAllProjectMappings() {
 		return this.model.findAllProjectMappings();
 	}
 

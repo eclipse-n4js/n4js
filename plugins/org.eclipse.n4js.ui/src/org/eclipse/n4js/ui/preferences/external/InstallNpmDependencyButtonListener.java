@@ -27,6 +27,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -110,7 +111,8 @@ class InstallNpmDependencyButtonListener extends SelectionAdapter {
 			// Call getSelectedNodeModulesURI.get() on the UI thread!
 			File prjRootDir = getSelectedNodeModulesURI.get().getParent().toFileSystemPath().toFile();
 			new ProgressMonitorDialog(getShell()).run(true, true, monitor -> {
-				Map<String, NPMVersionRequirement> singletonMap = Collections.singletonMap(packageName,
+				Map<N4JSProjectName, NPMVersionRequirement> singletonMap = Collections.singletonMap(
+						new N4JSProjectName(packageName),
 						packageVersion);
 				try {
 					org.eclipse.emf.common.util.URI projectRootURI = org.eclipse.emf.common.util.URI

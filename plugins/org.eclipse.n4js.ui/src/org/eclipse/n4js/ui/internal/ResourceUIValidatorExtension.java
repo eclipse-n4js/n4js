@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
@@ -131,7 +132,7 @@ public class ResourceUIValidatorExtension extends MarkerEraser implements IResou
 	 * @param projectName
 	 *            name of the project to be cleaned
 	 */
-	public void clearAllMarkersOfExternalProject(String projectName) {
+	public void clearAllMarkersOfExternalProject(N4JSProjectName projectName) {
 		List<N4JSExternalProject> projects = externalLibraryWorkspace.getProjectsForName(projectName);
 		N4JSExternalProject[] projectsArray = projects.toArray(new N4JSExternalProject[projects.size()]);
 		clearAllMarkersOfExternalProjects(projectsArray);

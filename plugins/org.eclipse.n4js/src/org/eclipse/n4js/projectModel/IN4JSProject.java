@@ -20,6 +20,7 @@ import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
@@ -58,7 +59,7 @@ public interface IN4JSProject {
 	 * <p>
 	 * For more details, see {@link ProjectDescriptionUtils#isProjectNameWithScope(String)}.
 	 */
-	String getProjectName();
+	N4JSProjectName getProjectName();
 
 	/**
 	 * The project's location. Also available if the project does not exist. This will return a platform URI when
@@ -136,7 +137,7 @@ public interface IN4JSProject {
 	 *
 	 * @return optional but not null string
 	 */
-	Optional<String> getExtendedRuntimeEnvironmentId();
+	Optional<N4JSProjectName> getExtendedRuntimeEnvironmentId();
 
 	/**
 	 * Returns with the extended runtime environment of the project. If not specified returns with an absent instance.
@@ -173,7 +174,7 @@ public interface IN4JSProject {
 	/**
 	 * returns the implementation ID of the project if and only if this project is an implementation project
 	 */
-	Optional<String> getImplementationId();
+	Optional<N4JSProjectName> getImplementationId();
 
 	/**
 	 * returns the projects implemented by the receiving project
@@ -214,5 +215,5 @@ public interface IN4JSProject {
 	 * {@code null} if this project does not specify the property (i.e. not a type definitions project (cf.
 	 * {@link ProjectType#DEFINITION})).
 	 */
-	public String getDefinesPackageName();
+	public N4JSProjectName getDefinesPackageName();
 }

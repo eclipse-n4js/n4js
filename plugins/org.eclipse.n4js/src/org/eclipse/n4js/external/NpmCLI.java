@@ -34,6 +34,7 @@ import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceModel;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverMatcher;
 import org.eclipse.n4js.semver.SemverUtils;
@@ -90,8 +91,8 @@ public class NpmCLI {
 	private UriExtensions uriExtensions;
 
 	/** Simple validation if the package name is not null or empty */
-	public boolean invalidPackageName(String packageName) {
-		return packageName == null || packageName.trim().isEmpty();
+	public boolean invalidPackageName(N4JSProjectName packageName) {
+		return packageName == null || packageName.getRawName().trim().isEmpty();
 	}
 
 	/** Simple validation if the package version is not null or empty */
@@ -159,7 +160,7 @@ public class NpmCLI {
 		SafeURI<?> nodeModulesLocationURI = externalLibraryWorkspace
 				.getRootLocationForResource(requestedChange.location);
 
-		List<String> packageNames = new ArrayList<>();
+		List<N4JSProjectName> packageNames = new ArrayList<>();
 		if ((requestedChange.type == LibraryChangeType.Uninstall) &&
 				ExternalLibraryPreferenceModel.isNodeModulesLocation(nodeModulesLocationURI)) {
 			packageNames.add(requestedChange.name);
@@ -223,7 +224,7 @@ public class NpmCLI {
 		File installPath = new File(localURI.toFileString());
 
 		// for installation, we invoke npm only once for all packages
-		final List<Pair<String, String>> packageNamesAndVersions = Lists.newArrayList();
+		final List<Pair<N4JSProjectName, String>> packageNamesAndVersions = Lists.newArrayList();
 		for (LibraryChange reqChg : requestedChanges) {
 			if (reqChg.type == LibraryChangeType.Install) {
 				packageNamesAndVersions.add(Tuples.pair(reqChg.name, "@" + reqChg.version));
@@ -256,7 +257,7 @@ public class NpmCLI {
 		Path nodeModulesFolder = installPath.resolve(N4JSGlobals.NODE_MODULES);
 		for (LibraryChange reqChg : requestedChanges) {
 			if (reqChg.type == LibraryChangeType.Install) {
-				Path completePath = nodeModulesFolder.resolve(reqChg.name);
+				Path completePath = nodeModulesFolder.resolve(reqChg.name.getRawName());
 				String actualVersion = getActualVersion(completePath);
 				if (actualVersion.isEmpty()) {
 					// unable to load version from package.json:
@@ -264,7 +265,7 @@ public class NpmCLI {
 					NodeModulesFolder nmf = nodeModulesDiscoveryHelper.getNodeModulesFolder(installPath);
 					if (nmf.isYarnWorkspace) {
 						Path nodeModulesFolderInYarnWorkspaceRoot = nmf.nodeModulesFolder.toPath();
-						completePath = nodeModulesFolderInYarnWorkspaceRoot.resolve(reqChg.name);
+						completePath = nodeModulesFolderInYarnWorkspaceRoot.resolve(reqChg.name.getRawName());
 						actualVersion = getActualVersion(completePath);
 					}
 				}
@@ -304,10 +305,10 @@ public class NpmCLI {
 	 * @param installPath
 	 *            path where package is supposed to be installed
 	 */
-	private IStatus install(List<Pair<String, String>> packageNamesAndVersions, File installPath) {
+	private IStatus install(List<Pair<N4JSProjectName, String>> packageNamesAndVersions, File installPath) {
 		List<String> packageNamesAndVersionsMerged = new ArrayList<>(packageNamesAndVersions.size());
-		for (Pair<String, String> pair : packageNamesAndVersions) {
-			String packageName = pair.getFirst();
+		for (Pair<N4JSProjectName, String> pair : packageNamesAndVersions) {
+			N4JSProjectName packageName = pair.getFirst();
 			String packageVersion = pair.getSecond();
 
 			// FIXME better error reporting (show all invalid names/versions, not just the first)
@@ -318,7 +319,8 @@ public class NpmCLI {
 				return statusHelper.createError("Malformed npm package version: '" + packageVersion + "'.");
 			}
 
-			String nameAndVersion = packageVersion.isEmpty() ? packageName : packageName + packageVersion;
+			String nameAndVersion = packageVersion.isEmpty() ? packageName.getRawName()
+					: packageName.getRawName() + packageVersion;
 			packageNamesAndVersionsMerged.add(nameAndVersion);
 		}
 
@@ -362,8 +364,8 @@ public class NpmCLI {
 	 *            the folder where the npm uninstall command will be executed
 	 * @return status status describing the execution status of this method
 	 */
-	private IStatus uninstall(List<String> packageNames, File uninstallPath) {
-		for (String packageName : packageNames) {
+	private IStatus uninstall(List<N4JSProjectName> packageNames, File uninstallPath) {
+		for (N4JSProjectName packageName : packageNames) {
 			if (invalidPackageName(packageName)) {
 				return statusHelper.createError("Malformed npm package name: '" + packageName + "'.");
 			}

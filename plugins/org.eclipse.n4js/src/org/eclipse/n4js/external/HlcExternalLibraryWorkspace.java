@@ -28,6 +28,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
@@ -83,7 +84,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public Map<String, VersionNumber> getProjectNameVersionMap() {
+	public Map<N4JSProjectName, VersionNumber> getProjectNameVersionMap() {
 		return emptyMap();
 	}
 
@@ -98,7 +99,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public N4JSExternalProject getProject(String projectName) {
+	public N4JSExternalProject getProject(N4JSProjectName projectName) {
 		return null;
 	}
 
@@ -159,7 +160,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 	}
 
 	@Override
-	public List<N4JSExternalProject> getProjectsForName(String projectName) {
+	public List<N4JSExternalProject> getProjectsForName(N4JSProjectName projectName) {
 		return emptyList();
 	}
 

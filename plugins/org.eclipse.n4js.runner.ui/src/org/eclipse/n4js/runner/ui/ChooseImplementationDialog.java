@@ -18,12 +18,12 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.n4js.compare.ApiImplMapping;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
-
-import org.eclipse.n4js.compare.ApiImplMapping;
 
 /**
  * A dialog for letting the user choose an implementation to run.
@@ -33,7 +33,7 @@ public class ChooseImplementationDialog extends ListDialog {
 	/***/
 	protected final ApiImplMapping apiImplMapping;
 	/***/
-	protected final List<String> availableImplIds;
+	protected final List<N4JSProjectName> availableImplIds;
 
 	/**
 	 * Create a dialog with default settings using the given <code>apiImplMapping</code>.
@@ -85,8 +85,10 @@ public class ChooseImplementationDialog extends ListDialog {
 	protected String computeMessage() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Project dependencies contain the following API projects:\n");
-		for (String apiId : apiImplMapping.getApiIds()) {
-			sb.append("- " + apiId + " (" + apiImplMapping.getImplIds(apiId).stream().collect(Collectors.joining(", "))
+		for (N4JSProjectName apiId : apiImplMapping.getApiIds()) {
+			sb.append("- " + apiId + " ("
+					+ apiImplMapping.getImplIds(apiId).stream().map(N4JSProjectName::getRawName)
+							.collect(Collectors.joining(", "))
 					+ ")\n");
 		}
 		sb.append('\n');

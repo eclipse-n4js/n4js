@@ -54,6 +54,7 @@ import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
@@ -383,8 +384,7 @@ public class ExternalLibraryBuilder {
 	 * Returns with {@code true} if the external project is accessible in the workspace as well.
 	 */
 	private boolean hasWorkspaceCounterpart(IN4JSProject project) {
-		URI uri = URI.createPlatformResourceURI(project.getProjectName(), true);
-		IN4JSProject n4Project = core.findProject(uri).orNull();
+		IN4JSProject n4Project = core.findProject(project.getProjectName()).orNull();
 		return null != n4Project && n4Project.exists() && !n4Project.isExternal();
 	}
 
@@ -446,7 +446,7 @@ public class ExternalLibraryBuilder {
 				} catch (OperationCanceledException e) {
 					throw e;
 				} catch (Exception e) {
-					String name = n4Project.getProjectName();
+					N4JSProjectName name = n4Project.getProjectName();
 					LOGGER.error("Error occurred while calculating to be build data for '" + name + "' project.", e);
 					throw Exceptions.sneakyThrow(e);
 				}
@@ -602,7 +602,8 @@ public class ExternalLibraryBuilder {
 		Set<String> toBeWipedStrings = new HashSet<>();
 		for (FileURI toWipe : toBeWiped) {
 			toBeWipedStrings.add(toWipe.toString());
-			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(toWipe);
+			N4JSProjectName projectName = new N4JSProjectName(
+					ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(toWipe));
 			validatorExtension.clearAllMarkersOfExternalProject(projectName);
 		}
 

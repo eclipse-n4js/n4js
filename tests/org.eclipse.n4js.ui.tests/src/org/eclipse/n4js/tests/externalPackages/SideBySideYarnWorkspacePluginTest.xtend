@@ -29,6 +29,7 @@ import org.junit.Test
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 /**
  * Testing the use of a yarn workspace inside the N4JS IDE, including the case that only
@@ -39,7 +40,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";
 	private static final String YARN_WORKSPACE_BASE = "YarnWorkspaceExample";
-	private static final String YARN_WORKSPACE_PROJECT = "YarnWorkspaceProject";
+	private static final N4JSProjectName YARN_WORKSPACE_PROJECT = new N4JSProjectName("YarnWorkspaceProject");
 
 	private static final String expectedOutput = '''
 		Hello from C in Lib!

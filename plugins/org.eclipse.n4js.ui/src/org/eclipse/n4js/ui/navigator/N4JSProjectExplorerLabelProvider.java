@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
@@ -177,7 +178,7 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 			N4JSExternalProject npmProject = helper.getNodeModulesNpmProjectOrNull(folder);
 			if (npmProject != null) {
 				IN4JSProject iNpmProject = npmProject.getIProject();
-				return helper.getStyledTextForExternalProject(iNpmProject, folder.getName());
+				return helper.getStyledTextForExternalProject(iNpmProject, new N4JSProjectName(folder.getName()));
 
 			} else if (Files.isSymbolicLink(folder.getLocation().toFile().toPath())) {
 				// might be a project from workspace

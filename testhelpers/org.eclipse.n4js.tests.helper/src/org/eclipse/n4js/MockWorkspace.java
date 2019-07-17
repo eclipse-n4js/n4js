@@ -21,6 +21,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 
@@ -75,7 +76,7 @@ public class MockWorkspace extends InternalN4JSWorkspace<MockURIWrapper> {
 	}
 
 	@Override
-	public MockURIWrapper getProjectLocation(String name) {
+	public MockURIWrapper getProjectLocation(N4JSProjectName name) {
 		return MockProject.MOCK_URI;
 	}
 

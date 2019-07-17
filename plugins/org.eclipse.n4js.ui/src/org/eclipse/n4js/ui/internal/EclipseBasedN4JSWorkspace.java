@@ -22,6 +22,7 @@ import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
@@ -79,9 +80,8 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformRes
 	}
 
 	@Override
-	public PlatformResourceURI getProjectLocation(String name) {
-		String eclipseName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(name);
-		IProject project = workspace.getProject(eclipseName);
+	public PlatformResourceURI getProjectLocation(N4JSProjectName name) {
+		IProject project = workspace.getProject(name.toEclipseProjectName().getRawName());
 		if (project.exists()) {
 			return new PlatformResourceURI(project);
 		}

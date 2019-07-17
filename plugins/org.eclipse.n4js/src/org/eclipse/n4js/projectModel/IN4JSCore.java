@@ -16,8 +16,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
@@ -62,15 +62,11 @@ public interface IN4JSCore {
 	/**
 	 * Returns the N4JS project with the given name.
 	 *
-	 * The name is supposed to be a valid Eclipse project name.
-	 *
-	 * @see ProjectDescriptionUtils#convertN4JSProjectNameToEclipseProjectName(String)
-	 *
 	 * @param projectName
 	 *            the project name
 	 * @return the n4js project
 	 */
-	Optional<? extends IN4JSProject> findProject(String projectName);
+	Optional<? extends IN4JSProject> findProject(N4JSProjectName projectName);
 
 	/**
 	 * Returns list of the N4JS projects that are in current working scope (IWorkspace or registered projects).
@@ -82,7 +78,7 @@ public interface IN4JSCore {
 	/**
 	 * @return a map that maps {@link IProject#getName()} to {@link IProject}.
 	 */
-	Map<String, IN4JSProject> findAllProjectMappings();
+	Map<N4JSProjectName, IN4JSProject> findAllProjectMappings();
 
 	/**
 	 * returns the source container that covers the given location.

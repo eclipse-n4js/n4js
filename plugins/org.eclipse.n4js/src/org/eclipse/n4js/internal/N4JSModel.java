@@ -40,6 +40,7 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -115,7 +116,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		return prjConfs;
 	}
 
-	public IN4JSProject findProject(String name) {
+	public IN4JSProject findProject(N4JSProjectName name) {
 		Loc loc = workspace.getProjectLocation(name);
 		if (loc != null) {
 			return getN4JSProject(loc, false);

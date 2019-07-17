@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 
 import com.google.inject.Inject;
 
@@ -44,7 +44,7 @@ public class ShadowingInfoHelper {
 
 	/** @return all projects that are shadowing the given project */
 	public List<IN4JSProject> findShadowingProjects(IN4JSProject project) {
-		String projectName = project.getProjectName();
+		N4JSProjectName projectName = project.getProjectName();
 
 		List<IN4JSProject> shadowingProjects = new LinkedList<>();
 		if (!project.isExternal()) {
@@ -71,8 +71,7 @@ public class ShadowingInfoHelper {
 			}
 		}
 
-		IN4JSProject shadowingProject = n4jsCore
-				.findProject(ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(projectName)).orNull();
+		IN4JSProject shadowingProject = n4jsCore.findProject(projectName).orNull();
 		if (shadowingProject != null && shadowingProject.exists() && !shadowingProject.isExternal()) {
 			shadowingProjects.add(shadowingProject);
 		}
@@ -81,7 +80,7 @@ public class ShadowingInfoHelper {
 
 	/** @return all projects that are shadowed by the given project */
 	public List<N4JSExternalProject> findShadowedProjects(IN4JSProject project) {
-		String projectName = project.getProjectName();
+		N4JSProjectName projectName = project.getProjectName();
 
 		List<N4JSExternalProject> projectsForName = externalLibraryWorkspace.getProjectsForName(projectName);
 		if (projectsForName == null || projectsForName.isEmpty()) {

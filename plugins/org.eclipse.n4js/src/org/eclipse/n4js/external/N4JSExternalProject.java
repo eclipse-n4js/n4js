@@ -20,6 +20,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -100,7 +101,7 @@ public class N4JSExternalProject extends ExternalProject {
 	 *
 	 * @return an iterable of direct dependency project IDs.
 	 */
-	public Iterable<String> getAllDirectDependencyIds() {
+	public Iterable<N4JSProjectName> getAllDirectDependencyIds() {
 		return from(getAllDirectDependencies())
 				.transform(p -> p.getProjectName())
 				.toSet();

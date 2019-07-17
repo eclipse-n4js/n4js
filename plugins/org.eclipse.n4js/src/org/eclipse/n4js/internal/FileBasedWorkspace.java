@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.util.UriExtensions;
@@ -38,7 +39,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	public final static String N4FBPRJ = "n4fbprj:";
 
 	private final Map<FileURI, LazyProjectDescriptionHandle> projectElementHandles = Maps.newConcurrentMap();
-	private final Map<String, FileURI> nameToLocation = Maps.newConcurrentMap();
+	private final Map<N4JSProjectName, FileURI> nameToLocation = Maps.newConcurrentMap();
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
 
@@ -71,11 +72,12 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location);
 			projectElementHandles.put(location, lazyDescriptionHandle);
 		}
-		nameToLocation.putIfAbsent(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location), location);
+		nameToLocation.putIfAbsent(new N4JSProjectName(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location)),
+				location);
 	}
 
 	@Override
-	public FileURI getProjectLocation(String name) {
+	public FileURI getProjectLocation(N4JSProjectName name) {
 		return nameToLocation.get(name);
 	}
 

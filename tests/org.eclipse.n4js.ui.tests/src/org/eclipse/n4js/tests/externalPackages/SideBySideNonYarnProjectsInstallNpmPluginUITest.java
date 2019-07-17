@@ -21,6 +21,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
@@ -64,8 +65,8 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 	public void installDifferentNpmInTwoIndependentProjects() throws CoreException {
 
 		File prjDir = new File(getResourceUri(PROBANDS, DIFFERENT_NPM_SUBFOLDER));
-		IProject prjP1 = ProjectTestsUtils.importProject(prjDir, "P1");
-		IProject prjP2 = ProjectTestsUtils.importProject(prjDir, "P2");
+		IProject prjP1 = ProjectTestsUtils.importProject(prjDir, new N4JSProjectName("P1"));
+		IProject prjP2 = ProjectTestsUtils.importProject(prjDir, new N4JSProjectName("P2"));
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -83,8 +84,9 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 
 		FileURI prjP1URI = new FileURI(prjP1.getLocation().toFile());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
-		libraryManager.installNPM("n4js-runtime", prjP1URI.toURI(), new NullProgressMonitor());
-		libraryManager.installNPM("lodash", lodashVersion, prjP1URI.toURI(), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP1URI.toURI(), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI.toURI(),
+				new NullProgressMonitor());
 		waitForAutoBuild();
 
 		// no lodash error anymore
@@ -97,8 +99,9 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 
 		FileURI prjP2URI = new FileURI(prjP2.getLocation().toFile());
 		String immutableVersion = getDependencyVersion(prjP2URI, "immutable");
-		libraryManager.installNPM("n4js-runtime", prjP2URI.toURI(), new NullProgressMonitor());
-		libraryManager.installNPM("immutable", immutableVersion, prjP2URI.toURI(), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP2URI.toURI(), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("immutable"), immutableVersion, prjP2URI.toURI(),
+				new NullProgressMonitor());
 		waitForAutoBuild();
 
 		assertIssues(pkgJsonP1,
@@ -120,8 +123,8 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 	public void installSamepNpmInTwoIndependentProjects() throws CoreException {
 
 		File prjDir = new File(getResourceUri(PROBANDS, SAME_NPM_SUBFOLDER));
-		IProject prjP1 = ProjectTestsUtils.importProject(prjDir, "P1");
-		IProject prjP2 = ProjectTestsUtils.importProject(prjDir, "P2");
+		IProject prjP1 = ProjectTestsUtils.importProject(prjDir, new N4JSProjectName("P1"));
+		IProject prjP2 = ProjectTestsUtils.importProject(prjDir, new N4JSProjectName("P2"));
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -137,8 +140,9 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 
 		FileURI prjP1URI = new FileURI(prjP1.getLocation().toFile());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
-		libraryManager.installNPM("n4js-runtime", prjP1URI.toURI(), new NullProgressMonitor());
-		libraryManager.installNPM("lodash", lodashVersion, prjP1URI.toURI(), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP1URI.toURI(), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI.toURI(),
+				new NullProgressMonitor());
 		waitForAutoBuild();
 		assertIssues(pkgJsonP1); // No errors in P1 anymore
 		assertIssues(pkgJsonP2,
@@ -162,8 +166,8 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 		System.out.println("start");
 
 		File prjDir = new File(getResourceUri(PROBANDS, DIFFERENT_NPMS_DEPENDENT_PROJECTS_SUBFOLDER));
-		IProject prjP1 = ProjectTestsUtils.importProject(prjDir, "P1");
-		IProject prjP2 = ProjectTestsUtils.importProject(prjDir, "P2");
+		IProject prjP1 = ProjectTestsUtils.importProject(prjDir, new N4JSProjectName("P1"));
+		IProject prjP2 = ProjectTestsUtils.importProject(prjDir, new N4JSProjectName("P2"));
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -181,8 +185,9 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 
 		FileURI prjP1URI = new FileURI(prjP1.getLocation().toFile());
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
-		libraryManager.installNPM("n4js-runtime", prjP1URI.toURI(), new NullProgressMonitor());
-		libraryManager.installNPM("lodash", lodashVersion, prjP1URI.toURI(), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP1URI.toURI(), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI.toURI(),
+				new NullProgressMonitor());
 		waitForAutoBuild();
 
 		// lodash error gone
@@ -195,8 +200,9 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 
 		FileURI prjP2URI = new FileURI(prjP2.getLocation().toFile());
 		String immutableVersion = getDependencyVersion(prjP2URI, "immutable");
-		libraryManager.installNPM("n4js-runtime", prjP2URI.toURI(), new NullProgressMonitor());
-		libraryManager.installNPM("immutable", immutableVersion, prjP2URI.toURI(), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP2URI.toURI(), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("immutable"), immutableVersion, prjP2URI.toURI(),
+				new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 

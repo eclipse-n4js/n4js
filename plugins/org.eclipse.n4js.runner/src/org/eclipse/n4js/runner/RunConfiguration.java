@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.jetty.util.ajax.JSON;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 
 import com.google.common.base.CharMatcher;
@@ -110,7 +111,7 @@ public class RunConfiguration {
 
 	private String implementationId;
 
-	private final Map<String, String> apiImplProjectMapping = new LinkedHashMap<>();
+	private final Map<N4JSProjectName, N4JSProjectName> apiImplProjectMapping = new LinkedHashMap<>();
 
 	/**
 	 * See {@link #getUserSelection()} for details.
@@ -125,7 +126,7 @@ public class RunConfiguration {
 
 	private final Map<String, String> environmentVariables = new LinkedHashMap<>();
 
-	private final Map<Path, String> coreProjectPaths = new LinkedHashMap<>();
+	private final Map<Path, N4JSProjectName> coreProjectPaths = new LinkedHashMap<>();
 
 	private final LinkedHashSet<String> additionalPaths = new LinkedHashSet<>();
 
@@ -311,12 +312,12 @@ public class RunConfiguration {
 	 * mapping from the <code>projectName</code> of the API project to the <code>projectName</code> of the
 	 * implementation project to use in the run. Never returns <code>null</code> but may return an empty map.
 	 */
-	public Map<String, String> getApiImplProjectMapping() {
+	public Map<N4JSProjectName, N4JSProjectName> getApiImplProjectMapping() {
 		return Collections.unmodifiableMap(apiImplProjectMapping);
 	}
 
 	/** @see #getApiImplProjectMapping() */
-	public void setApiImplProjectMapping(Map<String, String> apiImplProjectMapping) {
+	public void setApiImplProjectMapping(Map<N4JSProjectName, N4JSProjectName> apiImplProjectMapping) {
 		this.apiImplProjectMapping.clear();
 		this.apiImplProjectMapping.putAll(apiImplProjectMapping);
 	}
@@ -362,7 +363,7 @@ public class RunConfiguration {
 	 * of project containing the userSelection, its direct and indirect dependencies, the runtime environment project).
 	 * These are the <code>.../src-gen/es5/</code> folders.
 	 */
-	public Map<Path, String> getCoreProjectPaths() {
+	public Map<Path, N4JSProjectName> getCoreProjectPaths() {
 		return Collections.unmodifiableMap(coreProjectPaths);
 	}
 
@@ -370,7 +371,7 @@ public class RunConfiguration {
 	 * Adds entries to the {@link #getCoreProjectPaths() core project paths}. All previously stored values are removed,
 	 * and all provided values are stored.
 	 */
-	public void setCoreProjectPaths(Map<Path, String> paths) {
+	public void setCoreProjectPaths(Map<Path, N4JSProjectName> paths) {
 		this.coreProjectPaths.clear();
 		this.coreProjectPaths.putAll(paths);
 	}
@@ -378,7 +379,7 @@ public class RunConfiguration {
 	/**
 	 * Unlike {@link #setCoreProjectPaths(Map)} this method adds new entries without removing previous values.
 	 */
-	public void addCoreProjectPaths(Map<Path, String> paths) {
+	public void addCoreProjectPaths(Map<Path, N4JSProjectName> paths) {
 		this.coreProjectPaths.putAll(paths);
 	}
 
@@ -414,7 +415,7 @@ public class RunConfiguration {
 		this.name = getString(map, NAME, false);
 		this.runnerId = getString(map, RUNNER_ID, false);
 		this.runtimeEnvironment = RuntimeEnvironment
-				.fromProjectName(getString(map, RUNTIME_ENVIRONMENT, false));
+				.fromProjectName(new N4JSProjectName(getString(map, RUNTIME_ENVIRONMENT, false)));
 		this.implementationId = getString(map, IMPLEMENTATION_ID, true);
 		this.userSelection = getURI(map, USER_SELECTION, false);
 		this.engineOptions = nullToEmpty(getString(map, ENGINE_OPTIONS, true));
