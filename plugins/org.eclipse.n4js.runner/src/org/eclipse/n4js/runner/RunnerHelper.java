@@ -156,7 +156,7 @@ public class RunnerHelper {
 		}
 
 		for (final IN4JSProject dep : project.getAllDirectDependencies()) {
-			if (guard.tryNext(dep._getLocation())) {
+			if (guard.tryNext(dep.getSafeLocation().toURI())) {
 				recursiveDependencyCollector(dep, addHere, guard);
 			}
 		}

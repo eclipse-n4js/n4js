@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -501,7 +502,8 @@ public class LibraryManager {
 		logger.logInfo(msg);
 
 		// trim package name and "node_modules" segments from packageURI:
-		FileURI containingProjectURI = packageURI.getParentOf(name -> N4JSGlobals.NODE_MODULES.equals(name));
+		FileURI containingProjectURI = getParentOfMatchingLocation(packageURI,
+				name -> N4JSGlobals.NODE_MODULES.equals(name));
 		boolean usingYarn = npmCli.isYarnUsed(containingProjectURI.toFileSystemPath().toFile());
 
 		IStatus binaryStatus = checkBinary(usingYarn);
@@ -530,6 +532,17 @@ public class LibraryManager {
 		} finally {
 			monitor.done();
 		}
+	}
+
+	private FileURI getParentOfMatchingLocation(FileURI uri, Predicate<? super String> predicate) {
+		while (uri != null && !predicate.test(uri.getName())) {
+			uri = uri.getParent();
+		}
+		if (uri != null) {
+			return uri.getParent();
+		}
+		return null;
+
 	}
 
 	/**

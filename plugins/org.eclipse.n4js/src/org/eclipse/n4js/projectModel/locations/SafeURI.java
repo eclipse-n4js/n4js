@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.URI;
 
@@ -87,79 +86,145 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 		return toURI().toString();
 	}
 
+	/**
+	 * Returns true if this URI points to a file rather than a directory.
+	 */
 	public abstract boolean isFile();
 
+	/**
+	 * Returns the name of the file or folder this URI points to.
+	 */
 	public abstract String getName();
 
+	/**
+	 * Returns true if the location exists.
+	 */
 	public abstract boolean exists();
 
+	/**
+	 * Returns true if this URI points to a folder rather than a file.
+	 */
 	public abstract boolean isDirectory();
 
+	/**
+	 * Returns all the direct children of this location. Files do never have children.
+	 */
 	public abstract Iterable<? extends U> getChildren();
 
+	/**
+	 * Attempts to read the content of the file this URI is pointing to.
+	 */
 	public abstract InputStream getContents() throws IOException;
 
+	/**
+	 * Returns the absolute path this URI is refering to.
+	 */
 	public abstract String getAbsolutePath();
 
-	public U withTrailingPathDelimiter() {
+	/**
+	 * Returns a represenation of this URI that has a trailing path delimiter.
+	 */
+	public final U withTrailingPathDelimiter() {
 		if (toURI().hasTrailingPathSeparator()) {
-			return self();
+			@SuppressWarnings("unchecked")
+			U result = (U) this;
+			return result;
 		}
 		return appendSegment("");
 	}
 
-	public abstract U resolve(String relativePath);
+	/**
+	 * Resolve the given relative path against the current URI.
+	 */
+	public final U resolve(String relativePath) {
+		URI base = withTrailingPathDelimiter().toURI();
+		URI result = URI.createURI(relativePath).resolve(base);
+		return createFrom(result);
+	}
 
-	/*
-	 * // make sure workspace location has trailing path separator (for correct resolution) if
-	 * (!workspaceLocation.hasTrailingPathSeparator()) { workspaceLocation = workspaceLocation.appendSegment(""); }
+	/**
+	 * Wrap the given URI in the same typesafe representation as this URI.
+	 */
+	protected abstract U createFrom(URI uri);
+
+	/**
+	 * Deresolve against the given base URI. E.g. return the segments that would lead to the current location when
+	 * resolved against the given base.
 	 */
 	public List<String> deresolve(U base) {
 		Preconditions.checkArgument(base.getClass().equals(getClass()));
-		URI baseURI = base.toURI();
-		if (!baseURI.hasTrailingPathSeparator()) {
-			baseURI = baseURI.appendSegment("");
-		}
-		URI result = toURI().deresolve(baseURI.appendSegment(""), false, true, true);
+		URI baseURI = base.withTrailingPathDelimiter().toURI();
+		URI result = toURI().deresolve(baseURI, false, true, true);
 		return result.segmentsList();
 	}
 
-	public abstract U appendPath(String path);
+	/**
+	 * Append the given path to this location. The result is normalized.
+	 */
+	public final U appendPath(String path) {
+		return appendRelativeURI(URI.createURI(path));
+	}
 
-	public abstract U appendSegment(String segment);
+	private U appendRelativeURI(URI relativeURI) {
+		if (!URI.validSegments(relativeURI.segments())) {
+			return null;
+		}
+		URI base = withTrailingPathDelimiter().toURI();
+		URI result = relativeURI.resolve(base);
+		return createFrom(result);
+	}
 
-	public abstract U appendSegments(String[] segments);
+	/**
+	 * Append the given segment to this location. The result is normalized.
+	 */
+	public final U appendSegment(String segment) {
+		return appendSegments(new String[] { segment });
+	}
 
-	public boolean isEmpty() {
+	/**
+	 * Append the given segments to this location. The result is normalized.
+	 */
+	public final U appendSegments(String[] segments) {
+		return appendRelativeURI(URI.createHierarchicalURI(segments, null, null));
+	}
+
+	/**
+	 * Return true, if the location is representing the empty URI.
+	 */
+	public final boolean isEmpty() {
 		return toURI().isEmpty();
 	}
 
-	public abstract U getParent();
-
-	public abstract FileURI resolveSymLinks();
-
-	public abstract Iterator<? extends U> getAllChildren();
-
-	public boolean isParent(U nestedLocation) {
-		return nestedLocation.toFileSystemPath().startsWith(toFileSystemPath());
-	}
-
-	public abstract void delete(Consumer<? super IOException> errorHandler);
-
-	public abstract Path toFileSystemPath();
-
-	protected abstract U self();
-
-	public U getParentOf(Predicate<? super String> predicate) {
-		U result = self();
-		while (result != null && !predicate.test(result.getName())) {
-			result = result.getParent();
-		}
-		if (result != null) {
-			return result.getParent();
+	/**
+	 * Return the parent of this location.
+	 */
+	public U getParent() {
+		URI uri = toURI();
+		if (uri.segmentCount() > 0) {
+			return createFrom(uri.trimSegments(1));
 		}
 		return null;
-
 	}
+
+	/**
+	 * Follow symbolic links and return the result.
+	 */
+	public abstract FileURI resolveSymLinks();
+
+	/**
+	 * Return all the files transitively contained at the current location without the files in a nested node_modules
+	 * folder.
+	 */
+	public abstract Iterator<U> getAllChildren();
+
+	/**
+	 * Delete the current location and all contained elements.
+	 */
+	public abstract void delete(Consumer<? super IOException> errorHandler);
+
+	/**
+	 * Return the file system path representation of this location.
+	 */
+	public abstract Path toFileSystemPath();
 
 }

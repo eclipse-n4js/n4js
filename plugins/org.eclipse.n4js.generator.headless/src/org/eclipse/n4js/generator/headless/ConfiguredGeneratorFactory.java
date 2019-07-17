@@ -65,7 +65,7 @@ public class ConfiguredGeneratorFactory {
 	 */
 	private void configureFSA(IN4JSProject project) {
 		File currentDirectory = new File(".");
-		File projectLocation = new File(project._getLocation().toFileString());
+		File projectLocation = project.getSafeLocation().toFileSystemPath().toFile();
 
 		// If project is not in a sub directory of the current directory an absolute path is computed.
 		final java.net.URI projectURI = currentDirectory.toURI().relativize(projectLocation.toURI());

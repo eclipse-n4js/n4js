@@ -352,7 +352,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		// /home/user/workspace/Project/
 		val projectPath = project.safeLocation.toFileSystemPath
 		// platform:/resource/Project/
-		val projectLocURI = project._getLocation.appendSegment("")
+		val projectLocURI = project.getSafeLocation().withTrailingPathDelimiter.toURI
 
 		// --- output locations ---
 		// src-gen
@@ -367,7 +367,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		var completetSource = completetSourceURI.toFileString
 
 		// Handling case when source container is the project root itself. (Sources { source { '.' } })
-		if (null === completetSource && project._getLocation === input.URI.trimSegments(1)) {
+		if (null === completetSource && project.getSafeLocation().toURI === input.URI.trimSegments(1)) {
 			completetSource = projectPath.toFile.absolutePath;
 		}
 

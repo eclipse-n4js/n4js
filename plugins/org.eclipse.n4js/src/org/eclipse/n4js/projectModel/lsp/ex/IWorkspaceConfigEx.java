@@ -15,6 +15,9 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
+/**
+ * Enhancement to {@link IWorkspaceConfig}.
+ */
 @SuppressWarnings("restriction")
 public interface IWorkspaceConfigEx extends IWorkspaceConfig {
 

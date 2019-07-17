@@ -86,7 +86,7 @@ public class ProjectResolveHelper {
 					msg + " Does project '" + project.getProjectName() + "' exists and opened in the workspace?");
 		}
 
-		final IN4JSSourceContainer sourceContainer = project.findSourceFolderContaining(uri);
+		final IN4JSSourceContainer sourceContainer = project.findSourceContainerWith(uri);
 		if (sourceContainer == null) {
 			throw new RuntimeException(msg);
 		}

@@ -30,11 +30,6 @@ public class MockURIWrapper extends SafeURI<MockURIWrapper> {
 	}
 
 	@Override
-	protected MockURIWrapper self() {
-		return this;
-	}
-
-	@Override
 	protected URI validate(URI given) throws IllegalArgumentException, NullPointerException {
 		return given;
 	}
@@ -75,22 +70,7 @@ public class MockURIWrapper extends SafeURI<MockURIWrapper> {
 	}
 
 	@Override
-	public MockURIWrapper resolve(String relativePath) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public MockURIWrapper appendSegment(String packageJson) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public MockURIWrapper appendSegments(String[] segments) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public MockURIWrapper appendPath(String path) {
+	protected MockURIWrapper createFrom(URI uri) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -105,7 +85,7 @@ public class MockURIWrapper extends SafeURI<MockURIWrapper> {
 	}
 
 	@Override
-	public Iterator<? extends MockURIWrapper> getAllChildren() {
+	public Iterator<MockURIWrapper> getAllChildren() {
 		throw new UnsupportedOperationException();
 	}
 

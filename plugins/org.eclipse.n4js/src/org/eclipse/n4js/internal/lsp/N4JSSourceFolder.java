@@ -21,13 +21,16 @@ import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
 import com.google.common.collect.FluentIterable;
 
 /**
- *
+ * Wrapper around {@link IN4JSSourceContainer}.
  */
 public class N4JSSourceFolder implements IN4JSSourceFolder {
 
 	private final IN4JSSourceContainer delegate;
 	private final IN4JSProjectConfig project;
 
+	/**
+	 * Constructor
+	 */
 	public N4JSSourceFolder(IN4JSProjectConfig project, IN4JSSourceContainer delegate) {
 		this.project = project;
 		this.delegate = delegate;

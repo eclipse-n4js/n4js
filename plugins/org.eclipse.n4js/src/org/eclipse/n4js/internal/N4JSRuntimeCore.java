@@ -26,7 +26,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -227,8 +226,4 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 		}
 	}
 
-	@Override
-	public ProjectDescription internalGetProjectDescription(SafeURI<?> loc) {
-		return model.getProjectDescription(loc.toURI());
-	}
 }

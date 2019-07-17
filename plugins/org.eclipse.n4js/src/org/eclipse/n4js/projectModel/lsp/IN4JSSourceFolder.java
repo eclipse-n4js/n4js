@@ -12,6 +12,10 @@ package org.eclipse.n4js.projectModel.lsp;
 
 import org.eclipse.n4js.projectModel.lsp.ex.ISourceFolderEx;
 
+/**
+ * N4JS specific extension to {@link ISourceFolderEx} to ensure that the containing project is a
+ * {@link IN4JSProjectConfig}.
+ */
 public interface IN4JSSourceFolder extends ISourceFolderEx {
 
 	@Override

@@ -19,6 +19,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 /**
  * Internal representation of the known projects. At runtime, it's implemented based on registered project locations, in
@@ -29,6 +30,9 @@ import org.eclipse.n4js.projectModel.locations.SafeURI;
  */
 public abstract class InternalN4JSWorkspace<Loc extends SafeURI<Loc>> {
 
+	/**
+	 * Wrap the given location.
+	 */
 	public abstract Loc fromURI(URI uri);
 
 	/**
@@ -70,5 +74,12 @@ public abstract class InternalN4JSWorkspace<Loc extends SafeURI<Loc>> {
 	 */
 	public abstract Collection<Loc> getAllProjectLocations();
 
+	/**
+	 * Returns the location of the project with the given name.
+	 *
+	 * The name is supposed to be a valid eclipse project name.
+	 *
+	 * @see ProjectDescriptionUtils#convertN4JSProjectNameToEclipseProjectName(String)
+	 */
 	public abstract Loc getProjectLocation(String name);
 }

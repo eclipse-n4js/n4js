@@ -15,9 +15,9 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
@@ -44,9 +44,10 @@ public interface IN4JSCore {
 	 */
 	IN4JSProject create(URI location);
 
+	/**
+	 * Create a proper typesafe URI for the given location.
+	 */
 	SafeURI<?> toProjectLocation(URI uri);
-
-	ProjectDescription internalGetProjectDescription(SafeURI<?> loc);
 
 	/**
 	 * Returns the N4JS project that contains the element at the given location. The returned instance might be created
@@ -58,6 +59,17 @@ public interface IN4JSCore {
 	 */
 	Optional<? extends IN4JSProject> findProject(URI nestedLocation);
 
+	/**
+	 * Returns the N4JS project with the given name.
+	 *
+	 * The name is supposed to be a valid Eclipse project name.
+	 *
+	 * @see ProjectDescriptionUtils#convertN4JSProjectNameToEclipseProjectName(String)
+	 *
+	 * @param projectName
+	 *            the project name
+	 * @return the n4js project
+	 */
 	Optional<? extends IN4JSProject> findProject(String projectName);
 
 	/**

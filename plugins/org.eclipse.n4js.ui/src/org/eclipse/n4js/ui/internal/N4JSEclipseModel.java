@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -102,6 +103,30 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 			project = workspaceRoot.getProject(eclipseProjectName);
 		}
 		return doGetN4JSProject(project, toProjectLocation(location));
+	}
+
+	/**
+	 * This delegates to {@link InternalN4JSWorkspace#getProjectDescription(URI)} to allow caching.
+	 */
+	@Override
+	public ProjectDescription getProjectDescription(SafeURI<?> location) {
+		if (location instanceof PlatformResourceURI) {
+			return getInternalWorkspace().getProjectDescription((PlatformResourceURI) location);
+		}
+		return super.getProjectDescription(location);
+	}
+
+	@Override
+	public ProjectDescription getProjectDescription(IN4JSProject project) {
+		SafeURI<?> loc = project.getSafeLocation();
+		if (loc instanceof PlatformResourceURI) {
+			if (project.isExternal()) {
+				throw new IllegalArgumentException("External projects are supposed to have a file URI but was "
+						+ loc + " for project " + project.getProjectName());
+			}
+			return getInternalWorkspace().getProjectDescription((PlatformResourceURI) loc);
+		}
+		return super.getProjectDescription(project);
 	}
 
 	@Override
@@ -197,7 +222,7 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 
 		final IN4JSEclipseProject project = findProjectWith(location);
 		if (null != project && project.exists()) {
-			n4jsContainer = Optional.fromNullable(project.findSourceFolderContaining(location));
+			n4jsContainer = Optional.fromNullable(project.findSourceContainerWith(location));
 			// final Path path = new Path(location.toPlatformString(true));
 			// final IResource resource;
 			// if (1 == path.segmentCount()) {
@@ -227,7 +252,7 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 	public ImmutableList<? extends IN4JSEclipseSourceContainer> getN4JSSourceContainers(N4JSProject project) {
 		ImmutableList.Builder<IN4JSEclipseSourceContainer> result = ImmutableList.builder();
 		SafeURI<?> location = project.getSafeLocation();
-		ProjectDescription description = getProjectDescription(location.toURI());
+		ProjectDescription description = getProjectDescription(location);
 		if (description != null) {
 			List<SourceContainerDescription> sourceFragments = newArrayList(from(description.getSourceContainers()));
 			sourceFragments.sort((f1, f2) -> ProjectDescriptionUtils.compareBySourceContainerType(f1, f2));

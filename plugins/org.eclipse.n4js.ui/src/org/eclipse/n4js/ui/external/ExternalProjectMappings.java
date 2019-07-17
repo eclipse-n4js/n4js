@@ -272,8 +272,7 @@ public class ExternalProjectMappings {
 			ProjectDependency pDep) {
 
 		String projectName = pDep.getProjectName();
-		String workspaceProjectName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(projectName);
-		SafeURI<?> depLoc = userWorkspace.getProjectLocation(workspaceProjectName);
+		SafeURI<?> depLoc = userWorkspace.getProjectLocation(projectName);
 		// if (depLoc != null) {
 		// // respect closed workspace projects by omitting them
 		// String locStr = depLoc.toPlatformString(true);

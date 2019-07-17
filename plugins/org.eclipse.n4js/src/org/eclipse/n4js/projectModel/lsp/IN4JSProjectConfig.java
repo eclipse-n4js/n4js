@@ -16,6 +16,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.lsp.ex.IProjectConfigEx;
 
+/**
+ * N4JS specific extension to the IProjectConfig.
+ */
 public interface IN4JSProjectConfig extends IProjectConfigEx {
 	@Override
 	IN4JSSourceFolder findSourceFolderContaining(URI member);
@@ -26,5 +29,8 @@ public interface IN4JSProjectConfig extends IProjectConfigEx {
 	@Override
 	IN4JSWorkspaceConfig getWorkspaceConfig();
 
+	/**
+	 * Return the wrapped n4js project.
+	 */
 	IN4JSProject toProject();
 }

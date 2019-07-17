@@ -38,6 +38,7 @@ import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -96,7 +97,10 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	 * @return
 	 */
 	protected boolean isExternal(URI location) {
-		return externalLibraryWorkspace != null && externalLibraryWorkspace.getProject(location) != null;
+		if (externalLibraryWorkspace != null && location.isFile()) {
+			return externalLibraryWorkspace.getProject(new FileURI(location)) != null;
+		}
+		return false;
 	}
 
 	protected N4JSProject getN4JSProject(SafeURI<?> location, boolean external) {
@@ -192,26 +196,30 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	/**
 	 * This delegates to {@link InternalN4JSWorkspace#getProjectDescription(URI)} to allow caching.
 	 */
-	public ProjectDescription getProjectDescription(URI location) {
-		if (location.isPlatformResource()) {
-			return getProjectDescription(workspace, location);
+	public ProjectDescription getProjectDescription(SafeURI<?> location) {
+		if (location instanceof FileURI) {
+			ProjectDescription result = externalLibraryWorkspace.getProjectDescription((FileURI) location);
+			if (result != null) {
+				return result;
+			}
 		}
-		if (location.isFile()) {
-			return getProjectDescription(externalLibraryWorkspace, location);
-		}
-		return null;
-	}
-
-	private <PL extends SafeURI<PL>> ProjectDescription getProjectDescription(InternalN4JSWorkspace<PL> ws,
-			URI location) {
-		return ws.getProjectDescription(ws.fromURI(location));
+		@SuppressWarnings("unchecked")
+		Loc casted = (Loc) location;
+		return workspace.getProjectDescription(casted);
 	}
 
 	public ProjectDescription getProjectDescription(IN4JSProject project) {
-		if (project.isExternal()) {
-			return getProjectDescription(externalLibraryWorkspace, project._getLocation());
+		SafeURI<?> location = project.getSafeLocation();
+		if (!(location instanceof FileURI)) {
+			throw new IllegalArgumentException(
+					"Unexpected location of external project " + project.getProjectName() + " at " + location);
 		}
-		return getProjectDescription(workspace, project._getLocation());
+		if (project.isExternal()) {
+			return externalLibraryWorkspace.getProjectDescription((FileURI) location);
+		}
+		@SuppressWarnings("unchecked")
+		Loc casted = (Loc) location;
+		return workspace.getProjectDescription(casted);
 	}
 
 	public ImmutableList<? extends IN4JSSourceContainer> getN4JSSourceContainers(N4JSProject project) {
@@ -475,7 +483,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	public Iterable<IN4JSProject> getSortedDependencies(IN4JSProject project) {
 		SortedDependenciesProvider sdProvider = new SortedDependenciesProvider(project);
 		Iterable<IN4JSProject> existing = cache.get(sdProvider, MultiCleartriggerCache.CACHE_KEY_SORTED_DEPENDENCIES,
-				project._getLocation());
+				project.getSafeLocation().toURI());
 		return existing;
 	}
 
@@ -517,7 +525,7 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 			Set<URI> triggerURIs = new HashSet<>();
 			for (IN4JSProject dep : sortedDeps) {
 				if (dep.getDefinesPackageName() != null) {
-					URI uri = dep._getLocation();
+					URI uri = dep.getSafeLocation().toURI();
 					triggerURIs.add(uri);
 				}
 			}

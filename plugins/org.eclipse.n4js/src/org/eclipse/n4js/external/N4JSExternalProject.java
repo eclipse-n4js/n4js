@@ -70,10 +70,16 @@ public class N4JSExternalProject extends ExternalProject {
 		return externalPackage;
 	}
 
+	/**
+	 * Returns the location of this external project.
+	 */
 	public FileURI getSafeLocation() {
 		return (FileURI) externalPackage.getSafeLocation();
 	}
 
+	/**
+	 * Returns the location of this project's description.
+	 */
 	public FileURI getProjectDescriptionLocation() {
 		return (FileURI) externalPackage.getProjectDescriptionLocation();
 	}

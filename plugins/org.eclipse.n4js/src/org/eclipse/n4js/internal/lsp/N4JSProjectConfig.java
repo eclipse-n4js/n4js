@@ -24,11 +24,17 @@ import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
 import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
 import org.eclipse.xtext.generator.URIBasedFileSystemAccess;
 
+/**
+ * Wrapper around {@link IN4JSProject}.
+ */
 public class N4JSProjectConfig implements IN4JSProjectConfig {
 
 	private final IN4JSWorkspaceConfig workspace;
 	private final IN4JSProject delegate;
 
+	/**
+	 * Constructor
+	 */
 	public N4JSProjectConfig(IN4JSWorkspaceConfig workspace, IN4JSProject delegate) {
 		this.workspace = workspace;
 		this.delegate = delegate;
@@ -101,7 +107,7 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 
 	@Override
 	public IN4JSSourceFolder findSourceFolderContaining(URI member) {
-		IN4JSSourceContainer sourceContainer = delegate.findSourceFolderContaining(member);
+		IN4JSSourceContainer sourceContainer = delegate.findSourceContainerWith(member);
 		if (sourceContainer == null) {
 			return null;
 		}

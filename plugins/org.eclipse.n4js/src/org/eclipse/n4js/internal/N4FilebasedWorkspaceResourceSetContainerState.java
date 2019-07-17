@@ -50,7 +50,7 @@ public class N4FilebasedWorkspaceResourceSetContainerState extends ResourceSetBa
 
 		Iterable<? extends IN4JSProject> dps = project.get().getSortedDependencies();
 		// map uri to handle-form and add.
-		dps.forEach(d -> visibleContainers.add(FileBasedWorkspace.handleFrom(d._getLocation())));
+		dps.forEach(d -> visibleContainers.add(FileBasedWorkspace.handleFrom(d.getSafeLocation().toURI())));
 
 		return visibleContainers;
 	}

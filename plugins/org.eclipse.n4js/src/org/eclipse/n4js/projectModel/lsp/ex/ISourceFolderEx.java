@@ -31,6 +31,9 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 @SuppressWarnings("restriction")
 public interface ISourceFolderEx extends ISourceFolder {
 
+	/**
+	 * Returns the project this source folder is contained in.
+	 */
 	IProjectConfigEx getProject();
 
 	/**

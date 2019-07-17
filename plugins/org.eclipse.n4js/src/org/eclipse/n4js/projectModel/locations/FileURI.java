@@ -52,11 +52,6 @@ public class FileURI extends SafeURI<FileURI> {
 	}
 
 	@Override
-	protected FileURI self() {
-		return this;
-	}
-
-	@Override
 	protected URI validate(URI given) throws IllegalArgumentException, NullPointerException {
 		super.validate(given);
 		Preconditions.checkNotNull(given.authority());
@@ -68,15 +63,6 @@ public class FileURI extends SafeURI<FileURI> {
 		return new FileURI(toURI().trimFragment());
 	}
 
-	@Override
-	public FileURI getParent() {
-		URI uri = toURI();
-		if (uri.segmentCount() > 0) {
-			return new FileURI(uri.trimSegments(1));
-		}
-		return null;
-	}
-
 	public String toFileString() {
 		return toURI().toFileString();
 	}
@@ -84,49 +70,6 @@ public class FileURI extends SafeURI<FileURI> {
 	@Override
 	public boolean exists() {
 		return new File(toURI().toFileString()).exists();
-	}
-
-	@Override
-	public FileURI appendPath(String path) {
-		URI relativeURI = URI.createURI(path);
-		if (!URI.validSegments(relativeURI.segments())) {
-			return null;
-		}
-		URI base = toURI();
-		if (!base.hasTrailingPathSeparator()) {
-			base = base.appendSegment("");
-		}
-		URI result = relativeURI.resolve(base);
-		return new FileURI(result);
-		// String relativePathWithForwardSlashes = path.replace(File.separatorChar, '/');
-		// String[] segments = relativePathWithForwardSlashes.split("/");
-		// FileBasedLocation result = this;
-		// for (String segment : segments) {
-		// switch (segment) {
-		// case "..":
-		// result = result.getParent();
-		// if (result == null) {
-		// return null;
-		// }
-		// break;
-		// case ".":
-		// break;
-		// default:
-		// result = result.appendSegment(segment);
-		// break;
-		// }
-		// }
-		// return result;
-	}
-
-	@Override
-	public FileURI appendSegment(String segment) {
-		return new FileURI(toURI().appendSegment(segment));
-	}
-
-	@Override
-	public FileURI appendSegments(String[] segments) {
-		return new FileURI(toURI().appendSegments(segments));
 	}
 
 	@Override
@@ -171,13 +114,8 @@ public class FileURI extends SafeURI<FileURI> {
 	}
 
 	@Override
-	public FileURI resolve(String relativePath) {
-		URI base = toURI();
-		if (!base.hasTrailingPathSeparator()) {
-			base = base.appendSegment("");
-		}
-		URI result = URI.createURI(relativePath).resolve(base);
-		return new FileURI(result);
+	protected FileURI createFrom(URI uri) {
+		return new FileURI(uri);
 	}
 
 	@Override
@@ -190,7 +128,7 @@ public class FileURI extends SafeURI<FileURI> {
 	}
 
 	@Override
-	public Iterator<? extends FileURI> getAllChildren() {
+	public Iterator<FileURI> getAllChildren() {
 		File container = getCachedFile();
 		if (container.isDirectory()) {
 			AbstractTreeIterator<File> treeIterator = new AbstractTreeIterator<>(container, false) {

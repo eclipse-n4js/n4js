@@ -122,7 +122,8 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformRes
 
 	@Override
 	public PlatformResourceURI getProjectLocation(String name) {
-		IProject project = workspace.getProject(name);
+		String eclipseName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(name);
+		IProject project = workspace.getProject(eclipseName);
 		if (project.exists()) {
 			return new PlatformResourceURI(project);
 		}

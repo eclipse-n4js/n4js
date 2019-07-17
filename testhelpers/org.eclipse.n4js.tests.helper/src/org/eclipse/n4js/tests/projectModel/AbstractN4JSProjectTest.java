@@ -40,7 +40,7 @@ public abstract class AbstractN4JSProjectTest<Loc extends SafeURI<Loc>> extends 
 	public void testGetLocation_02() {
 		URI doesNotExist = myProjectURI.getParent().appendSegment("doesNotExist").toURI();
 		IN4JSProject project = getN4JSCore().create(doesNotExist);
-		assertEquals(doesNotExist, project._getLocation());
+		assertEquals(doesNotExist, project.getSafeLocation().toURI());
 	}
 
 	@SuppressWarnings("javadoc")

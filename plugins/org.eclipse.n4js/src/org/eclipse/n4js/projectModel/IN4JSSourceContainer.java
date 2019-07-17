@@ -49,12 +49,13 @@ public interface IN4JSSourceContainer extends Iterable<URI> {
 	 */
 	@Override
 	default Iterator<URI> iterator() {
-		return Iterators.transform(safeIterator(), pl -> pl.toURI());
+		return Iterators.transform(getSafeLocation().getAllChildren(), pl -> pl.toURI());
 	}
 
+	/**
+	 * Returns the typesafe location of this source container.
+	 */
 	SafeURI<?> getSafeLocation();
-
-	Iterator<? extends SafeURI<?>> safeIterator();
 
 	/**
 	 * If the source container contains an file for the given fully qualified name and file extension, this method will
@@ -72,13 +73,6 @@ public interface IN4JSSourceContainer extends Iterable<URI> {
 	 * The relative location under the project root.
 	 */
 	String getRelativeLocation();
-
-	/**
-	 * The absolute location of this source container.
-	 */
-	default URI _getLocation() {
-		return getSafeLocation().toURI();
-	}
 
 	/**
 	 * Returns <code>true</code> if the source container exists.

@@ -21,7 +21,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.internal.AbstractN4JSCore;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
@@ -160,11 +159,6 @@ public class N4JSEclipseCore extends AbstractN4JSCore implements IN4JSEclipseCor
 	@Override
 	public IResourceDescriptions getXtextIndex(ResourceSet resourceSet) {
 		return resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
-	}
-
-	@Override
-	public ProjectDescription internalGetProjectDescription(SafeURI<?> loc) {
-		return model.getProjectDescription(loc.toURI());
 	}
 
 }

@@ -19,10 +19,16 @@ import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
 
 import com.google.common.collect.FluentIterable;
 
+/**
+ * Wrapper around {@link IN4JSCore}.
+ */
 public class N4JSWorkspaceConfig implements IN4JSWorkspaceConfig {
 
 	private final IN4JSCore delegate;
 
+	/**
+	 * Constructor
+	 */
 	public N4JSWorkspaceConfig(IN4JSCore delegate) {
 		this.delegate = delegate;
 	}

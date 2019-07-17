@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.internal;
 
-import java.util.Iterator;
-
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -36,11 +34,6 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	@Override
 	public IN4JSProject getProject() {
 		return project;
-	}
-
-	@Override
-	public Iterator<? extends SafeURI<?>> safeIterator() {
-		return getSafeLocation().getAllChildren();
 	}
 
 	@Override

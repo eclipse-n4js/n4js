@@ -35,30 +35,38 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 /**
- *
+ * Wrapper around platform resource URIs.
  */
 public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 
 	private IResource cachedResource;
 
+	/**
+	 * Create a new typesafe wrapper for the given platform resource location.
+	 *
+	 * @param location
+	 *            the platform resource uri.
+	 */
 	public PlatformResourceURI(URI location) {
 		super(location);
 	}
 
+	/**
+	 * Creates a new typesafe location representation of the given resource.
+	 *
+	 * @param resource
+	 *            the resource.
+	 */
 	public PlatformResourceURI(IResource resource) {
 		super(URI.createPlatformResourceURI(resource.getFullPath().toString(), true));
 		this.cachedResource = resource;
 	}
 
 	@Override
-	protected PlatformResourceURI self() {
-		return this;
-	}
-
-	@Override
 	protected URI validate(URI given) throws IllegalArgumentException, NullPointerException {
 		super.validate(given);
 		Preconditions.checkArgument(given.isPlatformResource(), "%s", given);
+		Preconditions.checkArgument(given.segmentCount() >= 2, "%s", given);
 		return given;
 	}
 
@@ -123,37 +131,8 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 	}
 
 	@Override
-	public PlatformResourceURI resolve(String relativePath) {
-		URI base = toURI();
-		if (!base.hasTrailingPathSeparator()) {
-			base = base.appendSegment("");
-		}
-		URI result = URI.createURI(relativePath).resolve(base);
-		return new PlatformResourceURI(result);
-	}
-
-	@Override
-	public PlatformResourceURI appendPath(String path) {
-		URI relativeURI = URI.createURI(path);
-		if (!URI.validSegments(relativeURI.segments())) {
-			return null;
-		}
-		URI base = toURI();
-		if (!base.hasTrailingPathSeparator()) {
-			base = base.appendSegment("");
-		}
-		URI result = relativeURI.resolve(base);
-		return new PlatformResourceURI(result);
-	}
-
-	@Override
-	public PlatformResourceURI appendSegment(String segment) {
-		return new PlatformResourceURI(toURI().appendSegment(segment));
-	}
-
-	@Override
-	public PlatformResourceURI appendSegments(String[] segments) {
-		return new PlatformResourceURI(toURI().appendSegments(segments));
+	protected PlatformResourceURI createFrom(URI uri) {
+		return new PlatformResourceURI(uri);
 	}
 
 	@Override
@@ -176,7 +155,7 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 	}
 
 	@Override
-	public Iterator<? extends PlatformResourceURI> getAllChildren() {
+	public Iterator<PlatformResourceURI> getAllChildren() {
 		IResource container = getCachedResource();
 		if (container instanceof IContainer) {
 			final List<PlatformResourceURI> result = Lists.newArrayList();

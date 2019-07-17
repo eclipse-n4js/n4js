@@ -79,7 +79,7 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
-	public IN4JSSourceContainer findSourceFolderContaining(URI member) {
+	public IN4JSSourceContainer findSourceContainerWith(URI member) {
 		return model.findN4JSSourceContainerInProject(this, member).orNull();
 	}
 
@@ -181,11 +181,6 @@ public class N4JSProject implements IN4JSProject {
 			return null;
 		}
 		return pd.getVendorId();
-	}
-
-	@Override
-	public URI _getLocation() {
-		return location.toURI();
 	}
 
 	@Override

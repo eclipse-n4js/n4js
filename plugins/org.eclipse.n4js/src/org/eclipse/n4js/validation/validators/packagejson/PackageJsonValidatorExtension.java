@@ -1045,7 +1045,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return true;
 		}
 
-		final URI projectLocation = n4jsProject.get()._getLocation();
+		final URI projectLocation = n4jsProject.get().getSafeLocation().toURI();
 		// resolve against project uri with trailing slash
 		final URI projectRelativeResourceURI = resourceURI.deresolve(projectLocation.appendSegment(""));
 

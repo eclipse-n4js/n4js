@@ -64,8 +64,6 @@ public interface IN4JSProject {
 	 * The project's location. Also available if the project does not exist. This will return a platform URI when
 	 * running within Eclipse, and a file URI in headless mode.
 	 */
-	URI _getLocation();
-
 	SafeURI<?> getSafeLocation();
 
 	/**
@@ -73,7 +71,10 @@ public interface IN4JSProject {
 	 */
 	ImmutableList<? extends IN4JSSourceContainer> getSourceContainers();
 
-	IN4JSSourceContainer findSourceFolderContaining(URI member);
+	/**
+	 * Find the source container with the given member.
+	 */
+	IN4JSSourceContainer findSourceContainerWith(URI member);
 
 	/**
 	 * All direct dependencies for this structure.

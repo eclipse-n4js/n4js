@@ -64,7 +64,7 @@ public class WildcardPathFilterHelper {
 		}
 
 		IN4JSProject project = sourceContainer.getProject();
-		Path prjLocationPath = Paths.get(project._getLocation().toString());
+		Path prjLocationPath = Paths.get(project.getSafeLocation().toURI().toString());
 		Path locationPath = Paths.get(location.toString());
 		Preconditions.checkState(locationPath.startsWith(prjLocationPath));
 		Path prjRelativeLocationPath = prjLocationPath.relativize(locationPath);

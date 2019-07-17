@@ -217,12 +217,10 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	 * <p>
 	 * Will also work for <i>unnecessary</i> projects.
 	 *
-	 * @param projectLocation
+	 * @param location
 	 *            the location of the project.
 	 * @return the project, or {@code null} if does not exist.
 	 */
-	public abstract N4JSExternalProject getProject(URI projectLocation);
-
 	public abstract N4JSExternalProject getProject(FileURI location);
 
 	@Override

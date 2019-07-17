@@ -29,7 +29,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.N4JSExternalProject;
@@ -138,11 +137,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 			return result;
 		}
 		return null;
-	}
-
-	public FileURI findProjectWith(URI nestedLocation) {
-		FileURI location = new FileURI(nestedLocation);
-		return findProjectWith(location);
 	}
 
 	@Override
@@ -394,14 +388,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 	public N4JSExternalProject getProject(String projectName) {
 		return projectProvider
 				.getProject(ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(projectName));
-	}
-
-	@Override
-	public N4JSExternalProject getProject(URI projectLocation) {
-		if (projectLocation.isFile()) {
-			return projectProvider.getProject(new FileURI(projectLocation));
-		}
-		return null;
 	}
 
 	@Override

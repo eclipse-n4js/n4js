@@ -342,7 +342,7 @@ public abstract class ExternalIndexSynchronizer {
 	 * {@code workspaceLocation}
 	 */
 	private <U extends SafeURI<U>> String getPackageName(U nestedLocation, U workspaceLocation) {
-		if (!workspaceLocation.isParent(nestedLocation)) {
+		if (!isParentOf(workspaceLocation, nestedLocation)) {
 			throw new IllegalArgumentException("Cannot determine package name of " + nestedLocation
 					+ ": The nested location is not contained in the given workspace location " + workspaceLocation);
 		}
@@ -364,7 +364,10 @@ public abstract class ExternalIndexSynchronizer {
 		} else {
 			return path.get(0); // package name
 		}
+	}
 
+	private <U extends SafeURI<U>> boolean isParentOf(U parentLocation, U nestedLocation) {
+		return nestedLocation.toFileSystemPath().startsWith(parentLocation.toFileSystemPath());
 	}
 
 	/**
