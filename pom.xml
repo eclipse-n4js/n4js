@@ -27,6 +27,12 @@ Contributors:
 		<relativePath>releng/org.eclipse.n4js.parent</relativePath>
 	</parent>
 
+	<properties>
+		<!-- control parameters for starting/stopping the test verdaccio: -->
+		<internal_startVerdaccioPhase>none</internal_startVerdaccioPhase>
+		<internal_stopVerdaccioPhase>none</internal_stopVerdaccioPhase>
+	</properties>
+
 	<modules>
 		<module>releng</module>
 		<module>plugins</module>
@@ -38,9 +44,10 @@ Contributors:
 	</modules>
 
 	<profiles>
-		<!-- This profile adds the tests-folder to the build. 
-			 It's always active - unless the build is started with "-DnoTests". 
-			 -->
+		<!--
+			This profile adds the tests-folder to the build. 
+			It's always active - unless the build is started with "-DnoTests". 
+		-->
 		<profile>
 			<id>compileTests</id>
 			<activation>
@@ -49,6 +56,39 @@ Contributors:
 			<modules>
 				<module>tests</module>
 			</modules>
+		</profile>
+
+		<!--
+			If build started with '-Pexecute-hlc-integration-tests', activate the
+			starting and stopping of a verdaccio instance for testing purposes.
+		-->
+		<profile>
+			<id>execute-hlc-integration-tests</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<internal_startVerdaccioPhase>pre-integration-test</internal_startVerdaccioPhase>
+				<internal_stopVerdaccioPhase>post-integration-test</internal_stopVerdaccioPhase>
+			</properties>
+		</profile>
+
+		<!--
+			If build started with '-DstartAndKeepVerdaccio', then ...
+			1) enforce starting of a test verdaccio (even if '-Pexecute-hlc-integration-tests' is not given) and
+			2) suppress stopping of the test verdaccio (even if '-Pexecute-hlc-integration-tests' is given)
+		-->
+		<profile>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>startAndKeepVerdaccio</name>
+				</property>
+			</activation>
+			<properties>
+				<internal_startVerdaccioPhase>pre-integration-test</internal_startVerdaccioPhase>
+				<internal_stopVerdaccioPhase>none</internal_stopVerdaccioPhase>
+			</properties>
 		</profile>
 	</profiles>
 
@@ -62,6 +102,5 @@ Contributors:
 			</plugin>
 		</plugins>
 	</build>
-	
 
 </project>

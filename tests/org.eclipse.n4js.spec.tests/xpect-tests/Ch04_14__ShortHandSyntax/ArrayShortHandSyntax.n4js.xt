@@ -71,14 +71,10 @@ let a31: string|number&int[];
 
 
 
-// FIXME GH-1299 change back to intended expectation
-// X---PECT type of 'a41' --> Array<Array<Iterable<?>>>
-// XPECT warnings --> "Deprecated: old short-hand syntax for array type will soon have a different meaning. Change '[string]' to 'string[]', etc." at "[]"
+// XPECT type of 'a41' --> Array<Array<Iterable<?>>>
 let a41: [][][];
 
-// FIXME GH-1299 change back to intended expectation
-// X---PECT type of 'a42' --> Array<Array<Iterable<string>>>
-// XPECT warnings --> "Deprecated: old short-hand syntax for array type will soon have a different meaning. Change '[string]' to 'string[]', etc." at "[string]"
+// XPECT type of 'a42' --> Array<Array<Iterable<string>>>
 let a42: [string][][];
 
 // XPECT type of 'a43' --> Array<Array<Iterable2<string,number>>>

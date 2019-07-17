@@ -29,6 +29,3 @@ let t05: [string, number, string, number, string, number, string, number, string
 
 // XPECT type of 't06' --> Iterable2<Iterable<string>,Array<string>>
 let t06: [[string], string[]];
-
-
-// FIXME GH-1299 enable this test file

@@ -247,7 +247,11 @@ try {
 		doc.disposeInput // no exception
 Assert.fail("Xtext issue #967 seems to be fixed! Remove temporary workaround!");
 } catch(IllegalStateException e) {
+// original error behavior (still observable when run locally as headless(!) plugin test AND on maven/Jenkins):
 Assert.assertEquals("unexpected exception message", "Missing adapter for BuiltInTypeScope", e.message)
+} catch(NoClassDefFoundError e) {
+// error behavior as of July 2019 when executed locally as plain JUnit test (i.e. as non-plugin test):
+Assert.assertEquals("unexpected exception message", "org/eclipse/e4/ui/workbench/IWorkbench", e.message)
 }
 	}
 
