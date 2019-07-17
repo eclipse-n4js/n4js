@@ -30,10 +30,10 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -67,8 +67,16 @@ public class HeadlessHelper {
 	 *             in error Case.
 	 */
 	public void registerProjects(BuildSet buildSet, FileBasedWorkspace workspace) throws N4JSCompileException {
-		Iterable<FileURI> projectUris = Iterables.transform(buildSet.getAllProjects(),
-				p -> (FileURI) p.getSafeLocation());
+		List<FileURI> projectUris = new ArrayList<>();
+		for (IN4JSProject project : buildSet.getAllProjects()) {
+			SafeURI<?> location = project.getSafeLocation();
+			if (location instanceof FileURI) {
+				projectUris.add((FileURI) location);
+			} else {
+				throw new IllegalArgumentException(
+						"Unexpected project " + project.getProjectName() + " at " + location);
+			}
+		}
 		// Register all projects with the file based workspace.
 		this.registerProjectsToFileBasedWorkspace(projectUris, workspace);
 	}
