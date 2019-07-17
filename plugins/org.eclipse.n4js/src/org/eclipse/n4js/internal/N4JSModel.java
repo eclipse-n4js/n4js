@@ -121,12 +121,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 			return getN4JSProject(loc, false);
 		}
 		return null;
-		// for (IN4JSProject prjConf : getProjects()) {
-		// if (prjConf.getName().equals(name)) {
-		// return prjConf;
-		// }
-		// }
-		// return null;
 	}
 
 	public IN4JSProject findProjectWith(URI nestedLocation) {
@@ -242,10 +236,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		}
 		return result.build();
 	}
-
-	// protected String getLocationPath(URI location) {
-	// return location.toFileString();
-	// }
 
 	protected IN4JSSourceContainer createProjectN4JSSourceContainer(N4JSProject project, SourceContainerType type,
 			String relativeLocation) {

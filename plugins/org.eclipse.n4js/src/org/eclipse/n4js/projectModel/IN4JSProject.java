@@ -151,11 +151,6 @@ public interface IN4JSProject {
 	String getVendorID();
 
 	/**
-	 * The project's location in the local file system.
-	 */
-	// Path _getLocationPath();
-
-	/**
 	 * The declared version of the project. It is not available, if the project does not exist.
 	 */
 	VersionNumber getVersion();

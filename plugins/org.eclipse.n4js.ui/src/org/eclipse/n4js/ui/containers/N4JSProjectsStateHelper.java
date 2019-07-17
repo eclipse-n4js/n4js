@@ -53,9 +53,6 @@ public class N4JSProjectsStateHelper extends AbstractStorage2UriMapperClient {
 	@Inject
 	private IN4JSEclipseCore core;
 
-	// @Inject
-	// private N4JSModel model;
-
 	@Inject
 	private MultiCleartriggerCache cache;
 

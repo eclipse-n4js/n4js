@@ -395,26 +395,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 		return projectProvider.getProject(projectLocation);
 	}
 
-	/*
-	 * @Override public IResource getResource(URI location) { String path = location.toFileString(); if (null == path) {
-	 * return null; } File nestedResource = new File(path); if (nestedResource.exists()) { URI projectLocation =
-	 * findProjectWith(location); if (null != projectLocation) { String projectName =
-	 * ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation); IProject project =
-	 * getProject(projectName); if (project instanceof ExternalProject) { File projectResource = new
-	 * File(project.getLocationURI()); if (projectResource.isDirectory()) {
-	 *
-	 * Path projectPath = projectResource.toPath(); Path nestedPath = nestedResource.toPath();
-	 *
-	 * if (projectPath.equals(nestedPath)) { return project; }
-	 *
-	 * // TODO: project.getFile and project.getFolder don't check whether then given path is a file or // a folder, and
-	 * they should not? Path relativePath = projectPath.relativize(nestedPath); IFile file =
-	 * project.getFile(relativePath.toString()); if (file.exists()) return file;
-	 *
-	 * IFolder folder = project.getFolder(relativePath.toString()); if (folder.exists()) return folder; } } } }
-	 *
-	 * return null; }
-	 */
 	/**
 	 * Updates the internal state based on the available external project root locations.
 	 * <p>

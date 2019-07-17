@@ -63,7 +63,6 @@ public class N4JSProject implements IN4JSProject {
 				return location == otherP.location;
 			}
 			return location.equals(otherP.location);
-			// return URIUtils.equals(location, otherP.location);
 		}
 		return false;
 	}
@@ -187,11 +186,6 @@ public class N4JSProject implements IN4JSProject {
 	public SafeURI<?> getLocation() {
 		return location;
 	}
-
-	// public Path _getLocationPath() {
-	// final String pathStr = location.toFileString(); // pathStr will be null if location is not a file URI
-	// return pathStr != null ? Paths.get(pathStr) : null;
-	// }
 
 	@Override
 	public ImmutableList<? extends IN4JSSourceContainer> getSourceContainers() {

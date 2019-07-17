@@ -68,49 +68,7 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformRes
 	@Override
 	public PlatformResourceURI findProjectWith(PlatformResourceURI nestedLocation) {
 		return new PlatformResourceURI(URI.createPlatformResourceURI(nestedLocation.toURI().segment(1), true));
-
-		// // this might happen if the URI was located from non-platform information, e.g. in case
-		// // of a source file location found in a source map
-		// // FIXME: This loop and the call 'toFile()' / 'isFile()' are very expensive
-		// // FIXME: since this method is called for a lot of external files
-		// if (nestedLocation.toString().startsWith("file:/")) {
-		// String nested = nestedLocation.toFileString();
-		// java.nio.file.Path nestedPath = Paths.get(nested);
-		//
-		// for (IProject proj : workspace.getProjects()) {
-		// String locationStr = proj.getLocation().toString();
-		// java.nio.file.Path locationPath = Paths.get(locationStr);
-		//
-		// if (nestedPath.startsWith(locationPath)) {
-		// java.nio.file.Path nodeModulesPath = locationPath.resolve(N4JSGlobals.NODE_MODULES);
-		//
-		// if (!nestedPath.startsWith(nodeModulesPath) || nestedPath.equals(nodeModulesPath)) {
-		// // Note: There can be projects in nested node_modules folder.
-		// // The node_modules folder is still part of a project, but all
-		// // elements below the node_modules folder are not part of this project.
-		// return URIUtils.toFileUri(proj);
-		// }
-		// }
-		// }
-		// }
-		// return null;
-
 	}
-
-	/** @return the {@link URI} for a project with the given n4js project name */
-	// public URI findProjectForName(String projectName) {
-	// if (projectName == null) {
-	// return null;
-	// }
-	// for (IProject prj : workspace.getProjects()) {
-	// URI uri = URIUtils.convert(prj);
-	// String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri);
-	// if (projectName.equals(n4jsProjectName)) {
-	// return uri;
-	// }
-	// }
-	// return null;
-	// }
 
 	@Override
 	public ProjectDescription getProjectDescription(PlatformResourceURI location) {
@@ -192,13 +150,6 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformRes
 			return result;
 		}
 		return null;
-		/*
-		 * final String folderLocationString = folderLocation.toPlatformString(true); if (null != folderLocationString)
-		 * { final IFolder folder = workspace.getFolder(new Path(folderLocationString)); final String subPathStr =
-		 * folderRelativePath.replace(File.separator, "/"); final IPath subPath = new Path(subPathStr); final IFile file
-		 * = folder != null ? folder.getFile(subPath) : null; if (file != null && file.exists()) { return
-		 * folderLocation.appendSegments(subPathStr.split("/")); } } return null;
-		 */
 	}
 
 	void setProjectDescriptionLoadListener(ProjectDescriptionLoadListener listener) {

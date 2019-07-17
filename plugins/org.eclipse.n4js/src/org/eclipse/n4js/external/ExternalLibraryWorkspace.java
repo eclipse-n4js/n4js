@@ -73,32 +73,12 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 			this.wipedProjects = freeze(prjsWiped);
 		}
 
-		// /** Constructor */
-		// public RegisterResult(IProject[] allProjectsToClean, IProject[] wsPrjAffected) {
-		// this(allProjectsToClean, wsPrjAffected, null);
-		// }
-		//
-		// /** Constructor */
-		// public RegisterResult(IProject[] allProjectsToClean, IProject[] wsPrjAffected, Collection<URI> prjsWiped) {
-		// this.externalProjectsDone = freeze(getURIs(allProjectsToClean));
-		// this.affectedWorkspaceProjects = freeze(getURIs(wsPrjAffected));
-		// this.wipedProjects = freeze(prjsWiped);
-		// }
-
 		static private <E extends SafeURI<?>> Set<E> freeze(Collection<? extends E> prjs) {
 			if (prjs == null) {
 				return Collections.unmodifiableSet(Collections.emptySet());
 			}
 			return Collections.unmodifiableSet(new HashSet<>(prjs));
 		}
-
-		// static private Collection<URI> getURIs(IProject[] projects) {
-		// HashSet<URI> uris = new HashSet<>();
-		// for (IProject project : projects) {
-		// uris.add(URIUtils.convert(project));
-		// }
-		// return uris;
-		// }
 	}
 
 	@Inject
@@ -227,16 +207,6 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 	public FileURI getProjectLocation(String name) {
 		return getProject(name).getSafeLocation();
 	}
-
-	// /**
-	// * Returns with the file given with the file location URI argument. This method returns with {@code null} if the
-	// * file cannot be found at the given location.
-	// *
-	// * @param location
-	// * the location of the file we are looking for.
-	// * @return the file at the given location or {@code null} if does not exist.
-	// */
-	// public abstract IResource getResource(ProjectLocation location);
 
 	/**
 	 * Updates the internal state based on the available external project root locations.

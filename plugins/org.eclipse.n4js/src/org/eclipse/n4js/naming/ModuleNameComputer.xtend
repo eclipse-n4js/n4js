@@ -20,6 +20,7 @@ import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.util.UriExtensions
+import com.google.common.base.Preconditions
 
 /**
  * Utility class to calculate the qualified name of the resource depending on the project configuration.
@@ -106,10 +107,8 @@ class ModuleNameComputer {
 	}
 
 	private def boolean uriStartsWith(URI resourceLocation, URI containerLocation) {
-		val maxSegments = if (containerLocation.hasTrailingPathSeparator)
-			containerLocation.segmentCount() - 1
-		else 
-			containerLocation.segmentCount();
+		Preconditions.checkArgument(containerLocation.hasTrailingPathSeparator, 'Must have trailing separator: %s', containerLocation);
+		val maxSegments = containerLocation.segmentCount() - 1
 		if (resourceLocation.segmentCount < maxSegments) {
 			return false;
 		}

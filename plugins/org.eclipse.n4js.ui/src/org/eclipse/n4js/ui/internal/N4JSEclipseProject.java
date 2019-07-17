@@ -50,11 +50,6 @@ public class N4JSEclipseProject extends N4JSProject implements IN4JSEclipseProje
 		return project;
 	}
 
-	// @Override
-	// public Path getLocationPath() {
-	// return project.getLocation().toFile().toPath();
-	// }
-
 	@Override
 	public ImmutableList<? extends IN4JSEclipseProject> getDependencies() {
 		if (!exists()) {

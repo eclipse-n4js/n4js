@@ -107,9 +107,6 @@ public class LibraryManager {
 	@Inject
 	private IN4JSCore n4jsCore;
 
-	// @Inject
-	// private InternalN4JSWorkspace<?> userWorkspace;
-
 	@Inject
 	private ExternalLibraryPreferenceStore extLibPreferenceStore;
 
@@ -473,19 +470,6 @@ public class LibraryManager {
 		}
 		return multiStatus;
 	}
-	//
-	// /**
-	// * Uninstalls the given npm package in a blocking fashion.
-	// *
-	// * @param npmProject
-	// * the npm project that has to be uninstalled via package manager.
-	// * @param monitor
-	// * the monitor for the blocking uninstall process.
-	// * @return a status representing the outcome of the uninstall process.
-	// */
-	// public IStatus uninstallNPM(IProject npmProject, IProgressMonitor monitor) {
-	// return uninstallNPM(URIUtils.toFileUri(npmProject), monitor);
-	// }
 
 	/**
 	 * Uninstalls the given npm package in a blocking fashion.

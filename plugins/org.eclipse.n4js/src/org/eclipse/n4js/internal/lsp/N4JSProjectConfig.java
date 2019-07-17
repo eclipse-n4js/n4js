@@ -62,11 +62,6 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 	@Override
 	public URI getPath() {
 		return delegate.getLocation().withTrailingPathDelimiter().toURI();
-		// URI locationURI = this.location.toURI();
-		// if (!locationURI.lastSegment().isEmpty()) {
-		// locationURI = locationURI.appendSegment("");
-		// }
-		// return locationURI;
 	}
 
 	private class SourceContainerForPackageJson implements IN4JSSourceFolder {
