@@ -55,8 +55,8 @@ public class FileURI extends SafeURI<FileURI> {
 	@Override
 	protected URI validate(URI given) throws IllegalArgumentException, NullPointerException {
 		super.validate(given);
-		Preconditions.checkNotNull(given.authority());
-		Preconditions.checkArgument(given.isFile());
+		Preconditions.checkNotNull(given.authority(), "%s", given);
+		Preconditions.checkArgument(given.isFile(), "%s", given);
 		// String asString = given.toString();
 		// Preconditions.checkArgument(asString.lastIndexOf(':') == asString.indexOf(':'), given);
 		return given;
