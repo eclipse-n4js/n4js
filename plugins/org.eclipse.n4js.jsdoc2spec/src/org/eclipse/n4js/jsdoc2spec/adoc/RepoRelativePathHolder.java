@@ -16,9 +16,11 @@ import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.jsdoc2spec.RepoRelativePath;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.inject.Inject;
 
@@ -32,6 +34,9 @@ public class RepoRelativePathHolder {
 	@Inject
 	private IN4JSCore n4jscore;
 
+	@Inject
+	private UriExtensions uriExtensions;
+
 	private final Map<Resource, RepoRelativePath> modulesToRepoCache = new HashMap<>();
 
 	/**
@@ -43,7 +48,8 @@ public class RepoRelativePathHolder {
 
 		if (res != null) {
 			if (!modulesToRepoCache.containsKey(res)) {
-				RepoRelativePath rrpRes = RepoRelativePath.compute(res.getURI(), n4jscore);
+				FileURI fileURI = new FileURI(uriExtensions.withEmptyAuthority(res.getURI()));
+				RepoRelativePath rrpRes = RepoRelativePath.compute(fileURI, n4jscore);
 				if (rrpRes != null) {
 					modulesToRepoCache.put(res, rrpRes);
 				}
@@ -68,25 +74,6 @@ public class RepoRelativePathHolder {
 
 		Resource res = module.eResource();
 		return res;
-		// if (!module.isStaticPolyfillModule())
-		// return res;
-		//
-		// EObject container = idElement;
-		// while (container != null && !(container instanceof TClass))
-		// container = container.eContainer();
-		// if (container == null)
-		// return res;
-		// TClass tClass = (TClass) container;
-		// assert (tClass.isPolyfill());
-		//
-		// TClass superClass = tClass.getSuperClass();
-		// if (superClass == null) // happens when executing tests
-		// return res;
-		//
-		// TModule superClassModule = superClass.getContainingModule();
-		// assert (superClassModule.isStaticPolyfillAware());
-		//
-		// return superClassModule.eResource();
 	}
 
 }
