@@ -82,9 +82,21 @@ public class N4jsLibsAccess {
 				+ File.separator;
 		int idx = myLocationStr.indexOf(searchStr);
 		if (idx < 0) {
-			throw new IllegalStateException(
-					"cannot obtain location of n4js-libs: unable to find segments '..." + searchStr
-							+ "...' in location path of class " + N4jsLibsAccess.class.getSimpleName());
+			File currentDir = new File(myLocationStr);
+			while (currentDir != null) {
+				if (new File(currentDir, ".git").isDirectory()) {
+					break;
+				}
+				currentDir = currentDir.getParentFile();
+			}
+			if (currentDir == null) {
+				throw new IllegalStateException(
+						"cannot obtain location of n4js-libs: unable to find segments '..." + searchStr
+								+ "...' in location path of class " + N4jsLibsAccess.class.getSimpleName());
+			}
+			Path result = currentDir.toPath().resolve(N4JS_LIBS_NAME).resolve("packages").toAbsolutePath();
+			assertN4jsLibsAreBuilt(result);
+			return result;
 		}
 
 		String repoLocationStr = myLocationStr.substring(0, idx); // parent folder of N4JS Git repository

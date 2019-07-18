@@ -45,6 +45,9 @@ public class HeadlessHelper {
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
+	/*
+	 * We must be able to find projects that are not yet available in workspace.
+	 */
 	@Inject
 	private IN4JSCore n4jsCore;
 
@@ -209,7 +212,7 @@ public class HeadlessHelper {
 	 */
 	public List<IN4JSProject> getN4JSProjects(List<FileURI> projectURIs) {
 		return projectURIs.stream()
-				.map(u -> n4jsCore.findProject(u.toURI()).orNull())
+				.map(u -> n4jsCore.create(u.toURI()))
 				.filter(p -> isProjectToBeBuilt(p))
 				.collect(Collectors.toList());
 	}
