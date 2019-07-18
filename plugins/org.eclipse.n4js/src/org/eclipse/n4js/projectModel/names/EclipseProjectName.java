@@ -10,7 +10,10 @@
  */
 package org.eclipse.n4js.projectModel.names;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Typesafe wrapper around a String which represents a project name. The string is a valid eclipse project name (and
@@ -24,7 +27,8 @@ public class EclipseProjectName {
 	 * Constructor
 	 */
 	public EclipseProjectName(String name) {
-		this.name = name;
+		this.name = Preconditions.checkNotNull(name);
+		Preconditions.checkArgument(URI.validSegment(name), name);
 	}
 
 	/**
