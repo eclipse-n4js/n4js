@@ -27,7 +27,6 @@ import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.collections.Collections2;
 
 import com.google.common.base.Joiner;
@@ -286,7 +285,7 @@ public class BuildSetComputer {
 		Set<URI> result = Sets.newLinkedHashSet();
 
 		for (File sourceFile : sourceFiles) {
-			URI sourceFileURI = URIUtils.toFileUri(sourceFile);
+			URI sourceFileURI = new FileURI(sourceFile).toURI();
 			URI projectURI = findProjectLocationRecursivelyByProjectDescriptionFile(sourceFileURI);
 			if (projectURI == null) {
 				throw new N4JSCompileException("No project for file '" + sourceFile.toString() + "' found.");
@@ -295,7 +294,7 @@ public class BuildSetComputer {
 		}
 
 		// convert back to Files:
-		return result.stream().map(URIUtils::normalize).map(u -> new File(u.toFileString()))
+		return result.stream().map(u -> new File(u.toFileString()))
 				.collect(Collectors.toList());
 	}
 
@@ -311,7 +310,7 @@ public class BuildSetComputer {
 			while (directory != null) {
 				if (directory.isDirectory()) {
 					if (new File(directory, IN4JSProject.PACKAGE_JSON).exists()) {
-						URI projectLocation = URIUtils.toFileUri(directory);
+						URI projectLocation = new FileURI(directory).toURI();
 						return projectLocation;
 					}
 				}
