@@ -13,24 +13,44 @@ package org.eclipse.n4js.projectModel.names;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 /**
- *
+ * Typesafe wrapper around a String which represents a project name. The string is a valid eclipse project name (and
+ * thereby a valid segment of IPath). It is of the shape `(@scope:)?name`.
  */
 public class EclipseProjectName {
 
 	private final String name;
 
+	/**
+	 * Constructor
+	 */
 	public EclipseProjectName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Returns the raw name of the project as it is in Eclipse.
+	 */
 	public String getRawName() {
 		return name;
 	}
 
+	/**
+	 * Returns the simple name of the project (eg. without the scope prefix).
+	 */
 	public String getName() {
-		return name;
+		return toN4JSProjectName().getName();
 	}
 
+	/**
+	 * Returns the scope of this project name.
+	 */
+	public String getScope() {
+		return toN4JSProjectName().getScope();
+	}
+
+	/**
+	 * Convert this Eclipse compatible project name to a valid N4JSProjectName.
+	 */
 	public N4JSProjectName toN4JSProjectName() {
 		return new N4JSProjectName(ProjectDescriptionUtils.convertEclipseProjectNameToN4JSProjectName(name));
 	}

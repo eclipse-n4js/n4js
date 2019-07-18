@@ -21,27 +21,45 @@ public class N4JSProjectName implements Comparable<N4JSProjectName> {
 
 	private final String name;
 
+	/**
+	 * Constructor
+	 */
 	public N4JSProjectName(String name) {
 		this.name = Preconditions.checkNotNull(name);
 		Preconditions.checkArgument(name.indexOf(':') < 0, name);
 	}
 
+	/**
+	 * Returns the simple name of this project name, e.g. without scope prefix.
+	 */
 	public String getName() {
 		return ProjectDescriptionUtils.getPlainProjectName(name);
 	}
 
+	/**
+	 * Returns the scope part of this project name.
+	 */
 	public String getScope() {
 		return ProjectDescriptionUtils.getScopeName(name);
 	}
 
+	/**
+	 * Returns the raw name of this project.
+	 */
 	public String getRawName() {
 		return name;
 	}
 
+	/**
+	 * Convert this name to a valid Eclipse project name.
+	 */
 	public EclipseProjectName toEclipseProjectName() {
 		return new EclipseProjectName(ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(name));
 	}
 
+	/**
+	 * Return true, if this name is empty.
+	 */
 	public boolean isEmpty() {
 		return name.isEmpty();
 	}
