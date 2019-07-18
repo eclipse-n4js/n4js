@@ -16,7 +16,7 @@ import java.nio.file.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -36,7 +36,7 @@ public class SourceMapFileLocator {
 	 * @return existing source map file or null, if no such file exists
 	 */
 	public File resolveSourceMapFromSrc(Path srcLocation) throws Exception {
-		URI uri = URIUtils.toFileUri(srcLocation.normalize());
+		URI uri = new FileURI(srcLocation.normalize().toFile()).toURI();
 		Optional<? extends IN4JSSourceContainer> optSrcContainer = n4jsCore.findN4JSSourceContainer(uri);
 		if (optSrcContainer.isPresent()) {
 			IN4JSSourceContainer srcContainer = optSrcContainer.get();

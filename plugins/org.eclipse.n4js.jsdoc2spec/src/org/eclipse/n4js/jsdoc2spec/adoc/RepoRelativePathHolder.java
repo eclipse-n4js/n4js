@@ -13,6 +13,7 @@ package org.eclipse.n4js.jsdoc2spec.adoc;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.jsdoc2spec.RepoRelativePath;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -20,7 +21,7 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.inject.Inject;
 
@@ -34,6 +35,10 @@ public class RepoRelativePathHolder {
 	@Inject
 	private IN4JSCore n4jscore;
 
+	// TODO FIXME: Should not be necessary since resource should have been created with a proper URI
+	@Inject
+	private UriExtensions uriExtensions;
+
 	private final Map<Resource, RepoRelativePath> modulesToRepoCache = new HashMap<>();
 
 	/**
@@ -45,7 +50,7 @@ public class RepoRelativePathHolder {
 
 		if (res != null) {
 			if (!modulesToRepoCache.containsKey(res)) {
-				FileURI fileURI = new FileURI(URIUtils.toFileUri(res));
+				FileURI fileURI = new FileURI(fixupURI(res));
 				RepoRelativePath rrpRes = RepoRelativePath.compute(fileURI, n4jscore);
 				if (rrpRes != null) {
 					modulesToRepoCache.put(res, rrpRes);
@@ -58,6 +63,13 @@ public class RepoRelativePathHolder {
 			}
 		}
 		return null;
+	}
+
+	private URI fixupURI(Resource res) {
+		URI uri = res.getURI();
+		if (uri.isFile() && !uri.isRelative())
+			return uriExtensions.withEmptyAuthority(uri);
+		return uri;
 	}
 
 	/**

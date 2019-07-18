@@ -57,7 +57,6 @@ public interface ISourceFolderEx extends ISourceFolder {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				URI uri = URIUtils.toFileUri(file);
-				uri = URIUtils.addEmptyAuthority(uri);
 				uris.add(uri);
 				return FileVisitResult.CONTINUE;
 			}

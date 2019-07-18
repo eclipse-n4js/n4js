@@ -69,7 +69,7 @@ class ModuleNameComputer {
 	 */
 	def getQualifiedModuleName(URI uncheckedUri) {
 		// FIXME: add authority at def site of resource
-		val uri = if (uncheckedUri.file && !uncheckedUri.hasAuthority) {
+		val uri = if (uncheckedUri.file && !uncheckedUri.isRelative) {
 			uriExtensions.withEmptyAuthority(uncheckedUri);
 		} else uncheckedUri;
 		

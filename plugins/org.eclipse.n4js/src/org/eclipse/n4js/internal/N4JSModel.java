@@ -42,7 +42,6 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Optional;
@@ -419,7 +418,8 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	 * to-be-created projects.
 	 */
 	protected IN4JSProject newAbsentProject(String projectName) {
-		final URI absent = URIUtils.toFileUri(projectName);
+		// create a file uri of the shape file:/projectName - authority will be added by fromURI below
+		final URI absent = URI.createFileURI(projectName);
 		return getN4JSProject(workspace.fromURI(absent), false);
 	}
 
