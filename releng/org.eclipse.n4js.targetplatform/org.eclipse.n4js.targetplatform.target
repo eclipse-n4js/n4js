@@ -92,9 +92,9 @@
       <repository location="http://download.eclipse.org/mpc/releases/1.7.6"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.jetty.servlets" version="9.4.19.v20190610"/>
-      <unit id="org.eclipse.jetty.util.ajax" version="9.4.19.v20190610"/>
-      <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.19.v20190610"/>
+      <unit id="org.eclipse.jetty.servlets" version="9.4.18.v20190429"/>
+      <unit id="org.eclipse.jetty.util.ajax" version="9.4.18.v20190429"/>
+      <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.18.v20190429"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.gef" version="3.11.0.201606061308"/>

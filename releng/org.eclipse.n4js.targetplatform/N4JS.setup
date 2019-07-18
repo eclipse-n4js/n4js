@@ -405,7 +405,7 @@
         <repository
             url="http://download.eclipse.org/egit/updates-5.4"/>
         <repository
-            url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.19.v20190610"/>
+            url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.18.v20190429"/>
         <repository
             url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.18"/>
         <repository
