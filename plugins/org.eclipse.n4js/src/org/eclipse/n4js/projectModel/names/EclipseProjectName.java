@@ -28,6 +28,7 @@ public class EclipseProjectName {
 	 */
 	public EclipseProjectName(String name) {
 		this.name = Preconditions.checkNotNull(name);
+		Preconditions.checkArgument(name.length() > 0, name);
 		Preconditions.checkArgument(URI.validSegment(name), name);
 	}
 
