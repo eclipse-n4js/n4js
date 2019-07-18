@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.n4js.N4JSGlobals;
@@ -80,7 +81,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 
 		if (linkedProjectWithRegion != null) {
 			URI uri = linkedProjectWithRegion.getFirst();
-			Region region = linkedProjectWithRegion.getSecond();
+			IRegion region = linkedProjectWithRegion.getSecond();
 			N4JSEclipseProject uriProject = model.findProjectWith(uri);
 
 			String lnkName = uriProject == null ? ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri)

@@ -10,17 +10,16 @@
  */
 package org.eclipse.n4js.ui.wizard.components;
 
-import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.RowLayoutFactory;
+import org.eclipse.n4js.ui.wizard.classes.N4JSClassWizardModel;
+import org.eclipse.n4js.ui.wizard.classifiers.N4JSClassifierWizardModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import org.eclipse.n4js.ui.wizard.classes.N4JSClassWizardModel;
-import org.eclipse.n4js.ui.wizard.classifiers.N4JSClassifierWizardModel;
 
 /**
  * A component which provides control over the annotations of a N4JS class
@@ -77,23 +76,21 @@ public class OtherClassifierModifiersComponent extends WizardComponent {
 		// Final property binding
 
 		if (null != finalAnnotationBox) {
-			@SuppressWarnings("unchecked")
 			IObservableValue<Boolean> finalValue = BeanProperties
-					.value(N4JSClassWizardModel.class, N4JSClassWizardModel.FINAL_ANNOTATED_PROPERTY)
+					.value(N4JSClassifierWizardModel.class, N4JSClassWizardModel.FINAL_ANNOTATED_PROPERTY,
+							Boolean.class)
 					.observe(model);
-			@SuppressWarnings("unchecked")
-			IObservableValue<Boolean> finalUI = WidgetProperties.selection().observe(finalAnnotationBox);
+			IObservableValue<Boolean> finalUI = WidgetProperties.buttonSelection().observe(finalAnnotationBox);
 			getDataBindingContext().bindValue(finalUI, finalValue);
 		}
 
 		// n4js annotation property binding
 
-		@SuppressWarnings("unchecked")
 		IObservableValue<Boolean> n4jsValue = BeanProperties
-				.value(N4JSClassWizardModel.class, N4JSClassifierWizardModel.N4JS_ANNOTATED_PROPERTY)
+				.value(N4JSClassifierWizardModel.class, N4JSClassifierWizardModel.N4JS_ANNOTATED_PROPERTY,
+						Boolean.class)
 				.observe(model);
-		@SuppressWarnings("unchecked")
-		IObservableValue<Boolean> n4jsUI = WidgetProperties.selection().observe(n4jsAnnotationBox);
+		IObservableValue<Boolean> n4jsUI = WidgetProperties.buttonSelection().observe(n4jsAnnotationBox);
 
 		getDataBindingContext().bindValue(n4jsUI, n4jsValue);
 	}

@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.n4js.ts.types.TMember;
@@ -75,7 +76,7 @@ public class N4JSHyperlinkHelper extends HyperlinkHelper {
 	}
 
 	/** This method converts file URIs to platform URIs for external library files. */
-	private boolean provideHyperlinksForExternalFiles(Region region, EObject target, IHyperlinkAcceptor acceptor) {
+	private boolean provideHyperlinksForExternalFiles(IRegion region, EObject target, IHyperlinkAcceptor acceptor) {
 		URI targetUriWithFragment = EcoreUtil.getURI(target);
 		if (targetUriWithFragment.isFile()) {
 			URI uri = URIUtils.tryToPlatformUri(targetUriWithFragment);
@@ -85,7 +86,7 @@ public class N4JSHyperlinkHelper extends HyperlinkHelper {
 		return false;
 	}
 
-	private void superCreateHyperlinksTo(Region region, EObject target, IHyperlinkAcceptor acceptor, URI normalized) {
+	private void superCreateHyperlinksTo(IRegion region, EObject target, IHyperlinkAcceptor acceptor, URI normalized) {
 		String hyperlinkText = labelProvider.getText(target);
 		XtextHyperlink result = hyperlinkProvider.get();
 		result.setHyperlinkRegion(region);
