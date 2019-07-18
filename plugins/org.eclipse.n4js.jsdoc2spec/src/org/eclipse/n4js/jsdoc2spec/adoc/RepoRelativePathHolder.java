@@ -20,6 +20,7 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
 
@@ -44,7 +45,7 @@ public class RepoRelativePathHolder {
 
 		if (res != null) {
 			if (!modulesToRepoCache.containsKey(res)) {
-				FileURI fileURI = new FileURI(res.getURI());
+				FileURI fileURI = new FileURI(URIUtils.toFileUri(res));
 				RepoRelativePath rrpRes = RepoRelativePath.compute(fileURI, n4jscore);
 				if (rrpRes != null) {
 					modulesToRepoCache.put(res, rrpRes);

@@ -237,11 +237,11 @@ public class URIUtils {
 
 	/** Converts any emf URI to a file URI */
 	public static URI toFileUri(URI rUri) {
-		if (rUri.isFile()) {
-			return rUri;
+		URI fileUri = rUri;
+		if (!rUri.isFile()) {
+			fileUri = CommonPlugin.resolve(rUri);
 		}
-		URI resolvedFile = CommonPlugin.resolve(rUri);
-		return addEmptyAuthority(resolvedFile);
+		return addEmptyAuthority(fileUri);
 	}
 
 	/** Converts any emf file URI to an accessible platform local URI. Otherwise returns given URI. */
