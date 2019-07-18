@@ -118,10 +118,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * </ul>
 	 */
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
-		if (!shouldBeCompiled(input, null)) {
-			return;
-		}
-		
 		try {
 
 			// remove error-marker
@@ -159,7 +155,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 
 		val boolean result = (autobuildEnabled
 			&& isGenerateProjectType(inputUri)
-			&& correctFileExtension(inputUri)
 			&& !isInNodeModules(inputUri)
 			&& hasOutput(inputUri)
 			&& isOutputNotInSourceContainer(inputUri)
@@ -177,17 +172,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 			RaceDetectionHelper.log("Skip generation of artifacts from %s", input.URI)
 		}
 		return result
-	}
-
-	private def correctFileExtension(URI n4jsSourceURI){
-		val n4jsExtension = xpectAwareFileExtensionCalculator.getXpectAwareFileExtension(n4jsSourceURI);
-		switch (n4jsExtension) {
-			case N4JSGlobals.N4JS_FILE_EXTENSION:
-				{return true;}
-			case N4JSGlobals.N4JSX_FILE_EXTENSION:
-				{return true;}
-		}
-		return false;
 	}
 
 	private def isInNodeModules(URI n4jsSourceURI){
