@@ -24,6 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.utils.URIUtils
 
 /**
  */
@@ -100,7 +101,7 @@ class JavaScriptVariantTest {
 	 */
 	def assertVariant(JavaScriptVariant expectedVariant, String filePath, CharSequence src) {
 		val rs = resourceSetProvider.get
-		val script= src.parse(URI.createFileURI(filePath), rs);
+		val script= src.parse(URIUtils.toFileUri(filePath), rs);
 		val location = script.eAllContents.filter(StringLiteral).findFirst["here"==it.value];
 		assertNotNull("Bogus test, did not find string literal \"here\"")
 		val variant = JavaScriptVariant.getVariant(location)

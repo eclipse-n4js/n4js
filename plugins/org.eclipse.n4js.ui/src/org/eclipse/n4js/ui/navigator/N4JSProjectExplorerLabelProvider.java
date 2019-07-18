@@ -40,6 +40,7 @@ import org.eclipse.n4js.ui.workingsets.WorkingSetLabelProvider;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManager;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkingSet;
@@ -141,7 +142,7 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 
 			} else if (Files.isSymbolicLink(folder.getLocation().toFile().toPath())) {
 				// might be a project from workspace
-				URI symLinkUri = URI.createFileURI(folder.getLocation().toFile().toString());
+				URI symLinkUri = URIUtils.toFileUri(folder.getLocation().toFile());
 				String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(symLinkUri);
 				String eclipseProjectName = ProjectDescriptionUtils
 						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
@@ -182,7 +183,7 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 
 			} else if (Files.isSymbolicLink(folder.getLocation().toFile().toPath())) {
 				// might be a project from workspace
-				URI symLinkUri = URI.createFileURI(folder.getLocation().toFile().toString());
+				URI symLinkUri = URIUtils.toFileUri(folder.getLocation().toFile());
 				String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(symLinkUri);
 				String eclipseProjectName = ProjectDescriptionUtils
 						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);

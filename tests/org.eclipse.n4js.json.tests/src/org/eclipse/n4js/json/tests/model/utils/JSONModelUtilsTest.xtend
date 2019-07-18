@@ -11,6 +11,7 @@
 package org.eclipse.n4js.json.tests.model.utils
 
 import com.google.inject.Inject
+import java.io.File
 import java.io.IOException
 import java.io.StringWriter
 import java.util.Objects
@@ -26,6 +27,7 @@ import org.eclipse.n4js.json.JSONGlobals
 import org.eclipse.n4js.json.JSONInjectorProvider
 import org.eclipse.n4js.json.JSONParseHelper
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.serializer.ISerializer
@@ -130,7 +132,8 @@ class JSONModelUtilsTest extends Assert {
 			get();
 		// Use temporary Resource as AbstractFormatter2 implementations can only format
 		// semantic elements that are contained in a Resource.
-		val Resource temporaryResource = resourceSet.createResource(URI.createFileURI("__synthetic.json"));
+		val fileUri = URIUtils.toFileUri("__synthetic.json")
+		val Resource temporaryResource = resourceSet.createResource(fileUri);
 		temporaryResource.getContents().add(document);
 		// create string writer as serialization output
 		val StringWriter writer = new StringWriter();

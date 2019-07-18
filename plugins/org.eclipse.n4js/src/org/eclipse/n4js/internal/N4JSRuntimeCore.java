@@ -35,6 +35,7 @@ import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -128,7 +129,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	@Override
 	public void registerProject(File file) {
 		if (file.isDirectory()) {
-			URI uri = URI.createFileURI(file.toString());
+			URI uri = URIUtils.toFileUri(file);
 			workspace.registerProject((FileURI) toProjectLocation(uri));
 		} else {
 			throw new IllegalArgumentException(file.getAbsolutePath() + " is not a valid project location");

@@ -211,7 +211,7 @@ public class URIUtils {
 	/** @return a complete URI for a given project */
 	public static URI toFileUri(IProject project) {
 		String pathStr = project.getLocation().toString();
-		return addEmptyAuthority(URI.createFileURI(pathStr));
+		return toFileUri(pathStr);
 	}
 
 	/** @return absolute file URI for the given path. */
@@ -221,8 +221,12 @@ public class URIUtils {
 
 	/** @return absolute file URI for the given file. */
 	static public URI toFileUri(File file) {
-		String pathStr = file.getAbsolutePath();
-		return addEmptyAuthority(URI.createFileURI(pathStr));
+		return toFileUri(file.getAbsolutePath());
+	}
+
+	/** @return a complete URI for a given file path string */
+	public static URI toFileUri(String filePath) {
+		return addEmptyAuthority(URI.createFileURI(filePath));
 	}
 
 	/** @return a complete URI for a given emf resource */
@@ -232,7 +236,7 @@ public class URIUtils {
 	}
 
 	/** Converts any emf URI to a file URI */
-	private static URI toFileUri(URI rUri) {
+	public static URI toFileUri(URI rUri) {
 		if (rUri.isFile()) {
 			return rUri;
 		}

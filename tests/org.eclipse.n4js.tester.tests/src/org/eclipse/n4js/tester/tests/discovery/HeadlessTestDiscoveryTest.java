@@ -40,6 +40,7 @@ import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
+import org.eclipse.n4js.utils.URIUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -318,7 +319,7 @@ public class HeadlessTestDiscoveryTest extends AbstractTestTreeTest {
 	}
 
 	private static final URI toURI(File file) {
-		return URI.createFileURI(file.getAbsolutePath());
+		return URIUtils.toFileUri(file);
 	}
 
 	private static final String createFqn(String... segments) {

@@ -127,7 +127,7 @@ import com.google.common.collect.FluentIterable;
 
 	@Override
 	public URI getURI() {
-		return URI.createFileURI(file.getAbsolutePath());
+		return file.toURI();
 	}
 
 	/**

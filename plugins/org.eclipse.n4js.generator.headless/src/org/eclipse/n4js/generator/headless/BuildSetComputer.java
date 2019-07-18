@@ -286,7 +286,7 @@ public class BuildSetComputer {
 		Set<URI> result = Sets.newLinkedHashSet();
 
 		for (File sourceFile : sourceFiles) {
-			URI sourceFileURI = URI.createFileURI(sourceFile.toString());
+			URI sourceFileURI = URIUtils.toFileUri(sourceFile);
 			URI projectURI = findProjectLocationRecursivelyByProjectDescriptionFile(sourceFileURI);
 			if (projectURI == null) {
 				throw new N4JSCompileException("No project for file '" + sourceFile.toString() + "' found.");
@@ -311,7 +311,7 @@ public class BuildSetComputer {
 			while (directory != null) {
 				if (directory.isDirectory()) {
 					if (new File(directory, IN4JSProject.PACKAGE_JSON).exists()) {
-						URI projectLocation = URI.createFileURI(directory.getAbsolutePath());
+						URI projectLocation = URIUtils.toFileUri(directory);
 						return projectLocation;
 					}
 				}

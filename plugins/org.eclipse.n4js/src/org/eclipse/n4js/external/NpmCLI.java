@@ -44,10 +44,10 @@ import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.StatusHelper;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
-import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -86,9 +86,6 @@ public class NpmCLI {
 
 	@Inject
 	private SemverHelper semverHelper;
-
-	@Inject
-	private UriExtensions uriExtensions;
 
 	/** Simple validation if the package name is not null or empty */
 	public boolean invalidPackageName(N4JSProjectName packageName) {
@@ -274,8 +271,7 @@ public class NpmCLI {
 					IStatus packJsonError = statusHelper.createError(msg);
 					mergeStatusHere.merge(packJsonError);
 				} else {
-					FileURI actualLocation = new FileURI(
-							uriExtensions.withEmptyAuthority(URI.createFileURI(completePath.toString())));
+					FileURI actualLocation = new FileURI(URIUtils.toFileUri(completePath));
 					LibraryChange actualChange = new LibraryChange(LibraryChangeType.Added, actualLocation,
 							reqChg.name, actualVersion);
 					result.add(actualChange);
@@ -286,10 +282,9 @@ public class NpmCLI {
 	}
 
 	private String getActualVersion(Path completePath) {
-		URI location = URI.createFileURI(completePath.toString());
-		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(location);
+		URI location = URIUtils.toFileUri(completePath);
 		String versionStr = projectDescriptionLoader
-				.loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(new FileURI(withEmptyAuthority))
+				.loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(new FileURI(location))
 				.getFirst();
 
 		return Strings.nullToEmpty(versionStr);

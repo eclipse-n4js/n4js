@@ -28,6 +28,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
+import org.eclipse.n4js.utils.URIUtils
 
 /**
  * Unit test of {@link TypeDefinitionsAwareDependenciesSupplier}. 
@@ -302,6 +303,6 @@ class MockTypeDefinitionsProject extends N4JSProject {
 	 * by this method (passing the same project ID twice, will yield two distinct locations). 
 	 */
 	private static def FileURI newLocation(N4JSProjectName projectName) {
-		return new FileURI(URI.createFileURI("container" + containerCounter++ + "/" + projectName))
+		return new FileURI(URIUtils.toFileUri("container" + containerCounter++ + "/" + projectName))
 	}
 }
