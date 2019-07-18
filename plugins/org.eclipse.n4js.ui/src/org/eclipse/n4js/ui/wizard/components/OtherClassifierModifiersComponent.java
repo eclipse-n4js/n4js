@@ -75,11 +75,11 @@ public class OtherClassifierModifiersComponent extends WizardComponent {
 	private void setupBindings() {
 		// Final property binding
 
-		if (null != finalAnnotationBox) {
+		if (null != finalAnnotationBox && model instanceof N4JSClassWizardModel) {
 			IObservableValue<Boolean> finalValue = BeanProperties
-					.value(N4JSClassifierWizardModel.class, N4JSClassWizardModel.FINAL_ANNOTATED_PROPERTY,
+					.value(N4JSClassWizardModel.class, N4JSClassWizardModel.FINAL_ANNOTATED_PROPERTY,
 							Boolean.class)
-					.observe(model);
+					.observe((N4JSClassWizardModel) model);
 			IObservableValue<Boolean> finalUI = WidgetProperties.buttonSelection().observe(finalAnnotationBox);
 			getDataBindingContext().bindValue(finalUI, finalValue);
 		}
