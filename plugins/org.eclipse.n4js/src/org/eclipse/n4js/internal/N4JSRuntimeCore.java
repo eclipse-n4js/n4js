@@ -94,6 +94,9 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 		if (nestedLocation == null || N4Scheme.isN4Scheme(nestedLocation)) {
 			return Optional.absent();
 		}
+		if (nestedLocation.isFile() && nestedLocation.isRelative()) {
+			return Optional.absent();
+		}
 		IN4JSProject result = model.findProjectWith(nestedLocation);
 		return Optional.fromNullable(result);
 	}
@@ -119,7 +122,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 
 	@Override
 	public Optional<? extends IN4JSSourceContainer> findN4JSSourceContainer(URI nestedLocation) {
-		if (nestedLocation == null) {
+		if (nestedLocation == null || (nestedLocation.isFile() && nestedLocation.isRelative())) {
 			return Optional.absent();
 		} else {
 			return model.findN4JSSourceContainer(nestedLocation);
