@@ -26,6 +26,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.SemverHelper;
@@ -115,8 +116,7 @@ class InstallNpmDependencyButtonListener extends SelectionAdapter {
 						new N4JSProjectName(packageName),
 						packageVersion);
 				try {
-					org.eclipse.emf.common.util.URI projectRootURI = org.eclipse.emf.common.util.URI
-							.createFileURI(prjRootDir.getAbsolutePath());
+					FileURI projectRootURI = new FileURI(prjRootDir);
 
 					IStatus status = libManager.installNPMs(singletonMap, false, projectRootURI, monitor);
 					multistatus.merge(status);

@@ -95,6 +95,11 @@ public class MockURIWrapper extends SafeURI<MockURIWrapper> {
 	}
 
 	@Override
+	public FileURI toFileURI() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public Path toFileSystemPath() {
 		throw new UnsupportedOperationException();
 	}

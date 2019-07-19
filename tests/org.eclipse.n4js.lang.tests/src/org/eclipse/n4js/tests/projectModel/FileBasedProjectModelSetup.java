@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 
 import com.google.common.base.Charsets;
@@ -149,8 +150,8 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup<FileUR
 	}
 
 	/***/
-	protected FileURI createTempProject(String projectName) {
-		File myProjectDir = new File(workspaceRoot, projectName);
+	protected FileURI createTempProject(N4JSProjectName projectName) {
+		File myProjectDir = new File(workspaceRoot, projectName.getRawName());
 		if (!myProjectDir.mkdir()) {
 			throw new RuntimeException();
 		}

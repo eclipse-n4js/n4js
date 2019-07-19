@@ -13,7 +13,6 @@ package org.eclipse.n4js.ts.tests.scoping;
 import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
-import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.ScopingTest;
 import org.junit.runner.RunWith;
 

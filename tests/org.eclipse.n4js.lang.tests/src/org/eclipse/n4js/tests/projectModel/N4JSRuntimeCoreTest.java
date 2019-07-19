@@ -16,6 +16,7 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -47,7 +48,7 @@ public class N4JSRuntimeCoreTest extends AbstractN4JSCoreTest<FileURI> {
 	}
 
 	@Override
-	protected String[] getExpectedIssuesInInitialSetup(String projectName) {
+	protected String[] getExpectedIssuesInInitialSetup(N4JSProjectName projectName) {
 		return new String[0];
 	}
 

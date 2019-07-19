@@ -21,6 +21,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -82,10 +83,10 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 				"line 15: Project does not exist with project ID: n4js-runtime.",
 				"line 16: Project does not exist with project ID: immutable.");
 
-		FileURI prjP1URI = new FileURI(prjP1.getLocation().toFile());
+		FileURI prjP1URI = new PlatformResourceURI(prjP1).toFileURI();
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
-		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP1URI.toURI(), new NullProgressMonitor());
-		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI.toURI(),
+		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP1URI, new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI,
 				new NullProgressMonitor());
 		waitForAutoBuild();
 
@@ -97,10 +98,10 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 				"line 15: Project does not exist with project ID: n4js-runtime.",
 				"line 16: Project does not exist with project ID: immutable.");
 
-		FileURI prjP2URI = new FileURI(prjP2.getLocation().toFile());
+		FileURI prjP2URI = new PlatformResourceURI(prjP2).toFileURI();
 		String immutableVersion = getDependencyVersion(prjP2URI, "immutable");
-		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP2URI.toURI(), new NullProgressMonitor());
-		libraryManager.installNPM(new N4JSProjectName("immutable"), immutableVersion, prjP2URI.toURI(),
+		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP2URI, new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("immutable"), immutableVersion, prjP2URI,
 				new NullProgressMonitor());
 		waitForAutoBuild();
 
@@ -138,10 +139,10 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 				"line 15: Project does not exist with project ID: n4js-runtime.",
 				"line 16: Project does not exist with project ID: lodash.");
 
-		FileURI prjP1URI = new FileURI(prjP1.getLocation().toFile());
+		FileURI prjP1URI = new PlatformResourceURI(prjP1).toFileURI();
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
-		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP1URI.toURI(), new NullProgressMonitor());
-		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI.toURI(),
+		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP1URI, new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI,
 				new NullProgressMonitor());
 		waitForAutoBuild();
 		assertIssues(pkgJsonP1); // No errors in P1 anymore
@@ -183,10 +184,10 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 				"line 15: Project does not exist with project ID: n4js-runtime.",
 				"line 16: Project does not exist with project ID: immutable.");
 
-		FileURI prjP1URI = new FileURI(prjP1.getLocation().toFile());
+		FileURI prjP1URI = new PlatformResourceURI(prjP1).toFileURI();
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
-		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP1URI.toURI(), new NullProgressMonitor());
-		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI.toURI(),
+		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP1URI, new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI,
 				new NullProgressMonitor());
 		waitForAutoBuild();
 
@@ -198,10 +199,10 @@ public class SideBySideNonYarnProjectsInstallNpmPluginUITest extends AbstractBui
 				"line 15: Project does not exist with project ID: n4js-runtime.",
 				"line 16: Project does not exist with project ID: immutable.");
 
-		FileURI prjP2URI = new FileURI(prjP2.getLocation().toFile());
+		FileURI prjP2URI = new PlatformResourceURI(prjP2).toFileURI();
 		String immutableVersion = getDependencyVersion(prjP2URI, "immutable");
-		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP2URI.toURI(), new NullProgressMonitor());
-		libraryManager.installNPM(new N4JSProjectName("immutable"), immutableVersion, prjP2URI.toURI(),
+		libraryManager.installNPM(new N4JSProjectName("n4js-runtime"), prjP2URI, new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("immutable"), immutableVersion, prjP2URI,
 				new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();

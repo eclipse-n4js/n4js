@@ -18,10 +18,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Test;
 
@@ -52,7 +52,7 @@ public class DependencyNotInstalledPluginUITest extends AbstractBuilderParticipa
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
-		libraryManager.installNPM(new N4JSProjectName("lodash"), URIUtils.convert(prjUnrelated),
+		libraryManager.installNPM(new N4JSProjectName("lodash"), new PlatformResourceURI(prjUnrelated).toFileURI(),
 				new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
@@ -64,7 +64,8 @@ public class DependencyNotInstalledPluginUITest extends AbstractBuilderParticipa
 		IFile packageJsonA = prjA.getFile(IN4JSProject.PACKAGE_JSON);
 		assertIssues(packageJsonA, "line 14: Project does not exist with project ID: lodash.");
 
-		libraryManager.installNPM(new N4JSProjectName("lodash"), URIUtils.convert(prjA), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("lodash"), new PlatformResourceURI(prjA).toFileURI(),
+				new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 

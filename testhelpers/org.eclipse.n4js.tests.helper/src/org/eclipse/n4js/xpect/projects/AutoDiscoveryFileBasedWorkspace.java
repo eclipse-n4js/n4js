@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.xpect.projects;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.inject.Inject;
@@ -31,6 +33,17 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 	public AutoDiscoveryFileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader,
 			UriExtensions uriExtensions) {
 		super(projectDescriptionLoader, uriExtensions);
+	}
+
+	@Override
+	public FileURI fromURI(URI unsafe) {
+		if (!unsafe.isFile() || unsafe.isRelative()) {
+			unsafe = URIUtils.normalize(unsafe);
+			if (unsafe.isRelative()) {
+				return null;
+			}
+		}
+		return super.fromURI(unsafe);
 	}
 
 	@Override

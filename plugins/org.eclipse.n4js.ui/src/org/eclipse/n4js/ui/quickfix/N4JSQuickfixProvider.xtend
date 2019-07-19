@@ -80,6 +80,7 @@ import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI
 
 /**
  * N4JS quick fixes.
@@ -694,7 +695,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
 						val Map<N4JSProjectName, NPMVersionRequirement> package = Collections.singletonMap(packageName, packageVersion);
-						multiStatus.merge(libraryManager.installNPMs(package, false, issue.uriToProblem, monitor));
+						multiStatus.merge(libraryManager.installNPMs(package, false, new PlatformResourceURI(issue.uriToProblem).toFileURI, monitor));
 
 					} catch (IllegalBinaryStateException e) {
 						illegalBinaryExcRef.set(e);

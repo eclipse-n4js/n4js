@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ui.internal;
+package org.eclipse.n4js.projectModel.locations;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,8 +26,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
@@ -197,6 +195,14 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 		} catch (CoreException e) {
 			errorHandler.accept(new IOException(e));
 		}
+	}
+
+	/**
+	 * Obtain the equivalent file URI.
+	 */
+	@Override
+	public FileURI toFileURI() {
+		return new FileURI(toFileSystemPath().toFile());
 	}
 
 	@Override

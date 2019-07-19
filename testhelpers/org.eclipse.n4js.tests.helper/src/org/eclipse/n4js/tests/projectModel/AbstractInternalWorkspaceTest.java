@@ -37,7 +37,7 @@ public abstract class AbstractInternalWorkspaceTest<Loc extends SafeURI<Loc>> ex
 	public void testGetProjectDescription_01() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
 		assertNotNull(description);
-		assertEquals(myProjectName, description.getProjectName());
+		assertEquals(myProjectName.getRawName(), description.getProjectName());
 	}
 
 	@SuppressWarnings("javadoc")
@@ -45,7 +45,7 @@ public abstract class AbstractInternalWorkspaceTest<Loc extends SafeURI<Loc>> ex
 	public void testGetProjectDescription_02() {
 		ProjectDescription description = getWorkspace().getProjectDescription(libProjectURI);
 		assertNotNull(description);
-		assertEquals(libProjectName, description.getProjectName());
+		assertEquals(libProjectName.getRawName(), description.getProjectName());
 	}
 
 	@SuppressWarnings({ "javadoc" })

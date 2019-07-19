@@ -15,20 +15,19 @@ import java.util.ArrayList
 import java.util.Collections
 import java.util.List
 import java.util.Random
-import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.internal.N4JSProject
 import org.eclipse.n4js.internal.TypeDefinitionsAwareDependenciesSupplier
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.projectModel.locations.FileURI
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.projectModel.locations.FileURI
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
-import org.eclipse.n4js.utils.URIUtils
 
 /**
  * Unit test of {@link TypeDefinitionsAwareDependenciesSupplier}. 
@@ -303,6 +302,6 @@ class MockTypeDefinitionsProject extends N4JSProject {
 	 * by this method (passing the same project ID twice, will yield two distinct locations). 
 	 */
 	private static def FileURI newLocation(N4JSProjectName projectName) {
-		return new FileURI(URIUtils.toFileUri("container" + containerCounter++ + "/" + projectName))
+		return new FileURI(URIUtils.toFileUri("/container" + containerCounter++ + "/" + projectName))
 	}
 }

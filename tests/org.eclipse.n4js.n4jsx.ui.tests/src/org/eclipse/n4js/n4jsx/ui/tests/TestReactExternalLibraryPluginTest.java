@@ -26,13 +26,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -107,9 +107,10 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 				"line 6: Project does not exist with project ID: react.",
 				"line 7: Project does not exist with project ID: @n4jsd/react.");
 
-		libManager.installNPM(N4JS_RUNTIME, URIUtils.toFileUri(project), new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
+		libManager.installNPM(N4JS_RUNTIME, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_REACT, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_N4JSD_REACT, new PlatformResourceURI(project).toFileURI(),
+				new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -146,9 +147,10 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
 		assertTrue(projectDescriptionFile + " B module is not accessible.", projectDescriptionFile.isAccessible());
 
-		libManager.installNPM(N4JS_RUNTIME, URIUtils.toFileUri(project), new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
+		libManager.installNPM(N4JS_RUNTIME, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_REACT, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_N4JSD_REACT, new PlatformResourceURI(project).toFileURI(),
+				new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 

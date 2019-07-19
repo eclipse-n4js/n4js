@@ -14,6 +14,7 @@ import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -39,7 +40,7 @@ public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTes
 	}
 
 	@Override
-	protected String[] getExpectedIssuesInInitialSetup(String projectName) {
+	protected String[] getExpectedIssuesInInitialSetup(N4JSProjectName projectName) {
 		return new String[0];
 	}
 

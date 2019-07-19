@@ -163,6 +163,11 @@ public class FileURI extends SafeURI<FileURI> {
 	}
 
 	@Override
+	public FileURI toFileURI() {
+		return this;
+	}
+
+	@Override
 	public Path toFileSystemPath() {
 		return getCachedFile().toPath();
 	}

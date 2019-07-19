@@ -53,7 +53,6 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 
 	@Override
 	public FileURI fromURI(URI unsafe) {
-		// URI normalized = URIUtils.normalize(unsafe);
 		return safeFromURI(unsafe);
 	}
 

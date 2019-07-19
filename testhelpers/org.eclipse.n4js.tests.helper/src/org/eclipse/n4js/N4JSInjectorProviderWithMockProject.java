@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js;
 
-import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 
 /**
@@ -34,7 +34,7 @@ public class N4JSInjectorProviderWithMockProject extends N4JSInjectorProvider {
 
 		/** */
 		@Override
-		public Class<? extends InternalN4JSWorkspace<?>> bindInternalN4JSWorkspace() {
+		public Class<? extends InternalN4JSWorkspace<MockURIWrapper>> bindInternalN4JSWorkspace() {
 			return MockWorkspace.class;
 		}
 
@@ -42,5 +42,6 @@ public class N4JSInjectorProviderWithMockProject extends N4JSInjectorProvider {
 		public Class<? extends N4JSModel<?>> bindN4JSModel() {
 			return MockN4JSModel.class;
 		}
+
 	}
 }

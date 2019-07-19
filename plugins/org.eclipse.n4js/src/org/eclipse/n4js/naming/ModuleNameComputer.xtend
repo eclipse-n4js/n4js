@@ -20,7 +20,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IResourceDescription
-import org.eclipse.xtext.util.UriExtensions
 
 /**
  * Utility class to calculate the qualified name of the resource depending on the project configuration.

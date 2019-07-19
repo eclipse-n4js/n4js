@@ -21,8 +21,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.ui.internal.PlatformResourceURI;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.google.common.collect.Iterables;
@@ -64,7 +64,7 @@ public class WizardHelper {
 					try {
 						monitor.subTask("Installing dependencies");
 						for (IProject project : projects) {
-							IStatus status = libManager.runNpmYarnInstall(new PlatformResourceURI(project).toURI(),
+							IStatus status = libManager.runNpmYarnInstall(new PlatformResourceURI(project),
 									monitor);
 							if (status.matches(IStatus.ERROR)) {
 								throw status.getException();

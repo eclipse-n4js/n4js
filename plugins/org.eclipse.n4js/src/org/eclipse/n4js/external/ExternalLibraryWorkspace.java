@@ -87,6 +87,9 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace<Fil
 
 	@Override
 	public FileURI fromURI(URI uri) {
+		if (!uri.isFile() || uri.isRelative()) {
+			return null;
+		}
 		return new FileURI(uriExtensions.withEmptyAuthority(uri));
 	}
 

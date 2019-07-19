@@ -11,7 +11,6 @@
 package org.eclipse.n4js.json.tests.model.utils
 
 import com.google.inject.Inject
-import java.io.File
 import java.io.IOException
 import java.io.StringWriter
 import java.util.Objects
@@ -27,7 +26,6 @@ import org.eclipse.n4js.json.JSONGlobals
 import org.eclipse.n4js.json.JSONInjectorProvider
 import org.eclipse.n4js.json.JSONParseHelper
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.xtext.resource.SaveOptions
 import org.eclipse.xtext.serializer.ISerializer

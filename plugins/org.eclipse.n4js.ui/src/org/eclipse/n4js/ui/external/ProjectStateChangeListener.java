@@ -38,7 +38,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.ui.internal.PlatformResourceURI;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.xtext.builder.impl.ProjectOpenedOrClosedListener;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.ui.XtextProjectHelper;

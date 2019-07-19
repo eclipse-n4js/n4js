@@ -228,4 +228,9 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	 */
 	public abstract Path toFileSystemPath();
 
+	/**
+	 * Obtain the equivalent file URI.
+	 */
+	public abstract FileURI toFileURI();
+
 }

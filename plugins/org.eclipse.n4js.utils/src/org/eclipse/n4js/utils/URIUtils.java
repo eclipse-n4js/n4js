@@ -263,20 +263,11 @@ public class URIUtils {
 
 	/** Adds empty authority to the given URI. Necessary for windows platform. */
 	public static URI addEmptyAuthority(URI uri) {
-		if (uri.isFile() && !uri.hasAuthority()) {
+		if (uri.isFile() && !uri.hasAuthority() && !uri.isRelative()) {
 			uri = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(),
 					uri.fragment());
 		}
 		return uri;
 	}
 
-	/** Removes the authority from given URI iff it exists. */
-	public static URI removeAuthority(URI uri) {
-		if (uri.hasAuthority()) {
-			uri = URI.createHierarchicalURI(uri.scheme(), null, uri.device(), uri.segments(), uri.query(),
-					uri.fragment());
-			return uri;
-		}
-		return uri;
-	}
 }

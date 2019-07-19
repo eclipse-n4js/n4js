@@ -138,7 +138,11 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	}
 
 	protected <PL extends SafeURI<PL>> PL fromURI(InternalN4JSWorkspace<PL> ws, URI uri) {
-		return ws.findProjectWith(ws.fromURI(uri));
+		PL safeURI = ws.fromURI(uri);
+		if (safeURI == null) {
+			return null;
+		}
+		return ws.findProjectWith(safeURI);
 	}
 
 	public Optional<? extends IN4JSSourceContainer> findN4JSSourceContainer(URI nestedLocation) {

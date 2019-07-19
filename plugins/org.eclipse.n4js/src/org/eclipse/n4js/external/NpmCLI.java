@@ -205,20 +205,19 @@ public class NpmCLI {
 	 * @return multi status with children for each issue during processing
 	 */
 	public Collection<LibraryChange> batchInstall(IProgressMonitor monitor, MultiStatus status,
-			Collection<LibraryChange> requestedChanges, URI target) {
+			Collection<LibraryChange> requestedChanges, FileURI target) {
 
 		return batchInstallInternal(monitor, status, requestedChanges, target);
 	}
 
 	private Collection<LibraryChange> batchInstallInternal(IProgressMonitor monitor, MultiStatus status,
-			Collection<LibraryChange> requestedChanges, URI target) {
+			Collection<LibraryChange> requestedChanges, FileURI target) {
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
 		subMonitor.setTaskName("Installing npm packages.");
 
 		// Convert platform URI to local (e.g. file) URI
-		URI localURI = CommonPlugin.asLocalURI(target);
-		File installPath = new File(localURI.toFileString());
+		File installPath = target.toFileSystemPath().toFile();
 
 		// for installation, we invoke npm only once for all packages
 		final List<Pair<N4JSProjectName, String>> packageNamesAndVersions = Lists.newArrayList();
@@ -383,7 +382,8 @@ public class NpmCLI {
 	}
 
 	/** See {@link NodeYarnProcessBuilder#isYarnUsed(Path)}. */
-	public boolean isYarnUsed(URI projectURI) {
+	public boolean isYarnUsed(SafeURI<?> safeURI) {
+		URI projectURI = safeURI.toURI();
 		// convert platform URI to local (e.g. file) URI
 		URI projectFileURI = projectURI.isFile() ? projectURI : CommonPlugin.asLocalURI(projectURI);
 		File projectFile = new File(projectFileURI.toFileString()).getAbsoluteFile();

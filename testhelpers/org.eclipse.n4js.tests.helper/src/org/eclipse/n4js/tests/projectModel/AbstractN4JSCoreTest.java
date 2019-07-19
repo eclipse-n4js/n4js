@@ -75,7 +75,7 @@ public abstract class AbstractN4JSCoreTest<Loc extends SafeURI<Loc>> extends Abs
 	public void testProjectId_01() {
 		IN4JSProject project = getN4JSCore().create(myProjectURI.getParent().appendSegment("doesNotExist").toURI());
 		assertNotNull(project);
-		assertEquals("doesNotExist", project.getProjectName());
+		assertEquals("doesNotExist", project.getProjectName().getRawName());
 	}
 
 	@SuppressWarnings("javadoc")

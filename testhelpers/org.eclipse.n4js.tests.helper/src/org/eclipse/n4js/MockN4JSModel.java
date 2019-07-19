@@ -14,6 +14,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 
 import com.google.inject.Inject;
 
@@ -39,6 +41,11 @@ public class MockN4JSModel extends N4JSModel<MockURIWrapper> {
 	@Override
 	public N4JSProject findProjectWith(URI nestedLocation) {
 		return project;
+	}
+
+	@Override
+	public ProjectDescription getProjectDescription(IN4JSProject mock) {
+		return null;
 	}
 
 	/***/

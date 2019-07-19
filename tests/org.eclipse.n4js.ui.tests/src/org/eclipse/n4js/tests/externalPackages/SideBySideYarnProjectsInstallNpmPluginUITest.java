@@ -27,6 +27,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
@@ -75,9 +76,9 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 				.filter((subFolder) -> subFolder.getName().equals(N4JSGlobals.NODE_MODULES))
 				.findFirst().isPresent());
 
-		FileURI prjP1URI = new FileURI(projP1.getLocation().toFile());
+		FileURI prjP1URI = new PlatformResourceURI(projP1).toFileURI();
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
-		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI.toURI(),
+		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI,
 				new NullProgressMonitor());
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 

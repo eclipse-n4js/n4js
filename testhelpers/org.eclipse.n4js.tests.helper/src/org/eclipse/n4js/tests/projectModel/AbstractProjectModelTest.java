@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.eclipse.xtext.validation.Issue;
 import org.junit.After;
@@ -51,15 +52,15 @@ public abstract class AbstractProjectModelTest<Loc extends SafeURI<Loc>> {
 	 * Returns expected issues in the initial state of the test project with the given name. Checked by test method
 	 * {@link #testSetup()}.
 	 */
-	protected abstract String[] getExpectedIssuesInInitialSetup(String projectName);
+	protected abstract String[] getExpectedIssuesInInitialSetup(N4JSProjectName projectName);
 
 	/***/
-	public final String myProjectName = "myProject";
+	public final N4JSProjectName myProjectName = new N4JSProjectName("myProject");
 	/***/
 	protected Loc myProjectURI;
 
 	/***/
-	public final String libProjectName = "libProject";
+	public final N4JSProjectName libProjectName = new N4JSProjectName("libProject");
 	/***/
 	protected Loc libProjectURI;
 
@@ -137,8 +138,8 @@ public abstract class AbstractProjectModelTest<Loc extends SafeURI<Loc>> {
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testSetup() throws IOException {
-		assertEquals(myProjectName, myProjectURI.getName());
-		assertEquals(libProjectName, libProjectURI.getName());
+		assertEquals(myProjectName.getRawName(), myProjectURI.getName());
+		assertEquals(libProjectName.getRawName(), libProjectURI.getName());
 
 		// make sure temporary projects have valid project descriptions
 		validateTempProjects();

@@ -14,8 +14,9 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.eclipse.n4js.ui.internal.PlatformResourceURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -46,7 +47,7 @@ public class EclipseBasedInternalWorkspacePluginTest extends AbstractInternalWor
 	}
 
 	@Override
-	protected String[] getExpectedIssuesInInitialSetup(String projectName) {
+	protected String[] getExpectedIssuesInInitialSetup(N4JSProjectName projectName) {
 		if (projectName.equals(myProjectName)) {
 			return new String[] {
 					"line 6: Project depends on workspace project libProject which is missing in the node_modules folder. Either install project libProject or introduce a yarn workspace of both of the projects."

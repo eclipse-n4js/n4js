@@ -32,6 +32,8 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
@@ -109,7 +111,7 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 						if (containingProject == null) {
 							return statusHelper.createError("cannot find containing project");
 						}
-						URI targetLocation = containingProject.getLocation().toURI();
+						FileURI targetLocation = containingProject.getLocation().toFileURI();
 						Map<N4JSProjectName, NPMVersionRequirement> installedNpms = new HashMap<>();
 						NPMVersionRequirement versionReq = semverHelper.parse(versionRequirement);
 						N4JSProjectName typesafePackageName = new N4JSProjectName(packageName);
@@ -153,7 +155,8 @@ public class N4JSPackageJsonQuickfixProviderExtension extends AbstractN4JSQuickf
 				Function<IProgressMonitor, IStatus> registerFunction = new Function<>() {
 					@Override
 					public IStatus apply(IProgressMonitor monitor) {
-						return libraryManager.runNpmYarnInstall(issue.getUriToProblem(), monitor);
+						return libraryManager.runNpmYarnInstall(new PlatformResourceURI(issue.getUriToProblem()),
+								monitor);
 					}
 				};
 				wrapWithMonitor(label, errMsg, registerFunction);
