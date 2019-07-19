@@ -66,13 +66,7 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 	 * {@link IN4JSProject#PACKAGE_JSON} file.
 	 */
 	private static FileURI findClosestProjectLocation(FileURI location) {
-		do {
-			if (location.appendSegment(IN4JSProject.PACKAGE_JSON).isFile()) {
-				return location;
-			}
-			location = location.getParent();
-		} while (location != null);
-		return null;
+		return location.getProjectRoot();
 	}
 
 }

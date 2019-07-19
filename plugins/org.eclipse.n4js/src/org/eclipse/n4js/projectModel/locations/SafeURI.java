@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 
 import com.google.common.base.Preconditions;
@@ -212,7 +213,9 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	 * Return true if this is a directory that contains a {@link IN4JSProject#PACKAGE_JSON package.json} file.
 	 */
 	public boolean isProjectRootDirectory() {
-		return isDirectory() && appendSegment(IN4JSProject.PACKAGE_JSON).isFile();
+		return isDirectory() &&
+				(appendSegment(IN4JSProject.PACKAGE_JSON).isFile() ||
+						appendSegment(IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION).isFile());
 	}
 
 	/**
