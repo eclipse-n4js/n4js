@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 
@@ -191,7 +192,11 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 	@Override
 	public void delete(Consumer<? super IOException> errorHandler) {
 		try {
-			getCachedResource().delete(false, null);
+			IResource r = getCachedResource();
+			if (r == null) {
+				return;
+			}
+			r.delete(false, null);
 		} catch (CoreException e) {
 			errorHandler.accept(new IOException(e));
 		}
@@ -207,7 +212,13 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 
 	@Override
 	public Path toFileSystemPath() {
-		return getCachedResource().getLocation().toFile().toPath();
+		IResource r = getCachedResource();
+		if (r == null) {
+			IPath workspaceLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+			IPath doesNotExist = workspaceLocation.append(toURI().toPlatformString(true));
+			return doesNotExist.toFile().toPath();
+		}
+		return r.getLocation().toFile().toPath();
 	}
 
 }

@@ -758,7 +758,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				final String srcFrgmtName = sourceContainerType.getKey().getLiteral().toLowerCase();
 
 				// handle case that source container is nested within output directory (or equal)
-				if (isContained(absoluteSourceLocation, absoluteOutputLocation)) {
+				if (isContainedOrEqual(absoluteSourceLocation, absoluteOutputLocation)) {
 					final String containingFolder = ("A " + srcFrgmtName + " folder");
 					final String nestedFolder = astOutputValue.isPresent() ? "the output folder"
 							: "the default output folder \"" + OUTPUT.defaultValue + "\"";
@@ -771,7 +771,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				// if "output" AST element is available (outputPath is not a default value)
 				if (astOutputValue.isPresent()) {
 					// handle case that output path is nested within a source folder (or equal)
-					if (isContained(absoluteOutputLocation, absoluteSourceLocation)) {
+					if (isContainedOrEqual(absoluteOutputLocation, absoluteSourceLocation)) {
 						final String containingFolder = "The output folder";
 						final String nestedFolder = ("a " + srcFrgmtName + " folder");
 						final String message = IssueCodes
@@ -784,12 +784,15 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		}
 	}
 
-	private boolean isContained(URI uri, URI container) {
+	private boolean isContainedOrEqual(URI uri, URI container) {
 		if (!container.hasTrailingPathSeparator()) {
 			container = container.appendSegment("");
 		}
 		URI relative = uri.deresolve(container, true, true, false);
 		if (relative != uri) {
+			if (relative.isEmpty()) {
+				return true;
+			}
 			if ("..".equals(relative.segment(0))) {
 				return false;
 			}
