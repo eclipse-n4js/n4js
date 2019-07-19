@@ -109,7 +109,7 @@ public class RunConfiguration {
 
 	private RuntimeEnvironment runtimeEnvironment;
 
-	private String implementationId;
+	private N4JSProjectName implementationId;
 
 	private final Map<N4JSProjectName, N4JSProjectName> apiImplProjectMapping = new LinkedHashMap<>();
 
@@ -298,12 +298,12 @@ public class RunConfiguration {
 	 * list of available implementation IDs (UI case).
 	 * </ul>
 	 */
-	public String getImplementationId() {
+	public N4JSProjectName getImplementationId() {
 		return implementationId;
 	}
 
 	/** @see #getImplementationId() */
-	public void setImplementationId(String implementationId) {
+	public void setImplementationId(N4JSProjectName implementationId) {
 		this.implementationId = implementationId;
 	}
 
@@ -395,13 +395,27 @@ public class RunConfiguration {
 		final Map<String, Object> result = new HashMap<>();
 		result.put(NAME, this.name);
 		result.put(RUNNER_ID, this.runnerId);
-		result.put(RUNTIME_ENVIRONMENT, this.runtimeEnvironment.getProjectName());
-		result.put(IMPLEMENTATION_ID, this.implementationId);
+		result.put(RUNTIME_ENVIRONMENT, toString(this.runtimeEnvironment.getProjectName()));
+		result.put(IMPLEMENTATION_ID, toString(this.implementationId));
 		result.put(USER_SELECTION, this.userSelection.toString());
 		result.put(ENGINE_OPTIONS, getEngineOptions());
 		result.put(RUN_OPTIONS, getRunOptions());
 		result.put(ENV_VARS, this.getEnvironmentVariables());
 		return result;
+	}
+
+	private String toString(N4JSProjectName name) {
+		if (name == null) {
+			return null;
+		}
+		return name.getRawName();
+	}
+
+	private N4JSProjectName toName(String name) {
+		if (name == null) {
+			return null;
+		}
+		return new N4JSProjectName(name);
 	}
 
 	/**
@@ -415,8 +429,8 @@ public class RunConfiguration {
 		this.name = getString(map, NAME, false);
 		this.runnerId = getString(map, RUNNER_ID, false);
 		this.runtimeEnvironment = RuntimeEnvironment
-				.fromProjectName(new N4JSProjectName(getString(map, RUNTIME_ENVIRONMENT, false)));
-		this.implementationId = getString(map, IMPLEMENTATION_ID, true);
+				.fromProjectName(toName(getString(map, RUNTIME_ENVIRONMENT, false)));
+		this.implementationId = toName(getString(map, IMPLEMENTATION_ID, true));
 		this.userSelection = getURI(map, USER_SELECTION, false);
 		this.engineOptions = nullToEmpty(getString(map, ENGINE_OPTIONS, true));
 		this.runOptions = nullToEmpty(getString(map, RUN_OPTIONS, true));

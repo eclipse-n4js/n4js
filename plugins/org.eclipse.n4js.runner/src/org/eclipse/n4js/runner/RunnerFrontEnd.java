@@ -63,7 +63,7 @@ public class RunnerFrontEnd {
 
 	/**
 	 * Returns true iff the runner with the given id can run the given moduleToRun. Takes same arguments as
-	 * {@link #createConfiguration(String, String, URI)}.
+	 * {@link #createConfiguration(String, N4JSProjectName, URI)}.
 	 */
 	@SuppressWarnings("unused")
 	public boolean canRun(String runnerId, URI moduleToRun) {
@@ -98,7 +98,7 @@ public class RunnerFrontEnd {
 	 *            case it will be a file URI.
 	 * @return the run configuration.
 	 */
-	public RunConfiguration createConfiguration(String runnerId, String implementationId, URI moduleToRun) {
+	public RunConfiguration createConfiguration(String runnerId, N4JSProjectName implementationId, URI moduleToRun) {
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
 
@@ -117,7 +117,7 @@ public class RunnerFrontEnd {
 	/**
 	 * Allows for adding additional path if needed.
 	 */
-	public RunConfiguration createConfiguration(String runnerId, String implementationId, URI moduleToRun,
+	public RunConfiguration createConfiguration(String runnerId, N4JSProjectName implementationId, URI moduleToRun,
 			String additionalPath) {
 
 		RunConfiguration runConfig = createConfiguration(runnerId, implementationId, moduleToRun);
@@ -177,7 +177,7 @@ public class RunnerFrontEnd {
 	 * here} for details on primary and derived values). Additionally delegated to dynamically obtained runner to
 	 * customize derived values further.
 	 * <p>
-	 * This method is called from methods {@link #createConfiguration(String, String, URI)} and
+	 * This method is called from methods {@link #createConfiguration(String, N4JSProjectName, URI)} and
 	 * {@link #createConfiguration(Map)}, so client code usually does not need to call it directly.
 	 */
 	public void computeDerivedValues(RunConfiguration config) {
@@ -247,7 +247,7 @@ public class RunnerFrontEnd {
 		final ApiUsage apiUsage = runnerHelper.getProjectExtendedDepsAndApiImplMapping(
 				config.getRuntimeEnvironment(),
 				config.getUserSelection(),
-				config.getImplementationId() != null ? new N4JSProjectName(config.getImplementationId()) : null,
+				config.getImplementationId() != null ? config.getImplementationId() : null,
 				true);
 
 		final List<IN4JSProject> deps = apiUsage.projects;
@@ -316,10 +316,10 @@ public class RunnerFrontEnd {
 	}
 
 	/**
-	 * Convenience method. Creates a run configuration with {@link #createConfiguration(String, String, URI)} and
-	 * immediately passes it to {@link #run(RunConfiguration)} in order to launch the moduleToRun.
+	 * Convenience method. Creates a run configuration with {@link #createConfiguration(String, N4JSProjectName, URI)}
+	 * and immediately passes it to {@link #run(RunConfiguration)} in order to launch the moduleToRun.
 	 */
-	public Process run(String runnerId, String implementationId, URI moduleToRun) throws ExecutionException {
+	public Process run(String runnerId, N4JSProjectName implementationId, URI moduleToRun) throws ExecutionException {
 		return run(createConfiguration(runnerId, implementationId, moduleToRun));
 	}
 

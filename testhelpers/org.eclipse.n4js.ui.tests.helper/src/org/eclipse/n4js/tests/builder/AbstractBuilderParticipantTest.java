@@ -429,8 +429,8 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		return projectTestsHelper.runWithNodeRunnerUI(moduleToRun);
 	}
 
-	/** See {@link ProjectTestsHelper#runWithRunnerUI(String, String, URI)}. */
-	protected ProcessResult runWithRunnerUI(String runnerId, String implementationId, URI moduleToRun)
+	/** See {@link ProjectTestsHelper#runWithRunnerUI(String, N4JSProjectName, URI)}. */
+	protected ProcessResult runWithRunnerUI(String runnerId, N4JSProjectName implementationId, URI moduleToRun)
 			throws ExecutionException {
 		return projectTestsHelper.runWithRunnerUI(runnerId, implementationId, moduleToRun);
 	}

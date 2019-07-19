@@ -29,10 +29,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 import java.util.StringJoiner;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -89,7 +89,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Stopwatch;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 /**
@@ -827,20 +826,9 @@ public class ProjectTestsUtils {
 			final IMarker m = markers[i];
 			actualMessages[i] = "line " + MarkerUtilities.getLineNumber(m) + ": " + m.getAttribute(IMarker.MESSAGE);
 		}
-		if (!Objects.equals(
-				new HashSet<>(Arrays.asList(actualMessages)),
-				new HashSet<>(Arrays.asList(expectedMessages)))) {
-			final Joiner joiner = Joiner.on("\n    ");
-			final String actualMsg = (Strings.isNullOrEmpty(msg) ? "" : msg + "; ")
-					+ "expected these issues:\n"
-					+ "    " + joiner.join(expectedMessages) + "\n"
-					+ "but got these:\n"
-					+ "    " + joiner.join(actualMessages);
-			System.out.println("*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*");
-			System.out.println(actualMsg);
-			System.out.println("*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*");
-			Assert.fail(actualMsg);
-		}
+		Set<String> actual = new TreeSet<>(Arrays.asList(actualMessages));
+		Set<String> expected = new TreeSet<>(Arrays.asList(expectedMessages));
+		Assert.assertEquals(Joiner.on('\n').join(expected), Joiner.on('\n').join(actual));
 	}
 
 	/***/

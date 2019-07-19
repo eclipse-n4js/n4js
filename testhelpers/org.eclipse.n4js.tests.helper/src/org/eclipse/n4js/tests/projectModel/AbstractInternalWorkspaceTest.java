@@ -51,7 +51,7 @@ public abstract class AbstractInternalWorkspaceTest<Loc extends SafeURI<Loc>> ex
 	@SuppressWarnings({ "javadoc" })
 	@Test
 	public void testGetProjectDescription_04() {
-		final Loc doesNotExist = myProjectURI.getParent().appendSegment(myProjectName + "doesNotExist");
+		final Loc doesNotExist = myProjectURI.appendPath("../" + myProjectName + "doesNotExist");
 		final ProjectDescription description = getWorkspace().getProjectDescription(doesNotExist);
 		assertNull("Expecting null project description for non-existing project. Was: " + description, description);
 	}

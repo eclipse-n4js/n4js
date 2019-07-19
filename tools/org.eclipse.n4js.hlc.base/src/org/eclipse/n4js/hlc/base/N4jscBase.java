@@ -898,7 +898,7 @@ public class N4jscBase implements IApplication {
 				if (buildtype != BuildType.dontcompile) {
 					flushAndIinsertMarkerInOutputs();
 				}
-				headlessTester.runTests(tester, implementationId, checkLocationToTest(), testReportRoot);
+				headlessTester.runTests(tester, toName(implementationId), checkLocationToTest(), testReportRoot);
 			}
 
 			if (runThisFile != null) {
@@ -915,9 +915,16 @@ public class N4jscBase implements IApplication {
 				for (Path nmFolder : modulesFolders) {
 					additionalPaths.add(nmFolder.toString());
 				}
-				headlessRunner.startRunner(runner, implementationId, checkFileToRun(), additionalPaths);
+				headlessRunner.startRunner(runner, toName(implementationId), checkFileToRun(), additionalPaths);
 			}
 		}
+	}
+
+	private N4JSProjectName toName(String name) {
+		if (name == null) {
+			return null;
+		}
+		return new N4JSProjectName(name);
 	}
 
 	/**

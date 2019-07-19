@@ -79,7 +79,8 @@ public class BuildOrderComputer {
 		IN4JSProject[] n4jsPrjs = new IN4JSProject[projects.length];
 		for (int i = 0; i < projects.length; i++) {
 			N4JSExternalProject project = projects[i];
-			n4jsPrjs[i] = uri2PrjMapper.get(project.getIProject().getLocation());
+			IN4JSProject lookupResult = uri2PrjMapper.get(project.getIProject().getLocation());
+			n4jsPrjs[i] = lookupResult != null ? lookupResult : project.getIProject();
 		}
 		return getBuildOrder(n4jsPrjs);
 	}

@@ -38,7 +38,7 @@ public abstract class AbstractN4JSProjectTest<Loc extends SafeURI<Loc>> extends 
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testGetLocation_02() {
-		URI doesNotExist = myProjectURI.getParent().appendSegment("doesNotExist").toURI();
+		URI doesNotExist = myProjectURI.appendPath("../doesNotExist").toURI();
 		IN4JSProject project = getN4JSCore().create(doesNotExist);
 		assertEquals(doesNotExist, project.getLocation().toURI());
 	}
@@ -55,7 +55,7 @@ public abstract class AbstractN4JSProjectTest<Loc extends SafeURI<Loc>> extends 
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testGetSourceContainers_02() {
-		URI doesNotExist = myProjectURI.getParent().appendSegment("doesNotExist").toURI();
+		URI doesNotExist = myProjectURI.appendPath("../doesNotExist").toURI();
 		IN4JSProject project = getN4JSCore().create(doesNotExist);
 		ImmutableList<? extends IN4JSSourceContainer> sourceContainers = project.getSourceContainers();
 		assertEquals(0, sourceContainers.size());
@@ -82,7 +82,7 @@ public abstract class AbstractN4JSProjectTest<Loc extends SafeURI<Loc>> extends 
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testGetDependencies_02() {
-		URI doesNotExist = myProjectURI.getParent().appendSegment("doesNotExist").toURI();
+		URI doesNotExist = myProjectURI.appendPath("../doesNotExist").toURI();
 		IN4JSProject project = getN4JSCore().create(doesNotExist);
 		ImmutableList<? extends IN4JSProject> dependencies = project.getDependencies();
 		assertEquals(0, dependencies.size());

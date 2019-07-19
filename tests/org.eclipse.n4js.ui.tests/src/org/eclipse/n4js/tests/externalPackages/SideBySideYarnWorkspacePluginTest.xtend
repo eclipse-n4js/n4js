@@ -60,7 +60,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 	/** Standard case is importing all packages contained in the yarn workspace. */
 	@Test
 	def void testStandard() throws CoreException {
-		importYarnWorkspace("XClient", "Lib", "@myScope/Lib");
+		importYarnWorkspace("XClient".toProjectName, "Lib".toProjectName, "@myScope/Lib".toProjectName);
 		assertNoIssues;
 		assertCorrectOutput(expectedOutput);
 
@@ -74,14 +74,14 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		assertNoIssues;
 		assertCorrectOutput(expectedOutput);
 	}
-
+	
 	/**
 	 * Test the case that only some of the projects contained in a yarn workspace are imported into
 	 * the Eclipse workspace. Sub case: a non-scoped project is missing.
 	 */
 	@Test
 	def void testPartialOmitNonScoped() throws CoreException {
-		importYarnWorkspace("XClient", "Lib", "@myScope/Lib"); // importing 'Lib' only to have it compiled!
+		importYarnWorkspace("XClient".toProjectName, "Lib".toProjectName, "@myScope/Lib".toProjectName); // importing 'Lib' only to have it compiled!
 		assertNoIssues;
 		nonScopedProject.delete(IResource.NEVER_DELETE_PROJECT_CONTENT, null);
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
@@ -96,7 +96,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	def void testPartialOmitScoped() throws CoreException {
-		importYarnWorkspace("XClient", "Lib", "@myScope/Lib"); // importing '@myScope/Lib' only to have it compiled!
+		importYarnWorkspace("XClient".toProjectName, "Lib".toProjectName, "@myScope/Lib".toProjectName); // importing '@myScope/Lib' only to have it compiled!
 		assertNoIssues;
 		scopedProject.delete(IResource.NEVER_DELETE_PROJECT_CONTENT, null);
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
@@ -114,7 +114,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 
 	@Test
 	def void testCloseAndReopen() throws CoreException {
-		importYarnWorkspace("XClient", "Lib", "@myScope/Lib");
+		importYarnWorkspace("XClient".toProjectName, "Lib".toProjectName, "@myScope/Lib".toProjectName);
 		assertNoIssues;
 		assertCorrectOutput(expectedOutput);
 
@@ -132,7 +132,7 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		assertNoIssues;
 	}
 
-	def private void importYarnWorkspace(String... packagesToImport) {
+	def private void importYarnWorkspace(N4JSProjectName... packagesToImport) {
 		val workspace = ResourcesPlugin.workspace;
 		val parentFolder = new File(getResourceUri(PROBANDS, YARN_WORKSPACE_BASE));
 		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT, [pkgName|
@@ -142,8 +142,8 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		]);
 		testedWorkspace.fullBuild
 
-		for(String packageName : packagesToImport) {
-			val eclipsePackageName = ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(packageName);
+		for(N4JSProjectName packageName : packagesToImport) {
+			val eclipsePackageName = packageName.toEclipseProjectName.rawName;
 			assertTrue("package wasn't imported: " + packageName, workspace.root.getProject(eclipsePackageName).accessible);
 		}
 
@@ -161,5 +161,9 @@ class SideBySideYarnWorkspacePluginTest extends AbstractBuilderParticipantTest {
 		val actualOutput = result.stdOut.trim;
 		val expectedOutputTrimmed = expectedOutput.toString.trim;
 		assertEquals("incorrect output when running " + clientModule.name, expectedOutputTrimmed, actualOutput);
+	}
+	
+	private def toProjectName(String name) {
+		return new N4JSProjectName(name)
 	}
 }

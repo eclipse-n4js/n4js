@@ -32,7 +32,7 @@ public abstract class AbstractN4JSCoreTest<Loc extends SafeURI<Loc>> extends Abs
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testCreateProjectAndCheckExists_01() {
-		IN4JSProject project = getN4JSCore().create(myProjectURI.getParent().appendSegment("doesNotExist").toURI());
+		IN4JSProject project = getN4JSCore().create(myProjectURI.appendPath("../doesNotExist").toURI());
 		assertNotNull(project);
 		assertFalse(project.exists());
 	}
@@ -64,7 +64,7 @@ public abstract class AbstractN4JSCoreTest<Loc extends SafeURI<Loc>> extends Abs
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testCreateYieldsEqualsInstances_02() {
-		URI doesNotExist = myProjectURI.getParent().appendSegment("doesNotExist").toURI();
+		URI doesNotExist = myProjectURI.appendPath("../doesNotExist").toURI();
 		IN4JSProject first = getN4JSCore().create(doesNotExist);
 		IN4JSProject second = getN4JSCore().create(doesNotExist);
 		assertEquals(first, second);
@@ -73,7 +73,7 @@ public abstract class AbstractN4JSCoreTest<Loc extends SafeURI<Loc>> extends Abs
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testProjectId_01() {
-		IN4JSProject project = getN4JSCore().create(myProjectURI.getParent().appendSegment("doesNotExist").toURI());
+		IN4JSProject project = getN4JSCore().create(myProjectURI.appendPath("../doesNotExist").toURI());
 		assertNotNull(project);
 		assertEquals("doesNotExist", project.getProjectName().getRawName());
 	}

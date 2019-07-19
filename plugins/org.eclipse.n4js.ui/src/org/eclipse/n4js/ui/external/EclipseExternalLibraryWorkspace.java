@@ -215,10 +215,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 			for (N4JSExternalProject extProject : getProjects()) {
 				toBeDeleted.add(extProject.getSafeLocation());
 			}
-			Set<FileURI> toBeWiped = new HashSet<>();
-			for (FileURI rootLocation : projectProvider.getRootLocationsInReversedShadowingOrder()) {
-				toBeWiped.add(rootLocation);
-			}
+			Set<FileURI> toBeWiped = new HashSet<>(projectProvider.getRootLocationsInReversedShadowingOrder());
 			return deregisterProjectsInternal(monitor, toBeDeleted, toBeWiped);
 		} finally {
 			Job.getJobManager().endRule(rule);
