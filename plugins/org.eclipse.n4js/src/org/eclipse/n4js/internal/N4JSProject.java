@@ -60,9 +60,6 @@ public class N4JSProject implements IN4JSProject {
 			if (external != otherP.external) {
 				return false;
 			}
-			if (external && otherP.external) {
-				return location == otherP.location;
-			}
 			return location.equals(otherP.location);
 		}
 		return false;
@@ -72,7 +69,6 @@ public class N4JSProject implements IN4JSProject {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((exists == null) ? 0 : exists.hashCode());
 		result = prime * result + (external ? 1231 : 1237);
 		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		return result;

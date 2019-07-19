@@ -168,7 +168,7 @@ public class N4HeadlessCompiler {
 	public void compile(BuildSet buildSet, IssueAcceptor issueAcceptor) throws N4JSCompileException {
 		Set<IN4JSProject> allProjects = buildSet.getAllProjects();
 		Set<IN4JSProject> requestedProjects = buildSet.requestedProjects;
-		Predicate<URI> singleSourceFilter = buildSet.resourceFilter;
+		Predicate<FileURI> singleSourceFilter = buildSet.resourceFilter;
 
 		// make sure all to-be-compiled projects are registered with the workspace
 		// if a project had been registered before, it will be skipped by this registration method
@@ -543,7 +543,7 @@ public class N4HeadlessCompiler {
 	 * @throws N4JSCompileException
 	 *             if an error occurs during compilation
 	 */
-	private void processProjects(List<MarkedProject> projects, final Predicate<URI> filter,
+	private void processProjects(List<MarkedProject> projects, final Predicate<FileURI> filter,
 			IssueAcceptor issueAcceptor)
 			throws N4JSCompileException {
 
@@ -1007,7 +1007,7 @@ public class N4HeadlessCompiler {
 	 *             in case of compile-problems. Possibly wrapping other N4SJCompileExceptions.
 	 */
 	private void generateProject(MarkedProject markedProject, ResourceSet resSet,
-			Predicate<URI> compileFilter, N4ProgressStateRecorder rec) throws N4JSCompileException {
+			Predicate<FileURI> compileFilter, N4ProgressStateRecorder rec) throws N4JSCompileException {
 		rec.markStartCompiling(markedProject);
 
 		final N4JSProjectName projectName = markedProject.project.getProjectName();
@@ -1023,7 +1023,7 @@ public class N4HeadlessCompiler {
 
 		// then compile each file.
 		for (Resource resource : markedProject.resources) {
-			if (compileFilter.test(resource.getURI())) {
+			if (compileFilter.test(new FileURI(resource.getURI()))) {
 				boolean isTest = markedProject.isTest(resource);
 				boolean compile = (isTest && isProcessTestCode()) || (!isTest && isCompileSourceCode());
 				if (compile) {

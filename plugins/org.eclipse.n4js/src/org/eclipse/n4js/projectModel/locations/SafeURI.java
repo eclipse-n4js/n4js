@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 
 import com.google.common.base.Preconditions;
 
@@ -168,7 +169,7 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 
 	private U appendRelativeURI(URI relativeURI) {
 		if (!URI.validSegments(relativeURI.segments())) {
-			return null;
+			throw new IllegalArgumentException(String.valueOf(relativeURI));
 		}
 		URI base = withTrailingPathDelimiter().toURI();
 		URI result = relativeURI.resolve(base);
@@ -203,6 +204,33 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 		URI uri = toURI();
 		if (uri.segmentCount() > 0) {
 			return createFrom(uri.trimSegments(1));
+		}
+		return null;
+	}
+
+	/**
+	 * Return true if this is a directory that contains a {@link IN4JSProject#PACKAGE_JSON package.json} file.
+	 */
+	public boolean isProjectRootDirectory() {
+		return isDirectory() && appendSegment(IN4JSProject.PACKAGE_JSON).isFile();
+	}
+
+	/**
+	 * Ascends the the given file-system location, until a directory is detected that qualifies as N4JS project location
+	 * (e.g. contains an {@link IN4JSProject#PACKAGE_JSON} file). Returns null if this location is not nested in a
+	 * project.
+	 */
+	public U getProjectRoot() {
+		@SuppressWarnings("unchecked")
+		U result = (U) this;
+		if (isFile()) {
+			result = result.getParent();
+		}
+		while (result != null) {
+			if (result.isProjectRootDirectory()) {
+				return result;
+			}
+			result = result.getParent();
 		}
 		return null;
 	}

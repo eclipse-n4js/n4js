@@ -155,7 +155,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 
 		val boolean result = (autobuildEnabled
 			&& isGenerateProjectType(inputUri)
-			&& !isInNodeModules(inputUri)
+//			&& !isInNodeModules(inputUri)
 			&& hasOutput(inputUri)
 			&& isOutputNotInSourceContainer(inputUri)
 			&& isOutsideOfOutputFolder(inputUri)

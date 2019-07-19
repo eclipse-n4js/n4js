@@ -16,8 +16,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.common.collect.Sets;
 
@@ -60,7 +60,7 @@ public class BuildSet {
 	 * user requested compilation of specific single files, then this predicate applies only to those files, and no
 	 * others. In all other cases, the predicate applies to every file, i.e., it always returns <code>true</code>.
 	 */
-	final Predicate<URI> resourceFilter;
+	final Predicate<FileURI> resourceFilter;
 
 	/**
 	 * Returns a set of all {@link IN4JSProject N4JS projects} this build set contains.
@@ -70,14 +70,14 @@ public class BuildSet {
 	}
 
 	BuildSet(Collection<IN4JSProject> requestedProjects, Collection<IN4JSProject> discoveredProjects,
-			Predicate<URI> projectFilter) {
+			Predicate<FileURI> projectFilter) {
 		this.requestedProjects = Collections.unmodifiableSet(new LinkedHashSet<>(requestedProjects));
 		this.discoveredProjects = Collections.unmodifiableSet(new LinkedHashSet<>(discoveredProjects));
 		this.resourceFilter = projectFilter;
 	}
 
 	BuildSet(Set<IN4JSProject> requestedProjects, Set<IN4JSProject> discoveredProjects,
-			Predicate<URI> projectFilter) {
+			Predicate<FileURI> projectFilter) {
 		this.requestedProjects = Collections.unmodifiableSet(requestedProjects);
 		this.discoveredProjects = Collections.unmodifiableSet(discoveredProjects);
 		this.resourceFilter = projectFilter;

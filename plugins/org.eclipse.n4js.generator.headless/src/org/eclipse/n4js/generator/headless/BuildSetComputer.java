@@ -13,6 +13,7 @@ package org.eclipse.n4js.generator.headless;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,18 +21,15 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.collections.Collections2;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicates;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -259,12 +257,11 @@ public class BuildSetComputer {
 		discoveredResolvedList.removeIf(pred);
 
 		// Create a filter that applies only to the given single source files if any were requested to be compiled.
-		Predicate<URI> resourceFilter;
+		Predicate<FileURI> resourceFilter;
 		if (absSingleSourceFiles.isEmpty()) {
 			resourceFilter = Predicates.alwaysTrue();
 		} else {
-			Set<URI> singleSourceURIs = FluentIterable.from(headlessHelper.createFileURIs(absSingleSourceFiles))
-					.transform(SafeURI::toURI).toSet();
+			Set<FileURI> singleSourceURIs = new HashSet<>(headlessHelper.createFileURIs(absSingleSourceFiles));
 			resourceFilter = Predicates.in(singleSourceURIs);
 		}
 
@@ -282,11 +279,11 @@ public class BuildSetComputer {
 	 */
 	private List<File> findProjectsForSingleFiles(List<File> sourceFiles) throws N4JSCompileException {
 
-		Set<URI> result = Sets.newLinkedHashSet();
+		Set<FileURI> result = Sets.newLinkedHashSet();
 
 		for (File sourceFile : sourceFiles) {
-			URI sourceFileURI = new FileURI(sourceFile).toURI();
-			URI projectURI = findProjectLocationRecursivelyByProjectDescriptionFile(sourceFileURI);
+			FileURI sourceFileURI = new FileURI(sourceFile);
+			FileURI projectURI = sourceFileURI.getProjectRoot();
 			if (projectURI == null) {
 				throw new N4JSCompileException("No project for file '" + sourceFile.toString() + "' found.");
 			}
@@ -296,29 +293,6 @@ public class BuildSetComputer {
 		// convert back to Files:
 		return result.stream().map(u -> new File(u.toFileString()))
 				.collect(Collectors.toList());
-	}
-
-	/**
-	 * Ascends the the given file-system location, until a directory is detected that qualifies as N4JS project location
-	 * (e.g. contains an {@link IN4JSProject#PACKAGE_JSON} file).
-	 */
-	private URI findProjectLocationRecursivelyByProjectDescriptionFile(URI location) {
-		URI nestedLocation = location;
-		int segmentCount = 0;
-		if (nestedLocation.isFile()) { // Here, unlike java.io.File, #isFile can mean directory as well.
-			File directory = new File(nestedLocation.toFileString());
-			while (directory != null) {
-				if (directory.isDirectory()) {
-					if (new File(directory, IN4JSProject.PACKAGE_JSON).exists()) {
-						URI projectLocation = new FileURI(directory).toURI();
-						return projectLocation;
-					}
-				}
-				nestedLocation = nestedLocation.trimSegments(segmentCount++);
-				directory = directory.getParentFile();
-			}
-		}
-		return null;
 	}
 
 }

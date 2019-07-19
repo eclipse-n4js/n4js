@@ -244,9 +244,11 @@ public class RunnerFrontEnd {
 	private void configureDependenciesAndPaths(RunConfiguration config) {
 		// 1) for all API projects among the direct and indirect dependencies we have to provide a mapping
 		// from the projectName of the API project to the projectName of the implementation project to be used
-		final ApiUsage apiUsage = runnerHelper
-				.getProjectExtendedDepsAndApiImplMapping(config.getRuntimeEnvironment(),
-						config.getUserSelection(), new N4JSProjectName(config.getImplementationId()), true);
+		final ApiUsage apiUsage = runnerHelper.getProjectExtendedDepsAndApiImplMapping(
+				config.getRuntimeEnvironment(),
+				config.getUserSelection(),
+				config.getImplementationId() != null ? new N4JSProjectName(config.getImplementationId()) : null,
+				true);
 
 		final List<IN4JSProject> deps = apiUsage.projects;
 		final Map<IN4JSProject, IN4JSProject> apiImplProjectMapping = apiUsage.concreteApiImplProjectMapping;
