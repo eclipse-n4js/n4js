@@ -26,7 +26,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceNameComputer
@@ -76,8 +75,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	
 	@Inject private FolderContainmentHelper containmentHelper;
 	
-	@Inject	private XpectAwareFileExtensionCalculator xpectAwareFileExtensionCalculator;
-
 	@Inject	private UriExtensions uriExtensions;
 
 
@@ -155,7 +152,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 
 		val boolean result = (autobuildEnabled
 			&& isGenerateProjectType(inputUri)
-//			&& !isInNodeModules(inputUri)
 			&& hasOutput(inputUri)
 			&& isOutputNotInSourceContainer(inputUri)
 			&& isOutsideOfOutputFolder(inputUri)
@@ -172,18 +168,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 			RaceDetectionHelper.log("Skip generation of artifacts from %s", input.URI)
 		}
 		return result
-	}
-
-	private def isInNodeModules(URI n4jsSourceURI){
-		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
-		if (project !== null) {
-			val segments = project.location.toURI.segmentsList;
-			if (segments.contains(N4JSGlobals.NODE_MODULES)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	private def hasOutput(URI n4jsSourceURI){
