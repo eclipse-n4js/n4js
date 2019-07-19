@@ -20,6 +20,8 @@ import java.util.function.Consumer;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.base.Preconditions;
 
@@ -210,6 +212,32 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	}
 
 	/**
+	 * Finds the nearest project root for the current location and attempt to derive the project name from the found
+	 * root. May return null.
+	 *
+	 * @return the name or null.
+	 */
+	public N4JSProjectName findProjectName() {
+		U root = getProjectRoot();
+		if (root != null) {
+			return root.getProjectName();
+		}
+		return null;
+	}
+
+	/**
+	 * Assumes that this location is a valid project root and derives the project name from the location. root. May
+	 * return null.
+	 */
+	public N4JSProjectName getProjectName() {
+		String guess = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(this);
+		if (guess != null) {
+			return new N4JSProjectName(guess);
+		}
+		return null;
+	}
+
+	/**
 	 * Return true if this is a directory that contains a {@link IN4JSProject#PACKAGE_JSON package.json} file.
 	 */
 	public boolean isProjectRootDirectory() {
@@ -222,6 +250,8 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	 * Ascends the the given file-system location, until a directory is detected that qualifies as N4JS project location
 	 * (e.g. contains an {@link IN4JSProject#PACKAGE_JSON} file). Returns null if this location is not nested in a
 	 * project.
+	 *
+	 * @return the nearest project root or null, if none.
 	 */
 	public U getProjectRoot() {
 		@SuppressWarnings("unchecked")

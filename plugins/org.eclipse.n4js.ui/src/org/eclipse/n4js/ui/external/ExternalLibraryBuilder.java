@@ -65,7 +65,6 @@ import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
@@ -602,8 +601,7 @@ public class ExternalLibraryBuilder {
 		Set<String> toBeWipedStrings = new HashSet<>();
 		for (FileURI toWipe : toBeWiped) {
 			toBeWipedStrings.add(toWipe.toString());
-			N4JSProjectName projectName = new N4JSProjectName(
-					ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(toWipe));
+			N4JSProjectName projectName = toWipe.getProjectName();
 			validatorExtension.clearAllMarkersOfExternalProject(projectName);
 		}
 

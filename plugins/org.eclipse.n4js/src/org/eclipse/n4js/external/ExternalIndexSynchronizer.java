@@ -390,7 +390,7 @@ public abstract class ExternalIndexSynchronizer {
 		if (!rr.wipedProjects.isEmpty()) {
 			SortedSet<String> prjNames = new TreeSet<>();
 			for (SafeURI<?> location : rr.wipedProjects) {
-				String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+				String projectName = location.getProjectName().getRawName();
 				prjNames.add(projectName);
 			}
 			logger.logInfo("Projects deregistered: " + String.join(", ", prjNames));

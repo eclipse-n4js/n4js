@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
@@ -183,10 +184,8 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 
 			} else if (Files.isSymbolicLink(folder.getLocation().toFile().toPath())) {
 				// might be a project from workspace
-				URI symLinkUri = URIUtils.toFileUri(folder.getLocation().toFile());
-				String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(symLinkUri);
-				String eclipseProjectName = ProjectDescriptionUtils
-						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
+				N4JSProjectName n4jsProjectName = new PlatformResourceURI(folder).getProjectName();
+				String eclipseProjectName = n4jsProjectName.toEclipseProjectName().getRawName();
 
 				IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(eclipseProjectName);
 				if (iProject != null && iProject.exists()) {

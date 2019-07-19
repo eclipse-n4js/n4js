@@ -27,7 +27,6 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 
 import com.google.common.base.Optional;
@@ -165,7 +164,7 @@ public class N4JSProject implements IN4JSProject {
 	public N4JSProjectName getProjectName() {
 		// because the projectName must be available even if the project does not exist, we do not read from the
 		// ProjectDescription, here, but instead derive the projectName from the location URI
-		return new N4JSProjectName(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location));
+		return location.getProjectName();
 	}
 
 	@Override

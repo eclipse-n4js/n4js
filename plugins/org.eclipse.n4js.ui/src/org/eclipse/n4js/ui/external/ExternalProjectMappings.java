@@ -35,7 +35,6 @@ import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
@@ -115,15 +114,13 @@ public class ExternalProjectMappings {
 		// prepare list of locations of all projects in workspace
 		// (note: also include locations of close projects!)
 		Set<PlatformResourceURI> locationsOfWorkspaceProjects = new HashSet<>(userWorkspace.getAllProjectLocations());
-		Map<String, FileURI> workspaceAsFileURIs = new HashMap<>();
+		Map<N4JSProjectName, FileURI> workspaceAsFileURIs = new HashMap<>();
 		for (PlatformResourceURI wsProject : locationsOfWorkspaceProjects) {
-			workspaceAsFileURIs.put(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(wsProject),
-					wsProject.toFileURI());
+			workspaceAsFileURIs.put(wsProject.getProjectName(), wsProject.toFileURI());
 		}
 		List<FileURI> allPrjLocs = new LinkedList<>(completeCache.keySet());
 		for (FileURI projectLocation : allPrjLocs) {
-			String externalProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation);
-			FileURI fromWorkspace = workspaceAsFileURIs.get(externalProjectName);
+			FileURI fromWorkspace = workspaceAsFileURIs.get(projectLocation.getProjectName());
 			if (fromWorkspace != null) {
 				if (projectLocation.equals(fromWorkspace)) {
 					completeCache.remove(projectLocation);
@@ -180,8 +177,7 @@ public class ExternalProjectMappings {
 			completeListTmp.add(Tuples.pair(projectLocation, prjDescr));
 
 			// shadowing is done here by checking if an npm is already in the mapping
-			N4JSProjectName projectName = new N4JSProjectName(
-					ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation));
+			N4JSProjectName projectName = projectLocation.getProjectName();
 			if (!completeProjectNameMappingTmp.containsKey(projectName)) {
 
 				completeProjectNameMappingTmp.put(projectName, Lists.newArrayList(project));

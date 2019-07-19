@@ -23,7 +23,6 @@ import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.ProjectTestsHelper
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
-import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.xtext.util.Arrays
 import org.junit.Test
 

@@ -21,7 +21,6 @@ import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.common.collect.Iterators;
@@ -71,8 +70,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location);
 			projectElementHandles.put(location, lazyDescriptionHandle);
 		}
-		nameToLocation.putIfAbsent(new N4JSProjectName(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location)),
-				location);
+		nameToLocation.putIfAbsent(location.getProjectName(), location);
 	}
 
 	@Override
@@ -132,7 +130,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 	public FileURI getLocation(ProjectReference projectReference) {
 		String projectName = projectReference.getProjectName();
 		for (FileURI siblingProject : projectElementHandles.keySet()) {
-			String candidateProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(siblingProject);
+			String candidateProjectName = siblingProject.getProjectName().getRawName();
 			if (candidateProjectName.equals(projectName)) {
 				LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(siblingProject);
 				if (lazyHandle != null) {
