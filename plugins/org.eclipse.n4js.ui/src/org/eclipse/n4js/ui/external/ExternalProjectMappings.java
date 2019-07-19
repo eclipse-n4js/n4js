@@ -14,6 +14,7 @@ import static com.google.common.collect.Maps.newHashMap;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -113,13 +114,28 @@ public class ExternalProjectMappings {
 
 		// prepare list of locations of all projects in workspace
 		// (note: also include locations of close projects!)
-		Set<? extends SafeURI<?>> locationsOfWorkspaceProjects = new HashSet<>(userWorkspace.getAllProjectLocations());
-
-		List<SafeURI<?>> allPrjLocs = new LinkedList<>(completeCache.keySet());
-		for (SafeURI<?> projectLocation : allPrjLocs) {
-			if (projectLocation.isFile()) {
-				if (locationsOfWorkspaceProjects.contains(projectLocation)) {
+		Set<PlatformResourceURI> locationsOfWorkspaceProjects = new HashSet<>(userWorkspace.getAllProjectLocations());
+		Map<String, FileURI> workspaceAsFileURIs = new HashMap<>();
+		for (PlatformResourceURI wsProject : locationsOfWorkspaceProjects) {
+			workspaceAsFileURIs.put(ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(wsProject),
+					wsProject.toFileURI());
+		}
+		List<FileURI> allPrjLocs = new LinkedList<>(completeCache.keySet());
+		for (FileURI projectLocation : allPrjLocs) {
+			String externalProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectLocation);
+			FileURI fromWorkspace = workspaceAsFileURIs.get(externalProjectName);
+			if (fromWorkspace != null) {
+				if (projectLocation.equals(fromWorkspace)) {
 					completeCache.remove(projectLocation);
+				} else {
+					try {
+						FileURI canonicalLocation = projectLocation.resolveSymLinks();
+						if (canonicalLocation.equals(fromWorkspace)) {
+							completeCache.remove(projectLocation);
+						}
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 			}
 		}

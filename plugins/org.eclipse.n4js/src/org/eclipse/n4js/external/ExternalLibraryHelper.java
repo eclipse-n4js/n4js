@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -45,11 +44,7 @@ public final class ExternalLibraryHelper {
 	 * that has been explicitly installed on user request.
 	 */
 	public boolean isExternalProjectDirectory(SafeURI<?> projectDirectory) {
-		if (!projectDirectory.isDirectory()) {
-			return false;
-		}
-
-		return projectDirectory.appendSegment(N4JSGlobals.PACKAGE_JSON).isFile();
+		return projectDirectory instanceof FileURI && projectDirectory.isProjectRootDirectory();
 	}
 
 	/**
