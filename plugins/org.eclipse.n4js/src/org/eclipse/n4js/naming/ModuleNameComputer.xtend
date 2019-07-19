@@ -38,9 +38,6 @@ class ModuleNameComputer {
 	@Inject
 	private extension IN4JSCore core
 
-	@Inject
-	private extension UriExtensions uriExtensions
-
 	/**
 	 * Returns the qualified module name which is implicitly defined by the given resource.
 	 * <p>
@@ -67,12 +64,7 @@ class ModuleNameComputer {
 	 * Please note there is also a special treatment for Xpect test files that may have a file extension
 	 * like {@code ".n4js.xt"}. The calculation will handle this as a hole file extension, so {@code ".n4js"} will be pruned, too.
 	 */
-	def getQualifiedModuleName(URI uncheckedUri) {
-		// FIXME: add authority at def site of resource
-		val uri = if (uncheckedUri.file && !uncheckedUri.isRelative) {
-			uriExtensions.withEmptyAuthority(uncheckedUri);
-		} else uncheckedUri;
-		
+	def getQualifiedModuleName(URI uri) {
 		val maybeSourceContainer = findN4JSSourceContainer(uri)
 		if (maybeSourceContainer.present) {
 			val sourceContainer = maybeSourceContainer.get

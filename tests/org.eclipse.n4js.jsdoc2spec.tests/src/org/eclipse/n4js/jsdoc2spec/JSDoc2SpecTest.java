@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
 		SpecADocXpectMethod.class
 })
 @RunWith(XpectRunner.class)
-@LspCompatibleXpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect-tests", fileExtensions = { "xt" })
+@LspCompatibleXpectTestFiles(baseDir = "xpect-tests")
 @XpectImport({ N4JSStandaloneTestsModule.class })
 public class JSDoc2SpecTest {
 	// nop

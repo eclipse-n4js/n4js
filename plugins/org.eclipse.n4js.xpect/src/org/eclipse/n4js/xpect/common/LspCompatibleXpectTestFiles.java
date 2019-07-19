@@ -36,7 +36,7 @@ public @interface LspCompatibleXpectTestFiles {
 	/**
 	 * @see XpectTestFiles#fileExtensions()
 	 */
-	String[] fileExtensions() default { "xt", "xpect" };
+	String[] fileExtensions() default "xt";
 
 	/**
 	 * @see XpectTestFiles#files()
@@ -46,7 +46,7 @@ public @interface LspCompatibleXpectTestFiles {
 	/**
 	 * @see XpectTestFiles#relativeTo()
 	 */
-	FileRoot relativeTo() default FileRoot.CLASS;
+	FileRoot relativeTo() default FileRoot.PROJECT;
 
 	/**
 	 * Wraps all file uris created by the super impl with empty authorities.
