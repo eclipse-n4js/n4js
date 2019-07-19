@@ -284,6 +284,18 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		super();
 	}
 
+	@Override
+	public void setURI(URI uri) {
+		if (uri != null) {
+			if (uri.isFile() && !uri.isRelative()) {
+				if (!uri.hasAuthority()) {
+					throw new IllegalArgumentException("File URI without authority: " + uri);
+				}
+			}
+		}
+		super.setURI(uri);
+	}
+
 	/**
 	 * Returns the {@link ASTMetaInfoCache} (in states {@link #isFullyProcessed() "Fully Processed"} and during the
 	 * transition from "Fully Initialized" to "Fully Processed", i.e. during post-processing) or throws an exception if
