@@ -161,17 +161,17 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	}
 
 	@Override
-	protected void doClean(ToBeBuilt toBeBuilt, IProgressMonitor monitor)
+	protected void doClean(ToBeBuilt toBeBuilt, Set<String> removedProjects, IProgressMonitor monitor)
 			throws CoreException {
 
 		IProject project = getProject();
 		projectsStateHelper.clearProjectCache(project);
-		runWithBuildType(monitor, BuildType.CLEAN, (m) -> super.doClean(toBeBuilt, m));
+		runWithBuildType(monitor, BuildType.CLEAN, (m) -> super.doClean(toBeBuilt, removedProjects, m));
 	}
 
 	@Override
-	protected void doBuild(ToBeBuilt toBeBuilt, IProgressMonitor monitor, BuildType type) throws CoreException,
-			OperationCanceledException {
+	protected void doBuild(ToBeBuilt toBeBuilt, Set<String> removedProjects, IProgressMonitor monitor, BuildType type)
+			throws CoreException, OperationCanceledException {
 		// if we built it, we don't have to treat it as deleted first
 		toBeBuilt.getToBeDeleted().removeAll(toBeBuilt.getToBeUpdated());
 
@@ -183,7 +183,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 			toBeBuilt.getToBeDeleted().addAll(task.getToBeBuilt().getToBeDeleted());
 			toBeBuilt.getToBeUpdated().addAll(task.getToBeBuilt().getToBeUpdated());
 			RaceDetectionHelper.log("%s", toBeBuilt);
-			runWithBuildType(monitor, type, (m) -> superDoBuild(toBeBuilt, m, type));
+			runWithBuildType(monitor, type, (m) -> superDoBuild(toBeBuilt, removedProjects, m, type));
 		} catch (Exception e) {
 			task.reschedule();
 			throw e;
@@ -227,7 +227,8 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		}
 	}
 
-	private void superDoBuild(ToBeBuilt toBeBuilt, IProgressMonitor monitor, BuildType type) {
+	private void superDoBuild(ToBeBuilt toBeBuilt, Set<String> removedProjects, IProgressMonitor monitor,
+			BuildType type) {
 		// return early if there's nothing to do.
 		// we reuse the isEmpty() impl from BuildData assuming that it doesnT access the ResourceSet which is still null
 		// and would be expensive to create.
@@ -241,7 +242,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		IProject project = getProject();
 		ResourceSet resourceSet = createResourceSet(project);
 		BuildData buildData = new BuildData(getProject().getName(), resourceSet, toBeBuilt, queuedBuildData,
-				indexingOnly, this::needRebuild);
+				indexingOnly, this::needRebuild, removedProjects);
 		getBuilderState().update(buildData, progress.split(1, SubMonitor.SUPPRESS_NONE));
 		if (!indexingOnly) {
 			try {

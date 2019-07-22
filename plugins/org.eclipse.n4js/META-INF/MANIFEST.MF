@@ -32,7 +32,9 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.flowgraphs,
  org.eclipse.n4js.json,
  org.eclipse.n4js.semver.model,
- org.eclipse.n4js.semver
+ org.eclipse.n4js.semver,
+ org.eclipse.lsp4j,
+ org.eclipse.lsp4j.jsonrpc
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.binaries,

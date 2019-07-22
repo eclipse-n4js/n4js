@@ -1933,13 +1933,13 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 	 * Derived, returns extended class (if any) and implemented or extended interfaces.
 	 */
 	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
-		return Collections.emptyList;
+		return Collections.<ParameterizedTypeRef>emptyList;
 	}
 	/**
 	 * Derived, returns implemented or extended interfaces.
 	 */
 	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
-		return Collections.emptyList;
+		return Collections.<ParameterizedTypeRef>emptyList;
 	}
 }
 
