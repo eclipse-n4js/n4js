@@ -174,7 +174,7 @@ public class ExternalLibraryPreferenceModel {
 	 *            the location to remove.
 	 * @return {@code true} if the location was removed, otherwise {@code false}.
 	 */
-	synchronized public boolean remove(final SafeURI<?> location) {
+	synchronized public boolean remove(final FileURI location) {
 		if (null == location) {
 			return false;
 		}

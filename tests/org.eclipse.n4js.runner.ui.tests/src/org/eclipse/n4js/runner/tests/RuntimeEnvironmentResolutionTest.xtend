@@ -582,18 +582,18 @@ class RuntimeEnvironmentResolutionTest {
 		val deps = apiUsage.projects
 		val extendedMap = apiUsage.concreteApiImplProjectMapping
 
-		assertEquals(true,apiUsage.isInErrorState)
-		assertEquals(true,apiUsage.missingImplementationIds.contains('Bapi'))
-		assertEquals(1,apiUsage.missingImplementationIds.size)
+		assertEquals(true, apiUsage.isInErrorState)
+		assertEquals(true, apiUsage.missingImplementationIds.contains(new N4JSProjectName('Bapi')))
+		assertEquals(1, apiUsage.missingImplementationIds.size)
 
 
 		// ensure right Mapping
-		assertEquals( aimpl, extendedMap.get(aapi));
-		assertNotEquals( bimpl2, extendedMap.get(bapi));
+		assertEquals(aimpl, extendedMap.get(aapi));
+		assertNotEquals(bimpl2, extendedMap.get(bapi));
 
 		// ensure that all dependencies are there
-		assertThat( deps, hasItems(client,aimpl,/*bimpl,*/x,/*y,*/v8rl,v8re,aapi,bapi));
-		assertThat( deps, not(hasItems(bimpl,y)));
+		assertThat(deps, hasItems(client,aimpl,/*bimpl,*/x,/*y,*/v8rl,v8re,aapi,bapi));
+		assertThat(deps, not(hasItems(bimpl,y)));
 
 		// but not with wrong id.
 		assertThat("Should not have a dependency to z from different implID", deps, not(hasItem(z)))

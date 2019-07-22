@@ -785,6 +785,9 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	}
 
 	private boolean isContainedOrEqual(URI uri, URI container) {
+		if (uri.equals(container)) {
+			return true;
+		}
 		if (!container.hasTrailingPathSeparator()) {
 			container = container.appendSegment("");
 		}
