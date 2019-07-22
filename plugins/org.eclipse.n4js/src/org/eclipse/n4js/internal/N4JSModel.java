@@ -340,7 +340,11 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 
 	private <PL extends SafeURI<PL>> PL findArtifactInFolder(InternalN4JSWorkspace<PL> ws,
 			URI location, String pathStr) {
-		return ws.findArtifactInFolder(ws.fromURI(location), pathStr);
+		PL safeURI = ws.fromURI(location);
+		if (safeURI == null) {
+			return null;
+		}
+		return ws.findArtifactInFolder(safeURI, pathStr);
 	}
 
 	public Optional<String> getExtendedRuntimeEnvironmentName(N4JSProject project) {
