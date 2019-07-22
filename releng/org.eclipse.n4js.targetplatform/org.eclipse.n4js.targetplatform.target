@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_2019_06" sequenceNumber="154">
+<target name="Generated target-platform N4JS:N4JS_2019_06" sequenceNumber="155">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.wst.common.project.facet.ui" version="1.4.601.v201903222010"/>
