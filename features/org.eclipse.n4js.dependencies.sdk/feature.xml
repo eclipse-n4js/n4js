@@ -192,6 +192,8 @@ Contributors:
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
+      <import plugin="org.eclipse.lsp4j"/>
+      <import plugin="org.eclipse.lsp4j.jsonrpc"/>
    </requires>
 
    <plugin

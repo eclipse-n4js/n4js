@@ -47,7 +47,7 @@ Contributors:
 		<tycho-version>1.4.0</tycho-version>
 
 		<!-- Xtext, Xtend and their runtime -->
-		<xtext-version>2.17.1</xtext-version>
+		<xtext-version>2.18.0</xtext-version>
 
 		<!-- maven plugins -->
 		<build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
@@ -542,7 +542,7 @@ Contributors:
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
-				<xtext.version>2.11.0-SNAPSHOT</xtext.version>
+				<xtext.version>2.18.0</xtext.version>
 			</properties>
 			<repositories>
 					<repository>

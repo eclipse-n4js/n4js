@@ -12,13 +12,13 @@ package org.eclipse.n4js.ui.wizard.classifiers;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ui.dialog.ModuleSpecifierSelectionDialog;
 import org.eclipse.n4js.ui.wizard.components.AccessModifierComponent;
@@ -27,7 +27,6 @@ import org.eclipse.n4js.ui.wizard.components.OtherClassifierModifiersComponent;
 import org.eclipse.n4js.ui.wizard.components.WizardComponentDataConverters;
 import org.eclipse.n4js.ui.wizard.generator.ContentBlock;
 import org.eclipse.n4js.ui.wizard.generator.WorkspaceWizardGenerator;
-import org.eclipse.n4js.ui.wizard.interfaces.N4JSInterfaceWizardModel;
 import org.eclipse.n4js.ui.wizard.model.AccessModifier;
 import org.eclipse.n4js.ui.wizard.model.DefinitionFileModel;
 import org.eclipse.n4js.ui.wizard.workspace.PreviewableWizardPage;
@@ -114,13 +113,12 @@ public abstract class N4JSNewClassifierWizardPage<M extends N4JSClassifierWizard
 
 		DataBindingContext dataBindingContext = this.getDataBindingContext();
 
-		@SuppressWarnings("unchecked")
 		IObservableValue<String> moduleSpecifierValue = BeanProperties
-				.value(WorkspaceWizardModel.class, WorkspaceWizardModel.MODULE_SPECIFIER_PROPERTY).observe(getModel());
+				.value(WorkspaceWizardModel.class, WorkspaceWizardModel.MODULE_SPECIFIER_PROPERTY, String.class)
+				.observe(getModel());
 
-		@SuppressWarnings("unchecked")
 		IObservableValue<Boolean> suffixVisibilityValue = BeanProperties
-				.value(SuffixText.class, SuffixText.SUFFIX_VISIBILITY_PROPERTY)
+				.value(SuffixText.class, SuffixText.SUFFIX_VISIBILITY_PROPERTY, Boolean.class)
 				.observe(workspaceWizardControl.getModuleSpecifierText());
 
 		//// Only show the suffix on input values ending with a '/' character or empty module specifiers.
@@ -132,23 +130,20 @@ public abstract class N4JSNewClassifierWizardPage<M extends N4JSClassifierWizard
 				}));
 
 		//// interface name to module specifier suffix binding
-		@SuppressWarnings("unchecked")
 		IObservableValue<String> interfaceNameModelValue = BeanProperties
-				.value(N4JSInterfaceWizardModel.class, N4JSClassifierWizardModel.NAME_PROPERTY).observe(getModel());
-		@SuppressWarnings("unchecked")
-		IObservableValue<String> greySuffixValue = BeanProperties.value(SuffixText.class, SuffixText.SUFFIX_PROPERTY)
+				.value(N4JSClassifierWizardModel.class, N4JSClassifierWizardModel.NAME_PROPERTY, String.class)
+				.observe(getModel());
+		IObservableValue<String> greySuffixValue = BeanProperties
+				.value(SuffixText.class, SuffixText.SUFFIX_PROPERTY, String.class)
 				.observe(workspaceWizardControl.getModuleSpecifierText());
 		dataBindingContext.bindValue(greySuffixValue,
 				interfaceNameModelValue, noUpdateValueStrategy(),
 				new UpdateValueStrategy<>(UpdateValueStrategy.POLICY_UPDATE));
 
 		//// Enable n4js <-> Definition value(external) is selected
-		@SuppressWarnings("unchecked")
 		IObservableValue<Boolean> externalValue = BeanProperties
-				.value(DefinitionFileModel.class, N4JSClassifierWizardModel.DEFINITION_FILE_PROPERTY)
-				.observe(getModel());
-
-		@SuppressWarnings("unchecked")
+				.value(DefinitionFileModel.class, N4JSClassifierWizardModel.DEFINITION_FILE_PROPERTY, Boolean.class)
+				.observe((DefinitionFileModel) getModel());
 		IObservableValue<Boolean> n4jsEnabled = WidgetProperties.enabled()
 				.observe(otherClassifierModifiersComponent.getN4jsAnnotationBox());
 		dataBindingContext.bindValue(n4jsEnabled, externalValue, noUpdateValueStrategy(),
@@ -156,12 +151,11 @@ public abstract class N4JSNewClassifierWizardPage<M extends N4JSClassifierWizard
 						&& AccessModifier.PRIVATE != getModel().getAccessModifier()));
 
 		// One way binding of the access modifiers to the enabled state of internal checkbox
-		@SuppressWarnings("unchecked")
 		IObservableValue<Boolean> internalEnabledValue = WidgetProperties.enabled()
 				.observe(accessModifierComponent.getInternalAnnotationBox());
-		@SuppressWarnings("unchecked")
 		IObservableValue<AccessModifier> accessModifierSelectObservable = BeanProperties
-				.value(N4JSInterfaceWizardModel.class, N4JSClassifierWizardModel.ACCESS_MODIFIER_PROPERTY)
+				.value(N4JSClassifierWizardModel.class, N4JSClassifierWizardModel.ACCESS_MODIFIER_PROPERTY,
+						AccessModifier.class)
 				.observe(getModel());
 
 		dataBindingContext.bindValue(internalEnabledValue, accessModifierSelectObservable, noUpdateValueStrategy(),
@@ -173,7 +167,6 @@ public abstract class N4JSNewClassifierWizardPage<M extends N4JSClassifierWizard
 				}));
 
 		// N4JS annotation checkbox disabled when access modifier is private
-		@SuppressWarnings("unchecked")
 		IObservableValue<Boolean> n4jsEnabledValue = WidgetProperties.enabled()
 				.observe(otherClassifierModifiersComponent.getN4jsAnnotationBox());
 		dataBindingContext.bindValue(n4jsEnabledValue, accessModifierSelectObservable, noUpdateValueStrategy(),
@@ -185,9 +178,8 @@ public abstract class N4JSNewClassifierWizardPage<M extends N4JSClassifierWizard
 				}));
 
 		// Refresh wizard state on validation change
-		@SuppressWarnings("unchecked")
 		IObservableValue<ValidationResult> observableValidationValue = BeanProperties
-				.value(WorkspaceWizardModelValidator.VALIDATION_RESULT)
+				.value(WorkspaceWizardModelValidator.VALIDATION_RESULT, ValidationResult.class)
 				.observe(getValidator());
 		observableValidationValue.addValueChangeListener(new IValueChangeListener<ValidationResult>() {
 			@Override
