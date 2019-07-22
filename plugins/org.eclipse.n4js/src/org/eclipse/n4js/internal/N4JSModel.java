@@ -299,7 +299,9 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 				providedRuntimes.add(getN4JSProject(location, false));
 			} else {
 				SafeURI<?> external = externalLibraryWorkspace.getLocation(runtimeLibrary);
-				providedRuntimes.add(getN4JSProject(external, true));
+				if (external != null) {
+					providedRuntimes.add(getN4JSProject(external, true));
+				}
 			}
 		}
 
