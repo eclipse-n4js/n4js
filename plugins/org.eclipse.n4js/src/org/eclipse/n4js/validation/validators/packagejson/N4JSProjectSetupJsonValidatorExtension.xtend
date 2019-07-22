@@ -540,7 +540,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 			return;
 		}
 		
-		val currentProject = allProjects.get(description.projectName);
+		val currentProject = allProjects.get(new N4JSProjectName(description.projectName));
 
 		// Nothing to do with non-existing, missing and/or external projects.
 		if (null === currentProject || !currentProject.exists || currentProject.external) {
