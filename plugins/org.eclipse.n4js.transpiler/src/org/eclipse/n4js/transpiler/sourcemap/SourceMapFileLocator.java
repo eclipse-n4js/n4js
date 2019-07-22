@@ -13,10 +13,13 @@ package org.eclipse.n4js.transpiler.sourcemap;
 import java.io.File;
 import java.nio.file.Path;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -38,6 +41,16 @@ public class SourceMapFileLocator {
 	public File resolveSourceMapFromSrc(Path srcLocation) throws Exception {
 		URI uri = new FileURI(srcLocation.normalize().toFile()).toURI();
 		Optional<? extends IN4JSSourceContainer> optSrcContainer = n4jsCore.findN4JSSourceContainer(uri);
+		if (!optSrcContainer.isPresent()) {
+			IFile[] candidates = ResourcesPlugin.getWorkspace().getRoot()
+					.findFilesForLocationURI(java.net.URI.create(uri.toString()));
+			for (IFile candidate : candidates) {
+				optSrcContainer = n4jsCore.findN4JSSourceContainer(new PlatformResourceURI(candidate).toURI());
+				if (optSrcContainer.isPresent()) {
+					break;
+				}
+			}
+		}
 		if (optSrcContainer.isPresent()) {
 			IN4JSSourceContainer srcContainer = optSrcContainer.get();
 			Path projectPath = srcContainer.getProject().getLocation().toFileSystemPath();
