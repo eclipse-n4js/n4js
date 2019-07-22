@@ -14,7 +14,7 @@ import static org.eclipse.n4js.ui.wizard.components.WizardComponentUtils.fillLab
 
 import java.util.ArrayList;
 
-import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.list.IListChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.ListChangeEvent;
@@ -280,9 +280,9 @@ public class InterfacesComponentProvider {
 			if (interfacesTable == null || interfacesAddButton == null || interfacesRemoveButton == null) {
 				return;
 			}
-			@SuppressWarnings("unchecked")
 			IObservableList<ClassifierReference> interfacesValue = BeanProperties
-					.list(InterfacesContainingModel.class, N4JSClassifierWizardModel.INTERFACES_PROPERTY)
+					.list(InterfacesContainingModel.class, N4JSClassifierWizardModel.INTERFACES_PROPERTY,
+							ClassifierReference.class)
 					.observe(model);
 
 			// Update SWT Table on model interfaces list update

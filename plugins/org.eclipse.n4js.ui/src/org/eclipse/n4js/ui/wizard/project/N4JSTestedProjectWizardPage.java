@@ -14,9 +14,9 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -56,7 +56,6 @@ public class N4JSTestedProjectWizardPage extends WizardPage {
 		this.setMessage("Select projects to be tested in your new test project");
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void createControl(Composite parent) {
 		Composite listComposite = new Composite(parent, NONE);
@@ -70,7 +69,7 @@ public class N4JSTestedProjectWizardPage extends WizardPage {
 		DataBindingContext databindingContext = new DataBindingContext();
 		parent.addDisposeListener(e -> databindingContext.dispose());
 
-		databindingContext.bindList(ViewersObservables.observeMultiSelection(projectListViewer),
+		databindingContext.bindList(ViewerProperties.multipleSelection().observe(projectListViewer),
 				PojoProperties.list(N4JSProjectInfo.class, N4JSProjectInfo.TESTED_PROJECT_PROP_NAME)
 						.observe(projectInfo));
 
