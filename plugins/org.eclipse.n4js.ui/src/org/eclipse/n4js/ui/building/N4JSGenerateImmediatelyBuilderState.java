@@ -291,7 +291,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	/** logic of {@link IN4JSCore#findAllProjects()} with filtering by name */
 	private IProject findProject(BuildData buildData) {
 		String eclipseProjectName = buildData.getProjectName();
-		if (eclipseProjectName == null) {
+		if (Strings.isNullOrEmpty(eclipseProjectName)) {
 			return null;
 		}
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();

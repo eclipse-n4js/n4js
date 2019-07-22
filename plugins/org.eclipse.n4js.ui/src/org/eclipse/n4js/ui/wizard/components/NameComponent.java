@@ -12,15 +12,14 @@ package org.eclipse.n4js.ui.wizard.components;
 
 import static org.eclipse.n4js.ui.wizard.components.WizardComponentUtils.fillTextDefaults;
 
-import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.n4js.ui.wizard.classifiers.N4JSClassifierWizardModel;
+import org.eclipse.n4js.ui.wizard.model.NamedModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.n4js.ui.wizard.classifiers.N4JSClassifierWizardModel;
-import org.eclipse.n4js.ui.wizard.model.NamedModel;
 
 /**
  * A component which provides simple name input for {@link NamedModel}s
@@ -55,10 +54,8 @@ public class NameComponent extends WizardComponent {
 	}
 
 	private void setupBindings() {
-		@SuppressWarnings("unchecked")
 		IObservableValue<String> nameValue = BeanProperties
-				.value(NamedModel.class, N4JSClassifierWizardModel.NAME_PROPERTY).observe(model);
-		@SuppressWarnings("unchecked")
+				.value(NamedModel.class, N4JSClassifierWizardModel.NAME_PROPERTY, String.class).observe(model);
 		IObservableValue<String> nameUI = WidgetProperties.text(SWT.Modify).observe(nameText);
 		getDataBindingContext().bindValue(nameValue, nameUI);
 	}
