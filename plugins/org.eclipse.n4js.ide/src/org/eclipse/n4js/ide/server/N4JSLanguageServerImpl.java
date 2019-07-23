@@ -22,7 +22,6 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.projectModel.lsp.ex.IProjectConfigEx;
 import org.eclipse.xtext.ide.server.LanguageServerImpl;
-import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.inject.Inject;
@@ -32,9 +31,6 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class N4JSLanguageServerImpl extends LanguageServerImpl {
-
-	@Inject
-	UriExtensions uriUtils;
 
 	// TODO we should probably use the DisposableRegistry here
 	/**
@@ -89,7 +85,10 @@ public class N4JSLanguageServerImpl extends LanguageServerImpl {
 	}
 
 	private boolean isInOutputFolder(String uriString) {
-		URI uri = uriUtils.toUri(uriString);
+		URI uri = URI.createURI(uriString);
+		if (!uri.hasAuthority()) {
+			throw new RuntimeException("Missing authority in uri " + uriString);
+		}
 		N4JSWorkspaceManager workspaceManager = (N4JSWorkspaceManager) getWorkspaceManager();
 		IWorkspaceConfig workspaceConfig = workspaceManager.getWorkspaceConfig();
 		IProjectConfigEx projectConfig = (IProjectConfigEx) workspaceConfig.findProjectContaining(uri);
