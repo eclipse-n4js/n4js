@@ -24,8 +24,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.external.ShadowingInfoHelper;
-import org.eclipse.n4js.internal.N4JSModel;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
@@ -39,9 +40,9 @@ import com.google.inject.Inject;
 public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilderParticipantTest {
 	private static final String PROBANDS = "probands";
 	private static final String WORKSPACE_LOC = "ShadowingCreatesVersionWarnings";
-	private static final String YARN_PROJECT = "YarnWorkspaceProject";
-	private static final String PROJECT_P1 = "P1";
-	private static final String PROJECT_N4JSLANG = "n4js.lang";
+	private static final N4JSProjectName YARN_PROJECT = new N4JSProjectName("YarnWorkspaceProject");
+	private static final N4JSProjectName PROJECT_P1 = new N4JSProjectName("P1");
+	private static final N4JSProjectName PROJECT_N4JSLANG = new N4JSProjectName("n4js.lang");
 
 	@Inject
 	private EclipseExternalLibraryWorkspace extWS;
@@ -50,7 +51,7 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 	private EclipseBasedN4JSWorkspace userWS;
 
 	@Inject
-	private N4JSModel model;
+	private IN4JSCore n4jsCore;
 
 	@Inject
 	private ShadowingInfoHelper shadowingInfoHelper;
@@ -68,8 +69,10 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 
 		syncExtAndBuild();
 
-		IProject prjP1 = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_P1);
-		IProject prjN4JSLang = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_N4JSLANG);
+		IProject prjP1 = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(PROJECT_P1.toEclipseProjectName().getRawName());
+		IProject prjN4JSLang = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(PROJECT_N4JSLANG.toEclipseProjectName().getRawName());
 		assertTrue("Cannot access project: " + prjP1, prjP1.isAccessible());
 		assertTrue("Cannot access project: " + prjN4JSLang, prjN4JSLang.isAccessible());
 
@@ -83,9 +86,9 @@ public class ShadowingCreatesVersionWarningsPluginUITest extends AbstractBuilder
 		assertTrue(shadowingInfoHelper.findShadowedProjects(n4jsLangShipped).isEmpty());
 		assertTrue(shadowingInfoHelper.findShadowingProjects(n4jsLangShipped).size() == 1);
 
-		URI userN4LangUri = userWS.findProjectForName(PROJECT_N4JSLANG);
+		URI userN4LangUri = userWS.getProjectLocation(PROJECT_N4JSLANG).toURI();
 		assertNotNull(userN4LangUri);
-		IN4JSProject n4jsLangUserWS = model.getN4JSProject(userN4LangUri);
+		IN4JSProject n4jsLangUserWS = n4jsCore.findProject(userN4LangUri).get();
 		assertTrue(shadowingInfoHelper.isShadowingProject(n4jsLangUserWS));
 		assertFalse(shadowingInfoHelper.isShadowedProject(n4jsLangUserWS));
 		assertTrue(shadowingInfoHelper.findShadowedProjects(n4jsLangUserWS).size() == 1);

@@ -12,6 +12,8 @@ package org.eclipse.n4js.ide.server;
 
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.lsp.IN4JSProjectConfig;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.xtext.ide.server.DefaultProjectDescriptionFactory;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -27,16 +29,18 @@ public class N4JSProjectDescriptionFactory extends DefaultProjectDescriptionFact
 	@Override
 	public ProjectDescription getProjectDescription(IProjectConfig config) {
 		ProjectDescription projectDescription = super.getProjectDescription(config);
-		IN4JSProject casted = (IN4JSProject) config;
-		if (casted.getProjectType() == ProjectType.PLAINJS) {
+		IN4JSProjectConfig casted = (IN4JSProjectConfig) config;
+		IN4JSProject project = casted.toProject();
+		if (project.getProjectType() == ProjectType.PLAINJS) {
 			return projectDescription;
 		}
 		FluentIterable
-				.from(casted.getSortedDependencies())
+				.from(project.getSortedDependencies())
 				.transform(IN4JSProject::getProjectName)
+				.transform(N4JSProjectName::getRawName)
 				.copyInto(projectDescription.getDependencies());
-		if (casted.getProjectType() == ProjectType.DEFINITION) {
-			projectDescription.getDependencies().add(casted.getDefinesPackageName());
+		if (project.getProjectType() == ProjectType.DEFINITION) {
+			projectDescription.getDependencies().add(project.getDefinesPackageName().getRawName());
 		}
 		return projectDescription;
 	}

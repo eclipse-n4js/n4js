@@ -33,6 +33,7 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.semver.SemverHelper;
@@ -218,7 +219,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/**
 	 * Delegate to shared injector and obtain a contributed instance that is not a direct object in the shared injector
 	 */
-	public Provider<InternalN4JSWorkspace> provideInternalN4JSWorkspace() {
+	public Provider<InternalN4JSWorkspace<? extends SafeURI<?>>> provideInternalN4JSWorkspace() {
 		return Access.contributedProvider(InternalN4JSWorkspace.class);
 	}
 
@@ -378,7 +379,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<N4JSModel> provideN4JSModel() {
+	public Provider<N4JSModel<?>> provideN4JSModel() {
 		return Access.contributedProvider(N4JSModel.class);
 	}
 

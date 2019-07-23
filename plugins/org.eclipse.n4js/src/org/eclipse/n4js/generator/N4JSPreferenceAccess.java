@@ -10,9 +10,11 @@
  */
 package org.eclipse.n4js.generator;
 
-import org.eclipse.emf.common.util.URI;
+import java.nio.file.Path;
+
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.preferences.IPreferenceValues;
 import org.eclipse.xtext.preferences.IPreferenceValuesProvider;
 import org.eclipse.xtext.preferences.PreferenceKey;
@@ -53,9 +55,9 @@ public class N4JSPreferenceAccess {
 	 * Convenience method, calling {@link #getPreference(Resource, String, CompilerProperties, CompilerDescriptor)} with
 	 * a dummy resource created from the absolute path name.
 	 */
-	public String getPreference(String absolutePathName, String compilerID, CompilerProperties compilerProperty,
+	public String getPreference(Path absolutePath, String compilerID, CompilerProperties compilerProperty,
 			CompilerDescriptor defaultDescriptor) {
-		Resource resource = new ResourceImpl(URI.createFileURI(absolutePathName));
+		Resource resource = new ResourceImpl(URIUtils.toFileUri(absolutePath));
 		return getPreference(resource, compilerID, compilerProperty, defaultDescriptor);
 	}
 

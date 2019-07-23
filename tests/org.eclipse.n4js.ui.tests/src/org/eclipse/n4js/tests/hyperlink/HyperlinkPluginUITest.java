@@ -37,6 +37,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.ui.internal.JsonActivator;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -64,7 +65,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";
 	private static final String SUBFOLDER = "Hyperlink";
-	private static final String PROJECT_NAME = "Hyperlink";
+	private static final N4JSProjectName PROJECT_NAME = new N4JSProjectName("Hyperlink");
 
 	@Inject
 	private N4JSHyperlinkDetector hyperlinkDetector;
@@ -156,7 +157,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
-				PROJECT_NAME,
+				PROJECT_NAME.toEclipseProjectName().getRawName(),
 				"node_modules",
 				"n4js-runtime-node 0.13.4 [Runtime library]",
 				"src",
@@ -194,7 +195,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 	@Test
 	public void testHyperlinksToFileUri() throws CoreException {
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
-		ProjectTestsUtils.importYarnWorkspace(libraryManager, prjDir, "YarnWorkspaceProject");
+		ProjectTestsUtils.importYarnWorkspace(libraryManager, prjDir, new N4JSProjectName("YarnWorkspaceProject"));
 		waitForAutoBuild();
 
 		IProject ywPrj = ResourcesPlugin.getWorkspace().getRoot().getProject("YarnWorkspaceProject");
@@ -203,7 +204,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		UIUtils.waitForUiThread();
 
-		Path path = Paths.get(PROJECT_NAME, "src", "ABC.n4js");
+		Path path = Paths.get(PROJECT_NAME.toEclipseProjectName().getRawName(), "src", "ABC.n4js");
 		org.eclipse.core.runtime.Path iPath = new org.eclipse.core.runtime.Path(path.toString());
 		IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
 		XtextEditor editor = openAndGetXtextEditor(iFile, page);
@@ -245,7 +246,8 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		assertNoErrors();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
-		Path path = Paths.get(PROJECT_NAME, "node_modules", "n4js-runtime-node", "package.json");
+		Path path = Paths.get(PROJECT_NAME.toEclipseProjectName().getRawName(), "node_modules", "n4js-runtime-node",
+				"package.json");
 		org.eclipse.core.runtime.Path iPath = new org.eclipse.core.runtime.Path(path.toString());
 		IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
 		XtextEditor editor = openAndGetXtextEditorWithID(iFile, page, JsonActivator.ORG_ECLIPSE_N4JS_JSON_JSON);

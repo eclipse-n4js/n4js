@@ -169,7 +169,7 @@ abstract class N4JSNewClassifierWizardGenerator<M extends N4JSClassifierWizardMo
 		}
 
 		val projectDescriptionLocation = project.get().projectDescriptionLocation;
-		val projectDescriptionResource = getResource(projectDescriptionLocation.get());
+		val projectDescriptionResource = getResource(projectDescriptionLocation.toURI);
 
 		// Gather referenced projects
 		val referencedProjects = getReferencedProjects(model);

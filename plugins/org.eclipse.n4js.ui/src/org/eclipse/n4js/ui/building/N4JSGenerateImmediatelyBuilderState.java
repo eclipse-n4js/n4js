@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
@@ -291,7 +292,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	/** logic of {@link IN4JSCore#findAllProjects()} with filtering by name */
 	private IProject findProject(BuildData buildData) {
 		String eclipseProjectName = buildData.getProjectName();
-		if (eclipseProjectName == null) {
+		if (Strings.isNullOrEmpty(eclipseProjectName)) {
 			return null;
 		}
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -299,8 +300,8 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		IProject project = root.getProject(eclipseProjectName); // creates a project instance if not existing
 
 		if (null == project || !project.isAccessible()) {
-			String n4jsProjectName = ProjectDescriptionUtils
-					.convertEclipseProjectNameToN4JSProjectName(eclipseProjectName);
+			N4JSProjectName n4jsProjectName = new N4JSProjectName(ProjectDescriptionUtils
+					.convertEclipseProjectNameToN4JSProjectName(eclipseProjectName));
 
 			final IProject externalProject = externalLibraryWorkspace.getProject(n4jsProjectName);
 			if (null != externalProject && externalProject.exists()) {

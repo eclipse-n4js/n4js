@@ -13,9 +13,12 @@ package org.eclipse.n4js.tests.projectModel;
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
+import org.eclipse.xtext.util.UriExtensions;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
@@ -24,7 +27,7 @@ import com.google.inject.Inject;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSInjectorProvider.class)
-public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTest {
+public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTest<FileURI> {
 
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
@@ -32,18 +35,18 @@ public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTes
 	private FileBasedWorkspace testMe;
 
 	@Override
-	protected AbstractProjectModelSetup createSetup() {
+	protected AbstractProjectModelSetup<FileURI> createSetup() {
 		return new FileBasedProjectModelSetup(this, testMe);
 	}
 
 	@Override
-	protected String[] getExpectedIssuesInInitialSetup(String projectName) {
+	protected String[] getExpectedIssuesInInitialSetup(N4JSProjectName projectName) {
 		return new String[0];
 	}
 
 	@Override
 	public void setUp() {
-		testMe = new FileBasedWorkspace(projectDescriptionLoader);
+		testMe = new FileBasedWorkspace(projectDescriptionLoader, new UriExtensions());
 		super.setUp();
 	}
 
@@ -54,7 +57,7 @@ public class FileBasedInternalWorkspaceTest extends AbstractInternalWorkspaceTes
 	}
 
 	@Override
-	protected InternalN4JSWorkspace getWorkspace() {
+	protected InternalN4JSWorkspace<FileURI> getWorkspace() {
 		return testMe;
 	}
 

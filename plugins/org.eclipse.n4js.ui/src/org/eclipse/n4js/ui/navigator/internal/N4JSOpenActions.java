@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.navigator.internal;
 
-import java.io.File;
-
 import org.eclipse.jdt.internal.ui.navigator.OpenAndExpand;
 import org.eclipse.jdt.ui.actions.OpenAction;
 import org.eclipse.jdt.ui.actions.OpenEditorActionGroup;
@@ -20,6 +18,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.actions.ActionContext;
@@ -117,7 +116,7 @@ public class N4JSOpenActions extends CommonActionProvider {
 		for (final Object element : elements) {
 			if (element instanceof ResourceNode) {
 				final ResourceNode node = (ResourceNode) element;
-				final File resource = node.getResource();
+				final SafeURI<?> resource = node.getLocation();
 				if (!resource.isFile()) {
 					return false;
 				}

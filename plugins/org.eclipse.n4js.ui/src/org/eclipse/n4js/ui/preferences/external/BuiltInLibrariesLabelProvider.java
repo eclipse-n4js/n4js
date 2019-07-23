@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceModel;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
 import org.eclipse.swt.graphics.Image;
@@ -38,14 +39,14 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 		if (element instanceof URI) {
 			return getCategoryText((URI) element).getString();
 		} else if (element instanceof IN4JSProject) {
-			return ((IN4JSProject) element).getProjectName();
+			return ((IN4JSProject) element).getProjectName().getRawName();
 		}
 		return super.getText(element);
 	}
 
 	private StyledString getCategoryText(final URI location) {
 		File file = new File(location);
-		if (ExternalLibraryPreferenceModel.isNodeModulesLocation(location)) {
+		if (ExternalLibraryPreferenceModel.isNodeModulesLocation(new FileURI(file))) {
 			Path path = file.toPath();
 			int pCount = path.getNameCount();
 			StyledString styledString = new StyledString(path.getName(pCount - 1).toString());

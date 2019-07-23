@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.naming
 
+import com.google.common.base.Preconditions
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.common.util.URI
@@ -19,7 +20,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IResourceDescription
-import org.eclipse.xtext.util.UriExtensions
 
 /**
  * Utility class to calculate the qualified name of the resource depending on the project configuration.
@@ -36,10 +36,6 @@ class ModuleNameComputer {
 
 	@Inject
 	private extension IN4JSCore core
-
-	@Inject
-	private UriExtensions uriExtensions
-
 
 	/**
 	 * Returns the qualified module name which is implicitly defined by the given resource.
@@ -67,15 +63,13 @@ class ModuleNameComputer {
 	 * Please note there is also a special treatment for Xpect test files that may have a file extension
 	 * like {@code ".n4js.xt"}. The calculation will handle this as a hole file extension, so {@code ".n4js"} will be pruned, too.
 	 */
-	def getQualifiedModuleName(URI pUri) {
-		val uri = uriExtensions.withEmptyAuthority(pUri);
-		
+	def getQualifiedModuleName(URI uri) {
 		val maybeSourceContainer = findN4JSSourceContainer(uri)
 		if (maybeSourceContainer.present) {
 			val sourceContainer = maybeSourceContainer.get
-			val location = sourceContainer.location
+			val location = sourceContainer.location.withTrailingPathDelimiter.toURI
 			if(uri.uriStartsWith(location)) {
-				var relativeURI = uri.deresolve(location.appendSegment(""))
+				var relativeURI = uri.deresolve(location)
 				if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == uri.fileExtension.toLowerCase)) {
 					relativeURI = relativeURI.trimFileExtension.trimFileExtension
 				} else {
@@ -106,7 +100,8 @@ class ModuleNameComputer {
 	}
 
 	private def boolean uriStartsWith(URI resourceLocation, URI containerLocation) {
-		val maxSegments = containerLocation.segmentCount();
+		Preconditions.checkArgument(containerLocation.hasTrailingPathSeparator, 'Must have trailing separator: %s', containerLocation);
+		val maxSegments = containerLocation.segmentCount() - 1
 		if (resourceLocation.segmentCount < maxSegments) {
 			return false;
 		}

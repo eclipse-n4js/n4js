@@ -20,7 +20,6 @@ import static org.eclipse.swt.SWT.Selection;
 import static org.eclipse.swt.SWT.TOP;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -34,10 +33,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.n4js.external.LibraryManager;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceModel;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.ui.external.ExternalLibrariesActionsHelper;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
@@ -153,10 +152,10 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				uninstall.setEnabled(false);
 
 				Object selectedItem = getSelectedItem();
-				if (selectedItem instanceof URI) {
+				if (selectedItem instanceof SafeURI) {
 					install.setEnabled(true);
 				}
-				if (selectedItem instanceof N4JSProject) {
+				if (selectedItem instanceof IN4JSProject) {
 					uninstall.setEnabled(true);
 				}
 			}
@@ -174,14 +173,14 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		if (!Arrays2.isEmpty(selection) && 1 == selection.length) {
 			Object data = selection[0].getData();
 
-			if (data instanceof URI) {
-				URI uri = (URI) data;
+			if (data instanceof SafeURI<?>) {
+				SafeURI<?> uri = (SafeURI<?>) data;
 				if (ExternalLibraryPreferenceModel.isNodeModulesLocation(uri)) {
 					return data;
 				}
 			}
 
-			if (data instanceof N4JSProject) {
+			if (data instanceof IN4JSProject) {
 				return data;
 			}
 		}
@@ -192,8 +191,8 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 		return (IN4JSProject) getSelectedItem();
 	}
 
-	private URI getSelectedNodeModulesURI() {
-		return (URI) getSelectedItem();
+	private SafeURI<?> getSelectedNodeModulesURI() {
+		return (SafeURI<?>) getSelectedItem();
 	}
 
 	@Override

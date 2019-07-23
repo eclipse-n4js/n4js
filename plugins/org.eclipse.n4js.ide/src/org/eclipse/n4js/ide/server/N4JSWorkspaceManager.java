@@ -24,16 +24,11 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
-import com.google.inject.Inject;
-
 /**
  *
  */
 @SuppressWarnings("restriction")
 public class N4JSWorkspaceManager extends WorkspaceManager {
-
-	@Inject
-	private IWorkspaceConfig workspaceConfig;
 
 	private Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
 
@@ -52,7 +47,7 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 	 */
 	@Override
 	public Buildable didClose(URI uri) {
-		IProjectConfig projectConfig = workspaceConfig.findProjectContaining(uri);
+		IProjectConfig projectConfig = getWorkspaceConfig().findProjectContaining(uri);
 		final Buildable closedBuildable = super.didClose(uri);
 
 		Buildable cleaningBuildable = new Buildable() {
@@ -76,5 +71,10 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 	 */
 	public void clearIssues(URI uri) {
 		issueAcceptor.apply(uri, Collections.emptyList());
+	}
+
+	@Override
+	protected IWorkspaceConfig getWorkspaceConfig() {
+		return super.getWorkspaceConfig();
 	}
 }

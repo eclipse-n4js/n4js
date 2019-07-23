@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel;
+package org.eclipse.n4js.projectModel.lsp.ex;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -32,6 +32,11 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 public interface ISourceFolderEx extends ISourceFolder {
 
 	/**
+	 * Returns the project this source folder is contained in.
+	 */
+	IProjectConfigEx getProject();
+
+	/**
 	 * TODO ADD JAVADOC
 	 */
 	default boolean contains(URI uri) {
@@ -51,8 +56,7 @@ public interface ISourceFolderEx extends ISourceFolder {
 		FileVisitor<Path> fv = new SimpleFileVisitor<>() {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				URI uri = URI.createFileURI(file.toString());
-				uri = URIUtils.addEmptyAuthority(uri);
+				URI uri = URIUtils.toFileUri(file);
 				uris.add(uri);
 				return FileVisitResult.CONTINUE;
 			}

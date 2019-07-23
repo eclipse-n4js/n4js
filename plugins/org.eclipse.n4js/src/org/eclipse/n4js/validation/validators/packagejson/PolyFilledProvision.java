@@ -12,6 +12,7 @@ package org.eclipse.n4js.validation.validators.packagejson;
 
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -34,7 +35,7 @@ public class PolyFilledProvision {
 	/**
 	 * library entry as referenced in the project description
 	 */
-	public final String library;
+	public final N4JSProjectName library;
 
 	/**
 	 * The actual Polyfill- Objectdescription from the library
@@ -49,7 +50,7 @@ public class PolyFilledProvision {
 	/**
 	 *
 	 */
-	public PolyFilledProvision(String library, JSONStringLiteral libProjectDescription,
+	public PolyFilledProvision(N4JSProjectName library, JSONStringLiteral libProjectDescription,
 			IEObjectDescription ieoDescrOfPolyfill) {
 		this.library = library;
 		this.libraryProjectReferenceLiteral = libProjectDescription;

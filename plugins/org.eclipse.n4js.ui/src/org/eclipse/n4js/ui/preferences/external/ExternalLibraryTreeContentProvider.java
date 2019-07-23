@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.preferences.external;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +22,7 @@ import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.xtext.util.Pair;
 
@@ -37,7 +37,7 @@ public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvi
 
 	private Optional<TreeViewer> treeViewerRef;
 	// cache list of projects per location (invalidated on #inputChanged)
-	private final Map<URI, List<IN4JSProject>> locationProjectsCache = new HashMap<>();
+	private final Map<FileURI, List<IN4JSProject>> locationProjectsCache = new HashMap<>();
 
 	@Inject
 	private EclipseExternalLibraryWorkspace externalLibraryWorkspace;
@@ -68,11 +68,11 @@ public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvi
 			if (parent instanceof Iterable) {
 				final Object child = Iterables.get((Iterable<?>) parent, index);
 				treeViewer.replace(parent, index, child);
-				if (child instanceof URI) {
-					treeViewer.setChildCount(child, getProjects((URI) child).size());
+				if (child instanceof FileURI) {
+					treeViewer.setChildCount(child, getProjects((FileURI) child).size());
 				}
-			} else if (parent instanceof URI) {
-				final IN4JSProject child = getProjects((URI) parent).get(index);
+			} else if (parent instanceof FileURI) {
+				final IN4JSProject child = getProjects((FileURI) parent).get(index);
 				treeViewer.replace(parent, index, child);
 			}
 		}
@@ -84,8 +84,8 @@ public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvi
 			final TreeViewer treeViewer = treeViewerRef.get();
 			if (element instanceof Iterable) {
 				treeViewer.setChildCount(element, Iterables.size((Iterable<?>) element));
-			} else if (element instanceof URI) {
-				treeViewer.setChildCount(element, getProjects((URI) element).size());
+			} else if (element instanceof FileURI) {
+				treeViewer.setChildCount(element, getProjects((FileURI) element).size());
 			} else {
 				treeViewer.setChildCount(element, 0);
 			}
@@ -98,7 +98,7 @@ public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvi
 	}
 
 	/** Returns the list of {@link IN4JSProject} to be found in the given external location. */
-	private List<IN4JSProject> getProjects(URI location) {
+	private List<IN4JSProject> getProjects(FileURI location) {
 		if (locationProjectsCache.isEmpty()) {
 			initCache();
 		}
@@ -108,15 +108,15 @@ public class ExternalLibraryTreeContentProvider implements ILazyTreeContentProvi
 
 	private void initCache() {
 		locationProjectsCache.clear();
-		for (java.net.URI extLoc : externalLibraryPreferenceStore.getLocations()) {
+		for (FileURI extLoc : externalLibraryPreferenceStore.getLocations()) {
 			locationProjectsCache.putIfAbsent(extLoc, new LinkedList<>());
 		}
 
-		for (Pair<org.eclipse.emf.common.util.URI, ProjectDescription> pair : externalLibraryWorkspace
+		for (Pair<FileURI, ProjectDescription> pair : externalLibraryWorkspace
 				.getProjectsIncludingUnnecessary()) {
 
-			org.eclipse.emf.common.util.URI prjLocation = pair.getFirst();
-			URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(prjLocation);
+			FileURI prjLocation = pair.getFirst();
+			FileURI rootLocation = externalLibraryWorkspace.getRootLocationForResource(prjLocation);
 			N4JSExternalProject project = externalLibraryWorkspace.getProject(prjLocation);
 			locationProjectsCache.putIfAbsent(rootLocation, new LinkedList<>());
 			List<IN4JSProject> list = locationProjectsCache.get(rootLocation);

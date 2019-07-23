@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.junit.Before;
@@ -40,7 +41,7 @@ public class IDEBUG_856_PluginTest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";
 	private static final String WORKSPACE_LOC = "IDEBUG_856";
-	private static final String PROJECT = "IDEBUG_856";
+	private static final N4JSProjectName PROJECT = new N4JSProjectName("IDEBUG_856");
 
 	private static final int ITERATION_COUNT = 30;
 
@@ -54,7 +55,8 @@ public class IDEBUG_856_PluginTest extends AbstractBuilderParticipantTest {
 	public void setupWorkspace() throws Exception {
 		final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 		ProjectTestsUtils.importProject(projectsRoot, PROJECT);
-		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
+		final IProject project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(PROJECT.toEclipseProjectName().getRawName());
 		assertTrue("Cannot access project: " + project, project.isAccessible());
 	}
 

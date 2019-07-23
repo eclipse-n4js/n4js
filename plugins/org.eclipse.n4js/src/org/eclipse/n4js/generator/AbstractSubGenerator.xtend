@@ -26,7 +26,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceNameComputer
@@ -76,8 +75,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	
 	@Inject private FolderContainmentHelper containmentHelper;
 	
-	@Inject	private XpectAwareFileExtensionCalculator xpectAwareFileExtensionCalculator;
-
 	@Inject	private UriExtensions uriExtensions;
 
 
@@ -118,10 +115,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * </ul>
 	 */
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
-		if (!shouldBeCompiled(input, null)) {
-			return;
-		}
-		
 		try {
 
 			// remove error-marker
@@ -159,8 +152,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 
 		val boolean result = (autobuildEnabled
 			&& isGenerateProjectType(inputUri)
-			&& correctFileExtension(inputUri)
-			&& !isInNodeModules(inputUri)
 			&& hasOutput(inputUri)
 			&& isOutputNotInSourceContainer(inputUri)
 			&& isOutsideOfOutputFolder(inputUri)
@@ -177,28 +168,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 			RaceDetectionHelper.log("Skip generation of artifacts from %s", input.URI)
 		}
 		return result
-	}
-
-	private def correctFileExtension(URI n4jsSourceURI){
-		val n4jsExtension = xpectAwareFileExtensionCalculator.getXpectAwareFileExtension(n4jsSourceURI);
-		switch (n4jsExtension) {
-			case N4JSGlobals.N4JS_FILE_EXTENSION:
-				{return true;}
-			case N4JSGlobals.N4JSX_FILE_EXTENSION:
-				{return true;}
-		}
-		return false;
-	}
-
-	private def isInNodeModules(URI n4jsSourceURI){
-		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
-		if (project !== null) {
-			if (project.location.segmentsList.contains(N4JSGlobals.NODE_MODULES)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	private def hasOutput(URI n4jsSourceURI){
@@ -349,9 +318,9 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		val project = projectctContainer.get;
 
 		// /home/user/workspace/Project/
-		val projectPath = project.locationPath
+		val projectPath = project.location.toFileSystemPath
 		// platform:/resource/Project/
-		val projectLocURI = project.location.appendSegment("")
+		val projectLocURI = project.getLocation().withTrailingPathDelimiter.toURI
 
 		// --- output locations ---
 		// src-gen
@@ -366,7 +335,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		var completetSource = completetSourceURI.toFileString
 
 		// Handling case when source container is the project root itself. (Sources { source { '.' } })
-		if (null === completetSource && project.location === input.URI.trimSegments(1)) {
+		if (null === completetSource && project.getLocation().toURI === input.URI.trimSegments(1)) {
 			completetSource = projectPath.toFile.absolutePath;
 		}
 

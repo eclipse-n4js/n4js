@@ -93,9 +93,9 @@ class ModuleToModuleProxyPluginTest extends AbstractBuilderParticipantTest {
 		cleanBuild
 		waitForAutoBuild
 
-		uriA = projectN4JS.location.appendSegments(#["src", "A.n4js"]);
-		uriB = projectN4JS.location.appendSegments(#["src", "B.n4js"]);
-		uriB2 = projectN4JS.location.appendSegments(#["src", "B2.n4js"]);
+		uriA = projectN4JS.location.appendSegments(#["src", "A.n4js"]).toURI;
+		uriB = projectN4JS.location.appendSegments(#["src", "B.n4js"]).toURI;
+		uriB2 = projectN4JS.location.appendSegments(#["src", "B2.n4js"]).toURI;
 
 		// we now have type information for files A, B, and B2 in the Xtext index
 	}

@@ -36,6 +36,7 @@ import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.FileBasedExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.AccessibleSerializer;
 import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.resource.N4JSCache;
@@ -368,7 +369,7 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	/**
 	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link java.io.File files}.
 	 */
-	public Class<? extends InternalN4JSWorkspace> bindInternalN4JSWorkspace() {
+	public Class<? extends InternalN4JSWorkspace<? extends SafeURI<?>>> bindInternalN4JSWorkspace() {
 		return FileBasedWorkspace.class;
 	}
 

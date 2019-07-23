@@ -10,22 +10,15 @@
  */
 package org.eclipse.n4js.ui.internal;
 
-import static com.google.common.base.Optional.absent;
-import static com.google.common.base.Optional.fromNullable;
-
-import java.nio.file.Path;
-
 import org.eclipse.core.resources.IProject;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseSourceContainer;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -34,7 +27,7 @@ public class N4JSEclipseProject extends N4JSProject implements IN4JSEclipseProje
 
 	private final IProject project;
 
-	N4JSEclipseProject(IProject project, URI location, N4JSEclipseModel model) {
+	N4JSEclipseProject(IProject project, SafeURI<?> location, N4JSEclipseModel model) {
 		super(location, project instanceof ExternalProject, model);
 		this.project = project;
 	}
@@ -55,24 +48,6 @@ public class N4JSEclipseProject extends N4JSProject implements IN4JSEclipseProje
 	@Override
 	public IProject getProject() {
 		return project;
-	}
-
-	@Override
-	public Path getLocationPath() {
-		return project.getLocation().toFile().toPath();
-	}
-
-	@Override
-	public Optional<URI> getProjectDescriptionLocation() {
-		if (checkExists() // Existing project AND
-				&& ((getLocation().isPlatformResource()
-						// Platform resource URI
-						&& URIUtils.isPlatformResourceUriPointingToProject(getLocation()))
-						|| isExternal())) { // OR external
-			return fromNullable(getLocation().appendSegment(IN4JSProject.PACKAGE_JSON));
-		} else {
-			return absent();
-		}
 	}
 
 	@Override

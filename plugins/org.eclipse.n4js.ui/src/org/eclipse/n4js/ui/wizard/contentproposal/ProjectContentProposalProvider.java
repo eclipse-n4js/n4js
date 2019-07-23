@@ -28,7 +28,7 @@ public class ProjectContentProposalProvider extends SimpleContentProposalProvide
 		super(StreamSupport.stream(n4jsCore.findAllProjects().spliterator(), false)
 				.filter(p -> !p.isExternal())
 				.filter(p -> p.exists())
-				.map(p -> p.getProjectName())
+				.map(p -> p.getProjectName().getRawName())
 				.toArray(String[]::new));
 		this.setFiltering(true);
 	}

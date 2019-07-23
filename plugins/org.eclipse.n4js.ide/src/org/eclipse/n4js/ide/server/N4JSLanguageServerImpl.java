@@ -20,7 +20,7 @@ import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
-import org.eclipse.n4js.projectModel.IProjectConfigEx;
+import org.eclipse.n4js.projectModel.lsp.ex.IProjectConfigEx;
 import org.eclipse.xtext.ide.server.LanguageServerImpl;
 import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
@@ -35,9 +35,6 @@ public class N4JSLanguageServerImpl extends LanguageServerImpl {
 
 	@Inject
 	UriExtensions uriUtils;
-
-	@Inject
-	private IWorkspaceConfig workspaceConfig;
 
 	// TODO we should probably use the DisposableRegistry here
 	/**
@@ -93,6 +90,8 @@ public class N4JSLanguageServerImpl extends LanguageServerImpl {
 
 	private boolean isInOutputFolder(String uriString) {
 		URI uri = uriUtils.toUri(uriString);
+		N4JSWorkspaceManager workspaceManager = (N4JSWorkspaceManager) getWorkspaceManager();
+		IWorkspaceConfig workspaceConfig = workspaceManager.getWorkspaceConfig();
 		IProjectConfigEx projectConfig = (IProjectConfigEx) workspaceConfig.findProjectContaining(uri);
 		boolean isInOutputFolder = projectConfig != null && projectConfig.isInOutputFolder(uri);
 		return isInOutputFolder;

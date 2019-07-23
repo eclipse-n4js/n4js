@@ -36,7 +36,7 @@
 
 {
 	"name": "P",
-	// XPECT hyperlinks at '"ma<|>in"' --> file:/.../src/main.n4js
+	// XPECT hyperlinks at '"ma<|>in"' --> platform:/resource/P/src/main.n4js
 	"main": "src/main.n4js",
 	"n4js": {
 		"projectType": "definition",

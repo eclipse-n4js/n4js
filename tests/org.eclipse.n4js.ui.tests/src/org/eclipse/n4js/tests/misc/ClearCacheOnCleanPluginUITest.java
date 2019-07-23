@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -39,7 +40,7 @@ import com.google.inject.Inject;
 public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS = "probands";
-	private static final String PROJECT_NAME = "ClearCacheOnClean";
+	private static final N4JSProjectName PROJECT_NAME = new N4JSProjectName("ClearCacheOnClean");
 
 	@Inject
 	private MultiCleartriggerCache cache;

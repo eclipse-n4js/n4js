@@ -21,19 +21,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
-import org.junit.runner.Description;
+import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xpect.ui.N4IDEXpectUIPlugin;
+import org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestFilesCollector.N4IDEXpectTestURIProvider;
 import org.eclipse.xpect.runner.IXpectURIProvider;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectTestFiles;
 import org.eclipse.xpect.runner.XpectURIProvider;
 import org.eclipse.xpect.util.IBundleInfo;
 import org.eclipse.xpect.util.IBundleInfo.Registry;
+import org.junit.runner.Description;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-
-import org.eclipse.n4js.xpect.ui.N4IDEXpectUIPlugin;
-import org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestFilesCollector.N4IDEXpectTestURIProvider;
 
 /**
  * Custom test file provider. Configures custom {@link IXpectURIProvider} that will be used by {@link XpectRunner}.
@@ -80,7 +80,7 @@ public @interface N4IDEXpectTestFilesCollector {
 
 		/** create {@link URI} from {@link File#getAbsolutePath()} */
 		protected URI createURI(File file) {
-			return URI.createFileURI(file.getAbsolutePath());
+			return URIUtils.toFileUri(file);
 		}
 
 		/**
@@ -135,9 +135,9 @@ public @interface N4IDEXpectTestFilesCollector {
 			testFilesLocations.forEach(xtFileLocation -> {
 				// TODO add checks for ctx.fileExtensions()
 				// TODO add checks for ctx.baseDir
-					URI xtFIleURI = URI.createURI(xtFileLocation);
-					result.add(xtFIleURI);
-				});
+				URI xtFIleURI = URI.createURI(xtFileLocation);
+				result.add(xtFIleURI);
+			});
 
 			return result;
 		}
@@ -145,7 +145,7 @@ public @interface N4IDEXpectTestFilesCollector {
 		/** resolve bundle holding this class. */
 		protected IBundleInfo getBundle() {
 			Registry registry = IBundleInfo.Registry.INSTANCE;
-			return registry.getBundle(URI.createFileURI(new File(".").getAbsolutePath()));
+			return registry.getBundle(URIUtils.toFileUri(new File(".").getAbsolutePath()));
 		}
 
 		/** Should be bundle with used custom java test class */

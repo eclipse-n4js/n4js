@@ -211,7 +211,7 @@ public class URIUtils {
 	/** @return a complete URI for a given project */
 	public static URI toFileUri(IProject project) {
 		String pathStr = project.getLocation().toString();
-		return addEmptyAuthority(URI.createFileURI(pathStr));
+		return toFileUri(pathStr);
 	}
 
 	/** @return absolute file URI for the given path. */
@@ -221,8 +221,12 @@ public class URIUtils {
 
 	/** @return absolute file URI for the given file. */
 	static public URI toFileUri(File file) {
-		String pathStr = file.getAbsolutePath();
-		return addEmptyAuthority(URI.createFileURI(pathStr));
+		return toFileUri(file.getAbsolutePath());
+	}
+
+	/** @return a complete URI for a given file path string */
+	public static URI toFileUri(String filePath) {
+		return addEmptyAuthority(URI.createFileURI(filePath));
 	}
 
 	/** @return a complete URI for a given emf resource */
@@ -232,12 +236,12 @@ public class URIUtils {
 	}
 
 	/** Converts any emf URI to a file URI */
-	private static URI toFileUri(URI rUri) {
-		if (rUri.isFile()) {
-			return rUri;
+	public static URI toFileUri(URI rUri) {
+		URI fileUri = rUri;
+		if (!rUri.isFile()) {
+			fileUri = CommonPlugin.resolve(rUri);
 		}
-		URI resolvedFile = CommonPlugin.resolve(rUri);
-		return addEmptyAuthority(resolvedFile);
+		return addEmptyAuthority(fileUri);
 	}
 
 	/** Converts any emf file URI to an accessible platform local URI. Otherwise returns given URI. */
@@ -259,20 +263,11 @@ public class URIUtils {
 
 	/** Adds empty authority to the given URI. Necessary for windows platform. */
 	public static URI addEmptyAuthority(URI uri) {
-		if (uri.isFile() && !uri.hasAuthority()) {
+		if (uri.isFile() && !uri.hasAuthority() && !uri.isRelative()) {
 			uri = URI.createHierarchicalURI(uri.scheme(), "", uri.device(), uri.segments(), uri.query(),
 					uri.fragment());
 		}
 		return uri;
 	}
 
-	/** Removes the authority from given URI iff it exists. */
-	public static URI removeAuthority(URI uri) {
-		if (uri.hasAuthority()) {
-			uri = URI.createHierarchicalURI(uri.scheme(), null, uri.device(), uri.segments(), uri.query(),
-					uri.fragment());
-			return uri;
-		}
-		return uri;
-	}
 }

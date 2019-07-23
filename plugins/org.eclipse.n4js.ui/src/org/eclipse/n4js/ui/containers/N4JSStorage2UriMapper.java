@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.resources.ExternalFile;
 import org.eclipse.n4js.utils.resources.IExternalResource;
 import org.eclipse.xtext.ui.resource.FileStoreStorage;
@@ -77,7 +78,7 @@ public class N4JSStorage2UriMapper extends Storage2UriMapperImpl {
 			if (storage instanceof ExternalFile) {
 				final File externalResource = ((ExternalFile) storage).getExternalResource();
 				if (externalResource.isFile()) {
-					return URI.createFileURI(externalResource.getAbsolutePath());
+					return new FileURI(externalResource).toURI();
 				}
 			} else {
 				return URI.createPlatformResourceURI(storage.getFullPath().toString(), true);

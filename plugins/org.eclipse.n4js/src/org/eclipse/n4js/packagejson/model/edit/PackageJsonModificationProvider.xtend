@@ -23,6 +23,7 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXTENDED_RUNTIME_ENVIRONMENT
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE
+import java.util.List
 
 /**
  * This class provides basic edit operations for N4JS package.json files 
@@ -37,7 +38,7 @@ class PackageJsonModificationProvider {
 	 * @param dependencies 
 	 * 			The list of project dependencies to insert.
 	 */
-	public static def IJSONDocumentModification insertProjectDependencies(Collection<String> dependencies) {
+	public static def IJSONDocumentModification insertProjectDependencies(List<String> dependencies) {
 		return new IJSONDocumentModification() {
 			override apply(JSONDocument document) {
 				if (dependencies.empty) {

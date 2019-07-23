@@ -1112,7 +1112,8 @@ public class TestResultsView extends ViewPart {
 			openError(getShell(), "Cannot open editor", "The container project not found in the workspace.");
 			return true;
 		}
-		final String[] projectRelativeSegments = moduleLocationURI.deresolve(project.getLocation()).segments();
+		final String[] projectRelativeSegments = moduleLocationURI.deresolve(project.getLocation().toURI())
+				.segments();
 		final String path = Joiner.on(SEPARATOR)
 				.join(copyOfRange(projectRelativeSegments, 1, projectRelativeSegments.length));
 		final IFile module = project.getProject().getFile(path);
