@@ -13,7 +13,7 @@ package org.eclipse.n4js.ts.ui.labeling;
 import java.net.URL;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.ide.server.hover.CustomHoverLabelUtil;
+import org.eclipse.n4js.ts.ide.server.hover.CustomHoverLabelUtil;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
