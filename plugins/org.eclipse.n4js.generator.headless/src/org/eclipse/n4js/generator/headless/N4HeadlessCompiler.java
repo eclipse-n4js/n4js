@@ -12,7 +12,6 @@ package org.eclipse.n4js.generator.headless;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Collections;
@@ -221,8 +220,8 @@ public class N4HeadlessCompiler {
 
 	private void cleanProject(IN4JSProject project) {
 		String outputFolder = project.getOutputPath();
-		Path outputPath = project.getLocation().resolve(outputFolder).toFileSystemPath();
-		FileUtils.cleanFolder(outputPath.toFile());
+		File outputPath = project.getLocation().resolve(outputFolder).toJavaIoFile();
+		FileUtils.cleanFolder(outputPath);
 	}
 
 	private List<FileURI> convertProjectPathsToProjectURIs(List<File> projectPaths)

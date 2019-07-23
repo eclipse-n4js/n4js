@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
@@ -100,7 +100,7 @@ public class MockURIWrapper extends SafeURI<MockURIWrapper> {
 	}
 
 	@Override
-	public Path toFileSystemPath() {
+	public File toJavaIoFile() {
 		throw new UnsupportedOperationException();
 	}
 

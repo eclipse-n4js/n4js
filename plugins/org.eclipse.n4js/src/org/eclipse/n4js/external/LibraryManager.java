@@ -148,7 +148,7 @@ public class LibraryManager {
 	/** Runs 'npm/yarn install' in a given folder. Afterwards, re-registers all npms. */
 	public IStatus runNpmYarnInstall(PlatformResourceURI target, IProgressMonitor monitor) {
 		IN4JSProject project = n4jsCore.findProject(target.toURI()).orNull();
-		File projectFolder = project.getLocation().toFileSystemPath().toFile();
+		File projectFolder = project.getLocation().toJavaIoFile();
 
 		boolean usingYarn = npmCli.isYarnUsed(projectFolder);
 
@@ -236,7 +236,7 @@ public class LibraryManager {
 			status.merge(currStatus);
 		}
 		for (IN4JSProject project : projectsOutsideAnyYarnWorkspace) {
-			File projectFolder = project.getLocation().toFileSystemPath().toFile();
+			File projectFolder = project.getLocation().toJavaIoFile();
 			boolean usingYarn = npmCli.isYarnUsed(projectFolder);
 			msg = "Running '" + (usingYarn ? "yarn" : "npm") + " install' on " + project.getProjectName();
 			SubMonitor subMonitorInstall = subMonitor.split(1);
@@ -494,7 +494,7 @@ public class LibraryManager {
 		// trim package name and "node_modules" segments from packageURI:
 		FileURI containingProjectURI = getParentOfMatchingLocation(packageURI,
 				name -> N4JSGlobals.NODE_MODULES.equals(name));
-		boolean usingYarn = npmCli.isYarnUsed(containingProjectURI.toFileSystemPath().toFile());
+		boolean usingYarn = npmCli.isYarnUsed(containingProjectURI.toJavaIoFile());
 
 		IStatus binaryStatus = checkBinary(usingYarn);
 		if (!binaryStatus.isOK()) {

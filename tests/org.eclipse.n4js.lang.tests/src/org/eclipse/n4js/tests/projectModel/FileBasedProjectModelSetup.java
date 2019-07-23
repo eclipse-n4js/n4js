@@ -134,7 +134,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup<FileUR
 	 *             if the files cannot be created successfully.
 	 */
 	private void createProject(FileURI projectDir, String packageJSONContent) throws IOException {
-		File directory = projectDir.toFileSystemPath().toFile();
+		File directory = projectDir.toJavaIoFile();
 		Files.write(packageJSONContent, new File(directory, PROJECT_DESCRIPTION_FILENAME), Charsets.UTF_8);
 		File src = new File(directory, "src");
 		assertTrue(src.mkdir());

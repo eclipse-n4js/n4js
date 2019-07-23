@@ -110,7 +110,7 @@ class InstallNpmDependencyButtonListener extends SelectionAdapter {
 
 			// Assume that node_modules in a direct directory of the project root folder
 			// Call getSelectedNodeModulesURI.get() on the UI thread!
-			File prjRootDir = getSelectedNodeModulesURI.get().getParent().toFileSystemPath().toFile();
+			File prjRootDir = getSelectedNodeModulesURI.get().getParent().toJavaIoFile();
 			new ProgressMonitorDialog(getShell()).run(true, true, monitor -> {
 				Map<N4JSProjectName, NPMVersionRequirement> singletonMap = Collections.singletonMap(
 						new N4JSProjectName(packageName),

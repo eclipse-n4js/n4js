@@ -1063,7 +1063,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 
 		// compute the path of the folder that contains the currently validated package.json file
 		final Path baseResourcePath = new File(
-				absoluteProjectPath.toString(),
+				absoluteProjectPath.toFile(),
 				projectRelativeResourceURI.trimSegments(1).toFileString()).toPath();
 
 		final String relativePath = pathLiteral.getValue();
