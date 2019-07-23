@@ -36,7 +36,7 @@ import com.google.common.collect.Lists;
 /**
  * Wrapper around platform resource URIs.
  */
-public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
+public final class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 
 	private IResource cachedResource;
 

@@ -108,11 +108,6 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 		return null;
 	}
 
-	// @Override
-	// public IResource getResource(final URI location) {
-	// return null;
-	// }
-
 	@Override
 	public void updateState() {
 		// NOOP
