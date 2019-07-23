@@ -772,7 +772,7 @@ public class N4HeadlessCompiler {
 	}
 
 	/**
-	 * Indexes the resources in the given project including the manifest file resource and adds them to the index stored
+	 * Indexes the resources in the given project including the package json resource and adds them to the index stored
 	 * in the given resource set. Assumes that the resources have been loaded, but not fully processed.
 	 *
 	 * @param markedProject
@@ -792,12 +792,12 @@ public class N4HeadlessCompiler {
 			indexResource(resource, index);
 		}
 
-		// Index manifest file, too. Index artifact names among project types and library dependencies.
-		SafeURI<?> manifestUri = markedProject.project.getProjectDescriptionLocation();
-		if (manifestUri != null) {
-			final Resource manifestResource = resourceSet.getResource(manifestUri.toURI(), true);
-			if (manifestResource != null) {
-				indexResource(manifestResource, index);
+		// Index package.json file, too. Index artifact names among project types and library dependencies.
+		SafeURI<?> packageJson = markedProject.project.getProjectDescriptionLocation();
+		if (packageJson != null) {
+			final Resource packageJsonResource = resourceSet.getResource(packageJson.toURI(), true);
+			if (packageJsonResource != null) {
+				indexResource(packageJsonResource, index);
 			}
 		}
 	}
