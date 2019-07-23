@@ -404,18 +404,18 @@ public class RunConfiguration {
 		return result;
 	}
 
-	private String toString(N4JSProjectName name) {
-		if (name == null) {
+	private static String toString(N4JSProjectName projectName) {
+		if (projectName == null) {
 			return null;
 		}
-		return name.getRawName();
+		return projectName.getRawName();
 	}
 
-	private N4JSProjectName toName(String name) {
-		if (name == null) {
+	private static N4JSProjectName toName(String projectName) {
+		if (projectName == null) {
 			return null;
 		}
-		return new N4JSProjectName(name);
+		return new N4JSProjectName(projectName);
 	}
 
 	/**
