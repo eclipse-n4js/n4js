@@ -235,19 +235,16 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 
 		// Gather default project dependencies
 		if (N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(pi.getProjectType())) {
-			List<N4JSProjectName> projectDependencies = new ArrayList<>();
-			for (String dep : pi.getProjectDependencies()) {
-				projectDependencies.add(new N4JSProjectName(dep));
-			}
-			projectDependencies.add(N4JSGlobals.N4JS_RUNTIME);
+			List<String> projectDependencies = pi.getProjectDependencies();
+			projectDependencies.add(N4JSGlobals.N4JS_RUNTIME.getRawName());
 		}
 		if (ProjectType.TEST.equals(pi.getProjectType())) {
-			List<N4JSProjectName> projectDependencies = new ArrayList<>();
-			pi.getProjectDependencies();
-			projectDependencies.addAll(MANGELHAFT_DEPENDENCIES);
-			List<N4JSProjectName> projectDevDependencies = new ArrayList<>();
-			pi.getProjectDevDependencies();
-			projectDevDependencies.add(N4JSGlobals.MANGELHAFT_CLI);
+			List<String> projectDependencies = pi.getProjectDependencies();
+			for (N4JSProjectName mangelhaftDep : MANGELHAFT_DEPENDENCIES) {
+				projectDependencies.add(mangelhaftDep.getRawName());
+			}
+			List<String> projectDevDependencies = pi.getProjectDevDependencies();
+			projectDevDependencies.add(N4JSGlobals.MANGELHAFT_CLI.getRawName());
 		}
 
 		// Generate package.json content

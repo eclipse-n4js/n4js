@@ -106,7 +106,8 @@ public abstract class AbstractRunnerLaunchShortcut implements ILaunchShortcut {
 		if (implementationId == ChooseImplementationHelper.CANCEL)
 			return;
 
-		RunConfiguration runConfig = runnerFrontEnd.createConfiguration(runnerId, new N4JSProjectName(implementationId),
+		RunConfiguration runConfig = runnerFrontEnd.createConfiguration(runnerId,
+				implementationId != null ? new N4JSProjectName(implementationId) : null,
 				moduleToRun);
 
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
