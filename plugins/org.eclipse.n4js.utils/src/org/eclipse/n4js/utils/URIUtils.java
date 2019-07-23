@@ -226,7 +226,9 @@ public class URIUtils {
 
 	/** @return a complete URI for a given file path string */
 	public static URI toFileUri(String filePath) {
-		return addEmptyAuthority(URI.createFileURI(filePath));
+		URI uri = (filePath.startsWith("file:")) ? URI.createURI(filePath) : URI.createFileURI(filePath);
+
+		return addEmptyAuthority(uri);
 	}
 
 	/** @return a complete URI for a given emf resource */
