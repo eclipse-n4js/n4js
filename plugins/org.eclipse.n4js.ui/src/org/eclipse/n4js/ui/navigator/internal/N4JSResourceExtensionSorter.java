@@ -34,8 +34,8 @@ public class N4JSResourceExtensionSorter extends ResourceExtensionSorter {
 	@SuppressWarnings({ "deprecation" })
 	protected int compareClass(Object e1, Object e2) {
 		if (e1 instanceof ResourceNode && e2 instanceof ResourceNode) {
-			final File f1 = ((ResourceNode) e1).getLocation().toFileSystemPath().toFile();
-			final File f2 = ((ResourceNode) e2).getLocation().toFileSystemPath().toFile();
+			final File f1 = ((ResourceNode) e1).getLocation().toJavaIoFile();
+			final File f2 = ((ResourceNode) e2).getLocation().toJavaIoFile();
 			if (f1.isFile() == f2.isFile()) {
 				return getComparator().compare(f1.getName(), f2.getName());
 			} else if (f1.isDirectory() && f2.isFile()) {

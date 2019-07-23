@@ -239,7 +239,7 @@ import com.google.inject.Inject;
 			final Iterable<FileURI> directContents = getDirectProjectsInLocation(location);
 			final Iterable<FileURI> scopedContents = from(getDirectoryContents(location))
 					.filter(f1 -> isExistingFolder(f1))
-					.filter(f2 -> externalLibraryHelper.isScopeDirectory(f2.toFileSystemPath().toFile()))
+					.filter(f2 -> externalLibraryHelper.isScopeDirectory(f2.toJavaIoFile()))
 					.transformAndConcat(file -> getDirectProjectsInLocation(file));
 
 			return Iterables.concat(scopedContents, directContents);

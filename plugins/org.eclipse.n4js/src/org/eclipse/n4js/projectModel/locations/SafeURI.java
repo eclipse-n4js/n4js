@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.projectModel.locations;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -287,7 +288,14 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	/**
 	 * Return the file system path representation of this location.
 	 */
-	public abstract Path toFileSystemPath();
+	public final Path toFileSystemPath() {
+		return toJavaIoFile().toPath();
+	}
+
+	/**
+	 * Return the {@link File} equivalent to this location.
+	 */
+	public abstract File toJavaIoFile();
 
 	/**
 	 * Obtain the equivalent file URI.

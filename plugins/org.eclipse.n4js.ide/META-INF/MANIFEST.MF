@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.lsp4j.jsonrpc,
  org.eclipse.lsp4j,
  com.google.inject,
- com.google.gson
+ com.google.gson,
+ org.eclipse.n4js.ts.ide
 Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.server.hover,
  org.eclipse.n4js.ide.contentassist.antlr,

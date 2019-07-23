@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.projectModel.locations;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -154,11 +154,11 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 
 	@Override
 	public FileURI resolveSymLinks() {
-		Path path = toFileSystemPath();
+		File file = toJavaIoFile();
 		try {
-			return new FileURI(path.toFile().getCanonicalFile());
+			return new FileURI(file.getCanonicalFile());
 		} catch (IOException e) {
-			return new FileURI(path.toFile());
+			return new FileURI(file);
 		}
 	}
 
@@ -207,18 +207,18 @@ public class PlatformResourceURI extends SafeURI<PlatformResourceURI> {
 	 */
 	@Override
 	public FileURI toFileURI() {
-		return new FileURI(toFileSystemPath().toFile());
+		return new FileURI(toJavaIoFile());
 	}
 
 	@Override
-	public Path toFileSystemPath() {
+	public File toJavaIoFile() {
 		IResource r = getCachedResource();
 		if (r == null) {
 			IPath workspaceLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation();
 			IPath doesNotExist = workspaceLocation.append(toURI().toPlatformString(true));
-			return doesNotExist.toFile().toPath();
+			return doesNotExist.toFile();
 		}
-		return r.getLocation().toFile().toPath();
+		return r.getLocation().toFile();
 	}
 
 }

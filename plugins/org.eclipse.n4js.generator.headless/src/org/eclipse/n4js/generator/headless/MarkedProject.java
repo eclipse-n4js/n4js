@@ -150,7 +150,7 @@ class MarkedProject {
 				.findResourceDescriptionsData(resourceSet);
 
 		unloadResources(resourceSet, index, recorder);
-		unloadManifestResource(resourceSet, index, recorder);
+		unloadPackageJsonResource(resourceSet, index, recorder);
 		clearResources();
 
 		recorder.markFinishedUnloading(this);
@@ -162,11 +162,11 @@ class MarkedProject {
 			unloadResource(res, resourceSet, index, recorder);
 	}
 
-	private void unloadManifestResource(ResourceSet resourceSet, ResourceDescriptionsData index,
+	private void unloadPackageJsonResource(ResourceSet resourceSet, ResourceDescriptionsData index,
 			N4ProgressStateRecorder recorder) {
-		SafeURI<?> manifestLocation = project.getProjectDescriptionLocation();
-		if (manifestLocation != null) {
-			Resource resource = resourceSet.getResource(manifestLocation.toURI(), false);
+		SafeURI<?> packageJsonLocation = project.getProjectDescriptionLocation();
+		if (packageJsonLocation != null) {
+			Resource resource = resourceSet.getResource(packageJsonLocation.toURI(), false);
 			if (resource != null)
 				unloadResource(resource, resourceSet, index, recorder);
 		}

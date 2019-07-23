@@ -164,24 +164,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace
 			}
 		}
 		return result;
-		// String rootLocStr = rootLoc.toString();
-		// URI loc = URI.createURI(rootLocStr);
-		// URI prefix = !loc.hasTrailingPathSeparator() ? loc.appendSegment("") : loc;
-		// int oldSegmentCount = nestedLocation.segmentCount();
-		// int newSegmentCount = prefix.segmentCount()
-		// - 1 // -1 because of the trailing empty segment
-		// + 1; // +1 to include the project folder
-		// if (newSegmentCount - 1 >= oldSegmentCount) {
-		// return null; // can happen if the URI of an external library location is passed in
-		// }
-		// String projectNameCandidate = nestedLocation.segment(newSegmentCount - 1);
-		// if (projectNameCandidate.startsWith("@")) {
-		// // last segment is a folder representing an npm scope, not a project folder
-		// // --> add 1 to include the actual project folder
-		// ++newSegmentCount;
-		// }
-		// URI uriCandidate = nestedLocation.trimSegments(oldSegmentCount - newSegmentCount).trimFragment();
-		// return uriCandidate;
 	}
 
 	@Override

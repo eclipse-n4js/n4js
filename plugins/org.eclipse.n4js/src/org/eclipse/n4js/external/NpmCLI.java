@@ -163,7 +163,7 @@ public class NpmCLI {
 			packageNames.add(requestedChange.name);
 		}
 
-		File nodeModulesLocation = nodeModulesLocationURI.getParent().toFileSystemPath().toFile();
+		File nodeModulesLocation = nodeModulesLocationURI.getParent().toJavaIoFile();
 		// Assume that the parent of node_modules folder is the root of the project which contains package.json
 		// We call npm uninstall in this root folder
 		IStatus installStatus = uninstall(packageNames, nodeModulesLocation);
@@ -173,7 +173,7 @@ public class NpmCLI {
 		if (installStatus == null || !installStatus.isOK()) {
 			resultStatus.merge(installStatus);
 		} else {
-			File npmDirectory = requestedChange.location.toFileSystemPath().toFile();
+			File npmDirectory = requestedChange.location.toJavaIoFile();
 			String actualVersion = getActualVersion(npmDirectory.toPath());
 			if (actualVersion.isEmpty()) {
 				actualChanges.add(new LibraryChange(LibraryChangeType.Removed, requestedChange.location,
@@ -217,7 +217,7 @@ public class NpmCLI {
 		subMonitor.setTaskName("Installing npm packages.");
 
 		// Convert platform URI to local (e.g. file) URI
-		File installPath = target.toFileSystemPath().toFile();
+		File installPath = target.toJavaIoFile();
 
 		// for installation, we invoke npm only once for all packages
 		final List<Pair<N4JSProjectName, String>> packageNamesAndVersions = Lists.newArrayList();

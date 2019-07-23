@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -168,8 +167,8 @@ public class FileURI extends SafeURI<FileURI> {
 	}
 
 	@Override
-	public Path toFileSystemPath() {
-		return getCachedFile().toPath();
+	public File toJavaIoFile() {
+		return getCachedFile();
 	}
 
 }

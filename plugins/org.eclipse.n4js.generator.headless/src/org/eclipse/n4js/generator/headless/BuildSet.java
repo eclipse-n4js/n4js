@@ -11,14 +11,13 @@
 package org.eclipse.n4js.generator.headless;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 /**
@@ -71,15 +70,8 @@ public class BuildSet {
 
 	BuildSet(Collection<IN4JSProject> requestedProjects, Collection<IN4JSProject> discoveredProjects,
 			Predicate<FileURI> projectFilter) {
-		this.requestedProjects = Collections.unmodifiableSet(new LinkedHashSet<>(requestedProjects));
-		this.discoveredProjects = Collections.unmodifiableSet(new LinkedHashSet<>(discoveredProjects));
-		this.resourceFilter = projectFilter;
-	}
-
-	BuildSet(Set<IN4JSProject> requestedProjects, Set<IN4JSProject> discoveredProjects,
-			Predicate<FileURI> projectFilter) {
-		this.requestedProjects = Collections.unmodifiableSet(requestedProjects);
-		this.discoveredProjects = Collections.unmodifiableSet(discoveredProjects);
+		this.requestedProjects = ImmutableSet.copyOf(requestedProjects);
+		this.discoveredProjects = ImmutableSet.copyOf(discoveredProjects);
 		this.resourceFilter = projectFilter;
 	}
 
