@@ -64,6 +64,9 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformRes
 
 	@Override
 	public PlatformResourceURI fromURI(URI uri) {
+		if (!uri.isPlatformResource()) {
+			return null;
+		}
 		return new PlatformResourceURI(uri);
 	}
 
