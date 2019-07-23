@@ -1,0 +1,12 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: N4JS
+scopeName: source.n4js
+fileTypes: [n4js, n4jsx, n4jsd, n4idl]
+
+
+foldingStartMarker: '{|(\/\*)'
+foldingStopMarker: '}|(\*\/)'
+
+patterns:
+- include: 'source.ts'

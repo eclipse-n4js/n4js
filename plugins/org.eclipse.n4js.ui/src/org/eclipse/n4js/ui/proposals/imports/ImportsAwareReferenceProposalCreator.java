@@ -17,6 +17,7 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
@@ -146,13 +147,13 @@ public class ImportsAwareReferenceProposalCreator {
 		QualifiedName candidateName;
 		IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
 		if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
-			String projectName = project.getProjectName();
-			String definesPackage = project.getDefinesPackageName();
+			N4JSProjectName projectName = project.getProjectName();
+			N4JSProjectName definesPackage = project.getDefinesPackageName();
 			if (definesPackage != null) {
 				projectName = definesPackage;
 			}
 			String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
-			candidateName = QualifiedName.create(projectName, lastSegmentOfQFN);
+			candidateName = QualifiedName.create(projectName.getRawName(), lastSegmentOfQFN);
 		} else {
 			candidateName = candidate.getQualifiedName();
 		}

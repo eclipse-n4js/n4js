@@ -16,13 +16,13 @@ import static org.eclipse.n4js.external.N4JSExternalProject.NATURE_ID;
 import java.io.File;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.FileBasedExternalPackageManager;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
@@ -44,7 +44,7 @@ public class ExternalProjectLoader {
 	private FileBasedExternalPackageManager packageManager;
 
 	/** @return load project and description from given URI. Returns null if not available. */
-	public Pair<N4JSExternalProject, ProjectDescription> load(final URI rootLocation) {
+	public Pair<N4JSExternalProject, ProjectDescription> load(final FileURI rootLocation) {
 		try {
 			ProjectDescription projectDescription = packageManager.loadProjectDescriptionFromProjectRoot(rootLocation);
 

@@ -17,7 +17,6 @@ import org.eclipse.n4js.generation.*
 
 var rootPath = ".." // in the build this variable is configured externally, see 'plugins/pom.xml'
 var runtimeProjectName = "org.eclipse.n4js.regex"
-var runtimeProjectPath = "${rootPath}/${runtimeProjectName}"
 
 Workflow {
 	component = XtextGenerator {
@@ -31,8 +30,6 @@ Workflow {
 				}
 				genericIde = {
 					enabled = true
-					name = "${runtimeProjectName}.ui"
-					root = "${runtimeProjectPath}.ui"
 				}
 				eclipsePlugin = {
 					enabled = true

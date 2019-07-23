@@ -26,6 +26,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.EclipseProjectName;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.builder.BuilderUtil;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -43,7 +45,7 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 
 	// the probands folder
 	private static final String PROBANDS_DIR = "probands/ExternalPackages/";
-	private static final String PROBAND_CLIENT = "Client";
+	private static final N4JSProjectName PROBAND_CLIENT = new N4JSProjectName("Client");
 
 	private static final String PROBAND_LIBFOO = "LibFoo";
 	private static final String PROBAND_LIBBAR = "LibBar";
@@ -155,7 +157,8 @@ public class ExternalPackagesPluginTest extends AbstractBuilderParticipantTest {
 		waitForAutoBuild();
 
 		copyProjectsToLocation(projectsRoot, externalLibrariesRoot, PROBAND_LIBFOO);
-		ProjectTestsUtils.importDependencies(createJSProject.getName(), externalLibrariesRoot.toUri(), libraryManager);
+		ProjectTestsUtils.importDependencies(new EclipseProjectName(createJSProject.getName()).toN4JSProjectName(),
+				externalLibrariesRoot.toUri(), libraryManager);
 
 		Collection<String> expectedWorkspace = collectIndexableFiles(ResourcesPlugin.getWorkspace());
 		// remove those that are shadowed

@@ -13,14 +13,10 @@ package org.eclipse.n4js.ts.ui.labeling;
 import java.net.URL;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.TFormalParameter;
+import org.eclipse.n4js.ts.ide.server.hover.CustomHoverLabelUtil;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TVariable;
-import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
-import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
 
 import com.google.inject.Inject;
@@ -42,27 +38,9 @@ public class TypesHoverProvider extends DefaultEObjectHoverProvider {
 	/* Note: raised visibility to public to make this reusable from N4JSHoverProvider. */
 	@Override
 	public String getLabel(EObject obj) {
-
-		// for some elements we want a custom label
-		// (e.g. for functions we show the entire signature instead of just the name)
-		if (obj instanceof TFunction) {
-			// TODO use #getFunctionAsHTML() instead of UtilN4#sanitizeForHTML()
-			return UtilN4.sanitizeForHTML(((TFunction) obj).getFunctionAsString());
-		} else if (obj instanceof TMember) {
-			// TODO use #getMemberAsHTML() instead of UtilN4#sanitizeForHTML()
-			return UtilN4.sanitizeForHTML(((TMember) obj).getMemberAsString());
-		} else if (obj instanceof TFormalParameter) {
-			// TODO use #getFormalParameterAsHTML() instead of UtilN4#sanitizeForHTML()
-			return UtilN4.sanitizeForHTML(((TFormalParameter) obj).getFormalParameterAsString());
-		} else if (obj instanceof Type) {
-			// TODO use #getTypeAsHTML() instead of UtilN4#sanitizeForHTML()
-			return UtilN4.sanitizeForHTML(((Type) obj).getTypeAsString());
-		} else if (obj instanceof TypeRef) {
-			// TODO use #getTypeRefAsHTML() instead of UtilN4#sanitizeForHTML()
-			return UtilN4.sanitizeForHTML(((TypeRef) obj).getTypeRefAsString());
-		} else if (obj instanceof TVariable) {
-			// TODO use #getTypeRefAsHTML() instead of UtilN4#sanitizeForHTML()
-			return UtilN4.sanitizeForHTML(((TVariable) obj).getVariableAsString());
+		String label = CustomHoverLabelUtil.getLabel(obj);
+		if (label != null) {
+			return label;
 		}
 
 		return super.getLabel(obj);

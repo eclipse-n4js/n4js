@@ -10,35 +10,46 @@
  */
 package org.eclipse.n4js.xpect.projects;
 
-import java.io.File;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
  * A {@link FileBasedWorkspace} that automatically discovery new projects on the fly (e.g. when invoking
- * {@link #findProjectWith(org.eclipse.emf.common.util.URI)}).
+ * {@link #findProjectWith(FileURI)}).
  */
 @Singleton
 public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 
 	/** Initializes the workspace. */
 	@Inject
-	public AutoDiscoveryFileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader) {
-		super(projectDescriptionLoader);
+	public AutoDiscoveryFileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader,
+			UriExtensions uriExtensions) {
+		super(projectDescriptionLoader, uriExtensions);
 	}
 
 	@Override
-	public URI findProjectWith(URI nestedLocation) {
-		final URI closestProjectLocation = findClosestProjectLocation(nestedLocation);
-		final URI knownProjectLocation = super.findProjectWith(nestedLocation);
+	public FileURI fromURI(URI unsafe) {
+		if (!unsafe.isFile() || unsafe.isRelative()) {
+			unsafe = URIUtils.normalize(unsafe);
+			if (unsafe.isRelative()) {
+				return null;
+			}
+		}
+		return super.fromURI(unsafe);
+	}
+
+	@Override
+	public FileURI findProjectWith(FileURI nestedLocation) {
+		final FileURI closestProjectLocation = findClosestProjectLocation(nestedLocation);
+		final FileURI knownProjectLocation = super.findProjectWith(nestedLocation);
 
 		if (closestProjectLocation != null
 				&& (knownProjectLocation == null || !knownProjectLocation.equals(closestProjectLocation))) {
@@ -54,26 +65,8 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 	 * Ascends the file hierarchy starting from {@code location}, until it finds a directory that contains a
 	 * {@link IN4JSProject#PACKAGE_JSON} file.
 	 */
-	private static URI findClosestProjectLocation(URI location) {
-		URI nestedLocation = URIUtils.normalize(location);
-		int segmentCount = 0;
-		if (nestedLocation.isFile()) { // Here, unlike java.io.File, #isFile can mean directory as well.
-			File directory = new File(nestedLocation.toFileString());
-			while (directory != null) {
-				if (isProjectDirectory(directory)) {
-					URI projectLocation = URI.createFileURI(directory.getAbsolutePath());
-					return projectLocation;
-				}
-				nestedLocation = nestedLocation.trimSegments(segmentCount++);
-				directory = directory.getParentFile();
-			}
-		}
-		return null;
+	private static FileURI findClosestProjectLocation(FileURI location) {
+		return location.getProjectRoot();
 	}
 
-	/** Determines whether {@code directory} may be regarded as valid N4JS project directory. */
-	private static boolean isProjectDirectory(File directory) {
-		return directory.toPath().isAbsolute() &&
-				N4JSProject.isN4JSProjectDirectory(URI.createFileURI(directory.getPath()));
-	}
 }

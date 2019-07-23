@@ -83,6 +83,7 @@ import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
 import org.eclipse.xtext.ui.resource.IResourceSetInitializer;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapperContribution;
 import org.eclipse.xtext.ui.shared.contribution.IEagerContribution;
+import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.inject.Binder;
 import com.google.inject.Inject;
@@ -140,6 +141,7 @@ public class ContributingModule implements Module {
 
 		binder.bind(ExternalLibraryWorkspace.class).to(EclipseExternalLibraryWorkspace.class);
 		binder.bind(EclipseExternalLibraryWorkspace.class);
+		binder.bind(UriExtensions.class);
 		binder.bind(ExternalIndexSynchronizer.class).to(EclipseExternalIndexSynchronizer.class);
 		binder.bind(EclipseExternalIndexSynchronizer.class);
 		binder.bind(ShadowingInfoHelper.class);

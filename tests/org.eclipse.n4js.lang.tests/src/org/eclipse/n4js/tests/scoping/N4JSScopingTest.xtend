@@ -50,6 +50,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.utils.URIUtils
 
 /**
  * @see N4JSScopeProvider
@@ -74,7 +75,7 @@ class N4JSScopingTest {
 		val testModel = '''
 			var a=1;
 			var b=a;
-		'''.parse(URI.createFileURI("Test.n4js"), resourceSetProvider.get)
+		'''.parse(URIUtils.toFileUri("Test.n4js"), resourceSetProvider.get)
 		assertTrue(testModel.eResource.errors.empty)
 
 		val a1Assignment = testModel.eAllContents.filter(VariableDeclaration).filter[
@@ -456,7 +457,7 @@ class N4JSScopingTest {
 			foo(); // binds to function as identifier ref contained in a call expression
 			var e = foo() // binds to function as identifier ref contained in a call expression
 			var f = foo // binds to function as identifier ref
-		'''.parse(URI.createFileURI("Test.n4js"), resourceSetProvider.get)
+		'''.parse(URIUtils.toFileUri("Test.n4js"), resourceSetProvider.get)
 
 		assertTrue(testModel.eResource.errors.empty)
 

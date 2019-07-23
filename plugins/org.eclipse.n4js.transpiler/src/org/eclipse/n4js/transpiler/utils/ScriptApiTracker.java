@@ -36,6 +36,7 @@ import org.eclipse.n4js.compare.ProjectCompareHelper;
 import org.eclipse.n4js.compare.ProjectComparisonEntry;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TClass;
@@ -181,7 +182,7 @@ public class ScriptApiTracker {
 		/**
 		 * concrete implementation to compare against, if null this adapter doesn't deliver any compare-results
 		 */
-		private final String implementationID;
+		private final N4JSProjectName implementationID;
 
 		/**
 		 * This CompareAdapter will be initialized with an TModule from an concrete API-implementation. It then reads

@@ -10,18 +10,18 @@
  */
 package org.eclipse.n4js;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 
 /**
  */
 public final class MockProject extends N4JSProject {
 
 	/***/
-	public static final URI MOCK_URI = URI.createURI("mock://should.be.never.used");
+	public static final MockURIWrapper MOCK_URI = new MockURIWrapper();
 
 	/***/
-	public MockProject(URI location, MockN4JSModel model) {
+	public MockProject(MockURIWrapper location, MockN4JSModel model) {
 		super(location, false, model);
 	}
 
@@ -31,8 +31,9 @@ public final class MockProject extends N4JSProject {
 	}
 
 	@Override
-	public String getProjectName() {
-		return ((MockN4JSModel) getModel()).getInternalWorkspaceForMocks().getProjectDescription(MOCK_URI)
+	public N4JSProjectName getProjectName() {
+		String rawName = ((MockN4JSModel) getModel()).getInternalWorkspaceForMocks().getProjectDescription(MOCK_URI)
 				.getProjectName();
+		return new N4JSProjectName(rawName);
 	}
 }

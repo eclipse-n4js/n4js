@@ -27,6 +27,7 @@ import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -142,7 +143,7 @@ public class ProjectDescriptionUtils {
 	 * <td>{@code "@myScope/myProject"/"f"/"M"}</td>
 	 * </tr>
 	 * </table>
-	 * These encoding rules are implemented in methods {@link #deriveN4JSProjectNameFromURI(URI)} and
+	 * These encoding rules are implemented in methods {@link #deriveN4JSProjectNameFromURI(SafeURI)} and
 	 * {@link N4JSQualifiedNameConverter#toQualifiedName(String)}.
 	 */
 	public static boolean isProjectNameWithScope(String projectName) {
@@ -224,7 +225,25 @@ public class ProjectDescriptionUtils {
 	 * <p>
 	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
 	 */
+	public static String deriveN4JSProjectNameFromURI(SafeURI<?> location) {
+		if (location == null) {
+			return null;
+		}
+
+		return deriveN4JSProjectNameFromURI(location.toURI());
+	}
+
+	/**
+	 * Given a URI as used internally to identify N4JS projects, this method returns the corresponding N4JS project name
+	 * which may or may not {@link #isProjectNameWithScope(String) include an npm scope}. The given URI may be a
+	 * {@link URI#isFile() file URI} (headless case) or a {@link URI#isPlatform() platform URI} (UI case).
+	 * <p>
+	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
+	 */
 	public static String deriveN4JSProjectNameFromURI(URI uri) {
+		if (uri == null) {
+			return null;
+		}
 		int segCount = uri.segmentCount();
 		String last = segCount > 0 ? uri.segment(segCount - 1) : null;
 		if (uri.isPlatform()) {

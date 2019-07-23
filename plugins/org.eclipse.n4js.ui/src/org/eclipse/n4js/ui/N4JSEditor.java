@@ -25,6 +25,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
@@ -82,8 +83,8 @@ public class N4JSEditor extends XtextEditor implements IShowInSource, IShowInTar
 			FileEditorInput fei = (FileEditorInput) input;
 			IFile inputFile = fei.getFile();
 			if (inputFile.toString().contains(N4JSGlobals.NODE_MODULES)) {
-				URI fileUri = URIUtils.toFileUri(inputFile);
-				URI project = extWS.findProjectWith(fileUri);
+				FileURI fileUri = new FileURI(inputFile.getFullPath().toFile());
+				FileURI project = extWS.findProjectWith(fileUri);
 				boolean editorShowsExternalFile = project != null;
 				if (editorShowsExternalFile) {
 					return false;

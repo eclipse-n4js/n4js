@@ -17,24 +17,23 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
 /**
  */
-public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
+public class FileBasedProjectModelSetup extends AbstractProjectModelSetup<FileURI> {
 
 	private File workspaceRoot;
 	private final FileBasedWorkspace workspace;
 
 	/***/
-	protected FileBasedProjectModelSetup(AbstractProjectModelTest host, FileBasedWorkspace workspace) {
+	public FileBasedProjectModelSetup(AbstractProjectModelTest<FileURI> host, FileBasedWorkspace workspace) {
 		super(host);
 		this.workspace = workspace;
 	}
@@ -77,7 +76,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 	protected void createTempProjects() {
 		try {
 			workspaceRoot = Files.createTempDir();
-			final URI myProjectURI = URIUtils.normalize(createTempProject(host.myProjectName));
+			final FileURI myProjectURI = createTempProject(host.myProjectName);
 			host.setMyProjectURI(myProjectURI);
 			createProject(myProjectURI, "{\n" +
 					"  \"name\": \"" + host.myProjectName + "\",\n" +
@@ -98,7 +97,7 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"    }\n" +
 					"  }\n" +
 					"}");
-			final URI libProjectURI = URIUtils.normalize(createTempProject(host.libProjectName));
+			final FileURI libProjectURI = createTempProject(host.libProjectName);
 			host.setLibProjectURI(libProjectURI);
 			createProject(libProjectURI, "{\n" +
 					"  \"name\": \"" + host.libProjectName + "\",\n" +
@@ -118,10 +117,10 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 					"    }\n" +
 					"  }\n" +
 					"}");
-			ProjectTestsUtils.createDummyN4JSRuntime(workspaceRoot.toPath());
 			workspace.registerProject(myProjectURI);
 			workspace.registerProject(libProjectURI);
-			workspace.registerProject(toProjectURI(workspaceRoot, N4JSGlobals.N4JS_RUNTIME));
+			workspace.registerProject(
+					new FileURI(ProjectTestsUtils.createDummyN4JSRuntime(workspaceRoot.toPath()).toFile()));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -134,8 +133,8 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 	 * @throws IOException
 	 *             if the files cannot be created successfully.
 	 */
-	private void createProject(URI projectDir, String packageJSONContent) throws IOException {
-		File directory = new File(java.net.URI.create(projectDir.toString()));
+	private void createProject(FileURI projectDir, String packageJSONContent) throws IOException {
+		File directory = projectDir.toJavaIoFile();
 		Files.write(packageJSONContent, new File(directory, PROJECT_DESCRIPTION_FILENAME), Charsets.UTF_8);
 		File src = new File(directory, "src");
 		assertTrue(src.mkdir());
@@ -151,16 +150,12 @@ public class FileBasedProjectModelSetup extends AbstractProjectModelSetup {
 	}
 
 	/***/
-	protected URI createTempProject(String projectName) {
-		File myProjectDir = new File(workspaceRoot, projectName);
+	protected FileURI createTempProject(N4JSProjectName projectName) {
+		File myProjectDir = new File(workspaceRoot, projectName.getRawName());
 		if (!myProjectDir.mkdir()) {
 			throw new RuntimeException();
 		}
-		return toProjectURI(workspaceRoot, projectName);
+		return new FileURI(myProjectDir);
 	}
 
-	/** Returns project URI for a project at the given location with the given name. */
-	private URI toProjectURI(File location, String projectName) {
-		return URI.createURI(new File(location, projectName).toURI().toString()).trimSegments(1);
-	}
 }

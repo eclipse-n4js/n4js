@@ -10,20 +10,19 @@
  */
 package org.eclipse.n4js.ts.tests.resourcedescriptions;
 
-import org.junit.runner.RunWith;
+import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectRunner;
-import org.eclipse.xpect.runner.XpectTestFiles;
-import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.setup.XtextStandaloneSetup;
 import org.eclipse.xpect.xtext.lib.setup.XtextWorkspaceSetup;
 import org.eclipse.xpect.xtext.lib.tests.ResourceDescriptionTest;
+import org.junit.runner.RunWith;
 
 /**
  */
 @RunWith(XpectRunner.class)
 @XpectImport({ XtextStandaloneSetup.class, XtextWorkspaceSetup.class })
-@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "model/resourcedescriptions", fileExtensions = { "n4ts" })
+@LspCompatibleXpectTestFiles(baseDir = "model/resourcedescriptions", fileExtensions = "n4ts")
 public class TypesResourceDescriptionsPluginTest extends ResourceDescriptionTest {
 	// nothing more required
 }

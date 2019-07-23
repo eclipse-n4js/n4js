@@ -92,7 +92,7 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 		assertTrue("Project handle for the test project should have implementation ID (cache was invalidated).",
 				projectHandle1.get().getImplementationId().isPresent());
 
-		assertEquals(updatedImplementationId1, projectHandle1.get().getImplementationId().get());
+		assertEquals(updatedImplementationId1, projectHandle1.get().getImplementationId().get().getRawName());
 
 		// tear down
 		testProject1.delete(true, new NullProgressMonitor());
@@ -141,8 +141,8 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 		assertTrue("Project handle for test project 2 should have implementation ID (cache was invalidated).",
 				projectHandle2.get().getImplementationId().isPresent());
 
-		assertEquals(updatedImplementationId1, projectHandle1.get().getImplementationId().get());
-		assertEquals(updatedImplementationId2, projectHandle2.get().getImplementationId().get());
+		assertEquals(updatedImplementationId1, projectHandle1.get().getImplementationId().get().getRawName());
+		assertEquals(updatedImplementationId2, projectHandle2.get().getImplementationId().get().getRawName());
 
 		// tear down
 		testProject1.delete(true, new NullProgressMonitor());
@@ -226,9 +226,9 @@ public class ProjectCacheInvalidationPluginTest extends AbstractBuilderParticipa
 				"Project handle for the top-level test project should have implementation ID (cache was invalidated).",
 				projectHandle3.get().getImplementationId().isPresent());
 
-		assertEquals(updatedImplementationId1, projectHandle1.get().getImplementationId().get());
-		assertEquals(updatedImplementationId2, projectHandle2.get().getImplementationId().get());
-		assertEquals(updatedImplementationId3, projectHandle3.get().getImplementationId().get());
+		assertEquals(updatedImplementationId1, projectHandle1.get().getImplementationId().get().getRawName());
+		assertEquals(updatedImplementationId2, projectHandle2.get().getImplementationId().get().getRawName());
+		assertEquals(updatedImplementationId3, projectHandle3.get().getImplementationId().get().getRawName());
 
 		// tear down
 		nestedTestProject1.delete(true, new NullProgressMonitor());

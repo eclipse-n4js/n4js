@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue;
@@ -232,7 +233,7 @@ public class IssueMatcher {
 	 * @return this issue matcher
 	 */
 	public IssueMatcher at(String expectedURISuffix, int expectedLineNumber, int expectedColumn) {
-		return at(URI.createFileURI(expectedURISuffix), expectedLineNumber, expectedColumn);
+		return at(URIUtils.toFileUri(expectedURISuffix), expectedLineNumber, expectedColumn);
 	}
 
 	/**

@@ -14,7 +14,6 @@ import com.google.inject.Binder
 import com.google.inject.Inject
 import com.google.inject.Module
 import org.eclipse.n4js.serializer.StableOrderSyntacticSequencerPDAProvider
-import org.eclipse.xtext.Grammar
 import org.eclipse.xtext.serializer.analysis.SyntacticSequencerPDAProvider
 import org.eclipse.xtext.xtext.generator.DefaultGeneratorModule
 import org.eclipse.xtext.xtext.generator.XtextGeneratorNaming
@@ -41,17 +40,13 @@ class SemanticVersioningGeneratorNaming extends XtextGeneratorNaming {
 	@Inject
 	IXtextProjectConfig projectConfig
 
-	override getGenericIdeBasePackage(Grammar grammar) {
-		super.getEclipsePluginBasePackage(grammar)
-	}
-
 	override getEclipsePluginActivator() {
 		val pluginName = projectConfig.eclipsePlugin.name
 
 		if(pluginName === null) {
 			return null
 		} else {
-			new TypeReference(pluginName + '.internal', 'SemanticVersioningActivator')
+			new TypeReference(pluginName + '.internal', 'SemverActivator')
 		}
 	}
 }

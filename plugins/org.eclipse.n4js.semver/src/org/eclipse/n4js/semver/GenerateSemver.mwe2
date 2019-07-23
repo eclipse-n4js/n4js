@@ -3,23 +3,22 @@ module org.eclipse.n4js.semver.GenerateSemver
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
 
+import org.eclipse.n4js.generation.*
+
 var rootPath = ".."
 var runtimeProjectName = "org.eclipse.n4js.semver"
-var runtimeProjectPath = "${rootPath}/${runtimeProjectName}"
 
 /**
  * Workflow to generate the language infrastructure of the Semver language.
  */
 Workflow {
 	component = XtextGenerator {
-		configuration = {
+		configuration = SemanticVersioningGeneratorModule {
 			project = StandardProjectConfig {
 				baseName = runtimeProjectName
 				rootPath = rootPath
 				genericIde = {
 					enabled = true
-					name = "${runtimeProjectName}.ui"
-					root = "${runtimeProjectPath}.ui"
 				}
 				eclipsePlugin = {
 					enabled = true
@@ -27,7 +26,8 @@ Workflow {
 				createEclipseMetaData = false
 			}
 			code = {
-				encoding = "UTF-8"// same as org.eclipse.n4js.releng.utils.license.LicenseTemplate.COPYRIGHT_HEADER
+				encoding = "UTF-8"
+				// same as org.eclipse.n4js.releng.utils.license.LicenseTemplate.COPYRIGHT_HEADER
 				// should re-use in the long run
 				fileHeader =
 				"/**\n * Copyright (c) 2017 NumberFour AG.\n * All rights reserved. This program and the accompanying materials\n * are made available under the terms of the Eclipse Public License v1.0\n * which accompanies this distribution, and is available at\n * http://www.eclipse.org/legal/epl-v10.html\n *\n * Contributors:\n *   NumberFour AG - Initial API and implementation\n */"

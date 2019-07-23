@@ -12,7 +12,6 @@ package org.eclipse.n4js.utils;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -29,9 +28,6 @@ public class ProjectResolveHelper {
 
 	@Inject
 	private IN4JSCore n4jsCore;
-
-	@Inject
-	private N4JSModel model;
 
 	/**
 	 * Convenience method for {@link ProjectResolveHelper#resolveProject(URI)}, for which {@link URI} is resolved based
@@ -90,13 +86,12 @@ public class ProjectResolveHelper {
 					msg + " Does project '" + project.getProjectName() + "' exists and opened in the workspace?");
 		}
 
-		final Optional<? extends IN4JSSourceContainer> optionalSourceContainer = model
-				.findN4JSExternalSourceContainer(project, uri);
-		if (!optionalSourceContainer.isPresent()) {
+		final IN4JSSourceContainer sourceContainer = project.findSourceContainerWith(uri);
+		if (sourceContainer == null) {
 			throw new RuntimeException(msg);
 		}
 
-		return uri.deresolve(optionalSourceContainer.get().getLocation().appendSegment(""))
+		return uri.deresolve(sourceContainer.getLocation().withTrailingPathDelimiter().toURI())
 				.trimFileExtension()
 				.toString();
 	}

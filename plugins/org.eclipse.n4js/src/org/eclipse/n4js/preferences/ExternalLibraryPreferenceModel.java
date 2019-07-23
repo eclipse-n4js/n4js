@@ -15,7 +15,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 
 import java.io.File;
-import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -29,6 +28,9 @@ import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableMap;
@@ -42,9 +44,9 @@ public class ExternalLibraryPreferenceModel {
 	/** Name of JSON property that corresponds to field {@link #externalLibraryLocations}. */
 	private static final String PROP_EXTERNAL_LIBRARY_LOCATIONS = "externalLibraryLocations";
 
-	private final List<String> externalLibraryLocations = newArrayList();
-	private final LinkedHashSet<URI> externalLibraryLocationURIs = new LinkedHashSet<>();
-	private final LinkedHashSet<URI> externalNodeModulesURIs = new LinkedHashSet<>();
+	private final List<FileURI> externalLibraryLocations = newArrayList();
+	private final LinkedHashSet<FileURI> externalLibraryLocationURIs = new LinkedHashSet<>();
+	private final LinkedHashSet<FileURI> externalNodeModulesURIs = new LinkedHashSet<>();
 	private long externalLibraryLocationURIsHash = 0;
 
 	/**
@@ -54,8 +56,9 @@ public class ExternalLibraryPreferenceModel {
 	 * @return a new default instance.
 	 */
 	public static ExternalLibraryPreferenceModel createDefault() {
-		final URI homeFolderUri = new File(StandardSystemProperty.USER_HOME.value()).toURI(); // FIXME suspicious!
-		return new ExternalLibraryPreferenceModel(homeFolderUri);
+		// FIXME suspicious!
+		FileURI home = new FileURI(new File(StandardSystemProperty.USER_HOME.value()));
+		return new ExternalLibraryPreferenceModel(home);
 	}
 
 	/**
@@ -90,7 +93,10 @@ public class ExternalLibraryPreferenceModel {
 		List<String> extLibLocs = JSONModelUtils.asStringsInArrayOrEmpty(extLibLocsValue);
 		ExternalLibraryPreferenceModel result = new ExternalLibraryPreferenceModel();
 		synchronized (result) {
-			result.externalLibraryLocations.addAll(extLibLocs);
+			for (String extLibLoc : extLibLocs) {
+				FileURI fileUri = new FileURI(URIUtils.toFileUri(extLibLoc));
+				result.externalLibraryLocations.add(fileUri);
+			}
 		}
 		return result;
 	}
@@ -112,7 +118,8 @@ public class ExternalLibraryPreferenceModel {
 	 * @param restLocations
 	 *            other external library folder locations.
 	 */
-	public ExternalLibraryPreferenceModel(final URI firstLocation, final URI... restLocations) {
+	public ExternalLibraryPreferenceModel(final FileURI firstLocation,
+			final FileURI... restLocations) {
 		this(Lists.asList(firstLocation, restLocations));
 	}
 
@@ -122,12 +129,10 @@ public class ExternalLibraryPreferenceModel {
 	 * @param locations
 	 *            the folder locations for external libraries.
 	 */
-	public ExternalLibraryPreferenceModel(final List<URI> locations) {
-		for (final URI location : locations) {
-			checkUri(location);
-			final String path = new File(location).getAbsolutePath();
-			if (!this.externalLibraryLocations.contains(path)) {
-				this.externalLibraryLocations.add(path);
+	public ExternalLibraryPreferenceModel(final List<FileURI> locations) {
+		for (final FileURI location : locations) {
+			if (!this.externalLibraryLocations.contains(location)) {
+				this.externalLibraryLocations.add(location);
 			}
 		}
 	}
@@ -137,7 +142,7 @@ public class ExternalLibraryPreferenceModel {
 	 *
 	 * @return a list of external library folder locations.
 	 */
-	public List<String> getExternalLibraryLocations() {
+	public List<SafeURI<?>> getExternalLibraryLocations() {
 		return Collections.unmodifiableList(externalLibraryLocations);
 	}
 
@@ -147,21 +152,18 @@ public class ExternalLibraryPreferenceModel {
 	 * argument is {@code null}. Such cases this method returns with {@code false}.
 	 *
 	 * @param location
-	 *            the absolute file {@link URI} pointing to the external library folder.
+	 *            the absolute file {@link SafeURI} pointing to the external library folder.
 	 * @return {@code true} if the addition was successful, hence the state of the current instance has changed.
 	 *         Otherwise {@code false}.
 	 */
-	synchronized public boolean add(final URI location) {
+	synchronized public boolean add(final FileURI location) {
 		if (null == location) {
 			return false;
 		}
-
-		final String path = new File(checkUri(location)).getAbsolutePath();
-		if (externalLibraryLocations.contains(path)) {
+		if (externalLibraryLocations.contains(location)) {
 			return false;
 		}
-
-		return externalLibraryLocations.add(path);
+		return externalLibraryLocations.add(location);
 	}
 
 	/**
@@ -173,13 +175,11 @@ public class ExternalLibraryPreferenceModel {
 	 *            the location to remove.
 	 * @return {@code true} if the location was removed, otherwise {@code false}.
 	 */
-	synchronized public boolean remove(final URI location) {
+	synchronized public boolean remove(final FileURI location) {
 		if (null == location) {
 			return false;
 		}
-
-		final String path = new File(checkUri(location)).getAbsolutePath();
-		return externalLibraryLocations.remove(path);
+		return externalLibraryLocations.removeAll(Collections.singleton(location));
 	}
 
 	/**
@@ -189,13 +189,12 @@ public class ExternalLibraryPreferenceModel {
 	 * @param location
 	 *            to move up.
 	 */
-	synchronized public void moveUp(final URI location) {
+	synchronized public void moveUp(final FileURI location) {
 		if (null != location) {
-			final String path = new File(checkUri(location)).getAbsolutePath();
-			int indexOf = externalLibraryLocations.indexOf(path);
+			int indexOf = externalLibraryLocations.indexOf(location);
 			if (indexOf > 0) { // 0 is intentionally exclusive. Cannot move 'up' further,
 				externalLibraryLocations.remove(indexOf);
-				externalLibraryLocations.add(indexOf - 1, path);
+				externalLibraryLocations.add(indexOf - 1, location);
 			}
 		}
 	}
@@ -207,37 +206,36 @@ public class ExternalLibraryPreferenceModel {
 	 * @param location
 	 *            to move down.
 	 */
-	synchronized public void moveDown(final URI location) {
+	synchronized public void moveDown(final FileURI location) {
 		if (null != location) {
-			final String path = new File(checkUri(location)).getAbsolutePath();
-			int indexOf = externalLibraryLocations.indexOf(path);
+			int indexOf = externalLibraryLocations.indexOf(location);
 			if (indexOf >= 0 && indexOf < externalLibraryLocations.size() - 1) {
 				externalLibraryLocations.remove(indexOf);
-				externalLibraryLocations.add(indexOf + 1, path);
+				externalLibraryLocations.add(indexOf + 1, location);
 			}
 		}
 	}
 
 	/**
-	 * Returns with a view to the external library folder locations given as absolute file {@link URI}s.
+	 * Returns with a view to the external library folder locations given as absolute file {@link SafeURI locations}.
 	 *
 	 * @return a list of external library folder location URIs.
 	 */
-	synchronized public LinkedHashSet<URI> getExternalLibraryLocationsAsUris() {
+	synchronized public LinkedHashSet<FileURI> getExternalLibraryLocationsAsUris() {
 		int currentHash = externalLibraryLocations.hashCode();
 		boolean needUpdate = currentHash != externalLibraryLocationURIsHash;
 		if (needUpdate) {
 			externalLibraryLocationURIsHash = currentHash;
-			List<URI> locations = new LinkedList<>();
-			for (String pathStr : externalLibraryLocations) {
-				locations.add(new File(pathStr).toURI());
+			List<FileURI> locations = new LinkedList<>();
+			for (FileURI projectLocation : externalLibraryLocations) {
+				locations.add(projectLocation);
 			}
 			locations = ExternalLibraryHelper.sortByShadowing(locations);
 			externalLibraryLocationURIs.clear();
 			externalLibraryLocationURIs.addAll(locations);
 
 			externalNodeModulesURIs.clear();
-			for (URI location : locations) {
+			for (FileURI location : locations) {
 				if (isNodeModulesLocation(location)) {
 					externalNodeModulesURIs.add(location);
 				}
@@ -249,7 +247,7 @@ public class ExternalLibraryPreferenceModel {
 	/**
 	 * @return true of the URI points to a {@code node_modules} folder and false otherwise
 	 */
-	static public boolean isNodeModulesLocation(URI location) {
+	static public boolean isNodeModulesLocation(SafeURI<?> location) {
 		String locStr = location.toString();
 		if (locStr.endsWith("/")) {
 			return locStr.endsWith(ExternalLibraryHelper.NPM_CATEGORY + "/");
@@ -259,11 +257,11 @@ public class ExternalLibraryPreferenceModel {
 	}
 
 	/**
-	 * Returns with a view to the external library folder locations given as absolute file {@link URI}s.
+	 * Returns with a view to the external library folder locations given as absolute file {@link SafeURI locations}.
 	 *
 	 * @return a list of external library folder location URIs.
 	 */
-	synchronized public Collection<URI> getNodeModulesLocationsAsUris() {
+	synchronized public Collection<FileURI> getNodeModulesLocationsAsUris() {
 		return externalNodeModulesURIs;
 	}
 
@@ -273,7 +271,8 @@ public class ExternalLibraryPreferenceModel {
 	 * @return the JSON string representation of the current instance.
 	 */
 	synchronized public String toJsonString() {
-		final JSONArray extLibLocsValue = JSONModelUtils.createStringArray(this.externalLibraryLocations);
+		final JSONArray extLibLocsValue = JSONModelUtils.createStringArray(
+				() -> this.externalLibraryLocations.stream().map(Object::toString).iterator());
 		final JSONObject obj = JSONModelUtils.createObject(
 				ImmutableMap.of(PROP_EXTERNAL_LIBRARY_LOCATIONS, extLibLocsValue));
 		final JSONDocument doc = JSONModelUtils.createDocument(obj);
@@ -313,16 +312,6 @@ public class ExternalLibraryPreferenceModel {
 	@Override
 	public String toString() {
 		return toJsonString();
-	}
-
-	/** Validates the URI. */
-	private URI checkUri(final URI uri) {
-		try {
-			return new File(uri).toURI();
-		} catch (final Exception e) {
-			final String message = "Illegal URI: '" + uri + "'." + (null != e.getMessage() ? " " + e.getMessage() : "");
-			throw new IllegalArgumentException(message, e);
-		}
 	}
 
 }

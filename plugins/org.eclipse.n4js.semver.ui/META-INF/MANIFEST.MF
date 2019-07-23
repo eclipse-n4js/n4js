@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.n4js.semver;visibility:=reexport,
  org.eclipse.ui,
  org.antlr.runtime,
  org.eclipse.compare,
- org.apache.log4j
+ org.apache.log4j,
+ org.eclipse.n4js.semver.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.semver.ui
 Bundle-Activator: org.eclipse.n4js.semver.ui.internal.SemverActivator

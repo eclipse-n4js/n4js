@@ -30,6 +30,7 @@ import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
@@ -57,7 +58,7 @@ public class RunnerHelper {
 	/**
 	 * Returns list of absolute paths to each of the given projects' output folder in the local files system.
 	 */
-	public Map<Path, String> getCoreProjectPaths(Set<IN4JSProject> projects) {
+	public Map<Path, N4JSProjectName> getCoreProjectPaths(Set<IN4JSProject> projects) {
 		return projects.stream()
 				.map(project -> getProjectNameAndPath(project))
 				.filter(nap -> nap != null)
@@ -65,26 +66,23 @@ public class RunnerHelper {
 	}
 
 	/** get path to the project itself */
-	private Pair<Path, String> getProjectNameAndPath(IN4JSProject project) {
+	private Pair<Path, N4JSProjectName> getProjectNameAndPath(IN4JSProject project) {
 		if (!project.exists())
 			return null;
-		final String name = project.getProjectName();
+		final N4JSProjectName name = project.getProjectName();
 		if (name == null)
 			return null;
-		final Path path = project.getLocationPath();
+		final Path path = project.getLocation().toFileSystemPath();
 		if (path == null)
 			return null;
-		final Path pathNormalized = path.normalize().toAbsolutePath();
-		if (pathNormalized.toString().isEmpty())
-			return null;
-		return Pair.of(pathNormalized, name);
+		return Pair.of(path, name);
 	}
 
 	/**
 	 * Convenience method. Forwards to
-	 * {@link #getProjectExtendedDepsAndApiImplMapping(RuntimeEnvironment, URI, String, boolean)}, but you provide a
-	 * runnerId instead of a runtime environment (will use runtime environment of the runner with the given id),
-	 * implementationId is <code>null</code> throwOnError is <code>false</code> .
+	 * {@link #getProjectExtendedDepsAndApiImplMapping(RuntimeEnvironment, URI, N4JSProjectName, boolean)}, but you
+	 * provide a runnerId instead of a runtime environment (will use runtime environment of the runner with the given
+	 * id), implementationId is <code>null</code> throwOnError is <code>false</code> .
 	 *
 	 * Analyzes the containing project of the moduleToRun and returns list of extended dependencies, that is:
 	 * <ul>
@@ -118,7 +116,7 @@ public class RunnerHelper {
 	 * Collects transitive collection of project extended RuntimeEnvironemnts
 	 */
 	public void recursiveExtendedREsCollector(IN4JSProject project,
-			Collection<IN4JSProject> addHere, Iterable<IN4JSProject> projects) {
+			Collection<IN4JSProject> addHere, Iterable<? extends IN4JSProject> projects) {
 		if (project.getProjectType().equals(ProjectType.RUNTIME_ENVIRONMENT)) {
 			addHere.add(project);
 			// TODO RLs can extend each other, should we use recursive RL deps collector?
@@ -126,10 +124,10 @@ public class RunnerHelper {
 			// if RLs extend each other but are from independent REs, that is and error?
 			project.getProvidedRuntimeLibraries().forEach(rl -> addHere.add(rl));
 
-			Optional<String> ep = project.getExtendedRuntimeEnvironmentId();
+			Optional<N4JSProjectName> ep = project.getExtendedRuntimeEnvironmentId();
 			Optional<IN4JSProject> extendedRE = Optional.absent();
 			if (ep.isPresent()) {
-				extendedRE = findRuntimeEnvironemtnWithName(ep.get(), projects);
+				extendedRE = findRuntimeEnvironmentWithName(ep.get(), projects);
 			}
 			if (extendedRE.isPresent()) {
 				IN4JSProject e = extendedRE.get();
@@ -159,7 +157,7 @@ public class RunnerHelper {
 		}
 
 		for (final IN4JSProject dep : project.getAllDirectDependencies()) {
-			if (guard.tryNext(dep.getLocation())) {
+			if (guard.tryNext(dep.getLocation().toURI())) {
 				recursiveDependencyCollector(dep, addHere, guard);
 			}
 		}
@@ -172,8 +170,8 @@ public class RunnerHelper {
 	private Optional<IN4JSProject> getCustomRuntimeEnvironmentProject(RuntimeEnvironment runEnv) {
 		// final RuntimeEnvironment reOfRunner = runnerRegistry.getDescriptor(runnerId).getEnvironment();
 		if (runEnv != null) {
-			final String projectName = runEnv.getProjectName();
-			return findRuntimeEnvironemtnWithName(projectName);
+			final N4JSProjectName projectName = runEnv.getProjectName();
+			return findRuntimeEnvironmentWithName(projectName);
 		}
 		return Optional.absent();
 	}
@@ -185,8 +183,8 @@ public class RunnerHelper {
 	 *            of the project that servers as the desired environment.
 	 * @return optional with project if found, empty optional otherwise.
 	 */
-	public Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectName,
-			Iterable<IN4JSProject> projects) {
+	public Optional<IN4JSProject> findRuntimeEnvironmentWithName(final N4JSProjectName projectName,
+			Iterable<? extends IN4JSProject> projects) {
 		for (IN4JSProject project : projects) {
 			if (project.getProjectType() == ProjectType.RUNTIME_ENVIRONMENT
 					&& project.getProjectName().equals(projectName)) {
@@ -203,8 +201,8 @@ public class RunnerHelper {
 	 *            of the project that servers as the desired environment.
 	 * @return optional with project if found, empty optional otherwise.
 	 */
-	private Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectName) {
-		return findRuntimeEnvironemtnWithName(projectName, n4jsCore.findAllProjects());
+	private Optional<IN4JSProject> findRuntimeEnvironmentWithName(final N4JSProjectName projectName) {
+		return findRuntimeEnvironmentWithName(projectName, n4jsCore.findAllProjects());
 	}
 
 	/**
@@ -258,7 +256,7 @@ public class RunnerHelper {
 	// TODO this methods could require some cleanup after the concepts of API-Implementation mappings stabilized...
 	public ApiUsage getProjectExtendedDepsAndApiImplMapping(
 			RuntimeEnvironment runtimeEnvironment, URI moduleToRun,
-			String implementationId, boolean throwOnError) {
+			N4JSProjectName implementationId, boolean throwOnError) {
 		final LinkedHashSet<IN4JSProject> deps = new LinkedHashSet<>();
 
 		// 1) add project containing the moduleToRun and its direct AND indirect dependencies
@@ -309,7 +307,7 @@ public class RunnerHelper {
 		// special case: implementationId is null
 		// there must be exactly one implementation for the API projects in the workspace
 		if (implementationId == null) {
-			final List<String> allImplIds = apiImplMapping.getAllImplIds();
+			final List<N4JSProjectName> allImplIds = apiImplMapping.getAllImplIds();
 			if (allImplIds.size() != 1) {
 				if (throwOnError) {
 					throw new IllegalStateException(
@@ -325,10 +323,10 @@ public class RunnerHelper {
 		}
 
 		final Map<IN4JSProject, IN4JSProject> apiImplProjectMapping = new LinkedHashMap<>();
-		final List<String> missing = new ArrayList<>(); // projectNames of projects without an implementation
+		final List<N4JSProjectName> missing = new ArrayList<>(); // projectNames of projects without an implementation
 		for (IN4JSProject dep : deps) {
 			if (dep != null) {
-				final String depId = dep.getProjectName();
+				final N4JSProjectName depId = dep.getProjectName();
 				if (depId != null && apiImplMapping.isApi(depId)) {
 					// so: dep is an API project ...
 					final IN4JSProject impl = apiImplMapping.getImpl(depId, implementationId);
@@ -378,7 +376,7 @@ public class RunnerHelper {
 			apiImplMapping.enhance(batchedPivotNewDepList, n4jsCore.findAllProjects());
 			// go over new dependencies and decide:
 			for (IN4JSProject pivNewDep : batchedPivotNewDepList) {
-				final String depId = pivNewDep.getProjectName();
+				final N4JSProjectName depId = pivNewDep.getProjectName();
 				if (apiImplMapping.isApi(depId)) {
 					// API-mapping
 					if (joinedApiImplProjectMapping.containsKey(pivNewDep)) {
@@ -416,7 +414,7 @@ public class RunnerHelper {
 	/** DS to transport the results of the APIimpl computation for a concrete realization. */
 	public static class ApiUsage {
 		/** can be null, see {@link #implementationIdRequired} */
-		final public String implementationId;
+		final public N4JSProjectName implementationId;
 		/** list of dependent projects */
 		final public List<IN4JSProject> projects;
 		/** concrete mapping for the given implementationId */
@@ -425,13 +423,13 @@ public class RunnerHelper {
 		/** general access to the apiImplMapping state */
 		final public ApiImplMapping apiImplMapping;
 		/** list of api projects missing an implementations for the given implementationId */
-		final public List<String> missingImplementationIds;
+		final public List<N4JSProjectName> missingImplementationIds;
 		/** false if no Api-replacement has to take place. */
 		final public boolean implementationIdRequired;
 
-		private ApiUsage(String implementationatId, List<IN4JSProject> projects,
+		private ApiUsage(N4JSProjectName implementationatId, List<IN4JSProject> projects,
 				Map<IN4JSProject, IN4JSProject> concreteApiImplProjectMapping,
-				ApiImplMapping apiImplMapping, List<String> missingImplementationIds,
+				ApiImplMapping apiImplMapping, List<N4JSProjectName> missingImplementationIds,
 				boolean implementationIdRequired) {
 			this.implementationId = implementationatId;
 			this.apiImplMapping = apiImplMapping;
@@ -461,9 +459,9 @@ public class RunnerHelper {
 		}
 
 		/** Create standard result for required api-impl replacement. */
-		private static ApiUsage of(String implementationId, List<IN4JSProject> projects,
+		private static ApiUsage of(N4JSProjectName implementationId, List<IN4JSProject> projects,
 				Map<IN4JSProject, IN4JSProject> concreteApiImplProjectMapping,
-				ApiImplMapping apiImplMapping, List<String> missingImplementationIds) {
+				ApiImplMapping apiImplMapping, List<N4JSProjectName> missingImplementationIds) {
 			return new ApiUsage(implementationId, projects, concreteApiImplProjectMapping, apiImplMapping,
 					missingImplementationIds, true);
 		}

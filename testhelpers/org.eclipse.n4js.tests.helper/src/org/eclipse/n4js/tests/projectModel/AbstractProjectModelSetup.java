@@ -11,10 +11,11 @@
 package org.eclipse.n4js.tests.projectModel;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 /**
  */
-public abstract class AbstractProjectModelSetup {
+public abstract class AbstractProjectModelSetup<Loc extends SafeURI<Loc>> {
 	/***/
 	public static final String LIB_FOLDER_NAME = "lib";
 
@@ -22,10 +23,10 @@ public abstract class AbstractProjectModelSetup {
 	public static final String PROJECT_DESCRIPTION_FILENAME = N4JSGlobals.PACKAGE_JSON;
 
 	/***/
-	protected final AbstractProjectModelTest host;
+	protected final AbstractProjectModelTest<Loc> host;
 
 	/***/
-	protected AbstractProjectModelSetup(AbstractProjectModelTest host) {
+	protected AbstractProjectModelSetup(AbstractProjectModelTest<Loc> host) {
 		this.host = host;
 	}
 

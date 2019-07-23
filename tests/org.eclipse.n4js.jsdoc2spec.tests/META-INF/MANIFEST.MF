@@ -8,6 +8,7 @@ Fragment-Host: org.eclipse.n4js.jsdoc2spec
 Require-Bundle: org.eclipse.n4js.tests.helper,
  org.eclipse.xpect.xtext.lib,
  org.eclipse.n4js.xpect,
- org.eclipse.xtext.testing
+ org.eclipse.xtext.testing,
+ org.eclipse.xpect
 Bundle-Vendor: %providerName
 Automatic-Module-Name: org.eclipse.n4js.jsdoc2spec.tests

@@ -34,13 +34,14 @@ public class N4JSInjectorProviderWithMockProject extends N4JSInjectorProvider {
 
 		/** */
 		@Override
-		public Class<? extends InternalN4JSWorkspace> bindInternalN4JSWorkspace() {
+		public Class<? extends InternalN4JSWorkspace<MockURIWrapper>> bindInternalN4JSWorkspace() {
 			return MockWorkspace.class;
 		}
 
 		/** */
-		public Class<? extends N4JSModel> bindN4JSModel() {
+		public Class<? extends N4JSModel<?>> bindN4JSModel() {
 			return MockN4JSModel.class;
 		}
+
 	}
 }

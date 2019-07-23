@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Dosgi.requiredJavaVersion=1.8 -Xms1024m -Xmx2048m
+      <vmArgs>-Dosgi.requiredJavaVersion=11 -Xms1024m -Xmx2048m
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
@@ -132,7 +132,7 @@
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <property name="org.eclipse.core.resources/encoding" value="UTF-8" />
       <property name="osgi.instance.area.default" value="@user.home/workspace" />
-      <property name="osgi.requiredJavaVersion" value="1.8" />
+      <property name="osgi.requiredJavaVersion" value="11" />
    </configurations>
 
    <preferencesInfo>

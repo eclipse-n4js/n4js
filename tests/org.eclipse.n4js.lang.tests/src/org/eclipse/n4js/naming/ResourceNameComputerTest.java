@@ -18,6 +18,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ResourceNameComputer;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -50,7 +51,8 @@ public class ResourceNameComputerTest {
 	@SuppressWarnings("javadoc")
 	@Before
 	public void prepare() throws Exception {
-		this.script = parserHelper.parse("class C{}", URI.createFileURI("p/C.n4js"), resourceSetProvider.get());
+		URI fileUri = URIUtils.toFileUri("p/C.n4js");
+		this.script = parserHelper.parse("class C{}", fileUri, resourceSetProvider.get());
 		this.module = script.getModule();
 		this.type = module.getTopLevelTypes().get(0);
 	}

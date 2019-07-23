@@ -17,9 +17,7 @@ import static org.eclipse.n4js.projectDescription.ProjectType.API;
 import static org.eclipse.xtext.util.Strings.toFirstUpper;
 
 import java.io.File;
-import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -38,6 +36,8 @@ import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
@@ -151,9 +151,7 @@ public class N4JSProjectExplorerHelper {
 	 *         {@code false}.
 	 */
 	public N4JSExternalProject getNodeModulesNpmProjectOrNull(IFolder folder) {
-		String npmPckJson = folder.getLocation().toOSString();
-		org.eclipse.emf.common.util.URI folderURI = org.eclipse.emf.common.util.URI.createFileURI(npmPckJson);
-		return externalLibraryWorkspace.getProject(folderURI);
+		return externalLibraryWorkspace.getProject(new FileURI(folder.getLocation().toFile()));
 	}
 
 	/**
@@ -185,7 +183,7 @@ public class N4JSProjectExplorerHelper {
 	public boolean isNodeModulesFolder(IContainer container) {
 		if ("node_modules".equals(container.getName()) && container instanceof IFolder) {
 			IPath path = container.getLocation();
-			URI locURI = path.toFile().toURI();
+			FileURI locURI = new FileURI(path.toFile());
 			if (prefStore.getNodeModulesLocations().contains(locURI)) {
 				return true;
 			}
@@ -197,13 +195,15 @@ public class N4JSProjectExplorerHelper {
 	 * @return a styled string for a given external project. Respects name, type, version, and information about
 	 *         shadowing and whether it is available in the xtext index
 	 */
-	public StyledString getStyledTextForExternalProject(final IN4JSProject project, String overrideProjectName) {
-		String name = (overrideProjectName == null) ? project.getProjectName() : overrideProjectName;
+	public StyledString getStyledTextForExternalProject(final IN4JSProject project,
+			N4JSProjectName overrideProjectName) {
+		N4JSProjectName name = (overrideProjectName == null) ? project.getProjectName() : overrideProjectName;
 		ProjectType type = project.getProjectType();
 		// for better visual representation MyProject @1.2.3 -> MyProject v1.2.3
 		String version = SemverSerializer.serialize(project.getVersion()).replaceFirst("@", "v");
 		String typeLabel = getProjectTypeLabel(type);
-		boolean inIndex = indexSynchronizer.isInIndex(project.getProjectDescriptionLocation().orNull());
+		boolean inIndex = project.isExternal()
+				&& indexSynchronizer.isInIndex((FileURI) project.getProjectDescriptionLocation());
 		String rootLocationName = getRootLocationName(project);
 
 		Styler stylerName = inIndex ? null : StyledString.QUALIFIER_STYLER;
@@ -222,10 +222,10 @@ public class N4JSProjectExplorerHelper {
 		if (!shadowingProjects.isEmpty()) {
 			IN4JSProject shadowedProject = shadowingProjects.get(0);
 			if (shadowedProject.isExternal()) {
-				org.eclipse.emf.common.util.URI location = shadowedProject.getLocation();
-				URI rootLocation = externalLibraryWorkspace.getRootLocationForResource(location);
+				FileURI location = (FileURI) shadowedProject.getLocation();
+				FileURI rootLocation = externalLibraryWorkspace.getRootLocationForResource(location);
 				if (rootLocation != null) {
-					Path rootPath = Paths.get(rootLocation.getPath());
+					Path rootPath = rootLocation.toFileSystemPath();
 					Path subpath = rootPath.subpath(rootPath.getNameCount() - 2, rootPath.getNameCount());
 					rootLocationName = subpath.toString();
 				} else {

@@ -6,20 +6,19 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.json.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.n4js.json,
+ org.eclipse.n4js.json.model,
+ org.eclipse.n4js.json.ide,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.ui.codetemplates.ui,
  org.eclipse.compare,
  org.eclipse.xtext.builder,
  org.eclipse.xtend.lib;resolution:=optional,
- org.eclipse.n4js.json.model,
  org.apache.log4j,
  org.eclipse.n4js.utils.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.json.ui
-Export-Package: org.eclipse.n4js.json.ide.contentassist.antlr,
- org.eclipse.n4js.json.ide.contentassist.antlr.internal,
- org.eclipse.n4js.json.ui,
+Export-Package: org.eclipse.n4js.json.ui,
  org.eclipse.n4js.json.ui.contentassist,
  org.eclipse.n4js.json.ui.editor.hyperlinking,
  org.eclipse.n4js.json.ui.internal,

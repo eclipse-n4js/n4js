@@ -11,7 +11,6 @@
 package org.eclipse.n4js.scoping.accessModifiers;
 
 import static java.util.Collections.emptyList;
-import static org.eclipse.xtext.util.Strings.emptyIfNull;
 
 import java.util.Collection;
 
@@ -204,7 +203,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 				return false;
 			}
 			return this.core.findProject(element.getEObjectURI()).transform(project -> {
-				boolean result = Strings.equal(contextModule.getProjectName(), project.getProjectName())
+				boolean result = Strings.equal(contextModule.getProjectName(), project.getProjectName().getRawName())
 						&& Strings.equal(contextModule.getVendorID(), project.getVendorID())
 						|| isTestedProjectOf(contextModule, project);
 				return result;
@@ -231,14 +230,14 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		}
 
 		for (final IN4JSProject testedProject : getTestedProjects(contextModule.eResource().getURI())) {
-			final URI testProjectLocation = testedProject.getLocation();
+			final URI testProjectLocation = testedProject.getLocation().toURI();
 			if (null != testProjectLocation) {
 				final Resource eResource = elementModule.eResource();
 				if (null != eResource) {
 					final URI resourceUri = eResource.getURI();
 					final IN4JSProject elementProject = core.findProject(resourceUri).orNull();
 					if (null != elementProject) {
-						if (emptyIfNull(elementProject.getProjectName()).equals(testedProject.getProjectName())) {
+						if (elementProject.getProjectName().equals(testedProject.getProjectName())) {
 							return true;
 						}
 					}
@@ -263,7 +262,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 */
 	public boolean isTestedProjectOf(final TModule contextModule, final IN4JSProject elementProject) {
 		for (final IN4JSProject testedProject : getTestedProjects(contextModule.eResource().getURI())) {
-			if (emptyIfNull(elementProject.getProjectName()).equals(testedProject.getProjectName())) {
+			if (elementProject.getProjectName().equals(testedProject.getProjectName())) {
 				return true;
 			}
 		}
@@ -278,7 +277,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 *            the URI of the context resource to retrieve its container project's host.
 	 * @return a collection of tested projects. May be empty but never {@code null}.
 	 */
-	public Collection<IN4JSProject> getTestedProjects(final URI contextResourceUri) {
+	public Collection<? extends IN4JSProject> getTestedProjects(final URI contextResourceUri) {
 		if (null == contextResourceUri) {
 			return emptyList();
 		}

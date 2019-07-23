@@ -40,6 +40,7 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
@@ -65,16 +66,16 @@ public class ProjectDescriptionLoader {
 	 * <p>
 	 * Returns {@code null} if the project description cannot be loaded successfully (e.g. missing package.json).
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(URI location) {
+	public ProjectDescription loadProjectDescriptionAtLocation(SafeURI<?> location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON == null) {
 			return null;
 		}
-		return loadProjectDescriptionAtLocation(location, packageJSON);
+		return loadProjectDescriptionAtLocation(location.toURI(), packageJSON);
 	}
 
 	/**
-	 * Same as {@link #loadPackageJSONAtLocation(URI)}.
+	 * Same as {@link #loadPackageJSONAtLocation(SafeURI)}.
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON) {
 		adjustMainPath(location, packageJSON);
@@ -94,7 +95,7 @@ public class ProjectDescriptionLoader {
 	 * Loads the project description of the N4JS project at the given {@code location} and returns the version string or
 	 * <code>null</code> if undefined or in case of error.
 	 */
-	public Pair<String, Boolean> loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(URI location) {
+	public Pair<String, Boolean> loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(SafeURI<?> location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		JSONValue versionValue = null;
 		boolean hasN4JSNature = false;
@@ -110,7 +111,7 @@ public class ProjectDescriptionLoader {
 	 * Loads the project description of the N4JS project at the given {@code location} and returns the value of the
 	 * "workspaces" property or <code>null</code> if undefined or in case of error.
 	 */
-	public List<String> loadWorkspacesFromProjectDescriptionAtLocation(URI location) {
+	public List<String> loadWorkspacesFromProjectDescriptionAtLocation(SafeURI<?> location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON != null) {
 			JSONValue value = JSONModelUtils.getProperty(packageJSON, WORKSPACES.name).orElse(null);
@@ -176,7 +177,7 @@ public class ProjectDescriptionLoader {
 		target.setHasNestedNodeModulesFolder(hasNestedNodeModulesFolder);
 	}
 
-	private JSONDocument loadPackageJSONAtLocation(URI location) {
+	private JSONDocument loadPackageJSONAtLocation(SafeURI<?> location) {
 		JSONDocument packageJSON = loadXtextFileAtLocation(location, IN4JSProject.PACKAGE_JSON, JSONDocument.class);
 
 		if (packageJSON == null) {
@@ -188,9 +189,10 @@ public class ProjectDescriptionLoader {
 		return packageJSON;
 	}
 
-	private <T extends EObject> T loadXtextFileAtLocation(URI location, String name, Class<T> expectedTypeOfRoot) {
+	private <T extends EObject> T loadXtextFileAtLocation(SafeURI<?> location, String name,
+			Class<T> expectedTypeOfRoot) {
 		final T result;
-		if (location.isPlatformResource() || location.isFile()) {
+		if (location.exists()) {
 			result = loadXtextFile(location.appendSegment(name), expectedTypeOfRoot);
 		} else {
 			// we only handle workspace and file-based cases
@@ -199,24 +201,21 @@ public class ProjectDescriptionLoader {
 		return result;
 	}
 
-	private <T extends EObject> T loadXtextFile(URI uri, Class<T> expectedTypeOfRoot) {
+	private <T extends EObject> T loadXtextFile(SafeURI<?> location, Class<T> expectedTypeOfRoot) {
 		try {
-			ResourceSet resourceSet = resourceSetProvider.get();
-
 			// check whether a file exists at the given URI
-			if (!exists(resourceSet, uri)) {
+			if (!location.exists()) {
 				return null;
 			}
-
-			Resource resource = resourceSet.getResource(uri, true);
+			ResourceSet resourceSet = resourceSetProvider.get();
+			Resource resource = resourceSet.getResource(location.toURI(), true);
 			if (resource != null) {
 				List<EObject> contents = resource.getContents();
 
 				if (!contents.isEmpty()) {
 					EObject root = contents.get(0);
 					if (expectedTypeOfRoot.isInstance(root)) {
-						@SuppressWarnings("unchecked")
-						final T rootCasted = (T) root;
+						final T rootCasted = expectedTypeOfRoot.cast(root);
 						contents.clear();
 						return rootCasted;
 					}
@@ -224,7 +223,7 @@ public class ProjectDescriptionLoader {
 			}
 			return null;
 		} catch (Exception e) {
-			throw new WrappedException("failed to load Xtext file at " + uri, e);
+			throw new WrappedException("failed to load Xtext file at " + location, e);
 		}
 	}
 

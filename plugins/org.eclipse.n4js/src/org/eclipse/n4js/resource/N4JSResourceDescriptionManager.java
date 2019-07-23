@@ -94,11 +94,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	@Override
 	public boolean isAffected(Collection<IResourceDescription.Delta> deltas, IResourceDescription candidate,
 			IResourceDescriptions context) {
-
 		URI candidateURI = candidate.getURI();
-		if (candidateURI.isFile()) {
-			return false;
-		}
 
 		// Opaque modules cannot contain any references to one of the deltas.
 		// Thus, they will never be affected by any change.
