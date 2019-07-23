@@ -287,14 +287,6 @@ public class ExternalProjectMappings {
 
 		N4JSProjectName projectName = new N4JSProjectName(pDep.getProjectName());
 		SafeURI<?> depLoc = userWorkspace.getProjectLocation(projectName);
-		// if (depLoc != null) {
-		// // respect closed workspace projects by omitting them
-		// String locStr = depLoc.toPlatformString(true);
-		// IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(locStr);
-		// if (iProject == null || !iProject.isAccessible()) {
-		// depLoc = null;
-		// }
-		// }
 		if (depLoc == null) {
 			List<N4JSExternalProject> prjsOfName = projectNameMappingTmp.get(projectName);
 			N4JSExternalProject project = (prjsOfName == null || prjsOfName.isEmpty()) ? null : prjsOfName.get(0);
