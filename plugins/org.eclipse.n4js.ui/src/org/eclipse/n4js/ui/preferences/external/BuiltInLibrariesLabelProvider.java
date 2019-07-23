@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.preferences.external;
 
-import java.io.File;
-import java.net.URI;
 import java.nio.file.Path;
 
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
@@ -36,29 +34,28 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 
 	@Override
 	public String getText(final Object element) {
-		if (element instanceof URI) {
-			return getCategoryText((URI) element).getString();
+		if (element instanceof FileURI) {
+			return getCategoryText((FileURI) element).getString();
 		} else if (element instanceof IN4JSProject) {
 			return ((IN4JSProject) element).getProjectName().getRawName();
 		}
 		return super.getText(element);
 	}
 
-	private StyledString getCategoryText(final URI location) {
-		File file = new File(location);
-		if (ExternalLibraryPreferenceModel.isNodeModulesLocation(new FileURI(file))) {
-			Path path = file.toPath();
+	private StyledString getCategoryText(final FileURI location) {
+		Path path = location.toFileSystemPath();
+		if (ExternalLibraryPreferenceModel.isNodeModulesLocation(location)) {
 			int pCount = path.getNameCount();
 			StyledString styledString = new StyledString(path.getName(pCount - 1).toString());
 			styledString.append(" (" + path.getName(pCount - 2) + ")", StyledString.QUALIFIER_STYLER);
 			return styledString;
 		}
-		return new StyledString(file.getAbsolutePath());
+		return new StyledString(path.toString());
 	}
 
 	@Override
 	public Image getImage(final Object element) {
-		if (element instanceof URI) {
+		if (element instanceof FileURI) {
 			return ImageRef.LIB_PATH.asImage().orNull();
 		} else if (element instanceof IN4JSProject) {
 			return ImageRef.EXTERNAL_LIB_PROJECT.asImage().orNull();
@@ -68,8 +65,8 @@ class BuiltInLibrariesLabelProvider extends LabelProvider implements IStyledLabe
 
 	@Override
 	public StyledString getStyledText(final Object element) {
-		if (element instanceof URI) {
-			return getCategoryText((URI) element);
+		if (element instanceof FileURI) {
+			return getCategoryText((FileURI) element);
 		} else if (element instanceof IN4JSProject) {
 			return projectExplorerhelper.getStyledTextForExternalProject((IN4JSProject) element, null);
 		}
