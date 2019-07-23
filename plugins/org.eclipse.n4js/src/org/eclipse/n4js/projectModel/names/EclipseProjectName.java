@@ -19,7 +19,7 @@ import com.google.common.base.Preconditions;
  * Typesafe wrapper around a String which represents a project name. The string is a valid eclipse project name (and
  * thereby a valid segment of IPath). It is of the shape `(@scope:)?name`.
  */
-public class EclipseProjectName {
+public final class EclipseProjectName {
 
 	private final String name;
 

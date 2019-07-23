@@ -29,7 +29,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
 
 @SuppressWarnings("javadoc")
-public class FileURI extends SafeURI<FileURI> {
+public final class FileURI extends SafeURI<FileURI> {
 
 	private File cachedFile;
 

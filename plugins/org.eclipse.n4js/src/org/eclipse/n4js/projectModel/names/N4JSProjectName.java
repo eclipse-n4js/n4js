@@ -17,7 +17,7 @@ import com.google.common.base.Preconditions;
 /**
  * A project name of the shape `(@scope/)?name`.
  */
-public class N4JSProjectName implements Comparable<N4JSProjectName> {
+public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 
 	private final String name;
 
