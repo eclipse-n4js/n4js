@@ -33,7 +33,6 @@ import org.junit.Test;
  */
 public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 	private static final String EXTERNAL_WITH_N4JSD_TPT = "external_with_n4jsd_tpt";
-	private static final String NODE_MODULES = "node_modules";
 
 	File workspace;
 	String wsRoot;
@@ -46,7 +45,7 @@ public class TargetPlatformConfigurationsTest extends AbstractN4jscTest {
 		workspace = setupWorkspace(EXTERNAL_WITH_N4JSD_TPT, true, N4JSGlobals.N4JS_RUNTIME);
 		wsRoot = workspace.getAbsolutePath().toString();
 		packages = wsRoot + "/packages";
-		node_modules = new File(wsRoot, NODE_MODULES);
+		node_modules = new File(wsRoot, N4JSGlobals.NODE_MODULES);
 	}
 
 	/** Delete workspace. */

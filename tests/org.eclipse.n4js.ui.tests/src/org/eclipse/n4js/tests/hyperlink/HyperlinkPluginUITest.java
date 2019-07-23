@@ -158,7 +158,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		XtextEditor editor = openAndGetXtextEditorViaProjectExplorer(page,
 				PROJECT_NAME.toEclipseProjectName().getRawName(),
-				"node_modules",
+				N4JSGlobals.NODE_MODULES,
 				"n4js-runtime-node 0.13.4 [Runtime library]",
 				"src",
 				"n4js",
@@ -246,7 +246,8 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		assertNoErrors();
 
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
-		Path path = Paths.get(PROJECT_NAME.toEclipseProjectName().getRawName(), "node_modules", "n4js-runtime-node",
+		Path path = Paths.get(PROJECT_NAME.toEclipseProjectName().getRawName(), N4JSGlobals.NODE_MODULES,
+				"n4js-runtime-node",
 				"package.json");
 		org.eclipse.core.runtime.Path iPath = new org.eclipse.core.runtime.Path(path.toString());
 		IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);

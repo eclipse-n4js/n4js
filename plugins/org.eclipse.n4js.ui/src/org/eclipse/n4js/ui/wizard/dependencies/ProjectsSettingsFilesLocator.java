@@ -35,7 +35,6 @@ import com.google.common.io.Files;
 public final class ProjectsSettingsFilesLocator {
 	private static final String GIT = ".git";
 	private static final String NPMRC = "npmrc";
-	private static final String NODE_MODULES = N4JSGlobals.NODE_MODULES;
 	private static final Logger LOGGER = Logger.getLogger(ProjectsSettingsFilesLocator.class);
 
 	private final Set<File> foundNPMRC = new HashSet<>();
@@ -169,7 +168,7 @@ public final class ProjectsSettingsFilesLocator {
 	private void processContainer(File file) {
 		if (file.isFile())
 			processFile(file);
-		else if (file.isDirectory() && !file.getName().equals(GIT) && !file.getName().equals(NODE_MODULES))
+		else if (file.isDirectory() && !file.getName().equals(GIT) && !file.getName().equals(N4JSGlobals.NODE_MODULES))
 			Arrays.asList(file.listFiles()).forEach(this::processContainer);
 
 	}
