@@ -37,7 +37,7 @@ const nomnomOptions: Object = {
         list: true,
         metavar: "PATH",
         transform: resolvePath,
-        help: "Scan for all projects in directory."
+        help: "Scan for all N4JS projects in directories."
     },
     projects: {
         position: 0,
