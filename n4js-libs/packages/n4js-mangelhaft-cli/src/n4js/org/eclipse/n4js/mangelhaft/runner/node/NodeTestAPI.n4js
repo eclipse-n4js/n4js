@@ -43,8 +43,9 @@ export default public class NodeTestAPI {
             for (const p of await lib_fs.readdir(dir)) {
                 const prj = lib_path.join(dir, p);
 
-                if (fsSafeAccessSync(lib_path.join(prj, PACKAGE_JSON))) {
-                    const packageJson = readJsonFile(lib_path.join(dir, PACKAGE_JSON));
+                const packageJsonPath = lib_path.join(prj, PACKAGE_JSON);
+                if (fsSafeAccessSync(packageJsonPath)) {
+                    const packageJson = readJsonFile(packageJsonPath);
                     if (packageJson && packageJson[PACKAGE_JSON_N4JS_SECTION_KEY]) { // only add if package.json has an "n4js" section
                         pathToPackageJson.set(dir, packageJson);
                     }
