@@ -47,7 +47,7 @@ export default public class NodeTestAPI {
                 if (fsSafeAccessSync(packageJsonPath)) {
                     const packageJson = readJsonFile(packageJsonPath);
                     if (packageJson && packageJson[PACKAGE_JSON_N4JS_SECTION_KEY]) { // only add if package.json has an "n4js" section
-                        pathToPackageJson.set(dir, packageJson);
+                        pathToPackageJson.set(prj, packageJson);
                     }
                 }
             }
