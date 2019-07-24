@@ -128,7 +128,7 @@
    </plugins>
 
    <configurations>
-      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <property name="org.eclipse.core.resources/encoding" value="UTF-8" />
       <property name="osgi.instance.area.default" value="@user.home/workspace" />
