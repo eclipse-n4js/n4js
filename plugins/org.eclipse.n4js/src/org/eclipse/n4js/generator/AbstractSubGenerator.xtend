@@ -34,8 +34,12 @@ import org.eclipse.n4js.validation.helper.FolderContainmentHelper
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IFileSystemAccess2
+import org.eclipse.xtext.generator.IGenerator2
+import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
+import org.eclipse.xtext.util.UriExtensions
 import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
@@ -46,7 +50,7 @@ import static org.eclipse.xtext.diagnostics.Severity.*
  * shared implementations.
  */
 @Log
-abstract class AbstractSubGenerator implements ISubGenerator {
+abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 
 	@Accessors
 	private CompilerDescriptor compilerDescriptor = null
@@ -70,12 +74,30 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	@Inject protected N4JSPreferenceAccess preferenceAccess
 	
 	@Inject private FolderContainmentHelper containmentHelper;
+	
+	@Inject	private UriExtensions uriExtensions;
+
 
 	override getCompilerDescriptor() {
 		if (compilerDescriptor === null) {
 			compilerDescriptor = getDefaultDescriptor
 		}
 		return compilerDescriptor
+	}
+	
+
+	override doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		doGenerate(input, fsa);
+	}
+
+	override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -296,9 +318,9 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val project = projectctContainer.get;
 
 		// /home/user/workspace/Project/
-		val projectPath = project.locationPath
+		val projectPath = project.location.toFileSystemPath
 		// platform:/resource/Project/
-		val projectLocURI = project.location.appendSegment("")
+		val projectLocURI = project.getLocation().withTrailingPathDelimiter.toURI
 
 		// --- output locations ---
 		// src-gen
@@ -308,11 +330,12 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 		// --- source locations ---
 		// src/a/b/c
-		val completetSourceURI = input.URI.trimSegments(1).deresolve(projectLocURI)
+		val inputURI = uriExtensions.withEmptyAuthority(input.URI);
+		val completetSourceURI = inputURI.trimSegments(1).deresolve(projectLocURI)
 		var completetSource = completetSourceURI.toFileString
 
 		// Handling case when source container is the project root itself. (Sources { source { '.' } })
-		if (null === completetSource && project.location === input.URI.trimSegments(1)) {
+		if (null === completetSource && project.getLocation().toURI === input.URI.trimSegments(1)) {
 			completetSource = projectPath.toFile.absolutePath;
 		}
 
@@ -334,8 +357,9 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 *  
 	 */
 	private def Path getOutputRelativeLocation(N4JSResource input){
+		val uri = uriExtensions.withEmptyAuthority(input.URI);
 		// Project/a/b/c/Input.XX
-		val localOutputFilePath = Paths.get(resourceNameComputer.generateFileDescriptor(input.URI, ".XX"))
+		val localOutputFilePath = Paths.get(resourceNameComputer.generateFileDescriptor(uri, ".XX"))
 
 		// if calculated path  has just one element, e.g. "Input.XX"
 		// then local path segment is empty

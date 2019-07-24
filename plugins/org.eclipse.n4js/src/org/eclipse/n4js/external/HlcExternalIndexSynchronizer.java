@@ -13,6 +13,7 @@ package org.eclipse.n4js.external;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.inject.Singleton;
 
@@ -35,6 +36,12 @@ public class HlcExternalIndexSynchronizer extends ExternalIndexSynchronizer {
 	@Override
 	public void reindexAllExternalProjects(IProgressMonitor monitor) {
 		return;
+	}
+
+	@Override
+	public boolean isInIndex(FileURI projectLocation) {
+		// we assume all projects to be in the index in the headless case
+		return true;
 	}
 
 }

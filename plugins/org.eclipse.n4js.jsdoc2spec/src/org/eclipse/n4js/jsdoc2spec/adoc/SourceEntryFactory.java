@@ -28,7 +28,8 @@ public class SourceEntryFactory {
 	static final String ORG_ECLIPSE_N4JS = "org.eclipse.n4js";
 	static final String NO_REPO = "NO_REPO";
 	static final String NO_PATH = "NO_PATH";
-	static final String NO_FOLDER = "NO_FOLDER";
+	/** Placeholder when sources folder is '.' */
+	static public final String NO_FOLDER = "NO_FOLDER";
 	static final String NO_PACKAGE = "NO_PACKAGE";
 
 	/**
@@ -152,7 +153,7 @@ public class SourceEntryFactory {
 	}
 
 	static private String getProject(RepoRelativePath rrp) {
-		String tProject = trim(rrp.projectName);
+		String tProject = trim(rrp.projectName.getRawName());
 		return tProject;
 	}
 

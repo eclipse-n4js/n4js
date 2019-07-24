@@ -20,16 +20,16 @@ import java.util.Set;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace.RegisterResult;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.LibraryChange;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
-import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -86,7 +86,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 	private RegisterResult cleanChangesIndex(IProgressMonitor monitor, Collection<LibraryChange> changeSet) {
 		try {
 			monitor.setTaskName("Cleaning new projects...");
-			Set<URI> toBeRemovedProjects = getToBeRemovedProjects(changeSet);
+			Set<FileURI> toBeRemovedProjects = getToBeRemovedProjects(changeSet);
 			RegisterResult cleanResults = externalLibraryWorkspace.deregisterProjects(monitor, toBeRemovedProjects);
 			printRegisterResults(cleanResults, "cleaned");
 
@@ -107,8 +107,8 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		SubMonitor subMonitor = convert(monitor, 10);
 		try {
 
-			Set<URI> toBeUpdated = getToBeBuildProjects(changeSet);
-			for (URI cleanedPrjLoc : cleanResults.externalProjectsDone) {
+			Set<FileURI> toBeUpdated = getToBeBuildProjects(changeSet);
+			for (FileURI cleanedPrjLoc : cleanResults.externalProjectsDone) {
 				ExternalProject project = externalLibraryWorkspace.getProject(cleanedPrjLoc);
 				if (project != null) {
 					toBeUpdated.add(cleanedPrjLoc);
@@ -119,7 +119,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 			RegisterResult buildResult = externalLibraryWorkspace.registerProjects(subMonitor.split(9), toBeUpdated);
 			printRegisterResults(buildResult, "built");
 
-			Set<URI> toBeScheduled = new HashSet<>();
+			Set<SafeURI<?>> toBeScheduled = new HashSet<>();
 			toBeScheduled.addAll(cleanResults.affectedWorkspaceProjects);
 			toBeScheduled.addAll(buildResult.affectedWorkspaceProjects);
 			externalLibraryWorkspace.scheduleWorkspaceProjects(subMonitor.split(1), toBeScheduled);
@@ -148,8 +148,8 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		}
 	}
 
-	private Set<URI> getToBeRemovedProjects(Collection<LibraryChange> changeSet) {
-		Set<URI> toBeDeleted = new HashSet<>();
+	private Set<FileURI> getToBeRemovedProjects(Collection<LibraryChange> changeSet) {
+		Set<FileURI> toBeDeleted = new HashSet<>();
 		for (LibraryChange change : changeSet) {
 
 			switch (change.type) {
@@ -158,7 +158,7 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 				if (project != null) {
 					// The added project might shadow an existing project.
 					// Hence, the existing project must be cleaned.
-					toBeDeleted.add(project.getIProject().getLocation());
+					toBeDeleted.add(project.getSafeLocation());
 				}
 				break;
 
@@ -176,8 +176,8 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 		return toBeDeleted;
 	}
 
-	private Set<URI> getToBeBuildProjects(Collection<LibraryChange> changeSet) {
-		Set<URI> toBeUpdated = new HashSet<>();
+	private Set<FileURI> getToBeBuildProjects(Collection<LibraryChange> changeSet) {
+		Set<FileURI> toBeUpdated = new HashSet<>();
 		for (LibraryChange change : changeSet) {
 
 			switch (change.type) {
@@ -197,11 +197,11 @@ public class EclipseExternalIndexSynchronizer extends ExternalIndexSynchronizer 
 				break;
 			}
 			case Removed: {
-				ExternalProject project = externalLibraryWorkspace.getProject(change.name);
+				N4JSExternalProject project = externalLibraryWorkspace.getProject(change.name);
 				if (project != null) {
 					// The removed project shadowed an existing project.
 					// Hence, the shadowed project must be build.
-					toBeUpdated.add(URIUtils.convert(project));
+					toBeUpdated.add(project.getSafeLocation());
 				}
 				break;
 			}

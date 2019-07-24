@@ -61,7 +61,6 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 	@BuilderState
 	private IBuildLogger builderStateLogger;
 
-	@SuppressWarnings("unused")
 	private EclipseExternalIndexSynchronizer externalIndexSynchronizer;
 	private ExternalLibraryBuildScheduler externalLibraryBuildJobProvider;
 	private N4JSProjectDependencyStrategy projectDependencyStrategy;

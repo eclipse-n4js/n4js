@@ -18,7 +18,6 @@ import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
 import java.util.ArrayList
 import java.util.Collection
-import java.util.HashSet
 import java.util.List
 import java.util.Map
 import org.eclipse.core.resources.IFile
@@ -294,24 +293,20 @@ class WizardGeneratorHelper {
 	 *
 	 * @returns A list of {@link IAtomicChange}s for the manifest resource.
 	 */
-	public def Collection<IJSONDocumentModification> projectDescriptionModifications(Resource packageJson, WorkspaceWizardModel model, Collection<IN4JSProject> referencedProjects, URI moduleURI) {
+	public def List<IJSONDocumentModification> projectDescriptionModifications(Resource packageJson, WorkspaceWizardModel model, List<IN4JSProject> referencedProjects, URI moduleURI) {
 		val modifications = new ArrayList<IJSONDocumentModification>();
 		
 		// remove the containing project from the dependencies
-		val referencedProjectsExceptContainer = referencedProjects.filter[ !it.projectName.equals(model.project.lastSegment) ];
-
-		// remove duplicates
-		val referencedProjectsSet = new HashSet<IN4JSProject>();
-		referencedProjectsSet.addAll(referencedProjectsExceptContainer);
+		val referencedProjectsSet = referencedProjects.filter[ !it.projectName.rawName.equals(model.project.lastSegment) ].toSet;
 
 		// add project dependency changes (includes added runtime libraries)
-		modifications.add(PackageJsonModificationProvider.insertProjectDependencies(referencedProjectsSet
-			.map[projectName].toList));
+		modifications.add(PackageJsonModificationProvider.insertProjectDependencies(
+			referencedProjectsSet.map[projectName.rawName].toList));
 				
 		// add required runtime library changes
 		modifications.add(PackageJsonModificationProvider.insertRequiredRuntimeLibraries(referencedProjectsSet.filter [
 			projectType == ProjectType.RUNTIME_LIBRARY
-		].map[projectName].toList));
+		].map[projectName.rawName].toList));
 	
 		return modifications;
 	}

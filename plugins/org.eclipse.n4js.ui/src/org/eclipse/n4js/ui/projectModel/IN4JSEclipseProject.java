@@ -11,8 +11,8 @@
 package org.eclipse.n4js.ui.projectModel;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 import com.google.common.collect.ImmutableList;
 
@@ -37,10 +37,11 @@ public interface IN4JSEclipseProject extends IN4JSProject {
 	IProject getProject();
 
 	/**
-	 * Returns a platform resource URI of the form {@code platform:/resource/projectName}.
+	 * Returns a platform resource URI of the form {@code platform:/resource/projectName} or a file URI if this is an
+	 * external project.
 	 */
 	@Override
-	URI getLocation();
+	SafeURI<?> getLocation();
 
 	@Override
 	ImmutableList<? extends IN4JSEclipseSourceContainer> getSourceContainers();
@@ -59,7 +60,7 @@ public interface IN4JSEclipseProject extends IN4JSProject {
 	/**
 	 * Returns the dependencies including the unresolved deps. This is used by the builder to keep track of pending
 	 * project dependencies.
-	 * 
+	 *
 	 * @param includeAbsentProjects
 	 *            true if unresolved deps should be included.
 	 * @return the dependencies.

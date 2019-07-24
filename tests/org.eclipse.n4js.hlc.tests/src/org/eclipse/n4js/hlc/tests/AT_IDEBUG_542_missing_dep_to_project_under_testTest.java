@@ -16,6 +16,7 @@ import java.io.IOException;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -37,7 +38,7 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 		workspace = setupWorkspace(WSP_542, true,
 				N4JSGlobals.N4JS_RUNTIME,
 				N4JSGlobals.MANGELHAFT,
-				"n4js-runtime-es2015");
+				new N4JSProjectName("n4js-runtime-es2015"));
 	}
 
 	/** Delete workspace. */

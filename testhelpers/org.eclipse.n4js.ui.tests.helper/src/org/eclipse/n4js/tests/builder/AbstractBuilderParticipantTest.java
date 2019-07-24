@@ -42,6 +42,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.packagejson.PackageJsonBuilder;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.PackageJSONTestHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsHelper;
@@ -251,7 +252,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	/**
 	 * Adds a dependency to project 'projectName' in the package.json of project 'toChange'.
 	 */
-	protected void addProjectToDependencies(IProject toChange, String projectName, String versionConstraint)
+	protected void addProjectToDependencies(IProject toChange, N4JSProjectName projectName, String versionConstraint)
 			throws IOException {
 		ProjectTestsUtils.addProjectToDependencies(toChange, projectName, versionConstraint);
 	}
@@ -428,8 +429,8 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		return projectTestsHelper.runWithNodeRunnerUI(moduleToRun);
 	}
 
-	/** See {@link ProjectTestsHelper#runWithRunnerUI(String, String, URI)}. */
-	protected ProcessResult runWithRunnerUI(String runnerId, String implementationId, URI moduleToRun)
+	/** See {@link ProjectTestsHelper#runWithRunnerUI(String, N4JSProjectName, URI)}. */
+	protected ProcessResult runWithRunnerUI(String runnerId, N4JSProjectName implementationId, URI moduleToRun)
 			throws ExecutionException {
 		return projectTestsHelper.runWithRunnerUI(runnerId, implementationId, moduleToRun);
 	}

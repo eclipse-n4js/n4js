@@ -16,18 +16,20 @@ import static org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.ts.ui.navigation.IURIBasedStorage;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.graphics.Image;
 
 import com.google.common.base.Charsets;
@@ -42,14 +44,14 @@ import com.google.common.collect.FluentIterable;
 	private static final Image FOLDER_IMG = getWorkbench().getSharedImages().getImage(IMG_OBJ_FOLDER);
 	private static final Image FILE_IMG = getWorkbench().getSharedImages().getImage(IMG_OBJ_FILE);
 
-	private final File file;
+	private final SafeURI<?> file;
 	private final String label;
 
-	static public ResourceNode create(final Node parent, final File file) {
+	static public ResourceNode create(final Node parent, final SafeURI<?> file) {
 		return create(parent, file, file.getName());
 	}
 
-	static public ResourceNode create(final Node parent, final File file, final String label) {
+	static public ResourceNode create(final Node parent, final SafeURI<?> file, final String label) {
 		if (file == null || !file.exists()) {
 			return null;
 		}
@@ -65,7 +67,7 @@ import com.google.common.collect.FluentIterable;
 	 * @param file
 	 *            the wrapped file that the new node instance represents.
 	 */
-	private ResourceNode(final Node parent, final File file, final String label) {
+	private ResourceNode(final Node parent, final SafeURI<?> file, final String label) {
 		super(parent);
 		this.file = file;
 		this.label = label;
@@ -79,10 +81,14 @@ import com.google.common.collect.FluentIterable;
 	@Override
 	public Object[] getChildren() {
 		if (file.isDirectory()) {
-			final FluentIterable<File> subFiles = from(Arrays.asList(file.listFiles()));
+			final FluentIterable<? extends SafeURI<?>> subFiles = from(file.getChildren());
 			return subFiles.transform(f -> create(this, f)).toArray(ResourceNode.class);
 		}
 		return EMPTY_ARRAY;
+	}
+
+	public SafeURI<?> getLocation() {
+		return file;
 	}
 
 	@Override
@@ -93,9 +99,9 @@ import com.google.common.collect.FluentIterable;
 	@Override
 	public InputStream getContents() throws CoreException {
 		try {
-			return new FileInputStream(file);
-		} catch (final FileNotFoundException e) {
-			throw new RuntimeException("File '" + file + "' does not exist.", e);
+			return file.getContents();
+		} catch (final IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, N4JSActivator.PLUGIN_ID, "Cannot open stream", e));
 		}
 	}
 
@@ -119,13 +125,9 @@ import com.google.common.collect.FluentIterable;
 		return null;
 	}
 
-	/* default */ File getResource() {
-		return file;
-	}
-
 	@Override
 	public URI getURI() {
-		return URI.createFileURI(file.getAbsolutePath());
+		return file.toURI();
 	}
 
 	/**

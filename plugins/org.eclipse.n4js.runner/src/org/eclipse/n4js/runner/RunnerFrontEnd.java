@@ -27,6 +27,7 @@ import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.RunnerHelper.ApiUsage;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
@@ -62,7 +63,7 @@ public class RunnerFrontEnd {
 
 	/**
 	 * Returns true iff the runner with the given id can run the given moduleToRun. Takes same arguments as
-	 * {@link #createConfiguration(String, String, URI)}.
+	 * {@link #createConfiguration(String, N4JSProjectName, URI)}.
 	 */
 	@SuppressWarnings("unused")
 	public boolean canRun(String runnerId, URI moduleToRun) {
@@ -97,7 +98,7 @@ public class RunnerFrontEnd {
 	 *            case it will be a file URI.
 	 * @return the run configuration.
 	 */
-	public RunConfiguration createConfiguration(String runnerId, String implementationId, URI moduleToRun) {
+	public RunConfiguration createConfiguration(String runnerId, N4JSProjectName implementationId, URI moduleToRun) {
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
 
@@ -116,7 +117,7 @@ public class RunnerFrontEnd {
 	/**
 	 * Allows for adding additional path if needed.
 	 */
-	public RunConfiguration createConfiguration(String runnerId, String implementationId, URI moduleToRun,
+	public RunConfiguration createConfiguration(String runnerId, N4JSProjectName implementationId, URI moduleToRun,
 			String additionalPath) {
 
 		RunConfiguration runConfig = createConfiguration(runnerId, implementationId, moduleToRun);
@@ -146,7 +147,7 @@ public class RunnerFrontEnd {
 	 */
 	public RunConfiguration createXpectOutputTestConfiguration(String runnerId,
 			String userSelectionNodePathResolvableTargetFileName, Path additionalProjectPath,
-			String additionalProjectName) {
+			N4JSProjectName additionalProjectName) {
 
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
@@ -176,7 +177,7 @@ public class RunnerFrontEnd {
 	 * here} for details on primary and derived values). Additionally delegated to dynamically obtained runner to
 	 * customize derived values further.
 	 * <p>
-	 * This method is called from methods {@link #createConfiguration(String, String, URI)} and
+	 * This method is called from methods {@link #createConfiguration(String, N4JSProjectName, URI)} and
 	 * {@link #createConfiguration(Map)}, so client code usually does not need to call it directly.
 	 */
 	public void computeDerivedValues(RunConfiguration config) {
@@ -210,7 +211,7 @@ public class RunnerFrontEnd {
 		final URI userSelection = config.getUserSelection();
 		if (userSelection != null) {
 			IN4JSProject containingProject = resolveProject(userSelection);
-			Path workingDirectory = containingProject.getLocationPath();
+			Path workingDirectory = containingProject.getLocation().toFileSystemPath();
 			config.setWorkingDirectory(workingDirectory);
 		}
 	}
@@ -243,9 +244,11 @@ public class RunnerFrontEnd {
 	private void configureDependenciesAndPaths(RunConfiguration config) {
 		// 1) for all API projects among the direct and indirect dependencies we have to provide a mapping
 		// from the projectName of the API project to the projectName of the implementation project to be used
-		final ApiUsage apiUsage = runnerHelper
-				.getProjectExtendedDepsAndApiImplMapping(config.getRuntimeEnvironment(),
-						config.getUserSelection(), config.getImplementationId(), true);
+		final ApiUsage apiUsage = runnerHelper.getProjectExtendedDepsAndApiImplMapping(
+				config.getRuntimeEnvironment(),
+				config.getUserSelection(),
+				config.getImplementationId() != null ? config.getImplementationId() : null,
+				true);
 
 		final List<IN4JSProject> deps = apiUsage.projects;
 		final Map<IN4JSProject, IN4JSProject> apiImplProjectMapping = apiUsage.concreteApiImplProjectMapping;
@@ -259,7 +262,7 @@ public class RunnerFrontEnd {
 			final IN4JSProject p3 = p2 != null ? p2 : p;
 			return p3;
 		}).collect(Collectors.toCollection(() -> Sets.newLinkedHashSet()));
-		final Map<Path, String> coreProjectPaths = runnerHelper.getCoreProjectPaths(depsImpl);
+		final Map<Path, N4JSProjectName> coreProjectPaths = runnerHelper.getCoreProjectPaths(depsImpl);
 		config.setCoreProjectPaths(coreProjectPaths);
 	}
 
@@ -313,10 +316,10 @@ public class RunnerFrontEnd {
 	}
 
 	/**
-	 * Convenience method. Creates a run configuration with {@link #createConfiguration(String, String, URI)} and
-	 * immediately passes it to {@link #run(RunConfiguration)} in order to launch the moduleToRun.
+	 * Convenience method. Creates a run configuration with {@link #createConfiguration(String, N4JSProjectName, URI)}
+	 * and immediately passes it to {@link #run(RunConfiguration)} in order to launch the moduleToRun.
 	 */
-	public Process run(String runnerId, String implementationId, URI moduleToRun) throws ExecutionException {
+	public Process run(String runnerId, N4JSProjectName implementationId, URI moduleToRun) throws ExecutionException {
 		return run(createConfiguration(runnerId, implementationId, moduleToRun));
 	}
 

@@ -15,13 +15,13 @@
  */
 package org.eclipse.n4js.ui.editor;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ui.external.EclipseExternalLibraryWorkspace;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.XtextResource;
@@ -68,10 +68,10 @@ public class N4JSHyperlinkDetector extends DefaultHyperlinkDetector {
 
 	/** If a platform URI references a resource of the external workspace, it will be transformed to a file URI */
 	private XtextResource tryConvertToFileResource(XtextResource resource) {
-		URI fileUri = URIUtils.toFileUri(resource);
-		URI extProjectWithResource = extWS.findProjectWith(fileUri);
+		FileURI fileUri = new FileURI(URIUtils.toFileUri(resource));
+		FileURI extProjectWithResource = extWS.findProjectWith(fileUri);
 		if (extProjectWithResource != null) {
-			Resource extResource = resource.getResourceSet().getResource(fileUri, true);
+			Resource extResource = resource.getResourceSet().getResource(fileUri.toURI(), true);
 			if (extResource instanceof XtextResource) {
 				return (XtextResource) extResource;
 			}

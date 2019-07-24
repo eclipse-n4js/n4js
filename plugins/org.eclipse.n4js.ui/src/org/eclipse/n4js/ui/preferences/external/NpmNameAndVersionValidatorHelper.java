@@ -13,6 +13,7 @@ package org.eclipse.n4js.ui.preferences.external;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.NpmCLI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.ui.utils.InputComposedValidator;
 import org.eclipse.n4js.ui.utils.InputFunctionalValidator;
@@ -68,7 +69,7 @@ public class NpmNameAndVersionValidatorHelper {
 	IInputValidator getPackageNameToInstallValidator() {
 		return InputComposedValidator.compose(
 				getBasicPackageValidator(), InputFunctionalValidator.from(
-						(final String name) -> !isNpmWithNameInstalled(name) ? null
+						(final String name) -> !isNpmWithNameInstalled(new N4JSProjectName(name)) ? null
 								/* error message */
 								: "The npm package '" + name + "' is already available."));
 	}
@@ -82,7 +83,7 @@ public class NpmNameAndVersionValidatorHelper {
 	IInputValidator getPackageNameToUninstallValidator() {
 		return InputComposedValidator.compose(
 				getBasicPackageValidator(), InputFunctionalValidator.from(
-						(final String name) -> isNpmWithNameInstalled(name) ? null
+						(final String name) -> isNpmWithNameInstalled(new N4JSProjectName(name)) ? null
 								/* error case */
 								: "The npm package '" + name + "' is not installed."));
 	}
@@ -91,7 +92,8 @@ public class NpmNameAndVersionValidatorHelper {
 	private IInputValidator getBasicPackageValidator() {
 		return InputFunctionalValidator.from(
 				(final String name) -> {
-					if (npmCli.invalidPackageName(name))
+					N4JSProjectName projectName = new N4JSProjectName(name);
+					if (npmCli.invalidPackageName(projectName))
 						return "The npm package name should be specified.";
 					for (int i = 0; i < name.length(); i++) {
 						if (Character.isWhitespace(name.charAt(i)))
@@ -104,7 +106,7 @@ public class NpmNameAndVersionValidatorHelper {
 				});
 	}
 
-	private boolean isNpmWithNameInstalled(final String packageName) {
+	private boolean isNpmWithNameInstalled(final N4JSProjectName packageName) {
 		return externalLibraryWorkspace.getProject(packageName) != null;
 	}
 

@@ -17,7 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.collect.ImmutableList;
@@ -42,14 +43,8 @@ public final class ExternalLibraryHelper {
 	 * This excludes packages that have been installed to the external workspace as transitive dependency of a package
 	 * that has been explicitly installed on user request.
 	 */
-	public boolean isExternalProjectDirectory(File projectDirectory) {
-		if (!projectDirectory.isDirectory()) {
-			return false;
-		}
-
-		// check whether package.json exists
-		final File packageJsonFile = new File(projectDirectory, N4JSGlobals.PACKAGE_JSON);
-		return packageJsonFile.isFile();
+	public boolean isExternalProjectDirectory(SafeURI<?> projectDirectory) {
+		return projectDirectory instanceof FileURI && projectDirectory.isProjectRootDirectory();
 	}
 
 	/**
@@ -62,11 +57,11 @@ public final class ExternalLibraryHelper {
 	}
 
 	/** Sorts given set of locations and returns sorted list */
-	public static List<java.net.URI> sortByShadowing(Collection<java.net.URI> locations) {
-		Map<String, java.net.URI> knownLocations = new HashMap<>();
-		List<java.net.URI> unknownLocations = new LinkedList<>();
+	public static List<FileURI> sortByShadowing(Collection<FileURI> locations) {
+		Map<String, FileURI> knownLocations = new HashMap<>();
+		List<FileURI> unknownLocations = new LinkedList<>();
 
-		for (java.net.URI location : locations) {
+		for (FileURI location : locations) {
 			String locStr = location.toString();
 			locStr = locStr.endsWith("/") ? locStr.substring(0, locStr.length() - 1) : locStr;
 
@@ -83,9 +78,9 @@ public final class ExternalLibraryHelper {
 			}
 		}
 
-		List<java.net.URI> sortedLocations = new LinkedList<>();
+		List<FileURI> sortedLocations = new LinkedList<>();
 		for (String knownLocation : CATEGORY_SHADOWING_ORDER) {
-			java.net.URI location = knownLocations.get(knownLocation);
+			FileURI location = knownLocations.get(knownLocation);
 			if (location != null) {
 				sortedLocations.add(location);
 			}

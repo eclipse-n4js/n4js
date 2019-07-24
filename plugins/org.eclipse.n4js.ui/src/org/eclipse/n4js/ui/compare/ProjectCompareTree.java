@@ -26,6 +26,13 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.n4js.compare.ProjectCompareResult;
+import org.eclipse.n4js.compare.ProjectComparison;
+import org.eclipse.n4js.compare.ProjectComparisonEntry;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -36,13 +43,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
 import com.google.common.base.Joiner;
-
-import org.eclipse.n4js.compare.ProjectCompareResult;
-import org.eclipse.n4js.compare.ProjectComparison;
-import org.eclipse.n4js.compare.ProjectComparisonEntry;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.ts.types.TClassifier;
-import org.eclipse.n4js.ts.types.TEnum;
 
 /**
  * UI widget to show comparisons of API and implementation projects.
@@ -293,7 +293,7 @@ public class ProjectCompareTree extends TreeViewer {
 		if (errorMessages.isEmpty()) {
 			// if there is exactly one implementation, then focus on that; otherwise do not focus on an
 			// implementation (i.e. show all implementations side-by-side)
-			final String newFocusImplId;
+			final N4JSProjectName newFocusImplId;
 			if (newComparison != null && newComparison.getImplCount() == 1)
 				newFocusImplId = newComparison.getImplId(0);
 			else
@@ -323,7 +323,7 @@ public class ProjectCompareTree extends TreeViewer {
 	 * @param monitor
 	 *            the progress monitor to use or <code>null</code>.
 	 */
-	public void setComparison(ProjectComparison comparison, String focusImplId, IProgressMonitor monitor) {
+	public void setComparison(ProjectComparison comparison, N4JSProjectName focusImplId, IProgressMonitor monitor) {
 		this.comparison = comparison;
 		this.focusImplIndex = comparison != null && focusImplId != null ? comparison.getImplIndex(focusImplId) : -1;
 		this.cachedDocumentation = null;
@@ -358,12 +358,12 @@ public class ProjectCompareTree extends TreeViewer {
 		// set new column titles
 		if (comparison != null) {
 			if (focusImplIndex >= 0) {
-				setColumnHeader(1, comparison.getImplId(focusImplIndex));
+				setColumnHeader(1, comparison.getImplId(focusImplIndex).getRawName());
 				for (int specialColumnIdx = 0; specialColumnIdx < NUM_OF_SPECIAL_COLUMNS; specialColumnIdx++)
 					setColumnHeader(2 + specialColumnIdx, SPECIAL_COLUMN_TITLES[specialColumnIdx]);
 			} else {
 				for (int implColumnIdx = 0; implColumnIdx < NUM_OF_IMPLEMENTATION_COLUMNS; implColumnIdx++)
-					setColumnHeader(1 + implColumnIdx, comparison.getImplId(implColumnIdx));
+					setColumnHeader(1 + implColumnIdx, comparison.getImplId(implColumnIdx).getRawName());
 			}
 		}
 	}

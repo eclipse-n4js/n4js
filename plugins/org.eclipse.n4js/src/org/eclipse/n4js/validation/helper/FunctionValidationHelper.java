@@ -32,6 +32,7 @@ import org.eclipse.n4js.n4JS.AwaitExpression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.n4js.validation.validators.N4JSFunctionValidator;
@@ -65,7 +66,7 @@ public class FunctionValidationHelper {
 	 * Check for variadic, default, and missing initializer forward references in formal parameters. </br>
 	 * Note: This method is called for the {@link N4JSFunctionValidator}.
 	 */
-	static public <T extends EObject> void internalCheckFormalParameters(
+	static public <T extends IdentifiableElement> void internalCheckFormalParameters(
 			T[] fpars,
 			Predicate<T> variadic,
 			Predicate<T> hasInitAssgn,

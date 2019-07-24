@@ -409,7 +409,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			val script = EcoreUtil2.getContainerOfType(element, Script);
 			addIssue(msg, script, NO_PROJECT_FOUND);
 		} else {
-			val projectType = project.get?.projectType;
+			val projectType = project.orNull?.projectType;
 			if (projectType !== ProjectType.RUNTIME_ENVIRONMENT && projectType !== ProjectType.RUNTIME_LIBRARY) {
 				addIssue(getMessageForANN_DISALLOWED_IN_NON_RUNTIME_COMPONENT(annotation.name), annotation,
 					ANNOTATION__NAME, ANN_DISALLOWED_IN_NON_RUNTIME_COMPONENT);

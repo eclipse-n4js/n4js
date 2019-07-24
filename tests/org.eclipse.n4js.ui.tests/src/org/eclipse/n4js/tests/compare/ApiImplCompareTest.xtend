@@ -11,16 +11,17 @@
 package org.eclipse.n4js.tests.compare
 
 import com.google.inject.Inject
+import java.io.File
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.internal.FileBasedWorkspace
 import org.eclipse.n4js.internal.N4JSRuntimeCore
 import org.eclipse.n4js.projectModel.IN4JSCore
-import java.io.File
-import org.eclipse.emf.common.util.URI
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Before
 import org.junit.runner.RunWith
+import org.eclipse.n4js.projectModel.locations.FileURI
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -55,7 +56,7 @@ class ApiImplCompareTest extends AbstractApiImplCompareTest {
 	// note: main test contained in super class (common for UI and headless cases)
 
 
-	private def registerProject(String name) {
-		fbWorkspace.registerProject(URI.createFileURI(new File("probands/ApiImplCompare/YarnWorkspaceProject/packages/"+name).absolutePath))
+	private def registerProject(N4JSProjectName name) {
+		fbWorkspace.registerProject(new FileURI(new File("probands/ApiImplCompare/YarnWorkspaceProject/packages/"+name)))
 	}
 }

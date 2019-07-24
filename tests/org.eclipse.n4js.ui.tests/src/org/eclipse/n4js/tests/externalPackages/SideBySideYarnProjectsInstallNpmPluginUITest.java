@@ -26,6 +26,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
@@ -72,10 +76,10 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 				.filter((subFolder) -> subFolder.getName().equals(N4JSGlobals.NODE_MODULES))
 				.findFirst().isPresent());
 
-		org.eclipse.emf.common.util.URI prjP1URI = org.eclipse.emf.common.util.URI
-				.createFileURI(projP1.getLocation().toString());
+		FileURI prjP1URI = new PlatformResourceURI(projP1).toFileURI();
 		String lodashVersion = getDependencyVersion(prjP1URI, "lodash");
-		libraryManager.installNPM("lodash", lodashVersion, prjP1URI, new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("lodash"), lodashVersion, prjP1URI,
+				new NullProgressMonitor());
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 
 		assertTrue(Arrays.stream(prjRootFile.listFiles())
@@ -88,8 +92,8 @@ public class SideBySideYarnProjectsInstallNpmPluginUITest extends AbstractBuilde
 		assertIssues(pkgJsonP1, "line 16: Project does not exist with project ID: lodash.");
 	}
 
-	private String getDependencyVersion(org.eclipse.emf.common.util.URI prjURI, String dependencyName) {
-		ProjectDescription prjDesc1 = prjDescLoader.loadProjectDescriptionAtLocation(prjURI);
+	private String getDependencyVersion(SafeURI<?> loc, String dependencyName) {
+		ProjectDescription prjDesc1 = prjDescLoader.loadProjectDescriptionAtLocation(loc);
 		Optional<ProjectDependency> depPrj = prjDesc1.getProjectDependencies().stream()
 				.filter(prjDep -> prjDep.getProjectName().equals(dependencyName))
 				.findFirst();

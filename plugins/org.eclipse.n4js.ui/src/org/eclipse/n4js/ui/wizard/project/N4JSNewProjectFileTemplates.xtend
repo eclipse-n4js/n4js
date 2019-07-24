@@ -16,6 +16,7 @@ import org.eclipse.n4js.packagejson.PackageJsonBuilder
 
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 /**
  * Basic Xtend templates for new project wizard.
@@ -103,10 +104,10 @@ class N4JSNewProjectFileTemplates {
 		
 		// add dependencies
 		projectInfo.projectDependencies.forEach[dep |
-			builder.withDependency(dep);
+			builder.withDependency(new N4JSProjectName(dep));
 		]
 		projectInfo.projectDevDependencies.forEach[dep |
-			builder.withDevDependency(dep);
+			builder.withDevDependency(new N4JSProjectName(dep));
 		]
 		
 	

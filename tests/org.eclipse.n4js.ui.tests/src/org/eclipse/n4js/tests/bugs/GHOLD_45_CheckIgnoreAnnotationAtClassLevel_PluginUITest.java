@@ -25,6 +25,7 @@ import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.projectModel.names.EclipseProjectName;
 import org.eclipse.n4js.tester.nodejs.ui.NodejsTesterLaunchShortcut;
 import org.eclipse.n4js.tester.ui.TesterUiActivator;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
@@ -45,7 +46,7 @@ import com.google.inject.Injector;
 @SuppressWarnings("restriction")
 public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends AbstractPluginUITest {
 
-	private static final String PROJECT_NAME = "GHOLD-45";
+	private static final EclipseProjectName PROJECT_NAME = new EclipseProjectName("GHOLD-45");
 
 	private static final String CONSOLE_VIEW_ID = "org.eclipse.ui.console.ConsoleView";
 

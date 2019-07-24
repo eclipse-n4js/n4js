@@ -32,13 +32,16 @@ Contributors:
 		<!-- types -->
 		<module>org.eclipse.n4js.ts.model</module>
 		<module>org.eclipse.n4js.ts</module>
+		<module>org.eclipse.n4js.ts.ide</module>
 		<module>org.eclipse.n4js.ts.ui</module>
 		<!-- regex -->
 		<module>org.eclipse.n4js.regex</module>
+		<module>org.eclipse.n4js.regex.ide</module>
 		<module>org.eclipse.n4js.regex.ui</module>
 		<!-- n4js -->
 		<module>org.eclipse.n4js.model</module>
 		<module>org.eclipse.n4js</module>
+		<module>org.eclipse.n4js.ide</module>
 		<module>org.eclipse.n4js.ui</module>
 		<!-- execution environments -->
 		<module>org.eclipse.n4js.environments</module>
@@ -52,11 +55,13 @@ Contributors:
 		<!-- json -->
 		<module>org.eclipse.n4js.json</module>
 		<module>org.eclipse.n4js.json.model</module>
+		<module>org.eclipse.n4js.json.ide</module>
 		<module>org.eclipse.n4js.json.ui</module>
 		<!-- semver -->
 		<module>org.eclipse.n4js.semver</module>
-		<module>org.eclipse.n4js.semver.ui</module>
 		<module>org.eclipse.n4js.semver.model</module>
+		<module>org.eclipse.n4js.semver.ide</module>
+		<module>org.eclipse.n4js.semver.ui</module>
 		<!-- transpiler -->
 		<module>org.eclipse.n4js.generator.headless</module>
 		<module>org.eclipse.n4js.transpiler</module>

@@ -30,9 +30,10 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.EclipseProjectName;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
@@ -91,7 +92,7 @@ public class ExternalProjectsCollector {
 	 *
 	 * <p>
 	 * This method neither considers, nor modifies the {@link IProjectDescription#getDynamicReferences() dynamic
-	 * references} of the workspace projects. Instead it gathers the dependency information from the {@link N4JSProject
+	 * references} of the workspace projects. Instead it gathers the dependency information from the {@link IN4JSProject
 	 * N4JS project} using the {@link IN4JSCore N4JS core} service.
 	 *
 	 * <p>
@@ -151,19 +152,21 @@ public class ExternalProjectsCollector {
 			return emptyList();
 		}
 
-		Set<String> externalIds = from(externalProjects).transform(p -> p.getName()).toSet();
+		Set<N4JSProjectName> externalIds = from(externalProjects)
+				.transform(p -> new EclipseProjectName(p.getName()).toN4JSProjectName())
+				.toSet();
 		LinkedList<P> filteredProjects = new LinkedList<>();
 
-		Map<String, IProject> externalsMapping = new HashMap<>();
+		Map<N4JSProjectName, IProject> externalsMapping = new HashMap<>();
 		for (IProject prj : externalProjects) {
-			externalsMapping.put(prj.getName(), prj);
+			externalsMapping.put(new EclipseProjectName(prj.getName()).toN4JSProjectName(), prj);
 		}
 
 		for (P prj : wsProjects) {
 
 			if (prj instanceof N4JSExternalProject) {
 				N4JSExternalProject extPrj = (N4JSExternalProject) prj;
-				for (String eID : extPrj.getAllDirectDependencyIds()) {
+				for (N4JSProjectName eID : extPrj.getAllDirectDependencyIds()) {
 					IProject externalDependency = externalsMapping.get(eID);
 					if (externalDependency != null) {
 						filteredProjects.add(prj);
@@ -171,7 +174,7 @@ public class ExternalProjectsCollector {
 				}
 			} else {
 
-				Set<String> deps = Sets.newHashSet(getDirectExternalDependencyIds(prj));
+				Set<N4JSProjectName> deps = Sets.newHashSet(getDirectExternalDependencyIds(prj));
 				Iterables.retainAll(deps, externalIds);
 				if (!Iterables.isEmpty(deps)) {
 					filteredProjects.add(prj);
@@ -188,7 +191,7 @@ public class ExternalProjectsCollector {
 	 *
 	 * <p>
 	 * This method neither considers, nor modifies the {@link IProjectDescription#getDynamicReferences() dynamic
-	 * references} of the workspace projects. Instead it gathers the dependency information from the {@link N4JSProject
+	 * references} of the workspace projects. Instead it gathers the dependency information from the {@link IN4JSProject
 	 * N4JS project} using the {@link IN4JSCore N4JS core} service.
 	 *
 	 * <p>
@@ -234,22 +237,22 @@ public class ExternalProjectsCollector {
 			return mapping;
 		}
 
-		Map<String, N4JSExternalProject> externalsMapping = new HashMap<>();
+		Map<N4JSProjectName, N4JSExternalProject> externalsMapping = new HashMap<>();
 		for (N4JSExternalProject prj : externalProjects) {
-			externalsMapping.put(prj.getName(), prj);
+			externalsMapping.put(new EclipseProjectName(prj.getName()).toN4JSProjectName(), prj);
 		}
 
 		for (P prj : wsProjects) {
 			if (prj instanceof N4JSExternalProject) {
 				N4JSExternalProject extPrj = (N4JSExternalProject) prj;
-				for (String eID : extPrj.getAllDirectDependencyIds()) {
+				for (N4JSProjectName eID : extPrj.getAllDirectDependencyIds()) {
 					N4JSExternalProject externalDependency = externalsMapping.get(eID);
 					if (externalDependency != null) {
 						mapping.put(externalDependency, prj);
 					}
 				}
 			} else {
-				for (String eID : getDirectExternalDependencyIds(prj)) {
+				for (N4JSProjectName eID : getDirectExternalDependencyIds(prj)) {
 					N4JSExternalProject externalDependency = externalsMapping.get(eID);
 					if (externalDependency != null) {
 						mapping.put(externalDependency, prj);
@@ -264,7 +267,7 @@ public class ExternalProjectsCollector {
 	/**
 	 * Returns with all external project dependency project IDs for a particular non-external, accessible project.
 	 */
-	private Iterable<String> getDirectExternalDependencyIds(IProject project) {
+	private Iterable<N4JSProjectName> getDirectExternalDependencyIds(IProject project) {
 
 		if (null == project || !project.isAccessible()) {
 			return emptyList();

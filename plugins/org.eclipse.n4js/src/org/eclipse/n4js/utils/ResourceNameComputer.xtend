@@ -28,6 +28,7 @@ import org.eclipse.xtext.naming.QualifiedName
 
 import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
 import org.eclipse.n4js.semver.Semver.VersionNumber
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 /**
  * Helper class for computing descriptors for compiled files. Descriptors are used for file names and paths of generated files,
@@ -230,7 +231,7 @@ public final class ResourceNameComputer {
 		var projectName = project.projectName
 		var path = unitPath
 		if (asJsIdentifier) {
-			projectName = getValidJavascriptIdentifierName(project.projectName)
+			projectName = new N4JSProjectName(getValidJavascriptIdentifierName(project.projectName.rawName))
 			path = getValidUnitPath(unitPath)
 		}
 
