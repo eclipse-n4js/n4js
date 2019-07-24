@@ -39,6 +39,7 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.labeling.EObjectWithContext
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
+import org.eclipse.n4js.ui.typesearch.TypeSearchKind
 import org.eclipse.xtext.Keyword
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.label.AbstractLabelProvider
@@ -296,10 +297,18 @@ class ImageCalculationHelper {
 	// fallback
 	def dispatch ImageDescriptor dispatchDoGetImage(EObject object) {
 		if (object instanceof IEObjectDescription) {
-			if (TypesPackage.eINSTANCE.TN4Classifier.isSuperTypeOf(object.EClass) || TypesPackage.eINSTANCE.TEnum.isSuperTypeOf(object.EClass)) {
+			if (TypeSearchKind.EVERYTHING.matches(object.EClass)) {
 				// why not createValidationAwareImageDescriptor ?
 				val imageDesc = createSimpleImageDescriptor(object.imageFileName)
-				if (TypesPackage.eINSTANCE.TClass === object.EClass) {
+				val eClass = object.EClass;
+				if (TypesPackage.eINSTANCE.TVariable === eClass) {
+					if (N4JSResourceDescriptionStrategy.getConst(object)) {
+						return createDecorationOverlayIcon(imageDesc, createConstImageDecorator, IDecoration.TOP_RIGHT)
+					}
+				} else if (TypesPackage.eINSTANCE.TFunction.isSuperTypeOf(eClass)) {
+					val accessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(object);
+					return addAccessibiltyImageDecorator(imageDesc, accessModifier);
+				} else if (TypesPackage.eINSTANCE.TClass === eClass) {
 					// an abstract class cannot be set to final (with annotation @Final)
 					if (N4JSResourceDescriptionStrategy.getAbstract(object)) {
 						return createDecorationOverlayIcon(imageDesc, createAbstractImageDecorator, IDecoration.TOP_RIGHT)

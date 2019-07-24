@@ -20,19 +20,19 @@ import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TSetter
-import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.labeling.EObjectWithContext
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.n4js.ui.outline.N4JSOutlineTreeProvider
+import org.eclipse.n4js.ui.typesearch.TypeSearchKind
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.label.AbstractLabelProvider
-import org.eclipse.n4js.n4idl.N4IDLGlobals
 
 /**
  * This helper class serves as replacement for the polymorphic dispatch done
@@ -173,8 +173,7 @@ class LabelCalculationHelper {
 	}
 
 	def dispatch String dispatchDoGetText(IEObjectDescription d) {
-		if (TypesPackage.eINSTANCE.TN4Classifier.isSuperTypeOf(d.EClass) ||
-			TypesPackage.eINSTANCE.TEnum.isSuperTypeOf(d.EClass)) {
+		if (TypeSearchKind.EVERYTHING.matches(d.EClass)) {
 			return d.qualifiedName.lastSegment;
 		} else {
 			return "<unknown>"
