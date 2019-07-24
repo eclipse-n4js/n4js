@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_2019_06" sequenceNumber="155">
+<target name="Generated target-platform N4JS:N4JS_2019_06" sequenceNumber="156">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.wst.common.project.facet.ui" version="1.4.601.v201903222010"/>
@@ -74,7 +74,7 @@
       <unit id="com.google.inject" version="3.0.0.v201605172100"/>
       <unit id="io.github.classgraph" version="4.8.35.v20190528-1517"/>
       <unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
-      <unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
+      <unit id="javax.xml.stream" version="1.0.1.v201004272200"/> <!-- Oomph want's to remove javax.xml.stream, but it's required by rest-assured-2.4.0.jar in tester.tests.helper (tested July 2019) -->
       <unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
       <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository"/>
     </location>
