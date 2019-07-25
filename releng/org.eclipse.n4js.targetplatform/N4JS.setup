@@ -360,7 +360,7 @@
         </detail>
         <detail
             key="extraUnits">
-          <value>org.eclipse.equinox.executable.feature.group</value>
+          <value>org.eclipse.equinox.executable.feature.group,javax.xml.stream</value>  <!-- Oomph would not add javax.xml.stream, but it's required by rest-assured-2.4.0.jar in tester.tests.helper (July 2019) -->
         </detail>
         <detail
             key="singleLocation">

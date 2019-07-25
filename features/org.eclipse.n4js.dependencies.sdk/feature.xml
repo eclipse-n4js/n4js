@@ -99,7 +99,7 @@ Contributors:
       <import plugin="org.eclipse.e4.core.services"/>
       <import plugin="org.eclipse.e4.core.commands"/>
       <import plugin="org.eclipse.osgi.services"/>
-      <import plugin="org.eclipse.equinox.ds"/>
+      <import plugin="org.apache.felix.scr"/>
       <import plugin="org.eclipse.equinox.util"/>
       <import plugin="org.w3c.css.sac"/>
       <import plugin="org.eclipse.emf.ecore.change"/>
