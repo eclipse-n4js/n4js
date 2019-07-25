@@ -10,12 +10,10 @@
  */
 package org.eclipse.n4js.internal;
 
-import java.io.File;
-
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IExternalPackageManager;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 
 import com.google.inject.Inject;
@@ -33,10 +31,9 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 	private ExternalLibraryHelper externalLibraryHelper;
 
 	@Override
-	public boolean isN4ProjectRoot(URI rootLocation) {
-		if (null != rootLocation && rootLocation.isFile()) {
-			File projectRoot = new File(rootLocation.toFileString());
-			return externalLibraryHelper.isExternalProjectDirectory(projectRoot);
+	public boolean isN4ProjectRoot(FileURI rootLocation) {
+		if (null != rootLocation && rootLocation.exists()) {
+			return externalLibraryHelper.isExternalProjectDirectory(rootLocation);
 		}
 		return false;
 	}
@@ -47,12 +44,9 @@ public class FileBasedExternalPackageManager implements IExternalPackageManager 
 	 * Returns {@code null} if no valid project description can be read from the given project location.
 	 */
 	@Override
-	public ProjectDescription loadProjectDescriptionFromProjectRoot(URI rootLocation) {
-		if (null != rootLocation && rootLocation.isFile()) {
-			File projectRoot = new File(rootLocation.toFileString());
-			if (projectRoot.exists() && projectRoot.isDirectory()) {
-				return projectDescriptionLoader.loadProjectDescriptionAtLocation(rootLocation);
-			}
+	public ProjectDescription loadProjectDescriptionFromProjectRoot(FileURI rootLocation) {
+		if (null != rootLocation && rootLocation.isDirectory()) {
+			return projectDescriptionLoader.loadProjectDescriptionAtLocation(rootLocation);
 		}
 		return null;
 	}

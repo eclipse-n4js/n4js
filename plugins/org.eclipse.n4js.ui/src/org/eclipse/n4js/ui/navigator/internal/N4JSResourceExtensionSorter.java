@@ -13,13 +13,12 @@ package org.eclipse.n4js.ui.navigator.internal;
 import java.io.File;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.ui.internal.navigator.resources.workbench.ResourceExtensionSorter;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.ui.workingsets.WorkingSet;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManager;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
+import org.eclipse.ui.internal.navigator.resources.workbench.ResourceExtensionSorter;
+
+import com.google.inject.Inject;
 
 /**
  * Viewer sorter extension for the {@code Project Explorer} with N4JS content. Uses the default behavior when dealing
@@ -35,8 +34,8 @@ public class N4JSResourceExtensionSorter extends ResourceExtensionSorter {
 	@SuppressWarnings({ "deprecation" })
 	protected int compareClass(Object e1, Object e2) {
 		if (e1 instanceof ResourceNode && e2 instanceof ResourceNode) {
-			final File f1 = ((ResourceNode) e1).getResource();
-			final File f2 = ((ResourceNode) e2).getResource();
+			final File f1 = ((ResourceNode) e1).getLocation().toJavaIoFile();
+			final File f2 = ((ResourceNode) e2).getLocation().toJavaIoFile();
 			if (f1.isFile() == f2.isFile()) {
 				return getComparator().compare(f1.getName(), f2.getName());
 			} else if (f1.isDirectory() && f2.isFile()) {

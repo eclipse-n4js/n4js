@@ -17,9 +17,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.internal.N4JSModel;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ParserRule;
@@ -43,7 +43,7 @@ public final class N4JSLanguageHelper {
 	private N4JSGrammarAccess grammarAccess;
 
 	@Inject
-	private N4JSModel n4jsModel;
+	private IN4JSCore n4jsCore;
 
 	/**
 	 * Returns the reserved ECMAScript keywords which are defined in the grammar. The result is cached.
@@ -110,7 +110,7 @@ public final class N4JSLanguageHelper {
 		case N4JS:
 		case N4JSX:
 		case N4IDL:
-			N4JSProject project = n4jsModel.findProjectWith(resourceURI);
+			IN4JSProject project = n4jsCore.findProject(resourceURI).orNull();
 			if (project == null) {
 				return false; // happens in tests
 			}

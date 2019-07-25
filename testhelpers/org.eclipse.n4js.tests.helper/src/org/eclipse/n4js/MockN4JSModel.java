@@ -11,22 +11,23 @@
 package org.eclipse.n4js;
 
 import org.eclipse.emf.common.util.URI;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSProject;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+
+import com.google.inject.Inject;
 
 /**
  */
-public class MockN4JSModel extends N4JSModel {
+public class MockN4JSModel extends N4JSModel<MockURIWrapper> {
 
 	private N4JSProject project;
 
 	/***/
 	@Inject
-	public MockN4JSModel(InternalN4JSWorkspace workspace) {
+	public MockN4JSModel(InternalN4JSWorkspace<MockURIWrapper> workspace) {
 		super(workspace);
 	}
 
@@ -42,8 +43,13 @@ public class MockN4JSModel extends N4JSModel {
 		return project;
 	}
 
+	@Override
+	public ProjectDescription getProjectDescription(IN4JSProject mock) {
+		return null;
+	}
+
 	/***/
-	public InternalN4JSWorkspace getInternalWorkspaceForMocks() {
+	public InternalN4JSWorkspace<MockURIWrapper> getInternalWorkspaceForMocks() {
 		return this.getInternalWorkspace();
 	}
 

@@ -130,7 +130,7 @@ class JSONModelUtilsTest extends Assert {
 			get();
 		// Use temporary Resource as AbstractFormatter2 implementations can only format
 		// semantic elements that are contained in a Resource.
-		val Resource temporaryResource = resourceSet.createResource(URI.createFileURI("__synthetic.json"));
+		val Resource temporaryResource = resourceSet.createResource(URI.createURI("__synthetic.json"));
 		temporaryResource.getContents().add(document);
 		// create string writer as serialization output
 		val StringWriter writer = new StringWriter();

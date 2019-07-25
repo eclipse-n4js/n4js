@@ -12,7 +12,6 @@ package org.eclipse.n4js.generator.headless;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,11 +33,13 @@ import org.eclipse.n4js.generator.GeneratorException;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
 import org.eclipse.n4js.utils.Lazy;
@@ -59,7 +60,6 @@ import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
@@ -165,9 +165,9 @@ public class N4HeadlessCompiler {
 	 *             if one or multiple errors occur during compilation
 	 */
 	public void compile(BuildSet buildSet, IssueAcceptor issueAcceptor) throws N4JSCompileException {
-		Set<N4JSProject> allProjects = buildSet.getAllProjects();
-		Set<N4JSProject> requestedProjects = buildSet.requestedProjects;
-		Predicate<URI> singleSourceFilter = buildSet.resourceFilter;
+		Set<IN4JSProject> allProjects = buildSet.getAllProjects();
+		Set<IN4JSProject> requestedProjects = buildSet.requestedProjects;
+		Predicate<FileURI> singleSourceFilter = buildSet.resourceFilter;
 
 		// make sure all to-be-compiled projects are registered with the workspace
 		// if a project had been registered before, it will be skipped by this registration method
@@ -207,9 +207,9 @@ public class N4HeadlessCompiler {
 	 */
 	public void cleanProjects(List<File> projectPaths)
 			throws N4JSCompileException {
-		List<URI> projectURIs = convertProjectPathsToProjectURIs(projectPaths);
+		List<FileURI> projectURIs = convertProjectPathsToProjectURIs(projectPaths);
 		headlessHelper.registerProjectsToFileBasedWorkspace(projectURIs, n4jsFileBasedWorkspace);
-		List<N4JSProject> projectsToClean = headlessHelper.getN4JSProjects(projectURIs);
+		List<IN4JSProject> projectsToClean = headlessHelper.getN4JSProjects(projectURIs);
 		projectsToClean.forEach(project -> {
 			if (project.getProjectType() != ProjectType.VALIDATION && project.getProjectType() != ProjectType.PLAINJS)
 				// Do NOT clean project of type validation or plainjs because we don't want to
@@ -218,16 +218,17 @@ public class N4HeadlessCompiler {
 		});
 	}
 
-	private void cleanProject(N4JSProject project) {
+	private void cleanProject(IN4JSProject project) {
 		String outputFolder = project.getOutputPath();
-		Path outputPath = project.getLocationPath().resolve(outputFolder);
-		FileUtils.cleanFolder(outputPath.toFile());
+		File outputPath = project.getLocation().resolve(outputFolder).toJavaIoFile();
+		FileUtils.cleanFolder(outputPath);
 	}
 
-	private List<URI> convertProjectPathsToProjectURIs(List<File> projectPaths) throws N4JSCompileException {
+	private List<FileURI> convertProjectPathsToProjectURIs(List<File> projectPaths)
+			throws N4JSCompileException {
 		List<File> absProjectPaths = headlessHelper.toAbsoluteFileList(projectPaths);
 		// Convert absolute locations to file URIs.
-		List<URI> projectURIs = headlessHelper.createFileURIs(absProjectPaths);
+		List<FileURI> projectURIs = headlessHelper.createFileURIs(absProjectPaths);
 		return projectURIs;
 	}
 
@@ -240,15 +241,15 @@ public class N4HeadlessCompiler {
 	 */
 
 	// TODO GH-793 processing broken projects causes exceptions
-	private void configureResourceSetContainerState(final Set<N4JSProject> allProjects) {
+	private void configureResourceSetContainerState(final Set<IN4JSProject> allProjects) {
 		// a container is a project.
 		List<String> containers = new LinkedList<>();
-		BiMap<String, N4JSProject> container2project = HashBiMap.create();
+		BiMap<String, IN4JSProject> container2project = HashBiMap.create();
 
 		// the URIs of all resources directly contained in a project/container.
 		Multimap<String, URI> container2Uris = HashMultimap.create();
 
-		for (N4JSProject project : allProjects) {
+		for (IN4JSProject project : allProjects) {
 			String container = FileBasedWorkspace.N4FBPRJ + project.getLocation();
 			container2project.put(container, project);
 			containers.add(container);
@@ -541,7 +542,7 @@ public class N4HeadlessCompiler {
 	 * @throws N4JSCompileException
 	 *             if an error occurs during compilation
 	 */
-	private void processProjects(List<MarkedProject> projects, final Predicate<URI> filter,
+	private void processProjects(List<MarkedProject> projects, final Predicate<FileURI> filter,
 			IssueAcceptor issueAcceptor)
 			throws N4JSCompileException {
 
@@ -771,7 +772,7 @@ public class N4HeadlessCompiler {
 	}
 
 	/**
-	 * Indexes the resources in the given project including the manifest file resource and adds them to the index stored
+	 * Indexes the resources in the given project including the package json resource and adds them to the index stored
 	 * in the given resource set. Assumes that the resources have been loaded, but not fully processed.
 	 *
 	 * @param markedProject
@@ -791,12 +792,12 @@ public class N4HeadlessCompiler {
 			indexResource(resource, index);
 		}
 
-		// Index manifest file, too. Index artifact names among project types and library dependencies.
-		Optional<URI> manifestUri = markedProject.project.getProjectDescriptionLocation();
-		if (manifestUri.isPresent()) {
-			final Resource manifestResource = resourceSet.getResource(manifestUri.get(), true);
-			if (manifestResource != null) {
-				indexResource(manifestResource, index);
+		// Index package.json file, too. Index artifact names among project types and library dependencies.
+		SafeURI<?> packageJson = markedProject.project.getProjectDescriptionLocation();
+		if (packageJson != null) {
+			final Resource packageJsonResource = resourceSet.getResource(packageJson.toURI(), true);
+			if (packageJsonResource != null) {
+				indexResource(packageJsonResource, index);
 			}
 		}
 	}
@@ -970,7 +971,7 @@ public class N4HeadlessCompiler {
 	 * @throws N4JSCompileErrorException
 	 *             if the given issues contain errors
 	 */
-	private void failOnErrors(List<Issue> errors, String projectName)
+	private void failOnErrors(List<Issue> errors, N4JSProjectName projectName)
 			throws N4JSCompileErrorException {
 
 		if (!errors.isEmpty()) {
@@ -1005,10 +1006,10 @@ public class N4HeadlessCompiler {
 	 *             in case of compile-problems. Possibly wrapping other N4SJCompileExceptions.
 	 */
 	private void generateProject(MarkedProject markedProject, ResourceSet resSet,
-			Predicate<URI> compileFilter, N4ProgressStateRecorder rec) throws N4JSCompileException {
+			Predicate<FileURI> compileFilter, N4ProgressStateRecorder rec) throws N4JSCompileException {
 		rec.markStartCompiling(markedProject);
 
-		final String projectName = markedProject.project.getProjectName();
+		final N4JSProjectName projectName = markedProject.project.getProjectName();
 		if (logger.isVerbose()) {
 			logger.info("Generating " + projectName);
 		}
@@ -1021,7 +1022,7 @@ public class N4HeadlessCompiler {
 
 		// then compile each file.
 		for (Resource resource : markedProject.resources) {
-			if (compileFilter.test(resource.getURI())) {
+			if (compileFilter.test(new FileURI(resource.getURI()))) {
 				boolean isTest = markedProject.isTest(resource);
 				boolean compile = (isTest && isProcessTestCode()) || (!isTest && isCompileSourceCode());
 				if (compile) {

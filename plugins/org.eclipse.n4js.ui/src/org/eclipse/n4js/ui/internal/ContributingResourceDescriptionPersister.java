@@ -14,15 +14,20 @@ import static com.google.common.collect.FluentIterable.from;
 import static org.eclipse.n4js.ui.resource.IResourceDescriptionPersisterContribution.CLAZZ_PROPERTY_NAME;
 import static org.eclipse.n4js.ui.resource.IResourceDescriptionPersisterContribution.EXTENSION_POINT_ID;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ui.resource.IResourceDescriptionPersisterContribution;
 import org.eclipse.xtext.builder.builderState.EMFBasedPersister;
+import org.eclipse.xtext.resource.IResourceDescription;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -48,6 +53,26 @@ public class ContributingResourceDescriptionPersister extends EMFBasedPersister 
 	protected void scheduleRecoveryBuild() {
 		requiresRecoveryBuild.compareAndSet(false, true);
 	}
+
+	// FIXME: The following two methods are a temporarily solution to fix wrong URIs of old workspaces
+	// Delete next time you see this
+	@Override
+	public Iterable<IResourceDescription> loadFromResource(Resource resource) {
+		List<IResourceDescription> result = new ArrayList<>();
+		for (IResourceDescription description : super.loadFromResource(resource)) {
+			result.add(detectOutdated(description));
+		}
+		return result;
+	}
+
+	private IResourceDescription detectOutdated(IResourceDescription description) {
+		URI uri = description.getURI();
+		if (uri.isFile() && uri.scheme() != null && !uri.hasAuthority()) {
+			throw new RuntimeException("Outdated index information");
+		}
+		return description;
+	}
+	// end of FIXME
 
 	/**
 	 * Triggers a {@link IResourceDescriptionPersisterContribution#scheduleRecoveryBuild()} on all available

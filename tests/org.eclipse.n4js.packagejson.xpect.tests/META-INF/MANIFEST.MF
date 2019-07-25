@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.xpect,
  org.eclipse.n4js.json.tests.helper,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.json,
- org.eclipse.n4js.json.model
+ org.eclipse.n4js.json.model,
+ org.eclipse.n4js.xpect

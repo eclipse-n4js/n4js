@@ -50,6 +50,7 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.names.EclipseProjectName;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.navigator.N4JSProjectExplorerProblemsDecorator;
@@ -609,7 +610,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 				JavaProjectSetupUtil.createSimpleProject(projectName);
 				assertTrue(
 						"Project " + projectName + " is not accessible.",
-						ProjectTestsUtils.getProjectByName(projectName).isAccessible());
+						ProjectTestsUtils.getProjectByName(new EclipseProjectName(projectName)).isAccessible());
 			}
 		} finally {
 			workspaceDescription.setAutoBuilding(autoBuild);
@@ -664,7 +665,8 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 			}
 		}
 
-		StructuredSelection selection = new StructuredSelection(ProjectTestsUtils.getProjectsByName("A", "B", "C"));
+		StructuredSelection selection = new StructuredSelection(ProjectTestsUtils.getProjectsByName(
+				new EclipseProjectName("A"), new EclipseProjectName("B"), new EclipseProjectName("C")));
 		commonViewer.setSelection(selection);
 		assertEquals(3, commonViewer.getTree().getSelection().length);
 

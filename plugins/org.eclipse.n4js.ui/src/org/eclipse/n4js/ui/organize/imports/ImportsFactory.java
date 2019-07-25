@@ -21,6 +21,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.scoping.utils.ImportSpecifierUtil;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TExportableElement;
@@ -63,13 +64,13 @@ public class ImportsFactory {
 		String moduleQN;
 		if (targetProject != null && tmodule.getQualifiedName().toString().equals(targetProject.getMainModule())) {
 			// If the project has a main module, use project import instead.
-			moduleQN = targetProject.getProjectName();
+			moduleQN = targetProject.getProjectName().getRawName();
 		} else {
 			// Standard case
 			moduleQN = te.getContainingModule().getQualifiedName();
 		}
 		QualifiedName qn = qualifiedNameConverter.toQualifiedName(moduleQN);
-		String firstSegment = qn.getFirstSegment();
+		N4JSProjectName firstSegment = new N4JSProjectName(qn.getFirstSegment());
 		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
 
 		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamedImport);
@@ -80,27 +81,28 @@ public class ImportsFactory {
 			Adapter nodelessMarker) {
 		String moduleQN = te.getContainingModule().getQualifiedName();
 		QualifiedName qn = qualifiedNameConverter.toQualifiedName(moduleQN);
-		String firstSegment = qn.getFirstSegment();
+		N4JSProjectName firstSegment = new N4JSProjectName(qn.getFirstSegment());
 		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
 
 		return createImportDeclaration(qn, name, project, nodelessMarker, this::addDefaultImport);
 	}
 
 	/** Creates a new default import with name 'name' from object description. */
-	private ImportDeclaration createNamespaceImport(String name, IN4JSProject contextProject, TExportableElement te,
+	private ImportDeclaration createNamespaceImport(String name, IN4JSProject contextProject,
+			TExportableElement te,
 			Adapter nodelessMarker) {
 		String moduleQN = te.getContainingModule().getQualifiedName();
 		QualifiedName qn = qualifiedNameConverter.toQualifiedName(moduleQN);
-		String firstSegment = qn.getFirstSegment();
+		N4JSProjectName firstSegment = new N4JSProjectName(qn.getFirstSegment());
 
 		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
 		if (project == null) {
-			IN4JSProject projectByNamespace = ImportSpecifierUtil.getDependencyWithID(name, contextProject);
+			IN4JSProject projectByNamespace = ImportSpecifierUtil.getDependencyWithID(new N4JSProjectName(name),
+					contextProject);
 			IN4JSProject projectByEObject = core.findProject(te.eResource().getURI()).orNull();
 
 			if (projectByNamespace != null && projectByEObject != null
-					&& projectByNamespace.getLocation() == projectByEObject.getLocation())
-
+					&& projectByNamespace.getLocation().equals(projectByEObject.getLocation()))
 				project = projectByNamespace;
 		}
 		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamespaceImport);
@@ -116,7 +118,7 @@ public class ImportsFactory {
 		switch (ImportSpecifierUtil.computeImportType(qn, considerProjectName, fromProject)) {
 		case PROJECT:
 			return specifierFactory.apply(usedName,
-					createImportDeclaration(nodelessMarker, fromProject.getProjectName()));
+					createImportDeclaration(nodelessMarker, fromProject.getProjectName().getRawName()));
 		case PLAIN:
 			return specifierFactory.apply(usedName,
 					createImportDeclaration(nodelessMarker, qualifiedNameConverter.toString(qn)));

@@ -15,16 +15,14 @@ import static org.eclipse.jface.viewers.StructuredSelection.EMPTY;
 import java.io.File;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.ts.ui.navigation.IURIBasedStorage;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.utils.collections.Arrays2;
@@ -50,9 +48,6 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 	private static final Logger LOGGER = Logger.getLogger(N4JSResourceLinkHelper.class);
 
 	@Inject
-	private ExternalLibraryWorkspace externalLibraryWorkspace;
-
-	@Inject
 	private LanguageSpecificURIEditorOpener languageSpecificURIEditorOpener;
 
 	@Inject
@@ -64,20 +59,17 @@ public class N4JSResourceLinkHelper extends ResourceLinkHelper {
 		if (null != selection && !selection.isEmpty()) {
 			final Object firstElement = selection.getFirstElement();
 			if (firstElement instanceof ResourceNode) {
-				final File fileResource = ((ResourceNode) firstElement).getResource();
-				if (fileResource.isFile()) {
-					final URI uri = URI.createFileURI(fileResource.getAbsolutePath());
-					final IResource resource = externalLibraryWorkspace.getResource(uri);
-					if (resource instanceof IFile) {
-						final IEditorInput editorInput = EditorUtils.createEditorInput(new URIBasedStorage(uri));
-						final IEditorPart editor = page.findEditor(editorInput);
-						if (null != editor) {
-							page.bringToTop(editor);
-						} else {
-							languageSpecificURIEditorOpener.open(uri, true);
-						}
-						return;
+				SafeURI<?> nodeLocation = ((ResourceNode) firstElement).getLocation();
+				if (nodeLocation.isFile()) {
+					final URI uri = nodeLocation.toURI();
+					final IEditorInput editorInput = EditorUtils.createEditorInput(new URIBasedStorage(uri));
+					final IEditorPart editor = page.findEditor(editorInput);
+					if (null != editor) {
+						page.bringToTop(editor);
+					} else {
+						languageSpecificURIEditorOpener.open(uri, true);
 					}
+					return;
 				}
 			}
 		}

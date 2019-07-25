@@ -262,7 +262,8 @@ public class WizardPreviewProvider {
 		private XtextResource createTempResource() {
 			// Use a non-existing invalid URI to prevent conflicts with existing workspace resources, e.g.
 			// "/42TempProject98248/temp.n4js"
-			String partialUri = "/" + (new Random()).nextInt() + "TempProject" + Instant.now() + "/temp.n4js";
+			String partialUri = "/" + (new Random()).nextInt(Integer.MAX_VALUE) + "TempProject"
+					+ Instant.now().getNano() + "/temp.n4js";
 			return (XtextResource) n4jsCore.createResourceSet(Optional.absent())
 					.createResource(URI.createPlatformResourceURI(partialUri, true));
 		}

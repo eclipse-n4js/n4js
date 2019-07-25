@@ -13,6 +13,7 @@ package org.eclipse.n4js.tests.util;
 import java.util.concurrent.ExecutionException;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.nodejs.NodeRunner;
@@ -57,7 +58,7 @@ public class ProjectTestsHelper {
 	 * @param moduleToRun
 	 *            a platform resource URI pointing to the module to run.
 	 */
-	public ProcessResult runWithRunnerUI(String runnerId, String implementationId, URI moduleToRun)
+	public ProcessResult runWithRunnerUI(String runnerId, N4JSProjectName implementationId, URI moduleToRun)
 			throws ExecutionException {
 		RunConfiguration config = runnerFrontEnd.createConfiguration(runnerId, implementationId, moduleToRun);
 		Process process = runnerFrontEndUI.runInUI(config);

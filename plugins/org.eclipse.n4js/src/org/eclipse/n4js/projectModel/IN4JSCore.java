@@ -15,7 +15,8 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.projectDescription.ModuleFilter;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -44,6 +45,11 @@ public interface IN4JSCore {
 	IN4JSProject create(URI location);
 
 	/**
+	 * Create a proper typesafe URI for the given location.
+	 */
+	SafeURI<?> toProjectLocation(URI uri);
+
+	/**
 	 * Returns the N4JS project that contains the element at the given location. The returned instance might be created
 	 * on the fly to wrap another project instance. Consequently, it should not be used for identity comparisons.
 	 *
@@ -54,32 +60,25 @@ public interface IN4JSCore {
 	Optional<? extends IN4JSProject> findProject(URI nestedLocation);
 
 	/**
-	 * Given a nested location inside an existing(!) {@link IN4JSProject}, this method will return the "depth" of this
-	 * location, i.e. 0 if the location points to the project folder itself, 1 if it points to a file or folder in the
-	 * project's root folder, 2 if it points to a file or folder in a direct sub folder of the project's root folder,
-	 * etc.
-	 * <p>
-	 * Returns -1 if the given location is not a nested location in one of the registered, existing
-	 * {@code IN4JSProject}s.
+	 * Returns the N4JS project with the given name.
+	 *
+	 * @param projectName
+	 *            the project name
+	 * @return the n4js project
 	 */
-	int getDepthOfLocation(URI nestedLocation);
-
-	/**
-	 * Tells if the two given nested locations are contained in the same N4JS project.
-	 */
-	boolean isInSameProject(URI nestedLocation1, URI nestedLocation2);
+	Optional<? extends IN4JSProject> findProject(N4JSProjectName projectName);
 
 	/**
 	 * Returns list of the N4JS projects that are in current working scope (IWorkspace or registered projects).
 	 *
 	 * @return List containing n4js projects in scope
 	 */
-	Iterable<IN4JSProject> findAllProjects();
+	Iterable<? extends IN4JSProject> findAllProjects();
 
 	/**
 	 * @return a map that maps {@link IProject#getName()} to {@link IProject}.
 	 */
-	Map<String, IN4JSProject> findAllProjectMappings();
+	Map<N4JSProjectName, IN4JSProject> findAllProjectMappings();
 
 	/**
 	 * returns the source container that covers the given location.
@@ -95,11 +94,6 @@ public interface IN4JSCore {
 	 * returns the project relative path to the folder where the generated files should be placed
 	 */
 	String getOutputPath(URI nestedLocation);
-
-	/**
-	 * returns for the given URI the no-validate module filter
-	 */
-	ModuleFilter getModuleValidationFilter(URI uri);
 
 	/**
 	 * Creates and returns a new resource set that is properly set up for loading resources in the default workspace

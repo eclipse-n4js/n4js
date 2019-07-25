@@ -30,6 +30,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.names.EclipseProjectName;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
@@ -38,7 +40,6 @@ import org.eclipse.n4js.ui.N4JSClusteringBuilderConfiguration;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -299,8 +300,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		IProject project = root.getProject(eclipseProjectName); // creates a project instance if not existing
 
 		if (null == project || !project.isAccessible()) {
-			String n4jsProjectName = ProjectDescriptionUtils
-					.convertEclipseProjectNameToN4JSProjectName(eclipseProjectName);
+			N4JSProjectName n4jsProjectName = new EclipseProjectName(eclipseProjectName).toN4JSProjectName();
 
 			final IProject externalProject = externalLibraryWorkspace.getProject(n4jsProjectName);
 			if (null != externalProject && externalProject.exists()) {

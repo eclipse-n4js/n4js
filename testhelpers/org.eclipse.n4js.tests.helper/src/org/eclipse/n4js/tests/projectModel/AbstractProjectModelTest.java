@@ -19,10 +19,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.eclipse.xtext.validation.Issue;
 import org.junit.After;
@@ -35,7 +36,7 @@ import com.google.inject.Provider;
 
 /**
  */
-public abstract class AbstractProjectModelTest {
+public abstract class AbstractProjectModelTest<Loc extends SafeURI<Loc>> {
 
 	@Inject
 	private ValidationTestHelper validationTestHelper;
@@ -45,33 +46,33 @@ public abstract class AbstractProjectModelTest {
 	private LibraryManager libraryManager;
 
 	/***/
-	protected abstract AbstractProjectModelSetup createSetup();
+	protected abstract AbstractProjectModelSetup<Loc> createSetup();
 
 	/**
 	 * Returns expected issues in the initial state of the test project with the given name. Checked by test method
 	 * {@link #testSetup()}.
 	 */
-	protected abstract String[] getExpectedIssuesInInitialSetup(String projectName);
+	protected abstract String[] getExpectedIssuesInInitialSetup(N4JSProjectName projectName);
 
 	/***/
-	public final String myProjectName = "myProject";
+	public final N4JSProjectName myProjectName = new N4JSProjectName("myProject");
 	/***/
-	protected URI myProjectURI;
+	protected Loc myProjectURI;
 
 	/***/
-	public final String libProjectName = "libProject";
+	public final N4JSProjectName libProjectName = new N4JSProjectName("libProject");
 	/***/
-	protected URI libProjectURI;
+	protected Loc libProjectURI;
 
-	private AbstractProjectModelSetup setup;
+	private AbstractProjectModelSetup<Loc> setup;
 
 	/***/
-	public void setMyProjectURI(URI myProjectURI) {
+	public void setMyProjectURI(Loc myProjectURI) {
 		this.myProjectURI = myProjectURI;
 	}
 
 	/***/
-	public void setLibProjectURI(URI libProjectURI) {
+	public void setLibProjectURI(Loc libProjectURI) {
 		this.libProjectURI = libProjectURI;
 	}
 
@@ -97,13 +98,14 @@ public abstract class AbstractProjectModelTest {
 	 * @throws IOException
 	 *             If loading the project description resource fails
 	 */
-	private void validateProjectDescription(URI projectLocation, String... expectedIssues) throws IOException {
+	private void validateProjectDescription(SafeURI<?> projectLocation, String... expectedIssues)
+			throws IOException {
 		final ResourceSet resourceSet = resourceSetProvider.get();
-		final URI projectDescriptionURI = projectLocation
+		final SafeURI<?> projectDescriptionURI = projectLocation
 				.appendSegment(AbstractProjectModelSetup.PROJECT_DESCRIPTION_FILENAME);
 		// obtain resource for file project description file
 		final Resource projectDescriptionResource = resourceSet
-				.createResource(projectDescriptionURI);
+				.createResource(projectDescriptionURI.toURI());
 		projectDescriptionResource.load(Collections.emptyMap());
 		List<Issue> issues = validationTestHelper.validate(projectDescriptionResource);
 		String allIssuesStr = issues.stream()
@@ -136,8 +138,8 @@ public abstract class AbstractProjectModelTest {
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testSetup() throws IOException {
-		assertEquals(myProjectName, myProjectURI.lastSegment());
-		assertEquals(libProjectName, libProjectURI.lastSegment());
+		assertEquals(myProjectName.getRawName(), myProjectURI.getName());
+		assertEquals(libProjectName.getRawName(), libProjectURI.getName());
 
 		// make sure temporary projects have valid project descriptions
 		validateTempProjects();

@@ -22,6 +22,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
@@ -47,7 +48,7 @@ public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 	private static final String EXT_LOC = "IDE_1977_ExternalLibs";
 	private static final String PROBANDS = "probands";
 	private static final String WORKSPACE_LOC = "IDEBUG_855";
-	private static final String PROJECT = "IDEBUG_855";
+	private static final N4JSProjectName PROJECT = new N4JSProjectName("IDEBUG_855");
 	private static final String SRC_FOLDER = "src";
 	private static final String MODULE = "Client";
 
@@ -76,7 +77,8 @@ public class IDEBUG_855_PluginTest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	public void testAllIndexElementsCanBeAddedToAResource() throws CoreException {
-		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
+		final IProject project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(PROJECT.toEclipseProjectName().getRawName());
 		assertTrue(PROJECT + " project is not accessible.", project.isAccessible());
 
 		final IFile clientModule = project.getFile(getResourceName(SRC_FOLDER, MODULE + "." + N4JS_FILE_EXTENSION));

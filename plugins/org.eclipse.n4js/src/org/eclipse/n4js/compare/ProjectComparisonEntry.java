@@ -281,7 +281,7 @@ public class ProjectComparisonEntry {
 
 	private static String toText(Object element) {
 		if (element instanceof IN4JSProject)
-			return ((IN4JSProject) element).getProjectName();
+			return ((IN4JSProject) element).getProjectName().getRawName();
 		if (element instanceof TModule)
 			return ((TModule) element).getQualifiedName();
 		if (element instanceof TMember)

@@ -33,6 +33,8 @@ import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.resource.N4JSResourceDescriptionManager;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
@@ -108,6 +110,7 @@ import org.eclipse.n4js.ui.refactoring.N4JSRefactoringResourceSetProvider;
 import org.eclipse.n4js.ui.refactoring.N4JSRenameElementHandler;
 import org.eclipse.n4js.ui.refactoring.N4JSRenameElementProcessor;
 import org.eclipse.n4js.ui.refactoring.N4JSRenameStrategy;
+import org.eclipse.n4js.ui.resource.N4JSEclipseResourceDescriptionManager;
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
 import org.eclipse.n4js.ui.search.LabellingReferenceFinder;
 import org.eclipse.n4js.ui.search.MyReferenceSearchResultContentProvider;
@@ -216,7 +219,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/**
 	 * Delegate to shared injector and obtain a contributed instance that is not a direct object in the shared injector
 	 */
-	public Provider<InternalN4JSWorkspace> provideInternalN4JSWorkspace() {
+	public Provider<InternalN4JSWorkspace<? extends SafeURI<?>>> provideInternalN4JSWorkspace() {
 		return Access.contributedProvider(InternalN4JSWorkspace.class);
 	}
 
@@ -376,7 +379,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	}
 
 	/** Delegate to shared injector */
-	public Provider<N4JSModel> provideN4JSModel() {
+	public Provider<N4JSModel<?>> provideN4JSModel() {
 		return Access.contributedProvider(N4JSModel.class);
 	}
 
@@ -901,5 +904,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	@Override
 	public Class<? extends IDependentElementsCalculator> bindIDependentElementsCalculator() {
 		return N4JSDependentElementsCalculator.class;
+	}
+
+	/** Optimized N4JSResourceDescriptionManager */
+	public Class<? extends N4JSResourceDescriptionManager> bindN4JSResourceDescriptionManager() {
+		return N4JSEclipseResourceDescriptionManager.class;
 	}
 }

@@ -11,6 +11,7 @@ package org.eclipse.n4js.json.xpect.ui.tests;
  */
 
 import org.eclipse.n4js.json.validation.suppression.JSONSuppressIssuesSetup;
+import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
 import org.eclipse.n4js.xpect.ui.methods.HyperlinkXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OrganizeImportXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutlineXpectMethod;
@@ -21,8 +22,6 @@ import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.lib.XpectTestResultTest;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
-import org.eclipse.xpect.runner.XpectTestFiles;
-import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 import org.junit.runner.RunWith;
 
@@ -45,7 +44,7 @@ import org.junit.runner.RunWith;
 })
 
 @RunWith(XpectRunner.class)
-@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect", fileExtensions = "xt")
+@LspCompatibleXpectTestFiles(baseDir = "xpect")
 @XpectImport({ JSONSuppressIssuesSetup.class })
 public class JSONXpectPluginUITest {
 	//
