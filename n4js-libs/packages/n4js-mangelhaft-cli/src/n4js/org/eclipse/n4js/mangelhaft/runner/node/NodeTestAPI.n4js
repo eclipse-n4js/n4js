@@ -24,7 +24,7 @@ import * as lib_fs from "fs";
 import * as n4js_cli from "n4js-cli";
 import * as lib_path from "path";
 
-const log = debug("n4js-mangelhaft");
+const log = debug("n4js-mangelhaft:api");
 const rlog = debug("n4js-mangelhaft:test-run");
 
 export default public class NodeTestAPI {
