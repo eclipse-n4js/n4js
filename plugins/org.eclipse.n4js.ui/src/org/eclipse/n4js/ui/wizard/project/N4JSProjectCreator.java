@@ -34,6 +34,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -70,7 +71,7 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	private static final List<String> SRC_FOLDER_LIST = ImmutableList.of(SRC_ROOT, SRC_GEN);
 
 	/** The mangelhaft default dependencies */
-	private static final List<String> MANGELHAFT_DEPENDENCIES = Arrays.asList(N4JSGlobals.MANGELHAFT,
+	private static final List<N4JSProjectName> MANGELHAFT_DEPENDENCIES = Arrays.asList(N4JSGlobals.MANGELHAFT,
 			N4JSGlobals.MANGELHAFT_ASSERT);
 
 	// Set folder names to default values
@@ -235,13 +236,15 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 		// Gather default project dependencies
 		if (N4JSGlobals.PROJECT_TYPES_REQUIRING_N4JS_RUNTIME.contains(pi.getProjectType())) {
 			List<String> projectDependencies = pi.getProjectDependencies();
-			projectDependencies.add(N4JSGlobals.N4JS_RUNTIME);
+			projectDependencies.add(N4JSGlobals.N4JS_RUNTIME.getRawName());
 		}
 		if (ProjectType.TEST.equals(pi.getProjectType())) {
 			List<String> projectDependencies = pi.getProjectDependencies();
-			projectDependencies.addAll(MANGELHAFT_DEPENDENCIES);
+			for (N4JSProjectName mangelhaftDep : MANGELHAFT_DEPENDENCIES) {
+				projectDependencies.add(mangelhaftDep.getRawName());
+			}
 			List<String> projectDevDependencies = pi.getProjectDevDependencies();
-			projectDevDependencies.add(N4JSGlobals.MANGELHAFT_CLI);
+			projectDevDependencies.add(N4JSGlobals.MANGELHAFT_CLI.getRawName());
 		}
 
 		// Generate package.json content

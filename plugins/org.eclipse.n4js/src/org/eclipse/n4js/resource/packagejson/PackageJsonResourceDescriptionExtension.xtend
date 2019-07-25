@@ -40,6 +40,8 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import java.util.Objects
+import org.eclipse.n4js.projectModel.IN4JSProject
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of
@@ -105,8 +107,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	 */
 	private static val EXTENDED_RUNTIME_ENVIRONMENT_NAME_KEY = 'extendedRuntimeEnvironmentName';
 
-	@Inject
-	private IN4JSCore n4jsCore;
+	private final IN4JSCore n4jsCore;
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
@@ -114,7 +115,13 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
-
+	/**
+	 * Public for testing purpose
+	 */
+	@Inject
+	new(IN4JSCore n4jsCore) {
+		this.n4jsCore = n4jsCore
+	}
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
 
@@ -124,7 +131,35 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			return false; // not responsible
 		}
 		// make sure we are in the root folder of an IN4JSProject
-		return n4jsCore.getDepthOfLocation(uri) === 1;
+		return getDepthOfLocation(uri) === 1;
+	}
+	
+	/**
+	 * Given a nested location inside an existing(!) {@link IN4JSProject}, this method will return the "depth" of this
+	 * location, i.e. 0 if the location points to the project folder itself, 1 if it points to a file or folder in the
+	 * project's root folder, 2 if it points to a file or folder in a direct sub folder of the project's root folder,
+	 * etc.
+	 * <p>
+	 * Returns -1 if the given location is not a nested location in one of the registered, existing
+	 * {@code IN4JSProject}s.
+	 */
+	def int getDepthOfLocation(URI nestedLocation) {
+		// make sure we are in the root folder of an IN4JSProject and obtain its location
+		val containingProject = n4jsCore.findProject(nestedLocation).orNull();
+		if (containingProject === null || !containingProject.exists()) {
+			return -1;
+		}
+		var containingProjectLocation = containingProject.getLocation().toURI;
+		var locationToUse = nestedLocation
+		// trim trailing empty segments in both location URIs (if any)
+		while (Objects.equals(locationToUse.lastSegment(), "")) {
+			locationToUse = locationToUse.trimSegments(1);
+		}
+		while (Objects.equals(containingProjectLocation.lastSegment(), "")) {
+			containingProjectLocation = containingProjectLocation.trimSegments(1);
+		}
+		// compute and return depth
+		return locationToUse.segmentCount() - containingProjectLocation.segmentCount();
 	}
 
 	override QualifiedName getFullyQualifiedName(EObject obj) {

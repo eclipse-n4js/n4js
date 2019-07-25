@@ -15,6 +15,7 @@ import {join} from "path";
 
 export public const isHTTP_re = /^https?:\/\//i;
 export public const PACKAGE_JSON = "package.json";
+export public const PACKAGE_JSON_N4JS_SECTION_KEY = "n4js";
 
 /**
  * Scans filesystem upwards to find a package.json file.

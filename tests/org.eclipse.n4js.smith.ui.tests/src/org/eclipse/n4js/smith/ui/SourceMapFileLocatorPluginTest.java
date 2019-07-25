@@ -9,6 +9,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.projectModel.names.EclipseProjectName;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
 import org.eclipse.xtext.testing.InjectWith;
@@ -41,7 +43,7 @@ public class SourceMapFileLocatorPluginTest {
 	public static void setupEclipseWorkspace() throws CoreException {
 		try {
 			IResourcesSetupUtil.cleanWorkspace();
-			importTestProject("SVDemo");
+			importTestProject(new N4JSProjectName(("SVDemo")));
 		} catch (Exception ex) {
 			System.out.println("Cannot set up Eclipse workspace for smith.ui tests: " + ex);
 			throw ex;
@@ -54,7 +56,7 @@ public class SourceMapFileLocatorPluginTest {
 	 * @throws CoreException
 	 *             in case loading project goes wrong
 	 */
-	private static IProject importTestProject(String name) throws CoreException {
+	private static IProject importTestProject(N4JSProjectName name) throws CoreException {
 		IProject project = ProjectTestsUtils.importProject(new File("probands/sourcemaps"), name);
 		// addNature(project, XtextProjectHelper.NATURE_ID);
 		IResourcesSetupUtil.waitForBuild();
@@ -66,7 +68,7 @@ public class SourceMapFileLocatorPluginTest {
 	 */
 	@Test
 	public void testSrcGenMapExist() {
-		IProject project = ProjectTestsUtils.getProjectByName("SVDemo");
+		IProject project = ProjectTestsUtils.getProjectByName(new EclipseProjectName("SVDemo"));
 		IFile fileSrc = project.getFile("src/pac/SVDemo.n4js");
 		Assert.isTrue(fileSrc.exists());
 		IFile fileGen = project.getFile("src-gen/pac/SVDemo.js");
@@ -82,7 +84,7 @@ public class SourceMapFileLocatorPluginTest {
 	 */
 	@Test
 	public void testMapFromSrc() throws Exception {
-		IProject project = ProjectTestsUtils.getProjectByName("SVDemo");
+		IProject project = ProjectTestsUtils.getProjectByName(new EclipseProjectName("SVDemo"));
 		IFile fileSrc = project.getFile("src/pac/SVDemo.n4js");
 		Path path = Paths.get(fileSrc.getLocationURI());
 		File fileMap = sourceMapFileLocator.resolveSourceMapFromSrc(path);
@@ -94,7 +96,7 @@ public class SourceMapFileLocatorPluginTest {
 	 */
 	@Test
 	public void testMapFromGen() throws Exception {
-		IProject project = ProjectTestsUtils.getProjectByName("SVDemo");
+		IProject project = ProjectTestsUtils.getProjectByName(new EclipseProjectName("SVDemo"));
 		IFile fileGen = project.getFile("src-gen/pac/SVDemo.js");
 		Path path = Paths.get(fileGen.getLocationURI());
 		File fileMap = sourceMapFileLocator.resolveSourceMapFromGen(path);

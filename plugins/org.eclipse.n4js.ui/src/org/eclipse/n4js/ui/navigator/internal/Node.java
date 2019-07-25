@@ -102,7 +102,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 		}
 
 		if (Node.this instanceof ResourceNode) {
-			if (((ResourceNode) Node.this).getResource().equals(file)) {
+			if (((ResourceNode) Node.this).getLocation().toJavaIoFile().equals(file)) {
 				return Node.this;
 			}
 		}
@@ -115,7 +115,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 		while (!stack.isEmpty()) {
 			final Node currentNode = stack.pop();
 			if (currentNode instanceof ResourceNode) {
-				if (((ResourceNode) currentNode).getResource().equals(file)) {
+				if (((ResourceNode) currentNode).getLocation().toJavaIoFile().equals(file)) {
 					return currentNode;
 				}
 			}

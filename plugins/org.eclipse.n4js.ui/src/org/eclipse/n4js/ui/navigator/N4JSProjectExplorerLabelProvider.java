@@ -26,12 +26,15 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.ui.workingsets.WorkingSet;
 import org.eclipse.n4js.ui.workingsets.WorkingSetLabelProvider;
@@ -63,6 +66,9 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 
 	@Inject
 	private N4JSProjectExplorerHelper helper;
+
+	@Inject
+	private IN4JSEclipseCore n4jsCore;
 
 	@Inject
 	private WorkingSetManagerBroker workingSetManagerBroker;
@@ -137,7 +143,7 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 
 			} else if (Files.isSymbolicLink(folder.getLocation().toFile().toPath())) {
 				// might be a project from workspace
-				URI symLinkUri = URI.createFileURI(folder.getLocation().toFile().toString());
+				URI symLinkUri = URIUtils.toFileUri(folder.getLocation().toFile());
 				String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(symLinkUri);
 				String eclipseProjectName = ProjectDescriptionUtils
 						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
@@ -174,21 +180,20 @@ public class N4JSProjectExplorerLabelProvider extends LabelProvider implements I
 			N4JSExternalProject npmProject = helper.getNodeModulesNpmProjectOrNull(folder);
 			if (npmProject != null) {
 				IN4JSProject iNpmProject = npmProject.getIProject();
-				return helper.getStyledTextForExternalProject(iNpmProject, folder.getName());
+				return helper.getStyledTextForExternalProject(iNpmProject, new N4JSProjectName(folder.getName()));
 
 			} else if (Files.isSymbolicLink(folder.getLocation().toFile().toPath())) {
 				// might be a project from workspace
-				URI symLinkUri = URI.createFileURI(folder.getLocation().toFile().toString());
-				String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(symLinkUri);
-				String eclipseProjectName = ProjectDescriptionUtils
-						.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
+				N4JSProjectName n4jsProjectName = new PlatformResourceURI(folder).getProjectName();
+				String eclipseProjectName = n4jsProjectName.toEclipseProjectName().getRawName();
 
 				IProject iProject = ResourcesPlugin.getWorkspace().getRoot().getProject(eclipseProjectName);
 				if (iProject != null && iProject.exists()) {
+
 					Styler stylerName = StyledString.QUALIFIER_STYLER;
 					if (iProject.isAccessible()) {
-						URI prjPckJson = URIUtils.convert(iProject).appendSegment(N4JSGlobals.PACKAGE_JSON);
-						if (indexSynchronizer.isInIndex(prjPckJson)) {
+						IN4JSEclipseProject n4jsProject = n4jsCore.create(iProject).orNull();
+						if (n4jsProject.isExternal()) {
 							stylerName = null;
 						}
 					}

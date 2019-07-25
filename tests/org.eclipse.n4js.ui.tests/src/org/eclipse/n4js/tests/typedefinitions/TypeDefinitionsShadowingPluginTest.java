@@ -7,6 +7,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.xtext.testing.InjectWith;
@@ -22,7 +23,7 @@ import org.junit.runner.RunWith;
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 public class TypeDefinitionsShadowingPluginTest extends AbstractBuilderParticipantTest {
-	private static final String YARN_WORKSPACE_PROJECT = "YarnWorkspaceProject";
+	private static final N4JSProjectName YARN_WORKSPACE_PROJECT = new N4JSProjectName("YarnWorkspaceProject");
 	private static final String PROBANDS = "probands";
 	private static final String PROBANDS_SUBFOLDER = "type-definitions";
 

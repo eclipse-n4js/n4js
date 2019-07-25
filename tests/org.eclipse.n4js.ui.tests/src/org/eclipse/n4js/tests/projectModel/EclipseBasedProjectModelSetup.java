@@ -22,7 +22,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.util.StringInputStream;
@@ -31,12 +32,13 @@ import com.google.common.base.Charsets;
 
 /**
  */
-public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
+public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup<PlatformResourceURI> {
 
 	private final IWorkspaceRoot workspace;
 
 	/***/
-	protected EclipseBasedProjectModelSetup(AbstractProjectModelTest host, IWorkspaceRoot workspace) {
+	protected EclipseBasedProjectModelSetup(AbstractProjectModelTest<PlatformResourceURI> host,
+			IWorkspaceRoot workspace) {
 		super(host);
 		this.workspace = workspace;
 	}
@@ -100,8 +102,9 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 		}
 	}
 
-	private void createProject(String projectName, String string) throws CoreException, UnsupportedEncodingException {
-		IProject project = workspace.getProject(projectName);
+	private void createProject(N4JSProjectName projectName, String string)
+			throws CoreException, UnsupportedEncodingException {
+		IProject project = workspace.getProject(projectName.toEclipseProjectName().getRawName());
 		IFile projectDescriptionFile = project.getFile(PROJECT_DESCRIPTION_FILENAME);
 		@SuppressWarnings("resource")
 		StringInputStream content = new StringInputStream(string, Charsets.UTF_8.name());
@@ -124,15 +127,16 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 	}
 
 	/***/
-	protected URI createTempProject(String projectName) throws CoreException {
-		IProjectDescription description = workspace.getWorkspace().newProjectDescription(projectName);
+	protected PlatformResourceURI createTempProject(N4JSProjectName projectName) throws CoreException {
+		IProjectDescription description = workspace.getWorkspace()
+				.newProjectDescription(projectName.toEclipseProjectName().getRawName());
 		// deliberately avoid the build command
 		description.setNatureIds(new String[] { XtextProjectHelper.NATURE_ID });
-		IProject newProject = workspace.getProject(projectName);
+		IProject newProject = workspace.getProject(projectName.toEclipseProjectName().getRawName());
 		newProject.create(null);
 		newProject.open(null);
 		newProject.setDescription(description, null);
-		return URI.createPlatformResourceURI(projectName, true);
+		return new PlatformResourceURI(newProject);
 	}
 
 }

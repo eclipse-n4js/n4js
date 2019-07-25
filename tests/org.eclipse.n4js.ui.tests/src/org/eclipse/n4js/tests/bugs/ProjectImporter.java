@@ -23,6 +23,7 @@ import java.util.Collections;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
@@ -40,7 +41,7 @@ public class ProjectImporter {
 	public static ProjectImporter NOOP = new ProjectImporter();
 
 	private final File rootFolder;
-	private final Collection<String> n4jsLibs;
+	private final Collection<N4JSProjectName> n4jsLibs;
 
 	private ProjectImporter() {
 		this(FileUtils.createTempDirectory().toFile());
@@ -60,7 +61,7 @@ public class ProjectImporter {
 	 *            names of 'n4js-libs' to install from local Git clone (see {@link N4jsLibsAccess}) or an empty list if
 	 *            nothing should be installed.
 	 */
-	public ProjectImporter(final File rootFolder, Collection<String> n4jsLibs) {
+	public ProjectImporter(final File rootFolder, Collection<N4JSProjectName> n4jsLibs) {
 		assertNotNull("Root folder cannot be null.", rootFolder);
 		assertTrue("Root folder does not exist: " + rootFolder, rootFolder.exists());
 		assertTrue("Root folder must be a folder. But was a file: " + rootFolder, rootFolder.isDirectory());
@@ -75,7 +76,7 @@ public class ProjectImporter {
 			if (file.exists() && file.isDirectory() && null != file.listFiles() && 0 < file.listFiles().length) {
 
 				if (!newHashSet(file.list()).contains("_project")) {
-					final String projectName = file.getName();
+					final N4JSProjectName projectName = new N4JSProjectName(file.getName());
 					LOG.info("Project \'" + projectName
 							+ "\' does not have .project file. Creating a temporary one on the fly...");
 					final File dotProject = new File(file, "_project");
@@ -89,7 +90,7 @@ public class ProjectImporter {
 				}
 
 				LOG.info("Importing " + file.getName() + " into workspace...");
-				importProject(rootFolder, file.getName(), n4jsLibs);
+				importProject(rootFolder, new N4JSProjectName(file.getName()), n4jsLibs);
 				LOG.info("Project " + file.getName() + " was successfully imported into the workspace.");
 			} else {
 				LOG.warn("Skipped importing project from " + file + ".");

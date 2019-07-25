@@ -13,9 +13,11 @@ package org.eclipse.n4js.projectModel;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Iterators;
 
 /**
  * The project model representation of a configured source folder in a project.
@@ -46,7 +48,14 @@ public interface IN4JSSourceContainer extends Iterable<URI> {
 	 * Returns all contained artifact URIs.
 	 */
 	@Override
-	Iterator<URI> iterator();
+	default Iterator<URI> iterator() {
+		return Iterators.transform(getLocation().getAllChildren(), pl -> pl.toURI());
+	}
+
+	/**
+	 * Returns the typesafe location of this source container.
+	 */
+	SafeURI<?> getLocation();
 
 	/**
 	 * If the source container contains an file for the given fully qualified name and file extension, this method will
@@ -58,17 +67,12 @@ public interface IN4JSSourceContainer extends Iterable<URI> {
 	 * Implementations are expected to be optimized for fast look-up (in particular, they should avoid iterating over
 	 * all URIs returned by method {@link #iterator()}).
 	 */
-	URI findArtifact(QualifiedName name, Optional<String> fileExtension);
+	SafeURI<?> findArtifact(QualifiedName name, Optional<String> fileExtension);
 
 	/**
 	 * The relative location under the project root.
 	 */
 	String getRelativeLocation();
-
-	/**
-	 * The absolute location of this source container.
-	 */
-	URI getLocation();
 
 	/**
 	 * Returns <code>true</code> if the source container exists.

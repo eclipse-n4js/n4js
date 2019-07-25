@@ -18,9 +18,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Test;
 
@@ -34,9 +35,9 @@ import org.junit.Test;
 public class DependencyNotInstalledPluginUITest extends AbstractBuilderParticipantTest {
 
 	private static final String PROBANDS_DIR = "probands/DependencyNotInstalled";
-	private static final String PROBAND_A = "A";
-	private static final String PROBAND_B = "B";
-	private static final String PROBAND_UNRELATED = "Unrelated";
+	private static final N4JSProjectName PROBAND_A = new N4JSProjectName("A");
+	private static final N4JSProjectName PROBAND_B = new N4JSProjectName("B");
+	private static final N4JSProjectName PROBAND_UNRELATED = new N4JSProjectName("Unrelated");
 
 	/**
 	 * Checks that there is an issue in case an npm is not installed in the project's node_modules folder, even though
@@ -51,7 +52,8 @@ public class DependencyNotInstalledPluginUITest extends AbstractBuilderParticipa
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
-		libraryManager.installNPM("lodash", URIUtils.convert(prjUnrelated), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("lodash"), new PlatformResourceURI(prjUnrelated).toFileURI(),
+				new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 		IFile packageJsonUnrelated = prjUnrelated.getFile(IN4JSProject.PACKAGE_JSON);
@@ -62,7 +64,8 @@ public class DependencyNotInstalledPluginUITest extends AbstractBuilderParticipa
 		IFile packageJsonA = prjA.getFile(IN4JSProject.PACKAGE_JSON);
 		assertIssues(packageJsonA, "line 14: Project does not exist with project ID: lodash.");
 
-		libraryManager.installNPM("lodash", URIUtils.convert(prjA), new NullProgressMonitor());
+		libraryManager.installNPM(new N4JSProjectName("lodash"), new PlatformResourceURI(prjA).toFileURI(),
+				new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 

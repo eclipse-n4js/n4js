@@ -12,17 +12,17 @@
 import debug from "deps/debug";
 import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
+import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
 import {createTempDir} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util/npm";
+import {PACKAGE_JSON_N4JS_SECTION_KEY} from "org/eclipse/n4js/mangelhaft/util/npm";
 import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import * as child_process from "child_process";
 import * as lib_fs from "fs";
-import * as glob+ from "glob";
 import * as n4js_cli from "n4js-cli";
 import * as lib_path from "path";
-import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
 
 const log = debug("n4js-mangelhaft");
 const rlog = debug("n4js-mangelhaft-test-run");
@@ -36,18 +36,19 @@ export default public class NodeTestAPI {
 
         const pathToPackageJson = new Map<string, Object+>();
 
-        function addProject(dir: string): void {
-            pathToPackageJson.set(dir, readJsonFile(lib_path.join(dir, PACKAGE_JSON)));
-        }
-
-        (options.projects || []).forEach(addProject);
+        // explicit project directories:
+        (options.projects || []).forEach(dir => pathToPackageJson.set(dir, readJsonFile(lib_path.join(dir, PACKAGE_JSON))));
 
         for (const dir of (options.scan || [])) {
             for (const p of await lib_fs.readdir(dir)) {
                 const prj = lib_path.join(dir, p);
 
-                if (fsSafeAccessSync(lib_path.join(prj, PACKAGE_JSON))) {
-                    addProject(prj);
+                const packageJsonPath = lib_path.join(prj, PACKAGE_JSON);
+                if (fsSafeAccessSync(packageJsonPath)) {
+                    const packageJson = readJsonFile(packageJsonPath);
+                    if (packageJson && packageJson[PACKAGE_JSON_N4JS_SECTION_KEY]) { // only add if package.json has an "n4js" section
+                        pathToPackageJson.set(prj, packageJson);
+                    }
                 }
             }
         }

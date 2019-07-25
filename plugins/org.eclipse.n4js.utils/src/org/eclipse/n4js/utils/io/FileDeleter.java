@@ -84,7 +84,7 @@ public class FileDeleter implements FileVisitor<Path> {
 	 * @param errorHandler
 	 *            error handler invoked in case of {@link IOException} is caught
 	 */
-	public static void delete(File resourceToDelete, Consumer<IOException> errorHandler) {
+	public static void delete(File resourceToDelete, Consumer<? super IOException> errorHandler) {
 		if (resourceToDelete.exists()) {
 			try {
 				Files.walkFileTree(resourceToDelete.toPath(), new FileDeleter(false));

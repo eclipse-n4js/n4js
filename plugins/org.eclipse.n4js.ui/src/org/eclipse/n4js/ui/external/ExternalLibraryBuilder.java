@@ -53,6 +53,8 @@ import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.internal.RaceDetectionHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
@@ -63,8 +65,6 @@ import org.eclipse.n4js.ui.external.ComputeProjectOrder.VertexOrder;
 import org.eclipse.n4js.ui.external.ExternalLibraryBuildQueue.Task;
 import org.eclipse.n4js.ui.internal.N4JSEclipseProject;
 import org.eclipse.n4js.ui.internal.ResourceUIValidatorExtension;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.IToBeBuiltComputerContribution;
@@ -383,8 +383,7 @@ public class ExternalLibraryBuilder {
 	 * Returns with {@code true} if the external project is accessible in the workspace as well.
 	 */
 	private boolean hasWorkspaceCounterpart(IN4JSProject project) {
-		URI uri = URI.createPlatformResourceURI(project.getProjectName(), true);
-		IN4JSProject n4Project = core.findProject(uri).orNull();
+		IN4JSProject n4Project = core.findProject(project.getProjectName()).orNull();
 		return null != n4Project && n4Project.exists() && !n4Project.isExternal();
 	}
 
@@ -446,7 +445,7 @@ public class ExternalLibraryBuilder {
 				} catch (OperationCanceledException e) {
 					throw e;
 				} catch (Exception e) {
-					String name = n4Project.getProjectName();
+					N4JSProjectName name = n4Project.getProjectName();
 					LOGGER.error("Error occurred while calculating to be build data for '" + name + "' project.", e);
 					throw Exceptions.sneakyThrow(e);
 				}
@@ -584,9 +583,9 @@ public class ExternalLibraryBuilder {
 	 *            The projects to be wiped.
 	 */
 	public void wipeProjectFromIndex(IProgressMonitor monitor, Collection<N4JSExternalProject> projectsToBeWiped) {
-		final Set<URI> toBeWiped = new HashSet<>();
+		final Set<FileURI> toBeWiped = new HashSet<>();
 		for (N4JSExternalProject project : projectsToBeWiped) {
-			toBeWiped.add(URIUtils.toFileUri(project.getLocationURI()));
+			toBeWiped.add(project.getSafeLocation());
 		}
 		this.wipeURIsFromIndex(monitor, toBeWiped);
 	}
@@ -598,11 +597,11 @@ public class ExternalLibraryBuilder {
 	 * @param toBeWiped
 	 *            URIs of project roots
 	 */
-	public void wipeURIsFromIndex(IProgressMonitor monitor, Collection<URI> toBeWiped) {
+	public void wipeURIsFromIndex(IProgressMonitor monitor, Collection<FileURI> toBeWiped) {
 		Set<String> toBeWipedStrings = new HashSet<>();
-		for (URI toWipe : toBeWiped) {
+		for (FileURI toWipe : toBeWiped) {
 			toBeWipedStrings.add(toWipe.toString());
-			String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(toWipe);
+			N4JSProjectName projectName = toWipe.getProjectName();
 			validatorExtension.clearAllMarkersOfExternalProject(projectName);
 		}
 

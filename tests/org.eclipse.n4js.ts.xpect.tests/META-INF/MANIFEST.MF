@@ -25,6 +25,6 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.ts.ui.tests.helper,
  org.eclipse.n4js.regex.ui,
  org.eclipse.n4js.environments,
- org.eclipse.n4js.ui
+ org.eclipse.n4js.xpect
 Bundle-Vendor: %providerName
 Automatic-Module-Name: org.eclipse.n4js.ts.xpect.tests

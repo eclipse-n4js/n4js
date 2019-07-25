@@ -25,10 +25,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.N4JSExternalProject;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.external.EclipseExternalIndexSynchronizer;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,10 +41,10 @@ import com.google.inject.Inject;
  */
 public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest {
 
-	private static final String NPM_SNAFU = "snafu";
+	private static final N4JSProjectName NPM_SNAFU = new N4JSProjectName("snafu");
 	private static final String PROBANDS = "probands";
 	private static final String SUBFOLDER = "IndexSynchronizer";
-	private static final String PROJECT_NAME = "IndexSynchronizer";
+	private static final N4JSProjectName PROJECT_NAME = new N4JSProjectName("IndexSynchronizer");
 
 	@Inject
 	private ExternalLibraryWorkspace externalLibraryWorkspace;
@@ -66,7 +67,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		testedWorkspace.fullBuild();
 
 		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
-		libraryManager.installNPM(NPM_SNAFU, URIUtils.toFileUri(project), new NullProgressMonitor());
+		libraryManager.installNPM(NPM_SNAFU, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
 		waitForAutoBuild();
 
 		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
@@ -143,7 +144,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 				"line 12: Cannot resolve import target :: resolving simple module import : found no matching modules");
 
 		assertFalse(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
-		libraryManager.installNPM(NPM_SNAFU, URIUtils.toFileUri(project), new NullProgressMonitor());
+		libraryManager.installNPM(NPM_SNAFU, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
 		// waitForAutoBuild();
 		assertTrue(indexSynchronizer.findNpmsInIndex().containsKey(NPM_SNAFU));
 

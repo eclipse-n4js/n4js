@@ -33,10 +33,11 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TEnum;
+import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.EnumLiteralDeclaration;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
@@ -135,7 +136,8 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 		// we now have an IdentifierRef pointing to a string-based enum ...
 		final EObject parent = N4JSASTUtils.skipParenExpressionUpward(identRef.eContainer());
 		final ParameterizedPropertyAccessExpression parentPAE = parent instanceof ParameterizedPropertyAccessExpression
-				? (ParameterizedPropertyAccessExpression) parent : null;
+				? (ParameterizedPropertyAccessExpression) parent
+				: null;
 		final IdentifiableElement prop = parentPAE != null ? parentPAE.getProperty() : null;
 		if (prop != null) {
 			if (prop.eIsProxy()) {
@@ -143,9 +145,12 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 				// unnecessary duplicate error
 				return;
 			}
-			if (tEnum.getLiterals().contains(prop)) {
+			if (prop instanceof TEnumLiteral) {
 				// reference to one of tEnum's literals -> valid usage!
-				return;
+				TEnumLiteral casted = (TEnumLiteral) prop;
+				if (tEnum.getLiterals().contains(casted)) {
+					return;
+				}
 			}
 			final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(identRef);
 			final TMember getterLiterals = RuleEnvironmentExtensions.n4StringBasedEnumType(G)

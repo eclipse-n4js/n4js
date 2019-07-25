@@ -11,15 +11,14 @@
 package org.eclipse.n4js;
 
 import org.eclipse.emf.common.util.URI;
-
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  */
@@ -36,7 +35,6 @@ public class N4JSRuntimeCoreWithMockProject extends N4JSRuntimeCore {
 	}
 
 	private IN4JSProject createMockProject(MockN4JSModel model) {
-
 		N4JSProject project = new MockProject(MockProject.MOCK_URI, model);
 		model.setMockProject(project);
 		return project;

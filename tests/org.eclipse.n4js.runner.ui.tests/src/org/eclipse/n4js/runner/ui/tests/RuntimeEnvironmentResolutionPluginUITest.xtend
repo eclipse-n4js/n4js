@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.Platform
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI
 import org.eclipse.n4js.runner.tests.RuntimeEnvironmentResolutionTest
 import org.eclipse.n4js.tests.builder.TestedN4JSWorkspace
 import org.eclipse.xtext.testing.InjectWith
@@ -29,7 +30,6 @@ import org.junit.Rule
 import static org.apache.log4j.Logger.getLogger
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace
 import static org.eclipse.core.runtime.Platform.isRunning
-import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
 
 /**
@@ -111,7 +111,7 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 
 		assertTrue(packageJsonFile.exists)
 		testedWorkspace.build
-		return createPlatformResourceURI(project.fullPath.toString, true);
+		return new PlatformResourceURI(project);
 	}
 
 }

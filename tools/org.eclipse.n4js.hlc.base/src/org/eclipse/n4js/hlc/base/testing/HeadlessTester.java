@@ -21,6 +21,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.running.RunnableLookupHelper;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tester.CliTestTreeXMLTransformer;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterEventBus;
@@ -76,7 +77,7 @@ public class HeadlessTester {
 	 * @throws ExitCodeException
 	 *             in cases of errors
 	 */
-	public void runTests(String tester, String implementationId, URI locationToTest, File testReportRoot)
+	public void runTests(String tester, N4JSProjectName implementationId, URI locationToTest, File testReportRoot)
 			throws ExitCodeException {
 
 		ITesterDescriptor testerDescriptor = checkTester(tester);

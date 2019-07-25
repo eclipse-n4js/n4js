@@ -15,13 +15,8 @@ import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
-import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.InferenceVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
@@ -35,6 +30,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.validation.JavaScriptVariant
+import org.eclipse.n4js.xsemantics.AbstractTypesystemTest
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -49,7 +45,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
-public abstract class AbstractInferenceContextTest extends AbstractTypeSystemHelperTests {
+public abstract class AbstractInferenceContextTest extends AbstractTypesystemTest {
 
 	@Inject private N4JSTypeSystem ts;
 	@Inject private TypeSystemHelper tsh;
@@ -149,8 +145,8 @@ public abstract class AbstractInferenceContextTest extends AbstractTypeSystemHel
 
 	@Before
 	def void before() {
-		script = assembler.setupScript(getCode(), JavaScriptVariant.n4js, 0);
-		//val expr = script.eAllContents.filter(ParameterizedCallExpression).head;
+		script = createScript(JavaScriptVariant.n4js, getCode());
+		assertNoValidationErrors(script);
 
 		_G = RuleEnvironmentExtensions.newRuleEnvironment(script);
 
@@ -293,82 +289,5 @@ public abstract class AbstractInferenceContextTest extends AbstractTypeSystemHel
 
 	def protected Type any() {
 		return _G.anyType;
-	}
-
-
-	// for readability of test cases we enforce using different TypeRef creation methods for generic and non-generic types:
-	def protected static TypeRef ref(Type type) {
-		if(type.generic)
-			throw new IllegalArgumentException("type may not be generic; use methods #of() to create TypeRefs for generic types");
-		return TypeUtils.createTypeRef(type);
-	}
-	def protected static TypeRef rawTypeRef(Type type) {
-		if(!type.generic)
-			throw new IllegalArgumentException("type must generic; use method #ref() to create TypeRefs for non-generic types");
-		return TypeUtils.createTypeRef(type);
-	}
-	def protected static TypeRef of(Type type, Type... types) {
-		return of(type,types.map[ref]);
-	}
-	def protected static TypeRef of(Type type, TypeArgument... typeArgs) {
-		if(!type.generic)
-			throw new IllegalArgumentException("type must generic; use method #ref() to create TypeRefs for non-generic types");
-		if(type.typeVars.size !== typeArgs.size)
-			throw new IllegalArgumentException("incorrect number of type arguments provided; required: "+type.typeVars.size+", got: "+typeArgs.size);
-		return TypeUtils.createTypeRef(type,typeArgs);
-	}
-
-
-	def protected static UnionTypeExpression union(Type... types) {
-		return TypeUtils.createNonSimplifiedUnionType(types.map[it.ref]);
-	}
-	def protected static IntersectionTypeExpression intersection(Type... types) {
-		return TypeUtils.createNonSimplifiedIntersectionType(types.map[it.ref]);
-	}
-	def protected static UnionTypeExpression union(TypeRef... typeRefs) {
-		return TypeUtils.createNonSimplifiedUnionType(typeRefs);
-	}
-	def protected static IntersectionTypeExpression intersection(TypeRef... typeRefs) {
-		return TypeUtils.createNonSimplifiedIntersectionType(typeRefs);
-	}
-	def protected Wildcard wildcard() {
-		return TypeRefsFactory.eINSTANCE.createWildcard;
-	}
-	def protected Wildcard wildcardExtends(Type type) {
-		val w = TypeRefsFactory.eINSTANCE.createWildcard;
-		w.declaredUpperBound = type.ref;
-		return w;
-	}
-	def protected Wildcard wildcardExtends(TypeRef typeRef) {
-		val w = TypeRefsFactory.eINSTANCE.createWildcard;
-		w.declaredUpperBound = typeRef;
-		return w;
-	}
-	def protected Wildcard wildcardSuper(Type type) {
-		val w = TypeRefsFactory.eINSTANCE.createWildcard;
-		w.declaredLowerBound = type.ref;
-		return w;
-	}
-	def protected Wildcard wildcardSuper(TypeRef typeRef) {
-		val w = TypeRefsFactory.eINSTANCE.createWildcard;
-		w.declaredLowerBound = typeRef;
-		return w;
-	}
-	def protected FunctionTypeExpression functionType(Type returnType, Type... fparTypes) {
-		return functionType(#[], returnType, fparTypes);
-	}
-	def protected FunctionTypeExpression functionType(TypeRef returnTypeRef, TypeRef... fparTypeRefs) {
-		return functionType(#[], returnTypeRef, fparTypeRefs);
-	}
-	def protected FunctionTypeExpression functionType(TypeVariable[] typeVars, Type returnType, Type... fparTypes) {
-		return functionType(typeVars, returnType.ref, fparTypes.map[ref]);
-	}
-	def protected FunctionTypeExpression functionType(TypeVariable[] typeVars, TypeRef returnTypeRef, TypeRef... fparTypeRefs) {
-		val fpars = fparTypeRefs.map[typeRef|
-			val fpar = TypesFactory.eINSTANCE.createTFormalParameter;
-			fpar.typeRef = typeRef;
-			return fpar;
-		];
-		return TypeUtils.createFunctionTypeExpression(null, typeVars, fpars, returnTypeRef);
 	}
 }
