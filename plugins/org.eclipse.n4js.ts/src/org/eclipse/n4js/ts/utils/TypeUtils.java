@@ -1038,10 +1038,21 @@ public class TypeUtils {
 			return false;
 		if (isRefToTypeVar(obj, checkForInfVars, typeVars))
 			return true;
+		if (obj instanceof ExistentialTypeRef) { // FIXME IDE-1378 find more elegant solution
+			if (isOrContainsRefToTypeVar(((ExistentialTypeRef) obj).getWildcard(), checkForInfVars, typeVars)) {
+				return true;
+			}
+		}
 		final Iterator<EObject> iter = obj.eAllContents();
 		while (iter.hasNext()) {
-			if (isRefToTypeVar(iter.next(), checkForInfVars, typeVars))
+			EObject curr = iter.next();
+			if (isRefToTypeVar(curr, checkForInfVars, typeVars))
 				return true;
+			if (curr instanceof ExistentialTypeRef) { // FIXME IDE-1378 find more elegant solution
+				if (isOrContainsRefToTypeVar(((ExistentialTypeRef) curr).getWildcard(), checkForInfVars, typeVars)) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
