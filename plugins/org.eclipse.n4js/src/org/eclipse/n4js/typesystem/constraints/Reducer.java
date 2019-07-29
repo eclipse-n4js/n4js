@@ -763,7 +763,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					log("!!!WARNING!!! ignoring constraint due to re-opened ExistentialTypeRef (IDE-1653): "
 							+ constraint);
 				}
-				continue;
+				// continue;
 			}
 			wasAdded |= reduce(constraint);
 		}
