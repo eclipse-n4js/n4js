@@ -742,7 +742,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		boolean wasAdded = false;
 		final StructuralTypesHelper structTypesHelper = tsh.getStructuralTypesHelper();
 		final StructuralMembersTripleIterator iter = structTypesHelper.getMembersTripleIterator(G2, left, right, false);
-		while (iter.hasNext()) {
+		while (iter.hasNext() && !ic.isDoomed()) {
 			final StructuralMembersTriple next = iter.next();
 			final TMember l = next.getLeft();
 			final TMember r = next.getRight();
