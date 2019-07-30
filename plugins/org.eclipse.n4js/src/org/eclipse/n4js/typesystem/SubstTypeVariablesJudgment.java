@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -45,11 +46,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	 * <p>
 	 * Never returns <code>null</code>, EXCEPT if <code>null</code> is passed in as type argument.
 	 */
-	public TypeArgument apply(RuleEnvironment G, TypeArgument typeArg) {
+	public TypeArgument apply(RuleEnvironment G, TypeArgument typeArg, boolean withoutCapture) {
 		if (typeArg == null) {
 			return null;
 		}
-		final SubstTypeVariablesSwitch theSwitch = new SubstTypeVariablesSwitch(G);
+		final SubstTypeVariablesSwitch theSwitch = new SubstTypeVariablesSwitch(G, withoutCapture);
 		final TypeArgument result = theSwitch.doSwitch(typeArg);
 		if (result == null) {
 			final String stringRep = typeArg.getTypeRefAsString();
@@ -62,9 +63,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	private final class SubstTypeVariablesSwitch extends TypeRefsSwitch<TypeArgument> {
 
 		private final RuleEnvironment G;
+		private final boolean withoutCapture;
 
-		public SubstTypeVariablesSwitch(RuleEnvironment G) {
+		public SubstTypeVariablesSwitch(RuleEnvironment G, boolean withoutCapture) {
 			this.G = G;
+			this.withoutCapture = withoutCapture;
 		}
 
 		// the following 3 methods are provided to increase readability of recursive invocations of #doSwitch()
@@ -82,7 +85,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			if (G2 == this.G) {
 				return doSwitch(typeArg);
 			} else {
-				return apply(G2, typeArg);
+				return apply(G2, typeArg, this.withoutCapture);
 			}
 		}
 
@@ -212,7 +215,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				} else if (replacementFromEnvUntyped instanceof List<?>) {
 					// we have multiple substitutions!
 					// TODO GHOLD-43 consider resolving the redundancy with handling of recursive mappings in
-					// GenericsComputer#addSubstitutions())
+					// GenericsComputer#addSubstitutions()
 					@SuppressWarnings("unchecked")
 					final List<TypeRef> l_raw = (List<TypeRef>) replacementFromEnvUntyped;
 					final List<TypeRef> l = CollectionLiterals.newArrayList();
@@ -303,6 +306,12 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			// #copyIfContained() (e.g. in utility methods for creating union/intersection types), so we can't be sure
 			// copying will take place later.
 			replacement = TypeUtils.copy(replacement);
+
+			// reopen existential types, if requested
+			if (withoutCapture && replacement instanceof ExistentialTypeRef) {
+				final ExistentialTypeRef replacementCasted = (ExistentialTypeRef) replacement;
+				replacementCasted.setReopened(true);
+			}
 
 			return replacement;
 		}

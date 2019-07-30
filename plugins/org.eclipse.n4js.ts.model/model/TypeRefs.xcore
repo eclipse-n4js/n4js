@@ -741,6 +741,12 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
  * M. Torgersen, E. Ernst, and C. P. Hansen: Wild FJ. 2005
  */
 class ExistentialTypeRef extends TypeRef {
+	/*
+	 * If true, this existential type roughly behaves like the wildcard it was created from.
+	 * For detailed semantics see {@code SubtypeJudgment#applyExistentialTypeRef_Left|Right()}.
+	 */
+	boolean reopened
+
 	refers Wildcard wildcard
 	refers TypeVariable boundTypeVariable
 	/*

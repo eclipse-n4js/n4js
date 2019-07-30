@@ -27,7 +27,6 @@ import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
-import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
@@ -88,13 +87,6 @@ class RuleEnvironmentExtensions {
 	 * {@link RuleEnvironmentExtensions#getInconsistentSubstitutions(RuleEnvironment,TypeVariable)}.
 	 */
 	private static final String KEY__INCONSISTENT_SUBSTITUTIONS = "inconsistentSubstitutions";
-
-	/**
-	 * Key for a List&lt;ExistentialTypeRef> with existential type references that should be re-opened during
-	 * type inference, i.e. they should be treated like the Wildcard they were created from.
-	 * For detailed semantics, see xsemantics rules subtypeRefExistentialTypeRefLeft/Right.
-	 */
-	private static final String KEY__REOPEN_EXISTENTIAL_TYPES = "reopenExistentialTypes";
 
 	/**
 	 * Key for storing an ITypeReplacementProvider defining a replacement of some types by other types within
@@ -292,33 +284,6 @@ class RuleEnvironmentExtensions {
 	def static List<TypeRef> getInconsistentSubstitutions(RuleEnvironment G, TypeVariable typeVar) {
 		val storage = G.get(KEY__INCONSISTENT_SUBSTITUTIONS) as ListMultimap<TypeVariable,TypeRef>;
 		return if(storage!==null) storage.get(typeVar) else Collections.emptyList();
-	}
-
-	/**
-	 * For semantics, see xsemantics rules subtypeRefExistentialTypeRefLeft/Right.
-	 */
-	def static void addExistentialTypeToBeReopened(RuleEnvironment G, ExistentialTypeRef existentialTypeRef) {
-		if(existentialTypeRef.getWildcard!==null)
-			G.put(KEY__REOPEN_EXISTENTIAL_TYPES->existentialTypeRef.getWildcard,Boolean.TRUE,true);
-	}
-
-	/**
-	 * For semantics, see xsemantics rules subtypeRefExistentialTypeRefLeft/Right.
-	 */
-	def static boolean isExistentialTypeToBeReopened(RuleEnvironment G, ExistentialTypeRef existentialTypeRef) {
-		return existentialTypeRef.getWildcard!==null && G.get(KEY__REOPEN_EXISTENTIAL_TYPES->existentialTypeRef.getWildcard)!==null;
-	}
-
-	def static boolean isExistentialTypeToBeReopened(RuleEnvironment G, EObject obj, boolean searchContents) {
-		if(obj instanceof ExistentialTypeRef) {
-			if(G.isExistentialTypeToBeReopened(obj)) {
-				return true;
-			}
-		}
-		if(searchContents && obj!==null) {
-			return obj.eAllContents.filter(ExistentialTypeRef).exists[G.isExistentialTypeToBeReopened(it)];
-		}
-		return false;
 	}
 
 	def static void setTypeReplacement(RuleEnvironment G, ITypeReplacementProvider replacementProvider) {

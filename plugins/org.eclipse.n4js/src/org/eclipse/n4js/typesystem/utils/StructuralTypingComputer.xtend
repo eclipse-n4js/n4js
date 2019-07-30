@@ -12,11 +12,9 @@ package org.eclipse.n4js.typesystem.utils
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import java.util.Collection
 import java.util.List
 import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper
 import org.eclipse.n4js.AnnotationDefinition
-import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -38,7 +36,6 @@ import org.eclipse.n4js.utils.StructuralMembersTriple
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.xtend.lib.annotations.Data
-import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.AnnotationDefinition.*
 import static org.eclipse.n4js.ts.types.TypingStrategy.*
@@ -516,50 +513,10 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		tsh.addSubstitutions(G_left, info.left);
 		tsh.addSubstitutions(G_right, info.right);
 
-		// this is only a prototype implementation (see IDE-1256)
-		val reopen = newArrayList;
-		collectExistentialTypeRefs(G_right, reopen); // note: we only reopen on rhs
-
 		val typeLeft = ts.substTypeVariables(G_left, typeLeftRaw);
-		val typeRight = ts.substTypeVariables(G_right, typeRightRaw);
-
-		reopen.forEach[ G.addExistentialTypeToBeReopened(it) ];
+		val typeRight = ts.substTypeVariablesWithoutCapture(G_right, typeRightRaw); // note: we only suppress capturing on rhs
 
 		return typeLeft -> typeRight;
-	}
-
-	/**
-	 * Searches the values of all type variable mappings in the given rule environment for
-	 * {@link ExistentialTypeRef}s and adds them to the given list.
-	 */
-	def private void collectExistentialTypeRefs(RuleEnvironment G, List<? super ExistentialTypeRef> addHere) {
-		var next = G;
-		while (next !== null) {
-			for (entry : next.entrySet) {
-				val key = entry.key;
-				if (key instanceof TypeVariable) {
-					val value = entry.value;
-					if (value instanceof Collection<?>) {
-						for(currValue : value) {
-							if (currValue instanceof TypeRef) {
-								collectExistentialTypeRefs(currValue, addHere);
-							}
-						}
-					} else if (value instanceof TypeRef) {
-						collectExistentialTypeRefs(value, addHere);
-					}
-				}
-			}
-			next = G.next;
-		}
-	}
-
-	def private void collectExistentialTypeRefs(TypeRef typeRef, List<? super ExistentialTypeRef> addHere) {
-		if (typeRef instanceof ExistentialTypeRef) {
-			addHere.add(typeRef);
-		} else {
-			addHere.addAll(EcoreUtil2.getAllContentsOfType(typeRef, ExistentialTypeRef));
-		}
 	}
 
 	/**

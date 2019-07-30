@@ -19,7 +19,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collec
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getContextResource;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.intType;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isExistentialTypeToBeReopened;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isFunction;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObject;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4EnumType;
@@ -559,7 +558,7 @@ import com.google.common.collect.Iterables;
 
 	private Result applyExistentialTypeRef_Left(RuleEnvironment G,
 			ExistentialTypeRef existentialTypeRef, TypeArgument right) {
-		if (isExistentialTypeToBeReopened(G, existentialTypeRef)) {
+		if (existentialTypeRef.isReopened()) {
 			// special case: open existential
 			// --> we may pick any valid type we want for 'existentialTypeRef'
 			// --> only check that 'left' lies within the bounds
@@ -589,7 +588,7 @@ import com.google.common.collect.Iterables;
 
 	private Result applyExistentialTypeRef_Right(RuleEnvironment G,
 			TypeArgument left, ExistentialTypeRef existentialTypeRef) {
-		if (isExistentialTypeToBeReopened(G, existentialTypeRef)) {
+		if (existentialTypeRef.isReopened()) {
 			// special case: open existential
 			// --> we may pick any valid type we want for 'existentialTypeRef'
 			// --> only check that 'left' lies within the bounds

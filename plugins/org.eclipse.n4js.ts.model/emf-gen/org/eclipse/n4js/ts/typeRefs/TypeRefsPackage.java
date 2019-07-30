@@ -3738,13 +3738,22 @@ public interface TypeRefsPackage extends EPackage {
 	int EXISTENTIAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
+	 * The feature id for the '<em><b>Reopened</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF__REOPENED = TYPE_REF_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Wildcard</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF__WILDCARD = TYPE_REF_FEATURE_COUNT + 0;
+	int EXISTENTIAL_TYPE_REF__WILDCARD = TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Bound Type Variable</b></em>' reference.
@@ -3753,7 +3762,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE = TYPE_REF_FEATURE_COUNT + 1;
+	int EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE = TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Existential Type Ref</em>' class.
@@ -3762,7 +3771,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 2;
+	int EXISTENTIAL_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Contains Wildcards</em>' operation.
@@ -8254,6 +8263,17 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getExistentialTypeRef();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isReopened <em>Reopened</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Reopened</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isReopened()
+	 * @see #getExistentialTypeRef()
+	 * @generated
+	 */
+	EAttribute getExistentialTypeRef_Reopened();
+
+	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getWildcard <em>Wildcard</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9758,6 +9778,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass EXISTENTIAL_TYPE_REF = eINSTANCE.getExistentialTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Reopened</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXISTENTIAL_TYPE_REF__REOPENED = eINSTANCE.getExistentialTypeRef_Reopened();
 
 		/**
 		 * The meta object literal for the '<em><b>Wildcard</b></em>' reference feature.

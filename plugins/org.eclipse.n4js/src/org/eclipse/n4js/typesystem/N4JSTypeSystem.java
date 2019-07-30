@@ -199,7 +199,11 @@ public class N4JSTypeSystem {
 	 * FunctionTypeExpression back.
 	 */
 	public TypeArgument substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
-		return substTypeVariablesJudgment.apply(G, typeArgument);
+		return substTypeVariablesJudgment.apply(G, typeArgument, false);
+	}
+
+	public TypeArgument substTypeVariablesWithoutCapture(RuleEnvironment G, TypeArgument typeArgument) {
+		return substTypeVariablesJudgment.apply(G, typeArgument, true);
 	}
 
 	// ###############################################################################################################

@@ -148,7 +148,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		}
 		if (left instanceof ExistentialTypeRef) {
 			ExistentialTypeRef leftCasted = (ExistentialTypeRef) left;
-			if (RuleEnvironmentExtensions.isExistentialTypeToBeReopened(G, leftCasted)) {
+			if (leftCasted.isReopened()) {
 				Wildcard wildcard = leftCasted.getWildcard();
 				if (wildcard != null && !wildcard.eIsProxy()) {
 					return reduce(wildcard, right, variance);
@@ -157,7 +157,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		}
 		if (right instanceof ExistentialTypeRef) {
 			ExistentialTypeRef rightCasted = (ExistentialTypeRef) right;
-			if (RuleEnvironmentExtensions.isExistentialTypeToBeReopened(G, rightCasted)) {
+			if (rightCasted.isReopened()) {
 				Wildcard wildcard = rightCasted.getWildcard();
 				if (wildcard != null && !wildcard.eIsProxy()) {
 					return reduce(left, wildcard, variance);
@@ -754,17 +754,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				continue;
 			}
 			final TypeConstraint constraint = stc.reduceMembers(left, l, r, variance, infoFaked);
-			if (containsReopenedExistentialType(G2, constraint)) { // note: using G2 here, not G!
-				// by completely ignoring all constraints that contain a re-opened ExistentialTypeRef we might lose some
-				// information; but otherwise we would have to deal with this all throughout InferenceContext,
-				// Reducer, BoundSet
-				// TODO reconsider handling of re-opened ExistentialTypeRefs in InferenceContext, IDE-1653
-				if (DEBUG) {
-					log("!!!WARNING!!! ignoring constraint due to re-opened ExistentialTypeRef (IDE-1653): "
-							+ constraint);
-				}
-				// continue;
-			}
 			wasAdded |= reduce(constraint);
 		}
 		return wasAdded;
@@ -807,12 +796,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		final TypeRef rightSubst = ts.substTypeVariables(G_temp, right);
 		// step 2: now, perform subtype check reusing existing logic
 		return ts.subtypeSucceeded(G, leftSubst, rightSubst);
-	}
-
-	private static final boolean containsReopenedExistentialType(RuleEnvironment someG, TypeConstraint constraint) {
-		return constraint != null
-				&& (RuleEnvironmentExtensions.isExistentialTypeToBeReopened(someG, constraint.left, true)
-						|| RuleEnvironmentExtensions.isExistentialTypeToBeReopened(someG, constraint.right, true));
 	}
 
 	private TypeRef bottom() {

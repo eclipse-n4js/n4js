@@ -52,6 +52,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isReopened <em>Reopened</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getWildcard <em>Wildcard</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getBoundTypeVariable <em>Bound Type Variable</em>}</li>
  * </ul>
@@ -61,6 +62,32 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * @generated
  */
 public interface ExistentialTypeRef extends TypeRef {
+	/**
+	 * Returns the value of the '<em><b>Reopened</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If true, this existential type roughly behaves like the wildcard it was created from.
+	 * For detailed semantics see {@code SubtypeJudgment#applyExistentialTypeRef_Left|Right()}.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Reopened</em>' attribute.
+	 * @see #setReopened(boolean)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getExistentialTypeRef_Reopened()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isReopened();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isReopened <em>Reopened</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Reopened</em>' attribute.
+	 * @see #isReopened()
+	 * @generated
+	 */
+	void setReopened(boolean value);
+
 	/**
 	 * Returns the value of the '<em><b>Wildcard</b></em>' reference.
 	 * <!-- begin-user-doc -->
