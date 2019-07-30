@@ -1039,6 +1039,7 @@ public class TypeUtils {
 		if (isRefToTypeVar(obj, checkForInfVars, typeVars))
 			return true;
 		if (obj instanceof ExistentialTypeRef) { // FIXME IDE-1378 find more elegant solution
+			// FIXME wrong if obj is not re-opened!!!!
 			if (isOrContainsRefToTypeVar(((ExistentialTypeRef) obj).getWildcard(), checkForInfVars, typeVars)) {
 				return true;
 			}
