@@ -34,10 +34,8 @@ import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.NullType
@@ -321,27 +319,6 @@ class RuleEnvironmentExtensions {
 			return obj.eAllContents.filter(ExistentialTypeRef).exists[G.isExistentialTypeToBeReopened(it)];
 		}
 		return false;
-	}
-
-	def static ExistentialTypeRef createExistentialTypeRef(TypeVariable typeVar, Wildcard wildcard) {
-		var ExistentialTypeRef etr = TypeRefsFactory.eINSTANCE.createExistentialTypeRef();
-		etr.wildcard = wildcard
-		etr.boundTypeVariable = typeVar
-		return etr;
-	}
-
-	/**
-	 * For the moment we won't use that; it should also take intersection
-	 * types into consideration.
-	 */
-	def static ExistentialTypeRef createExistentialTypeRef(TypeVariable typeVar) {
-		createExistentialTypeRef(
-			typeVar,
-			TypeRefsFactory.eINSTANCE.createWildcard => [
-				val declUB = typeVar.declaredUpperBound;
-				declaredUpperBound = TypeUtils.copyIfContained(declUB);
-			]
-		)
 	}
 
 	def static void setTypeReplacement(RuleEnvironment G, ITypeReplacementProvider replacementProvider) {

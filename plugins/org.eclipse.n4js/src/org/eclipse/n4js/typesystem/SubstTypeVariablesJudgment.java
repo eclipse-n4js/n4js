@@ -199,59 +199,27 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			result = typeRef;
 
 			// (2) substitute type variables in declared type
-			// TODO GHOLD-43 clean up the following (simplify + resolve redundancy with handling of recursive mappings
-			// in GenericsComputer#addSubstitutions())
 			Type typeRefDeclType = typeRef.getDeclaredType();
 			if (typeRefDeclType instanceof TypeVariable) {
 				final TypeVariable typeVar = (TypeVariable) typeRefDeclType;
 
-				final Object tempFromEnvUntyped = G.get(typeVar);
-				if (tempFromEnvUntyped instanceof TypeRef) {
+				final Object replacementFromEnvUntyped = G.get(typeVar);
+				if (replacementFromEnvUntyped instanceof TypeRef) {
 					// we have a single substitution!
-					final TypeRef tempFromEnv = (TypeRef) tempFromEnvUntyped;
-					final TypeRef temp = TypeUtils.mergeTypeModifiers(tempFromEnv, typeRef);
-
-					final Type tempDeclaredType = temp.getDeclaredType();
-					final Pair<String, TypeRef> guardKey = Pair.of(GUARD_SUBST_TYPE_VARS, temp);
-					if (typeVar != tempDeclaredType
-							&& (TypeUtils.isOrContainsRefToTypeVar(temp)
-									|| (tempDeclaredType != null && tempDeclaredType.isGeneric()))
-							&& G.get(guardKey) == null) {
-						final RuleEnvironment G2 = wrap(G);
-						G2.put(guardKey, Boolean.TRUE);
-						result = substTypeVariables(G2, temp);
-						result = TypeUtils.copy(result); // always copy! (the subst-judgment might return 'temp'
-						// unchanged; see next comment why we have to copy 'temp')
-					} else {
-						result = TypeUtils.copy(temp); // always copy! ('temp' is lying in the rule env, don't wanna
-						// change content of rule env!)
-						// (note: TypeUtils#copyIfContained() would fail in previous lines, because 'temp' will not be
-						// "contained" in the sense of EMF containment)
-					}
-				} else if (tempFromEnvUntyped instanceof List<?>) {
+					final TypeRef replacementFromEnv = (TypeRef) replacementFromEnvUntyped;
+					final TypeRef replacement = TypeUtils.mergeTypeModifiers(replacementFromEnv, typeRef);
+					result = prepareTypeVariableReplacement(typeVar, replacement);
+				} else if (replacementFromEnvUntyped instanceof List<?>) {
 					// we have multiple substitutions!
+					// TODO GHOLD-43 consider resolving the redundancy with handling of recursive mappings in
+					// GenericsComputer#addSubstitutions())
 					@SuppressWarnings("unchecked")
-					final List<TypeRef> l_raw = (List<TypeRef>) tempFromEnvUntyped;
+					final List<TypeRef> l_raw = (List<TypeRef>) replacementFromEnvUntyped;
 					final List<TypeRef> l = CollectionLiterals.newArrayList();
 					for (int i = 0; i < l_raw.size(); i++) {
-						final TypeRef temp = l_raw.get(i);
-						final Type tempDeclaredType = temp.getDeclaredType();
-						final Pair<String, TypeRef> guardKey = Pair.of(GUARD_SUBST_TYPE_VARS, temp);
-						if (typeVar != tempDeclaredType
-								&& (TypeUtils.isOrContainsRefToTypeVar(temp)
-										|| (tempDeclaredType != null && tempDeclaredType.isGeneric()))
-								&& G.get(guardKey) == null) {
-							final RuleEnvironment G2 = wrap(G);
-							G2.put(guardKey, Boolean.TRUE);
-							TypeRef tempResult = substTypeVariables(G2, temp);
-							tempResult = TypeUtils.copy(tempResult); // always copy! (methods #createUnionType() and
-							// #createIntersectionType() below will do a #cloneIfContained() which fails here, see
-							// above)
-							l.add(tempResult);
-						} else {
-							l.add(TypeUtils.copy(temp)); // always copy! (methods #createUnion/IntersectionType() below
-							// will do a #cloneIfContained() which fails here, see above)
-						}
+						final TypeRef replacement = l_raw.get(i);
+						final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeVar, replacement);
+						l.add(replacementPrepared);
 					}
 					if (typeVar.isDeclaredCovariant()) {
 						result = typeSystemHelper.createIntersectionType(G, l.toArray(new TypeRef[l.size()]));
@@ -307,6 +275,36 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			}
 
 			return result;
+		}
+
+		private TypeRef prepareTypeVariableReplacement(TypeVariable typeVar, TypeRef replacement) {
+			// perform recursive substitution on the replacement (if required)
+			final Type replacementDeclType = replacement.getDeclaredType();
+			if (typeVar != replacementDeclType
+					&& (TypeUtils.isOrContainsRefToTypeVar(replacement)
+							|| (replacementDeclType != null && replacementDeclType.isGeneric()))) {
+				final Pair<String, TypeRef> guardKey = Pair.of(GUARD_SUBST_TYPE_VARS, replacement);
+				if (G.get(guardKey) == null) {
+					final RuleEnvironment G2 = wrap(G);
+					G2.put(guardKey, Boolean.TRUE);
+					replacement = substTypeVariables(G2, replacement);
+				}
+			}
+
+			// Always copy the replacement!
+			// Rationale:
+			// 1) 'replacement' was taken from the type mappings in the rule environment (by our caller) and we don't
+			// want those to be reused outside the rule environment.
+			// 2) using TypeUtils#copyIfContained() would fail here, because 'replacement' is "contained" in the rule
+			// environment via a POJO object reference, but not in the sense of EMF containment.
+			// 3) the above call to #substTypeVariables() might have returned the replacement unchanged, so we can't be
+			// sure copying has already taken place.
+			// 4) the copying performed in some cases by our caller on the value returned by this method will only use
+			// #copyIfContained() (e.g. in utility methods for creating union/intersection types), so we can't be sure
+			// copying will take place later.
+			replacement = TypeUtils.copy(replacement);
+
+			return replacement;
 		}
 	}
 }
