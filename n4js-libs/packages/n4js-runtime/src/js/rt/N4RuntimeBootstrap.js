@@ -92,6 +92,20 @@
         var proto = tinterface.$methods,
             n4type = n4typeFn(proto, tinterface);
         Object.defineProperty(tinterface, "n4type", { value: n4type });
+        Object.defineProperty(tinterface, Symbol.hasInstance, {
+            /**
+             * Check whether a value is instance of a class implementing an interface.
+             *
+             * @param instance - The instance which type is to be checked whether it implements the interface
+             * @return boolean
+             */
+            value: function(instance) {
+                if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
+                    return false;
+                }
+                return instance.constructor.n4type.allImplementedInterfaces.indexOf(n4type.fqn) !== -1;
+            }
+        });
     }
 
     /**
@@ -139,33 +153,13 @@
      * @param instance - The instance which type is to be checked whether it implements the interface
      * @param implementedInterface - The fully qualified name of the interface including the package identifier
      * @return boolean
+     * @deprecated
      */
     function $implements(instance, implementedInterface) {
         if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
             return false;
         }
         return instance.constructor.n4type.allImplementedInterfaces.indexOf(implementedInterface) !== -1;
-    }
-
-    /**
-     * Instanceof-wrapper delegating to $implements in case of potential interfaces on the right hand side.
-     *
-     * @param instance - The instance which type is to be checked whether it implements the interface
-     * @param supertpye - type to check against
-     * @return boolean true if instance-parameter is an instance of supertype-parameter
-     */
-    function $instanceof(instance, supertype) {
-        switch (typeof instance) {
-            case "object":
-            case "function":
-                if (typeof supertype === "object") { // interface type
-                    var t = (supertype["n4type"] || null);
-                    var fqn = t ? t.fqn : "";
-                    return $implements(instance, fqn);
-                }
-                return instance instanceof supertype;
-        }
-        return false;
     }
 
     /**
@@ -257,8 +251,12 @@
     global.$makeClass = $makeClass;
     global.$makeInterface = $makeInterface;
     global.$makeEnum = $makeEnum;
-    global.$implements = $implements;
-    global.$instanceof = $instanceof;
+
+    // @deprecated, remove:
+    global.$implements = $implements;    
+    // @deprecated, remove:
+    global.$instanceof = function(instance, supertype) { return instance instanceof supertype; };
+
     global.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
     global.$spawn = $spawn;
     global.$n4promisifyFunction = $n4promisifyFunction;
