@@ -1270,7 +1270,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	/** Returns a copy of the given {@link FunctionTypeExprOrRef} with its return type changed to <code>void</code>. */
 	private FunctionTypeExpression changeReturnTypeToVoid(RuleEnvironment G, FunctionTypeExprOrRef typeRef) {
 		final RuleEnvironment G_empty = RuleEnvironmentExtensions.newRuleEnvironment(G);
-		final FunctionTypeExpression result = tsh.createSubstitutionOfFunctionTypeExprOrRef(G_empty, typeRef);
+		final FunctionTypeExpression result = tsh.createSubstitutionOfFunctionTypeExprOrRef(G_empty, typeRef, false);
 		result.setReturnTypeRef(null); // TODO use RuleEnvironmentExtensions.voidTypeRef(G) here
 		return result;
 	}

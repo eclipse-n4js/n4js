@@ -331,16 +331,6 @@ public class TypeUtils {
 	}
 
 	/**
-	 * Creates a new ExistentialTypeRef.
-	 */
-	public static ExistentialTypeRef createExistentialTypeRef(TypeVariable typeVar, Wildcard wildcard) {
-		final ExistentialTypeRef etr = TypeRefsFactory.eINSTANCE.createExistentialTypeRef();
-		etr.setWildcard(wildcard);
-		etr.setBoundTypeVariable(typeVar);
-		return etr;
-	}
-
-	/**
 	 * Creates a new unbounded wildcard.
 	 */
 	public static Wildcard createWildcard() {
@@ -366,15 +356,13 @@ public class TypeUtils {
 	}
 
 	/**
-	 * If the given type argument is a {@link Wildcard}, then a new {@link ExistentialTypeRef} will be created and
-	 * returned; otherwise the given type argument will be returned without change.
+	 * Creates a new {@link ExistentialTypeRef} as a capture of the given wildcard.
 	 */
-	public static TypeRef captureWildcard(TypeVariable typeVar, TypeArgument typeArg) {
-		if (typeArg instanceof Wildcard)
-			return createExistentialTypeRef(typeVar, (Wildcard) typeArg);
-		else
-			// note: typeArg must be a TypeRef now, because Wildcard was the only other option below TypeArgument
-			return (TypeRef) typeArg;
+	public static ExistentialTypeRef captureWildcard(TypeVariable typeVar, Wildcard wildcard) {
+		final ExistentialTypeRef etr = TypeRefsFactory.eINSTANCE.createExistentialTypeRef();
+		etr.setWildcard(wildcard);
+		etr.setBoundTypeVariable(typeVar);
+		return etr;
 	}
 
 	/**

@@ -26,7 +26,6 @@ import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping
-import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -51,7 +50,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	private N4JSTypeSystem ts
 
 	@Inject
-	extension TypeCompareHelper;
+	private TypeCompareHelper typeCompareHelper;
 
 
 	/**
@@ -131,12 +130,6 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 			};
 		}
 
-		// resolve wildcards
-		if(actualTypeArg instanceof Wildcard)
-			actualTypeArg = TypeUtils.captureWildcard(typeVar, actualTypeArg);
-
-		// (note: actualTypeArg must be a TypeRef now, because Wildcard was the only other option below TypeArgument)
-
 		// combine actualTypeArg with current substitution target (if required)
 		var currSubstitute = G.get(typeVar);
 
@@ -152,7 +145,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		for(currTypeArg : typeArgs) {
 			val l = if(currTypeArg instanceof Collection<?>) currTypeArg else #[currTypeArg];
 			for(Object currO : l) {
-				if(currO!==null && !result.typeRefAwareContains(currO))
+				if(currO!==null && !typeArgAwareContains(result, currO))
 					result.add(currO);
 			}
 		}
@@ -164,11 +157,11 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		else
 			null
 	}
-	private def typeRefAwareContains(Collection<?> l, Object o) {
-		if(o instanceof TypeRef) {
+	private def typeArgAwareContains(Collection<?> l, Object o) {
+		if(o instanceof TypeArgument) {
 			for(Object currO : l)
-				if(currO instanceof TypeRef)
-					if(compare(currO,o)===0)
+				if(currO instanceof TypeArgument)
+					if(typeCompareHelper.compare(currO,o)===0)
 						return true;
 			return false;
 		}

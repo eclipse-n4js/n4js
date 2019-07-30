@@ -202,6 +202,10 @@ public class N4JSTypeSystem {
 		return substTypeVariablesJudgment.apply(G, typeArgument, false);
 	}
 
+	public TypeRef substTypeVariablesWithoutCapture(RuleEnvironment G, TypeRef typeRef) {
+		return (TypeRef) substTypeVariablesWithoutCapture(G, (TypeArgument) typeRef);
+	}
+
 	public TypeArgument substTypeVariablesWithoutCapture(RuleEnvironment G, TypeArgument typeArgument) {
 		return substTypeVariablesJudgment.apply(G, typeArgument, true);
 	}

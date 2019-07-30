@@ -156,7 +156,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 		@Override
 		public TypeArgument caseFunctionTypeExprOrRef(FunctionTypeExprOrRef typeRef) {
-			return typeSystemHelper.createSubstitutionOfFunctionTypeExprOrRef(G, typeRef);
+			return typeSystemHelper.createSubstitutionOfFunctionTypeExprOrRef(G, typeRef, withoutCapture);
 		}
 
 		@Override
@@ -207,20 +207,21 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				final TypeVariable typeVar = (TypeVariable) typeRefDeclType;
 
 				final Object replacementFromEnvUntyped = G.get(typeVar);
-				if (replacementFromEnvUntyped instanceof TypeRef) {
+				if (replacementFromEnvUntyped instanceof TypeArgument) {
 					// we have a single substitution!
-					final TypeRef replacementFromEnv = (TypeRef) replacementFromEnvUntyped;
-					final TypeRef replacement = TypeUtils.mergeTypeModifiers(replacementFromEnv, typeRef);
-					result = prepareTypeVariableReplacement(typeVar, replacement);
+					final TypeArgument replacementFromEnv = (TypeArgument) replacementFromEnvUntyped;
+					final TypeArgument replacement = TypeUtils.mergeTypeModifiers(replacementFromEnv, typeRef);
+					final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeVar, replacement);
+					result = replacementPrepared;
 				} else if (replacementFromEnvUntyped instanceof List<?>) {
 					// we have multiple substitutions!
 					// TODO GHOLD-43 consider resolving the redundancy with handling of recursive mappings in
 					// GenericsComputer#addSubstitutions()
 					@SuppressWarnings("unchecked")
-					final List<TypeRef> l_raw = (List<TypeRef>) replacementFromEnvUntyped;
+					final List<TypeArgument> l_raw = (List<TypeArgument>) replacementFromEnvUntyped;
 					final List<TypeRef> l = CollectionLiterals.newArrayList();
 					for (int i = 0; i < l_raw.size(); i++) {
-						final TypeRef replacement = l_raw.get(i);
+						final TypeArgument replacement = l_raw.get(i);
 						final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeVar, replacement);
 						l.add(replacementPrepared);
 					}
@@ -280,7 +281,30 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			return result;
 		}
 
-		private TypeRef prepareTypeVariableReplacement(TypeVariable typeVar, TypeRef replacement) {
+		private TypeRef prepareTypeVariableReplacement(TypeVariable typeVar, TypeArgument replacementArg) {
+
+			// capture wildcards
+			TypeRef replacement;
+			if (replacementArg instanceof Wildcard) {
+				if (!withoutCapture) {
+					// standard case: capturing is not suppressed
+					// -> simply capture the wildcard and proceed as normal
+					replacement = TypeUtils.captureWildcard(typeVar, (Wildcard) replacementArg);
+				} else {
+					// special case: capturing of wildcards is suppressed
+					// -> we cannot just keep the wildcard, because Wildcard does not inherit from TypeRef but the
+					// value returned from this method is intended as a replacement of type variable 'typeVar' and must
+					// therefore be usable in all locations where a type variable, i.e. a TypeRef, may appear.
+					// As a solution, we convert to an ExistentialTypeRef in this case, too, and mark the
+					// ExistentialTypeRef as "reopened":
+					final ExistentialTypeRef capture = TypeUtils.captureWildcard(typeVar, (Wildcard) replacementArg);
+					capture.setReopened(true);
+					replacement = capture;
+				}
+			} else {
+				replacement = (TypeRef) replacementArg;
+			}
+
 			// perform recursive substitution on the replacement (if required)
 			final Type replacementDeclType = replacement.getDeclaredType();
 			if (typeVar != replacementDeclType
@@ -306,12 +330,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			// #copyIfContained() (e.g. in utility methods for creating union/intersection types), so we can't be sure
 			// copying will take place later.
 			replacement = TypeUtils.copy(replacement);
-
-			// reopen existential types, if requested
-			if (withoutCapture && replacement instanceof ExistentialTypeRef) {
-				final ExistentialTypeRef replacementCasted = (ExistentialTypeRef) replacement;
-				replacementCasted.setReopened(true);
-			}
 
 			return replacement;
 		}

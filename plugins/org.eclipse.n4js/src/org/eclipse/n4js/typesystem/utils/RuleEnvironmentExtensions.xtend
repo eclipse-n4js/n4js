@@ -790,11 +790,7 @@ class RuleEnvironmentExtensions {
 		// ignore invalid type mappings
 		if(!G.isValidTypeMapping(key,value))
 			return;
-
-		// resolve wildcards
-		val actualValue = TypeUtils.captureWildcard(key, value);  // TODO capture before calling #isValidMapping() and return FALSE from isValidMapping() for Wildcard!!!!
-
-		G.put(key, actualValue);
+		G.put(key, value);
 	}
 
 	/**
