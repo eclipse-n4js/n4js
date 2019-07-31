@@ -12,6 +12,7 @@ Contributors:
 = Validation
 :find:
 
+WARNING: This chapter may be outdated.
 
 In this chapter the concept for the validation infrastructure of the N4JS IDE is described.
 
