@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 1120 783" width="1120" height="783">
+  <defs>
+    <font-face font-family="Arial" font-size="12" panose-1="2 11 6 4 2 2 2 2 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="73.24219" slope="0" x-height="518.5547" cap-height="716.3086" ascent="905.2734" descent="-211.91406" font-weight="400">
+      <font-face-src>
+        <font-face-name name="ArialMT"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Arial" font-size="13" panose-1="2 11 7 4 2 2 2 2 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="104.98047" slope="0" x-height="518.5547" cap-height="715.8203" ascent="905.2734" descent="-211.91406" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Arial-BoldMT"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Arial" font-size="10" panose-1="2 11 6 4 2 2 2 2 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="73.24219" slope="0" x-height="518.5547" cap-height="716.3086" ascent="905.2734" descent="-211.91406" font-weight="400">
+      <font-face-src>
+        <font-face-name name="ArialMT"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Arial" font-size="9" panose-1="2 11 6 4 2 2 2 2 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="73.24219" slope="0" x-height="518.5547" cap-height="716.3086" ascent="905.2734" descent="-211.91406" font-weight="400">
+      <font-face-src>
+        <font-face-name name="ArialMT"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Arial" font-size="8" panose-1="2 11 6 4 2 2 2 2 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="73.24219" slope="0" x-height="518.5547" cap-height="716.3086" ascent="905.2734" descent="-211.91406" font-weight="400">
+      <font-face-src>
+        <font-face-name name="ArialMT"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Arial" font-size="12" panose-1="2 11 7 4 2 2 2 2 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="104.98047" slope="0" x-height="518.5547" cap-height="715.8203" ascent="905.2734" descent="-211.91406" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Arial-BoldMT"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Arial" font-size="11" panose-1="2 11 6 4 2 2 2 2 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="73.24219" slope="0" x-height="518.5547" cap-height="716.3086" ascent="905.2734" descent="-211.91406" font-weight="400">
+      <font-face-src>
+        <font-face-name name="ArialMT"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Arial" font-size="12" panose-1="2 11 7 4 2 2 2 9 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="104.98047" slope="-1e3" x-height="518.5547" cap-height="715.332" ascent="905.2734" descent="-211.91406" font-style="italic" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Arial-BoldItalicMT"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2013-08-06 09:17:29 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="0" y="0" width="1120" height="783"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_213">
+        <path d="M 224.61456 421.0392 C 224.61456 412.70296 222.0604 411.6716 203.403 403.4216 L 203.20592 403.33624 C 184.44998 395 184.2549 395 165.00622 395 C 139.37618 395 23.5 395 23.5 395 L 23.5 483 L 224.61456 483 L 224.61456 421.0392 Z" fill="white"/>
+        <path d="M 224.61456 421.0392 C 224.61456 412.70296 222.0604 411.6716 203.403 403.4216 L 203.20592 403.33624 C 184.44998 395 184.2549 395 165.00622 395 C 139.37618 395 23.5 395 23.5 395 L 23.5 483 L 224.61456 483 L 224.61456 421.0392 Z M 224.61456 420.60976 C 224.61456 412.70296 224.41747 412.70296 184.2549 412.70296 L 184.2549 412.70296 C 184.2549 395.08624 184.2549 395 166.18475 395" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(28.5 400)" fill="black">
+          <tspan font-family="Arial" font-size="12" font-weight="400" fill="black" x="0" y="11">package</tspan>
+          <tspan font-family="Arial" font-size="13" font-weight="700" fill="black" x="0" y="26.392578">n4js.performance</tspan>
+          <tspan font-family="Arial" font-size="10" font-weight="400" fill="black" x="0" y="38.81787">Scopes shown: package, protected, public, </tspan>
+          <tspan font-family="Arial" font-size="10" font-weight="400" fill="black" x="0" y="50.14502">Omitted methods: getter and setter, </tspan>
+          <tspan font-family="Arial" font-size="10" font-weight="400" fill="black" x="0" y="61.47217">overriding methods, </tspan>
+          <tspan font-family="Arial" font-size="10" font-weight="400" fill="black" x="0" y="72.79932">created on Aug 6, 2013</tspan>
+        </text>
+      </g>
+      <g id="Line_203">
+        <path d="M 663 391.3166 L 711 363.4529 L 761 223.45288 L 791.1833 219.51293" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_191">
+        <line x1="696" y1="245.9722" x2="820.4962" y2="332.7725" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_190">
+        <line x1="696" y1="210.1969" x2="791.5507" y2="240.05955" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_189">
+        <line x1="696" y1="228.08454" x2="810.4906" y2="285.88766" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_188">
+        <line x1="696" y1="192.4076" x2="791.172" y2="203.94713" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_187">
+        <line x1="696" y1="174.6183" x2="791.1242" y2="167.95643" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_186">
+        <line x1="696" y1="139.03972" x2="806.4199" y2="89.06378" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_185">
+        <line x1="696" y1="156.82902" x2="791.4216" y2="131.8938" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_177">
+        <line x1="293.5" y1="124.32628" x2="147.97538" y2="80.27425" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_176">
+        <line x1="293.5" y1="156.80127" x2="179.18396" y2="186.20353" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_172">
+        <line x1="293.5" y1="134.08561" x2="148.31172" y2="114.56539" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_168">
+        <line x1="597.079" y1="378" x2="597.9955" y2="347.52695" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_167">
+        <text transform="translate(570.342 350.5752)" fill="black">
+          <tspan font-family="Arial" font-size="12" font-weight="400" fill="black" x="0" y="11">#config</tspan>
+        </text>
+      </g>
+      <g id="Graphic_166"/>
+      <g id="Line_165">
+        <line x1="281.2027" y1="305.64865" x2="281.2027" y2="363.00576" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_164">
+        <text transform="translate(246.18317 332.2772)" fill="black">
+          <tspan font-family="Arial" font-size="12" font-weight="400" fill="black" x="0" y="11">#measurements</tspan>
+        </text>
+      </g>
+      <g id="Graphic_163">
+        <text transform="translate(287.45148 360.68005)" fill="black">
+          <tspan font-family="Arial" font-size="9" font-weight="400" fill="black" x="0" y="8">*</tspan>
+        </text>
+      </g>
+      <g id="Line_162">
+        <line x1="293.5" y1="144.43976" x2="161.11513" y2="150.27426" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_161">
+        <text transform="translate(169.64197 132.58272)" fill="black">
+          <tspan font-family="Arial" font-size="12" font-weight="400" fill="black" x="0" y="11">-jobChangeListener</tspan>
+        </text>
+      </g>
+      <g id="Graphic_160"/>
+      <g id="Line_159">
+        <line x1="293.5" y1="177.00154" x2="193.46863" y2="237.56875" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_158">
+        <text transform="translate(196.74808 196.0056)" fill="black">
+          <tspan font-family="Arial" font-size="12" font-weight="400" fill="black" x="0" y="11">#buildStrategy</tspan>
+        </text>
+      </g>
+      <g id="Graphic_157"/>
+      <g id="Line_156">
+        <line x1="319.7825" y1="200.88358" x2="303.63065" y2="230.9288" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_155">
+        <text transform="translate(287.3076 209.4781)" fill="black">
+          <tspan font-family="Arial" font-size="12" font-weight="400" fill="black" x="0" y="11">#pmp</tspan>
+        </text>
+      </g>
+      <g id="Graphic_154"/>
+      <g id="Group_147">
+        <g id="Graphic_150">
+          <rect x="372" y="291.64865" width="121" height="14" fill="white"/>
+          <rect x="372" y="291.64865" width="121" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_149">
+          <rect x="372" y="277.64865" width="121" height="14" fill="white"/>
+          <rect x="372" y="277.64865" width="121" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_148">
+          <rect x="372" y="243.64865" width="121" height="34" fill="white"/>
+          <rect x="372" y="243.64865" width="121" height="34" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(377.36133 248.64865)" fill="black">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="black" x="0" y="7">PerformanceTestConfiguration.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="black" x="30.464844" y="20.261719">Property</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_139">
+        <g id="Graphic_140">
+          <rect x="23.5" y="38" width="115" height="44" fill="white"/>
+          <rect x="23.5" y="38" width="115" height="44" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(28.753906 43)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="32.45508" y="7">«interface»</tspan>
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="0" y="16.261719">org.eclipse.core.runtime.jobs.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="silver" x="15.238281" y="29.523438">IJobManager</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_128">
+        <g id="Graphic_131">
+          <rect x="237.2027" y="420.90576" width="88" height="28" fill="white"/>
+          <rect x="237.2027" y="420.90576" width="88" height="28" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(242.2027 421.90576)" fill="black">
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="10">+diff(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="22.359863">+toCSV()</tspan>
+          </text>
+        </g>
+        <g id="Graphic_130">
+          <rect x="237.2027" y="406.90576" width="88" height="14" fill="white"/>
+          <rect x="237.2027" y="406.90576" width="88" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_129">
+          <rect x="237.2027" y="372.90576" width="88" height="34" fill="white"/>
+          <rect x="237.2027" y="372.90576" width="88" height="34" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(242.52203 377.90576)" fill="black">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="black" x="6.8896484" y="7">PoorMansProfiler.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="black" x="0" y="20.261719">Measurement</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_108">
+        <g id="Graphic_109">
+          <rect x="801" y="50.98169" width="104" height="34" fill="white"/>
+          <rect x="801" y="50.98169" width="104" height="34" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(806.3125 55.98169)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="0" y="7">generators.TestDescriptor.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="silver" x="12.673828" y="20.261719">ClusterDscr</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_100">
+        <g id="Graphic_103">
+          <rect x="528" y="416" width="135" height="67" fill="white"/>
+          <rect x="528" y="416" width="135" height="67" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(533 417)" fill="black">
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="10">#getWorkspaceRoot()</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="22.359863">+findAllProblems()</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="34.719727">#findProblems(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="47.07959">+compare(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="59.43945">+createProblemReport(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_102">
+          <rect x="528" y="402" width="135" height="14" fill="white"/>
+          <rect x="528" y="402" width="135" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_101">
+          <rect x="528" y="378" width="135" height="24" fill="white"/>
+          <rect x="528" y="378" width="135" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(533 383)" fill="black">
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="black" x="22.489258" y="11">ProblemMeter</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_93">
+        <g id="Graphic_96">
+          <rect x="510" y="62.631424" width="186" height="275" fill="white"/>
+          <rect x="510" y="62.631424" width="186" height="275" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(515 63.631424)" fill="black">
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="10">+getTotalNumberOfPackages()</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="22.359863">+getTotalNumberOfClasses()</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="34.719727">+getTotalNumberOfFields()</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="47.07959">+getTotalNumberOfMethods()</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="59.43945">+entrySet()</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="71.79932">+get(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="84.15918">+set(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="96.51904">+getAbsolutePackageNo(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="108.8789">+getAbsoluteClassNo(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="121.23877">+getClassDescrFromAbsolute(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="133.59863">+getAbsoluteFieldNo(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="145.9585">+getAbsoluteMethodNo(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="158.31836">+projectName(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="170.67822">+packageName(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="183.03809">+className(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="195.39795">+classFQN(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="207.75781">+classFQNReqVar(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="220.11768">+fieldName(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="232.47754">+methodName(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="244.8374">+parseFQClassName(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="257.19727">+fromString(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_95">
+          <rect x="510" y="48.631424" width="186" height="14" fill="white"/>
+          <rect x="510" y="48.631424" width="186" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_94">
+          <rect x="510" y="24.631424" width="186" height="24" fill="white"/>
+          <rect x="510" y="24.631424" width="186" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(515.1006 29.631424)" fill="black">
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="black" x="0" y="11">PerformanceTestConfiguration</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_85">
+        <g id="Graphic_86">
+          <rect x="801" y="146.62305" width="104" height="34" fill="white"/>
+          <rect x="801" y="146.62305" width="104" height="34" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(806.3125 151.62305)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="0" y="7">generators.TestDescriptor.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="silver" x="8.994141" y="20.261719">PackageDscr</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_76">
+        <g id="Graphic_77">
+          <rect x="801" y="290.3495" width="104" height="34" fill="white"/>
+          <rect x="801" y="290.3495" width="104" height="34" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(806.3125 295.3495)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="0" y="7">generators.TestDescriptor.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="silver" x="19.344727" y="20.261719">FieldDscr</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_65">
+        <g id="Graphic_68">
+          <rect x="225.7027" y="277.64865" width="111" height="28" fill="white"/>
+          <rect x="225.7027" y="277.64865" width="111" height="28" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(230.7027 278.64865)" fill="black">
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="10">+measure()</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="22.359863">+measure(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_67">
+          <rect x="225.7027" y="263.64865" width="111" height="14" fill="white"/>
+          <rect x="225.7027" y="263.64865" width="111" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_66">
+          <rect x="225.7027" y="239.64865" width="111" height="24" fill="white"/>
+          <rect x="225.7027" y="239.64865" width="111" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(231.19293 244.64865)" fill="black">
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="black" x="0" y="11">PoorMansProfiler</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_58">
+        <g id="Graphic_61">
+          <rect x="293.5" y="120.88358" width="116" height="80" fill="white"/>
+          <rect x="293.5" y="120.88358" width="116" height="80" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(298.5 121.88358)" fill="black">
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="10">+scheduled(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="22.359863">+done(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="34.719727">+aboutToRun(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="47.07959">#isPrinted(..)</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="59.43945">+waitForIdle()</tspan>
+            <tspan font-family="Arial" font-size="11" font-weight="400" fill="black" x="0" y="71.79932">+measureBuild(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_60">
+          <rect x="293.5" y="106.88358" width="116" height="14" fill="white"/>
+          <rect x="293.5" y="106.88358" width="116" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_59">
+          <rect x="293.5" y="82.88358" width="116" height="24" fill="white"/>
+          <rect x="293.5" y="82.88358" width="116" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(298.8125 87.88358)" fill="black">
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="black" x="0" y="11">PerformanceMeter</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_50">
+        <g id="Graphic_51">
+          <rect x="801" y="194.44373" width="104" height="34" fill="white"/>
+          <rect x="801" y="194.44373" width="104" height="34" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(806.3125 199.44373)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="0" y="7">generators.TestDescriptor.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="silver" x="17.33496" y="20.261719">ClassDscr</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_41">
+        <g id="Graphic_42">
+          <rect x="25.22473" y="131.4867" width="126" height="44" fill="white"/>
+          <rect x="25.22473" y="131.4867" width="126" height="44" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(30.547974 136.4867)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="37.88574" y="7">«interface»</tspan>
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="5.430664" y="16.261719">org.eclipse.core.runtime.jobs.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="silver" x="0" y="29.523438">IJobChangeListener</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_38">
+        <g id="Graphic_39">
+          <rect x="23.5" y="88.51549" width="115" height="34" fill="white"/>
+          <rect x="23.5" y="88.51549" width="115" height="34" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(28.753906 93.51549)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="0" y="7">org.eclipse.core.runtime.jobs.</tspan>
+            <tspan font-family="Arial" font-size="12" font-style="italic" font-weight="700" fill="silver" x="41.5791" y="20.261719">Job</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_35">
+        <g id="Graphic_36">
+          <rect x="23.5" y="188.66957" width="160" height="34" fill="white"/>
+          <rect x="23.5" y="188.66957" width="160" height="34" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(28.810547 193.66957)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="26.66797" y="7">org.eclipse.core.resources.</tspan>
+            <tspan font-family="Arial" font-size="12" font-style="italic" font-weight="700" fill="silver" x="0" y="20.261719">IncrementalProjectBuilder</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_20">
+        <g id="Graphic_21">
+          <rect x="801" y="338.43457" width="104" height="34" fill="white"/>
+          <rect x="801" y="338.43457" width="104" height="34" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(806.3125 343.43457)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="0" y="7">generators.TestDescriptor.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="silver" x="12.017578" y="20.261719">MethodDscr</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_12">
+        <g id="Graphic_15">
+          <rect x="96" y="286.6403" width="89" height="14" fill="white"/>
+          <rect x="96" y="286.6403" width="89" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_14">
+          <rect x="96" y="272.6403" width="89" height="14" fill="white"/>
+          <rect x="96" y="272.6403" width="89" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_13">
+          <rect x="96" y="238.6403" width="89" height="34" fill="white"/>
+          <rect x="96" y="238.6403" width="89" height="34" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(101.49414 243.6403)" fill="black">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="black" x="4.9921875" y="7">PerformanceMeter.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="black" x="0" y="20.261719">BuildStrategy</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_7">
+        <g id="Graphic_8">
+          <rect x="801" y="242.2644" width="104" height="34" fill="white"/>
+          <rect x="801" y="242.2644" width="104" height="34" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(806.3125 247.2644)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="0" y="7">generators.TestDescriptor.</tspan>
+            <tspan font-family="Arial" font-size="12" font-style="italic" font-weight="700" fill="silver" x="10.338867" y="20.261719">MemberDscr</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_4">
+        <g id="Graphic_5">
+          <rect x="801" y="98.80237" width="104" height="34" fill="white"/>
+          <rect x="801" y="98.80237" width="104" height="34" stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(806.3125 103.80237)" fill="silver">
+            <tspan font-family="Arial" font-size="8" font-weight="400" fill="silver" x="0" y="7">generators.TestDescriptor.</tspan>
+            <tspan font-family="Arial" font-size="12" font-weight="700" fill="silver" x="13.004883" y="20.261719">ProjectDscr</tspan>
+          </text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
