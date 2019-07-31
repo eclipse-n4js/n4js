@@ -1,5 +1,11 @@
 <project>
 
+	<description>
+		Builds HTML files from asciidoc documents.
+		Instead of plain asciidoc, asciispec is used. This tools is downloaded if needed.
+		The generated html file is chunked into multiple files, one file per chapter.
+		The index file will contain a table of contents.
+	</description>
 
 	<property name="doctools.dir" value="${basedir}/asciispec-tools" />
 	<property name="docname" value="N4JSDesign" />
