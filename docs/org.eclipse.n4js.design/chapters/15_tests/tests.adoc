@@ -1,0 +1,1528 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Tests
+:find:
+
+WARNING: This chapter may be outdated.
+
+[[sec:Performance_Tests]]
+[.language-n4js]
+== Performance Tests
+
+There are two kind of performance tests:
+
+. Synthetic Tests: an arbitrary number of test classes is generated, and then some modifications are performed on these classes.
+. Real World Tests: tests are based on a snapshot version of our platform libraries
+
+[[sec:Synthetic_Performance_Tests]]
+=== Synthetic Performance Tests
+
+The idea of the synthetic performance tests is to test the performance of specific functionality with a defined number classes, specially designed for the functionality under test.
+
+The overall structure of the synthetic performance test is
+
+. generate test classes
+. compile these classes
+. modify the test classes
+. measure incremental build time
+
+Step 3) and 4) can be done in a loop. Also, step 2) can be looped (with clean build).
+
+The test classes are spread over clusters and projects. The following categories are used:
+
+[horizontal]
+Cluster::
+  A cluster is a set of projects, each project of a cluster may depend on another project of the cluster. There are no dependencies between projects of different clusters
+Project::
+  A project simply is a N4JS project, containing packages. A project may depend on other projects.
+Package::
+  A package is a folder in a source folder of a project. A package contains classes.
+Class::
+  A class is defined in a file, usually one class per file. The file, and with it the class, is contained in a package. The class contains members.
+Member::
+  A member is either a field or method of a class. A method may has a body, which may contain variables with references to other classes.
+
+[[sec:Design_of_Generator]]
+[.language-n4js]
+==== Design of Generator
+
+<<fig:cd_performancetest_generator,Performance Generator>> shows the classes of the performance test generator.
+
+[[fig:cd_performancetest_generator]]
+image::{find}images/cd_performancetest_generator.svg[]
+
+The package is designed as follows:
+
+1.  `N4ProjectGenerator` main control class for generation
+2.  `TestDescriptor` and subclasses: In order to _keep memory consumption of the test class generator low_, there is no graph structure created for the test elements. Instead, each element is uniquely named by a number, this number (actually a tuple of numbers) is stored in `TestDescriptors` and sub classes. There is a descriptor for each element of the tests.
+3.  `AbstractModifier` and subclasses generarate the tests. The idea is as follows:
+* `Modifier` generates all files, with complete references and no issues (complete)
+* sub classes of `Modifier` skip certain generations or add modifications, leading to issues or solving them
+
+In order to compute the name of a class from its descriptor, as well as retrieving a class based on an absolute number, the modifiers use utility methods provided by `PerformanceTestConfiguration`. Note that computing the names and numbers depends on a configuration!
+
+[[sec:Design_of_Performance_Test_Execution]]
+====   Design of Performance Test Configuration and Execution
+
+<<fig:cd_performancetest_configAnRun>> shows the classes of the performance test configuration and execution.
+
+[[fig:cd_performancetest_configAnRun]]
+image::{find}images/cd_performancetest_configAnRun.svg[title="Class Diagram of Performance Test Configuration and Execution"]
+
+The package is designed as follows:
+
+1.  `PerformanceTestConfiguration` stores the test configuration. The configuration stores how many clusters, packages etc. are to be generated. It also provides methods for generating names from the descriptors mentioned above.
+2.  `PerformanceMeter` executes the test, listening to the (build) job to be finished etc.
+3.  `AbstractGeneratingPerformanceTest` Base test class contains setup, teardown and utility methods.
+4.  `PerformanceTest` Test class containing tests.
+
+[[sec:JUnit_Configuration]]
+====   JUnit Configuration
+
+We are using JUnitBenchamrks (http://labs.carrotsearch.com/junit-benchmarks.html/) to extend adjust plain JUnit behavior specifically to the performance tests needs.
+
+[[sec:JUnitBenchmark_Test_Configuration]]
+====   JUnitBenchmark Test Configuration
+
+JUnitBenchmark test configuration performed by annotating test method with `@BenchmarkOptions`. Parameters for that annotation include:
+
+1.  `warmupRounds` how many times test will be executed without taking measurement
+2.  `benchmarkRounds` how many times test will be executed, measurements taken will be used in results report
+3.  `callgc` Call `System.gc()` before each test. This may slow down the tests in a significant way.
+4.  `concurrency` specifies how many threads to use for tests.
+5.  `clock` specifies which clock to use.
+
+Typical configuration for our performance tests might look like:
+
+[source]
+----
+    @BenchmarkOptions(benchmarkRounds = 5, warmupRounds = 2)
+    @Test
+    public void test() throws Exception {
+        //test...
+    }
+----
+
+[[sec:JUnitBenchmark_Report_Configuration]]
+====   JUnitBenchmark Report Configuration
+
+By annotating TestClass in proper way, JUnitBenchamrks will generate html reports with performance results. There are two reports that can be generated:
+
+1.  `@BenchmarkMethodChart` report will contain results for every method from one test run (but all `benchmarkRounds` defined)
+* `filePrefix` defines report file name
+2.  `@BenchmarkHistoryChart` report will contain trend of results from multiple test runs (it is aggregation of multiple instances of `@BenchmarkMethodChart` report)
+* `filePrefix` defines report file name
+* `labelWith` defines label that will mark separate runs
+
+_labelWith_ property can have value propagated from run configuration/command line. example configuration might be `@BenchmarkHistoryChart(filePrefix = benchmark-history, labelWith = LabelType.CUSTOM_KEY)`
+
+[[sec:JUnitBenchmark_Run_Configuration]]
+====   JUnitBenchmark Run Configuration
+
+It is possible to specify additional options for performance test run
+
+1.  `-Djub.consumers=CONSOLE,H2` specifies where results will be written, _H2_ indicates H2 database to be used
+2.  `-Djub.db.file=.benchmarks` specifies name of the H2 database file
+3.  `-Djub.customkey=` value of that property scan be used as label in `@BenchmarkHistoryChart`
+
+[[sec:JUnitBenchmark_Example]]
+====   JUnitBenchmark Example
+
+configuration example:
+
+[source]
+----
+@BenchmarkMethodChart(filePrefix = "benchmark-method")
+@BenchmarkHistoryChart(filePrefix = "benchmark-history", labelWith = LabelType.CUSTOM_KEY)
+public class PerformanceTest extends AbstractGeneratingPerformanceTest {
+
+    public PerformanceTest() {
+        super("PerfTest");
+    }
+
+    @Rule
+    public TestRule benchmarkRun = new BenchmarkRule();
+
+    @Test
+    @BenchmarkOptions(benchmarkRounds = 5, warmupRounds = 2)
+    public void Test1() throws Exception {
+
+        //Test...
+    }
+
+    @Test
+    @BenchmarkOptions(benchmarkRounds = 5, warmupRounds = 2)
+    public void Test2() throws Exception {
+
+        //Test...
+    }
+}
+----
+
+executing this code in Eclipse with configuration:
+
+[source,bash]
+----
+-Xms512m -Xmx1024m -XX:MaxPermSize=512m $-$Djub.consumers=CONSOLE,H2 $-$Djub.db.file=.benchmarks $-$Djub.customkey=${current_date}
+----
+
+will cause :
+
+1.  both tests to be executed 2 times for the warmup
+2.  both of tests being executed 5 times with measurement taken
+3.  results written to console
+4.  results stored in local H2 db file (created if doesn’t exist)
+5.  generated _benchmark-method.html_ with performance results of every test in that execution
+6.  generated _benchmark-history.html_ with performance results of every execution
+7.  separate test executions will be labeled in _benchmark-history.html_ with their start time
+
+[[sec:Note_on_Jenkins_Job]]
+====   Note on Jenkins Job
+
+For performance tests it is important not to get pass/fail result in terms of being below given threshold, but also to examine trend of those results. We achieve this by tooling described above. In order to keep this data independent of the build machine or build system storage, we are using separate repository to store performance artifacts. Jenkins in copying previous test results into workspace, runs performance tests, then commits and pushes combined results (adds current results to previous results) to repository.
+
+
+[[sec:ECMA_Tests]]
+[.language-n4js]
+==   ECMA Tests
+
+ECMAScript Language test262 is a test suite intended to check agreement between JavaScript implementations and ECMA-262, the ECMAScript Language Specification (currently 5.1 Edition).The test suite contains thousands of individual tests, each of which tests some specific requirements of the ECMAScript Language Specification. For more info refer to http://test262.ecmascript.org/
+
+Uses of this suite may include:
+
+1.  grammar tests
+2.  validation tests
+3.  run-time tests
+
+ECMA test262 suite source code can be found here: http://hg.ecmascript.org/tests/test262
+
+[[sec:Grammar_Tests]]
+===   Grammar Tests
+
+Based on the JS files included in test262 suite we are generating tests that feed provided JS code into the parser. This operation will result in
+
+1.  parser throwing exceptions
+2.  parsed output will contain standard output
+
+First case indicates that parsing provided JS code was not possible. This is considered to be Test Error.
+
+Second case case indicates that parsing of the provided code was successful, and will result either
+
+* output with no errors - code adhered parser grammar
+* output with errors - code violated parser grammar
+
+Given test must interpret those results to provide proper test output.
+
+[[sec:Negative_Tests]]
+====   Negative Tests
+
+It is important to note that some of the tests are positive and some are negative. Negative test cases are marked by the authors with _@negative_ JSDoc like marker therefore parser tests must be aware of that to avoid both false positives and false negatives results.
+
+[[sec:Test_Exclusion]]
+====   Test Exclusion
+
+To exclude validation tests or run-time related test, implementation is blacklist approach to exclude some of the ECMA test262 tests from execution.
+
+[[sec:Integration_Tests]]
+[.language-n4js]
+==   Integration Tests
+
+Integration tests based on the stdlib and online-presence code bases can be found in bundle `org.eclipse.n4js.hlc.tests`
+in package `org.eclipse.n4js.hlc.tests.integration` (headless case) and in bundle `org.eclipse.n4js.ui.tests` in
+package `org.eclipse.n4js.ui.tests.integration` (plugin-UI tests running inside Eclipse). The headless
+tests also execute mangelhaft tests, the UI tests only perform compilation of the test code.
+
+More information can be found in the API documentation of classes `AbstractIntegrationTest` and `AbstractIntegrationPluginUITest`.
+
+
+[[sec:Test_Helpers]]
+[.language-n4js]
+==   Test Helpers
+
+Test helpers contain utility classes that are reused between different test plug-ins.
+
+[[sec:Parameterized_N4JS_Tests]]
+===   Parameterized N4JS tests
+
+Xtext JUnit test runer injects test a ParserHelper that allows to run N4JS parser on given input and obtain information abut parsing results. In some cases we want to run this kind of tests on large input data. To address this we provide two utilities ParameterizedXtextRunner and TestCodeProvider. They allow write data driven parser tests.
+
+[[sec:ParameterizedXtextRunner]]
+====   ParameterizedXtextRunner
+
+This This junit runner serves two purposes:
+
+* injecting ParserHelper
+* creating multiple test instances for each input data provided
+
+This class is based on @link org.eclipse.xtext.testing.XtextRunner and @link org.junit.runners.Parameterized
+
+[[sec:TestCodeProvider]]
+====   TestCodeProvider
+
+This class is repsonsible for extracting ZipEntry from provided ZipFile. Additinally it can filter out entries that match strings in provided black list file. Filtering out ZipEntries assumes that blacklist file contians Path of ZipEntry in ZipFile as string in one line. Lines starting with _#_ in black list file are ignored by TestCodeProvider.
+
+[[sec:Example_Of_Parameterized_Parser_Test]]
+====   Example of parameterized parser test
+
+[source,n4js]
+----
+@RunWith(XtextParameterizedRunner.class)
+@InjectWith(N4JSInjectorProvider.class)
+public class DataDrivenParserTestSuite {
+
+    /**
+     * Zip archives containing test files.
+     */
+    public static final Collection<String> TEST_DATA_RESOURCES = Arrays.asList("foo.zip", "bar.zip");
+
+    /**
+     * Blacklist of files requiring an execution engine.
+     */
+    public static final String BLACKLIST_FILENAME = "blacklist.txt";
+
+    /**
+     * Every generated test will use different ZipEntry as test data
+     */
+    final ZipEntry entry;
+
+    /**
+     * Name of resource containing corresponding ZipEntry
+     */
+    final String resourceName;
+
+    @Inject
+    protected ParseHelper<Script> parserN4JS;
+
+    Collection<String> blackList;
+
+    static final Logger logger = Logger.getLogger("someLogger");
+
+    public CopyOfLibraryParsingTestSuite(ZipEntry entry, String resourceName, Collection<String> blackList) {
+        this.entry = entry;
+        this.resourceName = resourceName;
+        this.blackList = blackList;
+    }
+
+    @Rule
+    public TestRule blackListHandler = new TestRule() {
+        @Override
+        public Statement apply(final Statement base, Description description) {
+            final String entryName = entry.getName();
+            if (blackList.contains(entryName)) {
+                return new Statement() {
+                    @Override
+                    public void evaluate() throws Throwable {
+                        try {
+                            base.evaluate();
+                        } catch (AssertionError e) {
+                            // expected
+                            return;
+                        }
+                    }
+                };
+            } else {
+                return base;
+            }
+        }
+    };
+
+    /**
+     * Generates collection of ZipEntry instances that will be used as data
+     * provided parameter is mapped to name of the test (takes advantage of fact
+     * that ZipEntry.toString() is the same as entry.getName())
+     *
+     * @return
+     * @throws URISyntaxException
+     * @throws ZipException
+     * @throws IOException
+     */
+    @Parameters(name = "{0}")
+    public static Collection<Object[]> data() throws URISyntaxException, ZipException, IOException {
+        return TestCodeProvider.getDataFromZippedRoots(TEST_DATA_RESOURCES, BLACKLIST_FILENAME);
+    }
+
+    /**
+     * generated instances of the tests will use this base implementation
+     *
+     * @throws Exception
+     */
+    @Test
+    public void test() throws Exception {
+        assertNotNull(this.entry);
+        assertNotNull(this.resourceName);
+        assertNotNull(this.parserN4JS);
+
+        //actual test code
+
+    }
+}
+----
+
+[[sec:Issue_Suppression]]
+[.language-n4js]
+==   Issue Suppression
+
+It can be useful to suppress certain issues before tests are ran, so that test expectations don’t have to consider inessential warnings. This means that the validator still returns a full list of issues, but before passing them to the testing logic, the issues are filtered.
+
+When working with JUnit tests, the custom InjectorProvider `N4JSInjectorProviderWithIssueSuppression` can be used to configure them to suppress issues.
+
+The codes that are suppressed are globally specified by the +
+`DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS` constant in `N4JSLanguageConstants`.
+
+When working with Xpect tests, the XpectSetupFactory `SuppressIssuesSetup` can be used. See <<sec:Xpect_Issue_Suppression,Xpext Issue Suppression>> for more details on Xpect issue suppression.
+
+[[sec:Xpect_Tests]]
+[.language-n4js]
+==   Xpect Tests
+
+For many tests, Xpect cite:[Xpect] is used. Xpect allows for defining tests inside the language which is the language under test. That is, it is possible to refer to a JUnit test method in a special annotated comment, along with arguments passed to that method (typically expectations and the concrete location). Xpect comes with a couple of predefined methods which could be used there, e.g., tests for checking whether some expected error messages actually are produced. We have defined (and will probably define more) N4JS specific test methods.
+
+In the following, we describe the most common Xpect test methods we use. Note that we do not use all types of tests shipped with Xpect. For example, AST tests (comparing the actual AST with an expected AST, using string dumps) is too hard to maintain.
+
+Xpect test can be ignored by inserting a `!` between `XPECT` and the test name, e.g.
+
+[source]
+----
+// XPECT ! errors --> '~$message$~' at "~$location$~"
+----
+
+[[sec:Xpect_Test_Setup]]
+===   Xpect Test Setup
+
+The setup is either defined in the file itself, e.g.,
+
+[source]
+----
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+----
+
+or bundle-wide for a specific language in the plugin.xml (or fragment.xml), e.g.,
+
+[source]
+----
+<extension point="org.xpect.testSuite">
+    <testSuite class="org.eclipse.n4js.spec.tests.N4JSSpecTest" fileExtension="n4js" />
+</extension>
+----
+
+
+
+[[sec:Xpect_Issue_Suppression]]
+===   Xpect Issue Suppression
+
+To configure an Xpect test class to suppress issues, you have to use the `@XpectImport` annotation to import the XpectSetupFactory `org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup`. Any Xpect test that is executed by this runner will work on the filtered list of issues.
+
+Similar to issue suppressing JUnit tests, the suppressed issue codes are specified by +
+`DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS` constant in `N4JSLanguageConstants`.
+
+For further per-file configuration a custom `XPECT_SETUP` parameter can be used. This overrides the suppression configuration of an Xpect runner class for the current file.
+
+[source]
+----
+/* XPECT_SETUP org.eclipse.n4js.tests.N4JSXpectTest
+
+IssueConfiguration {
+    IssueCode "AST_LOCAL_VAR_UNUSED" {enabled=true}
+}
+
+END_SETUP
+*/
+----
+
+In this example the issue code `AST_LOCAL_VAR_UNUSED` is explicitly enabled which means that no issue with this issue code will be suppressed.
+
+[[sec:Xpect_Provided_Test_Methods]]
+===   Xpect Provided Test Methods
+
+[[errors]]
+====   errors
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+// XPECT errors --> '~$message$~' at "~$location$~"
+----
++
+Multi line:
++
+[source]
+----
+/* XPECT errors ---
+'~$message_1$~' at "~$location_1$~"
+~$\dots$~
+'~$message_n$~' at "~$location_n$~"
+--- */
+----
+
+[horizontal]
+Description::
+  Checks that one or more errors are issued at given location and compares the actual messages at a given location with the expected messages specified in the test.
+
+Also see `no errors` below.
+
+[[warnings]]
+====   warnings
+
+[horizontal]
+Definition::
+Single line: +
++
+[source]
+----
+// XPECT warnings --> '~$Message$~' at "~$Location$~"
+----
++
+Multi line:
++
+[source]
+----
+/* XPECT warnings ---
+'~$message_1$~' at "~$location_1$~"
+~$\dots$~
+'~$message_n$~' at "~$location_n$~"
+--- */
+----
+Description::
+  Checks that one or more warnings are issued at given location and compares the actual messages at a given location with the expected messages specified in the test.
+
+[[sec:N4JS_Specific_Xpect_Test_Methods]]
+===   N4JS Specific Xpect Test Methods
+
+There are a lot of N4 specific Xpect tests methods available. To get all of these methods, search for references to annotation `org.xpect.runner.Xpect` in the N4 test plugins.
+
+[[sec:XPECT_noerrors]]
+====   noerrors and nowarnings
+
+[horizontal]
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+// XPECT noerrors --> '~$messageOrComment$~' at "~$location$~"
+----
++
+Multi line:
++
+[source]
+----
+/* XPECT noerrors ---
+'~$messageOrComment_1$~' at "~$location_1$~"
+~$\dots$~
+'~$messageOrComment_n$~' at "~$location_n$~"
+--- */
+----
+
+[horizontal]
+Provided by::
+  `NoerrorsValidationTest`
+Description::
+  Checks that at the given location _no_ error (or warning) is issued. This tests is roughly speaker the opposite of `errors`. The idea behind this test is to replace comments in the code, stating that an expression is assumed to be valid, with an explicit test. This is in particular useful when you start working on a task, in which there are (wrong) errors at a given position, or for bug report.
+Example::
++
+[example]
+--
+[source]
+----
+function foo(any o): number {
+    if (o instanceof string) {
+        // XPECT noerrors --> "effect systems knows that o is a string" at "o"
+        return o.length;
+    }
+    return 0;
+}
+----
+
+is clearer and more explicit than
+
+[source]
+----
+function foo(any o): number {
+    if (o instanceof string) {
+        // here should be no error:
+        return o.length;
+    }
+    return 0;
+}
+----
+
+Also, the `noerrors` version will fail with a correct description, while the second one would fail with a general error and no location. Once the feature is implemented, regressions are detected much easier with the explicit version.
+--
+
+[[sec:XPECT_scope]]
+====   scope
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+// XPECT scope at $location$ --> ~$[$~!~$]$~~$name_1$~, ~$\dots$~, ~$[$~!~$]$~~$name_n$~ ~$[$ ~, ...~$]$~
+----
++
+Multi line:
++
+[source]
+----
+/* XPECT scope $location$ ---
+~$[$~!~$]$~~$name_1$~, ~$\dots$~,
+~$[$~!~$]$~~$name_n$~~$[$ ~, ...~$]$~
+--- */
+----
+
+[horizontal]
+Provided by::
+  `PositionAwareScopingXpectTest`
+Description::
+  Checks that the expected elements are actually found in the scope (or explicitly not found, when ``!``   is used). This is a modified version of the Xpect built-in scope test, ensuring that also elements only put into the scope when they are explicitly requested are found.
+Example::
++
+[source]
+----
+// XPECT scope at 'this.|$data_property_b' --> a, b, $data_property_b, !newB, ...
+return this.$data_property_b + "_getter";
+----
+
+[[sec:XPECT_scopeWithPosition]]
+====   scopeWithPosition
+
+[horizontal]
+Definition::
+Single line:
++
+[source,n4js]
+----
+// XPECT scopeWithPosition at $location$ --> ~$[$~!~$]$~~$name_1$~ - ~$pos_1$~, ~$\dots$~, ~$[$~!~$]$~~$name_n$~ - ~$pos_n$~ ~$[$ ~, ...~$]$~
+----
++
+Multi line:
++
+[source,n4js]
+----
+/* XPECT scopeWithPosition $location$ ---
+~$[$~!~$]$~~$name_1$~ - ~$pos_1$~, ~$\dots$~,
+~$[$~!~$]$~~$name_n$~ - ~$pos_n$~ ~$[$ ~, ...~$]$~
+--- */
+----
+Provided by::
+  `PositionAwareScopingXpectTest`
+Description::
+  Checks that the expected elements are actually found in the scope (or explicitly not found, when ``!``   is used). The concrete syntax of the position, which is usually the line number, or the line number prefix with ``T``   if a type element is referenced, is described in `EObjectDescriptionToNameWithPositionMapper`.
+Example::
++
+[source]
+----
+/* XPECT scopeWithPosition at foo2 ---
+    b - 9,
+    c - 25,
+    foo - T3,
+    foo2 - T9,
+    ...
+---*/
+foo2()
+----
+
+[[sec:XPECT_scopeWithResource]]
+====   scopeWithResource
+
+//TODO missing examples below
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+//
+----
++
+Multi line:
+
+Provided by::
+  `N4JSXpectTest`
+Description::
+  Compares scope including resource name but not line number.
+
+[[sec:XPECT_binding]]
+====   binding
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+//
+----
++
+Multi line:
+
+Provided by::
+  `N4JSXpectTest`
+Description::
+Checks that a given element is bound to something identified by (simple) qualified name. The check is designed as simple as possible. That is, simply the next following expression is tested, and within that we expect a property access or a direct identifiable element. The compared name is the simple qualified name, that is container (type) followed by elements name, without URIs of modules etc.
+
+[[sec:XPECT_linkedPathname]]
+====   linkedPathname
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+// XPECT linkedPathname at '$location$' --> ~$pathname$~
+----
+Provided by::
+  `LinkingXpectMethod`
+Description::
+  Checks that an identifier is linked to a given element identified by its path name. The path name is the qualified name in which the segments are separated by ’/’. This test does not use the qualified name provider, as the provider may return null for non-globally available elements. It rather computes the name again by using reflection, joining all ``name``   properties of the target and its containers.
+Example::
++
+[source]
+----
+// XPECT linkedPathname at 'foo()' --> C/foo
+new C().foo();
+----
+
+[[sec:XPECT_type_of]]
+====   type of
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+// XPECT type of '$location$' --> ~$type$~
+----
+Provided by::
+  `N4JSXpectTest`
+Description::
+  Checks that the type inferred at location is similar to expected type.
+Example::
++
+[source]
+----
+// XPECT type of 'x' --> string
+var x = 'hello';
+// XPECT type of 'foo()' --> union{A,number}
+var any y = foo();
+----
+
+[[sec:XPECT_expectedType]]
+====   expectedType
+
+[horizontal]
+Definition:: -
+Single line::
++
+[source]
+----
+// XPECT expectedType at 'location' --&gt; Type
+----
++
+  The location (at) is optional.
+Provided by::
+  `N4JSXpectTest`
+Description::
+  Checks that an element/expression has a certain expected type (i.e. Xsemantics judgment expectedTypeIn).
+
+[[sec:XPECT_elementKeyword]]
+====  elementKeyword
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+// XPECT elementKeyword at 'myFunction' -> function
+----
+Example::
++
+[source]
+----
+interface I {
+  fld: int;
+  get g(): string;
+  set s(p:string);
+}
+
+//XPECT elementKeyword at 'string' --> primitive
+var v1: string;
+
+//XPECT elementKeyword at 'I' --> interface
+var i: I;
+
+//XPECT elementKeyword at 'fld' --> field
+i.fld;
+----
+Provided by:: `ElementKeywordXpectMethod`
+Description:: Checks that an element/expression has a certain element keyword. The expected element keyword is identical
+to the element keyword shown when hovering the mouse over that element/expression in the N4JS IDE. This method is particuarly useful for testing merged elements of union/intersection.
+
+
+[[sec:XPECT_accessModifier]]
+====  accessModifier
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+// XPECT accessModifier at 'myFunction' -> function
+----
+or
++
+[source]
+----
+// XPECT accessModifier -> function
+----
+Example::
++
+[source]
+----
+// XPECT accessModifier --> publicInternal
+export @Internal public abstract class MyClass2 {
+
+// XPECT accessModifier --> project
+abstract m1(): string;
+
+// XPECT accessModifier at 'm2' --> project
+m2(): string {
+    return "";
+  }
+}
+----
+Provided by:: `AccessModifierXpectMethod`
+Description:: Checks that an element/expression has a certain accessibility.
+
+
+[[sec:XPECT_compileResult]]
+====   compileResult
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+//
+----
++
+Multi line:
+
+
+[horizontal]
+Provided by:: -
+Description::
+  _This test should only be used during development of compiler and not used in the long run, because this kind of test is extremely difficult to maintain._
+
+[[sec:XPECT_output]]
+====   output
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+//
+----
++
+Multi line:
+
+
+[horizontal]
+Provided by:: -
+Description::
+  The most important test for compiler/transpiler, but also for ensuring that N4JS internal validations and assumptions are true at runtime.
+
+[[sec:XPECT_outputRegEx]]
+====   outputRegEx
+
+[[sec:XPECT_calculatedAccessModifier]]
+====   calculatedAccessModifier
+
+[[sec:XPECT_spec]]
+====   spec
+
+[[sec:XPECT_deadCode]]
+====   deadCode
+
+[[sec:XPECT_returnOrThrows]]
+====   returnOrThrows
+
+[[sec:XPECT_lint]]
+====   lint
+
+
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+/* XPECT lint */
+----
+
+Provided by::
+  `CompileAndLintTest`
+Description::
+  Passes the generated code through the JSHint JavaScript linter. This test includes for instance checking for missing semicolons and undefined variables. The whole test exclusively refers to the generated javascript code.
+
+[[sec:XPECT_lintFails]]
+====   lintFails
+
+[horizontal]
+[horizontal]
+Definition::
+Single line:
++
+[source]
+----
+/* XPECT lintFails */
+----
+Provided By::
+  `CompileAndLintTest`
+Description::
+  Negation of lint. Fails on linting success. Expects linting errors.
+
+[[sec:FIXME_Xpect_modifier]]
+===   FIXME Xpect modifier
+
+A modification of the official Xpect framework allows us to use the FIXME modifier on each test. footnote:[Currently we use our own fork of Xpect https://github.com/NumberFour/Xpect and the respective p2-repository https://numberfour.github.io/Xpect/updatesite/nightly/]
+
+[horizontal]
+Syntax::
+FIXME can be applied on any test just after the XPECT keyword:
++
+[source]
+----
+// XPECT FIXME  xpectmethod ... --> ...
+----
++
+Tests will still be ignored if an exclamation mark (!) is put between XPECT and FIXME.
+Description::
+Using FIXME on a test negates the result of the underlying JUnit test framework. Thus a failure will be reported as a ``true assertion``   and an assertion that holds will be reported as ``failure``  . This enables to author valuable tests of behaviour, which is still not functional.
+Example::
+For instance, if we encounter an error-message at a certain code position, but the code is perfectly right, then we have an issue. We can annotate the situation with a ’fix me’ ’noerrors’ expectation:
++
+[source]
+----
+// Perfectly right behaviour XPECT FIXME noerrors -->
+console.log("fine example code with wrong error marker here.");
+----
++
+This turns the script into an Xpect test. We can integrate the test right away into our test framework and it will not break our build (even though the bug is not fixed).
++
+When the issue will be worked on, the developer starts with removing ’FIXME’ turning this into useful unit-test.
+
+It is crucial to understand that FIXME negates the whole assertion. Example: If one expects an error marker at a certain position using the ’errors’ directive, one must give the exact wording of the expected error-message to actually get the FIXME behaviour working. To avoid strange behaviour it is useful to describe the expected error a comment in front of the expectation and leave the message-section empty.
+
+[[sec:Expectmatrix_Xpect_Test_Methods]]
+=== Expectmatrix Xpect tests
+
+Applying test-driven development begins with authoring acceptance and functional tests for the work in the current sprint. By this the overall code quality is ensured for the current tasks to solve. Rerunning all collected tests with each build ensures the quality of tasks solved in the past. Currently there is no real support for tasks, which are not in progress but are known to be processed in the near or far future. Capturing non-trivial bug reports and turning them into reproducable failing test-cases is one example.
+
+Usually people deactivate those future-task-tests in the test code by hand. This approach doesn’t allow to calculate any metrics about the code. One such metric would be: Is there any reported bug solved just by working on an (seemingly unrelated) scheduled task?
+
+To achieve measurements about known problems, a special build-scenario is set up. As a naming convention all classes with names matching `pass:[*]  Pending` are assumed to be Junit tests. In bundle `org.eclipse.n4js.expectmatrix.tests` two different Xpect-Runners are provided, each working on its own subfolder. Usual Xpect-tests are organised in folder xpect-test while in folder xpect-pending all future-tests are placed. A normal maven-build processes only the standard junit and xpect tests. Starting a build with profile `execute-expectmatrix-pending-tests` will additionally execute Xpect tests from folder xpect-pending and for all bundles inheriting from `/tests/pom.xml` all unit tests ending in `pass:[*]  Pending`. This profile is deactivated by default.
+
+A special jenkins-job - N4JS-IDE_nightly_bugreports_pending - is configured to run the pending tests and render an overview und history to compare issues over time. Due to internal Jenkins structures this build always marked failed, even though the maven-build succeeds successfully.
+
+Relevant additional information can be found in
+
+* Jenkins job for pending cases: http://build-master:8080/view/N4JS/job/N4JS-IDE_nightly_bugreports_pending/
+* Testmatrix https://docs.google.com/a/numberfour.eu/spreadsheets/d/1Blo58cRwIWemaiBNSnOtsQ8U7b3FoodX3yEs7oJKIg0/
+
+[[xpect-lint-tests]]
+===   Xpect Lint Tests
+
+[[sec:XPECT_Lint_Tests]]
+task::IDE-1559[]
+
+image::{find}images/diag_XpectLint.svg[title="Xpect Lint"]
+
+The test transpiles the provided n4js resource and checks the generated code. This is achieved using the Javascript linter JSHint.
+
+After transpiling the provided n4js resource the LintXpectMethod combines the generated code with the jshint code into a script. It calls the JSHint validation function and returns the linting result as a json object. The error results are displayed in the console. The script is executed using the `Engine` class. (<<sec:Design,Design>>)
+
+For the linting process an adapted configuration for JSHint is used. For the needs of N4JS the linter is configured to recognise N4JS specific globals. Details about the error codes can be found at the https://github.com/jshint/jshint/blob/2444a0463e1a99d46e4afa50ed934c317265529d/src/messages.js[jshint repository].
+
+The following warnings are explicitly enabled/disabled:
+
+* *W069*: [’a’] is better written in dot notation *DISABLED*
+* *W033*: Missing semicolon *ENABLED*
+* *W014*: Bad line breaking before ’a’. *DISABLED*
+* *W032*: Uneccesarry semicolon *ENABLED*
+* *W080*: It’s not necessary to initialize ’a’ to ’undefined’. *ENABLED*
+* *W078*: Setter is defined without getter. *DISABLED*
+* ES6 related warnings are *disabled* using the ’esnext’ option: *W117*: Symbol is not defined. *DISABLED* *W104*: ’yield’ is only available in ES6 *DISABLED* *W117*: Promise is not defined *DISABLED* *W119*: function* is only available in ES6 *DISABLED*
+
+The xpect lint test only applies if the provided resource passes the n4js compiler.
+
+The xpect method lintFails can be used to create negative tests. All linting issues discovered during the development of the xpect plugin have there own negative test to keep track of their existence.
+
+Additional information:
+
+* JSHint: http://jshint.com/docs/
+
+[[xpect-proposal-tests]]
+[.language-n4js]
+== Xpect Proposal Tests
+
+[[sec:Proposal_Tests]]
+Proposal tests are all tests which verify the existence and application of completion proposals, created by content assist, quick fixes etc.
+
+The key attributes of a proposal (cf `ConfigurableCompletionProposal`) are:
+
+[horizontal]
+displayString::
+  the string displayed in the proposal list
+replacementString::
+  simple variant of which is to be added to document, not necessarily the whole replacement (as this may affect several locations and even user interaction)
+
+In the tests, a _proposal is identified by a string contained in the displayString_. If several proposal match, test will fail (have to rewrite test setup or proposal identifier to be longer). Proposal identifier should be as short as possible (to make test robust), but not too short (to make test readable).
+
+The following proposal tests are defined:
+
+[horizontal]
+contentAssist $[$ List $]$::
+  verifies proposals created by content assist
+quickFix $[$ List $]$::
+  verifies proposals created by quick fixes. Cursor position is relevant, that’s handled by the framework. We only create tests with cursor position – fixes applied via the problem view should work similarly, but without final cursor position.
++
+If no error is found at given position, test will fail (with appropriate error message!). In call cases of apply, the issue must be resolved. Usually, fixing an issue may leave the file invalid as other issues still exists, or because by fixing one issue others may be introduced (which may happen often as we try to avoid consequential errors in validation). For some special cases, quickFix tests support special features, see below.
+
+Not tested in this context: Verify proposal description, as these tests would be rather hard to maintain and the descriptions are often computed asynchronously.
+
+[[sec:Validation_vs__Non_Validation]]
+===   Validation vs. Non-Validation
+
+We expect proposal tests to be applied on non-valid test files, and usually file is also broken after a proposal has been applied. Thus, the test-suite must not fail if the file is not valid.
+
+[[sec:General_Proposal_Test_Features]]
+===   General Proposal Test Features
+
+[[sec:Test_Variables]]
+====   Test Variables
+
+Often, list of proposals are similar for different tests (which define different scenarios in which the proposals should be generated). For that reason, variables can be defined in the test set up:
+
+In the Xpect-Setup there is now a special `Config` component where specific switches are accessible. For instance the timeout switch for content assist can be modified:
+
+[source]
+----
+/* XPECT_SETUP org.eclipse.n4js.tests.N4JSNotValidatingXpectPluginUITest
+    ...
+    Config {
+        content_assist_timeout = 1000
+        ...
+    }
+    ...
+*/
+----
+
+Note: There should only be one `Config` component per Xpect-Setup.
+
+Variables are introduced via the `VarDef` component. It takes a string argument as the variable name on construction. Inside the body one add `MemberLists` and `StringLists` arguments. Variable definitions may appear in `Config` bodies or in the Xpect-Setup.
+
+[source]
+----
+VarDef "objectProposals" {
+    ...
+}
+----
+
+Define variables with expression: A simple selector is given with the `MemberList` component. These components take three `String` arguments in the constructor. The first one is a typename. The second one is the feature selector, e.g. ``methods``  , ``fields``  , …and the third one defines the visibility.
+
+[source]
+----
+/* XPECT_SETUP
+VarDef "stringProposals" { MemberList  "String" "methods" "public" {}}
+END_SETUP */
+----
+
+We have to define a filter later in Xtend/Java, e.g., `getClassWithName( __className__ ).filterType(__methods__).filterVisibility(__accessodifier__)...`
+
+A variable is later referenced as follows:
+
+[source]
+----
+<$variable>
+----
+
+Usage example:
+
+[source]
+----
+// XPECT contentAssistList at 'a.<|>methodA' proposals --> <$stringProposals>, methodA2
+a.methodA
+----
+
+[[sec:Location_and_Selection]]
+====   at – Location and Selection
+
+Tokens in expectation/setup:
+
+* `<|>` cursor position
+* `<[>` selection start → also defines cursor position
+* `<]>` selection end
+
+All proposal tests have to specify a location via `at`, the location must contain the cursor position and may contain a selection. E.g.:
+
+[source]
+----
+// XPECT contentAssistList at 'a.<|>methodA' apply 'methodA2' --> a.methodA2()<|>methodA
+// XPECT contentAssistList at 'a.<|><[>methodA<]>' apply 'methodA2' override --> a.methodA2()<|>
+a.methodA
+----
+
+[[sec:Multi_Line_Expectations_in_Proposal_Tests]]
+====   Multi Line Expectations in Proposal Tests
+
+In multiline expectations, ignored lines can be marked with `<...>`. This means that 0 to n lines may occur but are ignored for comparison.
+
+All multiline expectations are compared line-wise, with exact match except line delimiters (which are ignored as well)
+
+[[sec:Timeout]]
+====   Timeout and Performance
+
+We define a default timeout for content assist tests. In set up, this timeout may be changed:
+
+[source,n4js]
+----
+/* XPECT SETUP
+...
+content_assist_timeout = 2000ms
+...
+END_SETUP */
+----
+
+Performance is measured by measuring the runtime of tests, we should later setup performance measurements similar to the performance tests.
+
+[[proposals-verify-existence-of-proposals]]
+===   proposals – Verify Existence of Proposals
+
+[[sec:Verify_Existence_of_Proposals]]
+In general, one could verify if certain proposals are present or not present, and in which order they are present. This is verified by the `proposals` argument.
+
+E.g.
+
+[source]
+----
+// XPECT contentAssistList at 'a.<|>methodA' proposals --> <$stringProposals>, methodA2
+a.methodA
+----
+
+Additional flags:
+
+* Order modifier:
++
+[horizontal]
+unordered::
+  by default
+ordered::
+  the given expectations have to have that order, between these expectations other proposals may be present (in case of contains)
+* Subset modifier:
++
+[horizontal]
+exactly::
+  (default, maybe changed later) no other expectations as the given ones (usually ``contains``   is recommended).
+contains::
+at least the given expectations must be present, but others may be there as well.
++
+Using _contains_ must be used with care since we match items by searching for a proposal which contains one of the expected strings as a substring. So if the only available proposal were ’methodA2’ and we would test if proposals contain ’methodA’, ’methodA2’ we would obtain a passing test.
+not::
+  any of the given proposals must be NOT be proposed
+
+[[sec:Verify_displayed_string]]
+===   display – Verify displayed string
+
+We do not verify the text style. We only verify text:
+
+[source]
+----
+// XPECT contentAssistList at 'a.<|>methodA' display 'methodA2' --> 'methodA2(): any - A'
+a.methodA
+----
+
+This kind of test should be only applied for few scenarios, because the long display tests are rather hard to maintain.
+
+[[sec:Apply_Proposal]]
+===   apply – Apply Proposal
+
+Execution of proposal, the expectation describes the expected text result. The tests follow the naming convention of Ending in …Application.
+
+Additional flags:
+
+* insertion mode
++
+[horizontal]
+insert::
+  (default) Ctrl not pressed, proposal is inserted at given location
+override::
+  Ctrl is pressed, proposal overrides selection.
+
+Single line assumes change at line of initial cursor position:
+
+[source]
+----
+// XPECT contentAssist at 'a.<|>methodA' apply 'methodA2' --> a.methodA2()methodA
+// XPECT contentAssist at 'a.<|>methodA' apply 'methodA2' insert --> a.methodA2()methodA
+// XPECT contentAssist at 'a.<|>methodA' apply 'methodA2' override --> a.methodA2()
+a.methodA
+----
+
+or
+
+[source]
+----
+// XPECT quickFix at 'a.<|>method' apply 'methodA2' --> a.methodA2();
+a.methodTypo();
+----
+
+Multiline expectations describe changes to the whole. In order to match the expectation context information around the relevant places must be given. The format is similar to a unified diff with a special rule for inline-changes. The comparison works in a line-based mode. Each line in the expectation is prefixed with one character of ’+’, ’|’, ’-’ or ’ ’. Inserted lines are marked with + and removed lines with -. Lines marked with | denote changes in the line. Difference is placed inline inside of a pair of square brackets with a | separating the removal on the left and the addition on the right.
+
+[source]
+----
+/* XPECT contentAssistList at 'a.me<|>thodA' apply 'methodA2' ---
+<...>
+import A from "a/b/c"
+<...>
+a.methodA2()<|>methodA
+<...>
+--- */
+a.methodA
+----
+
+[source]
+----
+/* XPECT contentAssistList at 'a.me<|>thodA' apply 'methodA2' ---
+ import B from "p/b"
++import A from "a/b/c"
+
+ ...
+ foo() {
+|a.[me|thodA2()]
+ }
+ ...
+--- */
+a.methodA
+----
+
+[[resource-application-in-other-files]]
+====   resource – application in other files
+
+The resource parameter is available for the quickfix xpect method. It specifies the target resource of the quickfix. (e.g. change declaration of type in another file to quickfix an issue).
+
+[source]
+----
+/* XPECT quickFix at 'sameVendor.protected<|>Method()' apply 'Declare member as public, @Internal' resource='../../otherProject/src/other_file.n4js' ---
+diff here
+---
+*/
+----
+
+The syntax is similar to a normal multiline quickfix xpect test besides the addition of the resource parameter. The relative path points to a file in the same workspace as the test file. Note that the path refers to the folder structure specified in the XPECT SETUP header. It is relative to the folder the test file is contained in. +
+ +
+The diff is between the specified resource before and after the application of the quickfix +
+ +
+Note that the fileValid (<<fileValidVerify-validation-status,Verify Validation Status>>) parameter is not applicable to an extern resource.
+
+[[sec:Content_Assist_Cycling]]
+===   kind – Content Assist Cycling
+
+We assume the default kind to be ’n4js’. It is possible to select a proposal kind in the test set up or via the argument `kind` in the test.
+
+Select kind in test setup:
+
+[source]
+----
+/* XPECT_SETUP
+content_assist_kind = 'recommenders'
+END_SETUP */
+----
+
+Select kind in test:
+
+[source]
+----
+// XPECT contentAssistList kind 'smart' at 'a.<|>methodA' display 'methodA2' --> 'methodA2(): any - A'
+a.methodA
+----
+
+[[fileValidVerify-validation-status]]
+===   fileValid – Verify validation status
+
+In some cases, in particular in case of quick fix tests, the file should be valid after the proposal has been applied. This is added by an additional argument `fileValid`.
+
+E.g.,
+
+[source]
+----
+// XPECT quickFix at 'a.<|>method' apply 'methodA2' fileValid --> a.<|>methodA2();
+a.methodTypo();
+----
+
+[[sec:Apply_Proposal_And_Execute_Tests]]
+[.language-n4js]
+==   Apply Proposal And Execute Tests
+
+If a proposal fixes all issues in a test file, the file could be executed. This is an important type of test, as this is what the user expects in the end. Besides, this type of test is very robust, as it does not depend on the concrete way how an issue is fixed. For quick fixes, these kind of tests are to be implemented!
+
+The following combined proposal and execute tests are provided:
+
+[horizontal]
+quickFixAndRun::
+  applies a quick fix, verifies that all issues are solved, and executes the file.
+
+These tests are basically execution tests, that is the expectation describes the expected output of the script.
+
+E.g.
+
+[source]
+----
+// XPECT quickFixAndRun at 'a.<|>method' apply 'methodHelloWorld' --> Hello World
+a.methodTypo();
+----
+
+with `methodHelloWorld` printing `’Hello World’` to the console. The expected output can be multiline:
+
+[source]
+----
+/* XPECT quickFixAndRun at 'a.<|>method' apply 'methodHelloWorld' ---
+Hello World
+--- */
+a.methodTypo();
+----
+
+[[sec:Organize_Imports_Test]]
+[.language-n4js]
+==   Organize Imports Test
+
+For testing organise imports a Plugin-UI test method is available. It operates in two modes. Either a successful application of organise imports is tested or the expected abortion is checked.
+
+[[organizeimports]]
+===   organizeImports
+
+[horizontal]
+Definition::
+  Multi line:
++
+[source]
+----
+/* XPECT organizeImports ---
+~Failure given by line-syntax starting with two characters:~
++ additional line
+| line with inplace[removed part|added part]
++ removed line
+  unchanged line
+--- */
+// XPECT warnings --> "The import of A is unused." at "A"
+import A from "a/a1/A"
+...
+}
+----
++
+Single line:
++
+[source]
+----
+// XPECT organizeImports ambiguous '~Failure String of Exception~'-->
+}
+----
+Provided by::
+  `OrganizeImportXpectMethod`
+Description::
+Checks that the resulting source-file differs in the described way. The Multiline variant checks the result of a successful application of organise import to the file. All errors and warnings prior to organising imports must be marked as the appropriate XPECT-error or warning.
++
+The single-line notation checks the failure of an fully automatic reorganisation of the imports due to some reason. The reason is verified to be the given string after the `ambiguous` keyword. The expectation side (right of ``-->``) is empty.
+Example::
++
+[source]
+----
+/* XPECT_SETUP org.eclipse.n4js.tests.N4JSXpectPluginUITest
+   Workspace {
+     Project "P1" {
+        Folder "src" {
+            Folder "a" {  Folder "a1" { File "A.n4js" { from="../../a/a1/A.n4js" } }
+                            Folder "c"  { ThisFile {} }  }  }
+        File "package.json" { from="package_p1.json" }  }  }
+   END_SETUP
+*/
+
+/* XPECT organizeImports ---
+
+ | import [A from "a/a1/A"|]
+ | [import|] AR from "a/a1/A"
+   export public role BRole with AR {
+   }
+--- */
+// XPECT warnings --> "The import of A is unused." at "A"
+import A from "a/a1/A"
+import AR from "a/a1/A"
+
+// XPECT noerrors --> "Couldn't resolve reference to Type 'AR'."
+export public role BRole with AR {
+}
+----
+
+[[sec:Access_Control_Test]]
+[.language-n4js]
+==   Access Control Test
+
+Access control refers to the decision whether or not a member or a top level element is accessible for a client. In this context, access refers to reading, writing, and calling a member or a top level function, and to overriding inherited members in classes and interfaces. In N4JS, access is controlled via modifiers at the type and at the member level. Due to the large number of such modifiers and the large number of different scenarios for access control, manually written tests can only cover a small number of actual scenarios. An automatic test generator helps to increase the test coverage for access control.
+
+The test generator loads test scenarios from a CSV table that also contains the expected results of each test case and then generates N4JS projects and code for each test case, compiles them using the headless compiler, and compares the compilation results to the expectations from the CSV table. Note that the test generator does not generate test cases that check access control for top level functions and variables.
+
+[[test-scenarios]]
+===   Test Scenarios
+
+Each test scenario consists of a scenario specifier (one of ``Extends``  , ``Implements``  , ``References``  ), a supplier and a client (each of which can be a class, and abstract class, an interface, or an interface with default implementations of its getters, setters, and methods). Thereby, the client attempts to access a member of the supplier either by reading, writing, or calling it or by overriding it in the case of an ``Extends``   or ``Implements``   scenario. Furthermore, each test cases specifies the location of the client in relation to the location of the supplier, e.g., whether the client is in the same module, or whether it is in the same project (but not the same module), and so forth. Finally, a test case must specify the access control modifiers of the supplier type and the member that is being accessed by the client, whether that member is static or not, and, lastly, the type of access that is being attempted.
+
+[[n4js-code-generator]]
+===   N4JS Code Generator
+
+The test generator needs to generate N4JS projects and modules that implement a particular test case. For this purpose, it uses a simple code generator, available in the package `org.eclipse.n4js.tests.codegen`. The classes in that package allow specifying N4JS projects, modules, classes, and members in Java code and to generate the required artifacts as files at a given location.
+
+[[xtext-issue-matcher]]
+===   Xtext Issue Matcher
+
+To match the test expectations from the CSV file against the issues generated by the compiler, the test generator uses a small library of issue matchers, available in the package `org.eclipse.n4js.tests.issues`. The classes in that package make it easy to specify expectations against Xtext issues programmatically and to evaluate these expectations against a specific set of Xtext issues. Mismatches, that is, unexpected issues as well as unmatched expectations, are explained textually. These explanations are then shown in the failure notifications of the test case generator.
+
+The test expectations allow for FIXME annotations in the CSV table to express cases where an access control error has been found, but hasn’t been fixed yet. Such expectations lead to inverted expectations against the generated issues: For example, if a test expects an attempted access to fail with an error, but the validation rules allow the access regardless, then a FIXME annotation at the test will invert the actual expectation: Where previously an error was expected, there must now be no error at all. Then, once the validation rules have been adjusted and the error occurs as expected, the FIXME test case will fail until the FIXME annotation has been removed. Therefore, the issue expectation matchers can be inverted and adjust their behavior accordingly.
+
+[[sec:Smoke_Tests]]
+[.language-n4js]
+==   Smoke Tests
+
+Smoke tests are useful to ensure the robustness of the IDE. They aim at revealing potential exceptions that may surface to the end user in the IDE or in a headless compile run. Therefore, different permutations of a given input document are fed into processing components such as the validator or the type system. No exceptions may be thrown from these components.
+
+Since smoke tests are longrunning, it is not desired to execute them with each Maven run. That’s why the naming convention `pass:[*]  Smoketest` was choosen. It will not be matched by the naming pattern for normal JUnit tests during a maven run.
+
+The smoke tests are generally created by using the (valid or invalid) input of existing test cases. Therefore, the a command line argument `-DSmokeTestWriter=true` may be passed to the VM that executes a test. All input documents that are processed by a `ParseHelper<Script>` will be written to a new test method on the console. The result can be merged manually into the `GeneraredSmoketest`.
+
+[[how-to-handle-smoke-test-errors]]
+===   How to handle smoke test errors?
+
+If a smoke test fails, the concrete input should be extracted into a dedicated error test case. The existing classes like `scoping.ErrorTest` should be used to add the broken input document and create fast running cases for them. For that purpose, the `ExceptionAnalyzer` can be used. Such a test case will usually look like this:
+
+[source]
+----
+@Test
+def void testNoNPE_03() {
+    val script = ``  '
+        var target = {
+            s: "hello",
+            set x
+    ``  '.parse
+    analyser.analyse(script, "script", "script")
+}
+----
+
+[[smoketester-and-exceptionanalyzer]]
+===   SmokeTester and ExceptionAnalyzer
+
+The components that are used to implemement the smoke tests are the `SmokeTester` and the `ExceptionAnalyzer`. The smoke tester performs the permutation of the characters from the input model whereas the analyzer does the heavy lifting of passing the parsed model to various components such as the type system or the validation. Both utilities can be used to add either new smoke test documents or to check for the robustness of an implementation. It’s espeically useful to use the ExceptionAnalyzer in conjunction with existing test suites like the `LibraryParsingTestSuite` since it can be used instead of the other utilities like the `PositiveAnalyzer` or the `NegativeAnalyzer`.
+
+[[sec:UI_Tests_with_SWTBot]]
+[.language-n4js]
+==   UI Tests with SWTBot
+
+For testing functionality from the end-user perspective we use UI tests based on SWTBot http://eclipse.org/swtbot/.
+
+Since UI tests are usually rather fragile, it was decided to keep the number of these tests as low as possible. The main purpose of these tests is to ensure that the most fundamental IDE functionality is working properly, e.g. creating an N4JS project, creating a new N4JS file, running N4JS code in node.js.
+
+The tests have a number of SWTBot dependencies. For details, please refer to the latest target platform definition file.
+
+[[writing-swtbot-tests]]
+===   Writing SWTBot Tests
+
+The implementation is contained in bundle `org.eclipse.swtbot.tests`. Writing SWTBot tests is straightforward; see source code of `AbstractSwtBotTest` for usage and examples.
+
+Some hints:
+
+* Many methods of the SWTBot framework already include assertions. For example, the method `pass:[#]  menu(String)` to find a particular menu or menu item will assert that the item was found and otherwise throw an exception. Therefore, it is safe to write code like:
++
+[source]
+----
+bot.menu("File").menu("New").menu("Project...").click();
+----
+* It is usually considered bad practice to use sleep delays in UI tests. Instead, wait for the element to appear using methods such as http://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html#waitUntil or http://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html#waitWhile.
+
+[[running-swtbot-tests]]
+===   Running SWTBot Tests
+
+To run the tests locally in Eclipse just right-click the bundle and select ``Run As > SWTBot Test``  . To run them locally via maven simply start a normal maven build, no additional command line arguments, etc. required.
+
+To run remotely in a Jenkins build: on Windows the build must be executed with a logged-in user; on Linux Xvfb and a window manager are required. The recommended window manager is metacity. More information can be found here: http://wiki.eclipse.org/SWTBot/Automate_test_execution.
+
+To use metacity, add the following pre-build shell command to the Jenkins build configuration:
+
+[source,bash]
+----
+sleep 5; metacity --replace --sm-disable &
+----
+
+The sleep is required because metacity depends on Xvfb to be fully initialized, which might take a moment on slower build nodes. The following Jenkins console log shows the expected output when starting Xvfb and metacitiy:
+
+[source,bash]
+----
+Xvfb starting$ Xvfb :1 -screen 0 1024x768x24 -fbdir /var/lib/build/2014-09-05_10-36-343337290231975947044xvfb
+[N4JS-IDE_Oliver] $ /bin/sh -xe /tmp/hudson4475531813520593700.sh
++ sleep 5
++ metacity --replace --sm-disable
+Xlib:  extension "RANDR" missing on display ":1.0".
+Window manager warning: 0 stored in GConf key /desktop/gnome/peripherals/mouse/cursor_size is out of range 1 to 128
+Process leaked file descriptors. See http://wiki.jenkins-ci.org/display/JENKINS/Spawning+processes+from+build for more information
+Parsing POMs
+...
+----
+
+The warnings and error messages in the above log are expected and are considered unharmful (cf. discussion with Jörg Baldzer).
+
+[[sec:Debugging_UI_Tests]]
+==   Debugging UI Tests
+
+In rare cases UI Tests behave differently depending on the underlying OS und the power of the test machine. Missing user interaction on the build-server often results in waiting processes which in turn get a timeout request from the driving unit-testing-framework. To investigate the UI state on the build node a X11 connection needs to established.
+
+[[sec:Connecting_to_the_X_server_on_the_build_node]]
+===   Connecting to the X-server on the build-node
+
+First a vnc server needs to be started on the build-node. This is done via ``x11vnc -display :1 -shared >  /x11vnc.log 2>&1 &`` as a pre-build shellscript-step in Jenkins.
+
+You can narrow down the build to run on a specific node in Jenkins if a repeatable environment is required otherwise the current build-node is listed in the overview page. For security reasons the connection needs to be tunneld through an ssh login:
+
+[source,bash]
+ssh -l viewer -L 5900:localhost:5900 build-linux-25 ’x11vnc -localhost -display :1
+
+Here we are using the mating `build-linux-25` with the generic user/password ’viewer’ to start the program `x11vnc`. For the actual display number – `:1` in this case – you can refer to the console output. The command above tunnels the default vnc port 5900. You can now connect on `localhost` with a vnc client. If the user is not available, the `x11vnc` program not installed or in case of other issues, ask the build-and-release team.
+
+To display the screen you can use any arbitrary vnc-client (on mac there is screen sharing, in theory just opened from the command line by hitting `open vnc://viewer:viewer@localhost:5900`). One working client is ’chicken of the vnc’ http://sourceforge.net/projects/cotvnc/
+
+[[sec:Tools_to_investigate_the_java_stack]]
+===   Tools to investigate the java-stack
+
+Unix and Java come with some useful programs for investigations. The following tools may need some advanced rights to see processes from other users.
+
+* `htop` enhanced top to see all currently running processes
+* `jps` list running java processes
+* `jstack` investigate running java process
