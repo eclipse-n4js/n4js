@@ -73,6 +73,8 @@ In both cases, the method `promoteEOL()` is used to move a token that may serve 
 
 Since the EOL promotion does not work well with Antlr prediction mode, another customization complements that feature. As soon as an invalid token sequence is attempted to be parsed and missing semicolon would make that sequence valid, an offending token is sought and moved to the semantic channel. This is implemented in the custom recovery strategy.
 
+
+
 [[sec:_No_line_terminator_allowed_here__handling]]
 === Async and `No line terminator allowed here` Handling
 
@@ -173,3 +175,23 @@ ShiftOperator:
     ;
 ----
 
+
+[[sec:Content_Assist_Parser]]
+[.language-n4js]
+== Content-Assist Parser
+
+WARNING: This section may be outdated!
+
+The <<AC,CA>> parser also needs adjustments for supporting automatic semicolon insertion and regular expressions. Instead of modifying the <<AC,CA>> parser generator similar to the normal parser, the former reuses parts of the latter as far as possible. That is, the token sequence that is produced during production parsing is used as is for the content assist parser. Semicolons have already been inserted where appropriate and regular expression are successfully distinguished from divide operators.
+
+Since the n4js grammar uses syntactic predicates, the content assist parser is compiled with backtracking enabled. This is always the case for Xtext’s CA parsers that rely on backtracking or predicates (local backtracking) in the production parser. This approach is both good (CA works in general) and bad (unpredictable decisions in case of error at locations prior to the cursor). Since parsing with backtracking enabled makes for a fundamental difference in how the prediction and parsing works and how the parser decides which decision paths to take, the customization patterns from the production parser are not applied 1:1 to the CA parser, but adapted instead. The content assist parser doesn’t use a freshly lexed token stream with unicode support, ASI or regular expression literals, but instead uses a synthesized token sequence which is rebuilt from the existing node model.
+
+The token stream that is consumed by the content assist parser is therefore not created by a lexer but by the `org.eclipse.n4js.ui.contentassist.NodeModelTokenSource`.
+It traverses the existing node model that is contained in the resource and was produced by the production parser. This approach has the significant advantage that any decision that was made by that parser is also immediately applicable to the content assist infrastructure. For that purpose, the leaf nodes of the node model are mapped to ANTLR token types. 
+This is achieved by the `org.eclipse.n4js.ui.contentassist.ContentAssistTokenTypeMapper` which is capable to provide the untyped ANTLR token type (primitive int) for a given grammar element.
+
+Special considerations have been made for the last token in the produced source. If it overlaps with an existing leaf node but does not fully cover it, the plain Antlr lexer is used to consume the prefix that is overlapping. Since the terminals will never overlap with each other the longest match always wins without backtracking in the lexer, it is save to assume that only one token is produced from the prefix. The very last token in the `org.eclipse.n4js.ui.contentassist.NodeModelTokenSource` is always the EOF token (`org.antlr.runtime.Token.EOF_TOKEN`).
+
+Given that the token source is equal to the prefix in the production token source, some more thought has to be put into the synthesized end of file. The production parser used the complete file to decide where to automatically insert a semicolon and where not to. This would potentially change if there was another token next to the artificial EOF. Therefore, two cases have to considered. The first one describes CA request next to an automatically inserted semicolon and the second one describes CA requests at a position where a semicolon could have been inserted if the token to the right was another one. The `org.eclipse.n4js.ui.contentassist.CustomN4JSParser` reflects these cases. Heuristics are applied to the end of the token sequence to decide whether a second pass has to be performed to collect yet more following elements. Based on the concrete sequence, the last automatically inserted semicolon is removed from the sequence prior to the second pass or such is a token is explicitly synthesized and appended. Besides the second pass, another special treatment is made for postfix expressions. Those may not be interrupted by a hidden semicolon so those are filtered from the resulting follow set if appropriate.
+
+The parser is used by the `org.eclipse.n4js.ui.contentassist.ContentAssistContextFactory` where all relevant entry points from the super class are specialized to pass the node model in the the parser facade (`org.eclipse.n4js.ui.contentassist.CustomN4JSParser`). In that sense, the ContentAssistContextFactory serves as a drop-in replacement binding the default `ParserBasedContentAssistContextFactory.StatefulFactory`.
