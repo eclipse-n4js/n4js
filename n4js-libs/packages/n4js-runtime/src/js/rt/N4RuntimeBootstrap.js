@@ -13,7 +13,9 @@
 (function (global) {
     "use strict";
 
-    var ArraySlice = Array.prototype.slice,
+    var symImplementedInterfaces = Symbol.for("n4js-implemented-interfaces"),
+        symHasInstance = Symbol.hasInstance,
+        ArraySlice = Array.prototype.slice,
         noop = function() {};
 
     if (typeof __REACT_HOT_LOADER__ !== "undefined") {
@@ -71,6 +73,9 @@
             Object.setPrototypeOf(ctor, superCtor);
         }
         Object.defineProperties(ctor, staticMethods);
+        if (implementedInterfaces.length) {
+            Object.defineProperty(ctor, symImplementedInterfaces, { value: implementedInterfaces });
+        }
 
         var proto = Object.create(superCtor.prototype, instanceMethods);
         implementedInterfaces.forEach(mixinDefaultMethods, proto);
@@ -92,7 +97,7 @@
         var proto = tinterface.$methods,
             n4type = n4typeFn(proto, tinterface);
         Object.defineProperty(tinterface, "n4type", { value: n4type });
-        Object.defineProperty(tinterface, Symbol.hasInstance, {
+        Object.defineProperty(tinterface, symHasInstance, {
             /**
              * Check whether a value is instance of a class implementing an interface.
              *
@@ -100,10 +105,10 @@
              * @return boolean
              */
             value: function(instance) {
-                if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
+                if (!instance || !instance.constructor || !instance.constructor[symImplementedInterfaces]) {
                     return false;
                 }
-                return instance.constructor.n4type.allImplementedInterfaces.indexOf(n4type.fqn) !== -1;
+                return instance.constructor[symImplementedInterfaces].indexOf(tinterface) !== -1;
             }
         });
     }
