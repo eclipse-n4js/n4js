@@ -1,0 +1,186 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Validation
+:find:
+
+
+In this chapter the concept for the validation infrastructure of the N4JS IDE is described.
+
+Requirements:
+
+* like in old IDE centralize issue codes and messages
+* instead of the DLTK API, the Xtext Validation API should be used
+* there should be an unified approach / call to produce validation messages (as in old IDE with the call of reportProblem)
+
+[[sec:validation_overview]]
+[.language-n4js]
+== Validation overview
+
+* in Xtext in most cases validation should triggered after all Xtext resources are linked (so everything is resolved), so most validations are defined in N4JSValidator and there in composed validators
+* in Xtext there are resource diagnostics and validation diagnostics
+** resource diagnostics are produced for issues related to found syntax errors and linking errors
+** validation diagnostics are produced for issues found during semantic validation (model invariants)
+** Note, that you can only produce diagnostics only for the resource currenlty validated - e.g. it isn’t possible to create a marker for a duplicate issue in the other resource that contains the first element while producing the issue for the second - you have to create the diagnostic when validating the other resource
+* validation message sources
+** parser, e.g. ANTLR parser: messages are contained and produced internally by the parser but can be adapted by a customized SyntaxErrorMessageProvider (see link section below)
+** lazy linking - N4JSLinker (extension of lazy linker): custom handling exceptions from value converters, that produces own issues as XtextLinkingDiagnostic (this is a resource diagnostic)
+** lazy linking - ASTStructureValidator: traverses AST and produces custom DiagnosticMessage (triggered during N4JSLinker.doLinkModel), creates XtextLinkingDiagnostic (this is a resource diagnostic). The ASTStructureValidator checks for things like allowed occurence of continue, break, return as well as allowed labels
+** linking - default: uses the ILinkingDiagnosticMessageProvider to create error messages for typical error cases (referenced not resolved, unique constraint violation, bounds contraints violation, etc.)
+** linking - ErrorAwareLinkingService: In N4JS we have introduced a custom IEObjectDescription AbstractDescriptionWithError that holds issue code and error message and ErrorAwareLinkingService as extension of DefaultLinkingService to produce for every AbstractDescriptionWithError a XtextLinkingDiagnostic (this is a resource diagnostic) - the usual Xtext behavior would be to produce a linking error with linking disabled, with our customization linking still works but the error message/marker is produced as well. Currently there are these custom AbstractDescriptionWithError implementations, that are produced during scoping
+*** AmbiguousImportDescription: indicate an ambiguous wildcard import
+*** PlainAccessOfAliasedImportDescription: indicate accessing type directly instead of using the alias it has been imported with
+*** InvisibleMemberDescription: indicate accessing a member, that is not visible to the caller due to access modifier restrictions
+*** InvisibleTypeOrVariableDescription: indicate accessing a type / variable or function, that is not visible to the caller due to access modifier restrictions
+*** WrongFieldAccessorDescription: setter/getter access used in wrong context
+*** WrongStaticAccessorDescription: static/non-static access used in wrong context
+** N4JSTypeSystem:
+*** error: cannot type given expression
+*** error: element is not a subtype of another type
+*** RuleFailedException is thrown in type system, then handled as result where out of the contained information the AbstractDeclarativeValidator API is used to create issues via calls to error(..) or warning(..) methods
+*** RuleFailedExceptionWithoutStacktrace - sub class of RuleFailedException
+*** N4JSTypeValidator.createError -> delegates to AbstractDeclarativeValidator, or directly calls AbstractDeclarativeValidator.error
+*** XsemanticsValidatorErrorGenerator (currently not used)
+** N4JSValidation: composed validators, declarative checks, i.e. using annotation @Check at methods, issues mostly created by using combination of message, context object, EFeature and index passed to AbstractDeclarativeValidator methods like error(..), warning(..)
+*** N4JSClassValidator - checks related to classes, like duplicate member check
+*** N4JSFunctionValidator - checks for function expressions in expression statements and creates an error, but this validation is already done by the ASTStructureValidator
+*** N4JSImportValidator - checks invalid, duplicated and invalid imports
+*** N4JSInterfaceValidator - currently checks only for static members
+*** N4JSRoleValidator - currently checks only for static members
+*** N4JSStrictValidator - checks for function expressions in expression statements and creates an error, but this validation is already done by the ASTStructureValidator, thus this composite test is commented out
+*** N4JSTypeValidator - this is type system, see above
+* Check types and check modes
+** Check types are used in `@Check` annotation to influence, when a validation is triggered
+*** `FAST` - Check is declared as fast
+*** `NORMAL` - the common checks
+*** `EXPENSIVE` - long running checks
+** Check modes decide using check types when to run which types of checks
+*** `FAST_ONLY` - used by Xtext editor to execute FAST checks on every key stroke and in embedded Xtext editors
+*** `NORMAL_ONLY` - not used in Xtext framework itself
+*** `EXPENSIVE_ONLY` - not used in Xtext framework itself
+*** `NORMAL_AND_FAST` - used by Xtext editor to execute FAST and NORMAL checks on file save as well as on marker update for changed resources (delta calculated by Xtext builder)
+*** ALL - executes all types of checks when invoking explicitley the Validate action in the context menu of the Xtext editor
+** So by default check types and modes aren’t configurable at runtime
+* Severity
+** types
+*** `ERROR` - indicates a serious issue, that later will prevent things like builder, compiler and so on, to run
+*** `WARNING` - indicates a possible semantic problem, where the user have to decide how to handle it. Issues with such severity won’t stop any post processing
+*** `INFO` - only an information hint for the user. Note, it is not allowed to create a diagnostic with severity INFO.
+** can be statically provided by calling the AbstractDeclarativeValidator methods error(..), warning(..), info(..) or directly pass the severity to a sub class of AbstractValidationDiagnostic (e.g. FeatureBasedDiagnostic, RangeBasedDiagnostic)
+** can also determined dynamically at runtime with using the IssueSeveritiesProvider and a implementation of IPreferenceValuesProvider (e.g. the EclipsePreferencesProvider that uses the Eclipse preference store and preference page)
+* Issue codes
+** used to identify an issue elsewhere, e.g. when applying an quickfix for a validation issue but also for configuring validation handling (e.g. in a Eclipse preference page).
+** We can use this issue code to also externalize the issue messages at a central place
+* Issue data: String array to store additional data to be used in other places (e.g. hints for quickfixes)
+* message: The message shown as text for the marker created at the resource in Eclipse and shown in the Xtext editor but also available by the methods getWarnings and getErrors at the XtextResource itself and so usable when logging messages to console in headless mode
+
+[[sec:validation_control_flow]]
+[.language-n4js]
+==  Validation control flow
+
+<<fig:cd_validation>> gives an overview over the common control flow that triggers validation.
+
+[[fig:cd_validation]]
+[.center]
+image::{find}images/cd_validation.svg[title="Validation control flow"]
+
+Validation is either triggered by dirty state handling (editing an Xtext document without saving starts a validation job) or by the automated build (invoked directly or started by resource changes in the project e.g. after saving a file).
+
+While in dirty state handling the current resource is already parsed and resolved the builder have to load the resource.
+
+All issues collected during load (i.e. during parsing, linking and scoping) the resource are added to the resource.
+
+In the automated build process there is step `updateMarkers` that triggers the validation.
+
+The `SourceContainerAwareResourceValidator` is a customization by us to handle only files that are contained in folders declared as source container by the package.json file.
+
+The `CancelableDiagnostican`, called by the resource validator, iterates over all elements contained in the resource. For each element the bound validator is called, in our case `N4JSValidator`, as it is registered as validator for the N4JS EPackage (in `AbstractN4JSValidator`).
+
+As this validator extends `AbstractDeclarativeValidator` in the first step all methods that are annotated with @Check and that have exactly one parameter are collected keyed by the type of their input parameter. The result of this collection process is cached. There is a defined order how the methods are collected:
+
+* all local methods
+* all methods recursively found in the super classes of the current class
+* all methods found for the in the composed check annotation defined validators (by applying this algorithm as well)
+* all methods recursively found in the composed checks in the super classes of the current class (by applying this algorithm as well)
+
+The `N4JSValidator` filters all methods that uses the type of the currently traversed element from the before collected check methods and invokes them with the element from the resource.
+
+The Xsemantics type system validator is used as one of the composed validators in `N4JSValidator`. So although `N4JSValidator` extends `N4JSTypeSystemValidator`, `N4JSTypeSystemValidator` just re-uses the validation infrastructure but not its call hierarchy.
+
+[[sec:validation_issue_ids]]
+[.language-n4js]
+==  Issue IDs and Messages
+
+
+For now the NLS validation message bundle resides in +
+`/org.eclipse.n4js/src/org/eclipse/n4js/validation/messages.properties` +
+The entries in the messages.properties follows the pattern as described in `NLSProcessor`, the NLS class is `IssueCodes`
+
+TIP: We use the same pattern for semver and json. 
+
+* IDs shouldn’t be to long, as there might be a lot of markers and the issue codes are stored in memory
+* the ID should encode where the issue has been created, therefore there should be common used prefixes like
+** PRS for parser (not used yet)
+** VCO for value converter
+** AST for issues found during AST traversal
+** LIN for issues found during scoping/linking (not used yet)
+** TYS for type system
+** VAL for semantic validation (not used yet)
+* besides the source also the domain of the issue should be encoded (the following list may reduced or extended over time, when it gets obvious which sorts of domain specific validations are required in which frequency)
+** CLF for issues common to all classifiers
+** CLA for classes (not used yet)
+** ROL for roles
+** FUN for function
+** IMP for imports
+** VAR for variables (not used yet)
+** MEM for classifier members in general
+** OLI for object literals (not used yet)
+** ENU for enumerations (not used yet)
+** ARR for array literals (not used yet)
+** ANN for annotation related issues (not used yet)
+** EXP for expression related issues (assignment expression, binary expression, etc.) (not used yet)
+** STMT for statement related issues, such as if-else (conditional) , loops, switch etc.
+** PRP for property access related issues (not used yet)
+** EXC for exception handling related issues (not used yet)
+** LBL for labels related issues (not used yet)
+* also technical validation aspects can be encoded
+** DUP for duplicate checks
+** VIS for visibility checks (public, private, export, etc.)
+** STR for issues related only applied in strict mode
+* examples
+** `IMP_AMBIGUOUS`
+** `VIS_ILLEGAL_MEMBER_ACCESS`
+** `CLF_ABSTRACT_FINAL`
+** `AST_RESERVED_IDENTIFIER`
+** `VCO_HEXINT_CONVERT_EMPTY_STR`
+** `TYS_NO_SUBTYPE`
+
+[[sec:validation_usage_patterns]]
+[.language-n4js]
+==  Usage Pattern
+
+Due to the different places and circumstances a real unification of the API wasn’t possible yet (and wouldn’t have made sense), so there are these different usage patterns
+
+* in a custom error aware EObjectDescription like WrongFieldAccessorDescription you just return the issue code in getIssueCode and the message created using the issue code as well as the replacements for the wildcards in getMessage
+* in a validator extending AbstractDeclarativeValidator you just call `addIssue(message, context, EFeature, issueCode)`. The message you have to create before by calling the corresponding `getMessageFor[ISSUE_ID]` method passing the required wildcard replacement
+* in the ASTStructureValidator you have to call `producer.addDiagnostic(new DiagnosticMessage(IssueCodes.messageFor[ISSUE_ID](wildcard1, wildcard2, ..), IssueCodes.getDefaultSeverity(IssueCodes.[ISSUE_ID]), IssueCodes.[ISSUE_ID]))`
+* in the custom value converters you have to pass the information to an exception, so the call is: `new N4JSValueConverterException(IssueCodes.getMessageFor[ISSUE_ID](wildcard1, wildcard2, ..), IssueCodes.[ISSUE_ID], node, null)`. Beside this exception also N4JSValueConverterWithValueException is used in some places. In N4JSLinker then these exceptions are catched and a DiagnosticMessage is created out of the informations contained in these exceptions.
+* As Xsemantics uses hard wired error or warning in its grammar you cannot adapt these places, but there are currently only three messages produced by Xsemantic (cannot type, not a sub type, null object passed to system). They are all handled in N4JSTypeValidator.createError where the message from Xsemantic is split up in its parts and then passed as wild card replacements to e.g. `IssueCodes.getMessageForTYS_NO_SUBTYPE`.
+
+[[sec:validation_links]]
+==  Links
+
+* http://www.eclipse.org/Xtext/documentation.html#validation[Xtext Runtime Concepts: Validation]
+* http://blog.dietmar-stoll.de/2013/04/multiple-validators-in-xtext.html[Multiple validators in Xtext]
+* Customize error messages
+** http://zarnekow.blogspot.de/2010/06/customizing-error-messages-in-xtext-10.html[Customizing error messages in Xtext]
+** http://blog.dietmar-stoll.de/2012/07/custom-syntax-error-messages-with-quick.html[Custom syntax error messages with quickfix]
+** http://stackoverflow.com/questions/14526524/xtext-customizing-error-msg-by-unordered-groups[Xtext: customizing error messages by unordered groups]
