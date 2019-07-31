@@ -66,7 +66,7 @@
      *                                interfaces defined in definition files without annotation @N4JS.
      * @param instanceMethods - An object holding the methods for the class instance and mixed in methods
      * @param staticMethods - An object holding the descriptors for the class static methods
-     * @param n4typeFn - The factory function to create the meta type.
+     * @param n4typeFn - Optional factory function to create the meta type.
      */
     function $makeClass(ctor, superCtor, implementedInterfaces, instanceMethods, staticMethods, n4typeFn) {
         if (typeof superCtor === "function") {
@@ -74,15 +74,22 @@
         }
         Object.defineProperties(ctor, staticMethods);
         if (implementedInterfaces.length) {
-            Object.defineProperty(ctor, symImplementedInterfaces, { value: implementedInterfaces });
+            Object.defineProperty(ctor, symImplementedInterfaces, {
+                value: implementedInterfaces
+            });
         }
 
         var proto = Object.create(superCtor.prototype, instanceMethods);
         implementedInterfaces.forEach(mixinDefaultMethods, proto);
-        Object.defineProperty(proto, "constructor", { value: ctor });
+        Object.defineProperty(proto, "constructor", {
+            value: ctor
+        });
 
-        var n4type = n4typeFn(proto, ctor);
-        Object.defineProperty(ctor, "n4type", { value: n4type });
+        if (n4typeFn) {
+            Object.defineProperty(ctor, "n4type", {
+                value: n4typeFn(proto, ctor)
+            });
+        }
 
         ctor.prototype = proto;
     }
@@ -91,12 +98,15 @@
      * Setup a interface. Methods and field initializers are already merged into the interface object.
      *
      * @param tinterface - The interface object.
-     * @param n4typeFn - The factory function to create the meta type.
+     * @param n4typeFn - Optional factory function to create the meta type.
      */
     function $makeInterface(tinterface, n4typeFn) {
-        var proto = tinterface.$methods,
-            n4type = n4typeFn(proto, tinterface);
-        Object.defineProperty(tinterface, "n4type", { value: n4type });
+        if (n4typeFn) {
+            Object.defineProperty(tinterface, "n4type", {
+                value: n4typeFn(tinterface.$methods, tinterface)
+            });
+        }
+
         Object.defineProperty(tinterface, symHasInstance, {
             /**
              * Check whether a value is instance of a class implementing an interface.
@@ -119,18 +129,24 @@
      * @param enumeration - the enumeration constructor function
      * @param members - An array of <String, String> tuples containing
      *                  information about the enum members
-     * @param n4type - The factory function for the metatype
+     * @param n4typeFn - Optional factory function to create the meta type.
      * @return The constructed enumeration type
      */
-    function $makeEnum(enumeration, stringBased/* TODO obsolete */, members, n4type) {
+    function $makeEnum(enumeration, stringBased/* TODO obsolete */, members, n4typeFn) {
         var length, index, member, name, value, values, literal;
 
         Object.setPrototypeOf(enumeration, global.N4Enum);
         enumeration.prototype = Object.create(global.N4Enum.prototype, {});
-        Object.defineProperty(enumeration, 'n4type', {
-            value: n4type(noop)
+
+        if (n4typeFn) {
+            Object.defineProperty(enumeration, "n4type", {
+                value: n4typeFn(noop)
+            });
+        }
+
+        Object.defineProperty(enumeration.prototype, "constructor", {
+            value: enumeration
         });
-        Object.defineProperty(enumeration.prototype, "constructor", { value: enumeration });
 
         length = members.length;
         values = new Array(length);
