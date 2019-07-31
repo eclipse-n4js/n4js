@@ -956,7 +956,6 @@ Relevant additional information can be found in
 ===   Xpect Lint Tests
 
 [[sec:XPECT_Lint_Tests]]
-task::IDE-1559[]
 
 image::{find}images/diag_XpectLint.svg[title="Xpect Lint"]
 

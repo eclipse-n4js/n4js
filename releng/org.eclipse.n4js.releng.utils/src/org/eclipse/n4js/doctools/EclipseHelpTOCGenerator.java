@@ -64,7 +64,8 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 
 		File f = new File(in);
 		try {
-			String toc = generateTOC(f, linkPrefix);
+			EclipseHelpTOCGenerator handler = new EclipseHelpTOCGenerator();
+			String toc = handler.generateTOC(f, linkPrefix);
 			Files.write(Paths.get(tocName), toc.getBytes(), StandardOpenOption.CREATE,
 					StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (Exception ex) {
@@ -82,9 +83,9 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	}
 
 	/**
-	 * Creats an Eclipse help TOC from given asciidoc generated XML file.
+	 * Creates an Eclipse help TOC from given asciidoc generated XML file.
 	 */
-	public static String generateTOC(File file, String linkPrefix)
+	public String generateTOC(File file, String linkPrefix)
 			throws ParserConfigurationException, SAXException, IOException {
 
 		FileInputStream fis = new FileInputStream(file);
@@ -93,10 +94,9 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 			SAXParser parser = factory.newSAXParser();
 			XMLReader reader = parser.getXMLReader();
 
-			EclipseHelpTOCGenerator handler = new EclipseHelpTOCGenerator();
-			handler.dir = linkPrefix + file.getName().substring(0, file.getName().indexOf(".xml"));
+			dir = computeBasedir(file, linkPrefix);
 
-			reader.setContentHandler(handler);
+			reader.setContentHandler(this);
 			reader.setEntityResolver(new EntityResolver() {
 
 				@Override
@@ -109,13 +109,24 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 			InputSource input = new InputSource(fis);
 			reader.parse(input);
 
-			return handler.getResult();
+			return getResult();
 		} finally {
 			fis.close();
 		}
 	}
 
-	private static class Topic {
+	/**
+	 * Computes the base dir (to dir) in which all chapters reside. The folder is names after the main xml file. May be
+	 * overridden in subclasses.
+	 */
+	public String computeBasedir(File file, String linkPrefix) {
+		return linkPrefix + file.getName().substring(0, file.getName().indexOf(".xml"));
+	}
+
+	/**
+	 * Topic entry for TOC.
+	 */
+	protected static class Topic {
 		String id;
 		String label;
 		List<Topic> subtopics = new ArrayList<>(5);
@@ -126,7 +137,11 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	Stack<Topic> topics = new Stack<>();
 	StringBuilder titleBuffer = new StringBuilder();
 	boolean requireTitle = false;
-	private String dir;
+
+	/**
+	 * The folder in which all files are found.
+	 */
+	protected String dir;
 
 	/**
 	 * Visible for testing.
@@ -216,9 +231,9 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	}
 
 	/**
-	 * Emits the result (xml) file as string. Package visible for testing.
+	 * Emits the result (xml) file as string. Maybe overridden if other formats are to be emitted.
 	 */
-	String getResult() {
+	protected String getResult() {
 		StringBuilder out = new StringBuilder();
 		out.append("<?xml version='1.0' encoding='utf-8' ?>\n");
 		out.append("<toc topic=\"" + dir + "/index.html\" label=\"" + title + "\">");
@@ -229,7 +244,10 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 		return out.toString();
 	}
 
-	private String getFilename(String label) {
+	/**
+	 * Returns the output file name of a specific topic. Maybe overridden if other formats are to be emitted.
+	 */
+	protected String getFilename(String label) {
 		String name = "index";
 		if (label != null) {
 			name = ChunkHelper.extractFileNameFromTitle(label, 0, label.length());
@@ -237,7 +255,10 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 		return name + ".html";
 	}
 
-	private void appendTopic(StringBuilder out, String indent, Topic topic, String fileName) {
+	/**
+	 * Print out subtopics of a topic. Maybe overridden if other formats are to be emitted.
+	 */
+	protected void appendTopic(StringBuilder out, String indent, Topic topic, String fileName) {
 		out.append("\n" + indent);
 		String href = dir + "/" + fileName + "#" + topic.id;
 		out.append("<topic href=\"" + href + "\" label=\"" + topic.label + "\">");

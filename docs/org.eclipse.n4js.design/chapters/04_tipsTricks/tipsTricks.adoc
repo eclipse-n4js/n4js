@@ -9,7 +9,7 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-= Tips & Tricks, Dos & Don'ts
+= Tips and Tricks
 :find:
 
 In this chapter we collect some coding hints and guidelines on how to properly use the APIs of Eclipse, EMF, Xtext and

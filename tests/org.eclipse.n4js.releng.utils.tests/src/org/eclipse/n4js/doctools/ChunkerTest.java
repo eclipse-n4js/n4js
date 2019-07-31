@@ -64,7 +64,7 @@ public class ChunkerTest {
 		expectedChunksWithHTML.remove("html");
 		Chunker chunker = null;
 		try {
-			chunker = new Chunker(html, head, foot, chunk, name, index);
+			chunker = new Chunker(html, head, foot, chunk, name, index, null);
 		} catch (ChunkError e) {
 			fail("Failed parsing html: " + e);
 		}

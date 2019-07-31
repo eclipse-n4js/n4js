@@ -3,6 +3,7 @@ package org.eclipse.n4js.doctools;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -124,6 +125,7 @@ public class Chunker {
 	private final Pattern nameTagStartPattern;
 	private final Pattern nameTagEndPattern;
 	private final String indexName;
+	private final String toc;
 
 	private Range head;
 	private Range foot;
@@ -148,6 +150,7 @@ public class Chunker {
 		String tag = null;
 		String name = null;
 		String index = null;
+		String toc = "";
 
 		String dir = ".";
 		String in = null;
@@ -175,6 +178,9 @@ public class Chunker {
 			case "-i":
 				index = value;
 				break;
+			case "-t":
+				toc = value;
+				break;
 			default:
 				System.out.println("Flag " + flag + " not recognized.");
 				printHelp();
@@ -184,7 +190,7 @@ public class Chunker {
 		in = args[args.length - 1];
 
 		String html = new String(Files.readAllBytes(new File(in).toPath()));
-		Chunker chunker = new Chunker(html, head, foot, tag, name, index);
+		Chunker chunker = new Chunker(html, head, foot, tag, name, index, toc);
 		for (Range range : chunker.chunks) {
 			String fileName = dir + File.separator + range.name + ".html";
 			System.out.println("Writing chunk " + fileName);
@@ -206,6 +212,7 @@ public class Chunker {
 				+ "-c regex    The marker to determine a chapter, if omitted\n"
 				+ "            " + DEF_CHUNK + " is used.\n"
 				+ "-n string   The name tag, if omitted " + DEF_NAME + " is used.\n"
+				+ "-t string   The name of the toc fragment to be added to the index file, ignored if empty (empty by default).\n"
 				+ "-d output-directory\n"
 				+ "            The output directly, if omitted the current folder is used.");
 	}
@@ -225,7 +232,7 @@ public class Chunker {
 	 *            The tag of which the content is used as name of a chunk, may be null (in this case, {@link #DEF_NAME}
 	 *            is used).
 	 */
-	public Chunker(String html, String head, String foot, String chunk, String name, String index) {
+	public Chunker(String html, String head, String foot, String chunk, String name, String index, String toc) {
 
 		this.html = html;
 		if (html == null || html.isEmpty()) {
@@ -243,6 +250,7 @@ public class Chunker {
 		this.chunkMatcher = chunkPattern.matcher(html);
 
 		this.indexName = index == null ? DEF_INDEX : index;
+		this.toc = toc;
 
 		findHead();
 		findFoot();
@@ -389,8 +397,23 @@ public class Chunker {
 		StringBuilder strb = new StringBuilder();
 		appendWithRewrittenLinks(range, strb, html.substring(head.start, head.end));
 		appendWithRewrittenLinks(range, strb, html.substring(range.start, range.end));
+		if (toc != null && !toc.isEmpty() && range.name.equals(indexName)) {
+			appendToc(strb);
+		}
 		appendWithRewrittenLinks(range, strb, html.substring(foot.start, foot.end));
 		return strb;
+	}
+
+	/**
+	 * Adds the toc fragment
+	 */
+	private void appendToc(StringBuilder strb) {
+		try {
+			String tocFragment = Files.readString(Path.of(toc));
+			strb.append(tocFragment);
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 	/**
