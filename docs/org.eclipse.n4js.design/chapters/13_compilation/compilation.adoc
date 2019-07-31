@@ -12,6 +12,8 @@ Contributors:
 = Compilation
 :find:
 
+WARNING: This chapter may be outdated.
+
 [[chap:compilation]]
 [.language-n4js]
 == Introduction
