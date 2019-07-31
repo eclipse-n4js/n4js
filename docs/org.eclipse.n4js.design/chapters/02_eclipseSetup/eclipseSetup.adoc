@@ -11,6 +11,10 @@ Contributors:
 
 = Eclipse Setup
 
+== System Requirements
+
+In all cases, https://adoptopenjdk.net/[Java 11] is required to be installed on your system. https://nodejs.org/en/download/[Node.js] version 10+ is also required, and for some tests you need https://yarnpkg.com[Yarn] to be globally installed.
+
 == Contribute
 
 Eclipse developers who want to develop N4JS itself should use the https://www.eclipse.org/downloads/[Oomph Eclipse installer]. The N4JS project is listed under "Eclipse Projects/N4JS"
@@ -24,24 +28,47 @@ This installer is to be downloaded from https://wiki.eclipse.org/Eclipse_Install
 Run the installer and apply the following steps:
 
 1. change to "Advance Mode" via the menu (upper-right corner) (no need to move the installer)
-2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "Oxygen"
+2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "latest"
 3. double-click the entry **Eclipse Projects/N4JS** so that it is shown in the catalog view below
-4. on the next page, configure paths accordingly. You only have to configure the installation and workspace folder.
+4. on the next page, configure paths accordingly. You only have to configure the installation and workspace folder. You may want to use git with https instead of ssh.
 5. start installation
 
 The installer will then guide you through the rest of the installation. All plug-ins are downloaded and configured automatically, so is the workspace including downloading the git repository and setting up the workspace.
 
+The workspace is configured automatically. This includes fetching the necessary git repository. If you have selected git with SSH you may run into problems. In this case you can re-run the scripts and select HTTPS instead, this should work in any case.
+
+Eventually the installer scripts are done, that means the git repository has been cloned and the workspace has been configured (including the project set setup).
+Now the automatic build kicks in as you can see in the status bar. Screenshot 6
+
+The build will show a lot of errors while still working. Eventually the whole project should have been compiled without any errors. Unfortunately, due to a https://github.com/eclipse/n4js/issues/1373[known issue], two problems exists. Please have a look at the linked issue on how to fix that (it is quite easy).
+
+====  Changing the Setup Script
+
+The setup scripts is stored at
+
+`n4js/releng/com.enfore.n4js.targetplatform/N4JS.setup` 
+
+Details about Oomph-Setup scripts can be found at
+
+https://wiki.eclipse.org/Eclipse_Installer
+
 === Manual IDE Configuration
+
+WARNING: Manual IDE configuration is not recommended!
 
 For a manual install, clone the code and import all top-level projects from the docs, features, plugins, releng, testhelpers, and tests folders. Activate the targetplatform contained in the `releng/org.eclipse.n4js.targetplatform/` project.
 
-The N4JS IDE is developed with Eclipse Oxygen 4.7 or better since the system is based on Eclipse anyway.
+The N4JS IDE is developed with Eclipse 2019-06 or better since the system is based on Eclipse anyway.
 It is almost impossible to use another IDE to develop Eclipse plugins. The list of required plugins includes:
 
-- Xtext/Xtend 2.10.0
-- Xcore 1.4.0
-- Xsemantics 1.10.0
-- Xpect 0.1
+- Xtext/Xtend 2.17.0
+- Xcore 1.9.0
+- Xpect 0.2
 
 It is important to use the latest version of Xtext and the corresponding service release of Xcore. You will find the latest version numbers and plugins used in the target platform definition at
 https://github.com/eclipse/n4js/blob/master/releng/org.eclipse.n4js.targetplatform/org.eclipse.n4js.targetplatform.target
+
+You may need to adjust some settings in Eclipse, most importantly
+
+* *Text file encoding* to ``Other: UTF-8`` and
+* *New text file line delimiter* to ``Unix`` .
