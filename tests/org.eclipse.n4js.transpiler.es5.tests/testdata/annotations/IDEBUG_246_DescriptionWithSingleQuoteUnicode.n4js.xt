@@ -15,7 +15,7 @@
 <==
 stdout:
 [Function: U]
-@ Description [ '<\'>' ]
+@ Description
   t1 <'>
   t2 true
   t2b true
@@ -28,9 +28,11 @@ stderr:
 @Description("<\u0027>")
 class U{}
 
+// Remark: avoid using x.toString() calls since different node versions emit different string literals!
+
 console.log(U)
 U.n4type.annotations.forEach(function(a){
-	console.log("@", a.name, a.details)
+	console.log("@", a.name)
 	a.details.forEach(function(ad){
 		console.log(" ", "t1", ad)
 		console.log(" ", "t2",ad==="<\u0027>")

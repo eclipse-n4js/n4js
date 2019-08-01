@@ -14,7 +14,7 @@
 /* XPECT output ---
 <==
 stdout:
-@ Description [ 'I\'m a real cool class' ]
+@ Description
   t1 I'm a real cool class
   t2 true
   t3 "I'm a real cool class"
@@ -25,8 +25,10 @@ stderr:
 @Description("I'm a real cool class")
 export public class SomeClass{}
 
+// Remark: avoid using x.toString() calls since different node versions emit different string literals!
+
 SomeClass.n4type.annotations.forEach(function(a){
-	console.log("@", a.name, a.details)
+	console.log("@", a.name)
 	a.details.forEach(function(ad){
 		console.log(" ", "t1", ad)
 		console.log(" ", "t2",ad==="I'm a real cool class")
