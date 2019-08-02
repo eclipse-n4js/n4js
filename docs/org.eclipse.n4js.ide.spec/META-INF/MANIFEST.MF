@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.n4js.ide.spec;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: %providerName
+Require-Bundle: org.eclipse.help,
+ org.eclipse.swt,
+ org.eclipse.jface,
+ org.eclipse.ui,
+ org.eclipse.n4js.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: org.eclipse.n4js.ide.spec
