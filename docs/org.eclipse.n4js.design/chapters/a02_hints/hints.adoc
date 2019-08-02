@@ -1,0 +1,372 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+NumberFour AG - Initial API and implementation
+////
+
+[appendix]
+= Hints
+:experimental:
+:find:
+
+In this chapter, some tips and tricks regarding Eclipse, Xtend and Maven should be collected.
+
+[[sec:XtextInjection]]
+[.language-n4js]
+== Xtext Injection
+
+<<fig:cd_XtextInjectors&gt;&gt; shows different injectors used by Xtext
+and their relation to the injector of a custom language created with Xtext
+(in this example N4JS).
+
+[[fig:XtextInjectors]]
+[.center]
+image::{find}images/cd_XtextInjectors.svg[title="Xtext injectors and custom DSL injector"]
+
+*Injectors creation:*
+
+* create 'SharedInjector'
+** create shared singletons
+* create (lazily) custom language injector
+** take singletons from shared injector
+** add bindings from 'SharedModule'
+** create own singletons
+
+Normally one injector is bound to one language.
+'ContributingModule' allows custom languages to contribute bindings to the
+shared state, effectively cross project boundaries.
+
+It must be noted that in case of N4JS tools there are multiple languages
+contributing / extending Xtext injector, which can be seen in figure
+<<fig:cd_customInjectors&gt;&gt;
+
+[[fig:cd_customInjectors]]
+[.center]
+image::{find}images/cd_customInjectors.svg[title="Xtext injectors and custom DSL injector"]
+
+[[sec:DI_MultipleInjectors_Singletons]]
+=== Multiple Injectors and Singletons
+Every injector creates its 'ObjectGraph'. Having multiple Injectors in
+the system leads to multiple (disconnected) object graphs. For normal instances
+that is not an issue, but for scoped instances this causes problems.
+Most common issue happens with '@Singleton' instances that carry state.
+
+[[fig:cd_SingletonDuplicate]]
+[.center]
+image::{find}images/cd_SingletonDuplicate.svg[title="Xtext injectors and custom DSL injector"]
+
+<<fig:cd_customInjectors&gt;&gt; shows situation in which both 'ChildInjector'
+and 'N4JSInjector' have their bindings for 'N4JSEclipseCore'. As a result those
+injectors will create their instance of core that is expected to be
+'@Singleton'. Additionally, this will be true for all its transitive
+dependencies.
+
+[[sec:DI_avoid_duplicate_singletons]]
+==== Avoiding duplicate singletons
+
+To avoid issue with duplicate singletons two distinct injectors should not
+have their bindings for singletons. Developer needs to decide where to
+define *the only* binding, and let one 'ObjectGraph' delegate to another.
+
+[[sec:DI_binding_in_shared]]
+===== Defining binding in the shared injector
+
+One approach is to define binding in the shared injector. Then in the injector
+of the custom language to delegate to the shared contribution.
+
+[source]
+----
+/** Binds {@link IN4JSCore} */
+public class ContributingModule implements Module {
+    @Override
+    public void configure(Binder binder) {
+        binder.bind(IN4JSCore.class).to(IN4JSEclipseCore.class);
+        binder.bind(IN4JSEclipseCore.class).to(N4JSEclipseCore.class).in(SINGLETON);
+    }
+}
+
+/** Delegates binding for {@link IN4JSCore} to the shared provider. */
+public class ContributingModule implements Module {
+    public Provider<? extends IN4JSCore> bindIN4JSCore() {
+        return Access.contributedProvider(N4JSEclipseCore.class);
+    }
+}
+----
+
+Downside of this approach is in the shared injector itself.
+It does not allow for implicit bindings. This forces developer to declare
+bindings for *all transitive* dependencies of the main binding explicitly.
+Additionally, every custom language has to do it. These make shared injector
+the _GodInjector_ that contains configuration for all custom languages,
+it is responsible for creating most objects in the system, and potentially
+exposes types from one language to another language where it might not be
+desired.
+
+[[sec:DI_binding_in_custom]]
+===== Defining binding in the custom injector
+
+Other approach is to define binding in the injector for a custom
+language. Then let instances in the shared injector object graph to obtain
+singleton instances via custom language injector (which is stored on the
+custom language activator).
+
+[source]
+----
+/** Does not bind {@link IN4JSCore} */
+public class ContributingModule implements Module {
+    @Override
+    public void configure(Binder binder) {
+        // no core binding
+    }
+}
+
+/** Binds {@link IN4JSCore}. */
+public class ContributingModule implements Module {
+    public Class<? extends IN4JSCore> bindIN4JSCore() {
+        return IN4JSEclipseCore.class;
+    }
+}
+
+/** Some type used in shared injector object graph */
+public SomeSharedType{
+
+    /** Obtain {@link IN4JSCore} form {@code N4JSInjector}. */
+    private IN4JSCore getIN4JSCore() {
+        return N4JSActivator
+                .getInstance()
+                .getInjector(ORG_ECLIPSE_N4JS_N4JS)
+                .getInstance(IN4JSCore.class);
+    }
+}
+----
+
+This approach also has downsides. In the 'SomeSharedType' that exists in the
+shared injector object graph we cannot inject 'IN4JSCore' as it is not
+known to the shared injector. Instead, we have to get the instance form the
+'N4JSInjector' manually. This requires developer to know whole (singleton)
+types structure
+defined in every custom language.
+
+[[sec:DI_Hints]]
+[.language-n4js]
+=== Dependency Injection Hints
+
+[[sec:DI_custom_bundle]]
+==== Use DI in custom bundle, use DI with extensions
+
+[[sec:DI_custom_bundle_problem]]
+===== Problem
+
+DI should be used in a custom bundle, i.e. a bundle not generated by Xtext.
+E.g., a new handler should be provided in its plugin, and this handler requires
+an injected instance. Example
+
+my.dsl.bundle.ui xtext generated
+
+my.dsl.bundle.sub.ui
+The following class is contained in my custom plugin:
+
+[source]
+----
+class my.dsl.bundle.sub.ui.Handler {
+    @Inject SomeDSLOrXtextSpecificType obj;
+}
+----
+
+The question is, how can obj of type be injected at this location?
+
+[[sec:DI_custom_bundle_solution]]
+===== Solution
+
+First of all, to use DI in a type, the type instance itself must have been
+created via DI. This requires an injector which uses the same class loader as
+the type using the injector. This means that a new bundle needs its injector,
+created by an IExecutableExtensionFactory using the bundles' activator (plugin)
+singleton.
+
+This activator can extend the generated activator of a Xtext bundle. The
+following code can be used as a template, as long as no custom non-default
+bindings are to be added (in this case, have a look at the generated activator
+and override the methods configuring the injector):
+
+[source]
+----
+public class my.dsl.bundle.sub.ui.Activator extends my.dsl.bundle.ui.MyDSLActivator {
+    private static my.dsl.bundle.sub.ui.Activator INSTANCE;
+
+    @Override
+    public void start(BundleContext context) throws Exception {
+        super.start(context);
+        INSTANCE = this;
+    }
+
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        INSTANCE = null;
+        super.stop(context);
+    }
+
+    public static TypePopupActivator getInstance() {
+        return INSTANCE;
+    }
+}
+----
+
+Additionally, a custom 'AbstractGuiceAwareExecutableExtensionFactory' has to be
+implemented. This class then uses the new activator instance (this is required
+as bundles have their classloaders!)
+
+[source]
+----
+public class my.dsl.bundle.sub.ui.SubExecutableExtensionFactory extends AbstractGuiceAwareExecutableExtensionFactory {
+    @Override
+    protected Bundle getBundle() {
+        return my.dsl.bundle.sub.ui.Activator.getInstance().getBundle();
+    }
+
+    @Override
+    protected Injector getInjector() {
+    return my.dsl.bundle.sub.ui.Activator.getInstance().getInjector(MyDSLActivator.MY_LANGUAGE_GRAMMAR);
+    }
+}
+----
+
+Now, we can use this extension factory in the plugin.xml of the sub bundle to
+let the handler be created via DI. E.g.
+
+[source]
+----
+"org.eclipse.ui.handlers"&gt;
+<handler
+class="my.dsl.bundle.sub.ui.SubExecutableExtensionFactory:my.dsl.bundle.sub.ui.Handler"
+commandId="..."&gt;
+handler&gt;
+extension&gt;
+----
+
+[[sec:Access_Other_DSL_Injector]]
+==== How do I get the Guice Injector of my language?
+
+We have the use case to load a N4MF file inside the N4JS infrastructure to read
+out the project description and configure the qualified names and container
+visibility. I.e. we have to load another DSL in our current DSL infrastructure,
+in the use case to have a Xtext resource set available to load the N4MF file.
+Injecting the Xtext resource of the current DSL wouldn’t work as it has not the
+N4MF injection context. So in the following the ways how to access this
+injection context is described as extracted from
+http://koehnlein.blogspot.de/2012/11/xtext-tip-how-do-i-get-guice-injector.html[this blog post].
+
+[[sec:DSL_Injector_UI_context]]
+===== UI context
+
+To access another DSL injector in a UI DSL project just add a dependency to the
+UI project of the other DSL and then
+
+[source]
+----
+MyClass myClass =
+TheOtherDSLActivator.getInstance().getInjector().get(MyClass.class)
+----
+
+[[sec:DSL_Injector_Non_UI_context]]
+===== Non UI context but with injection context
+
+[source]
+----
+@Inject IResourceServiceProvider.Registry serviceProviderRegistry;
+...
+MyClass myClass
+=
+serviceProviderRegistry.getResourceServiceProvider(URI.createFileURI(n4mfFileAbsolutePath)).get(MyClass.class)
+----
+
+[[sec:DSL_Injector_Non_UI_non_injection_context]]
+===== Non UI context without injection context
+
+[source]
+----
+@Inject IResourceServiceProvider.Registry serviceProviderRegistry;
+...
+MyClass
+myClass
+=
+IResourceServiceProvider.Registry.INSTANCE.getResourceServiceProvider(uri).get(MyClass.class);
+----
+
+[[sec:Cancel_Indicator]]
+==== How do I get cancel indicators in different contexts?
+
+Several factors contribute to responsiveness in the IDE, but here we focus in
+running jobs in the background and reacting to cancellation requests.
+
+The Eclipse Jobs API is recommended for potentially long-running tasks (other
+than incremental building, which has dedicated support). For example, the
+outline view is populated by a background job, running validations on the
+resource (and honoring cancellation requests initiated as for any job).
+
+Cancel indicators are a Xtext abstraction while Eclipse favors progress
+monitors, the latter including not only cancellation capability but also a
+callback mechanism to give feedback in the UI about intermediate progress.
+Cancel indicator can wrap a progress monitor.
+
+Cancel indicators come in two variants, depending on the source of cancellation
+events:
+
+* a resource becoming stale (usually as a result of editing sources) triggers
+cancellation. These cancel indicators can be obtained via
+'OutdatedStateManager', which itself is available via injection.
+* cancel indicators associated to the UI, for example associated to an Eclipse
+job. Examples:
+** for an outline view running in the background, an override of method
+'createRoot()' from 'DefaultOutlineTreeProvider' receives a UI-aware cancel
+indicator;
+** for the transpiler, instances that carry cancel indicator are
+'IFileSystemAccess' and (in the future) 'IGenerator2'. To track the latter, see
+Eclipse bug 477068.
+
+In general, whenever a resource is validated cancel indicator should be checked
+periodically. These checks are performed automatically via
+'MethodWrapperCancelable' before the (reflective) invocation of each validation
+method and therefore require no manual intervention, see
+'AbstractMessageAdjustingN4JSValidator'. However, that doesn’t help in case a
+single validation method ''takes too long''. To simplify those checks, utility
+'isCanceled()' of 'AbstractMessageAdjustingN4JSValidator' can be invoked.
+
+[[sec:Eclipse]]
+== Eclipse
+
+[[sec:Show_Xtext_Index]]
+=== Show the current Xtext index
+
+Press the following keyboard shortcut in the running UI: kbd:[CTRL] +
+kbd:[SHIFT] + kbd:[F3] (likely under Mac kbd:[CMD] + kbd:[SHIFT] + kbd:[F3]).
+
+[[sec:Plugin_spy]]
+=== Plug-in spy
+
+Not special for Xtext but very helpful do identify which class implements a UI
+concept, for example, if you want to know which class implements the Open Model
+Element dialog just press kbd:[CTRL] + kbd:[SHIFT] + kbd:[F3] to open that
+dialog and afterwards press kbd:[SHIFT] + kbd:[ALT] + kbd:[F1] to show that
+'XtextEObjectSearchDialog' is used as implementation. Additionally, use
+kbd:[SHIFT] + kbd:[ALT] + kbd:[F2] to spy buttons in the toolbar and
+kbd:[SHIFT] + kbd:[ALT] + kbd:[F3] to spy the extension point name of the
+currently active view or window.
+
+[[sec:Maven-hints]]
+== Maven
+
+[[how-to-check-for-maven-mojo-updates]]
+=== How to check for Maven MOJO updates
+
+*cd* to the root directory and call
+
+[source,bash]
+----
+mvn versions:display-plugin-updates
+----

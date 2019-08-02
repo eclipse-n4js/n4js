@@ -8,7 +8,7 @@
  Contributors:
    Jens von Pilgrim (HAW Hamburg) - Initial API and implementation
 -->
-<project>
+<project default="all">
 
 	<description>
 		Builds HTML files from asciidoc documents.
@@ -17,7 +17,7 @@
 		The index file will contain a table of contents.
 	</description>
 
-	<property name="doctools.dir" value="${basedir}/asciispec-tools" />
+	<property name="doctools.dir" value="${basedir}/../asciispec-tools" />
 	<property name="docname" value="N4JSDesign" />
 	
 	<target name="all" depends="getAsciispec, asciispec, chunk" />

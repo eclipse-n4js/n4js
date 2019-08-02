@@ -19,7 +19,6 @@ This chapter is only about coding; add information on things like Eclipse setup 
 chapters. Similarly, this chapter is intended to provide just a quick overview, check-list and reminder; add detailed
 information and diagrams to one of the succeeding chapters.
 
-
 == Naming
 
 * The internal handling of N4JS project names is non-trivial (due to the support for npm scopes), see
@@ -120,6 +119,10 @@ class C {
 * Caching of user workspace projects (implemented in MuliCleartriggerCache)
 ** caches only some project information and should be refactored along with Core, Model and EclipseBasedN4JSWorkspace
 
+== Dependency Injection
+
+There are some things to keep in mind when using dependency injection in the context of Xtext. This is a longer topic and it is discussed in the appendix
+<<sec:XtextInjection>>.
 
 == Miscellaneous
 * Resource load states: when an N4JS/N4JSD file is loaded, a certain sequence of processing is triggered (parsing,
