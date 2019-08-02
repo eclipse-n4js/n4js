@@ -34,11 +34,7 @@ Torsten Krämer, Ákos Kitta, Sebastian Zarnekow, Lorenzo Bettini, Jörg Reicher
 
 include::{find}abstract.adoc[]
 
-include::{find}chapters/00a_revisionhistory/revisionhistory.adoc[]
-
 ifdef::backend-docbook5[<<<]
-
-include::{find}chapters/00b_license/license.adoc[]
 
 include::{find}chapters/01_introduction/introduction.adoc[]
 
@@ -76,7 +72,11 @@ include::{find}chapters/a02_jsobjects/jsobjects.adoc[]
 
 include::{find}chapters/a03_n4jsobjects/n4jsobjects.adoc[]
 
+[appendix]
 include::{find}acronyms.adoc[]
+
+[appendix]
+include::{find}chapters/00b_license/license.adoc[]
 
 :leveloffset: -1
 
