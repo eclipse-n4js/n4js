@@ -63,6 +63,7 @@ include::{find}chapters/24_docexporter/docexporter.adoc[]
 include::{find}chapters/25_renameRefactoring/renameRefactoring.adoc[]
 include::{find}chapters/30_flowgraphs/flowgraphs.adoc[]
 
+include::{find}chapters/40_publish_npms/publish_npms.adoc[]
 
 // Appendix
 
