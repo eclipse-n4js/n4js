@@ -69,6 +69,7 @@ include::{find}chapters/40_publish_npms/publish_npms.adoc[]
 
 include::{find}acronyms.adoc[]
 include::{find}chapters/a01_license/license.adoc[]
+include::{find}chapters/a10_moduleLoading/moduleLoading.adoc[]
 
 :leveloffset: -1
 

@@ -1,0 +1,2490 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Module Loading
+:find:
+
+WARNING: This chapter is outdated and basically kept for historical reasons.
+
+[[sec:Dependency_Management]]
+== Dependency Management
+
+There exist several types of dependencies between modules, distinguishable by the time when the dependency is relevant. We first define these dependencies lazily to give an impression of the problem, at more rigorously later on.
+
+Dependency needed at compile time. These type of dependency is removed by the compiler. These are basically type references used in variable or function declarations.
+
+Runtime dependencies are to be handled at runtime in general. We distinguish two special types of runtime dependencies:
+
+A loadtime dependency is a special runtime dependency that needs to be resolved before a module is initialized, that is, when all top-level statements of a module, containing class declarations, are executed. This usually is a types super type (e.g., super class), or a call to a function (defined in a different module) in a static initializer or module top level statement.
+
+An execution time dependency is a non-initialization runtime dependency. That is, when a method is called (from another module), this is execution time.
+
+Of course, before a module can be loaded, it needs to be fetched (i.e., the actual code has to be retrieved by the browser).
+
+We can define sets containing modules which a given module depends on. Note that these sets contain each other, as shown in <<fig:euler_dependencies,Euler Dependencies>>. However, we define disjoint sets in which a dependency to another type is only contained in one of the sets.
+
+[[fig:euler_dependencies]]
+[.center]
+image::{find}images/euler_dependencies.svg[title="Euler diagram of dependency sets"]
+
+Given a code sequence math:[$C$], we define the set of accessed modules in it as math:[$Mod(C)$].
+
+math:[$C<Fn>$] describes all function calls happening in code block math:[$C$], i.e. math:[$C<F1>, C<F2>, \dots$]. In case math:[$C$] calls on functions math:[$C<Fn>$], we define a function’s body code sequence as math:[$body(C<Fn>)$].
+
+The complete set of accessed modules for a particular code sequence math:[$C$] is then defined as
+math:[\[\begin{aligned}AccessedModules(C) :=\ & Mod(C) + \\& AccessedModules(body(C<F1>)) + \\& AccessedModules(body(C<F2>)) + \\& ...\end{aligned}\]]
+
+We explicitly allow a function to be excluded from being incorporated in the above algorithm by annotating it.
+
+The set of load-time-dependencies for a module math:[$M$] with initializer code math:[$IC(M)$] is then defined as math:[\[\begin{aligned}
+load-time-deps := AccessdModules( SuperClass(M) ) + AccessdModules( IC(M) ) \end{aligned}\]]
+
+[[ecmascript-modules]]
+[.language-javascript]
+== ECMAScript Modules
+
+[[sec:ES5_Modules_Systems]]
+=== ES5 Modules Systems
+
+Before ES6, Javascript had no built in support for modules. To overcome this hurdle, the two widely accepted formats have been :
+
+1.  `CommonJS` : Primarily aimed at synchronous module loading. The main implementation of this format is seen in `Node.js`
++
+[source,javascript]
+----
+var value = 100;
+function inc() {
+    value++;
+}
+
+module.exports = {
+    value : value,
+    inc : inc
+}
+----
++
+Import via require.
+2.  `AMD` : Primarily aimed at asynchronous module loading in browsers. The main implementation of this format is seen in `RequireJS`.
++
+[source]
+----
+define('myModule', ['mod1', 'mod2'], function (mod1, mod2) {
+        return {
+            myFunc: function(x, y) {
+                ..
+            }
+        };
+    };
+});
+----
++
+``passive`` format
+
+[[sec:ES6_Modules]]
+=== ES6 Modules
+
+The ES6 spec introduces http://www.ecma-international.org/ecma-262/6.0/#sec-modules[modules]. ES6 modules resemble `CommonJS` syntax with `AMD` like asynchronous loading support.
+
+Apart from the syntactic details, the highlights of ES6 modules are :
+
+1.  ES6 modules support (multiple) named exports.
++
+[source]
+----
+export const VERSION = "1.0.1";
+export function inc(x) {
+    return x + 1;
+}
+----
+2.  ES6 modules support default exports.
++
+[source]
+----
+export default function (x) {
+    return x+1;
+}
+----
+3.  As specified http://www.ecma-international.org/ecma-262/6.0/#sec-createimportbinding[here], ES6 modules export live immutable bindings (instead of values).
++
+NOTE: This behaviour is different from that of `CommonJS` and `AMD` modules where a snapshot of the value is exported.
++
+An example demonstrating the behavioural difference :
++
+[source]
+----
+//-------------src.js------------
+var value = 100;
+function inc() {
+    value++;
+}
+
+module.exports = {
+    value : value,
+    inc : inc
+}
+//-------------main.js------------
+var src = require("./src"); //import src
+
+console.log(src.value); //prints 100
+src.inc();
+
+console.log(src.value); //prints 100 <--- The value does not update.
+
+src.value = 65;
+console.log(src.value); //prints 65 <--- The imported value is mutable.
+----
++
+The same example with ES6 modules :
++
+[source]
+----
+//-------------src.js------------
+export var value = 100; // <--- ES6 syntax
+export function inc() { // <--- ES6 syntax
+    value++;
+}
+
+//-------------main.js------------
+import {value, inc} from "src" // <--- ES6 syntax
+
+console.log(value); //prints 100
+inc();
+
+console.log(value); //prints 101 <--- The value is a live binding.
+
+value = 65; // <--- throws an Error implying the binding is immutable.
+----
+4.  ES6 modules impose a static module structure i.e. the imports and exports can be determined at compile time (statically).
+
+[[sec:ECMAScript_Module_Loaders]]
+[.language-n4js]
+== ECMAScript Module Loaders
+
+For resolving module dependencies and loading modules, the JS landscape provides a few different module loaders.
+
+1.  `RequireJS` is the loader of choice for in browser, `AMD` style modules. We currently transpile our code into an AMD-style format to allow it running in both Browser and Node.js environments.
+2.  `Node.js` provides a native loader implementation for `CommonJS` style modules.
+3.  For browsers (primarily), tools like http://webpack.github.io/[`Webpack`] and http://browserify.org/[`Browserify`] exist. These tools analyse the dependency graph of the entire project and then bundle up all the dependencies in a single file. `Browserify` only supports `CommonJS` modules where as `Webpack` works with both `CommonJS` & `AMD` style modules.
+4.  At the time of writing this document (August 2015), there does not exist any native implementation for ES6 modules by any Javascript host environments i.e. ES6 modules are not natively supported by browsers or `Node.js`, as of now.
+
+[fig:moduelLoader] shows an overview.
+
+[[fig:moduleLoader]]
+[.center]
+image::{find}images/moduleLoader.svg[title="Module Loader and Transpilers, Overview"]
+
+[[sec:ES6_Module_Loaders]]
+=== ES6 Module Loaders
+
+The ES6 spec started out with ES6 Module Loader details as part of the spec. However the Working Group later decided to not proceed with it. The specification for ES6 Module Loader is now a separate specification cite:[WhatWGLoader].
+
+The aim of this specification is:
+
+_____
+This specification describes the behavior of loading JavaScript modules from a JavaScript host environment. It also provides APIs for intercepting the module loading process and customizing loading behavior.
+_____
+
+The https://github.com/whatwg/loader#implementation-status[Implementation status] of the spec states :
+
+_____
+It is too early to know about the Loader, first we need ES2015 modules implemented by the various engines.
+_____
+
+
+[[sec:Polyfills_for_ES6_Module_Loaders]]
+=== Polyfills for ES6 Module Loaders
+
+Although there is no native support for ES6 module loading, there are a few attempts to polyfill this gap.
+
+[[sec:es6_module_loader]]
+====  es6-module-loader
+
+The https://github.com/ModuleLoader/es6-module-loader[`es6-module-loader`] project provides a polyfill for the ES6 Module Loader implementation. It dynamically loads ES6 modules in browsers and `Node.js` with support for loading existing and custom module formats through loader hooks.
+
+[[sec:SystemJS]]
+====  SystemJS
+
+Building upon `es6-module-loader`, https://github.com/systemjs/systemjs[`SystemJS`] supports loading ES6 modules along with `AMD`, `CommonJS` and global scripts in the browser and `Node.js`.
+
+NOTE: In order to use ES6 modules (written in ES6 syntax) the code first needs to be transpiled to ES5. For this purpose, `SystemJS` provides an option to use https://github.com/google/traceur-compiler[`Traceur`] compiler or https://babeljs.io/[`Babel`].
+
+[[sec:Demo]]
+====  Demo
+
+A demonstration of how to how to use ES6 modules with `Babel` and `SystemJS` in `Node.js` as of today (August 2015).
+
+1.  Create an ES6 module as shown:
++
+[source]
+----
+export var value = 100; // <--- named export of a variable
+export function inc() { // <--- named export of a function
+    value++;
+}
+----
+2.  Import the bindings from the module as shown:
++
+[source]
+----
+import {value, inc} from "src"
+
+var importedValue = value; // <--- using the imported value
+inc(); // <--- using the imported function
+----
+3.  Transpile these two files using `Babel` to ES5 with the target module format as `system`, as shown:
++
+[source]
+----
+$ babel <inputdir> --out-dir <outputdir> --modules system
+----
+4.  The transpiled output should be resemble the following:
++
+[source]
+----
+System.register([], function (_export) {
+    "use strict";
+
+    var value;
+
+    _export("inc", inc);
+
+    function inc() {
+        _export("value", value += 1);
+    }
+
+    return {
+        setters: [],
+        execute: function () {
+            value = 100;
+
+            _export("value", value);
+        }
+    };
+});
+----
++
+[source]
+----
+System.register(["src"], function (_export) {
+  "use strict";
+
+  var value, inc, importedValue;
+  return {
+    setters: [function (_src) {
+      value = _src.value;
+      inc = _src.inc;
+    }],
+    execute: function () {
+      importedValue = value;
+      inc();
+    }
+  };
+});
+----
+5.  Finally run the above transpiled files, as shown:
++
+[source]
+----
+var System = require('systemjs'); // <--- Require SystemJS
+System.transpiler = 'babel'; // <--- Configure SystemJS
+
+System.import('main'); // <--- Import the transpiled "main" module.
+----
+
+[[case-study-typescript]]
+[.language-typescript]
+== Case Study : TypeScript
+
+NOTE: [[sec:Case_Study___TypeScript]] This section is NOT an exhaustive introduction to Microsoft’s `TypeScript`, but a narrowed down analysis of certain aspects of `TypeScript`.
+
+[[sec:ES6_Modules_Support]]
+=== ES6 Modules Support
+
+`TypeScript` language has recently added support for ES6 modules. From the https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#es6-modules[wiki] :
+
+_____
+`TypeScript` 1.5 supports `ECMAScript 6` (ES6) modules. ES6 modules are effectively `TypeScript` external modules with a new syntax: ES6 modules are separately loaded source files that possibly import other modules and provide a number of externally accessible exports. ES6 modules feature several new export and import declarations.
+_____
+
+[[sec:TypeScript_and_Module_Loading]]
+=== TypeScript and Module Loading
+
+`TypeScript` does not concern itself with providing a module loader. It is the responsibility of the host environment. However `TypeScript`’s compiler provides options to transpile the modules to different formats like `AMD`, `CommonJS`, `ES6` etc. It is the developer’s responsibility to choose an appropriate format and then use the modules with a correct module loader.
+
+From the https://github.com/Microsoft/TypeScript/issues/2242[wiki] again :
+
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+TypeScript supports down-level compilation of external modules using the new ES6 syntax. When compiling with `-t ES3` or `-t ES5` a module format must be chosen using `-m CommonJS` or `-m AMD`. When compiling with `-t ES6` the module format is implicitly assumed to be `ECMAScript 6` and the compiler simply emits the original code with type annotations removed. When compiling down-level for `CommonJS` or `AMD`, named exports are emitted as properties on the loader supplied exports instance. This includes default exports which are emitted as assignments to exports.default.
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Consider the following module `src.ts` :
+
+[source]
+----
+export var value = 100; //<--- ES6 syntax
+
+export function inc() {  //<--- ES6 syntax
+    value++;
+}
+----
+
+Compiling it to `SystemJS` format produces :
+
+[source]
+----
+System.register([], function(exports_1) {
+    var value;
+    function inc() {
+        (exports_1("value", ++value) - 1);
+    }
+    exports_1("inc", inc);
+    return {
+        setters:[],
+        execute: function() {
+            exports_1("value", value = 100); //<--- ES6 syntax
+        }
+    }
+});
+----
+
+Compiling it to `CommonJS` format produces :
+
+[source]
+----
+exports.value = 100; //<--- ES6 syntax
+function inc() {
+    exports.value++;
+}
+exports.inc = inc;
+----
+
+Compiling it to `AMD` format produces :
+
+[source]
+----
+define(["require", "exports"], function (require, exports) {
+    exports.value = 100; //<--- ES6 syntax
+    function inc() {
+        exports.value++;
+    }
+    exports.inc = inc;
+});
+----
+
+Compiling it to `UMD` format produces :
+
+[source]
+----
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports"], function (require, exports) {
+    exports.value = 100; //<--- ES6 syntax
+    function inc() {
+        exports.value++;
+    }
+    exports.inc = inc;
+});
+----
+
+NOTE :
+
+1.  Visual Studio 2015 does not http://visualstudio.uservoice.com/forums/121579-visual-studio/suggestions/7017377-support-for-es6-modules[support] ES6 modules at this time.
+2.  `SystemJS` supports `TypeScript` as a compiler. This implies `TypeScript` modules can be transpiled to be used with `SystemJS` as the module loader.
+
+[[sec:Cyclic_Dependencies]]
+[.language-js]
+== Cyclic Dependencies
+
+To better analyse and evaluate `SystemJS` module loader and different module formats, let’s look at a cyclic dependency example from a (extremely simplified) stdlib task `FixedPoint6`. The outline for the example is :
+
+1.  Prepare 2 ES6 modules with a circular dependency.
+2.  Then transpile these modules to different module formats (e.g. `AMD`, & `SystemJS`).
+3.  With `SystemJS` as the module loader, execute the test for every transpiled module format.
+
+[[sec:Setup]]
+=== Setup
+
+Consider the following ES6 listings:
+
+1.  RoundingMode
++
+[source]
+----
+export default {
+    FLOOR : "FLOOR",
+    CEILING : "CEILING"
+}
+----
+2.  MathContext
++
+[source]
+----
+import { default as FixedPoint6 } from "FixedPoint6";
+import { default as RoundingMode } from "RoundingMode";
+
+let MathContext = class {
+    constructor(mode) {
+        this.mode = mode;
+    }
+
+    divide(fp1, fp2) {
+        var quotient = FixedPoint6.getQuotient(fp1, fp2);
+
+        if(this.mode === RoundingMode.CEILING) {
+            return new FixedPoint6(Math.ceil(quotient));
+        } else if(this.mode === RoundingMode.FLOOR) {
+            return new FixedPoint6(Math.floor(quotient));
+        } else {
+            throw new Error("Incorrect RoundingMode");
+        }
+    }
+}
+
+MathContext.FLOOR = new MathContext(RoundingMode.FLOOR);
+MathContext.CEILING = new MathContext(RoundingMode.CEILING);
+
+export default MathContext;
+----
+3.  FixedPoint6
++
+[source]
+----
+import { default as MathContext } from "MathContext";
+
+export default class FixedPoint6 {
+    constructor(number) {
+        this.value = number;
+    }
+
+    static getQuotient(fp1, fp2) {
+        return fp1.value/fp2.value;
+    }
+
+    divide(fp) {
+        return FixedPoint6.defaultContext.divide(this, fp);
+    }
+}
+
+FixedPoint6.defaultContext = MathContext.FLOOR;
+----
+4.  Test
++
+[source]
+----
+import { default as FixedPoint6 } from "FixedPoint6";
+import { default as MathContext } from "MathContext";
+import { default as RoundingMode } from 'RoundingMode';
+
+var fp1 = new FixedPoint6(20.5);
+var fp2 = new FixedPoint6(10);
+
+var fp3 = fp1.divide(fp2);
+console.log(fp1, fp2, fp3);
+----
+5.  Runner : This is the runner file to execute the test (after transpilation).
++
+[source]
+----
+var System = require('systemjs');
+System.transpiler = 'babel';
+
+System.config({
+    baseURL: './build',
+    "paths": {
+        "*": "*.js"
+    }
+});
+
+System.import('test').catch(function(e) {
+    console.log(e);
+})
+----
+
+Clearly `MathContext` & `FixedPoint6` have a circular dependency upon each other.
+
+[[sec:Transpile_and_Execute]]
+[.language-js]
+=== Transpile and Execute
+
+Transpile the above setup to different formats and execute the code using `SystemJS` module loader :
+
+[[sec:Module_Format___AMD]]
+====  Module Format = AMD
+
+1.  Compile the previous set up using `babel` as the transpiler with `AMD` modules :
++
+[source]
+----
+babel src -w --out-dir build --modules amd
+----
+2.  Run the transpiled `test.js` with :
++
+[source]
+----
+node runner.js
+----
+3.  The execution would fail with an error like the following :
++
+[source]
+----
+Error: _FixedPoint62.default.getQuotient is not a function
+----
+
+[[sec:Module_Format___CommonJS]]
+====  Module Format = CommonJS
+
+1.  Compile the previous set up using `babel` as the transpiler with `CommonJS` modules :
++
+[source]
+----
+babel src -w --out-dir build --modules common
+----
+2.  Run the transpiled `test.js` with :
++
+[source]
+----
+node runner.js
+----
+3.  The execution is successful and logs the following results :
++
+[source]
+----
+{ value: 20.5 } { value: 10 } { value: 2 }
+----
+
+[[sec:Module_Format___SystemJS]]
+====  Module Format = SystemJS
+
+1.  Compile the previous set up using `babel` as the transpiler with `SystemJS` modules :
++
+[source]
+----
+babel src -w --out-dir build --modules system
+----
+2.  Run the transpiled `test.js` with :
++
+[source]
+----
+node runner.js
+----
+3.  The execution is successful and logs the following results :
++
+[source]
+----
+{ value: 20.5 } { value: 10 } { value: 2 }
+----
+
+[[sec:Conclusion]]
+=== Conclusion
+
+As observed, the test is executed successfully with `CommonJS` & `SystemJS` module formats. It however fails with `AMD` format (due to the circular dependency).
+
+[[system.register-as-transpilation-target]]
+[.language-n4js]
+== System.register as transpilation target
+
+[[sec:System_register_as_transpilation_target]]
+In order to integrate `SystemJS` as the module loader, the recommended module format is `System.register`. This section serves as a guide (& implementation hint) to transpile N4JS modules with `System.register` as the module format.
+
+[[sec:Introduction]]
+=== Introduction
+
+This format is best explained from its https://github.com/ModuleLoader/es6-module-loader/blob/master/docs/system-register.md[documentation] :
+
+____
+System.register can be considered as a new module format designed to support the exact semantics of ES6 modules within ES5. It is a format that was developed out of collaboration and is supported as a module output in Traceur (as instantiate), Babel and TypeScript (as system). All dynamic binding and circular reference behaviors supported by ES6 modules are supported by this format. In this way it acts as a safe and comprehensive target format for the polyfill path into ES6 modules.
+
+To run the format, a suitable loader implementation needs to be used that understands how to execute it. Currently these include SystemJS, SystemJS Self-Executing Bundles and ES6 Micro Loader. The ES6 Module Loader polyfill also uses this format internally when transpiling and executing ES6.
+____
+
+
+The `System.register` format is not very well documented. However, this format is supported by all major transpilers out there i.e. `BabelJS`, `Traceur` & `TypeScript` transpilers. In fact, the primary resource of this documentation has been the outputs generated by these transpilers.
+
+[[sec:External_Transpilers]]
+====  External Transpilers
+
+In order to follow along, it will be best to try out different ES6 syntax being transpiled to `System.register` format by these transpilers.
+
+The following instructions will be useful :
+
+1.  Transpile with Traceur
++
+[source,bash]
+----
+traceur --dir <SOURCE_DIR> <OUTPUT_DIR> --experimental --modules=instantiate
+----
+2.  Transpile with Babel
++
+[source,bash]
+----
+babel <SOURCE_DIR> --out-dir <OUTPUT_DIR> --modules system
+----
+3.  Transpile with TypeScript
++
+Create a file by the name of `tsconfig.json` in the project folder, with the following contents :
++
+[source,json]
+----
+{
+    "compilerOptions": {
+        "module": "system",
+        "target": "ES5",
+        "outDir": <OUTPUT_DIR>,
+        "rootDir": <SOURCE_DIR>
+    }
+}
+----
++
+Then transpile with :
++
+[source,javascript]
+----
+tsc
+----
+
+[[sec:Example_of_a_System_register_module]]
+====  Example of a System.register module
+
+For the following ES6 code :
+
+[source,javascript]
+----
+import { p as q } from './dep';
+
+var s = 'local';
+
+export function func() {
+    return q;
+}
+
+export class C {}
+----
+
+The `Babel` transpiler generates the following code (w/ `System.register` format):
+
+[source,javascript]
+----
+System.register(['./dep'], function (_export) {
+    'use strict';
+
+    var q, s, C;
+
+    _export('func', func);
+
+    function _classCallCheck(instance, Constructor) { .. }
+
+    function func() {
+        return q;
+    }
+
+    return {
+        setters: [function (_dep) {
+            q = _dep.p;
+        }],
+        execute: function () {
+            s = 'local';
+
+            C = function C() {
+                _classCallCheck(this, C);
+            };
+
+            _export('C', C);
+        }
+    };
+});
+----
+
+[[sec:Structure_of_a_System_register_module]]
+=== Structure of a System.register module
+
+Broadly speaking, a `System.register` module has the following structure :
+
+[source,javascript]
+----
+System.register(<<DEPENDENCIES ARRAY>>, function(<<exportFn>>) {
+    <<DECLARATION SCOPE>>
+
+    return {
+        setters: <<SETTERS ARRAY>>,
+        execute: function() {
+            <<EXECUTABLES>>
+        }
+    };
+});
+----
+
+Highlights :
+
+* `System.register(...)` is called with 2 arguments :
+** `\<<DEPENDENCIES ARRAY>>` : an array of dependencies (similar to `AMD`) extracted from the `ES6 import` statements.
+** a function (`FN`) :
+*** accepts a parameter called `\<<exportFn>>`. This `\<<exportFn>>` (provided by `SystemJS`) keeps a track of all the exports of this module & will inform all the importing modules of any changes.
+*** contains a `\<<DECLARATION SCOPE>>` where all the functions and variables (from the source code) get hoisted to.
+*** returns an object with 2 properties :
+**** `setters` : The `\<<SETTERS ARRAY>>` is simply an array of functions. Each of these functions represents the imported-bindings from the `\<<DEPENDENCIES ARRAY>>`. The `\<<SETTERS ARRAY>>` and `\<<DEPENDENCIES ARRAY>>` follow the same order.
+**** `execute` : `\<<EXECUTABLES>>` is the rest of the body of the source code.
+
+=== Transpilation Hints
+
+By observing the existing transpilers’ output, this sub-section provides insights into the process of transpiling to this format :
+
+[[sec:Handling_Imports]]
+====  Handling Imports
+
+The following are ES6 code snippets with some `import` statements :
+
+1.  Simple Import Statement
++
+[source,javascript]
+----
+import {b1} from 'B';
+----
++
+A valid `System.register` output for this snippet would look like :
++
+[source]
+----
+System.register(['B'], function (<<exportFn>>) { //(1.)
+
+  var b1;  //(2.)
+
+  return {
+
+    //(3.)
+    setters: [function (_B) {
+      b1 = _B.b1; //(4.)
+    }],
+
+    execute: function () {}
+  };
+});
+----
++
+[horizontal]
+highlights:::
+. The `\<<DEPENDENCIES ARRAY>>` is just `[’B’]`.
+. The `\<<DECLARATION SCOPE>>` simply declares the imported binding `v1` as a variable.
+. The `\<<SETTERS ARRAY>>` has 1 function. This function corresponds to the single dependency (`’B’`) from (1.)
+. The setter function accepts one argument (the exported object from ``pass:[’B’]`` as ``pass:[_B]`` . It then sets the local binding (i.e. local variable ``v1``) to ``pass:[_B.b1]``.
+
+Takeaway:::
+* An `import` statement is broken down into `\<<DEPENDENCIES ARRAY>>` & `\<<SETTERS ARRAY>>`.
+* Whenever the value of `b1` inside `B` is changed, `SystemJS` will execute the corresponding `setter function` in this module i.e. the 1st function in this case.
+2.  Multiple Import Statements
++
+[source]
+----
+import { a1 as a0 } from 'A';
+import {b1} from 'B';
+import { c1 as c0 } from 'C';
+import {b2, b3} from 'B';
+import {default} from 'C';
+import {a2} from 'A';
+----
++
+A valid `System.register` output for this snippet would look like :
++
+[source]
+----
+System.register(['A', 'B', 'C'], function (<<exportFn>>) { //(1.)
+
+  var a0, a2, b1, b2, b3, c0, default;  //(2.)
+
+  return {
+
+    //(3.)
+    setters: [function (_A) {
+      a0 = _A.a1;         //(4.1.)
+      a2 = _A.a2;         //(4.2.)
+    }, function (_B) {
+      b1 = _B.b1;
+      b2 = _B.b2;
+      b3 = _B.b3;
+    }, function (_C) {
+      c0 = _C.c1;
+      default = _C['default'];
+    }],
+
+
+    execute: function () {}
+  };
+});
+----
++
+[horizontal]
+highlights:::
+. The `\<<DEPENDENCIES ARRAY>>` is now a unique array `[’A’, ’B’, ’C’]`. Note that there are no duplicates.
+. The `\<<DECLARATION SCOPE>>` simply declares all the imported bindings as variables.
+. The `\<<SETTERS ARRAY>>` now has 3 functions. These 3 functions match the ordering of the `\<<DEPENDENCIES ARRAY>>`.
+. The setter function accepts one argument (the exported object from the dependency) It then sets the local bindings (i.e. local variables) from the exported value of the dependency.
++
+Takeaway:::
+* Whenever an exported value from `A` is changed, `SystemJS` will execute the first `setter function` in this module.
+* Whenever an exported value from `B` is changed, `SystemJS` will execute the second `setter function` in this module.
+* Whenever an exported value from `C` is changed, `SystemJS` will execute the third `setter function` in this module.
+
+[[sec:__exportFn__]]
+====  \<<exportFn>>
+
+Before moving on to handling exports, let’s focus on the SystemJS provided `\<<exportFn>>`.
+
+This function looks similar to the following :
+
+[source]
+----
+function (name, value) {     //(1.)
+      module.locked = true;
+
+      if (typeof name == 'object') {
+        for (var p in name)
+          exports[p] = name[p];      //(2.1.)
+      }
+      else {
+        exports[name] = value;      //(2.2.)
+      }
+
+      for (var i = 0, l = module.importers.length; i < l; i++) {
+        var importerModule = module.importers[i];
+        if (!importerModule.locked) {
+          var importerIndex = indexOf.call(importerModule.dependencies, module);
+          importerModule.setters[importerIndex](exports);     //(3.)
+        }
+      }
+
+      module.locked = false;
+      return value; //(4.)
+}
+----
+
+[horizontal]
+[horizontal]
+highlights:::
+. The `\<<exportFn>>` takes 2 arguments : `name` & `value`.
+. It maintains an `exports` object with `name` & `value`.
+. For every module which imports the current module, it executes the corresponding `setter function`.
+. It returns the `value`.
+
+[horizontal]
+Takeaway:::
+This `\<<exportFn>>` is responsible for pushing the changes from a module to every importing module thereby implementing the live binding.
+
+[[sec:Handling_Exports]]
+====  Handling Exports
+
+Now let’s focus on handling `export` statements.
+
+1.  Simple Exports Statement
++
+[source]
+----
+export var v =1;
+export function f(){}
+----
++
+A valid `System.register` output for this snippet would look like :
++
+[source]
+----
+System.register([], function (_export) {  //(1.)
+
+   //(2.)
+  var v;
+  function f() {}
+
+  _export("f", f); //(4.1)
+
+  return {
+    setters: [],
+
+    //(3.)
+    execute: function () {
+      v = 1;  //(3.1.)
+
+      _export("v", v); //(4.2.)
+    }
+  };
+});
+----
++
+[horizontal]
+highlights::
+. The `\<<exportFn>>` is named to as `pass:[_export]`. (This is an implementation decision by Babel.) The name should be unique to not conflict with any user-defined variable/function names.
+.  The `\<<DECLARATION SCOPE>>` hoists the exported variable `v` and the function `f`.
+.  The `\<<EXECUTABLES>>` zone now contains the executable code from the source module.
+.  Initialise the variable `v1` with the value extracted from the source. This essentially is the executable part of the module.
+.  The `export` function expression results in a call to the `pass:[_exports]` function as: `pass:[_export(f, f)]`
+.  The `export` statement results in a call to the `pass:[_export]` function as: `pass:[_export(v, v)]`
++
+Takeaway::
+* The module’s exports statements are separated from the hoistable and executable statements.
+* All the exported bindings are tracked by wrapping them inside the `\<<exportFn>>`.
+2.  Tracking Exported Bindings
++
+To maintain live bindings, `SystemJS` needs to track any changes to exported bindings in order to call the `setter` functions of importing modules. Let’s look at an example for that :
++
+[source]
+----
+export var v1 = 1;
+export var v2 = 2;
+export var v3 = 3;
+export function f() {}
+
+v1++; //(1.)
+++v2; //(2.)
+v3 += 5; //(3.)
+f = null; //(4.)
+----
++
+`Babel` output for this snippet looks like :
++
+[source]
+----
+System.register([], function (_export) {
+
+  var v1, v2, v3;
+
+  _export("f", f);
+
+  function f() {}
+
+  return {
+    setters: [],
+
+    execute: function () {
+      v1 = 1;
+
+      _export("v1", v1);
+
+      v2 = 2;
+
+      _export("v2", v2);
+
+      v3 = 3;
+
+      _export("v3", v3);
+
+      _export("v1", v1 += 1); //(1.)
+      _export("v2", v2 += 1); //(2.)
+      _export("v3", v3 += 5); //(3.)
+      _export("f", f = null); //(4.)
+    }
+  };
+});
+----
++
+`Traceur` output for this snippet looks like :
++
+[source]
+----
+System.register([], function($__export) {
+
+  var v1, v2, v3;
+  function f() {}
+
+  $__export("f", f);
+
+  return {
+    setters: [],
+
+    execute: function() {
+      v1 = 1;
+      $__export("v1", v1);
+      v2 = 2;
+      $__export("v2", v2);
+      v3 = 3;
+      $__export("v3", v3);
+
+      ($__export("v1", v1 + 1), v1++); //(1.)
+      $__export("v2", ++v2); //(2.)
+      $__export("v3", v3 += 5); //(3.)
+      $__export("f", f = null); //(4.)
+    }
+  };
+});
+----
++
+`TypeScript` output for this snippet looks like :
++
+[source]
+----
+System.register([], function(exports_1) {
+    var v1, v2, v3;
+    function f() { }
+
+    exports_1("f", f);
+
+    return {
+        setters:[],
+
+        execute: function() {
+            exports_1("v1", v1 = 1);
+            exports_1("v2", v2 = 2);
+            exports_1("v3", v3 = 3);
+
+            (exports_1("v1", ++v1) - 1); //(1.)
+            exports_1("v2", ++v2); //(2.)
+            exports_1("v3", v3 += 5); //(3.)
+            f = null; //(4.)
+        }
+    }
+});
+----
++
+[horizontal]
+highlights::
+* The re-assignment of `v1, v2, v3 and f` is wrapped inside a call to the `\<<exportFn>>` with the updated value.
++
+Takeaway::
+* While transpiling we need to detect if any exported binding is reassigned. In that case invoke the `\<<exportFn>>` immediately with the new value.
+* Different transpilers perform different optimization tricks, which may be worth looking at.
+3.  Exporting a Class extending an imported Class.
++
+Let’s look at the following class declaration :
++
+[source]
+----
+import {A} from "A"; //<-- import class A
+
+export class C extends A {}
+----
++
+`Babel` output for this snippet looks like :
++
+[source]
+----
+System.register(["A"], function (_export) {
+
+  var A, C;
+
+  var _get = function get(_x, _x2, _x3) { ... };
+
+  function _classCallCheck(instance, Constructor) { ... }
+
+  function _inherits(subClass, superClass) { ... }
+
+  return {
+    setters: [function (_A2) {
+      A = _A2.A;
+    }],
+
+    execute: function () { //(1.)
+      C = (function (_A) {
+        _inherits(C, _A);
+
+        function C() {
+          _classCallCheck(this, C);
+
+          _get(Object.getPrototypeOf(C.prototype), "constructor", this).apply(this, arguments);
+        }
+
+        return C;
+      })(A);
+
+      _export("C", C);
+    }
+  };
+});
+----
++
+`Traceur` output for this snippet looks like :
++
+[source]
+----
+System.register(["A"], function($__export) {
+  var A, C;
+
+  return {
+    setters: [function($__m) {
+      A = $__m.A;
+    }],
+
+    execute: function() { //(1.)
+      C = $traceurRuntime.initTailRecursiveFunction(function($__super) {
+        return $traceurRuntime.call(function($__super) {
+          function C() {
+            $traceurRuntime.superConstructor(C).apply(this, arguments);
+          }
+          return $traceurRuntime.continuation($traceurRuntime.createClass, $traceurRuntime, [C, {}, {}, $__super]);
+        }, this, arguments);
+      })(A);
+      $__export("C", C);
+    }
+  };
+});
+----
++
+`TypeScript` output for this snippet looks like :
++
+[source]
+----
+System.register(["A"], function(exports_1) {
+    var __extends = function(){ ... }
+    var A_1;
+    var C;
+
+    return {
+        setters:[
+            function (A_1_1) {
+                A_1 = A_1_1;
+            }],
+
+        execute: function() { //(1.)
+            C = (function (_super) {
+                __extends(C, _super);
+                function C() {
+                    _super.apply(this, arguments);
+                }
+                return C;
+            })(A_1.A);
+            exports_1("C", C);
+        }
+    }
+});
+----
++
+[horizontal]
+highlights::
+. Notice how the construction of class `C` has now been deferred to the `\<<EXECUTABLES>>` zone. It is because `C` depends on `A` being imported first.
++
+Takeaway::
+* The `\<<DECLARATION SCOPE>>` is for hoisting only independent entities i.e. the ones that do not depend upon any imports. Everything else is moved to the `\<<EXECUTABLES>>` region.
+
+[[sec:Examples_w__Circular_Dependencies]]
+=== Examples w/ Circular Dependencies
+
+This section focuses on circular dependencies. The goal is to see how the transpiled output looks like and if the execution is possible.
+
+[example]
+--
+Source files:
+[source]
+----
+import B from "B";
+
+export default class A {}
+A.b = new B(); //<---
+----
+
+[source]
+----
+import A from "A";
+
+export default class B {}
+B.a = new A(); //<---
+----
+
+Transpiled Outputs (w/ Babel): +
+
+[source]
+----
+System.register(["B"], function (_export) {
+  "use strict";
+
+  var B, A;
+
+  function _classCallCheck(instance, Constructor) {...}
+
+  return {
+    setters: [function (_B) {
+      B = _B["default"];
+    }],
+    execute: function () {
+      A = function A() {
+        _classCallCheck(this, A);
+      };
+
+      _export("default", A);
+
+      A.b = new B();
+    }
+  };
+});
+----
+
+[source]
+----
+System.register(["A"], function (_export) {
+  "use strict";
+
+  var A, B;
+
+  function _classCallCheck(instance, Constructor) {...}
+
+  return {
+    setters: [function (_A) {
+      A = _A["default"];
+    }],
+    execute: function () {
+      B = function B() {
+        _classCallCheck(this, B);
+      };
+
+      _export("default", B);
+
+      B.a = new A();
+    }
+  };
+});
+----
+
+Execution Result +
+
+[source]
+----
+var System = require('systemjs');
+
+System.import('A', 'B').then(function(resp) {
+    var a = new A();
+    var b = new B();
+}).catch(function(e) {
+    console.log(e);
+});
+----
+
+[source]
+----
+Babel : [Error: undefined is not a function]
+----
+--
+
+[example]
+--
+Source files:
+
+[source]
+----
+import {B} from "B";
+
+export class A extends B{}
+----
+
+[source]
+----
+import {A} from "A";
+
+export class B{}
+class C extends A{}
+----
+
+Transpiled Outputs (w/ Babel) : +
+
+[source]
+----
+System.register(["B"], function (_export) {
+  "use strict";
+
+  var B, A;
+
+  var _get = function get(_x, _x2, _x3) { ... };
+
+  function _classCallCheck(instance, Constructor) { ... }
+
+  function _inherits(subClass, superClass) {...}
+
+  return {
+    setters: [function (_B2) {
+      B = _B2.B;
+    }],
+    execute: function () {
+      A = (function (_B) {
+        _inherits(A, _B);
+
+        function A() {
+          _classCallCheck(this, A);
+
+          _get(Object.getPrototypeOf(A.prototype), "constructor", this).apply(this, arguments);
+        }
+
+        return A;
+      })(B);
+
+      _export("A", A);
+    }
+  };
+});
+----
+
+[source]
+----
+System.register(["A"], function (_export) {
+  "use strict";
+
+  var A, B, C;
+
+  var _get = function get(_x, _x2, _x3) { ... };
+
+  function _inherits(subClass, superClass) { ... }
+
+  function _classCallCheck(instance, Constructor) { ... }
+
+  return {
+    setters: [function (_A2) {
+      A = _A2.A;
+    }],
+    execute: function () {
+      B = function B() {
+        _classCallCheck(this, B);
+      };
+
+      _export("B", B);
+
+      C = (function (_A) {
+        _inherits(C, _A);
+
+        function C() {
+          _classCallCheck(this, C);
+
+          _get(Object.getPrototypeOf(C.prototype), "constructor", this).apply(this, arguments);
+        }
+
+        return C;
+      })(A);
+    }
+  };
+});
+----
+
+Execution Result +
+
+[source]
+----
+var System = require('systemjs');
+
+System.import('A','B').then(function(resp) {
+    var a = new A();
+}).catch(function(e) {
+    console.log(e);
+});
+----
+
+[source]
+----
+TypeScript : [Error: Cannot read property 'prototype' of undefined]
+Babel : [Error: Super expression must either be null or a function, not undefined]
+----
+--
+
+[example]
+--
+Source files:
+
+[source]
+----
+import B from "B";
+
+class A extends B {}
+export default class X {}
+----
+
+[source]
+----
+import X from "A";
+
+export default class B {}
+class Y extends X {}
+----
+
+Transpiled Outputs (w/ Babel): +
+
+[source]
+----
+System.register(["B"], function (_export) {
+  "use strict";
+
+  var B, A, X;
+
+  var _get = function get(_x, _x2, _x3) { ... };
+
+  function _classCallCheck(instance, Constructor) { ... }
+
+  function _inherits(subClass, superClass) { ... }
+
+  return {
+    setters: [function (_B2) {
+      B = _B2["default"];
+    }],
+    execute: function () {
+      A = (function (_B) {
+        _inherits(A, _B);
+
+        function A() {
+          _classCallCheck(this, A);
+
+          _get(Object.getPrototypeOf(A.prototype), "constructor", this).apply(this, arguments);
+        }
+
+        return A;
+      })(B);
+
+      X = function X() {
+        _classCallCheck(this, X);
+      };
+
+      _export("default", X);
+    }
+  };
+});
+----
+
+[source]
+----
+System.register(["A"], function (_export) {
+  "use strict";
+
+  var X, B, Y;
+
+  var _get = function get(_x, _x2, _x3) { ... };
+
+  function _inherits(subClass, superClass) { ... }
+
+  function _classCallCheck(instance, Constructor) { ... }
+
+  return {
+    setters: [function (_A) {
+      X = _A["default"];
+    }],
+    execute: function () {
+      B = function B() {
+        _classCallCheck(this, B);
+      };
+
+      _export("default", B);
+
+      Y = (function (_X) {
+        _inherits(Y, _X);
+
+        function Y() {
+          _classCallCheck(this, Y);
+
+          _get(Object.getPrototypeOf(Y.prototype), "constructor", this).apply(this, arguments);
+        }
+
+        return Y;
+      })(X);
+    }
+  };
+});
+----
+
+Execution Result +
+
+[source]
+----
+var System = require('systemjs');
+
+System.import('A').then(function(resp) {
+    var a = new A();
+}).catch(function(e) {
+    console.log(e);
+});
+----
+
+[source]
+----
+TypeScript : [Error: Cannot read property 'prototype' of undefined]
+Babel : [[Error: Super expression must either be null or a function, not undefined]]
+----
+--
+
+[[sec:N4JS_Examples_w__Circular_Dependencies]]
+=== N4JS Examples w/ Circular Dependencies
+
+In order to improve our precision in conversing and discussing about different kinds of circular dependencies, this section provides the most basic examples of different kinds.
+
+[[sec:Unresolved_Cyclic_Dependencies]]
+====  Unresolved Cyclic Dependencies
+
+Below examples demonstrate cases when cyclic dependency cannot be resolved at all and will cause runtime errors.
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import b from "B"
+
+export public var number a = 1;
+export public var number a2 = b + 1;
+----
+
+[source]
+----
+import a from "A"
+
+export public var number b = a + 1;
+----
+
+[source]
+----
+import a2 from "A"
+console.log(a2); //<-- should be 3. not NaN.
+----
+--
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import B from "B"
+
+export public class A {
+    static a = B.b + 1;
+}
+----
+
+[source]
+----
+import A from "A"
+export public class B {
+    static b = 1;
+}
+export public class B2 {
+    static b2 = A.a;
+}
+----
+
+[source]
+----
+import B2 from "B"
+console.log(B2.b2); //should log 2
+----
+--
+
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import B from "B"
+export public class A {
+    B b = new B();
+}
+----
+
+[source]
+----
+import A from "A"
+export public class B {
+    A a = new A();
+}
+----
+
+[source]
+----
+import A from "A"
+new A(); // should not cause a runtime error.
+----
+--
+
+[[sec:Variables___Functions]]
+====  Examples with Variables & Functions
+
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import b_fun from "B"
+
+export public var a2 = b_fun();
+export public var a = 1;
+----
+
+[source]
+----
+import a from "A"
+
+export public function b_fun() {
+    return a + 1;
+}
+----
+
+[source]
+----
+import a2 from "A"
+console.log(a2); //<-- should be 2. not NaN.
+----
+--
+
+[[sec:Classes]]
+====  Examples with Classes
+
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import B from "B"
+export public class A {
+    static a1 = 1;
+    static a2 = B.b1;
+}
+----
+
+[source]
+----
+import A from "A"
+export public class B {
+    static b1 = A.a1;
+}
+----
+
+[source]
+----
+import A from "A"
+console.log(A.a1); //should log 1. not an error.
+----
+--
+
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import B from "B"
+export public class A {
+    static a1 = 1;
+    static a2 = B.b1;
+}
+----
+
+[source]
+----
+import A from "A"
+export public class B {
+    static b1 = -1;
+    static b2 = A.a1;
+}
+----
+
+[source]
+----
+import A from "A"
+console.log(A.a1);//should log 1. not an error.
+----
+--
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import B from "B"
+export public class A {
+    static a = new B();
+}
+----
+
+[source]
+----
+import A from "A"
+export public class B {
+    static b = new A();
+}
+----
+
+[source]
+----
+import A from "A"
+new A(); //should succeed.
+----
+--
+
+[[sec:Examples_with_SubClassing]]
+====  Examples with SubClassing
+
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import B from "B"
+export public class A {}
+export public class C extends B {}
+----
+
+[source]
+----
+import A from "A"
+export public class B extends A{}
+----
+
+[source]
+----
+import C from "A"
+new C();//should succeed.
+----
+
+--
+
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import B from "B"
+export public class A {}
+export public class C {
+    c = new B();
+}
+----
+
+[source]
+----
+import A from "A"
+export public class B extends A{}
+----
+
+[source]
+----
+import C from "A"
+new C(); //should succeed.
+----
+--
+
+[[sec:Miscellaneous]]
+====  Miscellaneous
+
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import B from "B"
+export public class A {}
+new B();
+----
+
+[source]
+----
+import A from "A"
+export public class B {}
+new A();
+----
+
+[source]
+----
+import A from "A"
+new A() //should succeed.
+----
+--
+
+
+.Circular dependency resolution {counter:cdr}
+[example]
+--
+[source]
+----
+import B from "B"
+export public class A {}
+B.b1;
+----
+
+[source]
+----
+import A from "A"
+export public class B {
+    static b1;
+}
+new A();
+----
+
+[source]
+----
+import A from "A"
+new A() //should succeed.
+----
+--
+
+
+=== Resources
+
+https://github.com/ModuleLoader/es6-module-loader/blob/master/docs/system-register.md[Wiki]
+
+[[sec:CommonJS_as_transpilation_target]]
+[.language-js]
+== CommonJS as transpilation target
+
+To provide better compatibility with `npm` eco-system, we want to transpile `N4JS` code to `CommonJS` module format.
+
+=== Introduction
+
+A sample `CommonJS` module :
+
+[source]
+----
+var lib1 = require("/lib1"); //<-- require
+var lib2 = require("/lib2"); //<-- require
+
+function fn() {
+    //...something using 'lib1' & 'lib2'
+}
+
+exports.usefulFn = fn; //<--exports
+exports.uselessValue = 42; //<--exports
+----
+
+The http://www.commonjs.org/specs/modules/1.0/[CommonJS spec] describes the salient features of module format as (quoted verbatim) :
+
+____
+Module Context
+
+. In a module, there is a free variable "require", that is a
+function.
+.. The "require" function accepts a module identifier.
+.. "require" returns the exported API of the foreign module.
+.. If there is a dependency cycle, the foreign module may
+    not have finished executing at the time it is required by one
+    of its transitive dependencies; in this case, the object
+    returned by "require" must contain at least the exports
+    that the foreign module has prepared before the call to
+    require that led to the current module's execution.
+.. If the requested module cannot be returned, "require"
+    must throw an error.
+. In a module, there is a free variable called "exports",
+that is an object that the module may add its API to as it
+executes.
+. modules must use the "exports" object as the only means
+of exporting.
+
+Module Identifiers
+
+. A module identifier is a String of "terms" delimited by forward
+ slashes.
+. A term must be a camelCase identifier, ".", or "..".
+. Module identifiers may not have file-name extensions like ".js".
+. Module identifiers may be "relative" or "top-level". A module
+ identifier is "relative" if the first term is "." or "..".
+. Top-level identifiers are resolved off the conceptual module
+ name space root.
+. Relative identifiers are resolved relative to the identifier of
+the module in which "require" is written and called.
+____
+
+[[sec:Transpilation_Hints]]
+=== Transpilation Hints
+
+This section examines how `Babel` transpiles `ES6` modules to `CommonJS` format. By observing the transpiled output from `Babel`, we can gather insights for transpiling `N4JS` modules to `CommonJS` format.
+
+[[sec:Import_Statements]]
+====  Import Statements
+
+.Import an entire module (for side effects only)
+[example]
+--
+[source]
+----
+import "B";
+console.log(B);
+----
+
+[source]
+----
+"use strict";
+
+require("B");
+console.log(B);
+----
+--
+
+.Import single member of a module
+[example]
+--
+[source]
+----
+import {b1} from "B";
+b1;
+----
+
+[source]
+----
+"use strict";
+
+var _B = require("B");
+_B.b1;
+----
+--
+
+.Import multiple members of a module
+[example]
+--
+[source]
+----
+import {b1, b2} from "B";
+b1;
+b2;
+----
+
+[source]
+----
+"use strict";
+
+var _B = require("B");
+
+_B.b1;
+_B.b2;
+----
+--
+
+
+
+.Import a single member of a module w/ an alias
+[example]
+--
+[source]
+----
+import {b3 as b4} from "B";
+b4 + 1;
+----
+
+[source]
+----
+"use strict";
+
+var _B = require("B");
+
+_B.b3 + 1;
+----
+--
+
+
+.Import multiple members of a module w/ aliases
+[example]
+--
+[source]
+----
+import {b3 as b4, b5 as b6} from "B";
+b4 + 1;
+b6 + 1;
+----
+
+[source]
+----
+"use strict";
+
+var _B = require("B");
+
+_B.b3 + 1;
+_B.b5 + 1;
+----
+--
+
+
+.Import ALL the bindings of a module
+[example]
+--
+[source]
+----
+import * as B from "B";
+console.log(B);
+----
+
+[source]
+----
+"use strict";
+
+function _interopRequireWildcard(obj) {
+    //Babel internally tracks ES6 modules using a flag "__esModule".
+    if (obj && obj.__esModule) {
+        return obj;
+    } else {
+        //Copy over all the exported members.
+        var newObj = {};
+        if (obj != null) {
+            for (var key in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+            }
+        }
+
+        //Set the "default" as the obj itself (ES6 default export)
+        newObj["default"] = obj;
+        return newObj;
+    }
+}
+
+var _B = require("B");
+
+var B = _interopRequireWildcard(_B);
+
+console.log(B);
+----
+--
+
+
+
+.Import the default export of a module
+[example]
+--
+[source]
+----
+import B from "B";
+console.log(B);
+----
+
+[source]
+----
+"use strict";
+
+//For importing a default export,
+//Babel checks if the obj is an ES6 module or not.
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { "default": obj };
+}
+
+var _B = require("B");
+
+var _B2 = _interopRequireDefault(_B);
+
+console.log(_B2["default"]);
+----
+--
+
+[[sec:Export_Statements]]
+====  Export Statements
+
+.Export a member
+[example]
+--
+[source]
+----
+let a = 1;
+export {a};
+----
+
+[source]
+----
+"use strict";
+
+//Babel makes a note that this is as an ES6 module.
+//This information is later used when this module is imported.
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1;
+
+exports.a = a;
+----
+--
+
+
+.Export multiple members
+[example]
+--
+[source]
+----
+let a = 1;
+let b = true;
+
+export {a, b};
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1;
+var b = true;
+
+exports.a = a;
+exports.b = b;
+----
+--
+
+
+.Export using alias
+[example]
+--
+[source]
+----
+let a =1;
+export {a as b};
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1;
+exports.b = a;
+----
+--
+
+.Multiple exports using alias
+[example]
+--
+[source]
+----
+let a = 1, b = 2;
+export {a as A, b as B};
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1,
+    b = 2;
+exports.A = a;
+exports.B = b;
+----
+--
+
+
+.Simple default export
+[example]
+--
+[source]
+----
+export default 42;
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = 42; //<-- default export is treated as a special named export
+module.exports = exports["default"]; //<-- IMPORTANT
+----
+--
+
+
+.Default export using an alias
+[example]
+--
+[source]
+----
+let x =10;
+export {x as default};
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var x = 10;
+exports["default"] = x;
+module.exports = exports["default"];
+----
+--
+
+
+.Default export w/ named export
+[example]
+--
+[source]
+----
+let a = 1;
+export {a};
+export default 42;
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1;
+exports.a = a;
+exports["default"] = 42;
+----
+--
+
+
+
+.Default export a class
+[example]
+--
+
+[source]
+----
+export default class A  {}
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(...) { ... }
+
+var A = function A() {
+  _classCallCheck(this, A);
+};
+
+exports["default"] = A;
+module.exports = exports["default"];
+----
+--
+
+
+
+.Wildcard re-export
+[example]
+--
+[source]
+----
+export * from "A"
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _interopExportWildcard(obj, defaults) {
+    var newObj = defaults({}, obj);
+    delete newObj["default"]; //<-- A module's default export can not be re-exported.
+    return newObj;
+}
+
+function _defaults(obj, defaults) {
+    var keys = Object.getOwnPropertyNames(defaults);
+    for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        var value = Object.getOwnPropertyDescriptor(defaults, key);
+        if (value && value.configurable && obj[key] === undefined) {
+            Object.defineProperty(obj, key, value);
+        }
+    }
+    return obj;
+}
+
+var _A = require("A");
+
+_defaults(exports, _interopExportWildcard(_A, _defaults));
+----
+--
+
+
+
+.Specific member re-export
+[example]
+--
+[source]
+----
+export {a1, a2} from "A";
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _A = require("A");
+
+Object.defineProperty(exports, "a1", {
+  enumerable: true,
+  get: function get() {
+    return _A.a1;
+  }
+});
+Object.defineProperty(exports, "a2", {
+  enumerable: true,
+  get: function get() {
+    return _A.a2;
+  }
+});
+----
+--
+
+
+
+.Specific member re-export using alias
+[example]
+--
+[source]
+----
+export {a1 as A1, a2 as A2} from "A";
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _A = require("A");
+
+Object.defineProperty(exports, "A1", {
+  enumerable: true,
+  get: function get() {
+    return _A.a1;
+  }
+});
+Object.defineProperty(exports, "A2", {
+  enumerable: true,
+  get: function get() {
+    return _A.a2;
+  }
+});
+----
+--
+
+[[sec:Tracking_Live_Bindings]]
+====  Tracking Live Bindings
+
+As specified in the section about `ES6 Modules` (<<sec:ES6_Modules,ES6 Modules>>), `ES6 Modules` export live immutable bindings. The following listings demonstrate how `Babel` achieves this.
+
+
+
+.Tracking Live Binding
+[example]
+--
+[source]
+----
+export var a = 1;
+a++;
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1;
+exports.a = a;
+exports.a = a += 1; //<-- Exported value is tracked.
+----
+--
+
+[[sec:A_complete_example]]
+====  A complete example
+
+The following listings present a simple but complete example of ES6 export, import and live-binding concepts. It uses 3 simple `ES6 modules` called `A.js, B.js and Main.js`. The modules are listed alongside their `CommonJS` versions generated by `Babel`.
+
+[example]
+--
+[source]
+----
+export var a = 1; //<-- exports a number
+
+export function incA() { //<-- exports a function
+    a++;
+}
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.incA = incA;
+var a = 1;
+
+exports.a = a;
+
+function incA() {
+    exports.a = a += 1;
+}
+----
+
+[source]
+----
+import {incA} from "./A"; //<-- Imports the function from A.js
+
+export function incB() { //<-- Exports a function that calls the imported function from A.js
+    incA();
+}
+----
+
+[source]
+----
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.incB = incB;
+
+var _A = require("./A");
+
+function incB() {
+    _A.incA();
+}
+----
+
+[source]
+----
+import {a} from "./A"; //<-- Imports the exported number from A.js
+import {incB} from "./B"; //<-- Imports the exported function from B.js
+
+console.log(a); //<-- Prints "1"
+incB(); //<-- This will call the "incA" function of A.js
+console.log(a); //<--Prints "2". The imported value "a" is updated.
+----
+
+[source]
+----
+"use strict";
+
+var _A = require("./A");
+
+var _B = require("./B");
+
+console.log(_A.a);
+_B.incB();
+console.log(_A.a);
+----
+--
+
+=== Resources
+
+http://exploringjs.com/es6/ch_modules.html[Exploring ES6 by Dr. Axel Rauschmayer]
+
+http://www.commonjs.org/specs/modules/1.0/[CommonJS spec]
+
+http://benjamn.github.io/empirenode-2015/[The Importance of import and export]

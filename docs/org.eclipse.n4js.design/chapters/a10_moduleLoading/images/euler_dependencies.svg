@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 560 783" width="560" height="783">
+  <defs>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2014-02-27 15:10:58 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="0" y="0" width="560" height="783"/>
+    <g id="Canvas_1: overlapped">
+      <title>overlapped</title>
+      <g id="Graphic_166">
+        <path d="M 402.3458 106.10917 C 484.55154 127.58799 484.55154 162.41201 402.3458 183.89083 C 320.1405 205.36976 186.8595 205.36976 104.65419 183.89083 C 22.448464 162.41201 22.448464 127.58799 104.65419 106.10917 C 186.8595 84.63024 320.1405 84.63024 402.3458 106.10917" fill="#76f2a3" fill-opacity=".52"/>
+        <path d="M 402.3458 106.10917 C 484.55154 127.58799 484.55154 162.41201 402.3458 183.89083 C 320.1405 205.36976 186.8595 205.36976 104.65419 183.89083 C 22.448464 162.41201 22.448464 127.58799 104.65419 106.10917 C 186.8595 84.63024 320.1405 84.63024 402.3458 106.10917" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_167">
+        <ellipse cx="222.8701" cy="111.5" rx="170.870383733185" ry="50.5000806940457" fill="#ffafaa" fill-opacity=".5"/>
+        <ellipse cx="222.8701" cy="111.5" rx="170.870383733185" ry="50.5000806940457" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_170">
+        <ellipse cx="279.6378" cy="105.88221" rx="89.2335791707502" ry="26.3726395661133" fill="#85bfff" fill-opacity=".49"/>
+        <ellipse cx="279.6378" cy="105.88221" rx="89.2335791707502" ry="26.3726395661133" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(211.25104 98.88221)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="40.05081" y="11">Load time</tspan>
+        </text>
+      </g>
+      <g id="Graphic_197">
+        <text transform="translate(193 62)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="11">Runtime</tspan>
+        </text>
+      </g>
+      <g id="Graphic_198">
+        <text transform="translate(215.82715 177)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="11">Compile time</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
