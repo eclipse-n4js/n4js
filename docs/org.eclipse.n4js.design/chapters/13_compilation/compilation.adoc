@@ -224,7 +224,7 @@ In headless mode the `PropertiesFileBasedValuesProvider` is bound as implementat
 
 Transpilers are a special case of generators, used for transforming N4JS source code into some target code in some other, high-level programming language. In this section we describe the general transpiler infrastructure without considering any particular transpiler. Currently, there is only a single such concrete transpiler for ECMAScript target code, explained later in <<sec:N4JS_to_EcmaScript_Transpiler>>.
 
-All code of the general transpiler infrastructure is found in bundle `com.enfore.ide.n4js.transpiler`.
+All code of the general transpiler infrastructure is found in bundle `org.eclipse.n4js.transpiler`.
 
 [[sec:Phases]]
 === Overview
@@ -268,7 +268,7 @@ The `AbstractTranspiler` controls the overall workflow shown earlier in . Concre
 Class `Transformation` has a super class `TranspilerComponent` that has two important responsibilities:
 
 * it contains many utility methods that are easily accessible from within concrete transformations through inheritance.
-* it obtains the transpiler state via injection (using the scoping feature of Google Guice, for more details see `com.enfore.ide.utils.di.scopes.ScopeManager` and `TransformationScoped`). This injection is done in super class `TranspilerComponent`, so when implementing a new transformation, the programmer does not have to deal with these details and can simply obtain the transpiler state via the inherited method `TranspilerComponent#getState()`.
+* it obtains the transpiler state via injection (using the scoping feature of Google Guice, for more details see `org.eclipse.n4js.utils.di.scopes.ScopeManager` and `TransformationScoped`). This injection is done in super class `TranspilerComponent`, so when implementing a new transformation, the programmer does not have to deal with these details and can simply obtain the transpiler state via the inherited method `TranspilerComponent#getState()`.
 
 Code shared across concrete transformations should be placed in sub classes of `TransformationAssistant`. Those assistants are similar to the helpers used elsewhere, but by sharing the `TranspilerComponent` super class they get all the utility methods provided by that class and they automatically get the transpiler state.
 
@@ -550,7 +550,7 @@ It is important to not access the AST-elements of type-information obtained from
 
 The headless compiler interface consists of a runnable class capable of reading command line options packaged together with all required dependencies into one executable ``.jar`` archive.
 
-The sources of the command line interface are located in in the `tools/` subfolder of the main git repository. They comprise of the package `com.enfore.ide.hlc` and corresponding test package `com.enfore.ide.hlc.tests`. (c.f. <<sec:tools,Tools>>).
+The sources of the command line interface are located in in the `tools/` subfolder of the main git repository. They comprise of the package `org.eclipse.n4js.hlc` and corresponding test package `org.eclipse.n4js.hlc.tests`. (c.f. <<sec:tools,Tools>>).
 
 A description of how to use the headless compiler can be found in the N4IDE document.
 
@@ -569,4 +569,4 @@ Note however, on our build-server option a) is not feasible, option b) requires 
 // ToDo - missing xref (see <<sec:Build_Job_Configuration_for_the_Headless_Compiler,Build Job Config for Headless Compiler>>)
 and c) is difficult up to nearly impossible without a proper versioning-scheme.
 
-Parameters for the headless-compiler-build are defined in the parent-pom located at `releng/com.enfore.ide.parent/pom.xml` with properties prefixed by `hlc.`.
+Parameters for the headless-compiler-build are defined in the parent-pom located at `releng/org.eclipse.n4js.parent/pom.xml` with properties prefixed by `hlc.`.

@@ -39,14 +39,14 @@ In many situations developer needs to use some kind of logging. When in need, fo
 . Use `org.apache.log4j.Logger;` for logging. Other logging utilities (like java built in logger) are not configured.
 . do not use `System.out` nor `Sysetem.err` for logging. It is ok to use it for debugging purposes, but those calls
 should never be merged to master. _(with exception of headless compiler, which uses them explicitly)_
-. There is central logger configuration in `org.eclipse.n4js.utils.logging` (and `com.enfore.n4js.utils.logging`) that should 
+. There is central logger configuration in `org.eclipse.n4js.utils.logging` (and `org.eclipse.n4js.utils.logging`) that should 
 be used
 .. `log4j.xml` used for production
 .. `log4j_tests.xml` used when running tests
 . in Eclipse run configurations logger has to be set properly, e.g.
-`log4j.configuration=file:${workspace_loc:com.enfore.n4js.utils.logging/log4j_tests.xml}`
+`log4j.configuration=file:${workspace_loc:org.eclipse.n4js.utils.logging/log4j_tests.xml}`
 . in maven configurations logger has to be set separately, e.g.
-`-Dlog4j.configuration="file:${basedir}/../../plugins/com.enfore.n4js.utils.logging/log4j_tests.xml`
+`-Dlog4j.configuration="file:${basedir}/../../plugins/org.eclipse.n4js.utils.logging/log4j_tests.xml`
 
 
 == Cancellation Handling

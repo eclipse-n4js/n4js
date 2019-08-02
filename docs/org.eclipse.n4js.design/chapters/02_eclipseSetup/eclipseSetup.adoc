@@ -46,7 +46,7 @@ The build will show a lot of errors while still working. Eventually the whole pr
 
 The setup scripts is stored at
 
-`n4js/releng/com.enfore.n4js.targetplatform/N4JS.setup` 
+`n4js/releng/org.eclipse.n4js.targetplatform/N4JS.setup` 
 
 Details about Oomph-Setup scripts can be found at
 

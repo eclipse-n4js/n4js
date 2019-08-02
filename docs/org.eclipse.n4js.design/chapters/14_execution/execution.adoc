@@ -228,8 +228,8 @@ Note on maven usage. For maven based builds we need to ensure that binary resour
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>com.enfore.ide</groupId>
-                                    <artifactId>com.enfore.ide.js.engine</artifactId>
+                                    <groupId>org.eclipse.n4js</groupId>
+                                    <artifactId>org.eclipse.n4js.js.engine</artifactId>
                                     <version>0.0.1-SNAPSHOT</version>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>

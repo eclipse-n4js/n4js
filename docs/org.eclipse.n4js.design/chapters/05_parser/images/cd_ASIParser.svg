@@ -73,7 +73,7 @@
         <path d="M 543 568.8663 C 543 563.4667 541.0442 562.79865 526.7576 557.4549 L 526.6067 557.3996 C 512.24466 552 512.0953 552 497.35594 552 C 477.7302 552 389 552 389 552 L 389 609 L 543 609 L 543 568.8663 Z M 543 568.58814 C 543 563.4667 542.8491 563.4667 512.0953 563.4667 L 512.0953 563.4667 C 512.0953 552.05586 512.0953 552 498.2584 552" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
         <text transform="translate(394 557)" fill="black">
           <tspan font-family="Helvetica" font-size="9" font-weight="400" fill="black" x="0" y="9">package</tspan>
-          <tspan font-family="Helvetica" font-size="10" font-weight="700" fill="black" x="0" y="21">com.enfore.ide.n4js.parser</tspan>
+          <tspan font-family="Helvetica" font-size="10" font-weight="700" fill="black" x="0" y="21">org.eclipse.n4js.parser</tspan>
           <tspan font-family="Helvetica" font-size="7" font-weight="400" fill="black" x="0" y="29">Scopes shown: protected, public, </tspan>
           <tspan font-family="Helvetica" font-size="7" font-weight="400" fill="black" x="0" y="37">Omitted methods: getter and setter, </tspan>
           <tspan font-family="Helvetica" font-size="7" font-weight="400" fill="black" x="0" y="45">created on Oct 14, 2013</tspan>

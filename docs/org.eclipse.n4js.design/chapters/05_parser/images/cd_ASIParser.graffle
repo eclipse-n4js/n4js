@@ -307,7 +307,7 @@
 
 \f0\fs24 \cf0 to be moved to xtext}</string>
 						<key>TextAlongPathGlyphAnchor</key>
-						<string>left</string>
+						<string>center</string>
 					</dict>
 				</dict>
 				<dict>
@@ -321,6 +321,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -540,6 +547,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -596,6 +610,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -652,6 +673,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -713,6 +741,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -893,7 +928,7 @@
 								<key>r</key>
 								<real>0.24195262789726257</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 							<key>HeadArrow</key>
 							<string>StickArrow</string>
@@ -1034,12 +1069,69 @@
 										<key>r</key>
 										<real>0.24195262789726257</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
 							<key>Text</key>
 							<dict>
+								<key>RTFD</key>
+								<data>
+								BAtzdHJlYW10
+								eXBlZIHoA4QB
+								QISEhBJOU0F0
+								dHJpYnV0ZWRT
+								dHJpbmcAhIQI
+								TlNPYmplY3QA
+								hZKEhIQITlNT
+								dHJpbmcBlIQB
+								KxJJbnRlcm5h
+								bE40SlNQYXJz
+								ZXKGhAJpSQES
+								koSEhAxOU0Rp
+								Y3Rpb25hcnkA
+								lIQBaQOShJaW
+								B05TQ29sb3KG
+								koSEhAdOU0Nv
+								bG9yAJSEAWMB
+								hARmZmZmg/3B
+								QD6DGJWUPoN0
+								tTU/AYaShJaW
+								EE5TUGFyYWdy
+								YXBoU3R5bGWG
+								koSEhBdOU011
+								dGFibGVQYXJh
+								Z3JhcGhTdHls
+								ZQCEhBBOU1Bh
+								cmFncmFwaFN0
+								eWxlAJSEBEND
+								QFMCAISEhAdO
+								U0FycmF5AJSZ
+								DJKEhIQJTlNU
+								ZXh0VGFiAJSE
+								AkNmAByGkoSj
+								ogA4hpKEo6IA
+								VIaShKOiAHCG
+								koSjogCBjACG
+								koSjogCBqACG
+								koSjogCBxACG
+								koSjogCB4ACG
+								koSjogCB/ACG
+								koSjogCBGAGG
+								koSjogCBNAGG
+								koSjogCBUAGG
+								hgCGkoSWlgZO
+								U0ZvbnSGkoSE
+								hAZOU0ZvbnQe
+								lJkohAVbNDBj
+								XQYAAAAeAAAA
+								//5IAGUAbAB2
+								AGUAdABpAGMA
+								YQAtAEIAbwBs
+								AGQAAACEAWYM
+								mwCbAZsAmwCG
+								hoY=
+								</data>
 								<key>Text</key>
 								<string>{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf500
 {\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;}
@@ -1095,7 +1187,7 @@
 										<key>r</key>
 										<real>0.24195262789726257</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
@@ -1150,7 +1242,7 @@
 										<key>r</key>
 										<real>0.24195262789726257</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
@@ -1461,12 +1553,68 @@
 										<key>r</key>
 										<real>0.24195262789726257</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
 							<key>Text</key>
 							<dict>
+								<key>RTFD</key>
+								<data>
+								BAtzdHJlYW10
+								eXBlZIHoA4QB
+								QISEhBJOU0F0
+								dHJpYnV0ZWRT
+								dHJpbmcAhIQI
+								TlNPYmplY3QA
+								hZKEhIQITlNT
+								dHJpbmcBlIQB
+								KwpONEpTUGFy
+								c2VyhoQCaUkB
+								CpKEhIQMTlNE
+								aWN0aW9uYXJ5
+								AJSEAWkDkoSW
+								lgdOU0NvbG9y
+								hpKEhIQHTlND
+								b2xvcgCUhAFj
+								AYQEZmZmZoP9
+								wUA+gxiVlD6D
+								dLU1PwGGkoSW
+								lhBOU1BhcmFn
+								cmFwaFN0eWxl
+								hpKEhIQXTlNN
+								dXRhYmxlUGFy
+								YWdyYXBoU3R5
+								bGUAhIQQTlNQ
+								YXJhZ3JhcGhT
+								dHlsZQCUhARD
+								Q0BTAgCEhIQH
+								TlNBcnJheQCU
+								mQyShISECU5T
+								VGV4dFRhYgCU
+								hAJDZgAchpKE
+								o6IAOIaShKOi
+								AFSGkoSjogBw
+								hpKEo6IAgYwA
+								hpKEo6IAgagA
+								hpKEo6IAgcQA
+								hpKEo6IAgeAA
+								hpKEo6IAgfwA
+								hpKEo6IAgRgB
+								hpKEo6IAgTQB
+								hpKEo6IAgVAB
+								hoYAhpKElpYG
+								TlNGb250hpKE
+								hIQGTlNGb250
+								HpSZKIQFWzQw
+								Y10GAAAAHgAA
+								AP/+SABlAGwA
+								dgBlAHQAaQBj
+								AGEALQBCAG8A
+								bABkAAAAhAFm
+								DJsAmwGbAJsA
+								hoaG
+								</data>
 								<key>Text</key>
 								<string>{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf500
 {\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;}
@@ -1524,7 +1672,7 @@
 										<key>r</key>
 										<real>0.24195262789726257</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
@@ -1579,7 +1727,7 @@
 										<key>r</key>
 										<real>0.24195262789726257</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
@@ -3336,14 +3484,14 @@ N4JSSemicolonInjectingParser}</string>
 
 \f0\fs18 \cf0 package\
 
-\f1\b\fs20 com.enfore.ide.n4js.parser
+\f1\b\fs20 org.eclipse.n4js.parser
 \f0\b0\fs18 \
 
 \fs14 Scopes shown: protected, public, \
 Omitted methods: getter and setter, \
 created on Oct 14, 2013}</string>
 						<key>TextAlongPathGlyphAnchor</key>
-						<string>left</string>
+						<string>center</string>
 					</dict>
 				</dict>
 				<dict>
@@ -3437,7 +3585,7 @@ created on Oct 14, 2013}</string>
 		<key>CurrentSheet</key>
 		<integer>0</integer>
 		<key>Frame</key>
-		<string>{{435, 250}, {1355, 922}}</string>
+		<string>{{901, 245}, {1355, 922}}</string>
 		<key>ShowInfo</key>
 		<true/>
 		<key>ShowRuler</key>
