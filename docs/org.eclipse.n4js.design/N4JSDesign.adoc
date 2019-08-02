@@ -45,7 +45,7 @@ include::{find}chapters/04_tipsTricks/tipsTricks.adoc[]
 include::{find}chapters/05_parser/parser.adoc[]
 include::{find}chapters/06_typesystem/typesystem.adoc[]
 include::{find}chapters/07_typeindex/typeindex.adoc[]
-
+include::{find}chapters/08_projectModel/projectModel.adoc[]
 include::{find}chapters/09_binding/binding.adoc[]
 include::{find}chapters/10_validation/validation.adoc[]
 include::{find}chapters/11_references/references.adoc[]
