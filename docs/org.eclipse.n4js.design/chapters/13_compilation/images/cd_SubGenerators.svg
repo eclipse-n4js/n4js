@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 560 783" width="560" height="783">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="5.75 45.5 538.75 491.72046" width="538.75" height="491.72046">
   <defs>
     <font-face font-family="Helvetica" font-size="10" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
       <font-face-src>
@@ -44,11 +44,11 @@
     </marker>
   </defs>
   <metadata> Produced by OmniGraffle 7.11 
-    <dc:date>2017-12-07 09:46:22 +0000</dc:date>
+    <dc:date>2019-08-02 08:19:11 +0000</dc:date>
   </metadata>
   <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
     <title>Canvas 1</title>
-    <rect fill="white" x="0" y="0" width="560" height="783"/>
+    <rect fill="white" x="5.75" y="45.5" width="538.75" height="491.72046"/>
     <g id="Canvas_1: Layer 1">
       <title>Layer 1</title>
       <g id="Graphic_45">
@@ -139,7 +139,7 @@
         <path d="M 76.5 229.22046 L 77.5 459.72046 L 171.60004 459.4632" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_32">
-        <path d="M 76.5 229.22046 L 151 319.22046 L 150.16757 368.3933" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path d="M 101.25 229.22046 L 151 319.22046 L 150.16757 368.3933" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Graphic_31">
         <rect x="364.5" y="209.73454" width="147.5" height="36" fill="white"/>
@@ -150,7 +150,7 @@
         </text>
       </g>
       <g id="Line_30">
-        <line x1="305.25" y1="287.72046" x2="357.543" y2="234.77797" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line x1="305.25" y1="275.72046" x2="356.80665" y2="233.9653" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Graphic_29">
         <rect x="364.5" y="344.22046" width="147.5" height="36" fill="white"/>
@@ -161,7 +161,7 @@
         </text>
       </g>
       <g id="Line_28">
-        <line x1="305.25" y1="287.72046" x2="358.33774" y2="354.47213" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line x1="305.25" y1="299.72046" x2="357.68894" y2="355.0358" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Graphic_27">
         <rect x="364.5" y="406.22046" width="147.5" height="36" fill="white"/>
@@ -187,19 +187,19 @@
         <line x1="438.25" y1="209.73454" x2="438.25" y2="193.63453" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_23">
-        <path d="M 239.07423 311.03022 L 328.5 373.72046 L 315 442.22046 L 326.90697 491.1017" marker-end="url(#StickArrow_Marker)" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line x1="258.4774" y1="314.65527" x2="305.77103" y2="491.1578" marker-end="url(#StickArrow_Marker)" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_22">
-        <path d="M 240.69923 311.03022 L 330.125 373.72046 L 347.5 442.22046 L 333.5813 491.19754" marker-end="url(#StickArrow_Marker)" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line x1="283.7721" y1="314.4336" x2="346.843" y2="491.39505" marker-end="url(#StickArrow_Marker)" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Graphic_21">
-        <text transform="translate(348 469.72046)" fill="black">
-          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«default»</tspan>
+        <text transform="translate(347.32 478.04)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="0" y="8">«default»</tspan>
         </text>
       </g>
       <g id="Graphic_20">
-        <text transform="translate(275.5 411.22046)" fill="black">
-          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«current»</tspan>
+        <text transform="translate(305.20312 478.04)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="0" y="8">«current»</tspan>
         </text>
       </g>
       <g id="Line_19">
@@ -235,7 +235,7 @@
         <path d="M 336.5 88.23453 L 336.5 114.73453 L 438.25 114.73453 L 438.25 128" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Line_13">
-        <path d="M 27 211 L 8 209.73454 L 11 521 L 256.60008 520.03875" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path d="M 27 211 L 6.25 211 L 11 521 L 256.60008 520.03875" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Graphic_12">
         <text transform="translate(247.24878 509)" fill="black">

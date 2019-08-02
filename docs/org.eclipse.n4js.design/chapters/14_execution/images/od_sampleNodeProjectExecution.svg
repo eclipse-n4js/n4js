@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 560 783" width="560" height="783">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="4.5000006 2.25 407.25 582.96736" width="407.25" height="582.96736">
   <defs>
     <font-face font-family="Helvetica" font-size="9" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
       <font-face-src>
@@ -43,7 +43,7 @@
   </metadata>
   <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
     <title>Canvas 1</title>
-    <rect fill="white" x="0" y="0" width="560" height="783"/>
+    <rect fill="white" x="4.5000006" y="2.25" width="407.25" height="582.96736"/>
     <g id="Canvas_1: Layer 1">
       <title>Layer 1</title>
       <g id="Graphic_458">
@@ -340,7 +340,7 @@
         <path d="M 275.28153 483.78136 L 275.28153 471.88136 L 275.28153 446.88136 L 83.25 446.88136 L 83.25 388.29587 L 85.25 388.29587" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
       </g>
       <g id="Graphic_646">
-        <text transform="translate(167.64134 430.816)" fill="black">
+        <text transform="translate(150.64134 447.816)" fill="black">
           <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«link file system»</tspan>
         </text>
       </g>
@@ -368,7 +368,7 @@
         <path d="M 319.28805 494.78136 L 331.18805 494.78136 L 346.675 494.78136 L 346.675 320.79588 L 344.675 320.79588" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
       </g>
       <g id="Graphic_655">
-        <text transform="translate(352.35935 427.7873)" fill="black">
+        <text transform="translate(356.51587 428.52773)" fill="black">
           <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«call»</tspan>
         </text>
       </g>

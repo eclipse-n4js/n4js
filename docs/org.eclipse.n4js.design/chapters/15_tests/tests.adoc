@@ -14,6 +14,17 @@ Contributors:
 
 WARNING: This chapter may be outdated.
 
+
+In order to run all tests from command line, use maven:
+
+----
+mvn clean verify
+----
+
+You may have to increase the memory for maven via `export MAVEN_OPTS="-Xmx2048m"` (Unix) or `set MAVEN_OPTS="-Xmx2048m"` (Windows).
+
+Do not run the tests via `mvn clean test` as this may lead to some failures.
+
 [[sec:Performance_Tests]]
 [.language-n4js]
 == Performance Tests

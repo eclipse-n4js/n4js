@@ -23,7 +23,7 @@ The parser is created from an Xtext grammar. Actually, there are several grammar
 
 [[fig:cd_grammars]]
 [.center]
-image::{find}images/cd_grammars.png[title="N4 Grammars"]
+image::{find}images/cd_grammars.svg[title="N4 Grammars"]
 
 [[sec:N4JS_Parser]]
 ==   N4JS Parser
@@ -32,7 +32,7 @@ One of the most tricky parts of JavaScript is the parsing because there is a con
 
 [[fig:cd_ASIParser]]
 [.center]
-image::{find}images/cd_ASIParser.png[title="Overview custom parser implementation (runtime only)"]
+image::{find}images/cd_ASIParser.svg[title="Overview custom parser implementation (runtime only)"]
 
 
 [[sec:Parser_Generation_Post_Processing]]
@@ -50,7 +50,7 @@ Actually, there are several injections:
 The first two steps are handled by `AntlrGeneratorWithCustomKeywordLogic`, which is configured with additional helpers in `GenerateN4JS.mwe2`. shows the customized classes which modify the code generation. These classes are all part of the `releng.utils` bundle.
 
 [.center]
-image::{find}images/cd_parsergeneration.png[title="Class Diagram Parser Generation"]
+image::{find}images/cd_parsergeneration.svg[title="Class Diagram Parser Generation"]
 
 [[sec:Automatic_Semicolon_Insertion]]
 ===   Automatic Semicolon Insertion
@@ -87,7 +87,7 @@ There is no way of directly defining `No line terminator allowed here`. This is 
 The ANTLR parsing process can basically be divided into three steps. First of all, the file contents has to be read from disk. This includes the proper encoding of bytes to characters. The second step is the lexing or tokenizing of the character stream. A token is a basically a typed region in the stream, that is a triplet of token-id, offset and length. The last step is the parsing of these tokens. The result is a semantic model that is associated with a node tree. All necessary information to validate the model can be deduced from these two interlinked representations.
 
 [.center]
-image::{find}images/ad_parsing_simplified.png[title="Simplified visualization of the parsing"]
+image::{find}images/ad_parsing_simplified.svg[title="Simplified visualization of the parsing"]
 
 Since the default semantics and control flow of Antlr generated parsers do not really fit the requirements of a fully working JavaScript parser, some customizations are necessary. **Regular expression literals in JavaScript cannot be syntactically disambiguated from div operations without contextual information.** Nevertheless, the spec clearly describes, where a regular expression may appear and where it is prohibited. Unfortunately, it is not possible to implement these rules in the lexer alone, since it does not have enough contextual information. Therefore, the parser has been enhanced to establish a communication channel with the lexer. It announces when it expects a regular expression rather than a binary operation.
 
@@ -96,12 +96,12 @@ This required a reworking of the Antlr internals. Instead of a completely pre-po
 Only after the parser has read this buffered tokens and potentially announced that it expects a regular expression, another batch of characters is processed by the lexer until the next ambiguous situation occurs. This is fundamentally different from the default behavior of Antlr.
 
 [.center]
-image::{find}images/sd_parsing_sequence.png[title="Abstract control flow during parsing"]
+image::{find}images/sd_parsing_sequence.svg[title="Abstract control and object flow during parsing"]
 
 shows the involved classes which allow for this lexer-parser communication.
 
 [.center]
-image::{find}images/cd_parserlexercommunication.png[title="Class Diagram Parser-Lexer Communication"]
+image::{find}images/cd_parserlexercommunication.svg[title="Class Diagram Parser-Lexer Communication"]
 
 [[sec:Unicode]]
 === Unicode

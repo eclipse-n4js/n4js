@@ -2541,7 +2541,7 @@ TestLibCaller.js}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{460.52124743891136, 323.8948465222964}, {37, 22}}</string>
+					<string>{{472.42124743891134, 332.35044194627307}, {37, 22}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -4332,7 +4332,7 @@ ES5}</string>
 								<key>r</key>
 								<real>0.93603068590164185</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4389,7 +4389,7 @@ ES5}</string>
 								<key>r</key>
 								<real>0.79444092512130737</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4446,7 +4446,7 @@ ES5}</string>
 								<key>r</key>
 								<real>0.87108141183853149</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4503,7 +4503,7 @@ ES5}</string>
 								<key>r</key>
 								<real>0.93725508451461792</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4972,12 +4972,6 @@ n4Processors}</string>
 								<key>element</key>
 								<string>LINETO</string>
 								<key>point</key>
-								<string>{153.05745882150916, 583.39619905016741}</string>
-							</dict>
-							<dict>
-								<key>element</key>
-								<string>LINETO</string>
-								<key>point</key>
 								<string>{153.05745882150916, 491.39619905016741}</string>
 							</dict>
 							<dict>
@@ -4985,12 +4979,6 @@ n4Processors}</string>
 								<string>LINETO</string>
 								<key>point</key>
 								<string>{82.124998927116422, 491.39619905016741}</string>
-							</dict>
-							<dict>
-								<key>element</key>
-								<string>LINETO</string>
-								<key>point</key>
-								<string>{82.124998927116422, 464.76303096631}</string>
 							</dict>
 							<dict>
 								<key>element</key>
@@ -6508,7 +6496,7 @@ NodeJs}</string>
 								<key>r</key>
 								<real>0.93725508451461792</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -6570,7 +6558,7 @@ NodeJs}</string>
 								<key>r</key>
 								<real>0.87058830261230469</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -6632,7 +6620,7 @@ NodeJs}</string>
 								<key>r</key>
 								<real>0.79215675592422485</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -6694,7 +6682,7 @@ NodeJs}</string>
 								<key>r</key>
 								<real>0.93333375453948975</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -6813,7 +6801,7 @@ NodeJs}</string>
 	<key>createSinglePDFKey</key>
 	<integer>0</integer>
 	<key>exportAreaKey</key>
-	<integer>4</integer>
+	<integer>1</integer>
 	<key>exportQualityKey</key>
 	<real>100</real>
 	<key>exportSizesKey</key>

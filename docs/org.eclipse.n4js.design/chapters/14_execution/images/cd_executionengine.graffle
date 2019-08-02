@@ -3790,7 +3790,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>1.0029834508895874</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 								<key>shadow</key>
@@ -3809,7 +3809,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>0.68797892332077026</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
@@ -3841,7 +3841,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>1.0029834508895874</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 								<key>shadow</key>
@@ -3860,7 +3860,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>0.68797892332077026</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
@@ -3930,7 +3930,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>0.76889806985855103</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 								<key>shadow</key>
@@ -3949,7 +3949,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>0.68797892332077026</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
@@ -3981,7 +3981,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>0.76889806985855103</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 								<key>shadow</key>
@@ -4000,7 +4000,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>0.68797892332077026</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
@@ -4070,7 +4070,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>1.0029834508895874</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 								<key>shadow</key>
@@ -4089,7 +4089,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>0.68797892332077026</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
@@ -4121,7 +4121,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>1.0029834508895874</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 								<key>shadow</key>
@@ -4140,7 +4140,7 @@ execute(File file):EngineOutput}</string>
 										<key>r</key>
 										<real>0.68797892332077026</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 							</dict>
@@ -4246,7 +4246,7 @@ execute(File file):EngineOutput}</string>
 		<key>CurrentSheet</key>
 		<integer>0</integer>
 		<key>Frame</key>
-		<string>{{379, 4}, {1954, 1355}}</string>
+		<string>{{482, 17}, {1954, 1355}}</string>
 		<key>ShowInfo</key>
 		<true/>
 		<key>ShowRuler</key>
@@ -4279,7 +4279,7 @@ execute(File file):EngineOutput}</string>
 	<key>createSinglePDFKey</key>
 	<integer>0</integer>
 	<key>exportAreaKey</key>
-	<integer>4</integer>
+	<integer>1</integer>
 	<key>exportQualityKey</key>
 	<real>100</real>
 	<key>exportSizesKey</key>

@@ -99,6 +99,17 @@ public class IndexTocGenerator extends EclipseHelpTOCGenerator {
 		for (Topic topic : maintopics) {
 			appendTopic(out, "\t", topic, getFilename(topic.label));
 		}
+
+		if (!appendix.isEmpty()) {
+			out.append("<li>Appendix\n<ol>\n");
+			char appendixNo = 'A';
+			for (Topic topic : appendix) {
+				appendTopic(out, "\t", topic, getFilename("Appendix " + appendixNo + ": " + topic.label));
+				appendixNo++;
+			}
+			out.append("</ol></li>\n");
+		}
+
 		out.append("\n</ol>");
 		return out.toString();
 	}
@@ -110,7 +121,7 @@ public class IndexTocGenerator extends EclipseHelpTOCGenerator {
 	protected void appendTopic(StringBuilder out, String indent, Topic topic, String fileName) {
 		out.append("\n" + indent);
 		String href = dir + "/" + fileName + "#" + topic.id;
-		out.append("<li><a href=\"" + href + "\">" + topic.label);
+		out.append("<li><a href=\"" + href + "\">" + topic.label + "</a>");
 		if (!topic.subtopics.isEmpty()) {
 			// no subtopics at the moment
 			// out.append(indent + "<ol>");

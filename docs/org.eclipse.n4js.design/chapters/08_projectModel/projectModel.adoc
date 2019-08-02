@@ -138,7 +138,7 @@ The ExternalLibraryWorkspace relies on caching to provide data about all install
 The caching of the ExternalLibraryWorkspace is implemented in the ExternalProjectMappings which inspects all external locations and builds all necessary mappings.
 The set of mappings start from a simple list of all npms, include mappings that map from location or name to a N4JSExternalProject, or give reduced set of projects.
 
-==== Caching of ExternalLibraryWorkspace
+=== Caching of ExternalLibraryWorkspace
 
 A reduced set of projects is used since not all npms are actually necessary projects for the N4JS IDE.
 Most transitively installed plain-JS npms are of no interest since they are completely invisible to the user.
@@ -154,7 +154,7 @@ The mapping cache is updated every time a refresh is triggered (e.g. at startup 
 Also, every action of the library manager (such as installing or registering npms) triggers a refresh.
 
 
-==== Caching of N4JSProjectsStateHelper
+=== Caching of N4JSProjectsStateHelper
 
 The N4JSProjectsStateHelper uses the MultiCleartriggerCache for caching information about projects of the user workspace.
 The EclipseBasedN4JSWorkspace does not caching at all, but provides information about project descriptions which is expensive to compute on the fly.

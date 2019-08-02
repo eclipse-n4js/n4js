@@ -9,15 +9,13 @@ Contributors:
 NumberFour AG - Initial API and implementation
 ////
 
-[appendix]
+[[sec:Hints]]
 = Hints
-:experimental:
 :find:
 
 In this chapter, some tips and tricks regarding Eclipse, Xtend and Maven should be collected.
 
 [[sec:XtextInjection]]
-[.language-n4js]
 == Xtext Injection
 
 <<fig:cd_XtextInjectors&gt;&gt; shows different injectors used by Xtext

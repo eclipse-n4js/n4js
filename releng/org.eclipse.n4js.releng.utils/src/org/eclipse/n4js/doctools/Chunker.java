@@ -202,7 +202,7 @@ public class Chunker {
 		String html = new String(Files.readAllBytes(new File(in).toPath()));
 		Chunker chunker = new Chunker(html, head, foot, tag, name, index, toc);
 		for (Range range : chunker.chunks) {
-			String fileName = dir + File.separator + range.name + ".html";
+			String fileName = dir + range.name + ".html";
 			System.out.println("Writing chunk " + fileName);
 			File f = new File(fileName);
 			Files.write(f.toPath(), chunker.getChunk(range).toString().getBytes(), StandardOpenOption.CREATE,

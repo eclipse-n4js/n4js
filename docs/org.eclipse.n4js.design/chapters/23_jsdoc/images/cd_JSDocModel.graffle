@@ -3330,13 +3330,13 @@
 								<key>element</key>
 								<string>MOVETO</string>
 								<key>point</key>
-								<string>{9.6889796832887267, 894.33071677581506}</string>
+								<string>{9.6889796832887267, 894.33071677581529}</string>
 							</dict>
 							<dict>
 								<key>element</key>
 								<string>LINETO</string>
 								<key>point</key>
-								<string>{9.6889796832887267, 878.83071677581506}</string>
+								<string>{9.6889796832887267, 878.83071677581529}</string>
 							</dict>
 							<dict>
 								<key>element</key>
@@ -3360,7 +3360,7 @@
 					<real>-1</real>
 					<key>Points</key>
 					<array>
-						<string>{9.6889796832887267, 894.33071677581506}</string>
+						<string>{9.6889796832887267, 894.33071677581529}</string>
 						<string>{9.8149602698529197, 471.10236584398689}</string>
 					</array>
 					<key>Style</key>
@@ -3494,13 +3494,13 @@
 								<key>element</key>
 								<string>MOVETO</string>
 								<key>point</key>
-								<string>{226.87795723047788, 569.7637846971121}</string>
+								<string>{226.8779572304779, 569.7637846971121}</string>
 							</dict>
 							<dict>
 								<key>element</key>
 								<string>LINETO</string>
 								<key>point</key>
-								<string>{226.87795723047788, 523.2637846971121}</string>
+								<string>{226.8779572304779, 523.2637846971121}</string>
 							</dict>
 							<dict>
 								<key>element</key>
@@ -3524,7 +3524,7 @@
 					<real>-1</real>
 					<key>Points</key>
 					<array>
-						<string>{226.87795723047788, 569.7637846971121}</string>
+						<string>{226.8779572304779, 569.7637846971121}</string>
 						<string>{218.98521278628331, 476.37008272662877}</string>
 					</array>
 					<key>Style</key>
@@ -3573,13 +3573,13 @@
 								<key>element</key>
 								<string>MOVETO</string>
 								<key>point</key>
-								<string>{488.2677241358702, 825.75640448390948}</string>
+								<string>{488.26772413587014, 825.75640448390948}</string>
 							</dict>
 							<dict>
 								<key>element</key>
 								<string>LINETO</string>
 								<key>point</key>
-								<string>{488.26772096556004, 790.48819527757428}</string>
+								<string>{488.26772096555999, 790.48819527757439}</string>
 							</dict>
 						</array>
 					</dict>
@@ -3591,8 +3591,8 @@
 					<real>-1</real>
 					<key>Points</key>
 					<array>
-						<string>{488.2677241358702, 825.75640448390948}</string>
-						<string>{488.26772096556004, 790.48819527757428}</string>
+						<string>{488.26772413587014, 825.75640448390948}</string>
+						<string>{488.26772096555999, 790.48819527757439}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -4132,19 +4132,19 @@
 								<key>element</key>
 								<string>MOVETO</string>
 								<key>point</key>
-								<string>{500.66929814808486, 401.10236584398689}</string>
+								<string>{500.66929814808481, 401.10236584398695}</string>
 							</dict>
 							<dict>
 								<key>element</key>
 								<string>LINETO</string>
 								<key>point</key>
-								<string>{500.66929814808486, 362.60236584398689}</string>
+								<string>{500.66929814808481, 362.60236584398695}</string>
 							</dict>
 							<dict>
 								<key>element</key>
 								<string>LINETO</string>
 								<key>point</key>
-								<string>{325.98425492620851, 362.60236584398689}</string>
+								<string>{325.98425492620851, 362.60236584398695}</string>
 							</dict>
 							<dict>
 								<key>element</key>
@@ -4162,7 +4162,7 @@
 					<real>-1</real>
 					<key>Points</key>
 					<array>
-						<string>{500.66929814808486, 401.10236584398689}</string>
+						<string>{500.66929814808481, 401.10236584398695}</string>
 						<string>{325.98425492620851, 324.47637748981083}</string>
 					</array>
 					<key>Style</key>
@@ -4701,7 +4701,7 @@
 								<key>element</key>
 								<string>MOVETO</string>
 								<key>point</key>
-								<string>{488.2677241358702, 694.48819527757439}</string>
+								<string>{488.26772413587014, 694.48819527757439}</string>
 							</dict>
 							<dict>
 								<key>element</key>
@@ -4719,7 +4719,7 @@
 					<real>-1</real>
 					<key>Points</key>
 					<array>
-						<string>{488.2677241358702, 694.48819527757439}</string>
+						<string>{488.26772413587014, 694.48819527757439}</string>
 						<string>{488.26772096556004, 659.21998607123919}</string>
 					</array>
 					<key>Style</key>
@@ -4853,13 +4853,13 @@
 								<key>element</key>
 								<string>MOVETO</string>
 								<key>point</key>
-								<string>{102.41732284750549, 966.33071391479223}</string>
+								<string>{102.41732284750546, 966.33071391479234}</string>
 							</dict>
 							<dict>
 								<key>element</key>
 								<string>LINETO</string>
 								<key>point</key>
-								<string>{896.29724270175757, 966.33071391479223}</string>
+								<string>{896.29724270175757, 966.33071391479234}</string>
 							</dict>
 							<dict>
 								<key>element</key>
@@ -4877,7 +4877,7 @@
 					<real>-1</real>
 					<key>Points</key>
 					<array>
-						<string>{102.41732284750549, 966.33071391479223}</string>
+						<string>{102.41732284750546, 966.33071391479234}</string>
 						<string>{896.29724270175757, 639.76378469711221}</string>
 					</array>
 					<key>Style</key>
@@ -4914,7 +4914,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{878.79724270175757, 656.21139214269078}, {1, 1}}</string>
+					<string>{{878.79724270175757, 656.2114053408352}, {1, 1}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -4944,7 +4944,7 @@
 						<key>Offset</key>
 						<real>17</real>
 						<key>Position</key>
-						<real>0.98487426028399649</real>
+						<real>0.98487424850463867</real>
 						<key>RotationType</key>
 						<integer>0</integer>
 					</dict>
@@ -4984,7 +4984,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{908.79724270175757, 646.72377626399327}, {1, 1}}</string>
+					<string>{{908.79724270175757, 646.72375949748425}, {1, 1}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -5014,7 +5014,7 @@
 						<key>Offset</key>
 						<real>-13</real>
 						<key>Position</key>
-						<real>0.99334196740052771</real>
+						<real>0.99334198236465454</real>
 						<key>RotationType</key>
 						<integer>0</integer>
 					</dict>
@@ -5076,14 +5076,14 @@
 								<key>element</key>
 								<string>LINETO</string>
 								<key>point</key>
-								<string>{529.19292158755491, 401.10236584398683}</string>
+								<string>{529.19292158755479, 401.10236584398689}</string>
 							</dict>
 						</array>
 					</dict>
 					<key>Points</key>
 					<array>
 						<string>{693.07087243006902, 286.0155190977066}</string>
-						<string>{529.19292158755491, 401.10236584398683}</string>
+						<string>{529.19292158755479, 401.10236584398689}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -5543,13 +5543,13 @@
 								<key>element</key>
 								<string>LINETO</string>
 								<key>point</key>
-								<string>{846.79724565218748, 942.33073203460469}</string>
+								<string>{846.79724565218748, 942.33073203460481}</string>
 							</dict>
 							<dict>
 								<key>element</key>
 								<string>LINETO</string>
 								<key>point</key>
-								<string>{102.41732284750546, 942.33073203460469}</string>
+								<string>{102.41732284750549, 942.33073203460481}</string>
 							</dict>
 						</array>
 					</dict>
@@ -5562,7 +5562,7 @@
 					<key>Points</key>
 					<array>
 						<string>{846.79724565218748, 639.76378469711221}</string>
-						<string>{102.41732284750546, 942.33073203460469}</string>
+						<string>{102.41732284750549, 942.33073203460481}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -5596,7 +5596,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{122.56752482226955, 928.83073203460469}, {1, 1}}</string>
+					<string>{{122.56753076839652, 928.83073203460469}, {1, 1}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -5626,7 +5626,7 @@
 						<key>Offset</key>
 						<real>13</real>
 						<key>Position</key>
-						<real>0.98027581544435494</real>
+						<real>0.98027580976486206</real>
 						<key>RotationType</key>
 						<integer>0</integer>
 					</dict>
@@ -5885,7 +5885,7 @@
 								<key>element</key>
 								<string>MOVETO</string>
 								<key>point</key>
-								<string>{165.12694458108365, 418.96850740266603}</string>
+								<string>{165.12694458108365, 418.96850740266598}</string>
 							</dict>
 							<dict>
 								<key>element</key>
@@ -5897,7 +5897,7 @@
 					</dict>
 					<key>Points</key>
 					<array>
-						<string>{165.12694458108365, 418.96850740266603}</string>
+						<string>{165.12694458108365, 418.96850740266598}</string>
 						<string>{59.314960269852889, 418.60236584398689}</string>
 					</array>
 					<key>Style</key>
@@ -6018,7 +6018,7 @@
 								<key>element</key>
 								<string>MOVETO</string>
 								<key>point</key>
-								<string>{557.71654049331744, 421.85236584398689}</string>
+								<string>{557.71654049331732, 421.85236584398689}</string>
 							</dict>
 							<dict>
 								<key>element</key>
@@ -6030,7 +6030,7 @@
 					</dict>
 					<key>Points</key>
 					<array>
-						<string>{557.71654049331744, 421.85236584398689}</string>
+						<string>{557.71654049331732, 421.85236584398689}</string>
 						<string>{693.07087243006902, 334.01550193156891}</string>
 					</array>
 					<key>Style</key>
@@ -6383,7 +6383,7 @@
 		<key>CurrentSheet</key>
 		<integer>0</integer>
 		<key>Frame</key>
-		<string>{{469, 155}, {2107, 1236}}</string>
+		<string>{{453, 155}, {2107, 1236}}</string>
 		<key>ShowInfo</key>
 		<true/>
 		<key>Sidebar</key>
@@ -6414,7 +6414,7 @@
 	<key>createSinglePDFKey</key>
 	<integer>0</integer>
 	<key>exportAreaKey</key>
-	<integer>4</integer>
+	<integer>1</integer>
 	<key>exportQualityKey</key>
 	<real>100</real>
 	<key>exportSizesKey</key>

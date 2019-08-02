@@ -79,11 +79,10 @@
 	<target name="chunk" >
 		
 		<mkdir dir="${doctools.dir}/chunker"/>
-		<javac srcdir="${basedir}/../../releng/org.eclipse.n4js.releng.utils/src/org/eclipse/n4js/doctools" fork="yes" destdir="${doctools.dir}/chunker"></javac>
+		<javac srcdir="${basedir}/../../releng/org.eclipse.n4js.releng.utils/src/org/eclipse/n4js/doctools" fork="yes" destdir="${doctools.dir}/chunker" includeantruntime="false" />
 
 
-		<java classname="org.eclipse.n4js.doctools.IndexTocGenerator"
-			 classpath="${doctools.dir}/chunker">
+		<java classname="org.eclipse.n4js.doctools.IndexTocGenerator" classpath="${doctools.dir}/chunker">
 			<arg value="-t"/>
 			<arg value="${basedir}/generated-docs/toc.html"/>
 			<arg value="-p"/>
@@ -92,8 +91,7 @@
 		</java>
 
 
-		<java classname="org.eclipse.n4js.doctools.Chunker"
-			 classpath="${doctools.dir}/chunker">
+		<java classname="org.eclipse.n4js.doctools.Chunker" classpath="${doctools.dir}/chunker">
 			<arg value="-n"/>
 			<arg value="h2"/>
 			<arg value="-c"/>
@@ -110,7 +108,7 @@
 		</java>
 		
 		<delete file="${basedir}/generated-docs/toc.html" />
-		<delete file="${basedir}/generated-docs/${docname}.xml" />
-		<delete file="${basedir}/generated-docs/${docname}.html" />
+		<!-- delete file="${basedir}/generated-docs/${docname}.xml" /> -->
+		<!--delete file="${basedir}/generated-docs/${docname}.html" /> -->
 	</target>
 </project>

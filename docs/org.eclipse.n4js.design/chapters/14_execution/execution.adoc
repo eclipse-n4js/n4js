@@ -193,11 +193,11 @@ Compilation of N4JS may target many platforms. For the moment it is hard to disc
 
 We provide NodeJS binaries for various OSes. Direct access to binaries is not exposed. Selection and institutionalization of the binary is done internally and is not configurable. Instead bundle containing binaries provides classes required to run code (in form of `String` or `File` with the code). Clients That want to do this may either use provided `Engine` class or can implement their own engine based on provided infrastructure. Main class that used in engine implementation is `EngineCommandBuilder`. This class is responsible for building proper command line commands that engine implementation must execute to run code with NodeJS.
 
-shows the most important classes of the NodeJS integration.
+<<fig:cd_executionengine>> shows the most important classes of the NodeJS integration.
 
 [[fig:cd_executionengine]]
 [.center]
-image::{find}images/cd_executionengine.svg[]
+image::{find}images/cd_executionengine.svg[title="NodeJS execution integration"]
 
 [[sec:Usage_Outside_N4JSIDE]]
 ===  Usage Outside N4JSIDE

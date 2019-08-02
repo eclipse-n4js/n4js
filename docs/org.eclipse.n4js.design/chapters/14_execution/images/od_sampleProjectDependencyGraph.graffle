@@ -1962,7 +1962,7 @@ ES5}</string>
 								<key>r</key>
 								<real>0.93603068590164185</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -2019,7 +2019,7 @@ ES5}</string>
 								<key>r</key>
 								<real>0.79444092512130737</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -2076,7 +2076,7 @@ ES5}</string>
 								<key>r</key>
 								<real>0.87108141183853149</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -2133,7 +2133,7 @@ ES5}</string>
 								<key>r</key>
 								<real>0.93725508451461792</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4120,7 +4120,7 @@ NodeJs}</string>
 								<key>r</key>
 								<real>0.93725508451461792</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4182,7 +4182,7 @@ NodeJs}</string>
 								<key>r</key>
 								<real>0.87058830261230469</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4244,7 +4244,7 @@ NodeJs}</string>
 								<key>r</key>
 								<real>0.79215675592422485</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4306,7 +4306,7 @@ NodeJs}</string>
 								<key>r</key>
 								<real>0.93333375453948975</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4392,7 +4392,7 @@ NodeJs}</string>
 		<key>CurrentSheet</key>
 		<integer>0</integer>
 		<key>Frame</key>
-		<string>{{1378, 4}, {1177, 1413}}</string>
+		<string>{{822, 4}, {1177, 1413}}</string>
 		<key>ShowInfo</key>
 		<false/>
 		<key>ShowRuler</key>
@@ -4425,7 +4425,7 @@ NodeJs}</string>
 	<key>createSinglePDFKey</key>
 	<integer>0</integer>
 	<key>exportAreaKey</key>
-	<integer>4</integer>
+	<integer>1</integer>
 	<key>exportQualityKey</key>
 	<real>100</real>
 	<key>exportSizesKey</key>

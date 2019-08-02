@@ -1976,7 +1976,7 @@ StandaloneSetup}</string>
 						<key>Offset</key>
 						<real>8</real>
 						<key>Position</key>
-						<real>0.46324838904074933</real>
+						<real>0.46324840188026428</real>
 						<key>RotationType</key>
 						<integer>2</integer>
 					</dict>
@@ -4024,7 +4024,7 @@ RuntimeModule}</string>
 		<key>Sidebar_Tab</key>
 		<integer>0</integer>
 		<key>VisibleRegion</key>
-		<string>{{-741.33333333333337, -354.66666666666669}, {2254.6666666666665, 1466.6666666666667}}</string>
+		<string>{{-741.33333333333337, -354.66666666666708}, {2254.6666666666665, 1466.6666666666665}}</string>
 		<key>WindowInfo_InspectorTab</key>
 		<array>
 			<string>com.omnigroup.OmniGraffle.inspectorGroup.object</string>
@@ -4045,7 +4045,7 @@ RuntimeModule}</string>
 	<key>createSinglePDFKey</key>
 	<integer>0</integer>
 	<key>exportAreaKey</key>
-	<integer>4</integer>
+	<integer>1</integer>
 	<key>exportQualityKey</key>
 	<real>100</real>
 	<key>exportSizesKey</key>

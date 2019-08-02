@@ -3044,7 +3044,7 @@ transpiler}</string>
 		<key>Sidebar_Tab</key>
 		<integer>0</integer>
 		<key>VisibleRegion</key>
-		<string>{{12.666666666666666, -35}, {734.66666666666674, 683.33333333333337}}</string>
+		<string>{{2, -35}, {734.66666666666663, 683.33333333333337}}</string>
 		<key>WindowInfo_InspectorTab</key>
 		<array>
 			<string>com.omnigroup.OmniGraffle.inspectorGroup.object</string>
@@ -3065,7 +3065,7 @@ transpiler}</string>
 	<key>createSinglePDFKey</key>
 	<integer>0</integer>
 	<key>exportAreaKey</key>
-	<integer>4</integer>
+	<integer>1</integer>
 	<key>exportQualityKey</key>
 	<real>100</real>
 	<key>exportSizesKey</key>

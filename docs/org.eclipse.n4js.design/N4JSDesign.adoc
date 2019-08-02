@@ -40,7 +40,6 @@ ifdef::backend-docbook5[<<<]
 include::{find}chapters/01_introduction/introduction.adoc[]
 include::{find}chapters/02_eclipseSetup/eclipseSetup.adoc[]
 include::{find}chapters/03_releng/releng.adoc[]
-
 include::{find}chapters/04_tipsTricks/tipsTricks.adoc[]
 include::{find}chapters/05_parser/parser.adoc[]
 include::{find}chapters/06_typesystem/typesystem.adoc[]
@@ -61,19 +60,28 @@ include::{find}chapters/22_json/json.adoc[]
 include::{find}chapters/23_jsdoc/jsdoc.adoc[]
 include::{find}chapters/24_docexporter/docexporter.adoc[]
 include::{find}chapters/25_renameRefactoring/renameRefactoring.adoc[]
+
 include::{find}chapters/30_flowgraphs/flowgraphs.adoc[]
 
 include::{find}chapters/40_publish_npms/publish_npms.adoc[]
 
-// Appendix
+[appendix]
+include::{find}chapters/a02_hints/hints.adoc[]
 
-include::{find}acronyms.adoc[]
-include::{find}chapters/a01_license/license.adoc[]
+[appendix]
 include::{find}chapters/a10_moduleLoading/moduleLoading.adoc[]
+
+[appendix]
+include::{find}chapters/a01_license/license.adoc[]
+
+[appendix]
+include::{find}acronyms.adoc[]
+
+[appendix]
+= Bibliography and Footnotes
+
+bibliography::[]
 
 :leveloffset: -1
 
-[appendix]
-== Bibliography
 
-bibliography::[]

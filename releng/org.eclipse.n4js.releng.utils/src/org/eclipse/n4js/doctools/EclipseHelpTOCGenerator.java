@@ -140,10 +140,16 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 		String id;
 		String label;
 		List<Topic> subtopics = new ArrayList<>(5);
+		/**
+		 * Not used for Eclipse Help but required for html index generation. In the Eclipse help, we use a topic
+		 * "Appendix".
+		 */
+		boolean isAppendix = false;
 	}
 
 	String title;
 	List<Topic> maintopics = new ArrayList<>(5);
+	List<Topic> appendix = new ArrayList<>(5);
 	Stack<Topic> topics = new Stack<>();
 	StringBuilder titleBuffer = new StringBuilder();
 	boolean requireTitle = false;
@@ -164,24 +170,31 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 		super.startElement(uri, localName, qName, attributes);
 
 		if ("chapter".equals(qName)) {
-			startChapter(attributes);
+			startChapter(attributes, false);
 		} else if ("section".equals(qName)) {
 			startSection(attributes);
 		} else if ("book".equals(qName)) {
 			startBook();
+		} else if ("appendix".equals(qName)) {
+			startChapter(attributes, true);
 		}
-
 	}
 
 	private void startBook() {
 		requireTitle = true;
 	}
 
-	private void startChapter(Attributes attributes) {
+	private void startChapter(Attributes attributes, boolean isAppendix) {
 		requireTitle = true;
 		topics.clear();
 		Topic topic = new Topic();
-		maintopics.add(topic);
+		topic.isAppendix = isAppendix;
+		if (isAppendix) {
+			appendix.add(topic);
+		} else {
+			maintopics.add(topic);
+
+		}
 		topics.push(topic);
 
 		topic.id = attributes.getValue(XML_ID);
@@ -202,7 +215,7 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		super.endElement(uri, localName, qName);
 
-		if ("chapter".equals(qName)) {
+		if ("chapter".equals(qName) || "appendix".equals(qName)) {
 			endChapter();
 		} else if ("section".equals(qName)) {
 			endSection();
@@ -245,10 +258,21 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	 */
 	protected String getResult() {
 		StringBuilder out = new StringBuilder();
+
 		out.append("<?xml version='1.0' encoding='utf-8' ?>\n");
 		out.append("<toc topic=\"" + dir + "/index.html\" label=\"" + title + "\">");
 		for (Topic topic : maintopics) {
 			appendTopic(out, "\t", topic, getFilename(topic.label));
+		}
+
+		if (!appendix.isEmpty()) {
+			out.append("\n<topic label=\"Appendix\">");
+			char appendixNo = 'A';
+			for (Topic topic : appendix) {
+				appendTopic(out, "\t", topic, getFilename("Appendix " + appendixNo + ": " + topic.label));
+				appendixNo++;
+			}
+			out.append("\n</topic>");
 		}
 		out.append("\n</toc>");
 		return out.toString();

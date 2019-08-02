@@ -313,7 +313,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{347.35934782843083, 422.78730973539547}, {37, 22}}</string>
+					<string>{{351.51587371826167, 423.52773117675491}, {37, 22}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -962,7 +962,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{162.64134155070377, 425.81598371336247}, {87, 22}}</string>
+					<string>{{145.64133950555356, 442.81598371336247}, {87, 22}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -1749,7 +1749,7 @@
 								<key>r</key>
 								<real>0.87003046274185181</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4448,7 +4448,7 @@ n4js-es5}</string>
 								<key>r</key>
 								<real>0.93603068590164185</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4505,7 +4505,7 @@ n4js-es5}</string>
 								<key>r</key>
 								<real>0.79444092512130737</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4562,7 +4562,7 @@ n4js-es5}</string>
 								<key>r</key>
 								<real>0.93725508451461792</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4907,7 +4907,7 @@ n4js-node}</string>
 								<key>r</key>
 								<real>0.93725508451461792</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -4969,7 +4969,7 @@ n4js-node}</string>
 								<key>r</key>
 								<real>0.79215675592422485</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -5031,7 +5031,7 @@ n4js-node}</string>
 								<key>r</key>
 								<real>0.93333375453948975</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -5150,7 +5150,7 @@ n4js-node}</string>
 	<key>createSinglePDFKey</key>
 	<integer>0</integer>
 	<key>exportAreaKey</key>
-	<integer>4</integer>
+	<integer>1</integer>
 	<key>exportQualityKey</key>
 	<real>100</real>
 	<key>exportSizesKey</key>

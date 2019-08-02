@@ -613,6 +613,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -676,6 +683,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -816,6 +830,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -879,6 +900,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -942,6 +970,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -1005,6 +1040,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -1143,6 +1185,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -1206,6 +1255,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -1269,6 +1325,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -1332,6 +1395,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -1468,6 +1538,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -1531,6 +1608,13 @@
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -2919,7 +3003,7 @@ As it is an EMF model (for change adapter etc.), extensions cannot provide subcl
 								<key>r</key>
 								<real>0.50698423385620117</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 					</dict>
@@ -2927,6 +3011,37 @@ As it is an EMF model (for change adapter etc.), extensions cannot provide subcl
 					<dict>
 						<key>Align</key>
 						<integer>0</integer>
+						<key>RTFD</key>
+						<data>
+						BAtzdHJlYW10eXBlZIHoA4QBQISE
+						hBJOU0F0dHJpYnV0ZWRTdHJpbmcA
+						hIQITlNPYmplY3QAhZKEhIQITlNT
+						dHJpbmcBlIQBK4GCAG5hbWUgPSBw
+						YXJhbQp0YWcgPSBwYXJhbSAoPWFy
+						Zyw9YXJndW1lbnQpCmZvcm1hdCA9
+						ICd7JyB0eXBlPVRZUEVFWFBSICd9
+						JyBuYW1lPUlEIGRlc2NyaXB0aW9u
+						PVRFWFQKc2luZ2xlbGluZT10cnVl
+						CmNvbnRleHQ9ZnVuY3Rpb26GhAJp
+						SQGBggCShISEDE5TRGljdGlvbmFy
+						eQCUhAFpA5KElpYHTlNDb2xvcoaS
+						hISEB05TQ29sb3IAlIQBYwGEBGZm
+						ZmaDh9zcPoOH3Nw+g4fc3D4BhpKE
+						lpYQTlNQYXJhZ3JhcGhTdHlsZYaS
+						hISEF05TTXV0YWJsZVBhcmFncmFw
+						aFN0eWxlAISEEE5TUGFyYWdyYXBo
+						U3R5bGUAlIQEQ0NAUwAAhISEB05T
+						QXJyYXkAlJkMkoSEhAlOU1RleHRU
+						YWIAlIQCQ2YAHIaShKOiADiGkoSj
+						ogBUhpKEo6IAcIaShKOiAIGMAIaS
+						hKOiAIGoAIaShKOiAIHEAIaShKOi
+						AIHgAIaShKOiAIH8AIaShKOiAIEY
+						AYaShKOiAIE0AYaShKOiAIFQAYaG
+						AIaShJaWBk5TRm9udIaShISEBk5T
+						Rm9udB6UmRyEBVsyOGNdBgAAABQA
+						AAD//kgAZQBsAHYAZQB0AGkAYwBh
+						AIQBZgmbAJsBmwCbAIaGhg==
+						</data>
 						<key>Text</key>
 						<string>{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf500
 {\fonttbl\f0\fswiss\fcharset0 Helvetica;}
@@ -3021,7 +3136,7 @@ context=function}</string>
 										<key>r</key>
 										<real>1.0110785961151123</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 									<key>FillType</key>
 									<integer>2</integer>
@@ -3460,7 +3575,7 @@ context=function}</string>
 										<key>r</key>
 										<real>0.96257847547531128</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 									<key>Width</key>
 									<real>2</real>
@@ -3545,7 +3660,7 @@ context=function}</string>
 										<key>r</key>
 										<real>0.46202266216278076</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 									<key>FillType</key>
 									<integer>2</integer>
@@ -3985,7 +4100,7 @@ context=function}</string>
 										<key>r</key>
 										<real>-0.0021355478093028069</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 									<key>Width</key>
 									<real>2</real>
@@ -4048,7 +4163,7 @@ context=function}</string>
 										<key>r</key>
 										<real>0.46202266216278076</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 									<key>FillType</key>
 									<integer>2</integer>
@@ -4488,7 +4603,7 @@ context=function}</string>
 										<key>r</key>
 										<real>-0.0021355478093028069</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 									<key>Width</key>
 									<real>2</real>
@@ -4587,7 +4702,7 @@ context=function}</string>
 										<key>r</key>
 										<real>0.46202266216278076</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 									<key>FillType</key>
 									<integer>2</integer>
@@ -5027,7 +5142,7 @@ context=function}</string>
 										<key>r</key>
 										<real>-0.0021355478093028069</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 									<key>Width</key>
 									<real>2</real>
@@ -5221,7 +5336,7 @@ context=function}</string>
 										<key>r</key>
 										<real>1.0110785961151123</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 									<key>FillType</key>
 									<integer>2</integer>
@@ -5660,7 +5775,7 @@ context=function}</string>
 										<key>r</key>
 										<real>0.96257847547531128</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 									<key>Width</key>
 									<real>2</real>
@@ -6583,6 +6698,13 @@ virtual: boolean\
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -6646,6 +6768,13 @@ virtual: boolean\
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -7307,6 +7436,13 @@ virtual: boolean\
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -7370,6 +7506,13 @@ virtual: boolean\
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -7433,6 +7576,13 @@ virtual: boolean\
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -7832,6 +7982,13 @@ virtual: boolean\
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -7895,6 +8052,13 @@ virtual: boolean\
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -8061,6 +8225,13 @@ virtual: boolean\
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -8124,6 +8295,13 @@ virtual: boolean\
 					<string>Resize</string>
 					<key>FontInfo</key>
 					<dict>
+						<key>Color</key>
+						<dict>
+							<key>space</key>
+							<string>gg22</string>
+							<key>w</key>
+							<string>0</string>
+						</dict>
 						<key>Font</key>
 						<string>Helvetica</string>
 						<key>Size</key>
@@ -8687,7 +8865,7 @@ virtual: boolean\
 	<key>createSinglePDFKey</key>
 	<integer>0</integer>
 	<key>exportAreaKey</key>
-	<integer>4</integer>
+	<integer>1</integer>
 	<key>exportQualityKey</key>
 	<real>100</real>
 	<key>exportSizesKey</key>

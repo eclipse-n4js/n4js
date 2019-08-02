@@ -117,7 +117,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2014-02-27 15:10:58 +0000</string>
+	<string>2019-08-02 09:54:33 +0000</string>
 	<key>Modifier</key>
 	<string>Jens von Pilgrim</string>
 	<key>MovementHandleVisible</key>
@@ -172,7 +172,7 @@
 	<array>
 		<dict>
 			<key>ActiveLayerIndex</key>
-			<integer>0</integer>
+			<integer>1</integer>
 			<key>AutoAdjust</key>
 			<integer>6</integer>
 			<key>AutosizingMargin</key>
@@ -260,7 +260,7 @@
 								<key>r</key>
 								<real>0.51966714859008789</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -424,7 +424,7 @@
 										<key>r</key>
 										<real>1.0064153671264648</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 								<key>shadow</key>
@@ -733,7 +733,7 @@
 										<key>r</key>
 										<real>0.46468329429626465</real>
 										<key>space</key>
-										<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+										<string>srgb</string>
 									</dict>
 								</dict>
 								<key>shadow</key>
@@ -920,7 +920,7 @@
 								<key>r</key>
 								<real>0.51966714859008789</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -987,7 +987,7 @@
 								<key>r</key>
 								<real>1.0064153671264648</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -1048,7 +1048,7 @@
 								<key>r</key>
 								<real>0.46468329429626465</real>
 								<key>space</key>
-								<string>9eaea0911d89d63e39e95f2e2116eaec7e0bb91e</string>
+								<string>srgb</string>
 							</dict>
 						</dict>
 						<key>shadow</key>
@@ -1086,7 +1086,7 @@
 					<key>Name</key>
 					<string>disjoint</string>
 					<key>Print</key>
-					<true/>
+					<false/>
 					<key>View</key>
 					<false/>
 				</dict>
@@ -1132,7 +1132,7 @@
 		<key>CurrentSheet</key>
 		<integer>0</integer>
 		<key>Frame</key>
-		<string>{{599, 210}, {1377, 922}}</string>
+		<string>{{1020, 180}, {1377, 922}}</string>
 		<key>ShowInfo</key>
 		<true/>
 		<key>ShowRuler</key>
@@ -1165,7 +1165,7 @@
 	<key>createSinglePDFKey</key>
 	<integer>0</integer>
 	<key>exportAreaKey</key>
-	<integer>4</integer>
+	<integer>0</integer>
 	<key>exportQualityKey</key>
 	<real>100</real>
 	<key>exportSizesKey</key>

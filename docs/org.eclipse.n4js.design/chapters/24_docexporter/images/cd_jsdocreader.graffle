@@ -3275,7 +3275,7 @@
 	<key>createSinglePDFKey</key>
 	<integer>0</integer>
 	<key>exportAreaKey</key>
-	<integer>4</integer>
+	<integer>1</integer>
 	<key>exportQualityKey</key>
 	<real>100</real>
 	<key>exportSizesKey</key>
@@ -3288,7 +3288,7 @@
 	<key>htmlImageTypeKey</key>
 	<integer>0</integer>
 	<key>includeBackgroundGraphicKey</key>
-	<false/>
+	<true/>
 	<key>includeNonPrintingLayersKey</key>
 	<false/>
 	<key>lastExportTypeKey</key>

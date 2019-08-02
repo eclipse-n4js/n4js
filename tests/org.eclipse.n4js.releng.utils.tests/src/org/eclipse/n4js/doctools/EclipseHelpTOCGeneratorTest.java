@@ -39,7 +39,7 @@ public class EclipseHelpTOCGeneratorTest {
 	@Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
-				{ "sample" }
+				{ "sample" }, { "sampleWithAppendix" }
 		});
 	}
 

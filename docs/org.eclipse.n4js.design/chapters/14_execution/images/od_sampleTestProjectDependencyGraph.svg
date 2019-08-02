@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 560 783" width="560" height="783">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="4.5 5.625 509.24774 697.0299" width="509.24774" height="697.0299">
   <defs>
     <font-face font-family="Helvetica" font-size="9" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
       <font-face-src>
@@ -48,7 +48,7 @@
   </metadata>
   <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
     <title>Canvas 1</title>
-    <rect fill="white" x="0" y="0" width="560" height="783"/>
+    <rect fill="white" x="4.5" y="5.625" width="509.24774" height="697.0299"/>
     <g id="Canvas_1: Layer 1">
       <title>Layer 1</title>
       <g id="Graphic_458">
@@ -190,7 +190,7 @@
         </text>
       </g>
       <g id="Line_529">
-        <path d="M 153.05746 595.2962 L 153.05746 583.3962 L 153.05746 491.3962 L 82.125 491.3962 L 82.125 464.76303 L 82.125 462.76303" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+        <path d="M 153.05746 595.2962 L 153.05746 491.3962 L 82.125 491.3962 L 82.125 462.76303" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
       </g>
       <g id="Graphic_264">
         <rect x="71.25779" y="176.76442" width="99" height="36" fill="white"/>
@@ -370,7 +370,7 @@
         <path d="M 495.05746 359.25 L 506.95746 359.25 L 506.95746 190.96178 L 504.95746 190.96178" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
       </g>
       <g id="Graphic_575">
-        <text transform="translate(465.52125 328.89485)" fill="black">
+        <text transform="translate(477.42125 337.35044)" fill="black">
           <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«call»</tspan>
         </text>
       </g>
