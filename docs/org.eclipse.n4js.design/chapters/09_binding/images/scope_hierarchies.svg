@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="52.5 41.5 454 469" width="454" height="469">
+  <defs>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -8 14 16" markerWidth="14" markerHeight="16" color="black">
+      <g>
+        <path d="M 12 0 L 0 -7 L 0 7 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="10" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="8" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2013-10-15 10:32:03 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="52.5" y="41.5" width="454" height="469"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Group_149">
+        <g id="Graphic_151">
+          <rect x="53" y="42" width="133.23508" height="22.135802" fill="white"/>
+          <rect x="53" y="42" width="133.23508" height="22.135802" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(58 46.0679)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="25.5941" y="11">Global Scope</tspan>
+          </text>
+        </g>
+        <g id="Graphic_150">
+          <rect x="53" y="62.12346" width="453" height="305.87654" fill="white"/>
+          <rect x="53" y="62.12346" width="453" height="305.87654" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+      </g>
+      <g id="Graphic_163">
+        <rect x="209" y="73" width="99" height="48" fill="white"/>
+        <rect x="209" y="73" width="99" height="48" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(214 76)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="5.4941406" y="11">Global Object </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="15.15918" y="25">properties </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="27.15918" y="39">scope</tspan>
+        </text>
+      </g>
+      <g id="Graphic_164">
+        <rect x="209" y="162" width="99" height="36" fill="white"/>
+        <rect x="209" y="162" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(214 166)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="6.4990234" y="11">Built-in types </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="27.15918" y="25">scope</tspan>
+        </text>
+      </g>
+      <g id="Graphic_165">
+        <rect x="209" y="241" width="99" height="36" fill="white"/>
+        <rect x="209" y="241" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(214 245)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="16.498047" y="11">Container </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="27.15918" y="25">scope</tspan>
+        </text>
+      </g>
+      <g id="Graphic_166">
+        <rect x="53" y="380.5" width="99" height="48" fill="white"/>
+        <rect x="53" y="380.5" width="99" height="48" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(58 383.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="21.481445" y="11">Variable </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="7.829102" y="25">Environment</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="23.822266" y="39">scopes</tspan>
+        </text>
+      </g>
+      <g id="Graphic_167">
+        <rect x="395" y="241" width="99" height="36" fill="white"/>
+        <rect x="395" y="241" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(400 252)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="28.8291" y="11">Index</tspan>
+        </text>
+      </g>
+      <g id="Line_168">
+        <line x1="258.5" y1="162" x2="258.5" y2="134.5" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_169">
+        <line x1="258.5" y1="241" x2="258.5" y2="211.5" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_170">
+        <line x1="152" y1="404.5" x2="195.50002" y2="404.5" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_457">
+        <line x1="308" y1="259" x2="385.1" y2="259" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_272">
+        <text transform="translate(333.9927 246)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«filters»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_458">
+        <rect x="407" y="386.5" width="99" height="36" fill="white"/>
+        <rect x="407" y="386.5" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(412 397.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="7.928711" y="11">Types Scope</tspan>
+        </text>
+      </g>
+      <g id="Graphic_152">
+        <rect x="209.00002" y="382" width="99" height="45" fill="white"/>
+        <rect x="209.00002" y="382" width="99" height="45" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(214.00002 392.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="25.822266" y="8">«abstract»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="9.15625" y="21">Local Scope</tspan>
+        </text>
+      </g>
+      <g id="Graphic_459">
+        <rect x="209.00002" y="314.5" width="99" height="36" fill="white"/>
+        <rect x="209.00002" y="314.5" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(214.00002 325.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="6.1621094" y="11">Import Scope</tspan>
+        </text>
+      </g>
+      <g id="Line_460">
+        <line x1="407" y1="404.5" x2="321.5" y2="404.5" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_461">
+        <line x1="258.5" y1="382" x2="258.5" y2="364" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_462">
+        <line x1="258.5" y1="314.5" x2="258.5" y2="290.5" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_464">
+        <rect x="407" y="474" width="99" height="36" fill="white"/>
+        <rect x="407" y="474" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(412 478)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="16.158203" y="11">Validating</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="27.15918" y="25">scope</tspan>
+        </text>
+      </g>
+      <g id="Line_466">
+        <line x1="456.5" y1="474" x2="456.5" y2="436" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_467">
+        <rect x="209.00002" y="474" width="99" height="36" fill="white"/>
+        <rect x="209.00002" y="474" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(214.00002 485)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="2.4853516" y="11">Member scope</tspan>
+        </text>
+      </g>
+      <g id="Line_468">
+        <line x1="258.5" y1="474" x2="258.5" y2="440.5" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

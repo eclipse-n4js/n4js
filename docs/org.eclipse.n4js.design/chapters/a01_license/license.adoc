@@ -9,8 +9,8 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-[appendix]
-= Licence
+[[sec:License]]
+= License
 
 
 This specification and the accompanying materials is made available

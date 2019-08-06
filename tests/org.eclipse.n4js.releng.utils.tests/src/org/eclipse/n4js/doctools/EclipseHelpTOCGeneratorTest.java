@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2019 NumberFour AG and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
 package org.eclipse.n4js.doctools;
 
 import static org.junit.Assert.assertEquals;
@@ -29,7 +39,7 @@ public class EclipseHelpTOCGeneratorTest {
 	@Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
-				{ "sample" }
+				{ "sample" }, { "sampleWithAppendix" }
 		});
 	}
 
@@ -52,7 +62,8 @@ public class EclipseHelpTOCGeneratorTest {
 		File expectedTOCFile = Paths.get("testres", "toc", candidate, "toc" + candidate + ".xml").toFile();
 
 		String expectedTOC = new String(Files.readAllBytes(expectedTOCFile.toPath()));
-		String actualTOC = EclipseHelpTOCGenerator.generateTOC(adocXML, "");
+		EclipseHelpTOCGenerator generator = new EclipseHelpTOCGenerator();
+		String actualTOC = generator.generateTOC(adocXML, "");
 
 		assertEquals(expectedTOC, actualTOC);
 	}

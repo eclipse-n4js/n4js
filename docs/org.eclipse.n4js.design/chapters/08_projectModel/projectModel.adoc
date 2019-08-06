@@ -1,0 +1,188 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Project Model
+:find:
+
+
+[[sec:Package_json]]
+== Package.json File
+
+See cite:[N4JSSpec] for the format specification of N4JS-specific package.json files. 
+Based on the JSON-model-based AST that can be parsed from the package.json file, we transform the information that can be extracted into an instance of the N4JS-specific ProjectDescription model.
+This model is defined by means of EMF, the Xcore file is found in the N4JS model bundle.
+
+[[fig:projectDescriptionModel]]
+image::{find}images/cd_projectDescription.svg[Project Description Model]
+
+== Accessing Project Information
+
+The information in the package.json files is parsed into memory at runtime, e.g. within Eclipse or in headless mode. It is made available via the `IN4JSCore` facade that provides a high-level abstraction when working with the project structure. This facade has two implementations:
+
+* One implementation is backed by the file system, e.g. `java.io.File` and used in a headless environment
+* Another implementation uses the Eclipse resource model (`IProject`, `IFolder`, `IFile`) to describe the contents of an `IN4JSProject`. This implementation is automatically kept in sync whenever the contents of a package.json file is edited by a user. It is also maintained as dynamic project information to make the Eclipse workspace aware of the declared dependencies. That is, Eclipse projects know about the project references in the package.json file.
+
+The project model is mimicing the handle based services of Eclipse’s `JavaCore`, the handles are often represented as EMF `URIs` though. Therefore the API allows to retrieve a source folder for a given N4JS resource, all the libraries that are configured for a project or simply the project’s name or the information if it exists. Subsequent components in the processing chain like the scope provider can leverage the API to deduce the container configuration and visiblity constraints. Project references are resolved transparently.
+
+The Xtext index participation is implemented by means of the `N4JSToBeBuiltComputer` and the `N4JSAllContainersState`. These classes provide access to the container configuration.
+
+The precedence for the dependency resolution follows this lookup chain:
+
+* An accessible `IN4JSProject` with the given name is located in the workspace.
+* The library manager provides access to the requested project.
+
+Accordingly, the type lookup follows the same chain due to the container configuration that is deduced from the package.json configuration. Of course is prefers locally defined type that can be found in the current project over types that are located in referenced projects.
+
+[[sec:IN4JSCore]]
+=== IN4JSCore
+
+Facade analogous to org.eclipse.jdt.core.JavaCore.
+It is used look up the project or source container where a resource URI belongs to.
+It also provides some helper methods to retrieve information from the package.json file.
+N4JSRuntimeCore uses the file system and thus uses java.io to access files and folders.
+N4JSEclipseCore uses the Eclipse workspace and thus uses org.eclipse.resources API.
+Both Core implementations act as wrapper for N4JSModel resp. EclipseN4JSModel.
+Instances of the `IN4JSCore` are obtained as usually via dependency injection, e.g. `@Inject IN4JSCore n4jsCore`.
+
+
+[[sec:N4JSModel]]
+=== N4JSModel
+
+N4JSModel uses FileBasedWorkspace to load and access the project description from the package.json file and create wrappers for projects (N4JSProject) and source containers (N4JSSourceContainer).
+
+A source container is a wrapper for a file system that has been marked as source folder in the package.json file.
+For determination of the current project a given EMF URI pointing to the project path is used.
+In N4JSModel this location is directly wrapped in N4JSProject.
+In N4JSModel a given EMF URI is resolved to a source container by using the specified relative source paths from the package.json file and file system based project location.
+If the EMF URI converted to a file URI starts with the absolute source folder path a N4JSProjectSourceContainer is created and returned for that EMF URI.
+
+
+In EclipseN4JSModel (that extends N4JSModel) the last segment of the URI is assumed to be the project name and via the EclipseBasedN4JSWorkspace that wraps the Eclipse workspace a project with that name is tried to be resolved.
+This IProject is than wrapped in N4JSEclipseProject.
+In EclipseN4JSModel a given EMF URI is resolved to an org.eclipse.core.resources.IResource belonging to the IWorkspaceRoot.
+That resource is wrapped in EclipseSourceContainer.
+
+
+N4JSModel is also used to retrieve project dependencies wrapped as N4JSProject.
+
+
+[[sec:N4JSWorkspace]]
+=== N4JSWorkspace
+
+The FileBasedWorkspace and EclipseBasedN4JSWorkspace should only be accessed by N4JSModel resp. EclipseN4JSModel as they know the contract for the URI scheme.
+The FileBasedWorkspace creates AbstractTreeIterator for the direct contents of a source container, so that their children can be navigated by this as well.
+It then filters out all directories and returns an iterator of all files as EMF URIs.
+
+The EclipseBasedN4JSWorkspace wraps the IWorkspaceRoot.
+
+Fetching the project description read out from the package.json file is cached in both workspace implementations.
+In FileBasedWorkspace the LazyProjectDescriptionHandle is used as proxy and in EclipseBasedN4JSWorkspace the ProjectDescriptionLoadListener is used to invalidate the cache when the package.json file has been changed.
+ProjectDescriptionLoadListener also ensures that dependent projects are considered by the Eclipse builder by setting dynamic dependencies in the project meta data.
+It also updates these project dependencies if it is required and recalculates all source containers.
+
+In the tests another implementation, MockWorkspace, is used, that provides a dummy project description.
+
+
+[[sec:N4JSProject]]
+=== N4JSProject
+
+A N4JSProject represents a configured project as defined in the package.json file.
+So in principles it wraps access to N4JSModel (and so to containing source containers, libraries and so on)
+and to some information from the package.json file directly (like defined module filters, vendorId and others).
+It is also used to compare depending projects.
+
+N4JSProject is the runtime representation while N4JSEclipseProject represents a project in the Eclipse workspace.
+N4JSProject is identified by its EMF location URI while N4JSEclipseProject wraps the underlying org.eclipse.core.resources.IProject.
+
+In tests MockProject is used.
+
+
+[[sec:SourceContainer]]
+=== SourceContainer
+
+A source container contains either source files for production, tests or external declarations.
+By default all these files resp. their containing types will be exported to the Xtext index.
+A source container belongs exactly to one project it is identified by its project relative location.
+
+A N4JSProjectSourceContainer is a container that contains unpacked n4js, js and n4jsd files that can be modified.
+By default all these files are syntactically and semantically validated (this can be configured by the use of module filters).
+Except for n4jsd files, all files are compiled by the configured compilers.
+
+EclipseSourceContainer specializes N4JSProjectSourceContainer to work on top of the Eclipse resources API.
+Thus besides the location it also wraps the IFolder.
+
+The IFile was chosen instead of using the java.io.File because changes to an IFile (and IResource in general) trigger a workspace change event so that the Xtext builder is triggered properly.
+
+
+[[sec:N4JSProjectsStateHelper]]
+=== N4JSProjectsStateHelper
+
+Calculates the visible containers for a given container, where containers are source containers within the project as well as source containers of other depending projects in workspace.
+The calculated handles are cached and invalidated if the project description file has changed or the project has been closed or reopened.
+
+
+
+[[sec:Caching]]
+== Caching
+
+Caching is heavily used in the ExternalLibraryWorkspace and the N4JSProjectsStateHelper.
+The ExternalLibraryWorkspace relies on caching to provide data about all installed npms, their locations, names, shadowing, dependencies and so on.
+The caching of the ExternalLibraryWorkspace is implemented in the ExternalProjectMappings which inspects all external locations and builds all necessary mappings.
+The set of mappings start from a simple list of all npms, include mappings that map from location or name to a N4JSExternalProject, or give reduced set of projects.
+
+=== Caching of ExternalLibraryWorkspace
+
+A reduced set of projects is used since not all npms are actually necessary projects for the N4JS IDE.
+Most transitively installed plain-JS npms are of no interest since they are completely invisible to the user.
+The reduced set of projects always consists of all user workspace projects and all shipped libraries.
+From the set of all installed npms, only those are necessary that are dependencies of a non-plain-JS projects.
+Shadowed projects are also not included in the reduced set of npms.
+
+To access projects that are not included in the reduced set of npms, the ExternalProjectMappings provides some collections that contain complete set of npms.
+Additionally, some mappings also provide information about not necessary npms.
+Note that mappings that use the project name as a key naturally cannot provide information about shadowed projects.
+
+The mapping cache is updated every time a refresh is triggered (e.g. at startup or by hitting F5).
+Also, every action of the library manager (such as installing or registering npms) triggers a refresh.
+
+
+=== Caching of N4JSProjectsStateHelper
+
+The N4JSProjectsStateHelper uses the MultiCleartriggerCache for caching information about projects of the user workspace.
+The EclipseBasedN4JSWorkspace does not caching at all, but provides information about project descriptions which is expensive to compute on the fly.
+Hence this information is cached in the MultiCleartriggerCache and updated every time a project description changes, is added or removed.
+
+Sometimes, a project description is rendered invalid as a side effect of a change on another project description.
+In this case, the cache of both of project descriptions has to be updated.
+The implementation to cope with these side effects uses the MultiCleartriggerCache which allows to set multiple triggers that will clear a cached object.
+
+However, it seems reasonable to align the caching of the user workspace to the caching of the external workspace.
+The reason is that caching of user workspace information such as N4JSProjects would increase build performance significantly.
+This is since as of now, projects (and information about all their source containers) is computed on the fly, that causes thousands of expensive calls to the file system.
+
+
+
+[[sec:WildcardPathFilter]]
+== WildcardPathFilter
+
+This class encapsulates the logic to resolve (wildcard containing) paths against the file system.
+With the method matchPath it is also possible to resolve a path without using the file system.
+This class is also able to resolve relative navigation in paths.
+
+
+[[sec:ProjectUtils]]
+== ProjectUtils
+
+ProjectUtils provides additional methods for providing information only required in compilation, e.g. like file and module descriptor.
+It uses IN4JSCore to retrieve the information of output path and whether module wrapping is required for a given file.
+
+
+

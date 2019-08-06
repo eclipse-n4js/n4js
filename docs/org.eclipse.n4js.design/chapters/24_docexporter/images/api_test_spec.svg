@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="23.43705 192.2559 533.1496 319.5433" width="533.1496" height="319.5433">
+  <defs>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledDiamond_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-9 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M -8 0 L -4 3 L 0 0 L -4 -3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="8" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -8 14 16" markerWidth="14" markerHeight="16" color="black">
+      <g>
+        <path d="M 12 0 L 0 -7 L 0 7 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica Neue" font-size="11" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica Neue" font-size="9" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="9" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledDiamond_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-9 -4 10 8" markerWidth="10" markerHeight="8" color="#b0b0b0">
+      <g>
+        <path d="M -8 0 L -4 3 L 0 0 L -4 -3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#b0b0b0">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker_3" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#b0b0b0">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledDiamond_Marker_3" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-9 -4 10 8" markerWidth="10" markerHeight="8" color="#b0b0b0">
+      <g>
+        <path d="M -8 0 L -4 3 L 0 0 L -4 -3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2016-09-01 08:26:00 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Group_46">
+        <g id="Graphic_50">
+          <rect x="23.93705" y="260.26772" width="86.93705" height="46.771654" fill="white"/>
+          <rect x="23.93705" y="260.26772" width="86.93705" height="46.771654" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(28.93705 269.65355)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.128681" y="11">API.n4jsd </tspan>
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="9.810322" y="25">(TModule)</tspan>
+          </text>
+        </g>
+        <g id="Group_47">
+          <g id="Line_49">
+            <path d="M 104.465 263.62772 L 100.381 263.62772 L 100.381 273.70772 L 107.188 273.70772 L 107.188 266.98772 L 104.465 263.62772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_48">
+            <path d="M 104.465 263.62772 L 104.465 266.98772 L 107.188 266.98772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_41">
+        <g id="Graphic_45">
+          <rect x="36" y="469.2992" width="74.8741" height="42" fill="white"/>
+          <rect x="36" y="469.2992" width="74.8741" height="42" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(41 483.2992)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="6.869667" y="11">Test.n4js</tspan>
+          </text>
+        </g>
+        <g id="Group_42">
+          <g id="Line_44">
+            <path d="M 104.465 472.6592 L 100.381 472.6592 L 100.381 482.7392 L 107.188 482.7392 L 107.188 476.0192 L 104.465 472.6592" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_43">
+            <path d="M 104.465 472.6592 L 104.465 476.0192 L 107.188 476.0192 L 107.188 476.0192" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+        </g>
+      </g>
+      <g id="Graphic_40">
+        <rect x="158.58272" y="262.65355" width="108.19689" height="42" fill="white"/>
+        <rect x="158.58272" y="262.65355" width="108.19689" height="42" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(163.58272 262.65355)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="35.536922" y="11">Type</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="15.081844" y="25">(TClassifier, </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="18.108212" y="39">TFunction)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_39">
+        <rect x="158.58272" y="367.0866" width="108.19689" height="36" fill="white"/>
+        <rect x="158.58272" y="367.0866" width="108.19689" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(163.58272 378.0866)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="22.42657" y="11">TMember</tspan>
+        </text>
+      </g>
+      <g id="Line_38">
+        <line x1="212.68117" y1="313.90355" x2="212.68117" y2="367.0866" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_37">
+        <line x1="120.1241" y1="283.65355" x2="158.58272" y2="283.65355" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_36">
+        <rect x="158.58272" y="469.2992" width="108.19689" height="42" fill="white"/>
+        <rect x="158.58272" y="469.2992" width="108.19689" height="42" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(163.58272 469.2992)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="3.0877037" y="11">Constraint/Case</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="20.440243" y="25">(TMethod, </tspan>
+          <tspan font-family="Helvetica" font-size="8" font-weight="700" fill="black" x="10.43243" y="39">naming convention</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" y="39">)</tspan>
+        </text>
+      </g>
+      <g id="Line_35">
+        <line x1="120.6241" y1="490.2992" x2="158.58272" y2="490.2992" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Group_30">
+        <g id="Graphic_34">
+          <rect x="458.51965" y="192.7559" width="86.93705" height="46.771654" fill="white"/>
+          <rect x="458.51965" y="192.7559" width="86.93705" height="46.771654" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(463.51965 209.14173)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="8.456806" y="11">Spec.adoc</tspan>
+          </text>
+        </g>
+        <g id="Group_31">
+          <g id="Line_33">
+            <path d="M 539.0476 196.1159 L 534.9636 196.1159 L 534.9636 206.1959 L 541.7706 206.1959 L 541.7706 199.4759 L 539.0476 196.1159" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_32">
+            <path d="M 539.0476 196.1159 L 539.0476 199.4759 L 541.7706 199.4759" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+        </g>
+      </g>
+      <g id="Graphic_29">
+        <rect x="447.8897" y="282.3307" width="108.19689" height="46.771654" fill="white"/>
+        <rect x="447.8897" y="282.3307" width="108.19689" height="46.771654" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(452.8897 298.71654)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="14.425594" y="11">SpecRegion</tspan>
+        </text>
+      </g>
+      <g id="Line_28">
+        <line x1="501.9882" y1="248.77756" x2="501.9882" y2="282.3307" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_27">
+        <line x1="447.3897" y1="305.71654" x2="422.6953" y2="305.71654" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_26">
+        <rect x="313.79528" y="287.71654" width="99" height="36" fill="white"/>
+        <rect x="313.79528" y="287.71654" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(318.79528 291.71654)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="12.830078" y="11">Identifiable</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="21.15918" y="25">Element</tspan>
+        </text>
+      </g>
+      <g id="Line_25">
+        <path d="M 266.7796 385.0866 L 290.2796 385.0866 L 290.2796 305.71654 L 300.29528 305.71654" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_24">
+        <path d="M 266.7796 283.65355 L 290.2796 283.65355 L 290.2796 305.71654 L 300.29528 305.71654" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_23">
+        <line x1="239.7304" y1="469.2992" x2="239.7304" y2="412.9866" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_22">
+        <text transform="translate(241.2549 433.01935)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="11" font-weight="400" fill="black" x="4689582e-19" y="10">@testee</tspan>
+        </text>
+      </g>
+      <g id="Line_21">
+        <line x1="212.68117" y1="469.2992" x2="212.68117" y2="412.9866" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_20">
+        <text transform="translate(173.92317 422.2462)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" font-weight="400" fill="black" x=".8235" y="9">@testee</tspan>
+          <tspan font-family="Helvetica Neue" font-size="9" font-weight="400" fill="black" x="0" y="20.252">Member</tspan>
+        </text>
+      </g>
+      <g id="Line_19">
+        <path d="M 185.23654 468.9932 L 144 437.07706 L 143 352 L 178.6729 312.38217" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_18">
+        <text transform="translate(107.6615 391.3231)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="9" font-weight="400" fill="black" x="0" y="9">@testee</tspan>
+          <tspan font-family="Helvetica Neue" font-size="9" font-weight="400" fill="black" x="6.516" y="20.252">Type</tspan>
+        </text>
+      </g>
+      <g id="Graphic_17">
+        <rect x="452.48817" y="461.2126" width="99" height="36" fill="white"/>
+        <rect x="452.48817" y="461.2126" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(457.48817 472.2126)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="7.826172" y="11">Requirement</tspan>
+        </text>
+      </g>
+      <g id="Line_16">
+        <line x1="266.7796" y1="479.7992" x2="442.5882" y2="479.2439" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_15">
+        <text transform="translate(331.903 483.53976)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="11" font-weight="400" fill="black" x="0" y="10">@reqId</tspan>
+        </text>
+      </g>
+      <g id="Line_14">
+        <line x1="501.9882" y1="329.10237" x2="501.9882" y2="451.3126" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_13">
+        <rect x="350.07874" y="405.35433" width="44" height="25.060773" fill="white"/>
+        <rect x="350.07874" y="405.35433" width="44" height="25.060773" stroke="#b4b4b4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(355.07874 412.3847)" fill="#b0b0b0">
+          <tspan font-family="Helvetica" font-size="9" font-weight="700" fill="#b0b0b0" x="7.074951" y="9">Task</tspan>
+        </text>
+      </g>
+      <g id="Graphic_12">
+        <rect x="350.07874" y="358.5827" width="44" height="25.060773" fill="white"/>
+        <rect x="350.07874" y="358.5827" width="44" height="25.060773" stroke="#b4b4b4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(355.07874 361.11307)" fill="#b0b0b0">
+          <tspan font-family="Helvetica" font-size="8" font-weight="700" fill="#b0b0b0" x="1.4394531" y="8">Jira/GH-</tspan>
+          <tspan font-family="Helvetica" font-size="8" font-weight="700" fill="#b0b0b0" x="4.546875" y="18">Issues</tspan>
+        </text>
+      </g>
+      <g id="Line_11">
+        <line x1="372.07874" y1="392.89345" x2="372.07874" y2="405.35433" marker-start="url(#FilledDiamond_Marker_2)" stroke="#b0b0b0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_10">
+        <line x1="240.1836" y1="469.08805" x2="341.105" y2="422.06585" marker-end="url(#StickArrow_Marker_2)" stroke="#b0b0b0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_9">
+        <text transform="translate(279.29484 445.88407)" fill="#b0b0b0">
+          <tspan font-family="Helvetica Neue" font-size="9" font-weight="400" fill="#b0b0b0" x="3339551e-19" y="9">@task</tspan>
+        </text>
+      </g>
+      <g id="Line_8">
+        <line x1="266.7796" y1="394.0866" x2="340.391" y2="409.58044" marker-end="url(#StickArrow_Marker_3)" stroke="#b0b0b0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_7">
+        <text transform="translate(289.94807 403.6683)" fill="#b0b0b0">
+          <tspan font-family="Helvetica Neue" font-size="9" font-weight="400" fill="#b0b0b0" x="3339551e-19" y="9">@task</tspan>
+        </text>
+      </g>
+      <g id="Graphic_6">
+        <rect x="45.405575" y="209.76378" width="44" height="25.060773" fill="white"/>
+        <rect x="45.405575" y="209.76378" width="44" height="25.060773" stroke="#b4b4b4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(50.405575 217.29417)" fill="#b0b0b0">
+          <tspan font-family="Helvetica" font-size="8" font-weight="700" fill="#b0b0b0" x="8.111328" y="8">SCM</tspan>
+        </text>
+      </g>
+      <g id="Line_5">
+        <line x1="67.405575" y1="244.57455" x2="67.405575" y2="260.26772" marker-start="url(#FilledDiamond_Marker_3)" stroke="#b0b0b0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_4">
+        <path d="M 474.93895 282.3307 L 390 222 L 99.80557 222.284" marker-end="url(#StickArrow_Marker_3)" stroke="#b0b0b0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_3">
+        <text transform="translate(300.99174 222.073)" fill="#b0b0b0">
+          <tspan font-family="Helvetica Neue" font-size="9" font-weight="400" fill="#b0b0b0" x="5790923e-19" y="9">srcLink</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
