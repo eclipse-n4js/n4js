@@ -20,8 +20,8 @@ See cite:[N4JSSpec] for the format specification of N4JS-specific package.json f
 Based on the JSON-model-based AST that can be parsed from the package.json file, we transform the information that can be extracted into an instance of the N4JS-specific ProjectDescription model.
 This model is defined by means of EMF, the Xcore file is found in the N4JS model bundle.
 
-[[fig:traversalOrder]]
-image::{find}images/cd_projectDescription.svg[title="Project Description Model"]
+[[fig:projectDescriptionModel]]
+image::{find}images/cd_projectDescription.svg[Project Description Model]
 
 == Accessing Project Information
 
