@@ -1,0 +1,1079 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Test Support
+:find:
+
+N4IDE provides tests support by allowing different __TestRunner__s to extend it with test specific functionality. This allows to support specialized and very different from each other test requirements (e.g. nodejs based tests, browser based interactive ui tests, server integration tests).
+
+[[fig:test_support_diagram]]
+.Test Support Diagram
+image::{find}fig/cd_testsupport.png[]
+
+Explanation of the main components:
+
+
+_User Project_::
+
+* a project with production code (e.g. `src` folder), and test code (e.g. test folder)
+* test code may contain special language features contributed by _Test Library_
+
+_N4IDE_::
+
+* manage user project, including all test related parts (e.g. support test related code, validate some test code constraints)
+* host runner, allow its UI contributions
+
+_Test Runner_::
+
+* contribute to N4IDE necessary elements (test results view, user test selection, test start/stop actions)
+* use N4IDE mechanisms to access user project test fragment (e.g. discover tests)
+* configure _Test Execution Environment_
+* manage test runtime (e.g. start/stop execution environment)
+
+_Test Execution Environment_::
+
+* hosts (directly or indirectly) js engine in which tests are executed
+* executes test library logic
+* is responsible for some tests execution aspects (e.g. test isolation)
+* deals with some execution errors (e.g. no callback from async test, infinite loop in test)
+
+_Test Library_::
+
+* provides test api that user can use in his project
+* coordinates scheduling and test code execution (e.g. order of tests, execution of setups / teardowns)
+* creates test results
+
+Below picture and listings depicts the components of the Test Runner in the IDE:
+
+[[fig:test_runner_components]]
+image::{find}fig/test_runner_components.png[title="Test Runner Components",{medium-center}]
+
+[horizontal]
+_Test Delegate_::
+
+* After the test discovery it starts and stops the test session via the Test Facade.
+
+_Test Facade_::
+
+* Ensures that an embedded HTTP server is running to receive messages from the Test Execution Environment. Registers a test session into the IDE side via the Test Finite State Machine Registry and triggers the actual test running at Test Execution Environment.
+
+_HTTP Server_::
+
+* HTTP server is listening for HTTP requests from the Test Execution Environment via its RESTful API.
+
+_Resource Router Servlet_::
+
+* This servlet is deployed into the servlet container of the HTTP Server. The servlet percepts the HTTP requests from the Test Execution Environment and delegates the request body to the corresponding REST Endpoint Logic.
+
+_REST Endpoint Logic_::
+
+* Parses the HTTP request bodies, creates special events and sends them to all subscribers via the Test Event Bus.
+
+_Test Event Bus_::
+
+* This component is used to asynchronously deliver messages between the main test runner components in a decoupled fashion.
+
+_Test Finite State Machine Registry_::
+
+* This registry is used to cache test sessions represented as test trees and Test Finite State Machines. Percepts all messages initially sent by the Test Execution Environment and delegates them to the corresponding subscribers.
+
+_Test Finite State Machine_::
+
+* Ensures the lifecycle of a test session. Handles timeouts duo to possible communication errors between the HTTP server and the Test Execution Environment.
+
+_Test Tree Registry_::
+
+* Registry to handle the state of a test session. Responsible for updating a test tree associated with a test session with the received test results.
+
+_Test UI_::
+
+* This UI component provides feedback about the running test session to the end-user.
+
+[[sec:N4JS_Mangelhaft_support]]
+[.language-n4js]
+== N4JS Mangelhaft support
+
+[[fig:xUnitSupportDesign]]
+[.center]
+image::{find}fig/xUnitSupportDesign.png[title="xUnit Support Design",{medium-center}]
+
+In this section and subsections we specify N4IDE support for testing with Mangelhaft.
+
+Mangelhaft is N4JS _Test Library_. It is focused more on a xUnit tests than other forms of testing (BDD, Acceptance Testing, Functional UI Testing).
+
+The following test scenarios are supported on different __Test Execution Environment__s:
+
+[[tab:Test_Scenarios]]
+.Test Scenarios
+[cols="h,^m,^m,^m"]
+|===
+^|Test | Node | Browser |Wrapper
+
+|Plain                  |yes|yes|
+|DOM                    | - |yes| -
+|non-interactive UI     | - |   |
+|interactive UI (iUI)   |   |   |
+|(non UI) Server        |   |   |
+|iUI Server             | - |   |
+|===
+
+[[sec:Asynchronous_Tests]]
+=== Asynchronous Tests, Test Isolation and Timeouts
+
+A special problem about JavaScript tests is to control asynchronous tests and non-terminating tests.
+
+Performance and test isolation are conflicting goals: a perfect isolation would mean to run every tests by a separate JavaScript engine, which is not performant. For that reason, all tests are run by the same JS-engine in general. A test has to notify the test runner when it has been finished (successfully or with failure). If it does not finish in a defined time (timeout), _Test Execution Environment_ or _Manglehaft_ needs to handle that (e.g. restart node vm in which code is executed)...
+
+Main concerns with running test in parallel on js side are:
+
+. Timeouts Mangelhaft is supposed to track test timeout. If tests are running in fake parallel mode achieved by cooperative multitasking, then one test running eats up time for other test. This can cause tests to timeout when running in parallel, while succeed when running in sequential mode.
+. Mutability on client. Tests running in parallel can affect each other by mutating global state in which they operate. When they run in sequential mode this can happen too, but it is much less likely to.
+. Mutable state on the server. Tests running on the same session/login are prone to affecting each other through server interaction (and or mutating data on the server).
+
+[[sec:Supported_xUnit_API]]
+=== Supported xUnit API
+
+xUnit API is user facing API for defining tests. It allows test developer to define tests and configure some test execution aspects. N4IDE (via _Test Runner_ extension) supports defined API by :
+
+* gathering information via AST analysis and reflection
+* presenting user available actions, based on gathered information
+* gathering user input and configurations for test execution
+* generating proper data for test infrastructure, based on user actions
+
+[[sec:Test_Group]]
+==== Test Group
+
+A test group is a logical collection of tests. It is created by grouping `N4ClassDeclarations` that contain test methods or test methods directly (see <<sec:Test_Method,Test Method>>). Those classes or individual methods can be assigned to a _Group_ by annotating them with `@Group` annotation. This annotation takes non empty list of strings as parameter. Passed strings are used as category name (which is like its id).
+
+
+[source,xtext]
+----
+Annotation:
+    '@Group'
+    (' $group+=$STRING ')?
+    AnnotatedElement
+;
+
+AnnnotatedElement:
+    N4JSClassDeclaration | N4JSMethodDeclaration
+;
+----
+
+`@Group` properties
+
+* name -> ``Group``
+* targets -> N4Method, N4Class
+* retention policy -> RUNTIME
+* transitive -> YES
+* repeatable -> YES
+* arguments -> __String__s
+* arguments are optional -> NO
+
+[[sec:Test_Method]]
+==== Test Method
+
+_Test Method_ marks procedure that has to be executed by _Test Library_.
+
+[source,xtext]
+----
+Annotation:
+    '@Test'
+    AnnotatedElement
+;
+
+AnnnotatedElement:
+    N4JSMethodDeclaration
+;
+----
+
+`@Test` properties
+
+* name -> ``Test``
+* targets -> N4Method
+* retention policy -> RUNTIME
+* transitive -> NO
+* repeatable -> NO
+* arguments -> none
+
+Additional _TestMethod_ constraints:
+
+Test Method [[cnst:Test_Method]]
+
+* allowed only `N4ClassDeclarations` in project test fragment
+* method must be public
+* method takes no parameters
+* method return type is `Promise?`
+* method must not be referenced by other owning class members or other classes (also no _@override_)
+
+[[sec:BeforeAll]]
+==== BeforeAll Setup
+
+`@BeforeAll` marks method that will be executed once before *all* tests in a given test class will be executed.
+
+[source,xtext]
+----
+Annotation:
+    '@BeforeAll'
+    AnnotatedElement
+;
+
+AnnnotatedElement:
+    N4JSMethodDeclaration
+;
+----
+
+`@BeforeAll` properties
+
+* name -> ``BeforeAll``
+* targets -> N4Method
+* retention policy -> RUNTIME
+* transitive -> NO
+* repeatable -> NO
+* arguments -> none
+
+The same constraints apply as for the test method, see <<cnst:Test_Method,Test Method Constraints>>.
+
+[[sec:Before_Setup]]
+==== Before Setup
+
+`@Before` marks method that will be executed once before *each* tests in a given test class will be executed.
+
+[source,xtext]
+----
+Annotation:
+    '@Before'
+    AnnotatedElement
+;
+
+AnnnotatedElement:
+    N4JSMethodDeclaration
+;
+----
+
+`@Before` properties
+
+* name -> ``Before``
+* targets -> N4Method
+* retention policy -> RUNTIME
+* transitive -> NO
+* repeatable -> NO
+* arguments -> none
+
+The same constraints apply as for the test method, see <<cnst:Test_Method,Test Method Constraints>>.
+
+[[sec:After_Teardown]]
+==== After Teardown
+
+`@After` marks method that will be executed once after *each* tests in a given test class will be executed.
+
+[source,xtext]
+----
+Annotation:
+    '@After'
+    AnnotatedElement
+;
+
+AnnnotatedElement:
+    N4JSMethodDeclaration
+;
+----
+
+`@After` properties
+
+* name -> ``After``
+* targets -> N4Method
+* retention policy -> RUNTIME
+* transitive -> NO
+* repeatable -> NO
+* arguments -> none
+
+The same constraints apply as for the test method, see <<cnst:Test_Method,Test Method Constraints>>.
+
+[[sec:AfterAll_Teardown]]
+==== AfterAll Teardown
+
+`@AfterAll` marks method that will be executed once after *all* tests in a given test class will be executed.
+
+[source,xtext]
+----
+Annotation:
+    '@After'
+    AnnotatedElement
+;
+
+AnnnotatedElement:
+    N4JSMethodDeclaration
+;
+----
+
+[Test Fixture][cnst:Test_Fixture]
+
+* allowed only in class marked with _@TestClass_
+* method must be public
+* method takes no parameters
+* method return type is `void`
+* method must not be referenced by other owning class members
+
+`@AfterAll` properties
+
+* name -> ``AfterAll``
+* targets -> N4Method
+* retention policy -> RUNTIME
+* transitive -> NO
+* repeatable -> NO
+* arguments -> none
+
+The same constraints apply as for the test method, see <<cnst:Test_Method,Test Method Constraints>>.
+
+[[sec:Test_Ignore]]
+==== Test Ignore
+
+
+[horizontal]
+name::
+  @Ignore
+targets::
+  N4Method, N4Class
+retention policy::
+  RUNTIME
+transitive::
+  YES
+repeatable::
+  NO
+arguments::
+  String reason
+arguments are optional::
+  -> Yes
+
+_Test Ignore_ allows to mark tests that should be skipped during the test execution. That is the preferred way to temporarily disable tests without removing them (or commenting them out). Test developers may provide reason for skipping to make reason/intentions clearer.
+
+This annotation is _transitive_, which means that: _Test Method_ is considered as marked with _Test Skip_
+
+* explicitly when it is directly marked or
+* implicitly, when container of a _Test Method_ is marked.
+
+If a class is marked as `@Ignore`, then all its contained test methods will be ignored. +
+When `@Ignore` occurs at class level in a test class hierarchy chain, then the following rules are applied. Assume the following test classes:
+
+[source,n4js]
+----
+export public class A {
+
+    @Test
+    public aTest(): void {
+        console.log('A#aTest');
+    }
+
+}
+----
+
+[source,n4js]
+----
+import { A } from "A"
+
+@Ignore('Class B is ignored.')
+export public class B extends A {
+
+    @Test
+    public b1Test(): void {
+        console.log('B#b1Test');
+    }
+
+    @Ignore("Method B#b2Test is ignored.")
+    @Test
+    public b2Test(): void {
+        console.log("B#b2Test");
+    }
+
+}
+----
+
+[source,n4js]
+----
+import { B } from "B"
+
+export public class C extends B {
+
+    @Test
+    public cTest(): void {
+        console.log('C#cTest');
+    }
+
+}
+----
+
+* When module _A_ is being tested, then it is obvious that all the test methods of `A` will be tested. No methods will be skipped at all.
+* When module _B_ is being tested, then although the inherited members of class `A` will be included in the test tree, all methods, including the inherited ones (from class `A` from module _A_) will be skipped. Nothing will be tested.
+* When module _C_ is being tested, then all inherited members from class `B` and class `A` will be collected an included in the test tree. The `@Ignore` annotation declared at class level at `B` will be ignored but the `@Ignore` at method level in class `B` will be considered. In a nutshell, the following methods will be executed:
+** `A#aTest`
+** `B#b1Test`
+** `C#cTest`
+
+The above described behavior is identical to the behavior of _JUnit 4_ with respect to the `@Ignore` annotation handling in case of test class inheritance.
+
+[[sec:Timeout]]
+==== Timeout
+
+_Timeout_ allows test developer to set custom timeout when executing given test code. This can be used to set timeout for both __Test Method__s or _Test Fixtures_
+
+[source,xtext]
+----
+Annotation:
+    '@Timeout'
+    ($timoeout+=$INT)?
+    AnnotatedElement
+;
+
+AnnnotatedElement:
+    N4JSClassDeclaration | N4JSMethodDeclaration
+;
+----
+
+`@Timeout` properties
+
+* name -> ``Timeout``
+* targets -> N4Method, N4Class
+* retention policy -> RUNTIME
+* transitive -> YES
+* repeatable -> NO
+* arguments -> Number
+* arguments are optional -> NO
+
+[[sec:Description]]
+==== Description
+
+_Description_ allows test developer provide string describing given test or test class that _can_ be used in IDE test view or in the test report.
+
+[source,xtext]
+----
+Annotation:
+    '@Description'
+    ($desc+=$STRING)?
+    AnnotatedElement
+;
+
+AnnnotatedElement:
+    N4JSClassDeclaration | N4JSMethodDeclaration
+;
+----
+
+`@Description` properties
+
+* name -> ``Description``
+* targets -> N4Method, N4Class
+* retention policy -> RUNTIME
+* transitive -> YES
+* arguments -> String
+* arguments are optional -> NO
+
+[[sec:Test_Reporting]]
+== Test Reporting
+
+_Test Runtime Environment_ communicates with _Test Runner_ over HTTP. Defined communication is based on protocol used between lupenrein and old ide. It is used to send the information about test execution progress from the _Test Runtime_ to _Test Runner_. Information send by this protocol is not equivalent to test results. _Test Runner_ interprets progress it receives and based on gathered information it generates test results. Under specific conditions _Test Runner_ may change reported test status PASS to test result FAILED and put this information to the test report e.g. when timeout happens (see note on timeouts below).
+
+[[fig:sm_TestListener]]
+[.center]
+image::{find}fig/sm_TestListener.png[title="TestListener",{small-center}]
+
+<<fig:sm_TestListener,Test Listener>> shows Communication flow expected by the _Test Runner_. When the _Test Runner_ is started first it waits for _Start Session_ message. Next _Test Tree_ message is expected. This describes list of all tests that are expected to be executed. For all tests in the list _Test Runner_ expects _Test Start_ and _Test End_ message to be received. _End Session_ is expected to be last message in the test session. _Ping_ message can be send multiple times in between other messages to manage synchronization issues between _Test Runner_ and _Test Runtime_ (see below).
+
+
+Since all communication is asynchronous, IDE _Test Runner_ must assume some timeout values that will define standard wait time during communication:
+
+* Initial 90s timeout to wait for the _Start Session_ message. It may be fixed or adjusted to given environment (local/remote) and project (library/application).
+* Default timeout between all other test messages is 10 seconds. _Test Runtime_ may notify IDE _Test Runner_ that it should wait longer with _Ping_ _test message_. This is one time thing, as soon as another command is received the default timeout will have to be reused again.
+
+Do to the asynchronous nature of the tests, status updates can be given out of order by the Test Runtime Environment. The only sure thing is that all tests begin with _SessionStart_ and ends with a _SessionEnd_. Furthermore a _TestStart_ will be send before the _TestEnd_ for a particular test.
+
+[[sec:Test_Messages]]
+=== Test Messages
+
+IDE _Test Runner_ will be waiting for specific messages from _Test Runtime_. We assume that communication will be done over HTTP protocol. _Test Execution Environement_ should be configured by the _Test Runner_ in a way that _Test Runtime_ knows address where it has to send messages (see
+<<sec:Test_Runtime_Configuration,Test Runtime Configuration>>). _Test Runner_ exposes RESTful API allowing him to receive messages. Below we define parts of that api that enable specific messages to be communicated.
+
+When defining __Test Message__s we assume following model of tests:
+
+[source,n4js]
+----
+TestTree {
+    ID sessionId,
+    Array<TestSuite>? testSuites
+}
+
+TestSuite {
+    string name,
+    Array<TestCase>? testCases,
+    Array<TestSuite>? children
+}
+
+TestCase {
+    ID id,
+    string className,
+    string origin,
+    string name,
+    string displayName,
+    TestResult? result
+}
+
+TestResult {
+    TestStatus teststatus,
+    number elapsed,
+    string? expected,
+    string? actual,
+    string? message,
+    array<string>? trace
+}
+
+enum TestStatus {
+    PASSED, SKIPPED, FAILED, ERROR
+}
+
+ID {
+    string value
+}
+----
+
+==== Test Case IDs
+
+The ID of a test case in the following specifications is referred to as `testID`. 
+This ID is of the following structure:
+
+----
+testID: fqn '#' methodName
+----
+
+When used as part of the URL the testID is percent-escaped as defined in link:https://tools.ietf.org/html/rfc3986#section-2.1[RFC3986 Section 2.1]. This is necessarry to circumvent the fact that the N4JS FQN delimiter `/` is a reserved character in URLs and cannot be used in its original form.
+
+
+[[sec:Start_Session]]
+==== Start Session
+
+Signals start of the test session. When user triggers test execution, configures _IDETestRunnerCtrl_, afterwards IDE _Listener_ waits for this message from _TestRunner_.
+
+[source,json]
+----
+StartSession :
+    uri : /n4js/testing/sessions/{sessionID}/start
+    method : POST
+    contentType : application/vnd.n4js.start_session_req.tm+json
+    accept: application/json
+    responses:
+        200:
+        400:
+----
+
+Start session request object MIME type _application/vnd.n4js.start_session_req.tm+json_:
+
+[source,json]
+----
+{
+    map<string, string>? properties
+}
+----
+
+[[sec:Ping_Session]]
+==== Ping Session
+
+Signals that test runner is still busy doing things, and will report later to the listener.
+
+[source,json]
+----
+PingSession :
+    uri : /n4js/testing/sessions/{sessionID}/ping
+    method : POST
+    contentType : application/vnd.n4js.ping_session_req.tm+json
+    accept: application/json
+    responses:
+        200:
+        400:
+----
+
+Ping session request object MIME type _application/vnd.n4js.ping_session_req.tm+json_:
+
+[source,json]
+----
+{
+    number timeout,
+    string? comment
+}
+----
+
+[[sec:End_Session]]
+==== End Session
+
+Signals end of test session Notifies IDE _Listener_ that session is finished and no further related __TestMessage__s are expected. IDE, can stop listening and proceed with its own tasks (e.g. create summary test report ).
+
+[source,json]
+----
+EndSession :
+    uri : /n4js/testing/sessions/{sessionID}/end
+    method : POST
+    responses:
+        200:
+        400:
+----
+
+[[sec:Start_Test]]
+==== Start Test
+
+Signals that a test run has started. Updates the state of the test reported with the _tree_ .
+
+[source,json]
+----
+StartTest :
+    uri : /n4js/testing/sessions/{sessionID}/tests/{testID}/start
+    method : POST
+    contentType : application/vnd.n4js.start_test_req.tm+json
+    accept: application/json
+    responses:
+        200:
+            contentType : application/vnd.n4js.start_test_res.tm+json
+        400:
+----
+
+Start test request object MIME type _application/vnd.n4js.start_test_req.tm+json_:
+
+[source,json]
+----
+{
+    number timeout,
+    map<string, string>? properties
+}
+----
+
+Start test response object MIME type _application/vnd.n4js.start_test_res.tm+json_:
+
+[source,json]
+----
+{
+    links : [
+        {
+            rel: "ping test",
+            uri: "/n4js/testing/sessions/{sessionID}/tests/{testID}/ping"
+        },
+        {
+            rel: "end test",
+            uri: "/n4js/testing/sessions/{sessionID}/tests/{testID}/end"
+        }
+    ]
+}
+----
+
+[[sec:End_Test]]
+==== End Test
+
+Signals that a test run has ended. Updates the state of the test reported with the _tree_ .
+
+[source,json]
+----
+EndTest :
+    uri : /n4js/testing/sessions/{sessionID}/tests/{testID}/end
+    method : POST
+    contentType : application/vnd.n4js.end_test_req.tm+json
+    accept: application/json
+    responses:
+        200:
+        400:
+----
+
+End test request object MIME type _application/vnd.n4js.end_test_req.tm+json_:
+
+[source,json]
+----
+{
+    TestResult result
+}
+----
+
+[[sec:Ping_Test]]
+==== Ping Test
+
+Notifies IDE that _TestRunner_ is doing something (e.g. test setup/teardown code, long running test). Without this notification IDE might interpret long pause in received messages as timeout, _TestRunner_ crash or other issues (in consequence it might terminate whole test execution environment).
+
+[source,json]
+----
+PingTest :
+    uri : /n4js/testing/sessions/{sessionID}/tests/{testID}/ping
+    method : POST
+    contentType : application/vnd.n4js.ping_test_req.tm+json
+    accept: application/json
+    responses:
+        200:
+        400:
+----
+
+Ping test request object MIME type _application/vnd.n4js.ping_test_req.tm+json_:
+
+[source,json]
+----
+{
+    number timeout,
+    string? comment
+}
+----
+
+[[sec:Test_Catalog]]
+==== Test Catalog
+
+Assembles and returns with the test catalog representing all the tests available in the underlying _IN4JSCore_ specific workspace. The content of the test catalog is calculated dynamically. The test catalog calculation depends on the current built state of the workspace. If the workspace was cleaned and not built yet, then a test catalog containing zero test suites (and test cases) will be provided as a response. If the workspace is built and in consistent state, then a catalog containing all test cases will be sent as the response body. The provided test catalog format complies to the Mangelhaft reporters.
+
+[source,json]
+----
+TestCatalog :
+    uri : /n4js/testing/sessions/testcatalog
+    method : GET
+    contentType : application/vnd.n4js.assemble_test_catalog_req.tm+json
+    accept: application/json
+    responses:
+        200:
+        400:
+----
+
+Below listings represents an example of the test catalog format:
+
+[source,json]
+----
+
+{
+  "endpoint": "http://localhost:9415",
+  "sessionId": "fc3a425c-b675-47d7-8602-8877111cf909",
+  "testDescriptors": [
+    {
+      "origin": "SysProjectA-0.0.1",
+      "fqn": "T/T",
+      "testMethods": [
+        "t"
+      ]
+    },
+    {
+      "origin": "TestProjectA-0.0.1",
+      "fqn": "A/A",
+      "testMethods": [
+        "a"
+      ]
+    },
+    {
+      "origin": "TestProjectA-0.0.1",
+      "fqn": "B/B",
+      "testMethods": [
+        "b1",
+        "b2"
+      ]
+    },
+    {
+      "origin": "TestProjectB-0.0.1",
+      "fqn": "CSub1/CSub1",
+      "testMethods": [
+        "c1",
+        "c2"
+      ]
+    },
+    {
+      "origin": "TestProjectB-0.0.1",
+      "fqn": "CSub2/CSub2",
+      "testMethods": [
+        "c1",
+        "c2",
+        "c3"
+      ]
+    }
+  ]
+}
+----
+
+[[sec:Test_Session_Example]]
+==== Test Session Example
+
+Below example demonstrates what are the expected HTTP requests and JSON structures for a simple test group.
+
+[source,n4js]
+----
+class A {
+
+    @Test
+    public void foo() {}
+
+    @Test
+    @Ignore
+    public void bar() {}
+}
+
+class B {
+
+    @Test
+    public void baz() {}
+}
+
+class C {
+
+    @Test
+    public void qux() {}
+}
+----
+
+[source,json]
+----
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/start/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.start_session_req.tm+json; charset=ISO-8859-1
+----
+
+[source,json]
+----
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/tests/Test%2FC%23qux/start/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.start_test_req.tm+json; charset=ISO-8859-1
+Body:
+{
+    "timeout": 1000
+}
+
+
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/tests/Test%2FB%23baz/start/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.start_test_req.tm+json; charset=ISO-8859-1
+Body:
+{
+    "timeout": 1000
+}
+
+
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/tests/Test%2FA%23bar/start/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.start_test_req.tm+json; charset=ISO-8859-1
+Body:
+{
+    "timeout": 1000
+}
+
+
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/tests/Test%2FA%23foo/start/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.start_test_req.tm+json; charset=ISO-8859-1
+Body:
+{
+    "timeout": 1000
+}
+----
+
+[source,json]
+----
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/tests/Test%2FA%23bar/ping
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.ping_test_req.tm+json; charset=ISO-8859-1
+Body:
+{
+    "timeout": 1000
+}
+
+
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/tests/Test%2FC%23qux/ping/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.ping_test_req.tm+json; charset=ISO-8859-1
+Body:
+{
+    "timeout": 2000
+}
+----
+
+[source,json]
+----
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/tests/Test%2FB%23baz/end/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.end_test_req.tm+json; charset=ISO-8859-1
+Body:
+{
+    "message": "Some optional message.",
+        "trace": [
+        "trace_element_1",
+        "trace_element_2",
+        "trace_element_3"
+    ],
+    "expected": "1",
+    "testStatus": "FAILED",
+    "elapsedTime": 100,
+    "actual": "2"
+}
+
+
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/tests/Test%2FC%23qux/end/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.end_test_req.tm+json; charset=ISO-8859-1
+Body:
+{
+    "message": "Some failure message.",
+        "trace": [
+        "trace_element_1",
+        "trace_element_2",
+        "trace_element_3"
+    ],
+    "expected": "4",
+    "testStatus": "FAILED",
+    "elapsedTime": 50,
+    "actual": "3"
+}
+
+
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/tests/Test%2F%23foo/end/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.end_test_req.tm+json; charset=ISO-8859-1
+Body:
+{
+    "expected": "2",
+    "testStatus": "PASSED",
+    "elapsedTime": 60,
+    "actual": "power of 2 for 2"
+}
+
+
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/tests/Test%2FA%23bar/end/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.end_test_req.tm+json; charset=ISO-8859-1
+Body:
+{
+    "testStatus": "SKIPPED",
+    "elapsedTime": 0,
+}
+----
+
+[source,json]
+----
+Request method: POST
+Request path:   http://localhost:9415/n4js/testing/sessions/19f47a37-c1d1-4cb7-a514-1e131f26ab13/end/
+Headers:        Accept=*/*
+                Content-Type=application/vnd.n4js.end_session_req.tm+json; charset=ISO-8859-1
+----
+
+[[sec:Test_Runtime_Configuration]]
+=== Test Runtime Configuration
+
+_Test Runner_ must gather relevant information and send it to _Test Environment_ to allow proper test execution:
+
+* gathering user input and test options
+* gathering information about user project test code
+* maintaining proper name mappings (e.g. if project is minimized test names/references must be mapped correctly)
+
+[[sec:Test_Plan]]
+=== Test Plan
+
+_Test Runner_ uses N4IDE infrastructure to obtain information about test fragment of the user project. Based on that information and user input in UI (e.g. triggering test execution on whole project) IDE can determine __Test Method__s that should be executed. Such test list or _Test Plan_ is send to _Test Environment_ and is expected to be executed by a _Test Library_.
+
+[source,json]
+----
+TestPlan {
+    Array<TestProcedure> procedures
+}
+
+TestProcedure {
+    string functionName,
+    string functionType,
+    string functionContainer,
+    string containerModule
+}
+----
+
+[[sec:Test_Environment_Configuration]]
+=== Test Environment Configuration
+
+Additionally _Test Runner_ sends to _Test Environment_ other configuration options:
+
+* _Test Runner_ test communication protocol base url (_baseURL_)
+
+[[sec:Test_Environment_Configuration_Example]]
+=== Test Environment Configuration Example
+
+For example assuming that user selects _ProjectX_ to test that contains only one test class in _src/test/n4js/core_ path like:
+
+[source,n4js]
+----
+
+class MyTestClass{
+
+    @BeforeAll
+    public void someOneTimeSetup(){ /* setup code */}
+
+    @Test
+    public void testA(){ /* some test code*/ }
+    @Test
+    public void testB(){ /* some test code*/ }
+    @Test
+    public void testC(){ /* some test code*/ }
+
+    @After
+    public void afterCleanup(){ /* setup code */}
+
+}
+----
+
+Configuration sent for _Test Execution Environment_ would look like:
+
+[source,json]
+----
+{
+    "baseURL" : "http://localhost:1234/",
+    "testPlan":
+        [
+          {
+            "functionName": "someOneTimeSetup",
+            "functionType": "@BeforeAll",
+            "functionContainer": "MyTestClass",
+            "containerModule": "test/n4js/core/MyTestClass",
+          },
+          {
+            "functionName": "testA",
+            "functionType": "@Test",
+            "functionContainer": "MyTestClassA",
+            "containerModule": "test/n4js/core/MyTestClassA",
+          },
+          {
+            "functionName": "afterCleanup",
+            "functionType": "@After",
+            "functionContainer": "MyTestClassA",
+            "containerModule": "test/n4js/core/MyTestClassA",
+          },
+          {
+            "functionName": "testB",
+            "functionType": "@Test",
+            "functionContainer": "MyTestClassA",
+            "containerModule": "test/n4js/core/MyTestClassA",
+          },
+          {
+            "functionName": "afterCleanup",
+            "functionType": "@After",
+            "functionContainer": "MyTestClassA",
+            "containerModule": "test/n4js/core/MyTestClassA",
+          },
+          {
+            "functionName": "testC",
+            "functionType": "@Test",
+            "functionContainer": "MyTestClassA",
+            "containerModule": "test/n4js/core/MyTestClassA",
+          },
+          {
+            "functionName": "afterCleanup",
+            "functionType": "@After",
+            "functionContainer": "MyTestClassA",
+            "containerModule": "test/n4js/core/MyTestClassA",
+          }
+        ]
+}
+----

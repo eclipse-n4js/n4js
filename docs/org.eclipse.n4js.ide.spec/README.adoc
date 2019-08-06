@@ -9,7 +9,7 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-= N4JS Design Documentation
+= N4JS IDE Specification
 
 Build HTML and launch in browser: :: Note that you need `ant` to be installed.
 [source,bash]

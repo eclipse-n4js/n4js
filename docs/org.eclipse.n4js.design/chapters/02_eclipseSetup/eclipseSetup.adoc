@@ -65,7 +65,6 @@ It is almost impossible to use another IDE to develop Eclipse plugins. The list 
 - Xcore 1.9.0
 - Xpect 0.2.0.201906240918 from https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/20/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/
 
-
 It is important to use the latest version of Xtext and the corresponding service release of Xcore. You will find the latest version numbers and plugins used in the target platform definition at
 https://github.com/eclipse/n4js/blob/master/releng/org.eclipse.n4js.targetplatform/org.eclipse.n4js.targetplatform.target
 
