@@ -15,7 +15,7 @@ Contributors:
 :task_def_GH-: GitHub;GitHub Issues;https://github.com/eclipse/n4js/issues/{TASK_ID};images/issue.svg; #{TASK_ID}
 
 // Path to Bib File (usually in same folder as index.adoc)
-:bib-file: n4jsspec.bib
+:bib-file: n4jsdesign.bib
 
 // =================== Builtin AsciiDoctor Document Attributes ================= //
 // For more info, see http://asciidoctor.org/docs/user-manual/#builtin-attributes
