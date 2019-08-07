@@ -108,8 +108,9 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 }
 
 
-	def FunctionTypeExpression createSubstitutionOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, boolean withoutCapture) {
-		derivationComputer.createSubstitutionOfFunctionTypeExprOrRef(G,F,withoutCapture);
+	def FunctionTypeExpression createSubstitutionOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F,
+		boolean captureContainedWildcards, boolean captureUponSubstitution) {
+		derivationComputer.createSubstitutionOfFunctionTypeExprOrRef(G,F,captureContainedWildcards,captureUponSubstitution);
 	}
 	def FunctionTypeExpression createUpperBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
 		derivationComputer.createUpperBoundOfFunctionTypeExprOrRef(G,F);

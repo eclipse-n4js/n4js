@@ -205,7 +205,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 			else
 				Gx.put(e.key, TypeUtils.createTypeRef(e.value))
 		];
-		val typeRefSubst = ts.substTypeVariables(Gx, typeRef);
+		val typeRefSubst = ts.substTypeVariablesWithoutCapture(Gx, typeRef);
 		if (typeRefSubst === null)
 			throw new IllegalArgumentException("substitution failed");
 		return typeRefSubst;
@@ -217,7 +217,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 		}
 		val Gx = G.wrap;
 		solution.entrySet.forEach[e|Gx.put(e.key, e.value)];
-		val typeRefSubst = ts.substTypeVariables(Gx, typeRef);
+		val typeRefSubst = ts.substTypeVariablesWithoutCapture(Gx, typeRef);
 		if (typeRefSubst === null)
 			throw new IllegalArgumentException("substitution failed");
 		return typeRefSubst;

@@ -199,7 +199,7 @@ public class N4JSTypeSystem {
 	 * FunctionTypeExpression back.
 	 */
 	public TypeArgument substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
-		return substTypeVariablesJudgment.apply(G, typeArgument, false);
+		return substTypeVariablesJudgment.apply(G, typeArgument, true, true);
 	}
 
 	public TypeRef substTypeVariablesWithoutCapture(RuleEnvironment G, TypeRef typeRef) {
@@ -207,7 +207,18 @@ public class N4JSTypeSystem {
 	}
 
 	public TypeArgument substTypeVariablesWithoutCapture(RuleEnvironment G, TypeArgument typeArgument) {
-		return substTypeVariablesJudgment.apply(G, typeArgument, true);
+		return substTypeVariablesJudgment.apply(G, typeArgument, false, false);
+	}
+
+	public TypeRef substTypeVariables(RuleEnvironment G, TypeRef typeRef,
+			boolean captureContainedWildcards, boolean captureUponSubstitution) {
+		return (TypeRef) substTypeVariables(G, (TypeArgument) typeRef, captureContainedWildcards,
+				captureUponSubstitution);
+	}
+
+	public TypeArgument substTypeVariables(RuleEnvironment G, TypeArgument typeArgument,
+			boolean captureContainedWildcards, boolean captureUponSubstitution) {
+		return substTypeVariablesJudgment.apply(G, typeArgument, captureContainedWildcards, captureUponSubstitution);
 	}
 
 	// ###############################################################################################################

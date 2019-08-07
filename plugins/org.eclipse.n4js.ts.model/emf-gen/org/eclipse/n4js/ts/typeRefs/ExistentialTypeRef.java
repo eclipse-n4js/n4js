@@ -52,6 +52,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isReopened <em>Reopened</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getWildcard <em>Wildcard</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getBoundTypeVariable <em>Bound Type Variable</em>}</li>
@@ -62,6 +63,34 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * @generated
  */
 public interface ExistentialTypeRef extends TypeRef {
+	/**
+	 * Returns the value of the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Globally unique identifier of this capture. Required due to the copying semantics of
+	 * {@code TypeRef}s: unlike types, type references may be copied at will and therefore a
+	 * plain POJO identity comparison of two ExistentialTypeRefs cannot be used to check if
+	 * two {@code ExistentialTypeRef}s refer to the same capture.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Id</em>' attribute.
+	 * @see #setId(String)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getExistentialTypeRef_Id()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getId();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getId <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Id</em>' attribute.
+	 * @see #getId()
+	 * @generated
+	 */
+	void setId(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Reopened</b></em>' attribute.
 	 * <!-- begin-user-doc -->

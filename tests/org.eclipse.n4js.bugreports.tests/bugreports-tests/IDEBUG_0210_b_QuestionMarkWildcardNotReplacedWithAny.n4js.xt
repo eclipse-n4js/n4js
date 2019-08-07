@@ -15,24 +15,42 @@ interface I<T> {}
 class G<T> implements I<T> {}
 
 function <T> foo(i : I<T>, cb : {function(T)}) { }
+function <T> bar(i : I<T>, cb : {function(Array<T>):Array<T>}) { }
 
 var g : G<?>;
 
-// XPECT errors --> "G<?> is not a subtype of I<any>." at "g"
+// these cases are legal
+// (type of fpar 'x' will be the capture of the wildcard in variable 'g's type when reading
+// variable 'g's value in order to obtain the first argument of the call expression)
+
+// XPECT noerrors -->
 foo(g, function(x){})
-// the error message is a bit misleading, but having an error here should definitely be correct
-// (because we have to pick a concrete type for the fpar in the function expression that is the
-// same as the unkonwn type of G<?>, which is impossible)
+// XPECT noerrors -->
+bar(g, function(x){return x;})
+// XPECT noerrors -->
+bar(g, x=>x)
 
-
-// compare with this similar but simpler case:
+// contrast the above with the following similar but different case (which should produce an error):
 
 function <T> foo2(p1 : G<T>, p2 : G<T>) {}
 
 var g1 : G<?>;
 var g2 : G<?>;
 // XPECT errors ---
-// "G<?> is not a subtype of G<any>." at "g1"
-// "G<?> is not a subtype of G<any>." at "g2"
+// "G<?> is not a subtype of G<T>." at "g1"
+// "G<?> is not a subtype of G<T>." at "g2"
 // ---
 foo2(g1,g2);
+
+// even in this case we want to show an error:
+
+// XPECT errors ---
+// "G<?> is not a subtype of G<T>." at "g1"
+// "G<?> is not a subtype of G<T>." at "g1"
+// ---
+foo2(g1,g1);
+// We could allow the call expression in the previous line if we were sure the
+// value of variable 'g1' does not change between reading this variable for obtaining
+// the first and reading it for obtaining the second argument. In Javascript, this
+// would actually be possible (single-threaded), but we do not want to make use of
+// such assumptions (at this time).

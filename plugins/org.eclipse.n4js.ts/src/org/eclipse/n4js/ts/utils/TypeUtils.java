@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -360,6 +361,7 @@ public class TypeUtils {
 	 */
 	public static ExistentialTypeRef captureWildcard(TypeVariable typeVar, Wildcard wildcard) {
 		final ExistentialTypeRef etr = TypeRefsFactory.eINSTANCE.createExistentialTypeRef();
+		etr.setId(UUID.randomUUID().toString()); // FIXME performance!!!!!
 		etr.setWildcard(wildcard);
 		etr.setBoundTypeVariable(typeVar);
 		return etr;

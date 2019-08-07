@@ -742,6 +742,13 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
  */
 class ExistentialTypeRef extends TypeRef {
 	/*
+	 * Globally unique identifier of this capture. Required due to the copying semantics of
+	 * {@code TypeRef}s: unlike types, type references may be copied at will and therefore a
+	 * plain POJO identity comparison of two ExistentialTypeRefs cannot be used to check if
+	 * two {@code ExistentialTypeRef}s refer to the same capture.
+	 */
+	String ^id
+	/*
 	 * If true, this existential type roughly behaves like the wildcard it was created from.
 	 * For detailed semantics see {@code SubtypeJudgment#applyExistentialTypeRef_Left|Right()}.
 	 */

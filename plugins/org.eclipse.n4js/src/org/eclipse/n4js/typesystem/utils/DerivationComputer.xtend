@@ -35,7 +35,7 @@ package class DerivationComputer extends TypeSystemHelperStrategy {
 	@Inject private N4JSTypeSystem ts;
 
 	def FunctionTypeExpression createSubstitutionOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F,
-		boolean withoutCapture) {
+		boolean captureContainedWildcards, boolean captureUponSubstitution) {
 
 		val result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression
 
@@ -53,19 +53,19 @@ package class DerivationComputer extends TypeSystemHelperStrategy {
 				// unbound type variable -> add to 'unboundTypeVars'
 				result.unboundTypeVars += currTV;
 				// substitution on upper bounds (if required)
-				performSubstitutionOnUpperBounds(G, F, currTV, result, withoutCapture);
+				performSubstitutionOnUpperBounds(G, F, currTV, result, captureContainedWildcards, captureUponSubstitution);
 			}
 		}
 
 		// substitution on this type
 		if (F.declaredThisType !== null) {
-			val TypeRef resultDeclaredThisType = substTypeVariables(G, F.declaredThisType, withoutCapture);
+			val TypeRef resultDeclaredThisType = substTypeVariables(G, F.declaredThisType, false, captureUponSubstitution);
 			result.declaredThisType = TypeUtils.copy(resultDeclaredThisType)
 		}
 
 		// substitution on return type
 		if (F.returnTypeRef !== null) {
-			val TypeRef resultReturnTypeRef = substTypeVariables(G, F.returnTypeRef, withoutCapture);
+			val TypeRef resultReturnTypeRef = substTypeVariables(G, F.returnTypeRef, false, captureUponSubstitution);
 			result.returnTypeRef = TypeUtils.copyIfContained(resultReturnTypeRef)
 		}
 
@@ -81,7 +81,7 @@ package class DerivationComputer extends TypeSystemHelperStrategy {
 				newPar.hasInitializerAssignment = fpar.hasInitializerAssignment
 
 				if(fpar.typeRef !== null) {
-					val TypeRef resultParTypeRef = substTypeVariables(G, fpar.typeRef, withoutCapture);
+					val TypeRef resultParTypeRef = substTypeVariables(G, fpar.typeRef, false, captureUponSubstitution);
 					newPar.typeRef = TypeUtils.copyIfContained(resultParTypeRef)
 				}
 
@@ -179,19 +179,19 @@ package class DerivationComputer extends TypeSystemHelperStrategy {
 	 * {@link FunctionTypeExpression#getTypeVarUpperBound(TypeVariable)}.
 	 */
 	def private void performSubstitutionOnUpperBounds(RuleEnvironment G, FunctionTypeExprOrRef F, TypeVariable currTV,
-		FunctionTypeExpression result, boolean withoutCapture) {
+		FunctionTypeExpression result, boolean captureContainedWildcards, boolean captureUponSubstitution) {
 
 		val currTV_declUB = currTV.declaredUpperBound;
 		if(currTV_declUB!==null) {
 			val oldUB = F.getTypeVarUpperBound(currTV);
-			val newUB = substTypeVariables(G, oldUB, withoutCapture);
+			val newUB = substTypeVariables(G, oldUB, false, captureUponSubstitution);
 			val unchanged = (newUB === currTV_declUB); // note: identity compare is what we want
 			if(!unchanged) {
 				val idx = result.unboundTypeVars.indexOf(currTV);
 				while(result.unboundTypeVarsUpperBounds.size<idx) {
 					result.unboundTypeVarsUpperBounds.add(null); // add 'null' as padding entry
 				}
-				val ubSubst = newUB;
+				val ubSubst = TypeUtils.copyIfContained(newUB);
 				result.unboundTypeVarsUpperBounds += ubSubst;
 			} else {
 				// upper bound after substitution is identical to the one stored in type variable; no need to copy it
@@ -201,10 +201,7 @@ package class DerivationComputer extends TypeSystemHelperStrategy {
 		}
 	}
 
-	def private TypeRef substTypeVariables(RuleEnvironment G, TypeRef typeRef, boolean withoutCapture) {
-		if (withoutCapture) {
-			return ts.substTypeVariablesWithoutCapture(G, typeRef);
-		}
-		return ts.substTypeVariables(G, typeRef);
+	def private TypeRef substTypeVariables(RuleEnvironment G, TypeRef typeRef, boolean captureContainedWildcards, boolean captureUponSubstitution) {
+		return ts.substTypeVariables(G, typeRef, captureContainedWildcards, captureUponSubstitution);
 	}
 }

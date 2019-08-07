@@ -228,6 +228,8 @@ import com.google.inject.Inject;
 						} else {
 							final RuleEnvironment G2 = wrap(G);
 
+							// FIXME substitution really needed here??? targetTypeRef/F should have been
+							// substituted/captured already in type judgment!
 							typeSystemHelper.addSubstitutions(G2, expr, F);
 
 							if (expr.getTarget() instanceof SuperLiteral) {
@@ -255,7 +257,7 @@ import com.google.inject.Inject;
 							}
 
 							// bind type variables in function type's parameter type
-							final TypeRef paramTypeRefSubst = ts.substTypeVariables(G2, paramTypeRef);
+							final TypeRef paramTypeRefSubst = ts.substTypeVariablesWithoutCapture(G2, paramTypeRef);
 
 							return paramTypeRefSubst;
 						}

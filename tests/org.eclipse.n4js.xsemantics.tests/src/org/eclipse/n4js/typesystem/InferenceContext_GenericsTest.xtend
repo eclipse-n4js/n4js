@@ -13,7 +13,6 @@ package org.eclipse.n4js.typesystem
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -99,26 +98,22 @@ class InferenceContext_GenericsTest extends AbstractInferenceContextTest {
 			alpha -> any.ref
 		)
 	}
-	@Ignore("IDE-1653") // TODO IDE-1653
 	@Test
 	def void test_lhs_wildcard_upperBound() {
-		// should fail because we cannot find a non-wildcard α such that G<α> is a super type of G<? extends B>
-		script.assertNoSolution(
+		script.assertSolution(
 			#[
 				constraint(G.of(wildcardExtends(B)),'<:',G.of(alpha)) // ⟨ G<? extends B> <: G<α> ⟩
 			],
-			alpha
+			alpha -> B.ref
 		)
 	}
-	@Ignore("IDE-1653") // TODO IDE-1653
 	@Test
 	def void test_lhs_wildcard_lowerBound() {
-		// should fail because we cannot find a non-wildcard α such that G<α> is a super type of G<? super B>
-		script.assertNoSolution(
+		script.assertSolution(
 			#[
 				constraint(G.of(wildcardSuper(B)),'<:',G.of(alpha)) // ⟨ G<? super B> <: G<α> ⟩
 			],
-			alpha
+			alpha -> B.ref
 		)
 	}
 
@@ -128,36 +123,34 @@ class InferenceContext_GenericsTest extends AbstractInferenceContextTest {
 		// we can fix the case #test_lhs_wildcard_upperBound() by using a wildcard also on rhs:
 		script.assertSolution(
 			#[
-				constraint(G.of(wildcardExtends(B)),'<:',G.of(wildcardExtends(alpha)))
+				constraint(G.of(wildcardExtends(B)),'<:',G.of(wildcardExtends(alpha))) // ⟨ G<? extends B> <: G<? extends α> ⟩
 			],
 			alpha -> B.ref
 		)
-// TODO IDE-1653
-//		script.assertSolution(
-//			#[
-//				constraint(G.of(wildcardExtends(B)),'<:',G.of(wildcardExtends(alpha))),
-//				constraint(alpha,':>',A)
-//			],
-//			alpha -> union(A,B)
-//		)
+		script.assertSolution(
+			#[
+				constraint(G.of(wildcardExtends(B)),'<:',G.of(wildcardExtends(alpha))), // ⟨ G<? extends B> <: G<? extends α> ⟩
+				constraint(alpha,':>',A)
+			],
+			alpha -> union(A,B)
+		)
 	}
 	@Test
 	def void test_both_wildcard_lowerBound() {
 		// we can fix the case #test_lhs_wildcard_lowerBound() by using a wildcard also on rhs:
 		script.assertSolution(
 			#[
-				constraint(G.of(wildcardSuper(B)),'<:',G.of(wildcardSuper(alpha)))
+				constraint(G.of(wildcardSuper(B)),'<:',G.of(wildcardSuper(alpha))) // ⟨ G<? super B> <: G<? super α> ⟩
 			],
 			alpha -> B.ref
 		)
-// TODO IDE-1653
-//		script.assertSolution(
-//			#[
-//				constraint(G.of(wildcardSuper(B)),'<:',G.of(wildcardSuper(alpha))),
-//				constraint(alpha,'<:',C)
-//			],
-//			alpha -> intersection(B,C)
-//		)
+		script.assertSolution(
+			#[
+				constraint(G.of(wildcardSuper(B)),'<:',G.of(wildcardSuper(alpha))), // ⟨ G<? super B> <: G<? super α> ⟩
+				constraint(alpha,'<:',C)
+			],
+			alpha -> intersection(B,C)
+		)
 	}
 
 

@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl#isReopened <em>Reopened</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl#getWildcard <em>Wildcard</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl#getBoundTypeVariable <em>Bound Type Variable</em>}</li>
@@ -45,6 +46,26 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * @generated
  */
 public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTypeRef {
+	/**
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ID_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected String id = ID_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #isReopened() <em>Reopened</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -102,6 +123,29 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	@Override
 	protected EClass eStaticClass() {
 		return TypeRefsPackage.Literals.EXISTENTIAL_TYPE_REF;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setId(String newId) {
+		String oldId = id;
+		id = newId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID, oldId, id));
 	}
 
 	/**
@@ -260,6 +304,8 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID:
+				return getId();
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__REOPENED:
 				return isReopened();
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__WILDCARD:
@@ -280,6 +326,9 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID:
+				setId((String)newValue);
+				return;
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__REOPENED:
 				setReopened((Boolean)newValue);
 				return;
@@ -301,6 +350,9 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID:
+				setId(ID_EDEFAULT);
+				return;
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__REOPENED:
 				setReopened(REOPENED_EDEFAULT);
 				return;
@@ -322,6 +374,8 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__REOPENED:
 				return reopened != REOPENED_EDEFAULT;
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__WILDCARD:
@@ -387,7 +441,9 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (reopened: ");
+		result.append(" (id: ");
+		result.append(id);
+		result.append(", reopened: ");
 		result.append(reopened);
 		result.append(')');
 		return result.toString();

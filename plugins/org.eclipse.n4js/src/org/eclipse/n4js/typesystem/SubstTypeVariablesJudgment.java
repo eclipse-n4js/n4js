@@ -46,11 +46,13 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	 * <p>
 	 * Never returns <code>null</code>, EXCEPT if <code>null</code> is passed in as type argument.
 	 */
-	public TypeArgument apply(RuleEnvironment G, TypeArgument typeArg, boolean withoutCapture) {
+	public TypeArgument apply(RuleEnvironment G, TypeArgument typeArg, boolean captureContainedWildcards,
+			boolean captureUponSubstitution) {
 		if (typeArg == null) {
 			return null;
 		}
-		final SubstTypeVariablesSwitch theSwitch = new SubstTypeVariablesSwitch(G, withoutCapture);
+		final SubstTypeVariablesSwitch theSwitch = new SubstTypeVariablesSwitch(G, captureContainedWildcards,
+				captureUponSubstitution);
 		final TypeArgument result = theSwitch.doSwitch(typeArg);
 		if (result == null) {
 			final String stringRep = typeArg.getTypeRefAsString();
@@ -63,29 +65,35 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	private final class SubstTypeVariablesSwitch extends TypeRefsSwitch<TypeArgument> {
 
 		private final RuleEnvironment G;
-		private final boolean withoutCapture;
+		private final boolean captureContainedWildcards;
+		private final boolean captureUponSubstitution;
 
-		public SubstTypeVariablesSwitch(RuleEnvironment G, boolean withoutCapture) {
+		public SubstTypeVariablesSwitch(RuleEnvironment G, boolean captureContainedWildcards,
+				boolean captureUponSubstitution) {
 			this.G = G;
-			this.withoutCapture = withoutCapture;
+			this.captureContainedWildcards = captureContainedWildcards;
+			this.captureUponSubstitution = captureUponSubstitution;
 		}
 
 		// the following 3 methods are provided to increase readability of recursive invocations of #doSwitch()
 
 		@SuppressWarnings("unused")
-		private Wildcard substTypeVariables(RuleEnvironment G2, Wildcard wildcard) {
-			return (Wildcard) substTypeVariables(G2, (TypeArgument) wildcard);
+		private Wildcard substTypeVariables(RuleEnvironment G2, Wildcard wildcard,
+				boolean captureContainedWildcardsNEW) {
+			return (Wildcard) substTypeVariables(G2, (TypeArgument) wildcard, captureContainedWildcardsNEW);
 		}
 
-		private TypeRef substTypeVariables(RuleEnvironment G2, TypeRef typeRef) {
-			return (TypeRef) substTypeVariables(G2, (TypeArgument) typeRef);
+		private TypeRef substTypeVariables(RuleEnvironment G2, TypeRef typeRef,
+				boolean captureContainedWildcardsNEW) {
+			return (TypeRef) substTypeVariables(G2, (TypeArgument) typeRef, captureContainedWildcardsNEW);
 		}
 
-		private TypeArgument substTypeVariables(RuleEnvironment G2, TypeArgument typeArg) {
-			if (G2 == this.G) {
+		private TypeArgument substTypeVariables(RuleEnvironment G2, TypeArgument typeArg,
+				boolean captureContainedWildcardsNEW) {
+			if (G2 == this.G && captureContainedWildcardsNEW == this.captureContainedWildcards) {
 				return doSwitch(typeArg);
 			} else {
-				return apply(G2, typeArg, this.withoutCapture);
+				return apply(G2, typeArg, captureContainedWildcardsNEW, this.captureUponSubstitution);
 			}
 		}
 
@@ -97,19 +105,24 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 		@Override
 		public TypeArgument caseWildcard(Wildcard wildcard) {
+			// step #1: substitute type variables in upper and lower bound of given wildcard
 			TypeRef ub = wildcard.getDeclaredUpperBound();
 			if (ub != null) {
-				ub = substTypeVariables(G, ub);
+				ub = substTypeVariables(G, ub, captureContainedWildcards);
 			}
 			TypeRef lb = wildcard.getDeclaredLowerBound();
 			if (lb != null) {
-				lb = substTypeVariables(G, lb);
+				lb = substTypeVariables(G, lb, captureContainedWildcards);
 			}
 			if (ub != wildcard.getDeclaredUpperBound() || lb != wildcard.getDeclaredLowerBound()) {
 				Wildcard cpy = TypeUtils.copy(wildcard);
 				cpy.setDeclaredUpperBound(TypeUtils.copyIfContained(ub));
 				cpy.setDeclaredLowerBound(TypeUtils.copyIfContained(lb));
-				return cpy;
+				wildcard = cpy;
+			}
+			// step #2: capture the wildcard (if requested)
+			if (captureContainedWildcards) {
+				return TypeUtils.captureWildcard(null, wildcard);
 			}
 			return wildcard;
 		}
@@ -156,7 +169,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 		@Override
 		public TypeArgument caseFunctionTypeExprOrRef(FunctionTypeExprOrRef typeRef) {
-			return typeSystemHelper.createSubstitutionOfFunctionTypeExprOrRef(G, typeRef, withoutCapture);
+			return typeSystemHelper.createSubstitutionOfFunctionTypeExprOrRef(G, typeRef,
+					captureContainedWildcards, captureUponSubstitution);
 		}
 
 		@Override
@@ -164,7 +178,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			boolean haveReplacement = false;
 			final ArrayList<TypeRef> substTypeRefs = CollectionLiterals.newArrayList();
 			for (TypeRef currTypeRef : typeRef.getTypeRefs()) {
-				TypeRef substTypeRef = substTypeVariables(G, currTypeRef);
+				TypeRef substTypeRef = substTypeVariables(G, currTypeRef, captureContainedWildcards);
 				substTypeRefs.add(substTypeRef);
 				haveReplacement |= substTypeRef != currTypeRef;
 			}
@@ -182,7 +196,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			TypeArgument typeArg = typeRef.getTypeArg();
 			if (typeArg != null) {
 				// substitute in type argument
-				TypeArgument tResult = substTypeVariables(G, typeArg);
+				TypeArgument tResult = substTypeVariables(G, typeArg, captureContainedWildcards);
 				if (tResult != typeRef.getTypeArg()) {
 					// changed
 					TypeTypeRef result = TypeUtils.copyIfContained(typeRef);
@@ -251,7 +265,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				final TypeArgument[] argsChanged = new TypeArgument[len];
 				for (int i = 0; i < len; i++) {
 					final TypeArgument arg = typeRef.getTypeArgs().get(i);
-					TypeArgument argSubst = substTypeVariables(G, arg);
+					TypeArgument argSubst = substTypeVariables(G, arg, captureContainedWildcards);
 					if (argSubst != arg) {
 						// n.b.: will only add to argsChanged if changed! (otherwise argsChanged[i] will remain null)
 						argsChanged[i] = argSubst;
@@ -286,7 +300,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			// capture wildcards
 			TypeRef replacement;
 			if (replacementArg instanceof Wildcard) {
-				if (!withoutCapture) {
+				if (captureUponSubstitution) {
 					// standard case: capturing is not suppressed
 					// -> simply capture the wildcard and proceed as normal
 					replacement = TypeUtils.captureWildcard(typeVar, (Wildcard) replacementArg);
@@ -314,7 +328,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				if (G.get(guardKey) == null) {
 					final RuleEnvironment G2 = wrap(G);
 					G2.put(guardKey, Boolean.TRUE);
-					replacement = substTypeVariables(G2, replacement);
+					replacement = substTypeVariables(G2, replacement, captureContainedWildcards);
 				}
 			}
 

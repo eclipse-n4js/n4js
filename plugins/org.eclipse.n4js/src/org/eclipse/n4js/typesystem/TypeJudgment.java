@@ -92,6 +92,7 @@ import org.eclipse.n4js.n4JS.N4ClassExpression;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.NewExpression;
@@ -618,6 +619,10 @@ import com.google.inject.Inject;
 				}
 			}
 
+			if (!N4JSASTUtils.isWriteAccess(idref)) {
+				T = ts.substTypeVariables(G, T);
+			}
+
 			return T;
 		}
 
@@ -944,7 +949,7 @@ import com.google.inject.Inject;
 			}
 
 			TypeRef T;
-			T = ts.substTypeVariables(G2, propTypeRef);
+			T = ts.substTypeVariables(G2, propTypeRef, !N4JSASTUtils.isWriteAccess(expr), true);
 			T = n4idlVersionResolver.resolveVersion(T, receiverTypeRef);
 
 			if (expr.getTarget() instanceof SuperLiteral && T instanceof FunctionTypeExprOrRef) {

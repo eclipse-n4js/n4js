@@ -666,12 +666,12 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			final TypeArgument leftArg = leftArgs.get(idx);
 			final TypeVariable leftParam = leftParams.get(idx);
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
-				final TypeRef leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam));
+				final TypeRef leftParamSubst = ts.substTypeVariablesWithoutCapture(Gx,
+						TypeUtils.createTypeRef(leftParam));
 				wasAdded |= reduceConstraintForTypeArgumentPair(leftArg, leftParam, leftParamSubst);
 			}
 		}
 		return wasAdded;
-
 	}
 
 	/**
@@ -690,11 +690,9 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			if (lb != null) {
 				wasAdded |= reduce(lb, ts.lowerBound(G, rightArg), CO);
 			}
-		} else if (rightArg instanceof ExistentialTypeRef) {
+		} else if (rightArg instanceof ExistentialTypeRef
+				&& ((ExistentialTypeRef) rightArg).isReopened()) {
 			// TODO IDE-1653 reconsider this entire case
-			// re-open the existential type, because we assume it was closed only while adding substitutions
-			// UPDATE: this is wrong if right.typeArgs already contained an ExistentialTypeRef! (but might be
-			// an non-harmful over approximation)
 			final Wildcard w = ((ExistentialTypeRef) rightArg).getWildcard();
 			final TypeRef ub = w.getDeclaredUpperBound();
 			if (ub != null) {

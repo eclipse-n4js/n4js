@@ -341,12 +341,18 @@ import com.google.common.collect.Iterables;
 				for (int i = 0; i < len; i++) {
 					final TypeArgument leftArg = left.getTypeArgs().get(i);
 					final TypeArgument rightArg = right.getTypeArgs().get(i);
+					final boolean leftArgIsOpen = true; // FIXME IDE-1653 !!!
+					// final boolean leftArgIsOpen = leftArg instanceof Wildcard
+					// || (leftArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) leftArg).isReopened());
+					final boolean rightArgIsOpen = true; // FIXME IDE-1653 !!!
+					// final boolean rightArgIsOpen = rightArg instanceof Wildcard
+					// || (rightArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightArg).isReopened());
 					final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
 
-					TypeRef leftArgUpper = ts.upperBound(G, leftArg);
-					TypeRef leftArgLower = ts.lowerBound(G, leftArg);
-					TypeRef rightArgUpper = ts.upperBound(G, rightArg);
-					TypeRef rightArgLower = ts.lowerBound(G, rightArg);
+					TypeRef leftArgUpper = leftArgIsOpen ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
+					TypeRef leftArgLower = leftArgIsOpen ? ts.lowerBound(G, leftArg) : (TypeRef) leftArg;
+					TypeRef rightArgUpper = rightArgIsOpen ? ts.upperBound(G, rightArg) : (TypeRef) rightArg;
+					TypeRef rightArgLower = rightArgIsOpen ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
 
 					// guard against infinite recursion due to recursive implicit upper bounds, such as in
 					//
@@ -558,6 +564,15 @@ import com.google.common.collect.Iterables;
 
 	private Result applyExistentialTypeRef_Left(RuleEnvironment G,
 			ExistentialTypeRef existentialTypeRef, TypeArgument right) {
+		if (existentialTypeRef == right) {
+			return success(); // performance tweak
+		}
+		if (right instanceof ExistentialTypeRef) {
+			String otherId = ((ExistentialTypeRef) right).getId();
+			if (otherId != null && otherId.equals(existentialTypeRef.getId())) {
+				return success(); // same capture
+			}
+		}
 		if (existentialTypeRef.isReopened()) {
 			// special case: open existential
 			// --> we may pick any valid type we want for 'existentialTypeRef'
@@ -577,9 +592,6 @@ import com.google.common.collect.Iterables;
 			// --> all we know is the picked type lies within the bounds
 			// --> subtype check succeeds if and only if: P<:'right' for *ALL* types P that may have been picked for the
 			// existential
-			if (existentialTypeRef == right) {
-				return success(); // performance tweak
-			}
 			final TypeRef upperExt = ts.upperBound(G, existentialTypeRef);
 			return requireAllSuccess(
 					ts.subtype(G, upperExt, right));
@@ -588,6 +600,15 @@ import com.google.common.collect.Iterables;
 
 	private Result applyExistentialTypeRef_Right(RuleEnvironment G,
 			TypeArgument left, ExistentialTypeRef existentialTypeRef) {
+		if (left == existentialTypeRef) {
+			return success(); // performance tweak
+		}
+		if (left instanceof ExistentialTypeRef) {
+			String otherId = ((ExistentialTypeRef) left).getId();
+			if (otherId != null && otherId.equals(existentialTypeRef.getId())) {
+				return success(); // same capture
+			}
+		}
 		if (existentialTypeRef.isReopened()) {
 			// special case: open existential
 			// --> we may pick any valid type we want for 'existentialTypeRef'
@@ -607,9 +628,6 @@ import com.google.common.collect.Iterables;
 			// --> all we know is the picked type lies within the bounds
 			// --> subtype check succeeds if and only if: 'left'<:P for *ALL* types P that may have been picked for the
 			// existential
-			if (left == existentialTypeRef) {
-				return success(); // performance tweak
-			}
 			final TypeRef lowerExt = ts.lowerBound(G, existentialTypeRef);
 			return requireAllSuccess(
 					ts.subtype(G, left, lowerExt));

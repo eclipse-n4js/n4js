@@ -35,6 +35,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.NullType
@@ -791,6 +792,18 @@ class RuleEnvironmentExtensions {
 		if(!G.isValidTypeMapping(key,value))
 			return;
 		G.put(key, value);
+	}
+	// FIXME add documentation
+	public static def void addTypeMappingWithEnforcedCapture(RuleEnvironment G, TypeVariable key, TypeArgument value, boolean capture) {
+		if (value instanceof Wildcard) {
+			val existTypeRef = TypeUtils.captureWildcard(key, value);
+			if (!capture) {
+				existTypeRef.reopened = true;
+			}
+			addTypeMapping(G, key, existTypeRef);
+		} else {
+			addTypeMapping(G, key, value);
+		}
 	}
 
 	/**
