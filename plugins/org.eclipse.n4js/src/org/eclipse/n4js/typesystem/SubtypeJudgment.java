@@ -341,13 +341,12 @@ import com.google.common.collect.Iterables;
 				for (int i = 0; i < len; i++) {
 					final TypeArgument leftArg = left.getTypeArgs().get(i);
 					final TypeArgument rightArg = right.getTypeArgs().get(i);
-					final boolean leftArgIsOpen = true; // FIXME IDE-1653 !!!
-					// final boolean leftArgIsOpen = leftArg instanceof Wildcard
-					// || (leftArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) leftArg).isReopened());
-					final boolean rightArgIsOpen = true; // FIXME IDE-1653 !!!
-					// final boolean rightArgIsOpen = rightArg instanceof Wildcard
-					// || (rightArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightArg).isReopened());
 					final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
+
+					final boolean leftArgIsOpen = leftArg instanceof Wildcard
+							|| (leftArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) leftArg).isReopened());
+					final boolean rightArgIsOpen = rightArg instanceof Wildcard
+							|| (rightArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightArg).isReopened());
 
 					TypeRef leftArgUpper = leftArgIsOpen ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
 					TypeRef leftArgLower = leftArgIsOpen ? ts.lowerBound(G, leftArg) : (TypeRef) leftArg;
