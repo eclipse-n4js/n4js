@@ -19,8 +19,13 @@
 
 	<property name="doctools.dir" value="${basedir}/../asciispec-tools" />
 	<property name="docname" value="N4JSDesign" />
+	<property name="sharedResources" value="${basedir}/../shared/website" />
 	
 	<target name="all" depends="getAsciispec, asciispec, chunk" />
+	
+	<target name="clean" >
+		<delete dir="${basedir}/generated-docs" />
+	</target>
 
 	<target name="getAsciispec" depends="asciispec.check" unless="asciispec.Exists">
 		<mkdir dir="${doctools.dir}"/>
@@ -39,13 +44,15 @@
 	</target>
 
 	<target name="asciispec" depends="getAsciispec">
+		<echo>Illegal access operation already reported, see https://github.com/headius/backport9/issues/2</echo>
+		
 		<mkdir dir="${basedir}/generated-docs"/>
 		<!-- Generate ${docname}.html -->
 		<exec executable="${doctools.dir}/asciispec/bin/asciispec" spawn="false" dir="${basedir}">
 			<arg value="direct"/>
 			<arg value="-a"/>
 			<arg value="-o"/>
-            <arg value="-a eclipse-help-mode"/>
+            <!-- <arg value="-a eclipse-help-mode"/> -->
             <arg value="-D"/>
 			<arg value="generated-docs/"/>
 			<arg value="${docname}.adoc"/>
@@ -58,30 +65,38 @@
             <arg value="docbook"/>
             <arg value="-a"/>
             <arg value="-o"/>
-            <arg value="-a eclipse-help-mode"/>
+        	<!-- <arg value="-a eclipse-help-mode"/> -->
             <arg value="-D"/>
             <arg value="generated-docs/"/>
             <arg value="${docname}.adoc"/>
         </exec>
 
-        <copy todir="${basedir}/generated-docs/.">
-            <fileset dir="${basedir}">
+		<copy todir="${basedir}/generated-docs/.">
+            <fileset dir="${sharedResources}">
                 <include name="styles/**"/>
                 <include name="images/**"/>
                 <include name="scripts/**"/>
+           	</fileset> 	
+        </copy>
+		
+		<copy todir="${basedir}/generated-docs/.">
+            <fileset dir="${basedir}">
                 <include name="chapters/**"/>
                 <exclude name="chapters/**/*.adoc"/>
                 <exclude name="chapters/**/*.graffle"/>
-            </fileset>
+           	</fileset> 	
         </copy>
+		
+		
     </target>
 
 	<target name="chunk" >
 		
+		<!-- Compile Chunker -->
 		<mkdir dir="${doctools.dir}/chunker"/>
-		<javac srcdir="${basedir}/../../releng/org.eclipse.n4js.releng.utils/src/org/eclipse/n4js/doctools" fork="yes" destdir="${doctools.dir}/chunker" includeantruntime="false" />
+		<javac srcdir="${basedir}/../../releng/org.eclipse.n4js.releng.utils/src/org/eclipse/n4js/doctools" fork="yes" debug="yes" destdir="${doctools.dir}/chunker" includeantruntime="false" />
 
-
+		<!-- Create table of content stub -->
 		<java classname="org.eclipse.n4js.doctools.IndexTocGenerator" classpath="${doctools.dir}/chunker">
 			<arg value="-t"/>
 			<arg value="${basedir}/generated-docs/toc.html"/>
@@ -91,19 +106,27 @@
 		</java>
 
 
+		<!-- Chunk main file -->
 		<java classname="org.eclipse.n4js.doctools.Chunker" classpath="${doctools.dir}/chunker">
+			<!-- The name tag which is used to determine the name of the file to be generated -->
 			<arg value="-n"/>
 			<arg value="h2"/>
+			<!-- The regex to determine a chapter -->
 			<arg value="-c"/>
 			<arg value="&lt;div class=&quot;sect1&quot;&gt;"/>
+			<!-- The header separator regex -->
 			<arg value="-h"/>
-			<arg value="&lt;body class=&quot;book&quot;&gt;"/>
+			<arg value="&lt;div id=&quot;content&quot;&gt;"/>
+			<!-- The footer separator regex -->
 			<arg value="-f"/>
-			<arg value="&lt;div id=&quot;footer&quot;&gt;"/>
+			<arg value="&lt;/div&gt;\n&lt;div id=&quot;footer&quot;&gt;"/>
+			<!-- The name of the TOC fragment to be added to the index (part between header and first chapter) file -->
 			<arg value="-t"/>
 			<arg value="${basedir}/generated-docs/toc.html"/>
+			<!-- The output folder -->
 			<arg value="-d"/>
 			<arg value="${basedir}/generated-docs/"/>
+			<!-- The document to be chunked -->
 			<arg value="${basedir}/generated-docs/${docname}.html"/>
 		</java>
 		

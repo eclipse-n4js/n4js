@@ -15,30 +15,34 @@ Contributors:
 :task_def_GH-: GitHub;GitHub Issues;https://github.com/eclipse/n4js/issues/{TASK_ID};images/issue.svg; #{TASK_ID}
 
 // Path to Bib File (usually in same folder as index.adoc)
-:bib-file: n4jsidespec.bib
+:bib-file: n4jsspec.bib
 
 // =================== Builtin AsciiDoctor Document Attributes ================= //
 // For more info, see http://asciidoctor.org/docs/user-manual/#builtin-attributes
 
 // Header and Footer info //
-:docinfodir: headers
-:docinfo1:
+
+
 
 // Stylesheet settings //
 :stylesdir: styles
 :stylesheet: spec.min.css
 
-// Switch on/off eclipse help mode
-ifdef::eclipse-help-mode[]
-:docinfodir: eclipse-help-mode-headers
-:stylesheet: eclipse-help-mode-spec.min.css
-endif::[]
+// Website mode (non eclipse help)
 ifndef::eclipse-help-mode[]
-:docinfodir: headers
+:docinfodir: ../shared/website/headers
 :stylesheet: spec.min.css
 :toc: left
 :toclevels: 5
 endif::[]
+
+// Eclipse help mode
+ifdef::eclipse-help-mode[]
+:docinfodir: ../shared/eclipse-help/headers
+:stylesheet: eclipse-help-mode-spec.min.css
+endif::[]
+
+
 :docinfo1:
 
 // Syntax Highlighting //
@@ -65,7 +69,7 @@ endif::[]
 
 // =================== Project-Specific Attributes ================= //
 
-:revnumber: 0.4
+:revnumber: 0.9
 
 // ======================= Image Resizing Variables ================= //
 // Ifdefs below set image attributes based on backend - usage example:

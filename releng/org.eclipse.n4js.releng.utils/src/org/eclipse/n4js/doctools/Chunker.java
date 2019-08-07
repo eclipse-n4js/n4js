@@ -304,7 +304,7 @@ public class Chunker {
 		if (headPattern != null) {
 			Matcher m = headPattern.matcher(html);
 			if (!m.find()) {
-				throw new ChunkError("Head separator not found.");
+				throw new ChunkError("Head separator \"" + headPattern.pattern() + "\" not found.");
 			}
 			int pos = m.end();
 			head = new Range("head", 0, pos);
@@ -324,7 +324,7 @@ public class Chunker {
 	private void findFoot() {
 		Matcher m = footPattern.matcher(html);
 		if (!m.find()) {
-			throw new ChunkError("Foot separator not found.");
+			throw new ChunkError("Foot separator \"" + footPattern.pattern() + "\"not found.");
 		}
 		int pos = m.start();
 		foot = new Range("foot", pos, html.length());

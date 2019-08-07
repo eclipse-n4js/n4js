@@ -19,6 +19,7 @@ Contributors:
       <toc file="src-gen/indices/articles.xml" primary="true"> </toc>
       <toc file="src-gen/indices/n4jsdesign.xml" primary="true"> </toc>
       <toc file="src-gen/indices/n4jsspec.xml" primary="true"> </toc>
+      <toc file="src-gen/indices/n4jsidespec.xml" primary="true"> </toc>
    </extension>
 
 </plugin>
