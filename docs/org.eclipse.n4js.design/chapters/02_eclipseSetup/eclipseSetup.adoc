@@ -28,7 +28,7 @@ This installer is to be downloaded from https://wiki.eclipse.org/Eclipse_Install
 Run the installer and apply the following steps:
 
 1. change to "Advance Mode" via the menu (upper-right corner) (no need to move the installer)
-2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "latest"
+2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "2019-06". Hint: Do not select "latest" because this will cause automatic updates which may lead to weird errors later on.
 3. double-click the entry **Eclipse Projects/N4JS** so that it is shown in the catalog view below
 4. on the next page, configure paths accordingly. You only have to configure the installation and workspace folder. You may want to use git with https instead of ssh.
 5. start installation
@@ -38,7 +38,7 @@ The installer will then guide you through the rest of the installation. All plug
 The workspace is configured automatically. This includes fetching the necessary git repository. If you have selected git with SSH you may run into problems. In this case you can re-run the scripts and select HTTPS instead, this should work in any case.
 
 Eventually the installer scripts are done, that means the git repository has been cloned and the workspace has been configured (including the project set setup).
-Now the automatic build kicks in as you can see in the status bar. Screenshot 6
+Now the automatic build kicks in as you can see in the status bar.
 
 The build will show a lot of errors while still working. Eventually the whole project should have been compiled without any errors. Unfortunately, due to a https://github.com/eclipse/n4js/issues/1373[known issue], two problems exists. Please have a look at the linked issue on how to fix that (it is quite easy).
 
