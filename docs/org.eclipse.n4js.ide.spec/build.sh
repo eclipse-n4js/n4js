@@ -4,7 +4,7 @@
 # -x  == enable debug. (+x for disable)
 set -e +x
 
-MAIN_FILE="N4JSSpec"
+MAIN_FILE="N4JSIDESpec"
 
 # asciispec docker image expects data to be located in sub-folders "styles", "scripts", "images":
 cp -r ../shared/website/styles ../shared/website/scripts ../shared/website/images .
