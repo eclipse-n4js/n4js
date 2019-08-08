@@ -741,7 +741,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 * Currently, only a warning is displayed.
 	 */
 	def private void checkIntersectionTypeContainsMaxOneClass(RuleEnvironment G,
-		 List<TypeRef> intersectionTR, boolean covariantTypeArgValidation) {
+			List<TypeRef> intersectionTR, boolean covariantTypeArgValidation) {
 		if (intersectionTR.size() > 1) {
 			
 			val ArrayListMultimap<Type, TypeRef> byTypes = ArrayListMultimap.create();
@@ -768,30 +768,29 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				val type = byTypes.keys.head;
 				if (type.isGeneric) {
 					val List<TypeRef> ptrs = byTypes.get(type); // similar to intersectionTR
-					
-					try {
+
 					if (allCovariantOrWildcardWithUpperBound(type.typeVars, ptrs)) {
 						val length = type.typeVars.length;
 						for (var v=0; v<length; v++) {
 							val vIndex = v; // final
+							// typerefs already simplified by initial call to this method:
 							val typeArgsPerVariable = 
-							// typerefs already simplified by initial call to this method
-							extractNonStructTypeRefs(ptrs.map[
-								ptr|
-								val ta = ptr.typeArgs.get(vIndex);
-								var TypeRef upper;
-								if (ta instanceof TypeRef) {
-									upper = ta; 
-								}
-								if (upper===null && ta instanceof Wildcard) {
-									upper = (ta as Wildcard).declaredUpperBound;
-								}
-								if (upper===null) {
-									upper = type.typeVars.get(vIndex).declaredUpperBound;
-								}
-								return upper;
-								
-							]);
+								extractNonStructTypeRefs(ptrs.map[
+									ptr|
+									val ta = ptr.typeArgs.get(vIndex);
+									var TypeRef upper;
+									if (ta instanceof TypeRef) {
+										upper = ta; 
+									}
+									if (upper===null && ta instanceof Wildcard) {
+										upper = (ta as Wildcard).declaredUpperBound;
+									}
+									if (upper===null) {
+										upper = type.typeVars.get(vIndex).declaredUpperBound;
+									}
+									return upper;
+									
+								]);
 							checkIntersectionTypeContainsMaxOneClass(G, typeArgsPerVariable, true);
 						}
 						
@@ -806,12 +805,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 							if (! (tClassR.eContainer instanceof TypeVariable)) { // nested, type ref coming from def site
 								addIssue(message, tClassR, INTER_WITH_ONE_GENERIC);
 							}
-						}
-					}
-					} catch (IndexOutOfBoundsException e) {
-						// probably due to mismatch of type arguments, ignored as consequential error here
-						if (! "consequential".equals(e.message)) {
-							throw e;
 						}
 					}
 				}	
