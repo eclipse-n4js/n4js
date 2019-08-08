@@ -11,6 +11,7 @@ Contributors:
 
 = Types
 :find:
+:source-language: n4js
 
 [.language-n4js]
 == Overview
@@ -1829,23 +1830,89 @@ For a given intersection type $I$, the following conditions must hold:
 ++++
 I.typeRefs \neq \emptyset
 ++++
-2.  Only one class must be contained in the intersection type:
+2.  Only one nominally typed class must be contained in the intersection type:
 +
 [math]
 ++++
-(\exists C \in I.typeRefs: \mu(C)=\type{Class}) \rightarrow \nexists T \in I.typeRefs \setminus\{C\}: \mu(T)=\type{Class}
+(\exists C \in I.typeRefs: \mu(C)=\type{Class} \land C.isStructural) \rightarrow \nexists T \in I.typeRefs \setminus\{C\}: \mu(T)=\type{Class} \land T.isStructural
 ++++
-//`
-+
-For the time being, only a warning is produced when more than one class is contained in the intersection type .
+A warning is produced when more than one nominal class is contained in the intersection type, since
+only undefined (or null) can be assigned to a type reference of this type.
 3. Non-optional elements:
-
++
 [math]
 ++++
 \forall T \in I.typeRefs \rightarrow \lnot T.opt
 ++++
-
+4. If the intersection contains multiple references to the same generic type, a warning is produced if only undefined (or null) can be assigned to a type reference of this type. There are some rare cases in which this does not happen. This is true if for all type arguments one of the following conditions hold: 
+  ** a type argument corresponding to a type parameter without def-site variance is a wildcard with an upper bound (use "extends" or no bound) or a type argument not defining an upper bound corresponds to a covariant (out) type parameter, and this constraint (IDE-27) holds for an intersection created from the upper bounds of the type argument (or the lower bound of the type parameter).
+  ** a type argument is a wildcard with lower bounds (since Object would be a solution) 
 --
+
+Definition of structural typing attributes see <<Req-ID-78701>>.
+
+The combination of intersection types and generics is a bit tricky. The following example demonstrates that:
+
+.Intersection and generics
+[example]
+--
+Given the following types:
+
+----
+class G<T> {
+     private T: t
+	set(t: T) { this.t = t;}
+	get(): T { return this.t; }
+}
+class C { public y; }
+class D { public x; }
+interface I {}
+----
+
+We use the generic with the getter and setter here only to demonstrate co- and contra variance effects.
+
+Let
+
+----
+let g1: G<C> & G<D>;
+----
+
+be a variable. We can only assign undefined to g1, since any other value would not be confirm to the intersection.
+If we for example would assign
+
+----
+let gc = new G<C>() 
+g1 = gc; 
+----
+
+we would run into contra-variance problems:
+
+----
+gc.set(new C());
+----
+
+This would implicitly also set a `C` in `g1`, which would not be compatible with `D`. This would lead to a problem in the following lines:
+
+----
+let gd: G<D> = g1;
+let d: D = gd.get();
+----
+
+This is the typical contra variance problem.
+-- 
+
+Similar problems arise even with structural types.
+
+Note that in theory more warnings could be produced, in particular in combination with
+structural types (and the fact that N4JS classes must explicitly implement even 
+structural interfaces). We omit these kind of warnings for two reasons:
+
+- performance
+- anticipated slight changes in semantics (e.g. we may remove the requirement of explicitly implementing structural interfaces)
+
+Since problems caused by not instanceable type references will be detected by programmers before runtime anyway, we do not need to be strict here. They are merely convenience features and they do not affect the correctness of the type system.
+
+
 
 .Intersection Type Subtyping Rules
 [req,id=IDE-175,version=1]

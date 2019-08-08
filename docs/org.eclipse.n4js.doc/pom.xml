@@ -145,51 +145,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                 </executions>
             </plugin>
 
-            <!-- eclipse-help file list generation -->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <!-- userguides file list generation -->
-                    <execution>
-                        <id>userguide-page-list-creation</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <echo>Running directory listing dir=${eclipseUserguidesDir}</echo>
-                                <fileset id="eclipseuserguides.pages" dir="${eclipseUserguidesDir}" includes="*.html" excludes=""/>
-                                <pathconvert pathsep="${line.separator}" property="prop.dist.contents" refid="eclipseuserguides.pages">
-                                    <map from="${project.build.directory}" to="${dist}" />
-                                </pathconvert>
-                                <echo encoding="${file.encoding}" >${prop.dist.contents}</echo>
-                                <echo encoding="${file.encoding}" output="${indices.dir}/${help.userguides.list}">${prop.dist.contents}</echo>
-                            </target>
-                        </configuration>
-                    </execution>
-                    <!-- articles and features file list generation -->
-                    <execution>
-                        <id>article-page-list-creation</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <echo>Running directory listing dir=${eclipseHelpDir}</echo>
-                                <fileset id="eclipsehelp.articles.pages" dir="${eclipseHelpDir}" includes="**/*.html" excludes="index.html,userguides/*.html,_headers/**/*.html,generated-docs/**/*.html"/>
-                                <pathconvert pathsep="${line.separator}" property="prop.dist.contents" refid="eclipsehelp.articles.pages">
-                                    <map from="${project.build.directory}" to="${dist}" />
-                                </pathconvert>
-                                <echo encoding="${file.encoding}" >${prop.dist.contents}</echo>
-                                <echo encoding="${file.encoding}" output="${indices.dir}/${help.articles.list}">${prop.dist.contents}</echo>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
 <!-- Plugin to copy the final output from the /target/ folder into the /dist/folder       -->
 
             <plugin>
@@ -242,11 +197,51 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			    </executions>
 			</plugin>
 
-			<!-- Build N4JSDesign document -->
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
+			<!-- Build Eclipse Help files from specification documents -->
+			
+			<!-- eclipse-help file list generation -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
 				<version>${maven-antrun-plugin.version}</version>
-				<executions>
+                <executions>
+                    <!-- userguides file list generation -->
+                    <execution>
+                        <id>userguide-page-list-creation</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>Running directory listing dir=${eclipseUserguidesDir}</echo>
+                                <fileset id="eclipseuserguides.pages" dir="${eclipseUserguidesDir}" includes="*.html" excludes=""/>
+                                <pathconvert pathsep="${line.separator}" property="prop.dist.contents" refid="eclipseuserguides.pages">
+                                    <map from="${project.build.directory}" to="${dist}" />
+                                </pathconvert>
+                                <echo encoding="${file.encoding}" >${prop.dist.contents}</echo>
+                                <echo encoding="${file.encoding}" output="${indices.dir}/${help.userguides.list}">${prop.dist.contents}</echo>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <!-- articles and features file list generation -->
+                    <execution>
+                        <id>article-page-list-creation</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>Running directory listing dir=${eclipseHelpDir}</echo>
+                                <fileset id="eclipsehelp.articles.pages" dir="${eclipseHelpDir}" includes="**/*.html" excludes="index.html,userguides/*.html,_headers/**/*.html,generated-docs/**/*.html"/>
+                                <pathconvert pathsep="${line.separator}" property="prop.dist.contents" refid="eclipsehelp.articles.pages">
+                                    <map from="${project.build.directory}" to="${dist}" />
+                                </pathconvert>
+                                <echo encoding="${file.encoding}" >${prop.dist.contents}</echo>
+                                <echo encoding="${file.encoding}" output="${indices.dir}/${help.articles.list}">${prop.dist.contents}</echo>
+                            </target>
+                        </configuration>
+                    </execution>
 					<execution>
 						<id>build-n4jsdesign</id>
 						<phase>generate-resources</phase>
@@ -335,14 +330,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 						</configuration>
 					</execution>
 
-				</executions>
-			</plugin>
-
-			<!-- Build N4JSSpec document -->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>${maven-antrun-plugin.version}</version>
-                <executions>
                     <execution>
                         <id>build-n4jsspec</id>
                         <phase>generate-resources</phase>
@@ -431,14 +418,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                         </configuration>
                     </execution>
 
-                </executions>
-            </plugin>
-
-
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>${maven-antrun-plugin.version}</version>
-                <executions>
                     <execution>
                         <id>clean-up-n4jsdesign-n4jsspec</id>
                         <phase>process-resources</phase>
