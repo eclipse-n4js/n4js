@@ -80,11 +80,25 @@ New features of the N4JS IDE are introduced along the way such as *modules*, *ty
 
 ---
 
-== N4JS Language Specification
+== Specification
+
+=== N4JS Language Specification
 
 For a complete reference of the N4JS Language, the Specification is available at the following location:
 
-* link:https://www.eclipse.org/n4js/spec/N4JSSpec.html[N4JS Language Specification]
+* link:https://www.eclipse.org/n4js/spec/index.html[N4JS Language Specification]
+
+=== N4JS IDE Specification
+
+For a reference of the N4JS IDE, i.e. the specific views and UI features of the Eclipse based IDE, the Specification is available at the following location:
+
+* link:https://www.eclipse.org/n4js/idespec/index.html[N4JS IDE Specification]
+
+=== N4JS Design Documentation
+
+The design and other internal information valuable for contributors to Eclipse N4JS can be found at the following location:
+
+* link:https://www.eclipse.org/n4js/design/index.html[N4JS Design Documentation]
 
 == Release Notes
 

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="-26.5 -67 777.8766 36.49946" width="777.8766" height="36.49946">
+  <defs>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2019-08-02 08:32:58 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="-26.5" y="-67" width="777.8766" height="36.49946"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_10">
+        <rect x="138.55175" y="-66.5" width="87.21061" height="33.12542" fill="#d2e6f1"/>
+        <rect x="138.55175" y="-66.5" width="87.21061" height="33.12542" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(143.55175 -56.93729)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="6.261555" y="11">CharStream</tspan>
+        </text>
+      </g>
+      <g id="Graphic_9">
+        <rect x="372.3141" y="-66.5" width="87.21061" height="35.499462" fill="#d2e6f1"/>
+        <rect x="372.3141" y="-66.5" width="87.21061" height="35.499462" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(377.3141 -55.75027)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="3.2556953" y="11">TokenStream</tspan>
+        </text>
+      </g>
+      <g id="Graphic_8">
+        <rect x="606.0765" y="-66.5" width="103.02425" height="33.12542" fill="#d2e6f1"/>
+        <rect x="606.0765" y="-66.5" width="103.02425" height="33.12542" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(611.0765 -56.93729)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="3.492592" y="11">Semantic Model</tspan>
+        </text>
+      </g>
+      <g id="Line_7">
+        <line x1="115.27588" y1="-49.93729" x2="128.15175" y2="-49.93729" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_6">
+        <line x1="226.26236" y1="-49.93729" x2="239.13824" y2="-49.93729" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_5">
+        <line x1="460.02465" y1="-49.52725" x2="473.40213" y2="-49.762914" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_16">
+        <circle cx="-17" cy="-49.93729" r="9.00001438111706" fill="black"/>
+        <circle cx="-17" cy="-49.93729" r="9.00001438111706" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_18">
+        <path d="M 20.775876 -63.43729 L 109.77588 -63.43729 C 112.5373 -63.43729 114.77588 -61.198714 114.77588 -58.43729 L 114.77588 -41.43729 C 114.77588 -38.675866 112.5373 -36.43729 109.77588 -36.43729 L 20.775876 -36.43729 C 18.014452 -36.43729 15.775876 -38.675866 15.775876 -41.43729 L 15.775876 -58.43729 C 15.775876 -61.198714 18.014452 -63.43729 20.775876 -63.43729 Z" fill="white"/>
+        <path d="M 20.775876 -63.43729 L 109.77588 -63.43729 C 112.5373 -63.43729 114.77588 -61.198714 114.77588 -58.43729 L 114.77588 -41.43729 C 114.77588 -38.675866 112.5373 -36.43729 109.77588 -36.43729 L 20.775876 -36.43729 C 18.014452 -36.43729 15.775876 -38.675866 15.775876 -41.43729 L 15.775876 -58.43729 C 15.775876 -61.198714 18.014452 -63.43729 20.775876 -63.43729 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(20.775876 -56.93729)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="23.154297" y="11">read file</tspan>
+        </text>
+      </g>
+      <g id="Graphic_19">
+        <path d="M 254.53824 -63.43729 L 343.53824 -63.43729 C 346.29966 -63.43729 348.53824 -61.198714 348.53824 -58.43729 L 348.53824 -41.43729 C 348.53824 -38.675866 346.29966 -36.43729 343.53824 -36.43729 L 254.53824 -36.43729 C 251.7768 -36.43729 249.53824 -38.675866 249.53824 -41.43729 L 249.53824 -58.43729 C 249.53824 -61.198714 251.7768 -63.43729 254.53824 -63.43729 Z" fill="white"/>
+        <path d="M 254.53824 -63.43729 L 343.53824 -63.43729 C 346.29966 -63.43729 348.53824 -61.198714 348.53824 -58.43729 L 348.53824 -41.43729 C 348.53824 -38.675866 346.29966 -36.43729 343.53824 -36.43729 L 254.53824 -36.43729 C 251.7768 -36.43729 249.53824 -38.675866 249.53824 -41.43729 L 249.53824 -58.43729 C 249.53824 -61.198714 251.7768 -63.43729 254.53824 -63.43729 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(254.53824 -63.93729)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="22.152344" y="11">tokenize</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="25.495117" y="25">(Lexer)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_20">
+        <path d="M 488.3006 -63.43729 L 577.3006 -63.43729 C 580.062 -63.43729 582.3006 -61.198714 582.3006 -58.43729 L 582.3006 -41.43729 C 582.3006 -38.675866 580.062 -36.43729 577.3006 -36.43729 L 488.3006 -36.43729 C 485.5392 -36.43729 483.3006 -38.675866 483.3006 -41.43729 L 483.3006 -58.43729 C 483.3006 -61.198714 485.5392 -63.43729 488.3006 -63.43729 Z" fill="white"/>
+        <path d="M 488.3006 -63.43729 L 577.3006 -63.43729 C 580.062 -63.43729 582.3006 -61.198714 582.3006 -58.43729 L 582.3006 -41.43729 C 582.3006 -38.675866 580.062 -36.43729 577.3006 -36.43729 L 488.3006 -36.43729 C 485.5392 -36.43729 483.3006 -38.675866 483.3006 -41.43729 L 483.3006 -58.43729 C 483.3006 -61.198714 485.5392 -63.43729 488.3006 -63.43729 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(488.3006 -63.93729)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="29.49121" y="11">parse</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="22.83203" y="25">(Parser)</tspan>
+        </text>
+      </g>
+      <g id="Line_21">
+        <line x1="348.53824" y1="-49.93729" x2="361.91573" y2="-49.701625" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_22">
+        <line x1="582.8006" y1="-49.93729" x2="595.6765" y2="-49.93729" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Group_23">
+        <g id="Graphic_25">
+          <circle cx="741.8766" cy="-49.93729" r="9.00001438111708" fill="white"/>
+          <circle cx="741.8766" cy="-49.93729" r="9.00001438111708" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_24">
+          <circle cx="741.8766" cy="-49.93729" r="6.30001006678197" fill="black"/>
+          <circle cx="741.8766" cy="-49.93729" r="6.30001006678197" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+      </g>
+      <g id="Line_26">
+        <line x1="709.6007" y1="-49.93729" x2="722.9766" y2="-49.93729" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_27">
+        <line x1="-7.4999955" y1="-49.93729" x2="5.875876" y2="-49.93729" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

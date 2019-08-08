@@ -49,8 +49,7 @@ We distinguish four kinds of types as summarized in <<tab:KindOfTypes,Kind Of Ty
 |user |N4JS |developer |User defined types, such as declared classes or functions. These types are to be explicitly defined or imported in the code.
 |library |N4JSD |developer |Type declarations only, comparable to C header files, without implementation. Used for defining the API of 3rd party libraries. These type definitions are to be explicitly defined or imported in the code.
 |builtin |N4TS |smith |Built-in ECMAScript objects interpreted as types. E.g., `String`, `Date`, `Math`. These types are provided by N4JS and are always available.
-|primitive |N4TS |smith |Primitive ECMAScript (and N4JS ties), such as `string`, `number`, `pathselector<T>`, `i18n`, and also `any`, `undefined` and `void`. These types are provided by N4JS and are always available. Primitive types are described in detail in
-https://github.numberfour.eu/NumberFour/n4js/blob/master/docs/com.enfore.n4js.spec/chapters/04_types/types.adoc#primitive-ecmascript-types[Primitive ECMAScript Types] and https://github.numberfour.eu/NumberFour/n4js/blob/master/docs/com.enfore.n4js.spec/chapters/04_types/types.adoc#primitive-n4js-types[Primitive N4JS Types]
+|primitive |N4TS |smith |Primitive ECMAScript (and N4JS ties), such as `string`, `number`, `pathselector<T>`, `i18n`, and also `any`, `undefined` and `void`. These types are provided by N4JS and are always available. Primitive types are described in detail in the spec (see chapter "Primitive ECMAScript Types").
 |===
 
 

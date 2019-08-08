@@ -1,0 +1,103 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+
+
+[[sec:JSON_Support]]
+= JSON Support
+:find:
+
+WARNING: This chapter may be outdated.
+
+[[sec:JSON_Parser]]
+== JSON Parser
+
+For the JavaScript Object Notation format, a multitude of specifications exist (e.g. cite:[RFC8259], cite:[ECMA404], cite:[RFC7158]). While all specifications agree on the basic structure of JSON, many special cases exist, which remain un-addressed by the specifications. Therefore, in practice many parsers exhibit implementation-specific behavior. See cite:[Ser18] for a discussion of many of these cases.
+
+The initial grammar of the N4JS JSON parser is mostly based on cite:[ECMA404] while further adaptions have been made to accommodate for special cases such as escaping unicode control characters in string literals. This section discusses the different aspect in which our parser exhibits special behavior in order to parse a maximum of real-world JSON text. If applicable, we will also discuss differences between JSON and the N4JS syntax for object literals.
+
+[[sec:JSON_Parser_Unicode_Escaping]]
+=== Escaping Unicode Control Characters in String Literals
+
+In comparison to ECMAScript (and thus N4JS), JSON only requires the escaping of unicode control characters in the range from `U+0000` to `U+001F` when used in a string literal. This includes the line termination characters `U+000A` or `\n` and `U+000D` or `\r`. However, different from ECMAScript, JSON allows the unescaped use of the unicode characters `U+2028` and `U+2029` within string literals. Therefore, the JSON parser differs from the behavior of the N4JS parser.
+
+
+[[sec:JSON_Parser_Empty_Text]]
+=== Empty Text
+
+While the abovementioned JSON specifications do not allow for empty JSON text (e.g. no data, only whitespace data), our parser is tolerant towards such inputs. The reason behind this decision is that it allows users of the N4JS IDE, to create new empty JSON files without experiencing any parser errors.
+
+[[sec:JSON_Parser_Nested_Structures]]
+=== Nested Structures
+
+Since the N4JS JSON parser is implemented in terms of a recursive decent parser, the parsable inputs are limited in terms of nesting. This results in a stack overflow exception for highly nested input data.
+
+[[sec:JSON_Parser_Whitespace]]
+=== Whitespace
+
+cite:[RFC7158] and cite:[ECMA404] both define whitespace characters of JSON to be exclusively `U+0009`, `U+000A`, `U+000D` and `U+0020`. However, for now we adopt the whitespace strategy of the N4JS parser, which allows for additional whitespace characters (also see cite:[ECMA15a] section 7.2 White Space). This only applies to JSON text outside of string literals.
+
+[[sec:JSON_Parser_Comments]]
+=== Comments
+
+Although JSON as a standard does not specify any notion of source code comments, we allow them on a parser level. (single line comments introduced by `//` and multi-line comments using `/\*` and `*/`). After parsing, we issue corresponding validation messages that indicate to the user, that such comments will possibly not be parsable in a different context (e.g. by npm in case of package.json files).
+
+[[sec:JSON_Language_Extensions]]
+== JSON Language Extensions
+Generally, our JSON support was implemented with generic JSON support in mind. However, for some types of JSON files (e.g. `package.json` files) we provide custom behavior to better assist the user. This includes custom JSON validators and resource description strategies that only apply to certain types of JSON files. In order to keep our JSON implementation independent from N4JS-specific code, these concerns are separated using an Eclipse Extension Point. In the headless case, extension also need to be registered manually via the `JSONExtensionRegistry`. In the following we present the different aspect in which the JSON language can be extended.
+
+[[sec:JSON_Validator_Extensions]]
+=== JSON Validator Extensions
+
+Via the JSON validator extensions (cf. `IJSONValidatorExtension`), other bundles can register JSON validator extensions that introduce domain-specific validation for specific types of JSON files.
+
+[[sec:File_Specitic_Validator_Extensions]]
+==== File-Specific Validator Extensions
+
+For every JSON resource that is validated, all registered JSON validator extensions are executed. For a validator extension to be specific to a certain type of file, one may override the Xtext method `isResponsible` which checks whether a validator applies on a per resource basis.
+
+[[sec:JSON_Declarative_JSON_Validator_Extensions]]
+==== Declarative JSON Validator Extensions
+
+In addition to Xtext's `@Check` methods, we provide an annotation `@CheckProperty` that allows to declare JSON-specific check methods that only apply to certain property paths of a JSON document. The `@CheckProperty` annotation can only be used when inheriting from the `AbstractJSONValidatorExtension` class. The following example outlines its usage:
+
+[source, java]
+----
+(...)
+@CheckProperty(propertyPath = "prop1")
+public void checkProperty(JSONValue propertyValue) {
+	// validate JSONValue for top-level property 'prop1'
+}
+
+@CheckProperty(propertyPath = "nested.prop2")
+public void checkNestedProperty(JSONValue propertyValue) {
+	// validate JSONValue for the nested property 'nested.prop2'
+}
+(...)	
+----
+
+The examples illustrates how property-check-method can be declared. In a JSON document the first check method will only be invoked for the JSON value that is set for top-level property `prop1`. The second check method is invoked for the nested property `prop2` of the object that is set for the top-level property `prop2`.
+
+[source, json]
+----
+{
+	"prop1": 1, // checkProperty applies
+	"nested": {
+		"prop2": 2 // checkNestedProperty applies
+	}
+}
+----
+
+When inheriting from the `AbstractJSONValidatorExtension`, the usual `addIssue` methods may be used in order to issue validation messages. Furthermore, the issue codes that are  being used for the messages may originate from the bundle that hosts the validator extension.
+
+=== JSON Resource Description Strategy
+
+Via JSON resource description extensions (cf. `IJSONResourceDescriptionExtension`), other bundles can define a custom resource description strategy for specific types of JSON files. As a consequence, these extensions define what information on the contents of a JSON file is stored in the Xtext index (cf. `IResourceDescriptions`).

@@ -1,0 +1,370 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= References
+:experimental:
+:find:
+
+WARNING: This chapter maybe outdated.
+
+[[sec:usecases]]
+== Use cases
+
+[horizontal]
+Compilation::
+  for deciding in incremental builder which resources requires a recompilation
+Editing::
+  Dirty state calculation: for deciding which resources needs to be reparsed as references have changed
+UI::
+  Such as kbd:[Find references], find all places in the workspaces that points to the selected element
+Tools::
+  requiring references, such as refactorings, e.g., rename refactoring: apply the renaming of the element also to all references to it (like find by references)
+
+[[sec:calculation_algorithm]]
+[.language-n4js]
+== Calculation algorithm
+
+[[sec:Xtext_default_implementation]]
+=== Xtext default implementation
+
+Using Reference Descriptions:
+
+* default implementation contained in method `createReferenceDescriptions` of `o.e.x.resource.impl.DefaultResourceDescriptionStrategy`
+* iterates over all EReferences of the EClass of the current element
+* navigates all references and resolves them (already done before in DefaultResourceDescription.computeReferenceDescriptions)
+* create reference description objects for all these references
+
+In case of N4JS and the types, reference descriptions are also created for references to types model elements (definedType) and for references from Types element to AST.
+
+We do not use this default implementation for two reasons:
+
+1.  expensive
+2.  Default implementation of reference descriptions only calculates the direct dependencies but not the transitive ones + the calculation of the URIs is very expensive.
+
+[[sec:N4_implementation]]
+=== N4JS implementation
+
+1.  the Xtext default implementation is disabled by let `N4JSResourceDescription.computeReferenceDescriptions` return an empty list. Also the bound `N4JSDescriptionUtils` returns an empty list for collectOutgoingReferences
+2.  Calculating _direct references_ are only done inside `N4JSResourceDescription.getImportedNames` (that uses newly introduced `N4JSCrossReferenceComputer.computeCrossRefs` for collecting all direct dependencies) - here only (parameterized) type refs, types and identifiable elements are collected
+3.  collect all _transitive dependencies_, i.e. all super classes, consumed roles and implemented interfaces in the type hierarchy and add their resources as dependency (this is done in `N4JSResourceDescription.getImportedNames` (after calculating all direct dependencies with `N4JSResourceDescriptionStrategy`)
+4.  bind `N4JSReferenceQueryExecutor` as a custom implementation to calculate the target URIs for an given target element and bind `N4JSReferenceFinder` as a custom implementation to calculate reference descriptions to be used by the default Xtext found references UI (use case UI)
+
+`ClusteringBuilderState.doUpdate` calculates if a dependent resource has changed (in the context of calculating the `DefaultResourceDescriptionDelta` out of the old and new resource descriptions). Each resource description consists of `EObjectDescriptions`. The `EObjectDescription` for `Script` also contains the types model (`TModule`) for the resource. The references between resources are implemented via the type model. If it has changed (compared with the user data of the old `EObjectDescription`) then all other resource descriptions registered as been dependent on the resource (the qualified names of the resource descriptions are serialized as imported names within the resource description) will be notified that a reparse is needed.
+
+For _dirty state_ the same behavior is achieved via the dirty state editor support using the resource set of the editor (instead the file system resources).
+
+As the primitive and built-in types are fixed they are ignored when calculating the dirty state. When calculating dependending resources and dirty state the reference of an AST element to its defining type is ignored as is the reference from the type to its AST element
+
+<<fig:cd_classes,Classes>> shows the different entry points (user actions) and classes involved in the process.
+
+[[fig:cd_classes]]
+[.center]
+image::{find}images/cd_classes.svg[title-"Reference handling"]
+
+[[sec:PerformanceOfDependencyCalculation]]
+[.language-n4js]
+== Performance Of Dependency Calculation
+
+Concerning frequency and contexts it is clear, that triggering `Find references` and rename refactoring is not as frequent as editing (n4)js files that leads to dirty state (very often as happens when editing) and to trigger compilation (at file save, also often). Calculating if a resource is affected by a change (dirty state calculation) may not be too expensive. But running compilation for too many files (or the wrong set of files) due to incorrect dirty state calculation is expensive.
+
+`N4JSResourceDescription.getImportedNames` is invoked on every edit of a file in the editor, so on every edit the complete content has to be retraversed for possible new references (expensive but not avoidable). For the types of all found references the super types have to recalculated. Traversing the type hierarchy shouldn’t be too expensive.
+
+Possible optimization could be:
+
+1.  caching of traversing referenced types whose resources had not changed since last edit
+2.  not traversing types that are imported but non of their features are used within the current resource
+
+_Those optimization should be done only if there are real performance issues are discovered._
+
+
+[[sec:kinds_of_references]]
+[.language-n4js]
+== Kinds of references
+
+[[sec:Cross_References_to_be_ignored]]
+=== Cross References to be ignored
+
+[cols="3"]
+|===
+|Element |Reference |Explanation
+
+|TypeDefiningElement |definedType: Type |always inner resource change (e.g., Functions, Classifier)
+|types::Type |astElement |as always inner resource change
+|ImportDeclaration |importedModule: TModule |only affected if the resource name changes (and such a change cannot be performed dirty)
+|ContinueStatement |label: LabelledStatement |always inner resource changes
+|BreakStatement |label: LabelledStatement |always inner resource changes
+|types::PrimitiveType |autocoercedObject: TClassifier |fixed (immutable) and internal
+|===
+
+[[sec:Cross_References_to_be_handled]]
+[.language-n4js]
+=== Cross References to be handled
+
+Cross References
+
+//TODO: revise section, is not so clear, in general
+1.  types::ParameterizedTypeRef -> declaredType : Type
+2.  * -> N4GetterDeclaration: N4FieldDeclaration type, but references to getter can be done also done from outside
+3.  * -> N4SetterDeclaration: undef, references to setter can be done also done from outside
+4.  types::PrototypeTypeRef -> type : Type
+
+Contained `ParameterizedTypeRef` and `TypeVariables` (that internally references to `Type`):
+
+1.  references to declared super types of a type (Class, Role, Interface), i.e. superType, consumedRoles, implementedInterfaces
+2.  TypeVariable -> declaredUpperBounds
+3.  References in type arguments:
+* Wildcards -> upper and lower bounds, e.g. `var List<? super A> l1;`
+* direct type references, e.g. `var List<A> l;`
+
+Cross References to IdentifiableElement (types):
+
+1.  IdentifierRef -> id : IdentifiableElement
+2.  NamedImportSpecifier -> importedElement : IdentifiableElement
+3.  ParameterizedPropertyAccessExpression -> property : IdentifiableElement
+4.  PropertyAccessExpression -> property : IdentifiableElement
+
+Contained IdentifierRef (that internally references to IdentifiableElement):
+
+1.  ParameterizedCallExpression -> target
+2.  as PrimaryExpression in MemberExpression
+
+[[sec:transitive_dependencies]]
+== Transitive dependencies
+
+Besides the direct dependencies we also need the transitive dependencies, as demonstrated in the following example.
+
+[[ex:transdepex]]
+.Transitive Dependency
+[source,java]
+----
+export class A {
+    public myMethod()
+}
+----
+
+.Transitive Dependency pt.2
+[source,java]
+----
+export class B extends my/test/A {
+}
+----
+
+.Transitive Dependency pt.3
+[source,java]
+----
+export class C extends my/test/B {
+    myMethodC() {
+        this.myMethod()
+    }
+}
+----
+
+If the name of `myMethod` in A changes, C should get dirty. This can get more complicated, if, e.g., a method in a consumed role is renamed, which then leads to binding references to super types.
+
+Therefore all direct and indirect super types are calculated (including super classes, consumed roles and implemented interfaces) for all found directly referenced types. The qualified names of their resources are added to the list of imported names. footnote:[One could think of an optimization to only register those types that are not just imported or declared, but whose features are really in use. E.g., in one file another type be imported (and even used as type of variable), but non of its member is used. So changes to these members wouldn’t affect the current resources. However this might miss certain cases. E.g., when a method in the super class is removed and now the method with same signature of a consumed role would be used. The method of the role has no been used before, yet must not be ignored. Thus, currently all super classes, roles and interfaces and referenced classes are added as dependency regardless if their members are called.]
+
+Other transitive dependencies:
+
+.  call of member mixed by a consumed role
+..  role is consumed by role consumed by this class
+..  role is consumed by class inherited by this class
+.  call of member available by implemented interface
+..  interface is implemented by role consumed by this class
+..  interface is implemented by class inherited by this class
+.  call of member available by extended class
+..  class is extended by class inherited by this class
+.  chained method calls
+..  method is of type that itself has members which are directly called, so the type is not directly imported or referenced by name in the caller but indirectly required
+..  method is of type that itself inherits members which are directly called, so the type (and its super types) is not directly imported or referenced by name in the caller but indirectly required
+
+[example]
+--
+Each type is defined in its own file.
+
+[source,java]
+----
+export class MyClassOne  {
+    myMethodOne() {
+        var MyClassTwo instance;
+        instance.getElement().myMethodThree()
+    }
+}
+----
+
+[source,java]
+----
+export class MyClassTwo  {
+    MyClassThree getElement() {
+        return new MyClassThree;
+    }
+}
+----
+
+[source,java]
+----
+export class MyClassThree  {
+    void myMethodThree() {}
+}
+----
+
+If `myMethodThree` is renamed this should affect MyClassOne.
+
+Note that the method call in `MyClassOne` directly binds to the method in `MyClassThree`. However, the dependencies are only managed by means of types. So, from that perspective, the dependency between `MyClassOne` and `MyClassThree` is indirect.
+
+[source,java]
+----
+export class MyClassOne  {
+    void myMethodOne() {
+        var MyClassTwo instance;
+        instance.myMethodTwo().getElement().myMethodFour()
+    }
+}
+----
+
+[source,java]
+----
+export class MyClassTwo {
+    MyClassThree<MyClassFour> myMethodTwo() {
+        return null;
+    }
+}
+----
+
+[source,java]
+----
+export class MyClassThree<T extends MyClassFour>  {
+    T element;
+
+    T getElement() {
+        return this.element;
+    }
+}
+----
+
+[source,java]
+----
+export class MyClassFour  {
+    void myMethodFour() {
+    }
+}
+----
+
+If `myMethodFour` is renamed this should affect `MyClassOne`.
+--
+
+More examples are found in the tests (cf. `..ide.n4js.dirtystate.BuilderParticipantPluginTest` and `...BuilderParticipantPluginUITest`)
+
+
+[[sec:find-references]]
+[.language-n4js]
+== Find references
+
+Find references is perceived as a feature in Eclipse IDE, but its implementation can also be useful in a headless scenario, e.g. in the compiler to drop dead code.
+Therefore, as opposed to the Xtext default implementations, the code was refactored to split the parts that depend on the UI from the non-UI dependent logic (see `org.eclipse.n4js.findReferences` vs. `org.eclipse.n4js.ui.search`).
+
+
+=== Background
+Since no reference descriptions are stored in the index for N4JS resources, the cross references have to be found by other means.
+That is, the list of imported names is used as an indicator to find resources that have a potential dependency to the searched element.
+These resources have to be checked thoroughly.
+That is, their clear text representation is checked at a first step against the clear text representation of the found element before the resource is fully loaded and cross references are resolved.
+
+The decision to drop reference descriptions from the index was deliberate since they would only report bogus information in the context of inheritance, e.g. a method `getA` of type `B` my be overridden by `getA` in type `C`.
+Concrete bindings against `C.getA` should also be reported as references to `B.getA` since they identify the same public API of the type hiearchy around `B`.
+Therefore reference descriptions could not be used to find dependencies between source snippets.
+
+
+=== How Find References Work
+
+Methods for finding references are provided Xtext's interface `IReferenceFinder` and can be used both by the UI or headlessly.
+The N4JS implementation of this interface for the N4JS language is the class `ConcreteSyntaxAwareReferenceFinder`.
+One of the key methods defined by the `IReferenceFinder` is `void findAllReferences(TargetURIs, IResourceAccess, IResourceDescriptions, Acceptor, IProgressMonitor)` that finds all places in all resources of the index whereby those places cross-reference one of the URIs contained in `TargetURIs` .
+
+* `TargetURIs` contains the set of URIs to be searched. The caller of `IReferenceFinder` is responsible for collecting the `Target URIs` to be searched.
+* `IResourceAccess` is used to search local references. This is needed because local references are usually not index.
+* `IResourceDescriptions` is the indexed.
+*  `Acceptor` is called when a reference is found.
+*  `IProgressMonitor` is used for showing progress bar (can be null).
+
+
+In the following, we will have a look at the workflow to find references when triggered in the UI.
+After understanding the UI case, the workflow of find references in the headless case should be self-explanatory.
+
+<<fig:findreference_workflow,Find reference workflow>> shows the workflow of find references when triggered in the UI.
+
+[[fig:findreference_workflow]]
+[.center]
+image::{find}images/findreference_workflow.svg[title-"Find reference workflow"]
+
+The following example will be used for explanation.
+
+.A.n4js
+[source,n4js]
+----
+import {B} from "B";
+let b = new B(); // B here is an IdentifierRef referring to TClass B in B.n4js
+----
+
+.B.n4js
+[source,n4js]
+----
+export public class B {}
+----
+
+==== Step 1: Convert Cursor Position to Declared Element
+This step is represented by the purple color in <<fig:findreference_workflow,Find reference workflow>> diagram.
+
+In the IDE, for the sake of convenience, we allow the user to find references of an arbitrary element at the current cursor.
+For instance, while the cursor is currently at `IdentifierRef B` in the `NewExpression` in `A.n4js`, the user may want to find all references to `B`.
+In those cases, we first need to find declaration element of `IdentifierRef B` which is `TClass B`. The Target URIs then contains a single URI to `TClass B`.
+In diagram <<fig:findreference_workflow,Find reference workflow>>, the classe `EObjectAtOffsetHelper` can convert the current cursor position into a declared element.
+
+
+==== Step 2: Convert Declared Element to Target URIs
+This step is represented by the yellow color in <<fig:findreference_workflow,Find reference workflow>> diagram.
+
+The Target URIs contains the URIs whose references are to be searched.
+The caller guarantees that _Target URIs contain only URIs to declared elements, i.e. definitions_.
+For example, if we want to find references for `N4ClassDeclaration B` in `B.n4js`, the target URIs contains a URI to the AST node `N4ClassDeclaration B` and a URI to the TModule node `TClass B`.
+Note that, in addition to the URI to the AST node `N4ClassDeclaration B`, the URI to the derived TModule node `TClass B` is also needed because `N4ClassDeclaration` can never be a target of a cross reference.
+In the diagram <<fig:findreference_workflow,Find reference workflow>> , the classes depicted in yellow color are responsible for converting declared elements to `Target URIs` taking care of the derived `TModule` nodes.
+
+
+==== Step 3: Filter Potential Resources
+This step is represented by the green color in <<fig:findreference_workflow,Find reference workflow>> diagram.
+
+The general algorithm for finding references is to traverse the AST of each resource in the index and check each AST node if it has a cross reference to one of the URI in the `Target URIs`.
+However, this is too expensive because potentially all resources in the index have to be loaded.
+We need some way to quickly decide for a resource description if the corresponding resource may potentially contain the references before actually loading it for a more thorough search.
+This is done using two pieces of information:
+
+* `typesOrModulesToFind`: the set containing the fully qualified names of the `type` and `module` of the declaration to be searched. This set is calculated in the class `TargetURIKey`.
+*  `imported names`: the set exposed by `ResourceDescription` that contains the types needed by the underlying resource. The implementation for calculating imported names can be found in the class `N4JSResourceDescription`.
+
+In our example, supposed that we are finding references for `class B`. The `typesOrModulesToFind` contains fully qualified names to `N4ClassDeclaration B` and `module B`, i.e. `B.B` and `B`.
+The `imported names` of the resource description of `A.n4js` contains fully qualified names to `module B`, `class B`, i.e. `B` and `B.B`.
+Since the set of imported names of `A.n4js` contains elements in `typesOrModulesToFind`, this resource is searched thoroughly for references.
+
+
+==== Step 4: Search References in Resource
+If a resource is considered as a candidate for a more thorough search in Step 3, it is loaded.
+Its AST is traversed and at each AST node we check if there is a cross reference to one of the Target URIs (Step 1).
+If yes, the AST node is collected in the set of found references.
+See class `ConcreteSyntaxAwareReferenceFinder` for implementation details.
+
+The UI dependent logic may apply additional filters to drop references that are not relevant to the user, e.g. the reference from an AST element to its inferred type and vice versa (see `N4JSReferenceQueryExecutor.isToBeIgnored(EReference)`).
+
+==== Limitations and Possible Enhancements
+Other noteworthy limitations and potential enhancements of the current implementations are:
+
+* Semantics: Only references that are available in the model as real references are reported. Even though `getB()` in `myA.getB().getC()` may return an instance of type `B`, there is no reference reported to B in that expression, though a reference to a member of B would be reported for `getC`.
+* Visibility constraints are not applied and thus do not reduce the search scope to allow the report of invalidly established references in a later validation.
+

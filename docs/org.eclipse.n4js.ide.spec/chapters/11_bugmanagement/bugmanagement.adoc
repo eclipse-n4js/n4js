@@ -1,0 +1,172 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Bug Management
+:find:
+:experimental:
+
+WARNING: Parts of this document may be outdated.
+
+[[sec:Built_In_Xpect_Support]]
+== Built-In Xpect Support
+
+N4IDE contains built-in support for http://www.xpect-tests.org/[xpect] based tests. The purpose of those is to create tests for N4IDE support for user code, not the user code itself. Users can create _fileName.n4js.xt_ to write their test for a given N4IDE functionality. Those files can be executed (via context menu, run configurations, etc.) to verify user expectations.
+
+[[sec:Report_View]]
+=== Report View
+
+When executing xpect tests, users can view the results in a special view available in the IDE: kbd:[Window] -> kbd:[Show View] -> kbd:[Other]  -> kbd:[Test Views] -> kbd:[Xpect View].
+
+[[fig:test_view]]
+[.center]
+image::{find}fig/testView.png[title="Test View",{medium-center}]
+This view allows user to generate bug report (see <<sec:Generate_Bug_Report,Generating Bug Reports>>).
+
+In case of failing tests, users can see additional information (e.g. a stacktrace), or call a comparison view.
+
+[[fig:comparison]]
+[.center]
+image::{find}fig/comparison.png[title="Comparison",{medium-center}]
+[[sec:Generate_Bug_Report]]
+=== Generate Bug Report
+
+Generating bug reports can be done when there is some `.n4js.xt` file with all passing expectations, and at least one of them marked with _FIXME_. In this case icon of the executed test suite changes and via context menu user can call generate bug report option. When it is done, user can see contents of the bug generated in the console view. This output is prepared for out JIRA ticketing system.
+
+[[fig:bug_report]]
+[.center]
+image::{find}fig/bugReport.png[title="Bug Report",{medium-center}]
+There is also possibility to generate bug report via file selection and context menu. In this case xpect test is not executed, only bug contents are generated.
+
+[[fig:bug]]
+[.center]
+image::{find}fig/bug.png[title="Submited Bug",{half-center}]
+
+[[sec:Supported_Xpect_Tests]]
+=== Supported Xpect Tests
+
+Xpect methods are special form of comments inside _.xt_ files. General syntax for declaring usage of such method is _XPECT_ marker followed by _XpectMethodName_ and parameters for that method, all placed in comment. This can have three forms:
+
+* Single line comment (see the first comment in the listing below), Notice *`->`* separating the method name and its parameters.
+* Multi line comment with one method invocation, notice *`-`* separating the method name and its parameters
+* Multi line comment with multiple method invocations, simmilar to one above, but each line of method parameters indicates separate method invocation
++
+[source,n4js]
+----
+//XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'consoleX'." at "consoleX"
+consoleX.log(10);
+
+/*XPECT errors ---
+ "Couldn't resolve reference to IdentifiableElement 'logY'." at "logY"
+---*/
+console.logY(10);
+
+/*XPECT errors ---
+ "Couldn't resolve reference to IdentifiableElement 'log'." at "log"
+ "Couldn't resolve reference to IdentifiableElement 'ref'." at "ref"
+ --- */
+log(ref);
+----
+
+[[sec:XPECT_N4JS_Errors]]
+====  Errors, Warnings, Infos, Issues
+
+_Errors_, _Warnings_, _Infos_ are xpect methods that allow to capture marker of given severity. Additionally _Issues_ allows to allow markers of all above severities.
+
+All of those methods can be used single invocations or as mutline invocations.
+
+[source,n4js]
+----
+//XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'x'." at "x"
+console.log(x)
+
+//XPECT warnings --> "Variable names should start with lower case letter." at "String"
+var String = "some string"
+----
+
+[[sec:XPECT_N4JS_Noerrors]]
+====  Noerrors
+
+No errors allows to catch (and suppress) marker of any severity (_error_, _warning_, _info_).
+
+[source,n4js]
+----
+//XPECT noerrors --> "window object should be recognized"
+console.log(window)
+----
+
+[[sec:XPECT_N4JS_Output]]
+====  Output, OutputRegex
+
+Output methods are special in sense that they are not intended to be used on single element of the script, but they apply to the whole script.
+
+[source,n4js]
+----
+/* XPECT output ---
+<==
+stdout:
+hello world
+stderr:
+==>
+--- */
+console.log("hello world")
+----
+
+Second method accepts regex expressions. This allows to deal with troublesome output (e.g. dates)
+
+[source,n4js]
+----
+/* XPECT outputRegex ---
+<==
+stdout:
+[^\n]*
+stderr:
+==>
+--- */
+console.log(new Date())
+----
+
+[source,n4js]
+----
+/* XPECT outputRegex ---
+<==
+stdout:
+hello world
+stderr:
+
+[^\n]+
+throw ' cruel world'
+\^
+ cruel world
+==>
+--- */
+console.log("hello world")
+throw ' cruel world'
+----
+
+[[sec:XPECT_N4JS_Type_Of]]
+====  Type Of
+
+Xpect type methods allow test type inference, both for inferred type or expected type.
+
+[source,n4js]
+----
+//XPECT type of 'probablySomeString' --> string
+var probablySomeString = "some string";
+
+var union{string,number} u;
+// XPECT expectedType at 'null' --> {function(number?):string}
+u.toString = null
+----
+
+[[sec:XPECT_Advanced_Methods]]
+====  Advanced methods
+
+There are also other methods provided, that allow to test quick fixes and content assist. Their parameters syntax is more complicated. Additionally they actively modify contents of the editor, or even close it if needed. Their usage exceeds scope of this document.

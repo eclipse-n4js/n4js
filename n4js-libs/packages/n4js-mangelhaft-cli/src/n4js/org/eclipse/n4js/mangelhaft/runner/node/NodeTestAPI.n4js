@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import debug from "deps/debug";
+import debug from "debug";
 import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
 import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
@@ -24,8 +24,8 @@ import * as lib_fs from "fs";
 import * as n4js_cli from "n4js-cli";
 import * as lib_path from "path";
 
-const log = debug("n4js-mangelhaft");
-const rlog = debug("n4js-mangelhaft-test-run");
+const log = debug("n4js-mangelhaft:api");
+const rlog = debug("n4js-mangelhaft:test-run");
 
 export default public class NodeTestAPI {
     /**

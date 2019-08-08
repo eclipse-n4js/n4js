@@ -18,8 +18,9 @@
     "n4js-mangelhaft": "./bin/n4js-mangelhaft-cli.js"
   },
   "dependencies": {
+    "@n4jsd/debug": "<=4.1.*",
+    "debug": "~4.1.1",
     "cli-color": "~1.2.0",
-    "debug": "~3.1.0",
     "esm": "3.2.25",
     "n4js-cli": "^0.1.0",
     "n4js-runtime": "^0.1.0",
@@ -32,8 +33,7 @@
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.reporter.console": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.reporter.ide": "^0.1.0",
-    "org.eclipse.n4js.mangelhaft.reporter.xunit": "^0.1.0",
-    "@n4jsd/debug": "<=3.1.*"
+    "org.eclipse.n4js.mangelhaft.reporter.xunit": "^0.1.0"
   },
   "n4js": {
     "projectType": "library",
