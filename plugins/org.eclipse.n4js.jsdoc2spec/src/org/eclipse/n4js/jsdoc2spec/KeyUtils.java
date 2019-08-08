@@ -88,8 +88,8 @@ public class KeyUtils {
 		String key = "";
 		if (rrp != null) { // this happens in an error case only, we created a warning before
 			key += rrp.repositoryName;
-			if (!rrp.pathInRepository.isEmpty()) {
-				key += "." + rrp.pathInRepository;
+			if (!rrp.pathOfProjectInRepo.isEmpty()) {
+				key += "." + rrp.pathOfProjectInRepo;
 			}
 			key += "." + rrp.projectName;
 			key += ".";

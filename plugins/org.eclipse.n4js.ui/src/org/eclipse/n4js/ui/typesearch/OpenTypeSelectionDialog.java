@@ -19,7 +19,7 @@ import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Iterators.filter;
 import static org.eclipse.core.runtime.IProgressMonitor.UNKNOWN;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
-import static org.eclipse.n4js.ui.typesearch.TypeSearchKind.ALL_TYPES;
+import static org.eclipse.n4js.ui.typesearch.TypeSearchKind.EVERYTHING;
 import static org.eclipse.swt.SWT.BOLD;
 
 import java.util.Comparator;
@@ -97,7 +97,7 @@ public class OpenTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	/**
 	 * {@link TypeSearchKind Search kind} to restrict the available N4JS types in the search dialog.
 	 */
-	private TypeSearchKind searchKind = ALL_TYPES;
+	private TypeSearchKind searchKind = EVERYTHING;
 
 	private ItemsFilter currentFilter;
 

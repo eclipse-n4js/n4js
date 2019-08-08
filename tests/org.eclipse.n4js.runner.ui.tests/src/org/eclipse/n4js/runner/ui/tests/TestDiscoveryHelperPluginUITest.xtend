@@ -54,7 +54,7 @@ class TestDiscoveryHelperPluginUITest extends AbstractBuilderTest {
 
 		// Should not throw exception, but should return with false
 		try {
-			assertTrue('''Closed N4JS project '«project.name»' should not be testable''', !isTestable(n4Project.location));
+			assertTrue('''Closed N4JS project '«project.name»' should not be testable''', !isTestable(n4Project.getLocation.toURI));
 		} catch (Exception e) {
 			Throwables.throwIfUnchecked(e);
 			throw new RuntimeException(e);

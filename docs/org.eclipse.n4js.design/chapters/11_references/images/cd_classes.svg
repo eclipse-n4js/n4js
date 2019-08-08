@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="47 161.625 456.75 532.5" width="456.75" height="532.5">
+  <defs>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="10" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2019-07-31 11:09:55 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="47" y="161.625" width="456.75" height="532.5"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_163">
+        <rect x="47.5" y="416.5" width="99" height="36" fill="white"/>
+        <rect x="47.5" y="416.5" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(52.5 420.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="2.1455078" y="11">N4JSResource</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.49414" y="25">Description</tspan>
+        </text>
+      </g>
+      <g id="Graphic_164">
+        <rect x="59.25" y="495.375" width="75" height="51" fill="white"/>
+        <rect x="59.25" y="495.375" width="75" height="51" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(64.25 499.875)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x=".484375" y="11">N4JSCross</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="3.484375" y="25">Reference</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="4.166992" y="39">Computer</tspan>
+        </text>
+      </g>
+      <g id="Graphic_165">
+        <rect x="50.75" y="629.375" width="92" height="51" fill="white"/>
+        <rect x="50.75" y="629.375" width="92" height="51" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(55.75 633.875)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="2.3134766" y="11">N4JSExternal</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.984375" y="25">Reference</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="17.319336" y="39">Checker</tspan>
+        </text>
+      </g>
+      <g id="Graphic_166">
+        <rect x="383.75" y="488.125" width="99" height="46" fill="white"/>
+        <rect x="383.75" y="488.125" width="99" height="46" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(388.75 490.125)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="29.49121" y="11">N4JS</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="15.484375" y="25">Reference</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="26.166016" y="39">Finder</tspan>
+        </text>
+      </g>
+      <g id="Line_167">
+        <line x1="383.75" y1="511.125" x2="155.92084" y2="437.54266" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_212">
+        <text transform="translate(306.5 464.3125)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«findReferences»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_463">
+        <rect x="47.5" y="334.875" width="99" height="46" fill="white"/>
+        <rect x="47.5" y="334.875" width="99" height="46" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(52.5 336.875)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="2.1455078" y="11">N4JSResource</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.49414" y="25">Description</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="19.826172" y="39">Manager</tspan>
+        </text>
+      </g>
+      <g id="Line_464">
+        <line x1="97" y1="380.875" x2="97" y2="406.6" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_465">
+        <text transform="translate(108 389.25)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«getImportedNames»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_466">
+        <rect x="47.5" y="251.375" width="99" height="36" fill="white"/>
+        <rect x="47.5" y="251.375" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(52.5 255.375)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="1.149414" y="11">N4JSDirtyState</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="4.1728516" y="25">EditorSupport</tspan>
+        </text>
+      </g>
+      <g id="Graphic_467">
+        <rect x="187" y="246.375" width="99" height="46" fill="white"/>
+        <rect x="187" y="246.375" width="99" height="46" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(192 248.375)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="3.4785156" y="11">N4JSGenerate</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="9.818359" y="25">Immediately</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="9.15918" y="39">BuilderState</tspan>
+        </text>
+      </g>
+      <g id="Line_468">
+        <line x1="97" y1="287.375" x2="97" y2="324.975" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_469">
+        <text transform="translate(113 299.6875)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«isAffected»</tspan>
+        </text>
+      </g>
+      <g id="Line_470">
+        <line x1="97" y1="210.125" x2="97" y2="241.475" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_471">
+        <text transform="translate(113 222.25)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«isReparseRequired»</tspan>
+        </text>
+      </g>
+      <g id="Line_472">
+        <line x1="236.5" y1="292.375" x2="154.50456" y2="352.04946" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_473">
+        <text transform="translate(204.125 324.625)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«isAffected»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_476">
+        <rect x="47.5" y="174.125" width="99" height="36" fill="white"/>
+        <rect x="47.5" y="174.125" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(52.5 178.125)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="9.15625" y="11">N4JSUpdate</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="1.8291016" y="25">EditorStateJob</tspan>
+        </text>
+      </g>
+      <g id="Graphic_477">
+        <rect x="376" y="416.5" width="99" height="36" fill="white"/>
+        <rect x="376" y="416.5" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(381 427.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="12.264648" y="11">TypeHelper</tspan>
+        </text>
+      </g>
+      <g id="Line_478">
+        <line x1="97" y1="452.5" x2="96.80772" y2="485.4752" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_479">
+        <text transform="translate(101.75 473)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«computeCrossRefs»</tspan>
+        </text>
+      </g>
+      <g id="Line_480">
+        <line x1="96.75" y1="546.375" x2="96.75" y2="619.475" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_481">
+        <text transform="translate(107.75 556.75)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«isResolvedAndExternal»</tspan>
+        </text>
+      </g>
+      <g id="Line_482">
+        <line x1="146.5" y1="434.5" x2="366.1" y2="434.5" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_483">
+        <text transform="translate(214 414.625)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«collectAllDeclaredSuperTypes»</tspan>
+        </text>
+      </g>
+      <g id="Line_484">
+        <line x1="383.75" y1="511.125" x2="151.25238" y2="649.8036" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_485">
+        <text transform="translate(165.75 658.875)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«isResolvedAndExternal»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_486">
+        <rect x="383.75" y="577.125" width="99" height="36" fill="white"/>
+        <rect x="383.75" y="577.125" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(388.75 581.125)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x=".47558594" y="11">N4JSReference</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="1.8115234" y="25">QueryExecuter</tspan>
+        </text>
+      </g>
+      <g id="Group_412">
+        <g id="Graphic_419"/>
+        <g id="Group_413">
+          <g id="Graphic_418">
+            <circle cx="317.2497" cy="642.8767" r="6.75071078695634" fill="white"/>
+            <circle cx="317.2497" cy="642.8767" r="6.75071078695634" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_417">
+            <line x1="317.25" y1="649.626" x2="317.25" y2="659.741" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_416">
+            <line x1="317.25" y1="659.741" x2="309.75" y2="673.242" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_415">
+            <line x1="317.25" y1="659.741" x2="324.75" y2="673.242" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_414">
+            <line x1="324.75" y1="655.126" x2="309.75" y2="655.001" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_487">
+        <g id="Graphic_494"/>
+        <g id="Group_488">
+          <g id="Graphic_493">
+            <circle cx="433.4997" cy="171.3767" r="6.7507107869563" fill="white"/>
+            <circle cx="433.4997" cy="171.3767" r="6.7507107869563" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_492">
+            <line x1="433.5" y1="178.126" x2="433.5" y2="188.241" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_491">
+            <line x1="433.5" y1="188.241" x2="426" y2="201.742" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_490">
+            <line x1="433.5" y1="188.241" x2="441" y2="201.742" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_489">
+            <line x1="441" y1="183.626" x2="426" y2="183.501" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+        </g>
+      </g>
+      <g id="Line_495">
+        <line x1="411" y1="192.125" x2="156.4" y2="192.125" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_496">
+        <text transform="translate(277 172.125)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«typing in N4JS editor»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_559">
+        <path d="M 454.2749 663.6249 C 454.2749 663.625 474.75 645.625 474.75 645.625 L 393.75 645.625 L 393.75 681.6249 C 393.75 681.6249 474.75 681.625 474.74984 681.625 Z" fill="white"/>
+        <path d="M 454.2749 663.6249 C 454.2749 663.625 474.75 645.625 474.75 645.625 L 393.75 645.625 L 393.75 681.6249 C 393.75 681.6249 474.75 681.625 474.74984 681.625 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(395.75 649.625)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">Find by </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="25">references</tspan>
+        </text>
+      </g>
+      <g id="Line_560">
+        <line x1="339.75" y1="663.625" x2="383.35" y2="663.625" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_561">
+        <line x1="433.88366" y1="645.1251" x2="433.446" y2="623.02306" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_562">
+        <text transform="translate(442.75 626.125)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«creates»</tspan>
+        </text>
+      </g>
+      <g id="Line_563">
+        <line x1="433.25" y1="577.125" x2="433.25" y2="544.025" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_564">
+        <text transform="translate(446.75 566)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«executes»</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

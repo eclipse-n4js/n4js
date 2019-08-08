@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="16.5 36.5 1040 557" width="1040" height="557">
+  <defs>
+    <font-face font-family="Helvetica" font-size="9" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -8 14 16" markerWidth="14" markerHeight="16" color="black">
+      <g>
+        <path d="M 12 0 L 0 -7 L 0 7 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="11" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="-1e3" x-height="539.5508" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-style="italic" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-BoldOblique"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="10" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2019-07-31 10:43:09 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="16.5" y="36.5" width="1040" height="557"/>
+    <g id="Canvas_1: scoping">
+      <title>scoping</title>
+      <g id="Graphic_576">
+        <path d="M 1056 82.9688 C 1056 79.93744 1054.9586 79.5624 1047.3515 76.5624 L 1047.2711 76.53136 C 1039.6238 73.5 1039.5442 73.5 1031.696 73.5 C 1021.246 73.5 974 73.5 974 73.5 L 974 105.5 L 1056 105.5 L 1056 82.9688 Z" fill="white"/>
+        <path d="M 1056 82.9688 C 1056 79.93744 1054.9586 79.5624 1047.3515 76.5624 L 1047.2711 76.53136 C 1039.6238 73.5 1039.5442 73.5 1031.696 73.5 C 1021.246 73.5 974 73.5 974 73.5 L 974 105.5 L 1056 105.5 L 1056 82.9688 Z M 1056 82.81264 C 1056 79.93744 1055.9196 79.93744 1039.5442 79.93744 L 1039.5442 79.93744 C 1039.5442 73.53136 1039.5442 73.5 1032.1765 73.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(979 78.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="9" font-weight="400" fill="black" x="0" y="9">Scoping, </tspan>
+          <tspan font-family="Helvetica" font-size="9" font-weight="400" fill="black" x="0" y="20">Overview</tspan>
+        </text>
+      </g>
+      <g id="Line_575">
+        <line x1="734" y1="492.99643" x2="835.3756" y2="492.99643" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_574">
+        <line x1="655.9393" y1="420.9964" x2="689.83705" y2="365.45066" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_573">
+        <line x1="586.9926" y1="420.9964" x2="554.4675" y2="327.35197" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_572">
+        <line x1="534.6281" y1="420.9964" x2="431.1945" y2="324.74424" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_571">
+        <line x1="709.4416" y1="420.9964" x2="896.3578" y2="282.8833" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_570">
+        <line x1="133.83758" y1="412.9974" x2="179.14296" y2="326.76406" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_569">
+        <line x1="402.1013" y1="239" x2="416.8206" y2="210.77786" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_568">
+        <line x1="504.9806" y1="239" x2="480.81174" y2="209.64306" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_567">
+        <path d="M 353 540.46 L 452 520 L 452 399 L 409.6093 326.54497" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_566">
+        <line x1="734" y1="455.40127" x2="858.5439" y2="417.0222" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_565">
+        <text transform="translate(733.2793 420.10876)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">-_n4JSTypesScopeFilter</tspan>
+        </text>
+      </g>
+      <g id="Graphic_564"/>
+      <g id="Line_562">
+        <path d="M 116.5 478.9974 L 116.5 509.4974 L 227 509.4974 L 227 526.5" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_561">
+        <path d="M 316.3427 466.49643 L 316.3427 481.99643 L 316.3427 502.9964 L 250.72404 502.9964 L 250.72404 524.5 L 250.72404 526.5" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Group_556">
+        <g id="Graphic_559">
+          <rect x="845.2756" y="504.4964" width="180" height="15" fill="white"/>
+          <rect x="845.2756" y="504.4964" width="180" height="15" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(850.2756 505.4964)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">+getTypes()</tspan>
+          </text>
+        </g>
+        <g id="Graphic_558">
+          <rect x="845.2756" y="490.49643" width="180" height="14" fill="white"/>
+          <rect x="845.2756" y="490.49643" width="180" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_557">
+          <rect x="845.2756" y="466.49643" width="180" height="24" fill="white"/>
+          <rect x="845.2756" y="466.49643" width="180" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(850.6076 471.49643)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="11">AmbiguousImportDescription</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_549">
+        <g id="Graphic_552">
+          <rect x="490" y="458.9964" width="244" height="106" fill="white"/>
+          <rect x="490" y="458.9964" width="244" height="106" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(495 459.9964)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">#delegateGetScope(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="23">+getScope(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="36">+scope_LabelledStatement(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="49">+scope_ImportedModule(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="62">+scope_ImportedElement(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="75">+scope_IdentifierRef_id(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="88">+scope_PropertyAccessExpression_property(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="101">...</tspan>
+          </text>
+        </g>
+        <g id="Graphic_551">
+          <rect x="490" y="444.9964" width="244" height="14" fill="white"/>
+          <rect x="490" y="444.9964" width="244" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_550">
+          <rect x="490" y="420.9964" width="244" height="24" fill="white"/>
+          <rect x="490" y="420.9964" width="244" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(495 425.9964)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="59.64258" y="11">N4JSScopeProvider</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_535">
+        <g id="Graphic_538">
+          <rect x="137" y="277" width="135" height="41" fill="white"/>
+          <rect x="137" y="277" width="135" height="41" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(142 278)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">+createScope(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="23">+createScope(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="36">+getSingleElement(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_537">
+          <rect x="137" y="263" width="135" height="14" fill="white"/>
+          <rect x="137" y="263" width="135" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_536">
+          <rect x="137" y="239" width="135" height="24" fill="white"/>
+          <rect x="137" y="239" width="135" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(142.24414 244)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="11">UserDataAwareScope</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_528">
+        <g id="Graphic_531">
+          <rect x="17" y="450.9974" width="199" height="28" fill="white"/>
+          <rect x="17" y="450.9974" width="199" height="28" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(22 451.9974)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">#createContainerScope(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="23">#createContainerScopeWithContext(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_530">
+          <rect x="17" y="436.9974" width="199" height="14" fill="white"/>
+          <rect x="17" y="436.9974" width="199" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_529">
+          <rect x="17" y="412.9974" width="199" height="24" fill="white"/>
+          <rect x="17" y="412.9974" width="199" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(22 417.9974)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="18.47461" y="11">N4JSGlobalScopeProvider</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_521">
+        <g id="Graphic_524">
+          <rect x="864" y="399.1067" width="180" height="15" fill="white"/>
+          <rect x="864" y="399.1067" width="180" height="15" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(869 400.1067)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">#getTypeReferenceFilterCriteria(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_523">
+          <rect x="864" y="385.1067" width="180" height="14" fill="white"/>
+          <rect x="864" y="385.1067" width="180" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_522">
+          <rect x="864" y="361.1067" width="180" height="24" fill="white"/>
+          <rect x="864" y="361.1067" width="180" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(869 366.1067)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="20.417969" y="11">N4JSTypesScopeFilter</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_514">
+        <g id="Graphic_517">
+          <rect x="321" y="277" width="121" height="41" fill="white"/>
+          <rect x="321" y="277" width="121" height="41" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(326 278)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">#createDescriptions(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="23">+getAny()</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="36"> and other types</tspan>
+          </text>
+        </g>
+        <g id="Graphic_516">
+          <rect x="321" y="263" width="121" height="14" fill="white"/>
+          <rect x="321" y="263" width="121" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_515">
+          <rect x="321" y="239" width="121" height="24" fill="white"/>
+          <rect x="321" y="239" width="121" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(326 244)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="5.270508" y="11">BuiltInTypeScope</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_507">
+        <g id="Graphic_510">
+          <rect x="238" y="451.49643" width="204" height="15" fill="white"/>
+          <rect x="238" y="451.49643" width="204" height="15" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(243 452.49643)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">#getScope(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_509">
+          <rect x="238" y="437.49643" width="204" height="14" fill="white"/>
+          <rect x="238" y="437.49643" width="204" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_508">
+          <rect x="238" y="413.49643" width="204" height="24" fill="white"/>
+          <rect x="238" y="413.49643" width="204" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(243.42285 418.49643)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="11">BuiltInTypesGlobalScopeProvider</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_493">
+        <g id="Graphic_496">
+          <rect x="477" y="277" width="121" height="41" fill="white"/>
+          <rect x="477" y="277" width="121" height="41" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(482 278)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">#createDescriptions(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="23">+accept(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="36">+getGlobalObject()</tspan>
+          </text>
+        </g>
+        <g id="Graphic_495">
+          <rect x="477" y="263" width="121" height="14" fill="white"/>
+          <rect x="477" y="263" width="121" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_494">
+          <rect x="477" y="239" width="121" height="24" fill="white"/>
+          <rect x="477" y="239" width="121" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(482.1553 244)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="11">GlobalObjectScope</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_486">
+        <g id="Graphic_489">
+          <rect x="355.5" y="161" width="173" height="41" fill="white"/>
+          <rect x="355.5" y="161" width="173" height="41" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(360.5 162)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">#delegate()</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="23">#loadScopeContent()</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="36">#createDescriptions(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_488">
+          <rect x="355.5" y="147" width="173" height="14" fill="white"/>
+          <rect x="355.5" y="147" width="173" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_487">
+          <rect x="355.5" y="123" width="173" height="24" fill="white"/>
+          <rect x="355.5" y="123" width="173" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(360.98242 128)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-style="italic" font-weight="700" fill="black" x="0" y="11">LazyEObjectDescriptionMap</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_479">
+        <g id="Graphic_482">
+          <rect x="101" y="578" width="252" height="15" fill="white"/>
+          <rect x="101" y="578" width="252" height="15" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(106 579)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">#getScope(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_481">
+          <rect x="101" y="564" width="252" height="14" fill="white"/>
+          <rect x="101" y="564" width="252" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_480">
+          <rect x="101" y="540" width="252" height="24" fill="white"/>
+          <rect x="101" y="540" width="252" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(106.08301 545)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-style="italic" font-weight="700" fill="black" x="0" y="11">AbstractBuiltInTypesGlobalScopeProvider</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_472">
+        <g id="Graphic_475">
+          <rect x="591" y="75" width="310" height="67" fill="white"/>
+          <rect x="591" y="75" width="310" height="67" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(596 76)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">#internalGetAllDescriptions(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="23">+iterator()</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="36">#getImplicitImports(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="49">#getImportedNamespaceResolvers(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="62">#getLocalElementsScope(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_474">
+          <rect x="591" y="61" width="310" height="14" fill="white"/>
+          <rect x="591" y="61" width="310" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_473">
+          <rect x="591" y="37" width="310" height="24" fill="white"/>
+          <rect x="591" y="37" width="310" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(596.0469 42)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="11">N4JSImportedNamespaceAwareLocalScopeProvider</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_465">
+        <g id="Graphic_468">
+          <rect x="638.5" y="277" width="185" height="80" fill="white"/>
+          <rect x="638.5" y="277" width="185" height="80" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(643.5 278)" fill="black">
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="10">+create(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="23">+create(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="36">#getAllLocalElements()</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="49">#getLocalElementsByEObject(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="62">#getLocalElementsByName(..)</tspan>
+            <tspan font-family="Helvetica" font-size="11" font-weight="400" fill="black" x="0" y="75">#getSingleLocalElementByName(..)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_467">
+          <rect x="638.5" y="263" width="185" height="14" fill="white"/>
+          <rect x="638.5" y="263" width="185" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_466">
+          <rect x="638.5" y="239" width="185" height="24" fill="white"/>
+          <rect x="638.5" y="239" width="185" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(643.5 244)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="46.487305" y="11">MemberScope</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_458">
+        <g id="Graphic_460">
+          <rect x="868.0338" y="263" width="124" height="14" fill="white"/>
+          <rect x="868.0338" y="263" width="124" height="14" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_459">
+          <rect x="868.0338" y="239" width="124" height="24" fill="white"/>
+          <rect x="868.0338" y="239" width="124" height="24" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(873.3531 244)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="0" y="11">N4JSFilteringScope</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Graphic_577">
+        <rect x="464.24855" y="364.5106" width="43" height="22" fill="white"/>
+        <text transform="translate(469.6255 369.5106)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«uses»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_578">
+        <rect x="649.0254" y="381.1793" width="49" height="22" fill="white"/>
+        <text transform="translate(654.0674 386.1793)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«create»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_579">
+        <rect x="546.272" y="354.6576" width="43" height="22" fill="white"/>
+        <text transform="translate(551.649 359.6576)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«uses»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_580">
+        <rect x="845.3349" y="287.75102" width="49" height="22" fill="white"/>
+        <text transform="translate(850.3769 292.75102)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«create»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_581">
+        <rect x="134.42292" y="354.2505" width="49" height="22" fill="white"/>
+        <text transform="translate(139.46491 359.2505)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«create»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_582">
+        <rect x="409.41497" y="360.6348" width="59" height="32" fill="white"/>
+        <text transform="translate(414.41497 365.6348)" fill="black"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -15,7 +15,7 @@ import java.util.Collection
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.services.N4JSGrammarAccess
-import org.eclipse.n4js.ui.contentassist.antlr.N4JSParser.NameMappings
+import org.eclipse.n4js.ide.contentassist.antlr.N4JSParser.NameMappings
 import org.eclipse.xtext.AbstractElement
 import org.eclipse.xtext.Alternatives
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement

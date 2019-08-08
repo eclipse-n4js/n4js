@@ -10,18 +10,18 @@
  */
 package org.eclipse.n4js.preferences;
 
-import java.net.URI;
 import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 /**
  * Representation of a preference store for external libraries.
  */
-public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
+public interface ExternalLibraryPreferenceStore extends Iterable<FileURI> {
 	/** Code used in {@link #save(IProgressMonitor)} */
 	public static final int STATUS_CODE_SAVED_CHANGES = 1;
 	/** Code used in {@link #save(IProgressMonitor)} */
@@ -32,14 +32,14 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 *
 	 * @return a collection of configured external library locations.
 	 */
-	Collection<URI> getLocations();
+	Collection<FileURI> getLocations();
 
 	/**
 	 * Returns with a collection of configured node_module locations.
 	 *
 	 * @return a collection of configured node_module locations.
 	 */
-	Collection<URI> getNodeModulesLocations();
+	Collection<FileURI> getNodeModulesLocations();
 
 	/**
 	 * Adds a new external library configuration entry to the preferences. Has no effect if the location already exists.
@@ -48,7 +48,7 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 * @param location
 	 *            the external library location to add. Must not be {@code null}.
 	 */
-	void add(final URI location);
+	void add(final FileURI location);
 
 	/**
 	 * Removes a external library configuration entry from the preferences. Has no effect if the location does not
@@ -57,7 +57,7 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 * @param location
 	 *            the external library location to remove. Must not be {@code null}.
 	 */
-	void remove(final URI location);
+	void remove(final FileURI location);
 
 	/**
 	 * Moves the external library up in the ordered list. Has no effect if the location is already the first element, or
@@ -66,7 +66,7 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 * @param location
 	 *            the location to move up.
 	 */
-	void moveUp(final URI location);
+	void moveUp(final FileURI location);
 
 	/**
 	 * Moves the external library down in the ordered list. Has no effect if the location is already the last element,
@@ -75,7 +75,7 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 * @param location
 	 *            the location to move down.
 	 */
-	void moveDown(final URI location);
+	void moveDown(final FileURI location);
 
 	/**
 	 * Resets the state of the configuration to the default state. Explicit {@link #save(IProgressMonitor)} should be
@@ -130,14 +130,14 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 	 *            an iterable of external library root locations.
 	 * @return an iterable of URIs pointing to the external project locations nested in the external root locations.
 	 */
-	public Iterable<URI> convertToProjectRootLocations(Iterable<URI> externalRootLocations);
+	public Iterable<FileURI> convertToProjectRootLocations(Iterable<FileURI> externalRootLocations);
 
 	/**
 	 * Returns with an iterator pointing to all existing external project root locations after checking that each
 	 * project has an existing N4JS manifest file.
 	 */
 	@Override
-	default Iterator<URI> iterator() {
+	default Iterator<FileURI> iterator() {
 		return convertToProjectRootLocations(getLocations()).iterator();
 	}
 

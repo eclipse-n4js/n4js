@@ -16,13 +16,14 @@ import org.eclipse.n4js.compare.ProjectCompareHelper
 import org.eclipse.n4js.compare.ProjectCompareResult.Status
 import org.junit.Assert
 import org.junit.Test
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 abstract class AbstractApiImplCompareTest extends Assert {
 
-	protected static val YARN_PROJECT = "YarnWorkspaceProject"
-	protected static val PROJECT_ID_API = "org.eclipse.n4js.sample.api"
-	protected static val PROJECT_ID_IMPL = "org.eclipse.n4js.sample.n4js"
-	protected static val PROJECT_ID_UTILS = "org.eclipse.n4js.sample.utils"
+	protected static val YARN_PROJECT = new N4JSProjectName("YarnWorkspaceProject")
+	protected static val PROJECT_ID_API = new N4JSProjectName("org.eclipse.n4js.sample.api")
+	protected static val PROJECT_ID_IMPL = new N4JSProjectName("org.eclipse.n4js.sample.n4js")
+	protected static val PROJECT_ID_UTILS = new N4JSProjectName("org.eclipse.n4js.sample.utils")
 
 	@Inject
 	private ProjectCompareHelper projectCompareHelper;

@@ -14,7 +14,6 @@ import static org.eclipse.n4js.ui.utils.UIUtils.getDisplay;
 import static org.eclipse.n4js.ui.utils.UIUtils.getShell;
 
 import java.io.File;
-import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -27,6 +26,9 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -51,7 +53,7 @@ class InstallNpmDependencyButtonListener extends SelectionAdapter {
 	final private SemverHelper semverHelper;
 	final private StatusHelper statusHelper;
 	final private Runnable updateLocations;
-	final private Supplier<URI> getSelectedNodeModulesURI;
+	final private Supplier<SafeURI<?>> getSelectedNodeModulesURI;
 
 	/**
 	 * Constructor
@@ -74,7 +76,7 @@ class InstallNpmDependencyButtonListener extends SelectionAdapter {
 	 */
 	public InstallNpmDependencyButtonListener(Runnable updateLocations, LibraryManager libManager,
 			NpmNameAndVersionValidatorHelper validatorHelper, SemverHelper semverHelper, StatusHelper statusHelper,
-			Supplier<URI> getSelectedNodeModulesURI) {
+			Supplier<SafeURI<?>> getSelectedNodeModulesURI) {
 
 		this.updateLocations = updateLocations;
 		this.libManager = libManager;
@@ -108,13 +110,13 @@ class InstallNpmDependencyButtonListener extends SelectionAdapter {
 
 			// Assume that node_modules in a direct directory of the project root folder
 			// Call getSelectedNodeModulesURI.get() on the UI thread!
-			File prjRootDir = new File(getSelectedNodeModulesURI.get()).getParentFile();
+			File prjRootDir = getSelectedNodeModulesURI.get().getParent().toJavaIoFile();
 			new ProgressMonitorDialog(getShell()).run(true, true, monitor -> {
-				Map<String, NPMVersionRequirement> singletonMap = Collections.singletonMap(packageName,
+				Map<N4JSProjectName, NPMVersionRequirement> singletonMap = Collections.singletonMap(
+						new N4JSProjectName(packageName),
 						packageVersion);
 				try {
-					org.eclipse.emf.common.util.URI projectRootURI = org.eclipse.emf.common.util.URI
-							.createFileURI(prjRootDir.getAbsolutePath());
+					FileURI projectRootURI = new FileURI(prjRootDir);
 
 					IStatus status = libManager.installNPMs(singletonMap, false, projectRootURI, monitor);
 					multistatus.merge(status);

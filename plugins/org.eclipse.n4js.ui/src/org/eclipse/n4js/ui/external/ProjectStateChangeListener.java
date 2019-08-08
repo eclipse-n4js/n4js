@@ -29,6 +29,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -37,6 +38,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.xtext.builder.impl.ProjectOpenedOrClosedListener;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
 import org.eclipse.xtext.ui.XtextProjectHelper;
@@ -186,15 +188,22 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 	}
 
 	private boolean isSourceContainerModification(final IResource folder) {
-		final String fullPathStr = folder.getFullPath().toString();
+		return isSourceContainerModification(n4jsCore, folder.getFullPath());
+	}
+
+	/**
+	 * Returns whether a modification at the given path is a source container modification.
+	 */
+	public static boolean isSourceContainerModification(IN4JSCore n4jsCore, IPath changedPath) {
+		final String fullPathStr = changedPath.toString();
 		final URI folderUri = URI.createPlatformResourceURI(fullPathStr, true);
 		final IN4JSProject project = n4jsCore.findProject(folderUri).orNull();
 		if (null != project && project.exists()) {
 			return from(project.getSourceContainers())
 					.transform(container -> container.getLocation())
-					.filter(uri -> uri.isPlatformResource())
-					.transform(uri -> uri.toPlatformString(true))
-					.firstMatch(uri -> uri.equals(fullPathStr))
+					.filter(PlatformResourceURI.class)
+					.transform(uri -> uri.getAbsolutePath())
+					.firstMatch(path -> path.equals(fullPathStr))
 					.isPresent();
 		}
 		return false;

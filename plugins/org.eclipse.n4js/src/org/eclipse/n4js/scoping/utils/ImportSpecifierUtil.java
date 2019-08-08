@@ -15,6 +15,7 @@ import java.util.Objects;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.xtext.naming.QualifiedName;
 
 /**
@@ -23,7 +24,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 public class ImportSpecifierUtil {
 
 	/** Returns provided project or one of its dependencies with matching project ID. */
-	public static IN4JSProject getDependencyWithID(String projectName, IN4JSProject project) {
+	public static IN4JSProject getDependencyWithID(N4JSProjectName projectName, IN4JSProject project) {
 		if (Objects.equals(project.getProjectName(), projectName))
 			return project;
 
@@ -38,7 +39,7 @@ public class ImportSpecifierUtil {
 	 * Convenience method over {@link ImportSpecifierUtil#computeImportType(QualifiedName, boolean, IN4JSProject)}
 	 */
 	public static ModuleSpecifierForm computeImportType(QualifiedName name, IN4JSProject project) {
-		final String firstSegment = name.getFirstSegment();
+		final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
 		final IN4JSProject targetProject = getDependencyWithID(firstSegment, project);
 		final boolean firstSegmentIsProjectName = targetProject != null;
 		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectName, targetProject);

@@ -1,0 +1,240 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Navigation
+:find:
+:experimental:
+
+In this chapter we describe specific views and features to allow for easy navigation.
+
+[[sec:Outline_Navigation]]
+[.language-n4js]
+==  Outline
+
+In general, a outline view and a quick outline are supported. Both outlines work similar, which is why both are specified together. The outline of an N4JS file is a tree which should show the following structure: [[sec:N4JS_Outline]]
+
+* Top-level defined classes, interfaces, roles, enums, functions and exported variables. For all these different types, icons are to be used (similar to JDT). Beside the name, type variables should be shown as well, if defined.
+* Members of classifiers are to be shown in the classifier branch. All members (fields, methods, field accessors) are to be shown, with appropriate icons indicating the type (field/member), static flag, access modifier, abstract flag. The icons should look similar to JDT.
+* an import declaration should have a node in the outline view, if multiple elements are imported these should represented as child nodes of that import declaration node. If the import uses aliases the original name and the alias name should appear in the outline node text.
+* for a non exported function declaration no outline node should be created
+* for a non exported variable declaration no outline node should be created
+* for a exported variable statement there should be a node in the outline, if this statement contains only one variable declaration the node represents this declaration. For multiple variable declarations in the statement the statement node just is a comma separated list of the variable names and for each variable there is child node
+* for fields, functions, methods, getters and variables their declared (return) type should be shown (by adding : typeName after the element name). If the type is inferred then the type name should be presented in a different color
+* for functions, methods and setters each formal parameter should be represented by its declared or inferred type (when inferred than with different color)
+* constructors are represented by the method icon and a decorator in the top right corner
+* enumeration literals are represented with the same decoration as static final fields
+
+The top-level elements must be sortable either by order in the file (default) or alphabetically.
+
+=== Quick Outline
+
+The quick outline supports two modes. The modes are iteratively selected by pressing kbd:[CMD/CTRL + O].
+
+owned:: This is the default mode, only members directly owned by the type are shown
+inherited:: In this mode, the owned members are shown including inherited, consumed, or polyfilled members. The origin is also shown and a different color is used to highlight the special status of these members. For usability reasons (limiting the number of filters), inherited, consumed and polyfilled members are treated similarly.
+
+=== Normal Outline
+
+In the normal outline view, toggles are used for the same purpose. Visualisations are similar to the quick outline view.
+
+inherited:: By default, only owned members of a type are shown. If the "inherited" toggle is active, inherited, consumed, or polyfilled members as well. For usability reasons (limiting the number of filters), inherited, consumed, and polyfilled members are treated similarly. 
+
+task::GH-99[]
+
+sorting:: By default, all elements are sorted in the order of their appearance in the source code. If alphabetic sorting is enabled, they are sorted alphabetically.
+
+[TODO]
+--
+Potential improvements:
+
+* show decorator when a member overrides and member from a super class / super interface or role
+* show object literals and their members in the outline view (just filter `eAllContents` of an element that already has a node in outline view for object literals)
+* show function expression in the outline view (just filter `eAllContents` of an element that already has a node in outline view for function expressions)
+--
+
+== Navigation Commands
+
+[[sec:Navigate_to_Declaration]]
+===  Navigate to Declaration
+
+It is possible to Command-click on almost every reference and jump to its declaration. 
+
+[[sec:find_by_references]]
+===  Find by References
+
+For each referenceable element in an open N4JS file you can click your mouse and invoke the context menu to select ``Find references``. Then in the Eclipse search view all found references are displayed as tree: each match is structured by resource path and coarse grained element in the resource (like a method). If there are multiple matches within a method only the first match is linked but in its display string the total match count is shown in brackets.
+
+1.  find by references shows the result as tree in the Eclipse search view with having elements that are members or have defined type displayed as nodes
+2.  every found reference is displayed under its nearest parent that is a member or has a defined type
+3.  if there a multiple found references in a node only the first one is displayed (and linked) + the number of all total matches is shown as part of the display string (like in JDT)
+
+
+[[sec:Open_Type_Declaration]]
+===  Open Type Declaration
+
+One can quickly browse the workbench for available types. The declaration of the types can be opened in editor from this dialog. The N4JS type search dialog can be raised with the kbd:[Cmd] + kbd:[Shift] + kbd:[T] key binding (kbd:[Ctrl] + kbd:[Shift] + kbd:[T] on Windows and Linux systems).
+
+* Enter *exact type name*, prefix name or a camel case pattern to run a query against the types. The following rules and patterns are supported.
+** *Wildcards*: `?`  for any character and `pass:[*]` for any string.
+** *Camel case*: `DM`  will return with all types that contains `D` and `M` with the given order such as `DataMap` and `DataMapEntry` but not `ImmutableDataMap`.
++
+`AcBuGr` will return with all types that contain `Ac`, `Bu` and `Gr` with the given order such as `ActionButtonGroup`.
+* *Highlighting*: The matching types names are highlighted according to the matching parts.
+* *Decorator* for duplicate type names: The internally used fully qualified name of the type will be appended to the type name automatically, so one can easily distinguish between types even there are type name collision.
+* *Opening types in editor*: Type declarations can be opened in the editor in the following ways: after entering the type name prefix or pattern to the filter text one can navigate among the filtered items with the up and/or down arrow keys. Simply hitting return on the keyboard or clicking on the ’OK’ button the currently selected declaration of the selected type will be opened in the editor. For opening multiple type declarations one can use the kbd:[Shift]  modifier to select more than one element. Single type can be opened with double clicking on it in the dialog.
+* *History*: Once a type is being opened then it will be available among the recently opened type in the type search dialog. These items will show up in the upper part of the list in the dialog.
+
+
+[[sec:Working_Sets]]
+[.language-bash]
+==  Working Sets
+
+Working sets are used to logically group resources, projects in the Project Explorer (navigator) and in the UI in general. Although a couple of projects can be easily handled and shown without any sophisticated working set support in the navigator, larger code sources consisting of multiple projects could cause some trouble when one has to maintain them. Indeed one could use multiple workspaces and could switch between them or can simply manually open-close relevant projects, but this gets cumbersome too.
+
+This section describes the general design of the N4JS specific working set support and also introduces a couple of use cases while enumerating the constraints.
+
+[[sec:Working_Set_Managers]]
+===  Working Set Managers
+
+Just like the JDT (`org.eclipse.jdt.internal.ui.workingsets.WorkingSetModel`) based working set support, the N4JS IDE based approach is also aware of the `org.eclipse.ui.IWorkingSet` and the `org.eclipse.ui.IWorkingSetManager` APIs but besides simply using them it comes with its own implementation and adapts it to the default Eclipse based one, furthermore it also comes with an Eclipse extension point based mechanism to support various working set managers at the same time to provide even better user experience and a more convenient way of working set management.
+
+A working set manager can be contributed to the IDE via the `org.eclipse.n4js.ui.workingSetManager` extension point, then the implementation class must implement the `org.eclipse.n4js.ui.workingsets.WorkingSetManager` interface but it is highly recommended to rather extend the `org.eclipse.n4js.ui.workingsets.WorkingSetManagerImpl` class. Guice based dependency injection should also be considered when implementing the custom working set manager. It means that each custom working set manager implementation must have a public _no-args_ constructor. This _no-args_ constructor will be invoked when creating the instances via `IConfigurationElement#createExecutableExtension(String)` method. Then the members, if any will be injected by the working set manager broker. Below `plugin.xml` snippet describes how to contribute a custom working set manager to the IDE.
+
+[source,xml]
+----
+   <extension
+         point="org.eclipse.n4js.ui.workingSetManager">
+      <manager
+            class="some.package.name.MyExecutableExtensionFactory:some.package.name.MyWorkingSetManager">
+      </manager>
+   </extension>
+----
+
+By default the N4JS IDE comes with five different built-in working set managers. These are the followings:
+
+* Manual Association Working Set Manager,
+* Project Name Filter Working Set Manager,
+* Git Repository Working Set Manager,
+* Project Location Working Set Manager and
+* N4JS Project Type Working Set Manager.
+
+The benefits and the details of each built-in working set managers will be discussed in later sections but first we have to distinguish between three conceptually different working set manager approaches.
+
+First off, IDE supports fully static working set managers. Fully static working set managers might manage any arbitrary number of working sets, and each working set might be associated with any number of Eclipse projects. That means, user might create, edit and remove working sets and manually associate projects with individual working sets. One project might belong to multiple working sets. There is a dedicated working set, _Other Projects_, that cannot be renamed and/or deleted. When no user defined working sets are available this dedicated working set will be still available. IDE comes with one single fully static working set manager: _Manual Association Working Set Manager_.
+
+The second kind of working set manager is the semi-dynamic one. That means, user can create, modify and delete working sets, but the associations between the projects and the working sets are automatic. This means, the user might define a working set - project association rule, and the projects will be automatically associated with the working sets. Just like in the above kind, one project might belong to multiple working sets and here as well, there is a dedicated working set manager, that cannot be modified: _Other Projects_. IDE comes with one semi-dynamic working set manager. That is the _Project Name Filter Working Set Manager_. User might define a project name filter rule with a regular expression, and each project which name matches a pattern will be associated with the working set. If a project does not comply to any working set manager rule, then it will belong to the _Other Projects_ working set.
+
+The third kind of working set manager is the fully-dynamic working set manager. Both the working sets and the project associations are done by some implementation specific rules. Such as Git repository provider based, or project location based approaches. These working set managers have the dedicated _Other Projects_ working set that is used as a fallback working set. For instance, if the _Git Repository Working Set Manager_ is the active one, all projects that are shared with Git will belong to the corresponding working set manager but if a project is not yet a shared project, then it will belong to the dedicated fallback working set. As always that working set manager cannot be deleted and/or modified.
+
+[[sec:Working_Set_Constraints]]
+===  Working Set Constraints
+
+This section enumerates a set of constraints that have to considered by both end users and implementors:
+
+* Working set manager identifier must be unique.
+* The identifier of the working set manager must be unique per container working set managers.
+* Each working set must have a working set with _Other Projects_ unique ID and name.
+* Working sets with _Other Projects_ unique ID must not be editable nor deletable.
+* At least one working set should be visible (not hidden) per working set managers.
+* Working set managers are activated when the _Working Sets_ are configured as _Top Level Elements_ in the _Project Explorer_.
+* Working set order can be specified and customized by the user if it is not specified yet, then a case sensitive ordering based on the working set names should be applied.
+
+[[sec:Manual_Association_Working_Set_Manager_UI_Features]]
+===  Manual Association Working Set Manager - UI Features
+
+This section describes the working set manager by introducing the UI capabilities as well.
+
+This working set manager is a fully static working set manager and activated and used as the default one when the working set manager support is turned on in the IDE. With this working set manager one can create a new working set by simply defining a unique name for the working set and associating any number of workspace project to the working set. Furthermore existing working sets can be modified and deleted but the _Other Projects_ working set. The working set support can be turned on in the _Project Explorer_ view. Via the view menu one has to select _Top Level Elements_ _>_ _Working Sets_ menu item.
+
+[.center]
+.Activate Working Set Managers
+image::{find}fig/activate_working_set_managers.png[Activate_Working_Set_Managers,{half-center}]
+
+After the working set manager mode activation, a new toolbar contribution item become visible and user can select among the available working set managers.
+
+[.center]
+.Select Working Set Manager
+image::{find}fig/select_working_set_manager_01.png[Select_Working_Set_Manager,{half-center}]
+
+As the below picture depicts the available working set managers are listed and the currently active manager is marked with a check. In our case that is the _Manual Association Working Set Manager_.
+
+[.center]
+.Activate Working Set Manager
+image::{find}fig/select_working_set_manager_02.png[Activate_Working_Set_Manager,{small-center}]
+
+Once the the _Configure Manual Association..._ menu item is selected, the working set manager configuration dialog pops up. By clicking on the _New..._ button in the configuration dialog, a new working set wizard will be invoked and the manual working set - project association can be configured.
+
+[.center]
+.Configure Working Sets
+image::{find}fig/configure_working_sets_01.png[Configure_Working_Sets,{small-center}]
+
+In the wizard after specifying the desired unique name of the working set an arbitrary number of workspace projects can be associated with the working set. It is important to note, that a project can be associated with more than one working sets. If a project is not associated with any working sets then it will be automatically linked to the fallback _Other Projects_ working set.
+
+[.center]
+.Working Set - Projects Association
+image::{find}fig/working_set_project_association.png[Configure_Working_Set_Project_Association,{half-center}]
+
+Once all the changes made are confirmed and the configuration dialog is closed via the _OK_ button, the _Project Explorer_ will be refreshed and will reflect the working set changes.
+
+[.center]
+.Custom Working Sets In Project Explorer
+image::{find}fig/working_sets_in_navigator.png[Custom_Working_Sets_In_Project_Explorer,{small-center}]
+
+The order of the working sets can be configured and customized in the working set manager configuration dialog, or just simply reordering it from the navigator itself by drag and dropping the available working set managers.
+
+[.center]
+.Re-ordering Working Sets In Project Explorer
+image::{find}fig/working_set_reorder.png[Re_Ordering_Working_Sets_In_Project_Explorer,{small-center}]
+
+Besides changing the order of the working sets, working sets can be hidden from the navigator. Just like the ordering, this can be changed from the working set configuration dialog, or by simply selecting working sets in the navigator and hiding them via _Hide Selected Working Set_ menu item. Important to note, at least one working set should be visible in the navigator, so if all the working sets are selected in the navigator, then the menu item will be disabled. Same behavior in the working set customization dialog, if all items are unchecked, then the _OK_ button is disabled in the dialog.
+
+[.center]
+.Hide Working Sets In Project Explorer
+image::{find}fig/working_set_hide.png[Hide_Working_Sets_In_Project_Explorer,{small-center}]
+
+Once at least one working set is hidden from the UI, then a new toolbar contribution become visible in the _Project Explorer_. This UI contribution provides a quick, convenient way to show a specific or all hidden working sets in the navigator. It is worth to note, if a project is automatically associated with the _Other Projects_ working set (because it does not belong to any working sets due to the lack of manual association) it will be not shown in the navigator if the _Other Projects_ working set is hidden. Once all working sets are visible, indeed the _Show Hidden Working Sets_ toolbar contribution become invisible.
+
+[.center]
+.Show Hidden Working Sets In Project Explorer
+image::{find}fig/working_set_show.png[Show_Hidden_Working_Sets_In_Project_Explorer,{small-center}]
+
+Besides the above described generic working set UI support, projects can be associated with working sets by simply drag and dropping them from one working set into another. Note, this is only supported for the _Manual Association Working Set Manager_.
+
+[[sec:Project_Name_Filter_Working_Set_Manager]]
+===  Project Name Filter Working Set Manager
+
+As mentioned earlier, this working set is a semi-dynamic working set. The working sets can be created, edited and deleted by the user by simply specifying project name filter pattern as valid regular expressions but the project association itself is fully automatic. If the name of a project does not match with any project name filter rule, then the project will be associated with the _Other Projects_ working set. Although reordering the working sets from the navigator by simple drag and dropping them is supported, project association is disabled.
+
+[[sec:Git_Repository_Working_Set_Manager]]
+===  Git Repository Working Set Manager
+
+This working set is a fully-dynamic working set. Projects will be associated by the Git providers. It means, if a project is imported from a pre-configured local Git repository, then the project will be associated with the working set linked with the Git repository. The subset of the available working sets is become automatically updated once the Git repository preferences changed by the user. These preferences can be changed on the _Git_ perspective in the _Git Repositories_ view by simple adding or hiding/removing a repository from the view.
+
+[[sec:Project_Location_Working_Set_Manager]]
+===  Project Location Working Set Manager
+
+This fully-dynamic working set manager calculates the subset of available working sets based on the parent folder of the projects. The benefit of this working set manager is to support the convention recommended by the maven/Git folder structuring. The following constraints are applied when associating the projects with the available working sets:
+
+* If a project is located in the root of the Eclipse workspace, then it will be associated with _Other Projects_ working set.
+* If a project is nested somewhere in the Eclipse workspace, then it will be associated with a working set that has the same name as the parent folder of the project. Let assume the Eclipse workspace root points to `/eclipse/root` and there is a project `P1` nested in the workspace root at `/eclipse/root/path/to/nested/location/P1`, then the associated working set will be `location`.
+* If a project is not contained in the workspace, but has a Git provider that is configured in IDE, and the project root is the local Git repository root, then the associated working set name will be the name of the Git repository. For example, if we have Eclipse workspace root pointing to `/eclipse/root` location and a `P2` project located `/some/path/to/git/P2` but this location is the location of a registered Git repository, then the name of the associated working set will be neither `Other Projects` not `git` but `P2` since that is known Git local repository root.
+* If project `P3` is not contained in the Eclipse workspace but contained in a known local Git repository just like above, but the project root is not the local Git repository root, then the name of the parent folder will be considered as the name of the associated working set. This rule is a hybrid alternative of the second and the third constraints, hence for instance if the project is under `/some/path/to/git/repositoryName/plugins/P3` and `repositoryName` is local git repository, then the name of the associated working set will be `plugins` and not `repositoryName`.
+* Else the associated working set will be the _Other Projects_ fallback working set.
+
+[[sec:N4JS_Project_Type_Working_Set_Manager]]
+===  N4JS Project Type Working Set Manager
+
+This is working set manager is a N4JS specific fully-dynamic working set manager. The working sets will be calculated based on the instances defined by the `org.eclipse.n4js.n4mf.ProjectType` type. Each accessible N4JS project will be associated to a working set based on the project type. A workspace project will be associated with the _Other Projects_ fallback working set if any of the followings are true to the project:
+
+* The project is not accessible. (It does not exist or is not opened.)
+* The project does not configured with _Xtext_ nature.
+* The project does not have an _Xtext_ builder command ID.
+* The project does not have a valid N4 manifest file.

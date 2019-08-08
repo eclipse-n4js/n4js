@@ -17,11 +17,10 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.N4JSModel;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 
 import com.google.common.base.Preconditions;
@@ -34,9 +33,6 @@ public class WildcardPathFilterHelper {
 
 	@Inject
 	private IN4JSCore n4jsCore;
-
-	@Inject
-	private N4JSModel n4jsModel;
 
 	/** @return true iff the given location is matched the given filter */
 	public boolean isPathContainedByFilter(URI location, ModuleFilter filter) {
@@ -67,8 +63,8 @@ public class WildcardPathFilterHelper {
 			return null;
 		}
 
-		N4JSProject project = (N4JSProject) sourceContainer.getProject();
-		Path prjLocationPath = Paths.get(project.getLocation().toString());
+		IN4JSProject project = sourceContainer.getProject();
+		Path prjLocationPath = Paths.get(project.getLocation().toURI().toString());
 		Path locationPath = Paths.get(location.toString());
 		Preconditions.checkState(locationPath.startsWith(prjLocationPath));
 		Path prjRelativeLocationPath = prjLocationPath.relativize(locationPath);
@@ -76,7 +72,7 @@ public class WildcardPathFilterHelper {
 		String filterSrcCont = spec.getSourcePath();
 		if (filterSrcCont == null) {
 			// e.g. noValidate { "**/*" }
-			for (IN4JSSourceContainer srcCont : n4jsModel.getN4JSSourceContainers(project)) {
+			for (IN4JSSourceContainer srcCont : project.getSourceContainers()) {
 				Path srcContLocationPath = Paths.get(srcCont.getRelativeLocation());
 				if (prjRelativeLocationPath.startsWith(srcContLocationPath)) {
 					Path srcRelativeLocationPath = srcContLocationPath.relativize(prjRelativeLocationPath);

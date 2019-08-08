@@ -19,7 +19,10 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -38,6 +41,8 @@ public class N4JSExternalProject extends ExternalProject {
 	/** Constructor */
 	public N4JSExternalProject(final File file, final IN4JSProject externalPackage) {
 		super(file, NATURE_ID, BUILDER_ID);
+		Preconditions.checkArgument(externalPackage.getLocation() instanceof FileURI);
+		Preconditions.checkArgument(externalPackage.isExternal());
 		this.externalPackage = externalPackage;
 		referencedBuildConfigs = newHashSet();
 	}
@@ -67,6 +72,20 @@ public class N4JSExternalProject extends ExternalProject {
 	}
 
 	/**
+	 * Returns the location of this external project.
+	 */
+	public FileURI getSafeLocation() {
+		return (FileURI) externalPackage.getLocation();
+	}
+
+	/**
+	 * Returns the location of this project's description.
+	 */
+	public FileURI getProjectDescriptionLocation() {
+		return (FileURI) externalPackage.getProjectDescriptionLocation();
+	}
+
+	/**
 	 * Returns with all direct dependency project IDs of the project extracted from the wrapped {@link IN4JSProject
 	 * external package}.
 	 *
@@ -82,7 +101,7 @@ public class N4JSExternalProject extends ExternalProject {
 	 *
 	 * @return an iterable of direct dependency project IDs.
 	 */
-	public Iterable<String> getAllDirectDependencyIds() {
+	public Iterable<N4JSProjectName> getAllDirectDependencyIds() {
 		return from(getAllDirectDependencies())
 				.transform(p -> p.getProjectName())
 				.toSet();

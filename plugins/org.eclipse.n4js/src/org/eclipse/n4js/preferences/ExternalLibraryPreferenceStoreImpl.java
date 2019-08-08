@@ -12,15 +12,13 @@ package org.eclipse.n4js.preferences;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Sets.newHashSet;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
-import java.io.File;
-import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,10 +31,12 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -66,33 +66,33 @@ import com.google.inject.Inject;
 	}
 
 	@Override
-	public Collection<URI> getLocations() {
-		List<URI> result = new ArrayList<>(getOrCreateModel().getExternalLibraryLocationsAsUris());
+	public Collection<FileURI> getLocations() {
+		List<FileURI> result = new ArrayList<>(getOrCreateModel().getExternalLibraryLocationsAsUris());
 		return result;
 	}
 
 	@Override
-	public Collection<URI> getNodeModulesLocations() {
+	public Collection<FileURI> getNodeModulesLocations() {
 		return getOrCreateModel().getNodeModulesLocationsAsUris();
 	}
 
 	@Override
-	public void add(final URI location) {
+	public void add(final FileURI location) {
 		getOrCreateModel().add(location);
 	}
 
 	@Override
-	public void remove(final URI location) {
+	public void remove(final FileURI location) {
 		getOrCreateModel().remove(location);
 	}
 
 	@Override
-	public void moveUp(final URI location) {
+	public void moveUp(final FileURI location) {
 		getOrCreateModel().moveUp(location);
 	}
 
 	@Override
-	public void moveDown(final URI location) {
+	public void moveDown(final FileURI location) {
 		getOrCreateModel().moveDown(location);
 	}
 
@@ -154,7 +154,7 @@ import com.google.inject.Inject;
 		resetDefaults();
 		List<Path> locations = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectRoots);
 		for (Path location : locations) {
-			add(location.toUri());
+			add(new FileURI(location.toFile()));
 		}
 		return save(new NullProgressMonitor());
 	}
@@ -223,7 +223,8 @@ import com.google.inject.Inject;
 	 * @return an iterable of URIs pointing to the external project locations nested in the external root locations.
 	 */
 	@Override
-	public Iterable<URI> convertToProjectRootLocations(Iterable<URI> externalRootLocations) {
+	public Iterable<FileURI> convertToProjectRootLocations(
+			Iterable<FileURI> externalRootLocations) {
 		return from(externalRootLocations).transformAndConcat(this::getProjectsInLocation);
 	}
 
@@ -233,15 +234,13 @@ import com.google.inject.Inject;
 	 * Also includes external projects that are contained in a scope-directory in the given location (e.g.
 	 * {@code <location>/@scope/<project>}.
 	 */
-	private final Iterable<URI> getProjectsInLocation(URI location) {
-		final File rootFolder = new File(location);
-		if (isExistingFolder(rootFolder)) {
-			final Iterable<URI> directContents = getDirectProjectsInLocation(
-					rootFolder.toURI());
-			final Iterable<URI> scopedContents = from(getDirectoryContents(rootFolder))
+	private final Iterable<FileURI> getProjectsInLocation(FileURI location) {
+		if (isExistingFolder(location)) {
+			final Iterable<FileURI> directContents = getDirectProjectsInLocation(location);
+			final Iterable<FileURI> scopedContents = from(getDirectoryContents(location))
 					.filter(f1 -> isExistingFolder(f1))
-					.filter(f2 -> externalLibraryHelper.isScopeDirectory(f2))
-					.transformAndConcat(file -> getDirectProjectsInLocation(file.toURI()));
+					.filter(f2 -> externalLibraryHelper.isScopeDirectory(f2.toJavaIoFile()))
+					.transformAndConcat(file -> getDirectProjectsInLocation(file));
 
 			return Iterables.concat(scopedContents, directContents);
 		}
@@ -253,39 +252,28 @@ import com.google.inject.Inject;
 	 *
 	 * This does not include scoped project in the given location.
 	 */
-	private final Iterable<URI> getDirectProjectsInLocation(URI location) {
-		final File rootFolder = new File(location);
-		if (isExistingFolder(rootFolder)) {
-			return from(getDirectoryContents(rootFolder))
+	private final Iterable<FileURI> getDirectProjectsInLocation(FileURI location) {
+		if (isExistingFolder(location)) {
+			return from(getDirectoryContents(location))
 					.filter(f -> isExistingFolder(f))
-					.filter(f -> externalLibraryHelper.isExternalProjectDirectory(f))
-					.transform(file -> file.toURI());
+					.filter(f -> externalLibraryHelper.isExternalProjectDirectory(f));
 		}
 		return emptyList();
 	}
 
-	private final boolean isExistingFolder(File file) {
+	private final boolean isExistingFolder(FileURI file) {
 		return null != file && file.isDirectory();
 	}
 
-	private final Iterable<File> getDirectoryContents(File folder) {
+	private final List<FileURI> getDirectoryContents(FileURI folder) {
 		if (null == folder || !folder.isDirectory()) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Not a directory: " + folder + ".");
 			}
 			return emptyList();
 		}
-
-		final File[] files = folder.listFiles();
-		if (Arrays2.isEmpty(files)) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("No resources were found under: " + folder + ".");
-			}
-			return emptyList();
-		}
-
-		List<File> fileList = asList(files);
-		Collections.sort(fileList);
+		List<FileURI> fileList = Lists.newArrayList(folder.getChildren());
+		Collections.sort(fileList, Comparator.comparing(SafeURI::toString));
 		return fileList;
 	}
 }

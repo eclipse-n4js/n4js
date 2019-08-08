@@ -153,7 +153,7 @@ public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigu
 
 		/** Bind custom workspace implementation that automatically discovers existing projects on-the-fly. */
 		@SingletonBinding
-		public Class<? extends InternalN4JSWorkspace> bindInternalN4JSWorkspace() {
+		public Class<? extends InternalN4JSWorkspace<?>> bindInternalN4JSWorkspace() {
 			return AutoDiscoveryFileBasedWorkspace.class;
 		}
 

@@ -103,14 +103,15 @@ public class NodeTester implements ITester {
 
 		Path base = workingDirectory;
 		while (base != null
-				&& !Files.isDirectory(base.resolve(N4JSGlobals.NODE_MODULES).resolve(N4JSGlobals.MANGELHAFT_CLI))) {
+				&& !Files.isDirectory(
+						base.resolve(N4JSGlobals.NODE_MODULES).resolve(N4JSGlobals.MANGELHAFT_CLI.getRawName()))) {
 			base = base.getParent();
 		}
 		if (base == null) {
 			throw new IllegalStateException("unable to find npm package '" + N4JSGlobals.MANGELHAFT_CLI + "'");
 		}
 
-		return base.resolve(N4JSGlobals.NODE_MODULES).resolve(N4JSGlobals.MANGELHAFT_CLI)
+		return base.resolve(N4JSGlobals.NODE_MODULES).resolve(N4JSGlobals.MANGELHAFT_CLI.getRawName())
 				.resolve("bin/n4js-mangelhaft-cli.js");
 	}
 }

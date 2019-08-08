@@ -85,7 +85,6 @@ import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils.ProjectNameInfo;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.n4js.validation.helper.FolderContainmentHelper;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -117,8 +116,6 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	private IN4JSCore n4jsCore;
 	@Inject
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
-	@Inject
-	private FolderContainmentHelper containmentHelper;
 	@Inject
 	private SemverHelper semverHelper;
 
@@ -761,7 +758,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				final String srcFrgmtName = sourceContainerType.getKey().getLiteral().toLowerCase();
 
 				// handle case that source container is nested within output directory (or equal)
-				if (containmentHelper.isContained(absoluteSourceLocation, absoluteOutputLocation)) {
+				if (isContainedOrEqual(absoluteSourceLocation, absoluteOutputLocation)) {
 					final String containingFolder = ("A " + srcFrgmtName + " folder");
 					final String nestedFolder = astOutputValue.isPresent() ? "the output folder"
 							: "the default output folder \"" + OUTPUT.defaultValue + "\"";
@@ -774,7 +771,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				// if "output" AST element is available (outputPath is not a default value)
 				if (astOutputValue.isPresent()) {
 					// handle case that output path is nested within a source folder (or equal)
-					if (containmentHelper.isContained(absoluteOutputLocation, absoluteSourceLocation)) {
+					if (isContainedOrEqual(absoluteOutputLocation, absoluteSourceLocation)) {
 						final String containingFolder = "The output folder";
 						final String nestedFolder = ("a " + srcFrgmtName + " folder");
 						final String message = IssueCodes
@@ -785,6 +782,26 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 				}
 			}
 		}
+	}
+
+	private boolean isContainedOrEqual(URI uri, URI container) {
+		if (uri.equals(container)) {
+			return true;
+		}
+		if (!container.hasTrailingPathSeparator()) {
+			container = container.appendSegment("");
+		}
+		URI relative = uri.deresolve(container, true, true, false);
+		if (relative != uri) {
+			if (relative.isEmpty()) {
+				return true;
+			}
+			if ("..".equals(relative.segment(0))) {
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1034,11 +1051,11 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 			return true;
 		}
 
-		final URI projectLocation = n4jsProject.get().getLocation();
+		final URI projectLocation = n4jsProject.get().getLocation().toURI();
 		// resolve against project uri with trailing slash
 		final URI projectRelativeResourceURI = resourceURI.deresolve(projectLocation.appendSegment(""));
 
-		final Path absoluteProjectPath = n4jsProject.get().getLocationPath().toAbsolutePath();
+		final Path absoluteProjectPath = n4jsProject.get().getLocation().toFileSystemPath();
 		if (absoluteProjectPath == null) {
 			throw new IllegalStateException(
 					"Failed to compute project path for package.json at " + resourceURI.toString());
@@ -1046,7 +1063,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 
 		// compute the path of the folder that contains the currently validated package.json file
 		final Path baseResourcePath = new File(
-				absoluteProjectPath.toString(),
+				absoluteProjectPath.toFile(),
 				projectRelativeResourceURI.trimSegments(1).toFileString()).toPath();
 
 		final String relativePath = pathLiteral.getValue();
@@ -1103,7 +1120,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 		if (!n4jsProject.isPresent()) {
 			return null;
 		}
-		return n4jsProject.get().getLocationPath().toAbsolutePath();
+		return n4jsProject.get().getLocation().toFileSystemPath();
 	}
 
 	/**

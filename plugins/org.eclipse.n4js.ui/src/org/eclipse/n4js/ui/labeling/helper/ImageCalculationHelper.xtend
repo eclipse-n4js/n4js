@@ -36,9 +36,11 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.labeling.EObjectWithContext
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
+import org.eclipse.n4js.ui.typesearch.TypeSearchKind
 import org.eclipse.xtext.Keyword
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.label.AbstractLabelProvider
@@ -194,21 +196,28 @@ class ImageCalculationHelper {
 	// uses icon for a function and adds visibility decorators at bottom right and validation
 	// issues at bottom left
 	def dispatch ImageDescriptor dispatchDoGetImage(TFunction tFunction) {
-		val main = createValidationAwareImageDescriptor(tFunction, getImageFileName(tFunction))
-		addAccessibiltyImageDecorator(main, tFunction.typeAccessModifier)
+		val base = createValidationAwareImageDescriptor(tFunction, getImageFileName(tFunction))
+		return decorateImageForTFunction(base, tFunction.typeAccessModifier);
+	}
+
+	def private ImageDescriptor decorateImageForTFunction(ImageDescriptor baseDesc, TypeAccessModifier accessModifier) {
+		return addAccessibiltyImageDecorator(baseDesc, accessModifier);
 	}
 
 	// uses icon for a variable and adds visibility decorators at bottom right, validation
 	// issues at bottom left and a decorator at top right when a constant
 	def dispatch ImageDescriptor dispatchDoGetImage(TVariable tVariable) {
-		val main = createValidationAwareImageDescriptor(tVariable, getImageFileName(tVariable))
-		val newMain = if(tVariable.const) {
-			val decorator = createConstImageDecorator
-			createDecorationOverlayIcon(main, decorator, IDecoration.TOP_RIGHT)
-		} else {
-			main
+		val base = createValidationAwareImageDescriptor(tVariable, getImageFileName(tVariable))
+		return decorateImageForTVariable(base, tVariable.const, tVariable.typeAccessModifier);
+	}
+
+	def private ImageDescriptor decorateImageForTVariable(ImageDescriptor baseDesc, boolean isConst, TypeAccessModifier accessModifier) {
+		var result = baseDesc;
+		if(isConst) {
+			result = createDecorationOverlayIcon(result, createConstImageDecorator, IDecoration.TOP_RIGHT)
 		}
-		addAccessibiltyImageDecorator(newMain, tVariable.typeAccessModifier)
+		result = addAccessibiltyImageDecorator(result, accessModifier);
+		return result;
 	}
 
 	// uses icon for field and adds static, final as decorators if necessary at top right,
@@ -296,10 +305,18 @@ class ImageCalculationHelper {
 	// fallback
 	def dispatch ImageDescriptor dispatchDoGetImage(EObject object) {
 		if (object instanceof IEObjectDescription) {
-			if (TypesPackage.eINSTANCE.TN4Classifier.isSuperTypeOf(object.EClass) || TypesPackage.eINSTANCE.TEnum.isSuperTypeOf(object.EClass)) {
+			if (TypeSearchKind.EVERYTHING.matches(object.EClass)) {
 				// why not createValidationAwareImageDescriptor ?
 				val imageDesc = createSimpleImageDescriptor(object.imageFileName)
-				if (TypesPackage.eINSTANCE.TClass === object.EClass) {
+				val eClass = object.EClass;
+				if (TypesPackage.eINSTANCE.TVariable === eClass) {
+					val isConst = N4JSResourceDescriptionStrategy.getConst(object);
+					val accessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(object);
+					return decorateImageForTVariable(imageDesc, isConst, accessModifier);
+				} else if (TypesPackage.eINSTANCE.TFunction.isSuperTypeOf(eClass)) {
+					val accessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(object);
+					return decorateImageForTFunction(imageDesc, accessModifier);
+				} else if (TypesPackage.eINSTANCE.TClass === eClass) {
 					// an abstract class cannot be set to final (with annotation @Final)
 					if (N4JSResourceDescriptionStrategy.getAbstract(object)) {
 						return createDecorationOverlayIcon(imageDesc, createAbstractImageDecorator, IDecoration.TOP_RIGHT)

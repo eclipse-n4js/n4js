@@ -10,27 +10,19 @@
  */
 package org.eclipse.n4js.internal;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.xtext.util.UriExtensions;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -40,35 +32,50 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings("javadoc")
 @Singleton
-public class FileBasedWorkspace extends InternalN4JSWorkspace {
-
-	private final ProjectDescriptionLoader projectDescriptionLoader;
-
-	@Inject
-	public FileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader) {
-		this.projectDescriptionLoader = projectDescriptionLoader;
-	}
-
-	private final Map<URI, LazyProjectDescriptionHandle> projectElementHandles = Maps.newConcurrentMap();
+public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 
 	/** container-prefix for file-based projects */
 	public final static String N4FBPRJ = "n4fbprj:";
+
+	private final Map<FileURI, LazyProjectDescriptionHandle> projectElementHandles = Maps.newConcurrentMap();
+	private final Map<N4JSProjectName, FileURI> nameToLocation = Maps.newConcurrentMap();
+
+	private final ProjectDescriptionLoader projectDescriptionLoader;
+
+	private final UriExtensions uriExtensions;
+
+	@Inject
+	public FileBasedWorkspace(ProjectDescriptionLoader projectDescriptionLoader, UriExtensions uriExtensions) {
+		this.projectDescriptionLoader = projectDescriptionLoader;
+		this.uriExtensions = uriExtensions;
+	}
+
+	@Override
+	public FileURI fromURI(URI unsafe) {
+		return safeFromURI(unsafe);
+	}
+
+	private FileURI safeFromURI(URI uri) {
+		return new FileURI(uriExtensions.withEmptyAuthority(uri));
+	}
 
 	/**
 	 *
 	 * @param location
 	 *            project directory containing package.json directly
 	 */
-	public void registerProject(URI unsafeLocation) {
-		if (unsafeLocation.lastSegment().isEmpty()) {
-			throw new IllegalArgumentException("lastSegment may not be empty");
-		}
-
-		URI location = URIUtils.normalize(unsafeLocation);
+	public void registerProject(FileURI location) {
+		// URI location = URIUtils.normalize(unsafeLocation);
 		if (!projectElementHandles.containsKey(location)) {
 			LazyProjectDescriptionHandle lazyDescriptionHandle = createLazyDescriptionHandle(location);
 			projectElementHandles.put(location, lazyDescriptionHandle);
 		}
+		nameToLocation.putIfAbsent(location.getProjectName(), location);
+	}
+
+	@Override
+	public FileURI getProjectLocation(N4JSProjectName name) {
+		return nameToLocation.get(name);
 	}
 
 	/**
@@ -78,37 +85,30 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		projectElementHandles.clear();
 	}
 
-	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(URI location) {
+	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(FileURI location) {
 		return new LazyProjectDescriptionHandle(location, projectDescriptionLoader);
 	}
 
 	@Override
-	public URI findProjectWith(URI nestedLocation) {
-		URI key = URIUtils.normalize(nestedLocation.trimFragment());
+	public FileURI findProjectWith(FileURI nestedLocation) {
+		FileURI key = nestedLocation.trimFragment();
 
 		// determine longest registered project location, that is a prefix of 'key'
-		while (key.segmentCount() > 0) {
+		do {
 			LazyProjectDescriptionHandle match = this.projectElementHandles.get(key);
 			if (match != null) {
 				return key;
 			}
-			key = key.trimSegments(1);
-		}
+			key = key.getParent();
+		} while (key != null);
 
 		return null;
 	}
 
 	@Override
-	public ProjectDescription getProjectDescription(URI unsafeLocation) {
-		URI location = URIUtils.normalize(unsafeLocation);
+	public ProjectDescription getProjectDescription(FileURI location) {
+		// URI location = URIUtils.normalize(unsafeLocation);
 		LazyProjectDescriptionHandle handle = projectElementHandles.get(location);
-		if (handle == null) {
-			// check case without trailing path separator
-			if (location.hasTrailingPathSeparator()) {
-				handle = projectElementHandles.get(location.trimSegments(1));
-			}
-		}
-
 		if (handle == null) {
 			return null;
 		}
@@ -117,22 +117,22 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 		return description;
 	}
 
-	public Iterator<URI> getAllProjectLocationsIterator() {
+	public Iterator<FileURI> getAllProjectLocationsIterator() {
 		return projectElementHandles.values().stream().map(handle -> handle.getLocation()).iterator();
 	}
 
 	@Override
-	public Collection<URI> getAllProjectLocations() {
+	public Collection<FileURI> getAllProjectLocations() {
 		return projectElementHandles.values().stream().map(handle -> handle.getLocation()).collect(Collectors.toList());
 	}
 
 	@Override
-	public URI getLocation(URI unsafeLocation, ProjectReference projectReference) {
+	public FileURI getLocation(ProjectReference projectReference) {
 		String projectName = projectReference.getProjectName();
-		for (URI location : projectElementHandles.keySet()) {
-			String candidateProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
+		for (FileURI siblingProject : projectElementHandles.keySet()) {
+			String candidateProjectName = siblingProject.getProjectName().getRawName();
 			if (candidateProjectName.equals(projectName)) {
-				LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(location);
+				LazyProjectDescriptionHandle lazyHandle = projectElementHandles.get(siblingProject);
 				if (lazyHandle != null) {
 					return lazyHandle.getLocation();
 				}
@@ -142,60 +142,16 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public Iterator<URI> getFolderIterator(URI unsafeLocation) {
-		URI folderLocation = URIUtils.normalize(unsafeLocation);
-		java.net.URI create = java.net.URI.create(folderLocation.toString());
-
-		File sourceContainerDirectory = null;
-		try {
-			sourceContainerDirectory = new File(create);
-		} catch (IllegalArgumentException iae) {
-			// TODO GH-793 handle broken project data passed to the workspace
-			System.err.println(this.getClass().getName() + " invalid URI " + unsafeLocation);
-			iae.printStackTrace();
-		}
-		if (sourceContainerDirectory != null && sourceContainerDirectory.isDirectory()) {
-			AbstractTreeIterator<File> treeIterator = new AbstractTreeIterator<>(sourceContainerDirectory,
-					false) {
-				@Override
-				protected Iterator<? extends File> getChildren(Object root) {
-					if (root instanceof File) {
-						final File file = (File) root;
-						if (file.isDirectory()) {
-							// do not iterate over contents of nested node_modules folders
-							if (file.getName().equals(N4JSGlobals.NODE_MODULES)) {
-								return Collections.emptyIterator();
-							}
-							return Arrays.asList(((File) root).listFiles()).iterator();
-						}
-					}
-					return Collections.emptyIterator();
-				}
-			};
-			return Iterators.unmodifiableIterator(Iterators.transform(
-					Iterators.filter(treeIterator, new Predicate<File>() {
-						@Override
-						public boolean apply(File input) {
-							return !input.isDirectory();
-						}
-					}), new Function<File, URI>() {
-						@Override
-						public URI apply(File input) {
-							return URI.createURI(input.toURI().toString());
-						}
-					}));
-		}
-		return Collections.emptyIterator();
+	public Iterator<? extends FileURI> getFolderIterator(FileURI folderLocation) {
+		return Iterators.filter(folderLocation.getAllChildren(), loc -> !loc.isDirectory());
 	}
 
 	@Override
-	public URI findArtifactInFolder(URI unsafeLocation, String folderRelativePath) {
-		URI folderLocation = URIUtils.normalize(unsafeLocation);
-		final Path sourceContainerDirectory = Paths.get(java.net.URI.create(folderLocation.toString()));
-		final Path subPath = Paths.get(folderRelativePath.replace("/", File.separator));
-		final File file = sourceContainerDirectory.resolve(subPath).toFile().getAbsoluteFile();
-		if (file.exists())
-			return URI.createURI(file.toURI().toString());
+	public FileURI findArtifactInFolder(FileURI folder, String relativePath) {
+		FileURI result = folder.appendPath(relativePath);
+		if (result != null && result.exists()) {
+			return result;
+		}
 		return null;
 	}
 
