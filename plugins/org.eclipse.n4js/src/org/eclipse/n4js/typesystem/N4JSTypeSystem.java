@@ -11,6 +11,8 @@
 package org.eclipse.n4js.typesystem;
 
 import java.util.List;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -19,6 +21,7 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.postprocessing.TypeProcessor;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -219,6 +222,23 @@ public class N4JSTypeSystem {
 	public TypeArgument substTypeVariables(RuleEnvironment G, TypeArgument typeArgument,
 			boolean captureContainedWildcards, boolean captureUponSubstitution) {
 		return substTypeVariablesJudgment.apply(G, typeArgument, captureContainedWildcards, captureUponSubstitution);
+	}
+
+	// FIXME integrate this into substTypeVariables judgment!
+	public TypeRef reopenExistentialTypes(RuleEnvironment G, TypeRef typeRef) {
+		boolean isOrContainsClosedExistential = //
+				(typeRef instanceof ExistentialTypeRef && !((ExistentialTypeRef) typeRef).isReopened())
+						|| StreamSupport.stream(Spliterators.spliteratorUnknownSize(typeRef.eAllContents(), 0), false)
+								.anyMatch(eobj -> eobj instanceof ExistentialTypeRef
+										&& !((ExistentialTypeRef) eobj).isReopened());
+		if (isOrContainsClosedExistential) {
+			TypeRef cpy = TypeUtils.copy(typeRef);
+			StreamSupport.stream(Spliterators.spliteratorUnknownSize(cpy.eAllContents(), 0), false)
+					.filter(eobj -> eobj instanceof ExistentialTypeRef)
+					.forEach(etr -> ((ExistentialTypeRef) etr).setReopened(true));
+			return cpy;
+		}
+		return typeRef;
 	}
 
 	// ###############################################################################################################

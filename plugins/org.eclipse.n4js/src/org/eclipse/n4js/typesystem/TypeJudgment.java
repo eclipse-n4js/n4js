@@ -402,8 +402,12 @@ import com.google.inject.Inject;
 						// in case of ThisTypeRefs, there should be no existential type-refs (so there is no use in
 						// getting rid of it :-/)
 						// as part of IDE-785 leave the BoundThisTypeRef in place for variables w/o defined type.
+					} else if (E instanceof UnknownTypeRef) {
+						// NOTE: in case of variables (as opposed to fields, properties) we use UnknownTypeRef as the
+						// inferred type and do *not* convert it to 'any', as #sanitizeTypeOfVariableFieldProperty()
+						// in the else-block would do.
 					} else {
-						E = ts.upperBound(G2, E); // take upper bound to get rid of ExistentialTypeRef (if any)
+						E = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G2, E);
 					}
 					if (E.getDeclaredType() == undefinedType(G)
 							|| E.getDeclaredType() == nullType(G)

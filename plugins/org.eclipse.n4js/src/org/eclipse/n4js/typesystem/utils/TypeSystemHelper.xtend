@@ -267,13 +267,14 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
-		val typeUB = ts.upperBound(G, typeRaw); // take upper bound to get rid of ExistentialTypeRef (if any)
+		val typeUB = ts.upperBound(G, typeRaw); // take upper bound to get rid of wildcards (if any)
 		val declType = typeUB.declaredType
 		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
 			// don't use these types to type variables, fields, properties -> replace with any
 			return G.anyTypeRef;
 		}
-		return typeUB;
+		val typeReopened = ts.reopenExistentialTypes(G, typeUB);
+		return typeReopened;
 	}
 
 	public def returnStatements(FunctionDefinition definition) {

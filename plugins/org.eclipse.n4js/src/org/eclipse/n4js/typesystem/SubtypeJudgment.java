@@ -72,6 +72,7 @@ import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
 /* package */ final class SubtypeJudgment extends AbstractJudgment {
@@ -343,77 +344,10 @@ import com.google.common.collect.Iterables;
 					final TypeArgument rightArg = right.getTypeArgs().get(i);
 					final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
 
-					final boolean leftArgIsOpen = leftArg instanceof Wildcard
-							|| (leftArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) leftArg).isReopened());
-					final boolean rightArgIsOpen = rightArg instanceof Wildcard
-							|| (rightArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightArg).isReopened());
-
-					TypeRef leftArgUpper = leftArgIsOpen ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
-					TypeRef leftArgLower = leftArgIsOpen ? ts.lowerBound(G, leftArg) : (TypeRef) leftArg;
-					TypeRef rightArgUpper = rightArgIsOpen ? ts.upperBound(G, rightArg) : (TypeRef) rightArg;
-					TypeRef rightArgLower = rightArgIsOpen ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
-
-					// guard against infinite recursion due to recursive implicit upper bounds, such as in
-					//
-					// class A<T extends A<?>> {}
-					//
-					// and
-					//
-					// class X<T extends B<?>> {}
-					// class Y<T extends X<?>> {}
-					// class B<T extends Y<?>> {}
-					//
-					final RuleEnvironment G2;
-					if (rightArg instanceof Wildcard && ((Wildcard) rightArg).isImplicitUpperBoundInEffect()) {
-						// we're dealing with implicit upper bounds -> need to guard against infinite loop
-						final Pair<String, TypeArgument> guardKey = Pair.of(
-								GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS, rightArg);
-						final boolean isGuarded = G.get(guardKey) != null;
-						if (!isGuarded) {
-							// first time here for wildcard 'rightArg'
-							// -> continue as usual but add guard to rule environment
-							G2 = wrap(G);
-							G2.put(guardKey, Boolean.TRUE);
-						} else {
-							// returned here for the same wildcard!
-							// -> ignore implicit upper bound on right-hand side to break infinite loop
-							rightArgUpper = topTypeRef(G);
-							G2 = G; // won't add another guard, so no need to wrap G
-						}
-					} else {
-						// not dealing with implicit upper bounds -> just continue as usual without guarding
-						G2 = G;
-					}
-
-// @formatter:off
-// TODO IDE-1653 reconsider this logic
-// seems bogus because it allows G<?> <: G<E> (with E being a closed existential, i.e. ExistentialTypeRef)
-// why not just require type equality, i.e. L<:R && R<:L (without taking upper/lower bounds) and let the
-// subtype rules for WildCards / ExistentialTypeRefs do the heavy lifting?
-// @formatter:on
-					Result tempResult = success();
-					// require leftArg <: rightArg, except we have contravariance
-					if (variance != Variance.CONTRA) {
-						tempResult = ts.subtype(G2, leftArgUpper, rightArgUpper);
-					}
-					// require rightArg <: leftArg, except we have covariance
-					if (variance != Variance.CO) {
-						if (tempResult.isSuccess()) {
-							tempResult = ts.subtype(G2, rightArgLower, leftArgLower);
-						}
-					}
-
-					if (tempResult.isFailure()) {
-						if (tempResult.isOrIsCausedByPriority()) {
-							// fail with a custom message including the nested custom failure message:
-							return failure(left.getTypeRefAsString()
-									+ " is not a subtype of " + right.getTypeRefAsString()
-									+ " due to incompatible type arguments: "
-									+ tempResult.getPriorityFailureMessage());
-						} else {
-							// fail with our default message:
-							return failure();
-						}
+					final Result currResult = checkTypeArgumentCompatibility(G, left, right, leftArg, rightArg,
+							Optional.of(variance));
+					if (currResult.isFailure()) {
+						return currResult;
 					}
 				}
 				return success();
@@ -462,23 +396,29 @@ import com.google.common.collect.Iterables;
 			TypeTypeRef left, TypeTypeRef right) {
 		final TypeArgument leftTypeArg = left.getTypeArg();
 		final TypeArgument rightTypeArg = right.getTypeArg();
+		if (leftTypeArg == null || rightTypeArg == null) {
+			return failure();
+		}
+
 		final boolean leftIsCtorRef = left.isConstructorRef();
 		final boolean rightIsCtorRef = right.isConstructorRef();
-		final boolean rightHasTypeRef = rightTypeArg instanceof TypeRef;
 
 		if (!leftIsCtorRef && rightIsCtorRef) {
 			// case: type{} <: constructor{}
 			return failure();
+		}
 
-		} else if (rightHasTypeRef && !rightIsCtorRef) {
-			// case: type|constructor{} <: type{} AND right doesn't contain wildcard
+		// check type arguments
+		final Result typeArgCompatibilty = checkTypeArgumentCompatibility(G, left, right, leftTypeArg, rightTypeArg,
+				Optional.of(Variance.CO));
+		if (typeArgCompatibilty.isFailure()) {
+			return typeArgCompatibilty;
+		}
 
-			// check type arguments
-			return requireAllSuccess(
-					ts.subtype(G, leftTypeArg, rightTypeArg));
-
-		} else if (rightHasTypeRef && rightIsCtorRef) {
-			// constructor{} <: constructor{} AND right doesn't contain wildcard
+		final boolean rightArgIsOpen = rightTypeArg instanceof Wildcard
+				|| (rightTypeArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightTypeArg).isReopened());
+		if (!rightArgIsOpen && rightIsCtorRef) {
+			// constructor{} <: constructor{} AND right doesn't contain wildcard or open ExistentialTypeRef
 
 			final Type left_staticType = typeSystemHelper.getStaticType(G, left);
 			final Type right_staticType = typeSystemHelper.getStaticType(G, right);
@@ -490,7 +430,7 @@ import com.google.common.collect.Iterables;
 			final boolean leftHasCovariantConstructor = left_staticType instanceof TClassifier
 					&& N4JSLanguageUtils.hasCovariantConstructor((TClassifier) left_staticType);
 
-			// left must not contain a wildcard, (closed) existential type, this type
+			// left must not contain a wildcard, (open or closed) existential type, this type
 			// (except we have a @CovariantConstructor)
 			if (!leftHasCovariantConstructor) {
 				final boolean hasDisallowedArg = leftTypeArg instanceof Wildcard
@@ -499,12 +439,6 @@ import com.google.common.collect.Iterables;
 				if (hasDisallowedArg) {
 					return failure();
 				}
-			}
-
-			// check type arguments
-			final Result result = ts.subtype(G, leftTypeArg, rightTypeArg);
-			if (!result.isSuccess()) {
-				return failure(result);
 			}
 
 			// check constructors
@@ -546,19 +480,9 @@ import com.google.common.collect.Iterables;
 				return requireAllSuccess(
 						ts.subtype(G, leftCtorRefSubst, rightCtorRefSubst));
 			}
-
-		} else {
-			// any combination except type{} <: constructor{} AND right contains wildcard
-
-			final TypeRef upperBoundLeft = ts.upperBound(G, leftTypeArg);
-			final TypeRef lowerBoundLeft = ts.lowerBound(G, leftTypeArg);
-			final TypeRef upperBoundRight = ts.upperBound(G, rightTypeArg);
-			final TypeRef lowerBoundRight = ts.lowerBound(G, rightTypeArg);
-
-			return requireAllSuccess(
-					ts.subtype(G, upperBoundLeft, upperBoundRight),
-					ts.subtype(G, lowerBoundRight, lowerBoundLeft));
 		}
+
+		return success();
 	}
 
 	private Result applyExistentialTypeRef_Left(RuleEnvironment G,
@@ -698,6 +622,102 @@ import com.google.common.collect.Iterables;
 		} else {
 			return failure();
 		}
+	}
+
+	/**
+	 * Checks compatibility of the given type arguments, e.g. as required as part of a subtype check such as
+	 * {@code G<T> <: G<S>}. In case of wildcards and open existential types, a bounds check will be performed.
+	 *
+	 * @param leftContainingTypeRef
+	 *            The reference containing 'leftArg'. Only used for error reporting.
+	 * @param rightContainingTypeRef
+	 *            The reference containing 'rightArg'. Only used for error reporting.
+	 * @param leftArg
+	 *            left type argument to check.
+	 * @param rightArg
+	 *            right type argument to check.
+	 * @param variance
+	 *            the variance. Usually this is the definition-site variance of the type corresponding parameter, but
+	 *            can be some special value in certain contexts (e.g. in {@link TypeTypeRef}s). If absent, invariance
+	 *            will be assumed.
+	 * @return a result with a custom error message (in the failure case).
+	 */
+	private Result checkTypeArgumentCompatibility(RuleEnvironment G,
+			TypeRef leftContainingTypeRef, TypeRef rightContainingTypeRef,
+			TypeArgument leftArg, TypeArgument rightArg, Optional<Variance> variance) {
+		final boolean leftArgIsOpen = leftArg instanceof Wildcard
+				|| (leftArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) leftArg).isReopened());
+		final boolean rightArgIsOpen = rightArg instanceof Wildcard
+				|| (rightArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightArg).isReopened());
+
+		TypeRef leftArgUpper = leftArgIsOpen ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
+		TypeRef leftArgLower = leftArgIsOpen ? ts.lowerBound(G, leftArg) : (TypeRef) leftArg;
+		TypeRef rightArgUpper = rightArgIsOpen ? ts.upperBound(G, rightArg) : (TypeRef) rightArg;
+		TypeRef rightArgLower = rightArgIsOpen ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
+
+		// guard against infinite recursion due to recursive implicit upper bounds, such as in
+		//
+		// class A<T extends A<?>> {}
+		//
+		// and
+		//
+		// class X<T extends B<?>> {}
+		// class Y<T extends X<?>> {}
+		// class B<T extends Y<?>> {}
+		//
+		final RuleEnvironment G2;
+		if (rightArg instanceof Wildcard && ((Wildcard) rightArg).isImplicitUpperBoundInEffect()) {
+			// we're dealing with implicit upper bounds -> need to guard against infinite loop
+			final Pair<String, TypeArgument> guardKey = Pair.of(
+					GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS, rightArg);
+			final boolean isGuarded = G.get(guardKey) != null;
+			if (!isGuarded) {
+				// first time here for wildcard 'rightArg'
+				// -> continue as usual but add guard to rule environment
+				G2 = wrap(G);
+				G2.put(guardKey, Boolean.TRUE);
+			} else {
+				// returned here for the same wildcard!
+				// -> ignore implicit upper bound on right-hand side to break infinite loop
+				rightArgUpper = topTypeRef(G);
+				G2 = G; // won't add another guard, so no need to wrap G
+			}
+		} else {
+			// not dealing with implicit upper bounds -> just continue as usual without guarding
+			G2 = G;
+		}
+
+//@formatter:off
+//TODO IDE-1653 reconsider this logic
+//seems bogus because it allows G<?> <: G<E> (with E being a closed existential, i.e. ExistentialTypeRef)
+//why not just require type equality, i.e. L<:R && R<:L (without taking upper/lower bounds) and let the
+//subtype rules for WildCards / ExistentialTypeRefs do the heavy lifting?
+//@formatter:on
+		Result tempResult = success();
+		// require leftArg <: rightArg, except we have contravariance
+		if (!(variance.isPresent() && variance.get() == Variance.CONTRA)) {
+			tempResult = ts.subtype(G2, leftArgUpper, rightArgUpper);
+		}
+		// require rightArg <: leftArg, except we have covariance
+		if (!(variance.isPresent() && variance.get() == Variance.CO)) {
+			if (tempResult.isSuccess()) {
+				tempResult = ts.subtype(G2, rightArgLower, leftArgLower);
+			}
+		}
+
+		if (tempResult.isFailure()) {
+			if (tempResult.isOrIsCausedByPriority()) {
+				// fail with a custom message including the nested custom failure message:
+				return failure(leftContainingTypeRef.getTypeRefAsString()
+						+ " is not a subtype of " + rightContainingTypeRef.getTypeRefAsString()
+						+ " due to incompatible type arguments: "
+						+ tempResult.getPriorityFailureMessage());
+			} else {
+				// fail with our default message:
+				return failure();
+			}
+		}
+		return success();
 	}
 
 	// ################################################################################

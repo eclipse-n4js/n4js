@@ -984,8 +984,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			var trhs = ts.type(G, ee.rhs)
 
 			// we are only interested in upper bound here, cf. IDEBUG-260
-			tlhs = ts.upperBound(G, tlhs)
-			trhs = ts.upperBound(G, trhs)
+			tlhs = ts.reopenExistentialTypes(G, ts.upperBound(G, tlhs))
+			trhs = ts.reopenExistentialTypes(G, ts.upperBound(G, trhs))
 
 			val leftSubOfRight = ts.subtypeSucceeded(G, tlhs, trhs)
 			val rightSubOfLeft = ts.subtypeSucceeded(G, trhs, tlhs)
@@ -1263,7 +1263,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				|| (T instanceof IntersectionTypeExpression);
 
 			if (specialChecks) {
-				internalCheckCastExpression(G, S, T, castExpression, true, false);
+				internalCheckCastExpression(G, ts.reopenExistentialTypes(G, S), ts.reopenExistentialTypes(G, T), castExpression, true, false);
 			} else {
 				// Constraint 78 (Cast Validation At Compile-Time): 2
 				addIssue(IssueCodes.getMessageForEXP_CAST_INVALID_TARGET(), castExpression, IssueCodes.EXP_CAST_INVALID_TARGET);
