@@ -87,7 +87,7 @@ image::{find}fig/newclasswizard.png[scaledwidth=60%]
 Project:: Specifies the containing project.
 
 .Project constraints
-[req,id=GH-1413,version=1]
+[req,id=GH-1413a,version=1]
 --
 [horizontal]
 Constraints::
@@ -96,21 +96,21 @@ Constraints::
 --
 
 .Project browse button
-[req,id=GH-1413,version=1]
+[req,id=GH-1413b,version=1]
 --
 Browse Button::
   Browsing only allows the selection of projects in the current workspace. Project creation is not possible.
 --
 
 .Project initial selection inference
-[req,id=GH-1413,version=1]
+[req,id=GH-1413c,version=1]
 --
 Initial selection::
   The project should be derived from the initial selection.
 --
 
 .Project content assist
-[req,id=GH-1413,version=1]
+[req,id=GH-1413d,version=1]
 --
 Content Assist::
   Workspace projects
@@ -121,7 +121,7 @@ Content Assist::
 Source folder:: Specifies the containing source folder.
 
 .Source folder constraints
-[req,id=GH-1413,version=1]
+[req,id=GH-1413e,version=1]
 --
 
 [horizontal]
@@ -137,21 +137,21 @@ Constraints::
 --
 
 .Source folder browse button
-[req,id=GH-1413,version=1]
+[req,id=GH-1413f,version=1]
 --
 Browse Button::
   Browsing only allows the selection of source folders in the selected project. The dialog should provide a list of all source folders of the selected project. This includes nested source folders. A list element is a relative path of a source folder in the project.
 --
 
 .Source folder initial selection inference
-[req,id=GH-1413,version=1]
+[req,id=GH-1413g,version=1]
 --
 Initial selection::
   The source folder field should be derived from the initial selection
 --
 
 .Source folder content assist
-[req,id=GH-1413,version=1]
+[req,id=GH-1413h,version=1]
 --
 Content Assist::
   source folders defined by the project manifest
@@ -163,7 +163,7 @@ Module specifier::
 Specifies the module specifier. May only specify a module container (a folder) but could also include module name. May also be an already existing module. Does not include the file extension.
 
 .Module specifier constraints
-[req,id=GH-1413,version=1]
+[req,id=GH-1413i,version=1]
 --
 The specifier is a valid module specifier that is
 - Segments are separated by the path separator
@@ -171,20 +171,20 @@ The specifier is a valid module specifier that is
 --
 
 .Module specifier completion
-[req,id=GH-1413,version=1]
+[req,id=GH-1413j,version=1]
 --
 Manually inserting a specifier ending with a separator is valid.
 It is then interpreted as base path for the full module specifier automatically completed by the class name. (cf. grey suffix)
 --
 
 .Module specifier grey suffix
-[req,id=GH-1413,version=1]
+[req,id=GH-1413k,version=1]
 --
 A grey suffix should suggest the attached class name as module name if the specifier only specifies a base path.
 --
 
 .Module specifier browse button
-[req,id=GH-1413,version=1]
+[req,id=GH-1413l,version=1]
 --
 Browsing only allows the selection of modules or module containers in the selected source folder. The browse dialog has to offer a module container creation functionality. In contrast to the other parts of the wizard, the creation of module containers in this dialog should be immediate and on file system level. This is important to comply with the conceptual model of eclipse and the operating system.
 
@@ -192,13 +192,13 @@ When inserting a non-existent path in the text input and opening the browse dial
 --
 
 .Module specifier initial selection inference
-[req,id=GH-1413,version=1]
+[req,id=GH-1413m,version=1]
 --
 The module specifier should be derived from the initial selection by using the container of the selection as initial module container
 --
 
 .Module specifier content assist
-[req,id=GH-1413,version=1]
+[req,id=GH-1413n,version=1]
 --
 Modules in the selected source folder
 --
@@ -210,7 +210,7 @@ Class name::
 Specifies the class name.
 
 .Class name basic constraints
-[req,id=GH-1413,version=1]
+[req,id=GH-1413o,version=1]
 --
 
 [horizontal]
@@ -220,7 +220,7 @@ Constraints::
 --
 
 .Class name conflict validation
-[req,id=GH-1413,version=1]
+[req,id=GH-1413p,version=1]
 --
 If the target module already exists no other type with the same identifier may exist in this module
 --
@@ -228,13 +228,13 @@ If the target module already exists no other type with the same identifier may e
 [[Class_File_Wizard-Definition_File_Field]]
 
 .File type options
-[req,id=GH-1413,version=1]
+[req,id=GH-1413q,version=1]
 --
 Definition file (.n4jsd):: Specifies whether the class should be declared external. This option changes the file extension to ``n4jsd``
 --
 
 .Access modifier constraints
-[req,id=GH-1413,version=1]
+[req,id=GH-1413r,version=1]
 --
 Specifies the access modifiers of the class. One of `public`, `project`, *private*. `@Internal` is an additionally selectable option.
 
@@ -248,7 +248,7 @@ Constraints::
 Other modifiers:: Specifies other modifiers and annotations of the class. The non-exclusive options are ``@Final`` and *@N4JS*
 
 .Other modifiers constraints
-[req,id=GH-1413,version=1]
+[req,id=GH-1413s,version=1]
 --
 Constraints::
   1.  *@N4JS* annotation is only enabled and selectable if the Definition File box is checked
@@ -257,7 +257,7 @@ Constraints::
 Super class:: Specifies the super class
 
 .Super class constraints
-[req,id=GH-1413,version=1]
+[req,id=GH-1413t,version=1]
 --
 [horizontal]
 Constraints::
@@ -265,7 +265,7 @@ Constraints::
 --
 
 .Super class browse button
-[req,id=GH-1413,version=1]
+[req,id=GH-1413u,version=1]
 --
 
 [horizontal]
@@ -274,7 +274,7 @@ Browse Button::
 --
 
 .Super class content assist
-[req,id=GH-1413,version=1]
+[req,id=GH-1413v,version=1]
 --
 Content Assist::
   All classes matching mentioned criteria
@@ -284,13 +284,13 @@ Content Assist::
 Interfaces:: Specifies the implemented interfaces of the class
 
 .Interfaces constraints
-[req,id=GH-1413,version=1]
+[req,id=GH-1413w,version=1]
 --
 1.  A valid absolute interface specifier that is a module specifier and an interface name separated by a dot.
 --
 
 .Interfaces browsing
-[req,id=GH-1413,version=1]
+[req,id=GH-1413x,version=1]
 --
 Add Button:: Browsing allows the selection of all interfaces in the current workspace with modifiable source and visible interfaces with unmodifiable sources.
 
@@ -298,19 +298,19 @@ Remove Button:: Removes the selected interface from the list. Disabled if nothin
 --
 
 .Interfaces content assist
-[req,id=GH-1413,version=1]
+[req,id=GH-1413y,version=1]
 --
 Text input is available by clicking in empty space at the end of the list. Content Assist provides all interfaces matching mentioned criteria.
 --
 
 .Create method stubs
-[req,id=GH-1413,version=1]
+[req,id=GH-1413z1,version=1]
 --
 Specifies if the wizard should generate method stubs for all abstract methods of the newly generated class. That are abstract super class methods or methods that need to be implemented by the class to conform to the selected interfaces.
 --
 
 .Create method stub conflict detection
-[req,id=GH-1413,version=1]
+[req,id=GH-1413z2,version=1]
 --
 If the selected interfaces are impossible to implement (e.g. method name overlap with unrelated parameter types) this option needs to be disabled and a warning needs to be shown.
 --
@@ -322,13 +322,13 @@ Shouldn't this be a constraint of the selected interfaces? (Never generate inval
 ===  Visibility issues or `@Final` super classes
 
 .Visibility issue conflict solving
-[req,id=GH-1413,version=1]
+[req,id=GH-1413z3,version=1]
 --
 
 By allowing the user to select invisible interfaces and super classes or unextendable ``@Final``-annotated super classes, accessability issues may come up. The goal is to never generate a file containing invalid code. To accomplish this, conflicts must get solved before the file is generated.
 
 
-The slight limitation of the selection of interfaces and classes to elements from modifiable sources (cf. <<Req-GH-1413,super class browse button>>) allows to solve all possibly occurring visibility issues.
+The slight limitation of the selection of interfaces and classes to elements from modifiable sources (cf. <<Req-GH-1413u,super class browse button>>) allows to solve all possibly occurring visibility issues.
 
 If the modifications by finishing the wizard do imply changes different from insertions and creations, a compare view is to be shown, giving the user an overview of the needed changes before they’re applied.
 --
@@ -337,7 +337,7 @@ If the modifications by finishing the wizard do imply changes different from ins
 ===  Generation
 
 .Wizard generation
-[req,id=GH-1413,version=1]
+[req,id=GH-1413z4,version=1]
 --
 The following changes are to be made by the wizard:
 
@@ -352,7 +352,7 @@ The following changes are to be made by the wizard:
 ===  Preview
 
 .Generation preview
-[req,id=GH-1413,version=1]
+[req,id=GH-1413z5,version=1]
 --
 On the right of the wizard form a preview window should be provided. It should preview the full path of the generated file and all code that is generated with the options of the wizard. Changes should be updated in realtime as the user is choosing different options.
 --
@@ -395,7 +395,7 @@ Definition file (.n4jsd)::
 
 Access Modifiers:: Specifies the interface’s access modifiers
 
-See <<Req-GH-1413,N4JS Class Wizard Modifier Field>> except for the following point:
+See <<Req-GH-1413r,N4JS Class Wizard Modifier Field>> except for the following point:
 
 __Other than classes, interfaces must not be declared as `@Final`, therefore this option is removed.__
 
@@ -422,7 +422,7 @@ As the user might select invisible interfaces, the wizard has to solve these vis
 ===  Import naming conflicts
 
 As the user may select identically named interfaces, the wizard has to solve these naming conflicts. See
-*<<Req-GH-1413,Class Wizard Visibility Issues>>* for details.
+*<<Req-GH-1413z3,Class Wizard Visibility Issues>>* for details.
 
 [[generation-2]]
 ===  Generation

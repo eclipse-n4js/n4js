@@ -193,7 +193,10 @@ p.lead, .paragraph.lead > p, #preamble > .sectionbody > .paragraph:first-of-type
 /* Typography resets */
 div, dl, dt, dd, ul, ol, li, h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6, pre, form, p, blockquote, th, td { margin: 0; padding: 0; direction: ltr; }
 div.openblock.partintro, div.sectionbody.paragraph {font-weight: 500;  line-height: 1.4; margin-bottom: 1em; }
-div.sect1 {padding-top: 1rem;}
+div.sect1 {
+	padding-top: 1rem;
+	padding-right: 1rem;
+}
 
 div.paragraph.faq-intro {max-width: 66%;}
 
@@ -350,7 +353,7 @@ red "tbd" = #fee
 
 
 
-body { tab-size: 4; max-width: 1050px; margin-right: auto; margin-left: auto; position: relative; margin-top: 0rem; margin-bottom: 0rem; padding-top: 0rem; /*  Fixes tables, breaks headers */}
+body { tab-size: 4; max-width: 1250px; margin-right: auto; margin-left: auto; position: relative; margin-top: 0rem; margin-bottom: 0rem; padding-top: 0rem; /*  Fixes tables, breaks headers */}
 
 h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 { line-height: 1.4;  margin-top: 0rem;}
 
@@ -377,7 +380,10 @@ b.button:before { content: "["; padding: 0 3px 0 2px; }
 
 b.button:after { content: "]"; padding: 0 2px 0 3px; }
 
-#header, #content, #footnotes, #footer {  max-width: 1050px; margin-right: auto; margin-left: auto; position: relative; margin-top: 0rem; margin-bottom: 0rem; padding-top: 0rem;  padding-right: 0rem;}
+#header, #content, #footnotes, #footer {  
+	max-width: 1050px; margin-right: auto; margin-left: auto; position: relative; 
+	margin-top: 0rem; margin-bottom: 0rem; 
+	padding-top: 0rem;  padding-right: 1rem;}
 #header:before, #header:after, #content:before, #content:after, #footnotes:before, #footnotes:after, #footer:before, #footer:after { content: " "; display: table; }
 #header:after, #content:after, #footnotes:after, #footer:after { clear: both; }
 
@@ -414,7 +420,7 @@ b.button:after { content: "]"; padding: 0 2px 0 3px; }
 #toc a:active { text-decoration: underline; }
 
 #toc ul li:before {
-    content: "›";
+    /* content: "›"; */
     margin-left: -.75em;
     margin-right: .4em;
     color: #244d82
@@ -501,32 +507,37 @@ div#features-nav li:before {
 }
 
 
-@media only screen and (min-width: 1434px) { body.toc2.toc-right #toc.toc2 { border-right-width: 0; border: none; left: 0px; } }
 
-@media only screen and (min-width: 1434px) { #toctitle { padding-top: 1.5rem; font-size: 1.375em; }
-  body.toc2 { padding-left: 2em; padding-right: 1em; }
-  #toc.toc2 { margin-top: 0 !important; background-color: #f2f2f2; position: fixed; width: 12em; left: 0; top: 0; border-right: 1px solid #dddddd; border-top-width: 0 !important; border-bottom-width: 0 !important; z-index: 1000; padding: 1.25em 0.25em 0em 0.25em; height: 100%; overflow: auto; }
-  #toc.toc2 #toctitle { margin-top: 0; margin-bottom: 0.8rem; font-size: 1.2em; padding-left: 1em;}
-  #toc.toc2 > ul { font-size: 0.9em; margin-bottom: 0; }
-  #toc.toc2 ul ul { margin-left: 1em; padding-left: .3em; }
-  #toc.toc2 ul.sectlevel0 ul.sectlevel1 { padding-left: 0; margin-top: 0.5em; margin-bottom: 0.5em; }
-  body.toc2.toc-right { padding-left: 2em; padding-right: 2em; }
-  body.toc2.toc-right #toc.toc2 { border-right-width: 0; border-left: 1px solid #dddddd; left: auto; right: -13rem; } }
+@media only screen and (min-width: 1434px ) { 
+	body.toc2.toc-right #toc.toc2 { border-right-width: 0; border: none; left: 0px; }
+	#toctitle { padding-top: 1.5rem; font-size: 1.375em; }
+	body.toc2 { padding-left: 2em; padding-right: 1em; }
+	#toc.toc2 { margin-top: 0 !important; background-color: #f2f2f2; position: fixed; width: 12em; left: 0; top: 0; border-right: 1px solid #dddddd; border-top-width: 0 !important; border-bottom-width: 0 !important; z-index: 1000; padding: 1.25em 0.25em 0em 0.25em; height: 100%; overflow: auto; }
+	#toc.toc2 #toctitle { margin-top: 0; margin-bottom: 0.8rem; font-size: 1.2em; padding-left: 1em;}
+	#toc.toc2 > ul { font-size: 0.9em; margin-bottom: 0; }
+	#toc.toc2 ul ul { margin-left: 1em; padding-left: .3em; }
+	#toc.toc2 ul.sectlevel0 ul.sectlevel1 { padding-left: 0; margin-top: 0.5em; margin-bottom: 0.5em; }
+	body.toc2.toc-right { padding-left: 2em; padding-right: 2em; }
+	body.toc2.toc-right #toc.toc2 { border-right-width: 0; border-left: 1px solid #dddddd; left: auto; right: -13rem; } 
+}
 @media only screen and (min-width: 1535px) { 
-  body.toc2 { padding-left: 2em; padding-right: 2em; }
-  #toctitle { padding-top: 0rem; font-size: 1.375em; }
-  #toc.toc2 { width: 13em; }
-  #toc.toc2 #toctitle { font-size: 1.375em; }
-  #toc.toc2 > ul { font-size: 0.95em; }
-  #toc.toc2 ul ul { padding-left: 0; }
-  body.toc2.toc-right { padding-left: 2em; padding-right: 2em; } }
+	body.toc2 { padding-left: 2em; padding-right: 2em; }
+	#toctitle { padding-top: 0rem; font-size: 1.375em; }
+	#toc.toc2 { width: 13em; }
+	
+	#toc.toc2 #toctitle { font-size: 1.375em; }
+	
+	#toc.toc2 > ul { font-size: 0.95em; }
+	#toc.toc2 ul ul { padding-left: 0; }
+	body.toc2.toc-right { padding-left: 2em; padding-right: 2em; } 
+}
+
 #content #toc { border-style: solid; border-width: 1px; border-color: #d9d9d9; margin-bottom: 1.25em; padding: 1.25em; background: #f2f2f2; -webkit-border-radius: 0; border-radius: 0; }
 #content #toc > :first-child { margin-top: 0; }
 #content #toc > :last-child { margin-bottom: 0; }
 
 
 
-#footer {  width: 1050px;background-color: #132445; padding: 1.25em; padding-bottom: 0rem; margin-right: -2rem; margin-left: -2rem; margin-top: 2rem; color: white}
 div.social  { line-height: 1.4; color: #FFFFFF;font-size:  1.2rem; font-weight: 400; font-style: bold; background-color: #132445; margin-right: -2rem; margin-left: -2rem; text-align: left; padding-bottom: 4px; padding-left: 25px; }
 div.social li a {  margin-bottom: 2em;  color: #d5dfea;font-size:  1.2rem; font-weight: 800; font-style: bold; list-style: none; list-style-type: none; text-decoration-color: rgb(213, 223, 234); }
 /* div.social a:visited { color: #244D82; }*/
@@ -540,9 +551,6 @@ div.social li {/* nothing */}
 #bottomright {float: right;}
 
 
-@media only screen and (max-width: 1050px) {
-	body {width: 100%;}
-}
 
 
 
@@ -1036,6 +1044,12 @@ display: none;
     font-weight: 700;
 
 }
+
+#footer {  
+	/*width: 850px;*/
+	background-color: #ffffff; padding: 1.25em; padding-bottom: 0rem;
+	margin-right: 3rem; margin-left: -2rem; margin-top: 1rem; 
+	color: white}
 
 @media only screen and (max-width: 890px) {
 
