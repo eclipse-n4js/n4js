@@ -13,8 +13,7 @@
 (function (global) {
     "use strict";
 
-    var symImplementedInterfaces = Symbol.for("n4js-implemented-interfaces"),
-        symHasInstance = Symbol.hasInstance,
+    var symHasInstance = Symbol.hasInstance,
         ArraySlice = Array.prototype.slice,
         noop = function() {};
 
@@ -73,11 +72,6 @@
             Object.setPrototypeOf(ctor, superCtor);
         }
         Object.defineProperties(ctor, staticMethods);
-        if (implementedInterfaces.length) {
-            Object.defineProperty(ctor, symImplementedInterfaces, {
-                value: implementedInterfaces
-            });
-        }
 
         var proto = Object.create(superCtor.prototype, instanceMethods);
         implementedInterfaces.forEach(mixinDefaultMethods, proto);
@@ -115,10 +109,7 @@
              * @return boolean
              */
             value: function(instance) {
-                if (!instance || !instance.constructor || !instance.constructor[symImplementedInterfaces]) {
-                    return false;
-                }
-                return instance.constructor[symImplementedInterfaces].indexOf(tinterface) !== -1;
+                return $implements(instance, tinterface.n4type.fqn);
             }
         });
     }
