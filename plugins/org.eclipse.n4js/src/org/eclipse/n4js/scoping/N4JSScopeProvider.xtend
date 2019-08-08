@@ -17,7 +17,6 @@ import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.n4js.internal.N4JSModel
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -122,7 +121,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	IScopeProvider delegate;
 
 	@Inject private IN4JSCore n4jsCore;
-	@Inject private N4JSModel n4jsModel;
 
 	@Inject
 	ResourceDescriptionsProvider resourceDescriptionsProvider;
@@ -367,7 +365,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(initialScope,
 			resourceDescriptions, reference.EReferenceType);
 
-		val projectImportEnabledScope = ProjectImportEnablingScope.create(n4jsCore, n4jsModel, resource, importDeclaration,
+		val projectImportEnabledScope = ProjectImportEnablingScope.create(n4jsCore, resource, importDeclaration,
 			initialScope, delegateMainModuleAwareScope);
 
 		return projectImportEnabledScope;

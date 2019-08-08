@@ -11,6 +11,7 @@
 package org.eclipse.n4js.n4jsx.xpect.ui.tests;
 
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
+import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.HyperlinkXpectMethod;
@@ -24,8 +25,6 @@ import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
-import org.eclipse.xpect.runner.XpectTestFiles;
-import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.LinkingTest;
 import org.eclipse.xpect.xtext.lib.tests.ResourceDescriptionTest;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
@@ -49,7 +48,7 @@ import org.junit.runner.RunWith;
 		RenameRefactoringXpectMethod.class
 })
 @RunWith(XpectRunner.class)
-@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "testdata_ui", fileExtensions = "xt")
+@LspCompatibleXpectTestFiles(baseDir = "testdata_ui")
 @XpectImport({ N4JSSuppressIssuesSetup.class })
 public class N4JSXXpectPluginUITest {
 	static {

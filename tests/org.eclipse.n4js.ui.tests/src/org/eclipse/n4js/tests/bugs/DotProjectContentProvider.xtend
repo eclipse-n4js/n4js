@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tests.bugs
 
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
+
 /**
  * Utility class for providing {@code .project} file content for those projects that have
  * not got such file but are intended to import for test.
@@ -24,10 +26,10 @@ abstract class DotProjectContentProvider {
 	 *
 	 * @return the {@code .project} file content for a project as a string.
 	 */
-	static def getDotProjectContentForProject(String projectName)'''
+	static def getDotProjectContentForProject(N4JSProjectName projectName)'''
 	<?xml version="1.0" encoding="UTF-8"?>
 	<projectDescription>
-		<name>«projectName»</name>
+		<name>«projectName.toEclipseProjectName.rawName»</name>
 		<comment></comment>
 		<projects>
 		</projects>

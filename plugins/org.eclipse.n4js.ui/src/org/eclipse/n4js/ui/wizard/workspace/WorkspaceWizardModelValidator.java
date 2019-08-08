@@ -14,12 +14,11 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 
 /**
  * An abstract wizard model validator for {@link WorkspaceWizardModel}s
@@ -325,7 +324,7 @@ public abstract class WorkspaceWizardModelValidator<M extends WorkspaceWizardMod
 			throw new ValidationException(ErrorMessages.PROJECT_DOES_NOT_EXIST, WorkspaceWizardModel.PROJECT_PROPERTY);
 		} else {
 			// The path points to a resource inside the project
-			if (!n4jsProject.get().getLocation().equals(projectURI)) {
+			if (!n4jsProject.get().getLocation().toURI().equals(projectURI)) {
 				throw new ValidationException(ErrorMessages.INVALID_PROJECT + n4jsProject.get().getLocation(),
 						WorkspaceWizardModel.PROJECT_PROPERTY);
 			}

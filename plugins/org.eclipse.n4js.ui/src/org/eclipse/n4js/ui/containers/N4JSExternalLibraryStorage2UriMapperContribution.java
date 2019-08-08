@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorage;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject;
@@ -64,7 +65,7 @@ public class N4JSExternalLibraryStorage2UriMapperContribution implements IStorag
 		if (storage instanceof IExternalResource) {
 			final File externalResource = ((IExternalResource) storage).getExternalResource();
 			if (externalResource.isFile()) {
-				return URI.createFileURI(externalResource.getAbsolutePath());
+				return new FileURI(externalResource).toURI();
 			}
 		}
 		return null;

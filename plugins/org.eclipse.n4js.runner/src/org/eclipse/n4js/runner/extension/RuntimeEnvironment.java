@@ -13,6 +13,8 @@ package org.eclipse.n4js.runner.extension;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+
 /**
  * Runner environments, correspond to runtime environments in N4JS.
  */
@@ -43,23 +45,23 @@ public enum RuntimeEnvironment {
 	 *      holder idiom</a>
 	 */
 	private static class DataMap {
-		static Map<String, RuntimeEnvironment> data = new HashMap<>();
+		static Map<N4JSProjectName, RuntimeEnvironment> data = new HashMap<>();
 	}
 
-	private final String projectName;
+	private final N4JSProjectName projectName;
 
 	private RuntimeEnvironment(String projectName) {
-		this.projectName = projectName;
-		DataMap.data.put(projectName, this);
+		this.projectName = new N4JSProjectName(projectName);
+		DataMap.data.put(this.projectName, this);
 	}
 
 	/** @return {@link String} value */
-	public String getProjectName() {
+	public N4JSProjectName getProjectName() {
 		return this.projectName;
 	}
 
 	/** @return instance corresponding to provided representation */
-	public static RuntimeEnvironment fromProjectName(String representation) {
+	public static RuntimeEnvironment fromProjectName(N4JSProjectName representation) {
 		return DataMap.data.get(representation);
 	}
 }

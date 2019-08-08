@@ -15,13 +15,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.compare.ApiImplMapping;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.runner.RunnerHelper;
+import org.eclipse.n4js.runner.RunnerHelper.ApiUsage;
 import org.eclipse.swt.widgets.Display;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.compare.ApiImplMapping;
-import org.eclipse.n4js.runner.RunnerHelper;
-import org.eclipse.n4js.runner.RunnerHelper.ApiUsage;
 
 /**
  *
@@ -49,13 +49,14 @@ public class ChooseImplementationHelper {
 		final ApiUsage apiUsage = runnerHelper.getProjectExtendedDeps(runnerId, moduleToRun);
 		final ApiImplMapping apiImplMapping = apiUsage.apiImplMapping;
 
-		final List<String> availableImplIds = apiImplMapping.getAllImplIds();
+		final List<N4JSProjectName> availableImplIds = apiImplMapping.getAllImplIds();
 		if (apiImplMapping.isEmpty())
 			return null; // no API projects among the dependencies -> no need to bother the user
 		if (availableImplIds.isEmpty())
 			return null; // no implementations available -> error will be shown somewhere else
 		if (availableImplIds.size() == 1)
-			return availableImplIds.get(0); // exactly 1 implementation -> use that, no need to bother the user
+			return availableImplIds.get(0).getRawName(); // exactly 1 implementation -> use that, no need to bother the
+															// user
 		// make user choose:
 		// We have to open the dialog on the UI-thread
 		// See:

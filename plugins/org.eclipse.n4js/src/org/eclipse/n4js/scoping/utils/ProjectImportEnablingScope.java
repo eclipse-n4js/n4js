@@ -21,12 +21,12 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
@@ -76,7 +76,7 @@ public class ProjectImportEnablingScope implements IScope {
 	private final Optional<ImportDeclaration> importDeclaration;
 	private final IScope parent;
 	private final IScope delegate;
-	private final N4JSModel n4jsModel;
+	// private final N4JSModel n4jsModel;
 
 	/**
 	 * Wraps the given parent scope to enable project imports (see {@link ProjectImportEnablingScope} for details).
@@ -89,7 +89,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 *            {@link IEObjectDescriptionWithError} will be returned instead of <code>null</code> in case of
 	 *            unresolvable references).
 	 */
-	public static IScope create(IN4JSCore n4jsCore, N4JSModel n4jsModel, Resource resource,
+	public static IScope create(IN4JSCore n4jsCore, Resource resource,
 			Optional<ImportDeclaration> importDecl,
 			IScope parent, IScope delegate) {
 
@@ -106,7 +106,7 @@ public class ProjectImportEnablingScope implements IScope {
 			// without properly setting up the IN4JSCore; to not break those tests, we return 'parent' here
 			return parent;
 		}
-		return new ProjectImportEnablingScope(n4jsCore, n4jsModel, contextProject.get(), importDecl, parent, delegate);
+		return new ProjectImportEnablingScope(n4jsCore, contextProject.get(), importDecl, parent, delegate);
 	}
 
 	/**
@@ -114,14 +114,13 @@ public class ProjectImportEnablingScope implements IScope {
 	 * @param contextProject
 	 *            the project containing the import declaration (not the project containing the module to import from)!
 	 */
-	private ProjectImportEnablingScope(IN4JSCore n4jsCore, N4JSModel n4jsModel, IN4JSProject contextProject,
+	private ProjectImportEnablingScope(IN4JSCore n4jsCore, IN4JSProject contextProject,
 			Optional<ImportDeclaration> importDecl, IScope parent, IScope delegate) {
 
 		if (n4jsCore == null || contextProject == null || importDecl == null || parent == null) {
 			throw new IllegalArgumentException("none of the arguments may be null");
 		}
 		this.n4jsCore = n4jsCore;
-		this.n4jsModel = n4jsModel;
 		this.contextProject = contextProject;
 		this.parent = parent;
 		this.importDeclaration = importDecl;
@@ -207,13 +206,13 @@ public class ProjectImportEnablingScope implements IScope {
 
 		switch (moduleSpecifierForm) {
 		case PROJECT: {
-			final String firstSegment = name.getFirstSegment();
+			final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
 			final QualifiedName mainModule = ImportSpecifierUtil.getMainModuleOfProject(targetProject);
 			return getElementsWithDesiredProjectName(mainModule, targetProject.getProjectName());
 		}
 		case COMPLETE: {
-			final String firstSegment = name.getFirstSegment();
+			final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
 			return getElementsWithDesiredProjectName(name.skipFirst(1), targetProject.getProjectName());
 		}
@@ -245,7 +244,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 * are filtered by expected {@link IN4JSProject#getProjectName()}.
 	 */
 	private Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
-			String projectName) {
+			N4JSProjectName projectName) {
 
 		final Iterable<IEObjectDescription> moduleSpecifierMatchesWithPossibleDuplicates = delegate
 				.getElements(moduleSpecifier);
@@ -262,12 +261,12 @@ public class ProjectImportEnablingScope implements IScope {
 		return result.values();
 	}
 
-	private IN4JSProject findProject(String projectName, IN4JSProject project) {
+	private IN4JSProject findProject(N4JSProjectName projectName, IN4JSProject project) {
 		if (Objects.equals(project.getProjectName(), projectName)) {
 			return project;
 		}
 
-		Iterable<IN4JSProject> dependencies = n4jsModel.getSortedDependencies(project);
+		Iterable<? extends IN4JSProject> dependencies = project.getSortedDependencies();
 		for (IN4JSProject p : dependencies) {
 			if (Objects.equals(p.getDefinesPackageName(), projectName)) {
 				return p;
@@ -284,7 +283,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 */
 	private ModuleSpecifierForm computeImportType(QualifiedName name, IN4JSProject project) {
 		final String firstSegment = name.getFirstSegment();
-		final IN4JSProject targetProject = findProject(firstSegment, project);
+		final IN4JSProject targetProject = findProject(new N4JSProjectName(firstSegment), project);
 		final boolean firstSegmentIsProjectName = targetProject != null;
 		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectName, targetProject);
 	}

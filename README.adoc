@@ -46,6 +46,12 @@ The installer will then guide you through the rest of the installation. All plug
 
 On the https://www.eclipse.org/n4js/downloads.html[Eclipse N4JS download page] we have described this set up with screenshots.
 
+Once the Oomph installation is done, perform the following steps inside the newly installed Eclipse IDE:
+
+1. compile n4js-libs by running the MWE2 workflow `BuildN4jsLibs.mwe2` (e.g. right-click this file in explorer and select "Run As > MWE2 Workflow" from context menu).
+2. generate documentation by running `N4js.doc.maven.launch` (e.g. right-click this file in explorer and select "Run As > n4js.doc.maven" from context menu).
+   This will resolve all warnings in the documentation bundles.
+
 === Manual IDE Configuration
 
 For a manual install, clone the code and import all top-level projects from the docs, features, plugins, releng, testhelpers, and tests folders. Activate the targetplatform contained in the `releng/org.eclipse.n4js.targetplatform/` project.

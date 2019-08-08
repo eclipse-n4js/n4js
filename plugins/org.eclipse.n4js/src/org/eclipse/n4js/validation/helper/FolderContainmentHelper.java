@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.validation.helper;
 
-import java.io.File;
 import java.nio.file.Path;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -38,9 +38,9 @@ public class FolderContainmentHelper {
 	public boolean isContainedInOutputFolder(URI uri) {
 		final IN4JSProject project = n4jsCore.findProject(uri).orNull();
 		if (project != null) {
-			final URI absoluteOutputLocation = getOutputURI(project);
+			final SafeURI<?> absoluteOutputLocation = getOutputURI(project);
 			if (absoluteOutputLocation != null) {
-				if (isContained(uri, absoluteOutputLocation)) {
+				if (isContained(n4jsCore.toProjectLocation(uri), absoluteOutputLocation)) {
 					return true;
 				}
 			}
@@ -54,8 +54,8 @@ public class FolderContainmentHelper {
 	 *
 	 * Returns {@code false} if the given URI is not contained by any known {@link IN4JSProject}.
 	 */
-	public boolean isContainedInSourceContainer(URI uri) {
-		final Optional<? extends IN4JSSourceContainer> container = n4jsCore.findN4JSSourceContainer(uri);
+	public boolean isContainedInSourceContainer(SafeURI<?> location) {
+		final Optional<? extends IN4JSSourceContainer> container = n4jsCore.findN4JSSourceContainer(location.toURI());
 		if (container.isPresent()) {
 			return true;
 		}
@@ -69,7 +69,7 @@ public class FolderContainmentHelper {
 	 * Returns {@code false} if the given project declares no output path.
 	 */
 	public boolean isOutputContainedInSourceContainer(IN4JSProject project) {
-		final URI absoluteOutputLocation = getOutputURI(project);
+		final SafeURI<?> absoluteOutputLocation = getOutputURI(project);
 		if (absoluteOutputLocation != null) {
 			return isContainedInSourceContainer(absoluteOutputLocation);
 		}
@@ -80,9 +80,9 @@ public class FolderContainmentHelper {
 	 * Returns {@code true} iff the given {@code uri} is contained by {@code container}. Returns {@code false}
 	 * otherwise.
 	 */
-	public boolean isContained(URI uri, URI container) {
-		final Path path = new File(uri.toString()).toPath().normalize();
-		final Path containerPath = new File(container.toString()).toPath().normalize();
+	public boolean isContained(SafeURI<?> uri, SafeURI<?> container) {
+		final Path path = uri.toFileSystemPath();
+		final Path containerPath = container.toFileSystemPath();
 
 		return path.startsWith(containerPath);
 	}
@@ -94,29 +94,12 @@ public class FolderContainmentHelper {
 	 *
 	 * @See {@link IN4JSProject#getOutputPath()}
 	 */
-	private static URI getOutputURI(IN4JSProject project) {
+	private static SafeURI<?> getOutputURI(IN4JSProject project) {
 		final String outputPathName = project.getOutputPath();
 		if (outputPathName != null) {
-			final URI projectLocation = appendTrailingSlash(project.getLocation());
-
-			final URI relativeOutputURI = URI.createURI(outputPathName);
-			final URI absoluteOutputLocation = relativeOutputURI.resolve(projectLocation);
-
-			return absoluteOutputLocation;
+			return project.getLocation().resolve(outputPathName);
 		}
 		return null;
 	}
 
-	/**
-	 * Returns an URI which represent {@code uri} but with an additional empty segment (trailing slash) at the end.
-	 *
-	 * @See {@link URI#isPrefix()}
-	 */
-	private static URI appendTrailingSlash(URI uri) {
-		if (!uri.isPrefix()) {
-			return uri.appendSegment("");
-		} else {
-			return uri;
-		}
-	}
 }

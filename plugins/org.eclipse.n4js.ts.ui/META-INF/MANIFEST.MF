@@ -6,6 +6,7 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.ts.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.n4js.ts;visibility:=reexport,
+ org.eclipse.n4js.ts.ide,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.ui.codetemplates.ui,
@@ -18,11 +19,11 @@ Require-Bundle: org.eclipse.n4js.ts;visibility:=reexport,
  org.antlr.runtime,
  org.eclipse.compare,
  org.eclipse.n4js.environments,
- org.eclipse.n4js.utils
+ org.eclipse.n4js.utils,
+ org.eclipse.n4js.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.ts.ui,
  org.eclipse.n4js.ts.ui.contentassist,
- org.eclipse.n4js.ts.ui.contentassist.antlr,
  org.eclipse.n4js.ts.ui.internal,
  org.eclipse.n4js.ts.ui.labeling,
  org.eclipse.n4js.ts.ui.navigation,

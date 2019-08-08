@@ -14,20 +14,19 @@ import static org.eclipse.n4js.ui.wizard.components.WizardComponentUtils.fillLab
 import static org.eclipse.n4js.ui.wizard.components.WizardComponentUtils.fillTextDefaults;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.layout.RowLayoutFactory;
+import org.eclipse.n4js.ui.wizard.classifiers.N4JSClassifierWizardModel;
+import org.eclipse.n4js.ui.wizard.model.AccessModifiableModel;
+import org.eclipse.n4js.ui.wizard.model.AccessModifier;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import org.eclipse.n4js.ui.wizard.classifiers.N4JSClassifierWizardModel;
-import org.eclipse.n4js.ui.wizard.model.AccessModifiableModel;
-import org.eclipse.n4js.ui.wizard.model.AccessModifier;
 
 /**
  * A component to allow the selection of a N4JS access modifiers and an additional internal annotation checkbox.
@@ -87,14 +86,11 @@ public class AccessModifierComponent extends WizardComponent {
 
 	private void setupBindings() {
 		// Access modifier property binding
-		@SuppressWarnings("unchecked")
-		IObservableValue<Boolean> publicButtonSelection = WidgetProperties.selection()
+		IObservableValue<Boolean> publicButtonSelection = WidgetProperties.buttonSelection()
 				.observe(publicAccessModifierBox);
-		@SuppressWarnings("unchecked")
-		IObservableValue<Boolean> projectButtonSelection = WidgetProperties.selection()
+		IObservableValue<Boolean> projectButtonSelection = WidgetProperties.buttonSelection()
 				.observe(projectAccessModifierBox);
-		@SuppressWarnings("unchecked")
-		IObservableValue<Boolean> privateButtonSelection = WidgetProperties.selection()
+		IObservableValue<Boolean> privateButtonSelection = WidgetProperties.buttonSelection()
 				.observe(privateAccessModifierBox);
 
 		SelectObservableValue<AccessModifier> accessModifierSelectObservable = new SelectObservableValue<>();
@@ -102,20 +98,17 @@ public class AccessModifierComponent extends WizardComponent {
 		accessModifierSelectObservable.addOption(AccessModifier.PROJECT, projectButtonSelection);
 		accessModifierSelectObservable.addOption(AccessModifier.PRIVATE, privateButtonSelection);
 
-		@SuppressWarnings("unchecked")
-		IObservableValue<AccessModifier> accessModifierProperty = BeanProperties
-				.value(AccessModifiableModel.class, N4JSClassifierWizardModel.ACCESS_MODIFIER_PROPERTY).observe(model);
+		IObservableValue<AccessModifier> accessModifierProperty = BeanProperties.value(AccessModifiableModel.class,
+				N4JSClassifierWizardModel.ACCESS_MODIFIER_PROPERTY, AccessModifier.class).observe(model);
 
 		dataBindingContext.bindValue(accessModifierSelectObservable, accessModifierProperty);
 
 		// Internal property binding
 
-		@SuppressWarnings("unchecked")
 		IObservableValue<Boolean> internalValue = BeanProperties
-				.value(AccessModifiableModel.class, N4JSClassifierWizardModel.INTERNAL_PROPERTY)
+				.value(AccessModifiableModel.class, N4JSClassifierWizardModel.INTERNAL_PROPERTY, Boolean.class)
 				.observe(model);
-		@SuppressWarnings("unchecked")
-		IObservableValue<Boolean> internalUI = WidgetProperties.selection().observe(getInternalAnnotationBox());
+		IObservableValue<Boolean> internalUI = WidgetProperties.buttonSelection().observe(getInternalAnnotationBox());
 		dataBindingContext.bindValue(internalUI, internalValue);
 	}
 

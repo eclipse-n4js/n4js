@@ -182,7 +182,7 @@ public class TestDiscoveryHelper {
 	public TestTree collectAllTestsFromWorkspace() {
 		List<URI> testableProjectURIs = new LinkedList<>();
 		for (IN4JSProject project : n4jsCore.findAllProjects()) {
-			URI location = project.getLocation();
+			URI location = project.getLocation().toURI();
 			if (project.exists() && isTestable(location)) {
 				testableProjectURIs.add(location);
 			}
@@ -229,8 +229,8 @@ public class TestDiscoveryHelper {
 					.stream()
 					.filter(IN4JSSourceContainer::isTest)
 					.flatMap(TestDiscoveryHelper::stream) // note: IN4JSSourceContainer is an Iterable<URI>
-					.filter(uri -> isTestFile(uri)) // filter out everything but N4JS files.
-					.filter(uri -> isTestModule(resSet, index.getResourceDescription(uri)));
+					// filter out everything but N4JS files.
+					.filter(uri -> isTestFile(uri) && isTestModule(resSet, index.getResourceDescription(uri)));
 		}
 
 		// does location point to an n4js file?
@@ -257,8 +257,9 @@ public class TestDiscoveryHelper {
 				// yes --> collect all test modules (files containing test classes) in this source container
 				final String locationStr = location.toString();
 				return stream(srcContainer) // note: IN4JSSourceContainer is an Iterable<URI>
-						.filter(uri -> uri.toString().startsWith(locationStr)) // TODO improve?
-						.filter(uri -> isTestModule(resSet, index.getResourceDescription(uri)));
+						// TODO improve?
+						.filter(uri -> uri.toString().startsWith(locationStr)
+								&& isTestModule(resSet, index.getResourceDescription(uri)));
 			}
 			return Stream.empty();
 		}

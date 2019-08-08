@@ -14,13 +14,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.FluentIterable.from;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.graphics.Image;
@@ -56,7 +55,7 @@ import org.eclipse.swt.graphics.Image;
 
 	@Override
 	public String getText() {
-		return project.getProjectName();
+		return project.getProjectName().getRawName();
 	}
 
 	@Override
@@ -66,10 +65,9 @@ import org.eclipse.swt.graphics.Image;
 
 		final List<ResourceNode> childrenList = new LinkedList<>();
 		for (IN4JSSourceContainer srcContainer : project.getSourceContainers()) {
-			URI location = srcContainer.getLocation();
-			File file = new File(location.toFileString());
+			SafeURI<?> location = srcContainer.getLocation();
 			String label = srcContainer.getRelativeLocation();
-			ResourceNode resourceNode = ResourceNode.create(this, file, label);
+			ResourceNode resourceNode = ResourceNode.create(this, location, label);
 			if (resourceNode != null) {
 				childrenList.add(resourceNode);
 			}
@@ -84,13 +82,10 @@ import org.eclipse.swt.graphics.Image;
 	private ResourceNode getManifestResourceNode() {
 		ResourceNode manifestNode = null;
 		// Does nothing if the project root is a source container as well.
-		if (!from(project.getSourceContainers()).transform(src -> src.getRelativeLocation()).toSet().contains("")) {
-			final URI manifestLocation = project.getProjectDescriptionLocation().orNull();
-			if (null != manifestLocation) {
-				final File manifest = new File(manifestLocation.toFileString());
-				if (manifest.isFile()) {
-					manifestNode = ResourceNode.create(this, manifest);
-				}
+		if (!from(project.getSourceContainers()).transform(src -> src.getRelativeLocation()).contains("")) {
+			final SafeURI<?> manifestLocation = project.getProjectDescriptionLocation();
+			if (manifestLocation != null && manifestLocation.isFile()) {
+				manifestNode = ResourceNode.create(this, manifestLocation);
 			}
 		}
 		return manifestNode;

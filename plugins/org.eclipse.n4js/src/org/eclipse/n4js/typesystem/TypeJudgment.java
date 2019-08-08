@@ -651,6 +651,9 @@ import com.google.inject.Inject;
 				return unknown();
 			}
 			final TClass containingClass = ((N4ClassDeclaration) container).getDefinedTypeAsClass();
+			if (containingClass == null) {
+				return unknown();
+			}
 			final TClassifier superClassifier = getDeclaredOrImplicitSuperType(G, containingClass);
 
 			TClassifier effectiveSuperClassifier = superClassifier;

@@ -17,27 +17,27 @@ import static org.junit.Assert.assertSame;
 
 import java.util.Set;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
 /**
  */
-public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModelTest {
+public abstract class AbstractInternalWorkspaceTest<Loc extends SafeURI<Loc>> extends AbstractProjectModelTest<Loc> {
 
 	/***/
-	protected abstract InternalN4JSWorkspace getWorkspace();
+	protected abstract InternalN4JSWorkspace<Loc> getWorkspace();
 
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testGetProjectDescription_01() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
 		assertNotNull(description);
-		assertEquals(myProjectName, description.getProjectName());
+		assertEquals(myProjectName.getRawName(), description.getProjectName());
 	}
 
 	@SuppressWarnings("javadoc")
@@ -45,13 +45,13 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	public void testGetProjectDescription_02() {
 		ProjectDescription description = getWorkspace().getProjectDescription(libProjectURI);
 		assertNotNull(description);
-		assertEquals(libProjectName, description.getProjectName());
+		assertEquals(libProjectName.getRawName(), description.getProjectName());
 	}
 
-	@SuppressWarnings("javadoc")
+	@SuppressWarnings({ "javadoc" })
 	@Test
 	public void testGetProjectDescription_04() {
-		final URI doesNotExist = URI.createURI(myProjectName + "doesNotExist");
+		final Loc doesNotExist = myProjectURI.appendPath("../" + myProjectName + "doesNotExist");
 		final ProjectDescription description = getWorkspace().getProjectDescription(doesNotExist);
 		assertNull("Expecting null project description for non-existing project. Was: " + description, description);
 	}
@@ -69,16 +69,16 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 	public void testGetLocation_01() {
 		ProjectDescription description = getWorkspace().getProjectDescription(myProjectURI);
 		ProjectDependency dependency = description.getProjectDependencies().get(1);
-		URI resolvedLocation = getWorkspace().getLocation(myProjectURI, dependency);
+		Loc resolvedLocation = getWorkspace().getLocation(dependency);
 		assertEquals(libProjectURI, resolvedLocation);
 	}
 
-	@SuppressWarnings("javadoc")
+	@SuppressWarnings({ "javadoc", "unchecked" })
 	@Test
 	public void testGetFolderIterator_01() {
-		Set<URI> containedURIs = Sets.newHashSet(getWorkspace().getFolderIterator(
+		Set<Loc> containedURIs = Sets.newHashSet(getWorkspace().getFolderIterator(
 				myProjectURI.appendSegment("src")));
-		Set<URI> expectation = Sets.newHashSet(
+		Set<Loc> expectation = Sets.newHashSet(
 				myProjectURI.appendSegments(new String[] { "src", "A.js" }),
 				myProjectURI.appendSegments(new String[] { "src", "B.js" }),
 				myProjectURI.appendSegments(new String[] { "src", "sub", "B.js" }),
@@ -87,21 +87,21 @@ public abstract class AbstractInternalWorkspaceTest extends AbstractProjectModel
 		assertEquals(expectation, containedURIs);
 	}
 
-	@SuppressWarnings("javadoc")
+	@SuppressWarnings({ "javadoc" })
 	@Test
 	public void testGetFolderIterator_02() {
-		Set<URI> containedURIs = Sets.newHashSet(getWorkspace().getFolderIterator(
+		Set<Loc> containedURIs = Sets.newHashSet(getWorkspace().getFolderIterator(
 				myProjectURI.appendSegment("doesNotExist")));
-		Set<URI> expectation = Sets.newHashSet();
+		Set<Loc> expectation = Sets.newHashSet();
 		assertEquals(expectation, containedURIs);
 	}
 
-	@SuppressWarnings("javadoc")
+	@SuppressWarnings({ "javadoc", "unchecked" })
 	@Test
 	public void testGetFolderIterator_03() {
-		Set<URI> containedURIs = Sets.newHashSet(getWorkspace().getFolderIterator(
+		Set<Loc> containedURIs = Sets.newHashSet(getWorkspace().getFolderIterator(
 				myProjectURI.appendSegments(new String[] { "src", "sub" })));
-		Set<URI> expectation = Sets.newHashSet(
+		Set<Loc> expectation = Sets.newHashSet(
 				myProjectURI.appendSegments(new String[] { "src", "sub", "B.js" }),
 				myProjectURI.appendSegments(new String[] { "src", "sub", "C.js" }),
 				myProjectURI.appendSegments(new String[] { "src", "sub", "leaf", "D.js" }));

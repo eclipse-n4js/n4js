@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 
 import com.google.common.collect.ImmutableList;
 
@@ -49,7 +50,7 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 	static public Iterable<IN4JSProject> get(IN4JSProject project) {
 		final ImmutableList<? extends IN4JSProject> dependencies = project.getDependencies();
 		// keep ordered list of type definition projects per project ID of the definesPackage property
-		final Map<String, List<IN4JSProject>> typeDefinitionsById = new HashMap<>();
+		final Map<N4JSProjectName, List<IN4JSProject>> typeDefinitionsById = new HashMap<>();
 		// runtime dependencies (non-type dependencies)
 		final List<IN4JSProject> runtimeDependencies = new LinkedList<>();
 
@@ -60,7 +61,7 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 		// separate type definition projects from runtime projects
 		for (IN4JSProject dependency : dependencies) {
 			if (dependency.getProjectType() == ProjectType.DEFINITION) {
-				final String definesPackage = dependency.getDefinesPackageName();
+				final N4JSProjectName definesPackage = dependency.getDefinesPackageName();
 				if (definesPackage != null) {
 					// get existing or create new list of type definition projects
 					List<IN4JSProject> typeDefinitionsProjects = typeDefinitionsById.getOrDefault(definesPackage,
@@ -78,7 +79,7 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 
 		// construct ordered list of dependencies
 		for (IN4JSProject dependency : runtimeDependencies) {
-			final String projectName = dependency.getProjectName();
+			final N4JSProjectName projectName = dependency.getProjectName();
 			final Collection<IN4JSProject> typeDefinitionProjects = typeDefinitionsById.getOrDefault(projectName,
 					Collections.emptyList());
 
@@ -100,10 +101,11 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 
 		// make lost dependencies very explicit
 		if (orderedDependencies.size() != dependencies.size()) {
-			throw new IllegalStateException("Failed to compute dependency order for project " + project.getLocation()
-					+ ": Ordered list of dependencies does not match original dependencies list in length.\n"
-					+ "Length " + orderedDependencies.size() + ": " + orderedDependencies.toString() + " vs. "
-					+ "Length " + dependencies.size() + ": " + dependencies.toString());
+			throw new IllegalStateException(
+					"Failed to compute dependency order for project " + project.getLocation()
+							+ ": Ordered list of dependencies does not match original dependencies list in length.\n"
+							+ "Length " + orderedDependencies.size() + ": " + orderedDependencies.toString() + " vs. "
+							+ "Length " + dependencies.size() + ": " + dependencies.toString());
 		}
 
 		return orderedDependencies;

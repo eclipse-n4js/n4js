@@ -32,6 +32,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tester.TestDiscoveryHelper;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.domain.TestSuite;
@@ -39,6 +40,7 @@ import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.tests.AbstractTestTreeTest;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
+import org.eclipse.n4js.utils.URIUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,9 +93,9 @@ public class HeadlessTestDiscoveryTest extends AbstractTestTreeTest {
 	/***/
 	@Before
 	public void prepareIN4JSCore() {
-		fbWorkspace.registerProject(URI.createFileURI(TEST_PROJECT.getAbsolutePath()));
-		fbWorkspace.registerProject(URI.createFileURI(TEST_PROJECT_IDEBUG_572.getAbsolutePath()));
-		fbWorkspace.registerProject(URI.createFileURI(TEST_N4JSX_PROJECT.getAbsolutePath()));
+		fbWorkspace.registerProject(new FileURI(TEST_PROJECT));
+		fbWorkspace.registerProject(new FileURI(TEST_PROJECT_IDEBUG_572));
+		fbWorkspace.registerProject(new FileURI(TEST_N4JSX_PROJECT));
 		// Register extensions
 		headlessExtensionRegistrationHelper.registerExtensions();
 	}
@@ -317,7 +319,7 @@ public class HeadlessTestDiscoveryTest extends AbstractTestTreeTest {
 	}
 
 	private static final URI toURI(File file) {
-		return URI.createFileURI(file.getAbsolutePath());
+		return URIUtils.toFileUri(file);
 	}
 
 	private static final String createFqn(String... segments) {

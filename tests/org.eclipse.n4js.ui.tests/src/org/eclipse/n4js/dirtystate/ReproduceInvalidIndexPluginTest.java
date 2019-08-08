@@ -13,6 +13,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.XtextParametrizedRunner;
 import org.eclipse.n4js.XtextParametrizedRunner.Parameters;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.UserdataMapper;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
@@ -122,7 +123,7 @@ public class ReproduceInvalidIndexPluginTest extends AbstractBuilderParticipantT
 		// not executing anything, so a dummy n4js-runtime is sufficient:
 		ProjectTestsUtils.importProject(testdataLocation, N4JSGlobals.N4JS_RUNTIME);
 		for (String projectName : projectsToImport) {
-			ProjectTestsUtils.importProject(testdataLocation, projectName);
+			ProjectTestsUtils.importProject(testdataLocation, new N4JSProjectName(projectName));
 		}
 		if (incremental) {
 			// This should really be called incrementalBuild

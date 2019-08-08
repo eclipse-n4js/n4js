@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.RuntimeEnvironmentsHelper;
 import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
@@ -52,10 +53,10 @@ public class GH_986_ExternalCircularDependencyAndRuntimeLibrariesPluginUITest ex
 	// the workspace projects location in the probands folder
 	private static final String WS_LOC = "workspace";
 
-	private static final String CLIENT_DEPS_PROJECT_NAME = "client-dependencies";
-	private static final String CLIENT_DEV_DEPS_PROJECT_NAME = "client-devDependencies";
+	private static final N4JSProjectName CLIENT_DEPS_PROJECT_NAME = new N4JSProjectName("client-dependencies");
+	private static final N4JSProjectName CLIENT_DEV_DEPS_PROJECT_NAME = new N4JSProjectName("client-devDependencies");
 
-	private static final String RUNTIME_ENVIRONMENT_NAME = "n4js-es5";
+	private static final N4JSProjectName RUNTIME_ENVIRONMENT_NAME = new N4JSProjectName("n4js-es5");
 
 	@Inject
 	private RuntimeEnvironmentsHelper runtimeEnvironmentsHelper;

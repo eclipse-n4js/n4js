@@ -26,15 +26,14 @@ import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
-import org.eclipse.n4js.internal.N4JSModel;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -46,8 +45,11 @@ public class HeadlessHelper {
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
+	/*
+	 * We must be able to find projects that are not yet available in workspace.
+	 */
 	@Inject
-	private N4JSModel n4jsModel;
+	private IN4JSCore n4jsCore;
 
 	@Inject
 	private IHeadlessLogger logger;
@@ -68,7 +70,16 @@ public class HeadlessHelper {
 	 *             in error Case.
 	 */
 	public void registerProjects(BuildSet buildSet, FileBasedWorkspace workspace) throws N4JSCompileException {
-		Iterable<URI> projectUris = Iterables.transform(buildSet.getAllProjects(), p -> p.getLocation());
+		List<FileURI> projectUris = new ArrayList<>();
+		for (IN4JSProject project : buildSet.getAllProjects()) {
+			SafeURI<?> location = project.getLocation();
+			if (location instanceof FileURI) {
+				projectUris.add((FileURI) location);
+			} else {
+				throw new IllegalArgumentException(
+						"Unexpected project " + project.getProjectName() + " at " + location);
+			}
+		}
 		// Register all projects with the file based workspace.
 		this.registerProjectsToFileBasedWorkspace(projectUris, workspace);
 	}
@@ -79,27 +90,26 @@ public class HeadlessHelper {
 	 * Skips {@link IN4JSProject}s that are already registered with the given {@code workspace}.
 	 *
 	 */
-	public void registerProjectsToFileBasedWorkspace(Iterable<URI> projectURIs, FileBasedWorkspace workspace)
+	public void registerProjectsToFileBasedWorkspace(Iterable<FileURI> projectURIs,
+			FileBasedWorkspace workspace)
 			throws N4JSCompileException {
 
 		// TODO GH-783 refactor FileBasedWorkspace, https://github.com/eclipse/n4js/issues/783
 		// this is reverse mapping of the one that is kept in the workspace
-		Map<String, URI> registeredProjects = new HashMap<>();
+		Map<String, FileURI> registeredProjects = new HashMap<>();
 		workspace.getAllProjectLocationsIterator().forEachRemaining(uri -> {
 			String projectName = workspace.getProjectDescription(uri).getProjectName();
-			registeredProjects.put(projectName, URIUtils.normalize(uri));
+			registeredProjects.put(projectName, uri);
 		});
 
 		// register all projects with the file based workspace.
-		for (URI uri : projectURIs) {
-			URI projectURI = URIUtils.normalize(uri);
-
+		for (FileURI projectURI : projectURIs) {
 			final ProjectDescription projectDescription = projectDescriptionLoader
 					.loadProjectDescriptionAtLocation(projectURI);
 
 			if (projectDescription == null) {
 				throw new N4JSCompileException(
-						"Cannot load project description for project at " + projectURI.toFileString()
+						"Cannot load project description for project at " + projectURI
 								+ ". Make sure the project contains a valid package.json file.");
 			}
 
@@ -164,11 +174,10 @@ public class HeadlessHelper {
 			FileBasedWorkspace workspace)
 			throws N4JSCompileException {
 
-		Set<URI> result = Sets.newLinkedHashSet();
+		Set<FileURI> result = Sets.newLinkedHashSet();
 
 		for (File sourceFile : sourceFiles) {
-			URI sourceFileURI = URI.createFileURI(sourceFile.toString());
-			URI projectURI = workspace.findProjectWith(sourceFileURI);
+			FileURI projectURI = workspace.findProjectWith(new FileURI(sourceFile));
 			if (projectURI == null) {
 				throw new N4JSCompileException("No project for file '" + sourceFile.toString() + "' found.");
 			}
@@ -192,7 +201,7 @@ public class HeadlessHelper {
 	}
 
 	/**
-	 * Returns a list of {@link N4JSProject} instances representing all N4JS projects at the given locations.
+	 * Returns a list of {@link IN4JSProject instances} representing all N4JS projects at the given locations.
 	 *
 	 * Excludes projects that have been installed by the library manager which do not need to be built (cf.
 	 * {@link #isProjectToBeBuilt(IN4JSProject)}).
@@ -201,9 +210,9 @@ public class HeadlessHelper {
 	 *            the URIs to process
 	 * @return a list of projects at the given URIs
 	 */
-	public List<N4JSProject> getN4JSProjects(List<URI> projectURIs) {
-		return projectURIs.stream().map(URIUtils::normalize)
-				.map(u -> n4jsModel.getN4JSProject(u))
+	public List<IN4JSProject> getN4JSProjects(List<FileURI> projectURIs) {
+		return projectURIs.stream()
+				.map(u -> n4jsCore.create(u.toURI()))
 				.filter(p -> isProjectToBeBuilt(p))
 				.collect(Collectors.toList());
 	}
@@ -215,8 +224,11 @@ public class HeadlessHelper {
 	 *
 	 */
 	public boolean isProjectToBeBuilt(IN4JSProject project) {
+		if (project == null) {
+			return false;
+		}
 		if (project.isExternal()) {
-			return externalLibraryHelper.isExternalProjectDirectory(project.getLocationPath().toFile());
+			return externalLibraryHelper.isExternalProjectDirectory(project.getLocation());
 		}
 		return true;
 	}
@@ -229,9 +241,8 @@ public class HeadlessHelper {
 	 *            the files to convert
 	 * @return the list of URIs
 	 */
-	public List<URI> createFileURIs(List<File> files) {
-		return files.stream().map(f -> URI.createFileURI(f.toString())).map(URIUtils::normalize)
-				.collect(Collectors.toList());
+	public List<FileURI> createFileURIs(List<File> files) {
+		return files.stream().map(FileURI::new).collect(Collectors.toList());
 	}
 
 	/**
@@ -251,14 +262,15 @@ public class HeadlessHelper {
 	 * @throws N4JSCompileException
 	 *             if project conflicts with project in different location
 	 */
-	private boolean skipRegistering(String projectName, URI projectLocation, Map<String, URI> registeredProjects)
+	private boolean skipRegistering(String projectName, FileURI projectLocation,
+			Map<String, FileURI> registeredProjects)
 			throws N4JSCompileException {
 
 		// new ID, don't skip registering
 		if (!registeredProjects.containsKey(projectName))
 			return false;
 
-		URI registeredProjectLocation = registeredProjects.get(projectName);
+		FileURI registeredProjectLocation = registeredProjects.get(projectName);
 
 		// duplicate is the same location, so the same project passed twice, skip registering
 		if (projectLocation.equals(registeredProjectLocation))
@@ -274,7 +286,6 @@ public class HeadlessHelper {
 		throw new N4JSCompileException("Duplicate project id [" + projectName
 				+ "]. Already registered project at " + registeredProjectLocation
 				+ ", trying to register project at " + projectLocation + ".");
-
 	}
 
 	/**

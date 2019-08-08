@@ -10,44 +10,31 @@
  */
 package org.eclipse.n4js.ui.internal;
 
-import java.io.File;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Iterator;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
 
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import com.google.common.collect.UnmodifiableIterator;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
  */
 @Singleton
-public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
+public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace<PlatformResourceURI> {
+
 	private final IWorkspaceRoot workspace;
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
@@ -76,80 +63,49 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 	}
 
 	@Override
-	public URI findProjectWith(URI nestedLocation) {
-		if (nestedLocation.isPlatformResource()) {
-			return URI.createPlatformResourceURI(nestedLocation.segment(1), true);
-		}
-		// this might happen if the URI was located from non-platform information, e.g. in case
-		// of a source file location found in a source map
-		// FIXME: This loop and the call 'toFile()' / 'isFile()' are very expensive
-		// FIXME: since this method is called for a lot of external files
-		if (nestedLocation.toString().startsWith("file:/")) {
-			String nested = nestedLocation.toFileString();
-			java.nio.file.Path nestedPath = Paths.get(nested);
-
-			for (IProject proj : workspace.getProjects()) {
-				String locationStr = proj.getLocation().toString();
-				java.nio.file.Path locationPath = Paths.get(locationStr);
-
-				if (nestedPath.startsWith(locationPath)) {
-					java.nio.file.Path nodeModulesPath = locationPath.resolve(N4JSGlobals.NODE_MODULES);
-
-					if (!nestedPath.startsWith(nodeModulesPath) || nestedPath.equals(nodeModulesPath)) {
-						// Note: There can be projects in nested node_modules folder.
-						// The node_modules folder is still part of a project, but all
-						// elements below the node_modules folder are not part of this project.
-						return URIUtils.toFileUri(proj);
-					}
-				}
-			}
-		}
-		return null;
-
-	}
-
-	/** @return the {@link URI} for a project with the given n4js project name */
-	public URI findProjectForName(String projectName) {
-		if (projectName == null) {
+	public PlatformResourceURI fromURI(URI uri) {
+		if (!uri.isPlatformResource()) {
 			return null;
 		}
-		for (IProject prj : workspace.getProjects()) {
-			URI uri = URIUtils.convert(prj);
-			String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri);
-			if (projectName.equals(n4jsProjectName)) {
-				return uri;
-			}
-		}
-		return null;
+		return new PlatformResourceURI(uri);
 	}
 
 	@Override
-	public ProjectDescription getProjectDescription(URI location) {
-		if (!location.isPlatformResource()) {
-			return null;
-		}
+	public PlatformResourceURI findProjectWith(PlatformResourceURI nestedLocation) {
+		return new PlatformResourceURI(URI.createPlatformResourceURI(nestedLocation.toURI().segment(1), true));
+	}
+
+	@Override
+	public ProjectDescription getProjectDescription(PlatformResourceURI location) {
 		ProjectDescriptionLoaderAndNotifier supplier = new ProjectDescriptionLoaderAndNotifier(location);
 		ProjectDescription existing = cache.get(supplier, MultiCleartriggerCache.CACHE_KEY_PROJECT_DESCRIPTIONS,
-				location);
-
+				location.toURI());
 		return existing;
 	}
 
 	@Override
-	public Collection<URI> getAllProjectLocations() {
-		Collection<URI> prjLocations = new LinkedList<>();
+	public PlatformResourceURI getProjectLocation(N4JSProjectName name) {
+		IProject project = workspace.getProject(name.toEclipseProjectName().getRawName());
+		if (project.exists()) {
+			return new PlatformResourceURI(project);
+		}
+		return null;
+	}
+
+	@Override
+	public Collection<PlatformResourceURI> getAllProjectLocations() {
+		Collection<PlatformResourceURI> prjLocations = new ArrayList<>();
 		for (IProject prj : workspace.getProjects()) {
-			URI uri = URIUtils.convert(prj);
-			prjLocations.add(uri);
+			prjLocations.add(new PlatformResourceURI(prj));
 		}
 		return prjLocations;
 	}
 
 	/** Loads the project description and notifies the listener */
 	private class ProjectDescriptionLoaderAndNotifier implements CleartriggerSupplier<ProjectDescription> {
-		final URI location;
+		final PlatformResourceURI location;
 
-		public ProjectDescriptionLoaderAndNotifier(URI location) {
+		public ProjectDescriptionLoaderAndNotifier(PlatformResourceURI location) {
 			this.location = location;
 		}
 
@@ -163,13 +119,13 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 		public void postSupply() {
 			if (listener != null) {
 				// happens in test scenarios
-				listener.onDescriptionLoaded(location);
+				listener.onDescriptionLoaded(location.toURI());
 			}
 		}
 	}
 
 	@Override
-	public URI getLocation(URI projectURI, ProjectReference projectReference) {
+	public PlatformResourceURI getLocation(ProjectReference projectReference) {
 		String expectedProjectName = projectReference.getProjectName();
 		if (expectedProjectName != null && expectedProjectName.length() > 0) {
 			// the below call to workspace.getProject(name) will search the Eclipse IProject by name, using the
@@ -179,59 +135,23 @@ public class EclipseBasedN4JSWorkspace extends InternalN4JSWorkspace {
 					.convertN4JSProjectNameToEclipseProjectName(expectedProjectName);
 			IProject existingProject = workspace.getProject(expectedEclipseProjectName);
 			if (existingProject.isAccessible()) {
-				return URI.createPlatformResourceURI(expectedEclipseProjectName, true);
+				return new PlatformResourceURI(existingProject);
 			}
 		}
 		return null;
 	}
 
 	@Override
-	public UnmodifiableIterator<URI> getFolderIterator(URI folderLocation) {
-		final IContainer container;
-		if (URIUtils.isPlatformResourceUriPointingToProject(folderLocation)) {
-			String n4jsProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(folderLocation);
-			String eclipseProjectName = ProjectDescriptionUtils
-					.convertN4JSProjectNameToEclipseProjectName(n4jsProjectName);
-			container = workspace.getProject(eclipseProjectName);
-		} else {
-			container = workspace.getFolder(new Path(folderLocation.toPlatformString(true)));
-		}
-		if (container != null && container.exists()) {
-			final List<URI> result = Lists.newLinkedList();
-			try {
-				container.accept(new IResourceVisitor() {
-					@Override
-					public boolean visit(IResource resource) throws CoreException {
-						if (resource.getType() == IResource.FILE) {
-							result.add(URI.createPlatformResourceURI(resource.getFullPath().toString(), true));
-						}
-						// do not iterate over contents of nested node_modules folders
-						if (resource.getType() == IResource.FOLDER &&
-								resource.getName().equals(N4JSGlobals.NODE_MODULES)) {
-							return false;
-						}
-						return true;
-					}
-				});
-				return Iterators.unmodifiableIterator(result.iterator());
-			} catch (CoreException e) {
-				return Iterators.unmodifiableIterator(result.iterator());
-			}
-		}
-		return Iterators.unmodifiableIterator(Collections.emptyIterator());
+	public Iterator<? extends PlatformResourceURI> getFolderIterator(
+			PlatformResourceURI folderLocation) {
+		return folderLocation.getAllChildren();
 	}
 
 	@Override
-	public URI findArtifactInFolder(URI folderLocation, String folderRelativePath) {
-		final String folderLocationString = folderLocation.toPlatformString(true);
-		if (null != folderLocationString) {
-			final IFolder folder = workspace.getFolder(new Path(folderLocationString));
-			final String subPathStr = folderRelativePath.replace(File.separator, "/");
-			final IPath subPath = new Path(subPathStr);
-			final IFile file = folder != null ? folder.getFile(subPath) : null;
-			if (file != null && file.exists()) {
-				return folderLocation.appendSegments(subPathStr.split("/"));
-			}
+	public PlatformResourceURI findArtifactInFolder(PlatformResourceURI folderLocation, String folderRelativePath) {
+		PlatformResourceURI result = folderLocation.appendPath(folderRelativePath);
+		if (result.exists()) {
+			return result;
 		}
 		return null;
 	}

@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -42,6 +41,7 @@ import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils.ParseResult;
 import org.eclipse.xtext.resource.SaveOptions;
@@ -569,7 +569,7 @@ public class JSONModelUtils {
 
 		// Use temporary Resource as AbstractFormatter2 implementations can only format
 		// semantic elements that are contained in a Resource.
-		Resource temporaryResource = resourceSet.createResource(URI.createFileURI("__synthetic." + FILE_EXTENSION));
+		Resource temporaryResource = resourceSet.createResource(URIUtils.toFileUri("__synthetic." + FILE_EXTENSION));
 		temporaryResource.getContents().add(document);
 
 		// create string writer as serialization output
