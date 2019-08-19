@@ -431,13 +431,21 @@ import com.google.common.collect.Iterables;
 					&& N4JSLanguageUtils.hasCovariantConstructor((TClassifier) left_staticType);
 
 			// left must not contain a wildcard, (open or closed) existential type, this type
-			// (except we have a @CovariantConstructor)
+			// (except we have a @CovariantConstructor or we have same capture on both sides)
 			if (!leftHasCovariantConstructor) {
 				final boolean hasDisallowedArg = leftTypeArg instanceof Wildcard
 						|| leftTypeArg instanceof ExistentialTypeRef
 						|| leftTypeArg instanceof ThisTypeRef;
 				if (hasDisallowedArg) {
-					return failure();
+					final boolean isSameCapture = leftTypeArg instanceof ExistentialTypeRef
+							&& rightTypeArg instanceof ExistentialTypeRef
+							&& !((ExistentialTypeRef) leftTypeArg).isReopened()
+							&& !((ExistentialTypeRef) rightTypeArg).isReopened()
+							&& ((ExistentialTypeRef) leftTypeArg).getId()
+									.equals(((ExistentialTypeRef) rightTypeArg).getId());
+					if (!isSameCapture) {
+						return failure();
+					}
 				}
 			}
 

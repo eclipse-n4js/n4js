@@ -195,7 +195,8 @@ import com.google.inject.Inject;
 							return anyTypeRef(G2);
 						} else {
 							// bind type variables in function type's parameter type
-							return ts.substTypeVariables(G2, paramType);
+							return ts.substTypeVariables(G2, paramType, false, true); // FIXME substitute on typeRef of
+							// ctor instead!
 						}
 					}
 				}

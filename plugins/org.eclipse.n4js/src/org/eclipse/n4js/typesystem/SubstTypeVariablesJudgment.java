@@ -197,10 +197,10 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			if (typeArg != null) {
 				// substitute in type argument
 				TypeArgument tResult = substTypeVariables(G, typeArg, captureContainedWildcards);
-				if (tResult != typeRef.getTypeArg()) {
+				if (tResult != typeArg) {
 					// changed
-					TypeTypeRef result = TypeUtils.copyIfContained(typeRef);
-					result.setTypeArg(TypeUtils.copyIfContained(tResult));
+					TypeTypeRef result = TypeUtils.copy(typeRef);
+					result.setTypeArg(tResult);
 					return result;
 				}
 			}
@@ -265,7 +265,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				final TypeArgument[] argsChanged = new TypeArgument[len];
 				for (int i = 0; i < len; i++) {
 					final TypeArgument arg = typeRef.getTypeArgs().get(i);
-					TypeArgument argSubst = substTypeVariables(G, arg, captureContainedWildcards);
+					TypeArgument argSubst = substTypeVariables(G, arg, false);
 					if (argSubst != arg) {
 						// n.b.: will only add to argsChanged if changed! (otherwise argsChanged[i] will remain null)
 						argsChanged[i] = argSubst;
