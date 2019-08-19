@@ -736,8 +736,8 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
  * declared type of g1, g2, and g3 could have been specified without wildcards).
  * <p>
  * For details, see<br/>
- * S. Wehr and P. Thiemann: Subtyping Existential Types. 2008, <a href="http://www.informatik.uni-freiburg.de/~wehr/publications/Wehr_Subtyping_existential_types.pdf">PDF</a><br/>
- * N. Cameron, S. Drossopoulou, and E. Ernst: A Model for Java with Wildcards. Springer, 2008,<a href="http://dx.doi.org/10.1007/978-3-540-70592-5_2">DOI</a><br/>
+ * S. Wehr and P. Thiemann: Subtyping Existential Types. 2008, <a href="http://www.stefanwehr.de/publications/Wehr_Subtyping_existential_types.pdf">PDF</a><br/>
+ * N. Cameron, S. Drossopoulou, and E. Ernst: A Model for Java with Wildcards. Springer, 2008,<a href="https://doi.org/10.1007/978-3-540-70592-5_2">DOI</a><br/>
  * M. Torgersen, E. Ernst, and C. P. Hansen: Wild FJ. 2005
  */
 class ExistentialTypeRef extends TypeRef {
