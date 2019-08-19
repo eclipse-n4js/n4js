@@ -1228,8 +1228,10 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 				: mainContext;
 		final RuleEnvironment G_left = ts.createRuleEnvironmentForContext(mainContext, mainContext, res);
 		final RuleEnvironment G_right = ts.createRuleEnvironmentForContext(mainContext, rightThisContext, res);
-		TypeRef typeLeft = ts.tau(left, G_left);
-		TypeRef typeRight = ts.tau(right, G_right);
+		TypeRef typeLeftPlain = ts.type(G_left, left);
+		TypeRef typeLeft = typeLeftPlain != null ? ts.substTypeVariables(G_left, typeLeftPlain, false, true) : null;
+		TypeRef typeRightPlain = ts.type(G_right, right);
+		TypeRef typeRight = typeRightPlain != null ? ts.substTypeVariables(G_right, typeRightPlain, false, true) : null;
 
 		// in case of checking compatibility of constructors, we can ignore the return types
 		// i.e. turn {function(string):this[C]?} into {function(string)}
