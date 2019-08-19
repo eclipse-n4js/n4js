@@ -265,7 +265,10 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				final TypeArgument[] argsChanged = new TypeArgument[len];
 				for (int i = 0; i < len; i++) {
 					final TypeArgument arg = typeRef.getTypeArgs().get(i);
-					TypeArgument argSubst = substTypeVariables(G, arg, false);
+					final boolean captureContainedWildcardsNEW = arg instanceof Wildcard
+							? captureContainedWildcards
+							: false;
+					TypeArgument argSubst = substTypeVariables(G, arg, captureContainedWildcardsNEW);
 					if (argSubst != arg) {
 						// n.b.: will only add to argsChanged if changed! (otherwise argsChanged[i] will remain null)
 						argsChanged[i] = argSubst;
