@@ -434,7 +434,17 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				// ⟨ L <: ? extends UB ⟩ implies ⟨ L <: UB ⟩
 				wasAdded |= reduce(left, ubRight, CO);
 			}
+			final TypeRef lbRight = right.getDeclaredLowerBound();
+			if (lbRight != null) {
+				// ⟨ L <: ? super LB ⟩ implies ⟨ L <: LB ⟩
+				wasAdded |= reduce(left, lbRight, CO);
+			}
 		} else if (variance == CONTRA) {
+			final TypeRef ubRight = right.getDeclaredOrImplicitUpperBound();
+			if (ubRight != null) {
+				// ⟨ L :> ? extends UB ⟩ implies ⟨ L :> UB ⟩
+				wasAdded |= reduce(left, ubRight, CONTRA);
+			}
 			final TypeRef lbRight = right.getDeclaredLowerBound();
 			if (lbRight != null) {
 				// ⟨ L :> ? super LB ⟩ implies ⟨ L :> LB ⟩
