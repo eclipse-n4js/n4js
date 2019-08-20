@@ -624,7 +624,7 @@ import com.google.inject.Inject;
 			}
 
 			if (!N4JSASTUtils.isWriteAccess(idref)) {
-				T = ts.substTypeVariables(G, T);
+				T = ts.substTypeVariablesWithCapture(G, T);
 			}
 
 			return T;
