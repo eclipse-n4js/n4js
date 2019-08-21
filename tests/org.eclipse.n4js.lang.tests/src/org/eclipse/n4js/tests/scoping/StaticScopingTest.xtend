@@ -122,14 +122,14 @@ class StaticScopingTest {
 
 		val thisInMethod1 = script.eAllContents.filter(ThisLiteral).head
 		val G = script.newRuleEnvironment
-		val thisType1 = ts.upperBound(G, ts.type(G, thisInMethod1))
+		val thisType1 = ts.upperBoundWithForce(G, ts.type(G, thisInMethod1))
 		Assert.assertTrue("expected type{A} but was " + thisType1.class, thisType1 instanceof TypeTypeRef)
 		val classifierTypeRef1 = thisType1 as TypeTypeRef
 		val typeName1 = tsh.getStaticType(G, classifierTypeRef1).name
 		Assert.assertEquals("A", typeName1)
 
 		val thisInMethod2 = script.eAllContents.filter(ThisLiteral).last
-		val thisType2 = ts.upperBound(G, ts.type(G, thisInMethod2))
+		val thisType2 = ts.upperBoundWithForce(G, ts.type(G, thisInMethod2))
 		Assert.assertTrue("expected type{A} but was " + thisType2.class, thisType2 instanceof ParameterizedTypeRef)
 		val parameterizedTypeRef = thisType2 as ParameterizedTypeRef
 		val typeName2 = parameterizedTypeRef.declaredType.name

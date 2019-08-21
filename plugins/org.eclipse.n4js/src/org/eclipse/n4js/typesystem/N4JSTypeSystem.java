@@ -267,7 +267,7 @@ public class N4JSTypeSystem {
 
 	/** Returns the upper bound of the given type. Never returns <code>null</code>. */
 	public TypeRef upperBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument, true);
+		return boundJudgment.applyUpperBound(G, typeArgument, false);
 	}
 
 	public TypeRef upperBoundHesitant(RuleEnvironment G, TypeArgument typeArgument) {
@@ -280,7 +280,7 @@ public class N4JSTypeSystem {
 
 	/** Returns the lower bound of the given type. Never returns <code>null</code>. */
 	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument, true);
+		return boundJudgment.applyLowerBound(G, typeArgument, false);
 	}
 
 	public TypeRef lowerBoundHesitant(RuleEnvironment G, TypeArgument typeArgument) {

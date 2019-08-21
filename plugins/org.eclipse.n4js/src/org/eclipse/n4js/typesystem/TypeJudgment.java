@@ -375,7 +375,7 @@ import com.google.inject.Inject;
 					final TypeRef ofPartTypeRef = ts.type(G2, forOfStmnt.getExpression());
 					final TypeArgument elemType = tsh.extractIterableElementType(G2, ofPartTypeRef);
 					if (elemType != null) {
-						T = ts.upperBound(G2, elemType);
+						T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G2, elemType);
 					} else {
 						T = unknown();
 					}
@@ -1033,7 +1033,7 @@ import com.google.inject.Inject;
 						//         }
 						//     }
 						// @formatter:on
-						T = ts.upperBound(G2, T); // taking upper bound turns this[C] into C
+						T = ts.upperBoundWithForce(G2, T); // taking upper bound turns this[C] into C
 					}
 				}
 				return T;

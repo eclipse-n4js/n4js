@@ -98,13 +98,7 @@ package class DerivationComputer extends TypeSystemHelperStrategy {
 	}
 
 
-	def FunctionTypeExpression createUpperBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
-		createBoundOfFunctionTypeExprOrRef(G,F,BoundType.UPPER);
-	}
-	def FunctionTypeExpression createLowerBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
-		createBoundOfFunctionTypeExprOrRef(G,F,BoundType.LOWER);
-	}
-	def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType) {
+	def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType, boolean force) {
 		val result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression
 
 		// let posterity know that the newly created FunctionTypeExpression
@@ -128,8 +122,8 @@ package class DerivationComputer extends TypeSystemHelperStrategy {
 		// upper/lower bound of return type
 		if (F.returnTypeRef !== null) {
 			val resultReturnTypeRef = switch(boundType) {
-				case UPPER: ts.upperBound(G,F.returnTypeRef)
-				case LOWER: ts.lowerBound(G,F.returnTypeRef)
+				case UPPER: if (force) ts.upperBoundWithForce(G,F.returnTypeRef) else ts.upperBoundHesitant(G,F.returnTypeRef)
+				case LOWER: if (force) ts.lowerBoundWithForce(G,F.returnTypeRef) else ts.lowerBoundHesitant(G,F.returnTypeRef)
 			};
 			result.returnTypeRef =
 				TypeUtils.copyIfContained(resultReturnTypeRef);
@@ -146,8 +140,8 @@ package class DerivationComputer extends TypeSystemHelperStrategy {
 
 				if(fpar.typeRef !== null) {
 					val resultParTypeRef = switch(boundType) {
-						case UPPER: ts.lowerBound(G,fpar.typeRef)
-						case LOWER: ts.upperBound(G,fpar.typeRef)
+						case UPPER: if (force) ts.lowerBoundWithForce(G,fpar.typeRef) else ts.lowerBoundHesitant(G,fpar.typeRef)
+						case LOWER: if (force) ts.upperBoundWithForce(G,fpar.typeRef) else ts.upperBoundHesitant(G,fpar.typeRef)
 					};
 					newPar.typeRef = TypeUtils.copyIfContained(resultParTypeRef)
 				}

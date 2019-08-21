@@ -211,7 +211,7 @@ import com.google.common.base.Optional;
 
 		@Override
 		public TypeRef caseFunctionTypeExprOrRef(FunctionTypeExprOrRef F) {
-			return typeSystemHelper.createBoundOfFunctionTypeExprOrRef(G, F, boundType);
+			return typeSystemHelper.createBoundOfFunctionTypeExprOrRef(G, F, boundType, force);
 		}
 
 		@Override
@@ -238,6 +238,13 @@ import com.google.common.base.Optional;
 						return TypeUtils.createTypeTypeRef(typeArgNew, ct.isConstructorRef());
 					}
 				}
+			}
+			final TypeArgument typeArg = ct.getTypeArg();
+			final TypeArgument typeArgBound = pushBoundOfTypeArgument(typeArg);
+			if (typeArgBound != typeArg) {
+				TypeTypeRef ctCpy = TypeUtils.copyPartial(ct, TypeRefsPackage.eINSTANCE.getTypeTypeRef_TypeArg());
+				ctCpy.setTypeArg(TypeUtils.copyIfContained(typeArgBound));
+				return ctCpy;
 			}
 			return ct;
 		}

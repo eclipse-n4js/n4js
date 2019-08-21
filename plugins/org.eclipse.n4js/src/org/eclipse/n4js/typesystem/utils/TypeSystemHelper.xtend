@@ -112,14 +112,9 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		boolean captureContainedWildcards, boolean captureUponSubstitution) {
 		derivationComputer.createSubstitutionOfFunctionTypeExprOrRef(G,F,captureContainedWildcards,captureUponSubstitution);
 	}
-	def FunctionTypeExpression createUpperBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
-		derivationComputer.createUpperBoundOfFunctionTypeExprOrRef(G,F);
-	}
-	def FunctionTypeExpression createLowerBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
-		derivationComputer.createLowerBoundOfFunctionTypeExprOrRef(G,F);
-	}
-	def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType) {
-		derivationComputer.createBoundOfFunctionTypeExprOrRef(G,F,boundType);
+	def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType,
+		boolean force) {
+		derivationComputer.createBoundOfFunctionTypeExprOrRef(G,F,boundType,force);
 	}
 
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
@@ -245,7 +240,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 
 	/** see {@link N4JSTypeSystem#resolveType(RuleEnvironment,TypeArgument)} */
 	public def TypeRef resolveType(RuleEnvironment G, TypeArgument typeArg) {
-		var typeRef = if(typeArg !== null) ts.upperBound(G, typeArg);
+		var typeRef = if(typeArg !== null) ts.upperBoundWithForce(G, typeArg);
 		typeRef = if(typeRef !== null) TypeUtils.resolveTypeVariable(typeRef);
 		// TODO IDE-2367 recursively resolve the resulting 'typeRef' until it is stable (requires refactoring of upper/lower bound judgment!)
 		return typeRef;
@@ -267,13 +262,13 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
-		val typeUB = ts.upperBound(G, typeRaw); // take upper bound to get rid of wildcards (if any)
+		val typeUB = ts.upperBoundWithForce(G, typeRaw); // take upper bound to get rid of wildcards, etc. (if any)
 		val declType = typeUB.declaredType
 		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
 			// don't use these types to type variables, fields, properties -> replace with any
 			return G.anyTypeRef;
 		}
-		val typeReopened = ts.reopenExistentialTypes(G, typeUB);
+		val typeReopened = ts.reopenExistentialTypes(G, typeUB); // FIXME probably no longer required! (due to "withForce" above)
 		return typeReopened;
 	}
 

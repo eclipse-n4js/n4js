@@ -578,7 +578,7 @@ import com.google.common.collect.Iterables;
 		if (boundThisTypeRef == right) {
 			return success();
 		}
-		final TypeRef upperExt = ts.upperBound(G, boundThisTypeRef);
+		final TypeRef upperExt = ts.upperBoundWithForce(G, boundThisTypeRef);
 		return requireAllSuccess(
 				ts.subtype(G, upperExt, right));
 	}

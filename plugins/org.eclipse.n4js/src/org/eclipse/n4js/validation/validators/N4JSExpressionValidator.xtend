@@ -984,8 +984,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			var trhs = ts.type(G, ee.rhs)
 
 			// we are only interested in upper bound here, cf. IDEBUG-260
-			tlhs = ts.reopenExistentialTypes(G, ts.upperBound(G, tlhs))
-			trhs = ts.reopenExistentialTypes(G, ts.upperBound(G, trhs))
+			tlhs = ts.upperBoundWithForce(G, tlhs)
+			trhs = ts.upperBoundWithForce(G, trhs)
 
 			val leftSubOfRight = ts.subtypeSucceeded(G, tlhs, trhs)
 			val rightSubOfLeft = ts.subtypeSucceeded(G, trhs, tlhs)
