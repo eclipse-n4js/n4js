@@ -158,12 +158,12 @@ public class N4JSTypeSystem {
 		return equaltype(G, left, right).isSuccess();
 	}
 
-	/** Returns the upper bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
+	/** Returns the upper bound of the given type. Never returns <code>null</code>. */
 	public TypeRef upperBound(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyUpperBound(G, typeArgument);
 	}
 
-	/** Returns the lower bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
+	/** Returns the lower bound of the given type. Never returns <code>null</code>. */
 	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyLowerBound(G, typeArgument);
 	}
@@ -241,6 +241,9 @@ public class N4JSTypeSystem {
 										&& !((ExistentialTypeRef) eobj).isReopened());
 		if (isOrContainsClosedExistential) {
 			TypeRef cpy = TypeUtils.copy(typeRef);
+			if (cpy instanceof ExistentialTypeRef) {
+				((ExistentialTypeRef) cpy).setReopened(true);
+			}
 			StreamSupport.stream(Spliterators.spliteratorUnknownSize(cpy.eAllContents(), 0), false)
 					.filter(eobj -> eobj instanceof ExistentialTypeRef)
 					.forEach(etr -> ((ExistentialTypeRef) etr).setReopened(true));

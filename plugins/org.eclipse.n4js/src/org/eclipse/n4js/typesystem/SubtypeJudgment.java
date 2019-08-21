@@ -506,17 +506,12 @@ import com.google.common.collect.Iterables;
 		}
 		if (existentialTypeRef.isReopened()) {
 			// special case: open existential
-			// --> we may pick any valid type we want for 'existentialTypeRef'
-			// --> only check that 'left' lies within the bounds
+			// --> treat it like a wildcard
 
 			// obtain wildcard from which existentialTypeRef was created
 			final Wildcard wildThing = existentialTypeRef.getWildcard();
-			// check upper and lower bounds
-			final TypeRef upperBound = ts.upperBound(G, wildThing);
-			final TypeRef lowerBound = ts.lowerBound(G, wildThing);
 			return requireAllSuccess(
-					ts.subtype(G, right, upperBound),
-					ts.subtype(G, lowerBound, right));
+					ts.subtype(G, wildThing, right));
 		} else {
 			// standard case: closed existential
 			// --> the type has been picked but we don't know it
@@ -542,17 +537,12 @@ import com.google.common.collect.Iterables;
 		}
 		if (existentialTypeRef.isReopened()) {
 			// special case: open existential
-			// --> we may pick any valid type we want for 'existentialTypeRef'
-			// --> only check that 'left' lies within the bounds
+			// --> treat it like a wildcard
 
 			// obtain wildcard from which existentialTypeRef was created
 			final Wildcard wildThing = existentialTypeRef.getWildcard();
-			// check upper and lower bounds
-			final TypeRef upperBound = ts.upperBound(G, wildThing);
-			final TypeRef lowerBound = ts.lowerBound(G, wildThing);
 			return requireAllSuccess(
-					ts.subtype(G, left, upperBound),
-					ts.subtype(G, lowerBound, left));
+					ts.subtype(G, left, wildThing));
 		} else {
 			// standard case: closed existential
 			// --> the type has been picked but we don't know it
