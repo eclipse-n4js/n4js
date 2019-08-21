@@ -283,6 +283,21 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 		)
 	}
 
+	// FIXME IDE-1653 more tests like that
+	@Test
+	def void testArrayVsIterable() {
+		script.assertSolution(
+			#[
+				constraint(A,    '<:',alpha),
+				constraint(alpha,'<:',A),
+				constraint(_G.arrayTypeRef(beta.ref),'<:',_G.iterableTypeRef(wildcardExtends(alpha))) // Array<β> <: Iterable<? extends α>
+//				constraint(Gsub.of(beta.ref),'<:',G.of(wildcardExtends(alpha))) // Gsub<β> <: G<? extends α>
+			],
+			alpha -> A.ref,
+			beta -> A.ref
+		)
+	}
+
 	@Test
 	def void testTEMP() {
 		script.assertSolution(
