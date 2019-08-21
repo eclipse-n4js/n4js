@@ -443,7 +443,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef ctorTypeRef) {
 		var typeArg = ctorTypeRef.typeArg;
 		while(typeArg instanceof Wildcard || typeArg instanceof ExistentialTypeRef || typeArg instanceof BoundThisTypeRef) {
-			typeArg = ts.upperBound(G, typeArg);
+			typeArg = ts.upperBoundWithForce(G, typeArg);
 		}
 		return typeArg as TypeRef;
 	}

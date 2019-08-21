@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.typesystem.utils
 
+import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.List
@@ -322,9 +323,9 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			// -> make sure types are compatible
 
 			val mtypes = getMemberTypes(left, right, info);
-			var subtypeResult = null as Result;
 
 			// IDE-1780
+			var variance = null as Variance;
 			if (left.optional && !right.optional) {
 				info.missingMembers.add(left.name + ' failed: non-optional member requires a corresponding non-optional member in the structural subtype.');
 			} else if (right.writeableField && left instanceof TField) {
@@ -335,20 +336,23 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 					&& STRUCTURAL_READ_ONLY_FIELDS !== rightStrategy) {
 					info.wrongMembers.add(right.name + " failed: field is read-only.");
 				} else {
-					subtypeResult = ts.equaltype(G, mtypes.key, mtypes.value);
+					variance = Variance.INV;
 				}
 			} else if (right instanceof TSetter || left instanceof TSetter) {
 				// Setter on one side (other side may be field or setter).
 				// contra-variant
-				subtypeResult = ts.supertype(G, mtypes.key, mtypes.value);
+				variance = Variance.CONTRA;
 			} else {
 				// Other cases such as methods and function expressions.
 				// Only L<:R.
-				subtypeResult = ts.subtype(G, mtypes.key, mtypes.value);
+				variance = Variance.CO;
 			}
 
-			if (subtypeResult !== null && subtypeResult.failure) {
-				info.wrongMembers.add(right.name + " failed: " + subtypeResult.failureMessage);
+			if (variance !== null) {
+				val result = ts.checkTypeArgumentCompatibility(G, mtypes.key, mtypes.value, Optional.of(variance), true);
+				if (result.failure) {
+					info.wrongMembers.add(right.name + " failed: " + result.failureMessage);
+				}
 			}
 		}
 	}

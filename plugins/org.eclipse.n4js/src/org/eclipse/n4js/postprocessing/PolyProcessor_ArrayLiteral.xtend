@@ -86,7 +86,8 @@ if(isValueToBeDestructured) {
 			val elemTypeRefs = newArrayList;
 			val nonNullElems = arrLit.elements.filter[expression !== null];
 			for (arrElem : nonNullElems) {
-				val arrElemTypeRef = polyProcessor.processExpr(G, arrElem.expression, null, infCtx, cache);
+				var arrElemTypeRef = polyProcessor.processExpr(G, arrElem.expression, null, infCtx, cache);
+arrElemTypeRef = ts.upperBoundWithForce(G, arrElemTypeRef);
 				if (arrElem.spread) {
 					elemTypeRefs += extractSpreadTypeRefs(G, arrElemTypeRef); // more than one in case of IterableN; none in case of invalid value after spread operator
 				} else {
@@ -327,8 +328,9 @@ if(isValueToBeDestructured) {
 
 	private def TypeRef getFinalResultTypeOfArrayElement(RuleEnvironment G, ArrayElement currElem, Optional<Collection<TypeRef>> addTypeRefsHere) {
 		val currExpr = currElem?.expression;
-		val currElemTypeRef = if (currExpr!==null) getFinalResultTypeOfNestedPolyExpression(currExpr);
+		var currElemTypeRef = if (currExpr!==null) getFinalResultTypeOfNestedPolyExpression(currExpr);
 		if (currElemTypeRef !== null) {
+currElemTypeRef = ts.upperBoundWithForce(G, currElemTypeRef);
 			val currElemTypeRefs = if (currElem.spread) extractSpreadTypeRefs(G, currElemTypeRef) else #[ currElemTypeRef ];
 			if (addTypeRefsHere.present) {
 				addTypeRefsHere.get += currElemTypeRefs;

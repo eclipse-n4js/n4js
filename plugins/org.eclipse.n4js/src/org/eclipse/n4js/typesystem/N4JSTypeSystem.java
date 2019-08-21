@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.typesystem;
 
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
+
 import java.util.List;
 import java.util.Spliterators;
 import java.util.stream.StreamSupport;
@@ -25,17 +29,21 @@ import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypableElement;
+import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -158,14 +166,129 @@ public class N4JSTypeSystem {
 		return equaltype(G, left, right).isSuccess();
 	}
 
+	/**
+	 * Checks compatibility of the given type arguments, e.g. as required as part of a subtype check such as
+	 * {@code G<T> <: G<S>}. In case of wildcards and open existential types, a bounds check will be performed.
+	 *
+	 * @param leftArg
+	 *            left type argument to check.
+	 * @param rightArg
+	 *            right type argument to check.
+	 * @param varianceOpt
+	 *            the variance. Usually this is the definition-site variance of the type corresponding parameter, but
+	 *            can be some special value in certain contexts (e.g. in {@link TypeTypeRef}s). If absent, invariance
+	 *            will be assumed.
+	 * @param useFancyErrMsg
+	 *            if <code>true</code>, will use methods {@link #equaltype(RuleEnvironment, TypeArgument, TypeArgument)
+	 *            #equaltype()} and {@link #supertype(RuleEnvironment, TypeArgument, TypeArgument) #supertype()} instead
+	 *            of plain subtype checks. Will only affect error messages.
+	 * @return a result of the appropriate subtype check(s).
+	 */
+	public Result checkTypeArgumentCompatibility(RuleEnvironment G,
+			TypeArgument leftArg, TypeArgument rightArg, Optional<Variance> varianceOpt, boolean useFancyErrMsg) {
+
+		final Variance variance = varianceOpt.or(Variance.INV);
+
+		// FIXME delete the following
+		// final boolean leftArgIsOpen = leftArg instanceof Wildcard
+		// || (leftArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) leftArg).isReopened());
+		// final boolean rightArgIsOpen = rightArg instanceof Wildcard
+		// || (rightArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightArg).isReopened());
+		//
+		// TypeRef leftArgUpper = leftArgIsOpen ? upperBound(G, leftArg) : (TypeRef) leftArg;
+		// TypeRef leftArgLower = leftArgIsOpen ? lowerBound(G, leftArg) : (TypeRef) leftArg;
+		// TypeRef rightArgUpper = rightArgIsOpen ? upperBound(G, rightArg) : (TypeRef) rightArg;
+		// TypeRef rightArgLower = rightArgIsOpen ? lowerBound(G, rightArg) : (TypeRef) rightArg;
+
+		TypeRef leftArgUpper = upperBoundHesitant(G, leftArg);
+		TypeRef leftArgLower = lowerBoundHesitant(G, leftArg);
+		TypeRef rightArgUpper = upperBoundHesitant(G, rightArg);
+		TypeRef rightArgLower = lowerBoundHesitant(G, rightArg);
+
+		// minor tweak to slightly improve error messages
+		// (i.e. having "not equals to" instead of "not a subtype" in a random direction)
+		if (useFancyErrMsg
+				&& variance == Variance.INV
+				&& leftArgUpper == leftArg && leftArgLower == leftArg
+				&& rightArgUpper == rightArg && rightArgLower == rightArg) {
+			return equaltype(G, leftArg, rightArg);
+		}
+
+		// guard against infinite recursion due to recursive implicit upper bounds, such as in
+		//
+		// class A<T extends A<?>> {}
+		//
+		// and
+		//
+		// class X<T extends B<?>> {}
+		// class Y<T extends X<?>> {}
+		// class B<T extends Y<?>> {}
+		//
+		final RuleEnvironment G2;
+		if (rightArg instanceof Wildcard && ((Wildcard) rightArg).isImplicitUpperBoundInEffect()) {
+			// we're dealing with implicit upper bounds -> need to guard against infinite loop
+			final Pair<String, TypeArgument> guardKey = Pair.of(
+					GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS, rightArg);
+			final boolean isGuarded = G.get(guardKey) != null;
+			if (!isGuarded) {
+				// first time here for wildcard 'rightArg'
+				// -> continue as usual but add guard to rule environment
+				G2 = wrap(G);
+				G2.put(guardKey, Boolean.TRUE);
+			} else {
+				// returned here for the same wildcard!
+				// -> ignore implicit upper bound on right-hand side to break infinite loop
+				rightArgUpper = topTypeRef(G);
+				G2 = G; // won't add another guard, so no need to wrap G
+			}
+		} else {
+			// not dealing with implicit upper bounds -> just continue as usual without guarding
+			G2 = G;
+		}
+
+		// require leftArgUpper <: rightArgUpper, except we have contravariance
+		if (variance != Variance.CONTRA) {
+			Result result = subtype(G2, leftArgUpper, rightArgUpper);
+			if (result.isFailure()) {
+				return result;
+			}
+		}
+		// require rightArgLower <: leftArgLower, except we have covariance
+		if (variance != Variance.CO) {
+			Result result = useFancyErrMsg
+					? supertype(G2, leftArgLower, rightArgLower)
+					: subtype(G2, rightArgLower, leftArgLower);
+			if (result.isFailure()) {
+				return result;
+			}
+		}
+		return Result.success();
+	}
+
 	/** Returns the upper bound of the given type. Never returns <code>null</code>. */
 	public TypeRef upperBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument);
+		return boundJudgment.applyUpperBound(G, typeArgument, true);
+	}
+
+	public TypeRef upperBoundHesitant(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyUpperBound(G, typeArgument, false);
+	}
+
+	public TypeRef upperBoundWithForce(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyUpperBound(G, typeArgument, true);
 	}
 
 	/** Returns the lower bound of the given type. Never returns <code>null</code>. */
 	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument);
+		return boundJudgment.applyLowerBound(G, typeArgument, true);
+	}
+
+	public TypeRef lowerBoundHesitant(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyLowerBound(G, typeArgument, false);
+	}
+
+	public TypeRef lowerBoundWithForce(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyLowerBound(G, typeArgument, true);
 	}
 
 	/**
@@ -232,15 +355,20 @@ public class N4JSTypeSystem {
 		return substTypeVariablesJudgment.apply(G, typeArgument, captureContainedWildcards, captureUponSubstitution);
 	}
 
-	// FIXME integrate this into substTypeVariables judgment!
 	public TypeRef reopenExistentialTypes(RuleEnvironment G, TypeRef typeRef) {
+		return (TypeRef) reopenExistentialTypes(G, (TypeArgument) typeRef);
+	}
+
+	// FIXME integrate this into substTypeVariables judgment!
+	public TypeArgument reopenExistentialTypes(RuleEnvironment G, TypeArgument typeArgument) {
 		boolean isOrContainsClosedExistential = //
-				(typeRef instanceof ExistentialTypeRef && !((ExistentialTypeRef) typeRef).isReopened())
-						|| StreamSupport.stream(Spliterators.spliteratorUnknownSize(typeRef.eAllContents(), 0), false)
+				(typeArgument instanceof ExistentialTypeRef && !((ExistentialTypeRef) typeArgument).isReopened())
+						|| StreamSupport
+								.stream(Spliterators.spliteratorUnknownSize(typeArgument.eAllContents(), 0), false)
 								.anyMatch(eobj -> eobj instanceof ExistentialTypeRef
 										&& !((ExistentialTypeRef) eobj).isReopened());
 		if (isOrContainsClosedExistential) {
-			TypeRef cpy = TypeUtils.copy(typeRef);
+			TypeArgument cpy = TypeUtils.copy(typeArgument);
 			if (cpy instanceof ExistentialTypeRef) {
 				((ExistentialTypeRef) cpy).setReopened(true);
 			}
@@ -249,7 +377,7 @@ public class N4JSTypeSystem {
 					.forEach(etr -> ((ExistentialTypeRef) etr).setReopened(true));
 			return cpy;
 		}
-		return typeRef;
+		return typeArgument;
 	}
 
 	// ###############################################################################################################
