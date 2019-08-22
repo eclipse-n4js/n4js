@@ -16,6 +16,7 @@ import static org.eclipse.n4js.ts.types.util.Variance.INV;
 import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.CONJUNCTION;
 import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.DISJUNCTION;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -761,8 +762,22 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				// commencing with type inference here produces better error messages.)
 				continue;
 			}
-			final TypeConstraint constraint = stc.reduceMembers(left, l, r, variance, infoFaked);
-			wasAdded |= reduce(constraint);
+			final List<TypeConstraint> constraints = new ArrayList<>();
+			switch (variance) {
+			case CO:
+				constraints.addAll(stc.reduceMembers(G2, left, l, r, infoFaked));
+				break;
+			case CONTRA:
+				constraints.addAll(stc.reduceMembers(G2, left, r, l, infoFaked));
+				break;
+			case INV:
+				constraints.addAll(stc.reduceMembers(G2, left, l, r, infoFaked));
+				constraints.addAll(stc.reduceMembers(G2, left, r, l, infoFaked));
+				break;
+			}
+			for (TypeConstraint constraint : constraints) {
+				wasAdded |= reduce(constraint);
+			}
 		}
 		return wasAdded;
 	}

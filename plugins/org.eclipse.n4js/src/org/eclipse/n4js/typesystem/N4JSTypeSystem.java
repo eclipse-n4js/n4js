@@ -14,6 +14,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Spliterators;
 import java.util.stream.StreamSupport;
@@ -36,6 +37,7 @@ import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.typesystem.constraints.TypeConstraint;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
@@ -189,6 +191,8 @@ public class N4JSTypeSystem {
 
 		final Variance variance = varianceOpt.or(Variance.INV);
 
+		// !!! keep the following aligned with below method #reduceTypeArgumentCompatibilityCheck() !!!
+
 		// FIXME delete the following
 		// final boolean leftArgIsOpen = leftArg instanceof Wildcard
 		// || (leftArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) leftArg).isReopened());
@@ -263,6 +267,37 @@ public class N4JSTypeSystem {
 			}
 		}
 		return Result.success();
+	}
+
+	/**
+	 * Same as {@link #checkTypeArgumentCompatibility(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)},
+	 * but instead of actually performing the compatibility check, 0..2 {@link TypeConstraint}s are returned that
+	 * represent the compatibility check.
+	 */
+	public List<TypeConstraint> reduceTypeArgumentCompatibilityCheck(RuleEnvironment G,
+			TypeArgument leftArg, TypeArgument rightArg, Optional<Variance> varianceOpt) {
+
+		final Variance variance = varianceOpt.or(Variance.INV);
+
+		// !!! keep the following aligned with above method #checkTypeArgumentCompatibility() !!!
+
+		final TypeRef leftArgUpper = upperBoundHesitant(G, leftArg);
+		final TypeRef leftArgLower = lowerBoundHesitant(G, leftArg);
+		final TypeRef rightArgUpper = upperBoundHesitant(G, rightArg);
+		final TypeRef rightArgLower = lowerBoundHesitant(G, rightArg);
+
+		final List<TypeConstraint> result = new ArrayList<>(2);
+
+		// require leftArgUpper <: rightArgUpper, except we have contravariance
+		if (variance != Variance.CONTRA) {
+			result.add(new TypeConstraint(leftArgUpper, rightArgUpper, Variance.CO));
+		}
+		// require rightArgLower <: leftArgLower, except we have covariance
+		if (variance != Variance.CO) {
+			result.add(new TypeConstraint(rightArgLower, leftArgLower, Variance.CO));
+		}
+
+		return result;
 	}
 
 	/** Returns the upper bound of the given type. Never returns <code>null</code>. */

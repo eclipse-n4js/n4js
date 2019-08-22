@@ -13,6 +13,7 @@ package org.eclipse.n4js.typesystem.utils
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import java.util.Collections
 import java.util.List
 import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper
 import org.eclipse.n4js.AnnotationDefinition
@@ -175,7 +176,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		val leftStrategy = info.leftStrategy;
 		val rightStrategy = info.rightStrategy;
 
-		checkMembers(leftTypeRef, leftMember, rightMember, info, rightStrategy);
+		checkMembers(leftTypeRef, leftMember, rightMember, info);
 
 		switch (rightStrategy) {
 
@@ -285,7 +286,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 							}
 						} else {
 							// check type of setter as usual
-							checkMembers(leftTypeRef, leftOtherAccessor, rightMember, info, rightStrategy);
+							checkMembers(leftTypeRef, leftOtherAccessor, rightMember, info);
 						}
 					}
 
@@ -308,14 +309,14 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	 * on left side; the requirement that BOTH a getter AND setter must be provided for a writable field must be
 	 * checked outside this method.
 	 */
-	def private void checkMembers(TypeRef leftTypeRef, TMember left, TMember right, StructTypingInfo info, TypingStrategy rightStrategy) {
+	def private void checkMembers(TypeRef leftTypeRef, TMember left, TMember right, StructTypingInfo info) {
 		val G = info.G;
 
 		// !!! keep the following aligned with below method #reduceMembers() !!!
 		if (left === null) {
 			// no corresponding member found on left side
 			if (memberIsMissing(leftTypeRef, right, info)) {
-				info.missingMembers.add(keywordProvider.keyword(right, rightStrategy) + " " + right.name);
+				info.missingMembers.add(keywordProvider.keyword(right, info.rightStrategy) + " " + right.name);
 			}
 
 		} else {
@@ -324,17 +325,18 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 
 			val mtypes = getMemberTypes(left, right, info);
 
-			// IDE-1780
-			var variance = null as Variance;
+			var Variance variance;
 			if (left.optional && !right.optional) {
 				info.missingMembers.add(left.name + ' failed: non-optional member requires a corresponding non-optional member in the structural subtype.');
+				return;
 			} else if (right.writeableField && left instanceof TField) {
 				// Fields are on both sides.
 				// T_FL = T_FR
 				if (left.readOnlyField
-					&& STRUCTURAL_FIELD_INITIALIZER !== rightStrategy
-					&& STRUCTURAL_READ_ONLY_FIELDS !== rightStrategy) {
+					&& STRUCTURAL_FIELD_INITIALIZER !== info.rightStrategy
+					&& STRUCTURAL_READ_ONLY_FIELDS !== info.rightStrategy) {
 					info.wrongMembers.add(right.name + " failed: field is read-only.");
+					return;
 				} else {
 					variance = Variance.INV;
 				}
@@ -348,55 +350,50 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 				variance = Variance.CO;
 			}
 
-			if (variance !== null) {
-				val result = ts.checkTypeArgumentCompatibility(G, mtypes.key, mtypes.value, Optional.of(variance), true);
-				if (result.failure) {
-					info.wrongMembers.add(right.name + " failed: " + result.failureMessage);
-				}
+			val result = ts.checkTypeArgumentCompatibility(G, mtypes.key, mtypes.value, Optional.of(variance), true);
+			if (result.failure) {
+				info.wrongMembers.add(right.name + " failed: " + result.failureMessage);
 			}
 		}
 	}
 
 	/**
-	 * Same as previous method, but instead of actually checking the types, we return a constraint. This would normally
+	 * Same as previous method, but instead of actually checking the types, we return 0..2 constraints. This would normally
 	 * belong into class <code>InferenceContext</code>, but is placed here to keep it aligned with above method more
 	 * easily.
 	 */
-	def public TypeConstraint reduceMembers(TypeRef leftTypeRef, TMember left, TMember right, Variance variance, StructTypingInfo info) {
-		if (variance === Variance.CONTRA) {
-			// normalize variance (i.e. turn CONTRA into CO)
-			return reduceMembers(leftTypeRef, right, left, Variance.CO, info);
-		}
+	def public List<TypeConstraint> reduceMembers(RuleEnvironment G,
+		TypeRef leftTypeRef, TMember left, TMember right, StructTypingInfo info) {
 
 		// !!! keep the following aligned with above method #checkMembers() !!!
 		if (left === null) {
 			// no corresponding member found on left side
 			if (memberIsMissing(leftTypeRef, right, info)) {
-				return TypeConstraint.FALSE;
+				return Collections.singletonList(TypeConstraint.FALSE);
 			} else {
-				return TypeConstraint.TRUE;
+				return Collections.emptyList(); // this is like returning TypeConstraint.TRUE
 			}
 
 		} else {
 			val mtypes = getMemberTypes(left, right, info);
 
+			var Variance variance;
 			if (left.optional && !right.optional) {
-				return TypeConstraint.FALSE;
+				return Collections.singletonList(TypeConstraint.FALSE);
 			} else if (right.writeableField && left instanceof TField) {
-
 				if (left.readOnlyField
 					&& STRUCTURAL_FIELD_INITIALIZER !== info.rightStrategy
 					&& STRUCTURAL_READ_ONLY_FIELDS !== info.rightStrategy) {
-					return TypeConstraint.FALSE;
+					return Collections.singletonList(TypeConstraint.FALSE);
 				} else {
-					return new TypeConstraint(mtypes.key, mtypes.value, Variance.INV);
+					variance = Variance.INV;
 				}
-
 			} else if (right instanceof TSetter || left instanceof TSetter) {
-				return new TypeConstraint(mtypes.key, mtypes.value, variance.inverse);
+				variance = Variance.CONTRA;
 			} else {
-				return new TypeConstraint(mtypes.key, mtypes.value, variance);
+				variance = Variance.CO;
 			}
+			return ts.reduceTypeArgumentCompatibilityCheck(G, mtypes.key, mtypes.value, Optional.of(variance));
 		}
 	}
 
