@@ -67,10 +67,10 @@ var v12 : G<A> = fooG_ret(b);
 // XPECT typeArgs of fooG_ret --> B
 var v13 : G<? extends A> = fooG_ret(b);
 // contra-variant return type expectation, mismatch (alternatively, this could emit an error)
-// XPECT typeArgs of fooG_ret --> union{A,B}
+// XPECT typeArgs of fooG_ret --> A
 var v14 : G<? super A> = fooG_ret(b);
-// contra-variant return type expectation, match (TODO B would be a nicer result here)
-// XPECT typeArgs of fooG_ret --> union{B,C}
+// contra-variant return type expectation, match
+// XPECT typeArgs of fooG_ret --> B
 var v15 : G<? super C> = fooG_ret(b);
 
 // ========================================================================

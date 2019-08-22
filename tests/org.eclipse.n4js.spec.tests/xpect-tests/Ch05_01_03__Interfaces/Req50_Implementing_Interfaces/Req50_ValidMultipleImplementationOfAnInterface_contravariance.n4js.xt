@@ -32,7 +32,7 @@ class B01 extends A01 {}
 class C01 extends B01 implements I<C> {}
 // XPECT noerrors -->
 class D01 extends C01 {}
-// XPECT expectedType at 'null' --> union{B,C}
+// XPECT expectedType at 'null' --> B
 new D01().write(null);
 
 
@@ -42,7 +42,7 @@ class B02 extends A02 {}
 class C02 extends B02 implements I<A> {} // also ok: super type of B
 // XPECT noerrors -->
 class D02 extends C02 {}
-// XPECT expectedType at 'null' --> union{A,B}
+// XPECT expectedType at 'null' --> A
 new D02().write(null);
 
 
@@ -58,11 +58,11 @@ new D03().write(null);
 
 // XPECT noerrors -->
 class A11 implements I<B>, J<C> {}
-// XPECT expectedType at 'null' --> union{B,C}
+// XPECT expectedType at 'null' --> B
 new A11().write(null);
 
 
 // XPECT noerrors -->
 class A21 implements I<B>, J_C {}
-// XPECT expectedType at 'null' --> union{B,C}
+// XPECT expectedType at 'null' --> B
 new A21().write(null);

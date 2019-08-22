@@ -68,7 +68,7 @@ class InferenceContext_GenericsTest extends AbstractInferenceContextTest {
 				constraint(G.of(alpha),'<:',G.of(wildcardExtends(B))), // ⟨ G<α> <: G<? extends B> ⟩
 				constraint(alpha,'<:',C)
 			],
-			alpha -> intersection(B,C) // just C would be nicer
+			alpha -> C.ref
 		)
 	}
 	@Test
@@ -84,7 +84,7 @@ class InferenceContext_GenericsTest extends AbstractInferenceContextTest {
 				constraint(G.of(alpha),'<:',G.of(wildcardSuper(B))), // ⟨ G<α> <: G<? super B> ⟩
 				constraint(alpha,':>',A)
 			],
-			alpha -> union(A,B) // just A would be nicer
+			alpha -> A.ref
 		)
 	}
 
@@ -132,7 +132,7 @@ class InferenceContext_GenericsTest extends AbstractInferenceContextTest {
 				constraint(G.of(wildcardExtends(B)),'<:',G.of(wildcardExtends(alpha))), // ⟨ G<? extends B> <: G<? extends α> ⟩
 				constraint(alpha,':>',A)
 			],
-			alpha -> union(A,B)
+			alpha -> A.ref
 		)
 	}
 	@Test
@@ -149,7 +149,7 @@ class InferenceContext_GenericsTest extends AbstractInferenceContextTest {
 				constraint(G.of(wildcardSuper(B)),'<:',G.of(wildcardSuper(alpha))), // ⟨ G<? super B> <: G<? super α> ⟩
 				constraint(alpha,'<:',C)
 			],
-			alpha -> intersection(B,C)
+			alpha -> C.ref
 		)
 	}
 

@@ -146,9 +146,6 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def <T extends ComposedTypeRef> TypeRef simplify(RuleEnvironment G, T composedType) {
 		simplifyComputer.simplify(G,composedType)
 	}
-	def List<TypeRef> getSimplifiedTypeRefs(RuleEnvironment G, ComposedTypeRef composedType) {
-		simplifyComputer.getSimplifiedTypeRefs(G,composedType)
-	}
 
 	/**
 	 * Convenience method calling {@link join(RuleEnvironment, Iterable<TypeRef>)} with

@@ -38,7 +38,6 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.ts.types.NullType
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -835,10 +834,6 @@ class RuleEnvironmentExtensions {
 		// ignore void (type 'void' is never a valid substitution for a type variable)
 		if (value instanceof ParameterizedTypeRef)
 			if (value.declaredType instanceof VoidType)
-				return false;
-		// ignore null (null does not provide any clue about key's type)
-		if (value instanceof ParameterizedTypeRef)
-			if (value.declaredType instanceof NullType)
 				return false;
 		return true;
 	}

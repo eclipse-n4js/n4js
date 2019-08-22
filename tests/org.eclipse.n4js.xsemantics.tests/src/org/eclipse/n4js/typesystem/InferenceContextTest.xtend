@@ -153,12 +153,12 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 	def void testTwoInferenceVariables_leadingToIntersection_01() {
 		script.assertSolution(
 			#[
-				constraint(alpha,'<:',A),
-				constraint(beta,'<:',B),
+				constraint(alpha,'<:',X),
+				constraint(beta,'<:',Y),
 				constraint(alpha,'=',beta)
 			],
-			alpha -> intersection(A,B),
-			beta -> intersection(A,B)
+			alpha -> intersection(X,Y),
+			beta -> intersection(X,Y)
 		)
 	}
 
@@ -166,12 +166,12 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 	def void testTwoInferenceVariables_leadingToIntersection_02() {
 		script.assertSolution(
 			#[
-				constraint(alpha,'<:',A),
+				constraint(alpha,'<:',X),
 				constraint(alpha,'<:',beta),
-				constraint(C,'<:',beta)
+				constraint(Y,'<:',beta)
 			],
-			alpha -> intersection(A,C),
-			beta -> C.ref
+			alpha -> intersection(X,Y),
+			beta -> Y.ref
 		)
 	}
 
@@ -328,7 +328,7 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 				constraint(I1,'<:',alpha)
 			],
 			alpha -> I1.ref,
-			beta -> union(A,I1)
+			beta -> I1.ref
 		)
 	}
 }

@@ -23,10 +23,10 @@ var jvar: J = { };
 const jconst: J = {};
 var b: boolean;
 
-// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "b ? null : null" 
-i = b ? null : null;
+// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "b ? undefined : undefined" 
+i = b ? undefined : undefined;
 
-// XPECT errors --> "J is not a structural subtype of I: missing field optional." at "b ? jvar : null" 
+// XPECT errors --> "union{J,null} is not a subtype of I." at "b ? jvar : null" 
 i = b ? jvar : null;
 
 // XPECT noerrors

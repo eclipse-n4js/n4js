@@ -74,7 +74,7 @@ class N6_1_04_ArrayLiteralTypesystemTest extends AbstractTypesystemTest {
 		assertArrayLiteralType("Array<int>", '''[1,2,3]''');
 		assertArrayLiteralType("Array<number>", '''[n1]''');
 		assertArrayLiteralType("Array<number>", '''[n1,n2]''');
-		assertArrayLiteralType("Array<union{int,number}>", '''[n1,2,3]''');
+		assertArrayLiteralType("Array<number>", '''[n1,2,3]''');
 		assertArrayLiteralType("Array<string>", '''[s1]''');
 		assertArrayLiteralType("Array<string>", '''[s1,s2]''');
 		assertArrayLiteralType("Array<A>", '''[a]''');
@@ -85,9 +85,9 @@ class N6_1_04_ArrayLiteralTypesystemTest extends AbstractTypesystemTest {
 	def void testArrayUnionElementType() {
 		assertArrayLiteralType("Array<union{number,string}>", '''["Walter", 1"]'''); // syntax error was intended (I guess)
 		assertArrayLiteralType("Array<union{A,number,string}>", '''["Walter", a, 1"]'''); // syntax error was intended (I guess)
-		assertArrayLiteralType("Array<union{A,B}>", '''[a,b]''');
-		assertArrayLiteralType("Array<union{A,B}>", '''[a,b,a]''');
-		assertArrayLiteralType("Array<union{A,B}>", '''[a,b,a,b,a,a,b]''');
+		assertArrayLiteralType("Array<A>", '''[a,b]''');
+		assertArrayLiteralType("Array<A>", '''[a,b,a]''');
+		assertArrayLiteralType("Array<A>", '''[a,b,a,b,a,a,b]''');
 	}
 
 	@Test
@@ -99,8 +99,8 @@ class N6_1_04_ArrayLiteralTypesystemTest extends AbstractTypesystemTest {
 
 		assertArrayLiteralType("Array<union{number,string}>", '''[,"Walter", 1"]'''); // syntax error was intended (I guess)
 		assertArrayLiteralType("Array<union{A,number,string}>", '''["Walter", a, 1",]'''); // syntax error was intended (I guess)
-		assertArrayLiteralType("Array<union{A,B}>", '''[a,b,,]''');
-		assertArrayLiteralType("Array<union{A,B}>", '''[a,b,a,,,]''');
-		assertArrayLiteralType("Array<union{A,B}>", '''[a,b,a,,a,,b]''');
+		assertArrayLiteralType("Array<A>", '''[a,b,,]''');
+		assertArrayLiteralType("Array<A>", '''[a,b,a,,,]''');
+		assertArrayLiteralType("Array<A>", '''[a,b,a,,a,,b]''');
 	}
 }
