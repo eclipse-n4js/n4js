@@ -84,7 +84,7 @@ export public class Assert {
                 any actual: actual,
                 any expected: expected,
                 string operator: operator,
-                stackStartFunction: fail_
+                Function stackStartFunction: fail_
             });
         throw error;
     }
