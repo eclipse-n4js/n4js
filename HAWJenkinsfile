@@ -51,7 +51,7 @@ pipeline {
                         // works:
                         // sh "mvn clean verify ${options}"
                         // for quick testing:
-                        sh "mvn clean ${options}"
+                        sh "mvn -o clean ${options}"
 
                       // sh "ls -Ral builds/org.eclipse.n4js.product.build/target/repository/"
                     }
