@@ -45,9 +45,9 @@ pipeline {
                             git log -n 1
                             npm version
                         """
-                        // sh "mvn clean verify -P${profiles} ${options}"
+                        sh "mvn clean verify -P${profiles} ${options}"
                         // works:
-                        sh "mvn clean verify ${options}"
+                        // sh "mvn clean verify ${options}"
                         // for quick testing: 6
                         // sh "mvn -o clean"
 
