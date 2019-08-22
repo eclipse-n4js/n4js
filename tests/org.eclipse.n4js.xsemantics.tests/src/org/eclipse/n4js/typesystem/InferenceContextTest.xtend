@@ -255,31 +255,52 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 	}
 
 	@Test
-	def void testRawTypeNotAcceptedAsSolution01() {
+	def void testBoundThisTypeRef01() {
 		val thisG = TypeRefsFactory.eINSTANCE.createBoundThisTypeRef => [
 			actualThisTypeRef = G.rawTypeRef as ParameterizedTypeRef;
 		];
 
-		script.assertNoSolution(
+		script.assertSolution(
 			#[
 				constraint(alpha,':>',thisG),
 				constraint(alpha,'<:',G.of(A))
 			],
-			alpha
+			alpha -> thisG
+		)
+	}
+
+	@Test
+	def void testBoundThisTypeRef02() {
+		val thisG = TypeRefsFactory.eINSTANCE.createBoundThisTypeRef => [
+			actualThisTypeRef = G.rawTypeRef as ParameterizedTypeRef;
+		];
+
+		script.assertSolution(
+			#[
+				constraint(alpha,':>',thisG)
+			],
+			alpha -> thisG
+		)
+	}
+
+	@Test
+	def void testRawTypeNotAcceptedAsSolution01() {
+		script.assertSolution(
+			#[
+				constraint(alpha,':>',G.rawTypeRef),
+				constraint(alpha,'<:',G.of(A))
+			],
+			alpha -> G.of(A)
 		)
 	}
 
 	@Test
 	def void testRawTypeNotAcceptedAsSolution02() {
-		val thisG = TypeRefsFactory.eINSTANCE.createBoundThisTypeRef => [
-			actualThisTypeRef = G.rawTypeRef as ParameterizedTypeRef;
-		];
-
-		script.assertNoSolution(
+		script.assertSolution(
 			#[
-				constraint(alpha,':>',thisG)
+				constraint(alpha,':>',G.rawTypeRef)
 			],
-			alpha
+			alpha -> G.of(wildcard())
 		)
 	}
 

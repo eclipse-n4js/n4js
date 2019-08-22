@@ -196,9 +196,11 @@ import com.google.common.base.Optional;
 				}
 			} else if (typeArg instanceof ExistentialTypeRef) {
 				final ExistentialTypeRef etr = (ExistentialTypeRef) typeArg;
-				final Wildcard wildcard = etr.getWildcard();
-				final Wildcard wildcardPushed = (Wildcard) pushBoundOfTypeArgument(wildcard);
-				return wildcardPushed;
+				if (force || etr.isReopened()) {
+					final Wildcard wildcard = etr.getWildcard();
+					final Wildcard wildcardPushed = (Wildcard) pushBoundOfTypeArgument(wildcard);
+					return wildcardPushed;
+				}
 			}
 			return typeArg; // no change
 		}
@@ -230,6 +232,10 @@ import com.google.common.base.Optional;
 
 		@Override
 		public TypeRef caseTypeTypeRef(TypeTypeRef ct) {
+			// special case: handle BoundThisTypeRef
+			// (note: the this-type is a very special beast that may only appear at certain locations
+			// within a type reference; this is why we handle it here up-front instead of moving this
+			// case to method #pushBoundOfTypeArgument())
 			if (force) {
 				if (boundType == BoundType.UPPER) {
 					final TypeArgument typeArg = ct.getTypeArg();
@@ -239,6 +245,7 @@ import com.google.common.base.Optional;
 					}
 				}
 			}
+			// ordinary handling of type argument
 			final TypeArgument typeArg = ct.getTypeArg();
 			final TypeArgument typeArgBound = pushBoundOfTypeArgument(typeArg);
 			if (typeArgBound != typeArg) {

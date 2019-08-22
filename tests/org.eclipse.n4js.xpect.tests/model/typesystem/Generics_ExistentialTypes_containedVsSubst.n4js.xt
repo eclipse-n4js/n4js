@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
+
+
+//
+// This test asserts proper handling of wildcards and their capturing between two distinct cases:
+// a) wildcards that are CONTAINED IN a type reference
+//    (as is the case in the types of 'field2b', 'field3b', 'field4b').
+// b) wildcards that are SUBSTITUTED INTO a type reference
+//    (as is the case with the wildcard from line "let g: G<?>;" that is substituted into
+//    the types of 'field1', 'field2', 'field3', 'field4').
+//
+// These cases require different handling w.r.t. closed ExistentialTypeRefs in SubstTypeVariableJudgment
+// and BoundJudgment, i.e. the CONTAINED wildcard must remain open on the left-hand side of an assignment
+// whereas it must be closed (i.e. captured) on the right-hand side of an assignment; the SUBSTITUTED
+// wildcard must be closed on both sides of an assignment.
+//
+
+
+class G<T> {
+	public field1: T;
+	public field2: Array<T>;
+	public field2b: Array<?>;
+	public field3: Array<Array<T>>;
+	public field3b: Array<Array<?>>;
+	public field4: Array<Array<Array<T>>>;
+	public field4b: Array<Array<Array<?>>>;
+}
+
+
+let g: G<?>;
+
+
+// XPECT errors --> "? is not a subtype of ?." at "g.field1"
+g.field1 = g.field1;
+// XPECT errors --> "Array<?> is not a subtype of Array<?>." at "g.field2"
+g.field2 = g.field2;
+// XPECT errors ---
+// "Array<?> is not a subtype of Array<?>." at "g.field2.filter(e=>true)"
+// "{function(any):any} is not a subtype of {function(?,number,Array<?>):boolean}." at "e=>true"
+// ---
+g.field2 = g.field2.filter(e=>true);
+// XPECT noerrors -->
+g.field2b = g.field2b;
+// XPECT noerrors -->
+g.field2b = g.field2b.filter(e=>true);
+// XPECT errors --> "Array<Array<?>> is not a subtype of Array<Array<?>>." at "g.field3"
+g.field3 = g.field3;
+// XPECT errors ---
+// "Array<Array<?>> is not a subtype of Array<Array<?>>." at "g.field3.filter(e=>true)"
+// "{function(any):any} is not a subtype of {function(Array<?>,number,Array<Array<?>>):boolean}." at "e=>true"
+// ---
+g.field3 = g.field3.filter(e=>true);
+// XPECT noerrors -->
+g.field3b = g.field3b;
+// XPECT noerrors -->
+g.field3b = g.field3b.filter(e=>true);
+// XPECT errors --> "Array<Array<Array<?>>> is not a subtype of Array<Array<Array<?>>>." at "g.field4"
+g.field4 = g.field4;
+// XPECT errors ---
+// "Array<Array<Array<?>>> is not a subtype of Array<Array<Array<?>>>." at "g.field4.filter(e=>true)"
+// "{function(any):any} is not a subtype of {function(Array<Array<?>>,number,Array<Array<Array<?>>>):boolean}." at "e=>true"
+// ---
+g.field4 = g.field4.filter(e=>true);
+// XPECT noerrors -->
+g.field4b = g.field4b;
+// XPECT noerrors -->
+g.field4b = g.field4b.filter(e=>true);
