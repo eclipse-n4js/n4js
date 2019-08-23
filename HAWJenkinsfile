@@ -27,6 +27,7 @@ pipeline {
                             '--show-version',
                             '-Dtycho.localArtifacts=ignore',
                             '-Dmaven.test.failure.ignore',
+                            "--fail-at-end",
                             '-DWORKSPACE=' + env.WORKSPACE,
                             '-DexcludeJRE'
                         ].join(' ')
