@@ -21,8 +21,8 @@
     "index.n4jsd"
   ],
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "mocha": "^3.5.3"
+    "eslint": "^6.2.2",
+    "mocha": "^6.2.0"
   },
   "eslintConfig": {
     "env": {
