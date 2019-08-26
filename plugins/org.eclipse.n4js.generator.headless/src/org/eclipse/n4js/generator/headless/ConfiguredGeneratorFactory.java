@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.generator.headless;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,7 +23,7 @@ import org.eclipse.xtext.generator.OutputConfiguration;
 import com.google.inject.Inject;
 
 /**
- * Factory for {@link ConfiguredGenerator} that created isntances configured and ready to be used for a specific
+ * Factory for {@link ConfiguredGenerator} that created instances configured and ready to be used for a specific
  * {@link IN4JSProject}.
  *
  * In Eclipse-compile mode there are "projects" and the FSA is configured relative to these projects. In headless mode
@@ -64,20 +63,13 @@ public class ConfiguredGeneratorFactory {
 	 *            project to be compiled
 	 */
 	private void configureFSA(IN4JSProject project) {
-		File currentDirectory = new File(".");
-		File projectLocation = project.getLocation().toJavaIoFile();
+		final String projectPath = project.getLocation().toJavaIoFile().getAbsolutePath();
 
-		// If project is not in a sub directory of the current directory an absolute path is computed.
-		final java.net.URI projectURI = currentDirectory.toURI().relativize(projectLocation.toURI());
-		final String projectPath = projectURI.getPath();
-		if (projectPath.length() != 0) {// not the same directory, reconfigure
-
-			if (initialOutputConfiguration == null)
-				initialOutputConfiguration = getInitialOutputConfigurations(compositeGenerator);
-			Map<String, OutputConfiguration> configs = transformedOutputConfiguration(projectPath,
-					initialOutputConfiguration);
-			fsa.setOutputConfigurations(configs);
-		}
+		if (initialOutputConfiguration == null)
+			initialOutputConfiguration = getInitialOutputConfigurations(compositeGenerator);
+		Map<String, OutputConfiguration> configs = transformedOutputConfiguration(projectPath,
+				initialOutputConfiguration);
+		fsa.setOutputConfigurations(configs);
 	}
 
 	/**
