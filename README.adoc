@@ -18,7 +18,7 @@ N4JS is based on ECMAScript Version 5 and ECMAScript 2015 is supported to a grea
 
 == Releases
 
-The Eclipse N4JS project is in the link:https://wiki.eclipse.org/Development_Resources/HOWTO/Incubation_Phase[Incubation Phase] and there is no official release available yet (for unofficial releases see the link:https://www.eclipse.org/n4js/download.html[download page].
+The Eclipse N4JS project is in the link:https://wiki.eclipse.org/Development_Resources/HOWTO/Incubation_Phase[Incubation Phase] and there is no official release available yet (for unofficial releases see the link:https://www.eclipse.org/n4js/downloads.html[download page].
 This doesn't mean that N4JS is unstable; we have an extensive test suite (>90.000 tests including the https://github.com/tc39/test262[ECMAScript test suites]) to ensure a stable nightly build.
 N4JS has been in use in several large non-public projects for years. 
 There still may be bugs (as there are always bugs) and features which are currently under development. 
