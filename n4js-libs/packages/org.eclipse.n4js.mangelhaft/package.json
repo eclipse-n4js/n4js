@@ -41,7 +41,6 @@
     ]
   },
   "dependencies": {
-    "debug": "~3.1.0",
     "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",
     "n4js-runtime": "^0.1.0",
     "n4js-runtime-v8": "^0.1.0",

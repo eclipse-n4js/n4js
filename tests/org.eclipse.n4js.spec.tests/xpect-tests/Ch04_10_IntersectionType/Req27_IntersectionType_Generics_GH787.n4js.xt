@@ -1,0 +1,111 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+
+
+// for simplified discussion of co- and contra variance
+class G<T> {
+	set(t: T) {}
+	get(): T { return null }
+}
+class C { public y; }
+class D { public x; }
+class E { public x; } // structurally similar to ~D!
+interface I {}
+
+/* XPECT warnings ---
+"An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<C>"
+"An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<~D>"
+--- */
+let g1: G<C> & G<~D>;
+// XPECT errors --> "G<C> is not a subtype of intersection{G<C>,G<~D>}." at "new G<C>()"
+g1 = new G<C>(); // we cannot set an D, since G<C> won't accept that!
+
+/* XPECT warnings ---
+"An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<C>"
+"An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<D>"
+--- */
+let g2: G<C> & G<D>;
+g2; // ... as above, even stricter
+
+/* XPECT warnings ---
+"An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<C>"
+"An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<I>"
+--- */
+let g3: G<C> & G<I>;
+// XPECT errors --> "G<intersection{C,I}> is not a subtype of intersection{G<C>,G<I>}." at "new G<C&I>()"
+g3 = new G<C&I>(); // We cannot add an I (accepted by G<I>), since it is not a subtype of I&C (as it is no C) 
+// XPECT errors --> "G<union{C,I}> is not a subtype of intersection{G<C>,G<I>}." at "new G<C|I>()"
+g3 = new G<C|I>(); // since we also get an G _or_ an I when e.g., in case of G<C> we expect only a C
+
+/* XPECT warnings ---
+"Type arguments for the same covariant type parameter in an intersection type should not contain more than one class. Otherwise there cannot exist a value of such a type." at "C"
+"Type arguments for the same covariant type parameter in an intersection type should not contain more than one class. Otherwise there cannot exist a value of such a type." at "D"
+--- */
+let g4: G<? extends C> & G<? extends D>;
+/* XPECT warnings ---
+"An intersection type should not contain more than one class. Otherwise there cannot exist a value of such a type." at "C"
+"An intersection type should not contain more than one class. Otherwise there cannot exist a value of such a type." at "D"
+--- */
+g4 = new G<C&D>(); // would work, but there is no subtype of C&D
+
+/* XPECT warnings ---
+"An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<~C>"
+"An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<~D>"
+--- */ 
+let g5: G<~C> & G<~D>; 
+// XPECT errors --> "G<intersection{~C,~D}> is not a subtype of intersection{G<~C>,G<~D>}." at "new G<~C & ~D>()"
+g5 = new G<~C & ~D>() // similar to interface and class above  
+// XPECT errors --> "G<union{~C,~D}> is not a subtype of intersection{G<~C>,G<~D>}." at "new G<~C|~D>()"
+g5 = new G<~C|~D>(); // similar to interface and class above
+
+// XPECT nowarnings -->
+let g6: G<? extends C> & G<? extends I>;
+g6 = new G<C&I>(); // works!
+
+// XPECT nowarnings -->
+let g7: G<? super C> & G<? super D>;
+g7 = new G<Object>(); // works
+
+// XPECT warnings --> "The use of redundant supertypes is discouraged." at "G<~E>"
+let g8: G<~E> & G<~D>;
+g8 = new G<~E>(); // works
+
+/* XPECT warnings ---
+"An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<~r~C>"
+"An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<~w~C>"
+--- */ 
+let g9: G<~r~C> & G<~w~C>;
+// XPECT errors --> "G<C> is not a subtype of intersection{G<~r~C>,G<~w~C>}." at "new G<C>()"
+g9 = new G<C>(); 
+
+// if we would use g9 where only a G<~r~C> is expected, 
+// we would be able to add a ~r~C only, which would not work for G<C>
+// see below:
+
+class ReadC { public get y() { return null;} };
+function f(p: G<~r~C>) { p.set(new ReadC())}
+f(g9);   
+
+class H<out T> {
+	get(): T { return null }
+}
+
+class CE {
+	public y;
+	public x;
+}
+// XPECT nowarnings -->
+let h1: H<~C>&H<~E>
+h1 = new H<CE>();

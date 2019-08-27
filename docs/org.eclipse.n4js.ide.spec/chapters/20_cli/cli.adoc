@@ -1,0 +1,237 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= CLI
+:find:
+
+WARNING: Parts of this document may be outdated.
+
+[[sec:Headless_Compiler]]
+[.language-bash]
+== Headless Compiler
+
+The headless compiler is provided as a separate tool, coming as a single jar file `n4jsc.jar`. It is to be invoked via
+
+[source,bash]
+----
+java -jar n4jsc.jar
+----
+
+Simply invoking the headless compiler with no further arguments will print out a description of command line options.
+
+The headless compiler works in three major modes (given as arguments to the switch `-bt`):
+
+* compilation of single files (`-bt singlefile`, _default_),
+* compilation of given projects (`-bt projects`) or
+* compilation of all projects (`-bt allprojects`)
+
+The command-line invocation usually has the form of
+
+[source,bash]
+----
+java -jar n4jsc.jar  ^$[options]$^  file1 file2 ...
+----
+
+Standard compiler _options_:
+
+`--buildType` , `-bt` _mode_::
+With _mode_ as exactly one of
+  singlefile;;
+    only the source files given by _file1_, _file2_, ... are compiled.
+  projects;;
+    _file1_, _file2_, ... denote projects (folders containing a `manifest.n4mf`). These projects will be compiled.
+  allprojects;;
+    All project found under the project-root(s) are compiled. There should be no _file..._ given.
+  dontcompile;;
+    Nothing will be compiled. There should be no _file..._ given. (This is the default if no `-t` option is given).
+`--projectlocations` (`-pl`) `path`::
+[[opt-projectlocations]] provide folder(s) to search for projects. If not set, the base folder of the running JVM will be taken as the location. Multiple folders are separated by the systems path-separator (’`:`’ on Mac / Unix and ’`;`’ on Windows). Only direct subfolders will be queried for projects. A subfolder is assumed to be a N4JS-project if it contains a `manifest.n4mf` file. All found projects are taken into consideration for dependency-resolution. Example on Linux: +
+  `-pl  /rootA/: /rootB:/some/absolute/path/to/projects`.
+
+Advanced compiler options (optional):
+
+`--notests`::
+  turn off compilation of code in test-folders. Can not be combined with `–testonly`
+`--testonly`::
+  only compile test code. Externals and sources will not be compiled. Can not be combined with `–notests`
+`--keepCompiling`::
+  try to compile even if some errors occur.
+`--preference` _file_::
+  uses _file_ as there internal preferences-store similar to the preferences internally stored by the N4IDE.
+
+Additional command line options (optional):
+
+ `--help` , `-h` ::
+  prints out help to the console and exits.
+ `--verbose` , `-v`::
+  verbose output during build
+ `--debug` ::
+  before executing, summarises the information of the current setup like resolved pathnames and other information, carries on with normal workflow and prints additional status information about loading and unloading projects and processing each resource.
+ `--log`::
+  write a log file `n4jsc.log` to the base folder. (Change filename with `–logfile filename`)
+
+
+[[sec:Headless_Dependencies]]
+[.language-bash]
+== Headless Dependnecies
+Compiler can manage dependencies of the processed projects:
+
+ `--installMissingDependencies` , `-imd` ::
+  alnalyzes available projects and installs missing dependencies 
+ `--targetPlatformInstallLocation` , `-tl`::
+  location to which dependencies will be installed, if not provided temporal location will be used
+  `--npmrcRootLocation`::
+  location of the _.npmrc_ file to be used in _npm_ invocations
+
+[[sec:Headless_Execution]]
+[.language-bash]
+== Headless Execution
+
+For headless compiling, running and testing of N4JS code a general command line tool is provided. Many parameters of the different use cases are shared. Although you can combine the use cases each of them is described in its own section. This section is about running compiled code.
+
+For compiling refer to <<sec:Headless_Compiler,Headless Compiler>> for executing tests refer to <<_test_support,Tests>>.
+
+
+[[sec:Cleaning_Headlessly]]
+=== Cleaning Headlessly
+
+It is possible to use the headless compiler to clean projects by using the following option
+
+`--clean` (`-c`)::
+When this option is used. The headless compiler only cleans projects without compilation. Moreover, the use of this option requires that the option `-t` must be specified and must be either `-t projects` or `-t allprojects`.
+
+For instance, `n4jsc --clean -t allprojects -pl path/to/project` or `n4jsc --clean -t projects project1 project2` are valid use while `n4jsc --clean -t singlefile file1 file2` is invalid.
+After the calling the command with `--clean (`-c`), the output folders of the specified projects (e.g. `src-gen` folders) are cleaned.
+
+
+[[sec:Running_Headlessly]]
+===  Running Headlessly
+
+Running code from the command line requires basically three different pieces of information:
+
+1.  The locations where projects, libraries and environments can be found must be given.
+2.  The starting point of execution must be given by pointing to a module.
+3.  Since there are multiple different project types, an adequate Runner has to be selected.
+
+The follwing command line switches are used to provide this information:
+
+`--projectlocations` (`-pl`) `path`::
+  path of locations to search for projects (c.f. <<sec:Headless_Compiler,Headless Compiler>> ,<<opt-projectlocations,Project Locations>>)
+`--runWith` (`-rw`) `VAL`::
+  denotes the runner-id (as listed with --list-runners) or at least the last segment of it
+`--run` (`-r`) `FILE`::
+  source-module to run. Note you should point to the full location of the source file (*.n4js). The runner is _responsible to determine the compiled file_. It is not sufficient to give a project-relative path, it always needs to be a full path to the source file.
+
+It is possible to compile and run with a single CLI line. Compilation always precedes the execution. It the compilation fails the runner will not be started.
+
+To ease the usage of different runners it is allowed to provide the last segment(s) of the runner-id in a case-insensitive way, e.g. one can use the runner with id `org.eclipse.n4js.runner.nodejs.NODEJS` as follows:
+
+[source,bash]
+----
+.. --runWith org.eclipse.n4js.runner.nodejs.NODEJS ..
+----
+
+or in short
+
+[source,bash]
+----
+.. --rw NODEJS ..
+----
+
+or even lower-cased with
+
+[source,bash]
+----
+.. --rw nodejs ..
+----
+
+Assume having a common workspace location ’wsp’ with a project ’P1’ containing the module ’A’. The following line shows how to run this code:
+
+[ex:Example running a module with NodeJS runner headless]
+
+[source,bash]
+----
+java -jar n4jsc.jar -pl wsp -rw nodejs -r wsp/P1/src/A.n4js
+----
+
+[[sec:Information_about_running_headlessly]]
+===  Information about running headlessly
+
+Available runner-ids can be actively queried:
+
+ `--listRunners` (`-lr`)::
+  prints out a list of all available command-line runners
+  
+  
+[[sec:Testing_Headlessly]]
+===  Testing Headlessly
+
+Testing code from the command line requires basically three different pieces of information:
+
+1.  The locations where projects, libraries and environments can be found must be given.
+2.  The starting point of test execution must be given by pointing to what is supposed to be tested (single file / whole project)/
+3.  Since there are multiple different project types, an adequate Tester has to be selected.
+
+The follwing command line switches are used to provide this information:
+
+`--projectlocations` (`-pl`) `path`::
+  path of locations to search for projects (c.f. <<sec:Headless_Compiler,Headless Compiler>> ,<<opt-projectlocations,Project Locations>>)
+`--testWith` (`-tw`) `VAL`::
+  denotes the tester-id (as listed with --list-testers) or at least the last segment of it
+`--test` (`-t`) `FILE`::
+  source-module to run. Note you should point to the full location of the project with tests, specific folder inside project with tests or the test source file (*.n4js). It is not sufficient to give a project-relative path, it always needs to be a full path to the source file.
+
+It is possible to compile and run with a single CLI line. Compilation always precedes the execution. It the compilation fails the tester will not be started.
+
+To ease the usage of different testers it is allowed to provide the last segment(s) of the tester-id in a case-insensitive way, e.g. one can use the runner with id `org.eclipse.n4js.tester.nodejs.NODEJS_MANGELHAFT` as follows:
+
+[source,bash]
+----
+.. --runWith org.eclipse.n4js.tester.nodejs.NODEJS_MANGELHAFT ..
+----
+
+or in short
+
+[source,bash]
+----
+.. --rw NODEJS_MANGELHAFT ..
+----
+
+or even lower-cased with
+
+[source,bash]
+----
+.. --rw nodejs_mangelhaft ..
+----
+
+Assume having a common workspace location ’wsp’ with a project ’P1’ containing the module ’TestA’. The following line shows how to execute this test code:
+
+[ex:Example running a test module with NodeJS runner headless]
+
+[source,bash]
+----
+java -jar n4jsc.jar -pl wsp -tw nodejs_mangelhaft -t wsp/P1/src/TestA.n4js
+----
+
+[[sec:Information_about_testing_headlessly]]
+===  Information about testing headlessly
+
+Available tester-ids can be actively queried:
+
+ `--listTesters` (`-lt`)::
+  prints out a list of all available command-line testers
+  
+=== TestResults
+
+TODO
+
+  
+  

@@ -1,0 +1,530 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= UI Concepts
+
+WARNING: Parts of this chapter may be outdated.
+
+[[sec:User_Interface_Concepts]]
+[.language-n4js]
+==  User Interface Concepts
+
+[[sec:Eclipse_UI_Concepts]]
+===  Eclipse UI Concepts
+
+The following list gives an overview of Eclipse specific UI concepts and which classes are used for implementation.
+
+[[sec:Label_Provider]]
+====   Label Provider
+
+Also provides decorations for icons and text labels.
+
+[horizontal]
+Example::
+  The representation of objects in the outline view or in search results.
+Eclipse API::
+  * `o.e.jface.viewers.ILabelProvider` → without styes
+  * `o.e.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider` → with styles Drawback: Depends on Image rather than ImageDescriptor (see below)
+Xtext Specifics::
+  * ``Declarative API``  via reflective, polymorphic dispatching. `org.eclipse.xtext.ui.label.AbstractLabelProvider`
+  * Allows to work with ImageDescriptors (non-ui-thread, can be composed), but cumbersome
+  * DefaultLabelProvider will be used everywhere (outline etc.), returns the ``name``  (via reflection). You could bind specific label providers.
+  * DescriptionLabelProvider provides labels for objects from the Xtext index used by ``open model element`` , ``find references``  – the later is already customized)
+Best Practices::
+  Labels are often use-case specific, so a single label provider is not always useful Therefore, in Xtext are different label providers for different use cases. Use cases are defined and enumerated (see `DefaultUiModule.configure*Label*`).
+  +
+  Often labels could be easier created where they are needed instead of using a label provider (even for things like OutlineView). (LabelProvider are maybe over-engineered). (Note: default label provider has dependencies to SWT, because it uses images, which are often not needed; also they are only called with an object and no further configuration).
+  +
+  Images:
+  +
+  * DeclarativeLabelProvider: text and image (String: path relative to icons folder; or: ImageDescriptor, or Image), put it into folder (needs to be called ``icons`` , otherwise bind another name)
+  * better use AbstractLabelProvider and use EMF concepts (easier to debug and handle)
+  * image format and size: sub-folders with 32, 12, 16, 24, etc. (look which sizes are needed); in about view maybe bigger; png (supports transparency)
+
+[[sec:Markers]]
+====   Markers
+
+[quote,Eclispe Help]
+____
+Markers are objects that may be associated with Workbench resources. There are many uses of markers in the Workbench...
+Markers are shown in a marker view (Tasks, Problems or Bookmark view) or on the marker bar in the editor area.
+____
+
+[horizontal]
+Examples::
+  Tasks, Problems, Bookmarks, Breakpoints, Trace information
+Eclipse API::
+  `org.eclipse.core.resources.IMarker` and `IResource.findMarkers`
+  +
+  * Marker types registered via extension point (basically String). A marker is more or less a Map of String -> String with some meta information, e.g. the resource location in WS, line numbers, type
+  * Markers are very efficient (e.g., find markers of a certain type), cf Xtext Specifics
+  * For validation, some new marker types are already registered.
+Xtext::
+  (2.6)
+  +
+  * Todo-Markers are created during build, task list is populated by these markers.
+  * `org.eclipse.xtext.tasks.ITaskFinder` (and default implementation is bound by default, can be replaced with custom implementation)
+Best Practices::
+  In Xtend, markers are used to trace from original file to generated file. They are hidden (and not displayed), so in general markers can be used for non-UI-problems as well (but only available in Eclipse of course) clean up markers: no general solution, often managed by some (single) life-cycle aware class (e.g., Builder)
+
+[[sec:Commands__Toolbar_and_Menus]]
+====   Commands, Toolbar and Menus
+
+[horizontal]
+Examples::
+  Organize Imports,
+Eclipse API::
+  use Commands + Handlers instead of Actions (or ActionDelegates etc.)
+Xtext Specifics::
+  uses commands and handlers
+Best Practice::
+*Use commands and handlers* -
+handler usually only delegates to real thing (that is, retrieve parameters from context and call the real thing) +
+*Register in pluginxml* via ExecutableExtensionFactory to be able to use injection (also pre-generatd, e.g.:
++
+[source,xml]
+----
+            <handler class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+                          commandId="org.eclipse.n4js.N4JS.validate">
+
+----
+
+*Undo*: use TextEdit and MultiTextEdit (composed) +
+otherwise very low level
+
+
+//TODO Revise Section above
+
+
+[[sec:Content_Assist]]
+====   Content Assist
+
+[quote,Eclipse Help]
+____
+Content assist allows you to provide context sensitive content completion upon user request. Popup windows (infopops) are used to propose possible text choices to complete a phrase. The user can select these choices for insertion in the text. Content assist also supports contextual infopops for providing the user with information that is related to the current position in the document.
+____
+
+
+[horizontal]
+Risk::
+  Always needs longer than anticipated.
+Examples::
+  complete name of function in function call, complete keywords
+Eclipse API::
+  * IContentAssistant wraps the widget,
+  * IContentProposalProvider computes the (array of) CompletionProposal (quite cumbersome!).
+  * Many extension interfaces that provide valuable UI features.
+Xtext Specifics::
+  * ConfigurableCompletionProposal implements the currently defined extension interfaces, provides getters to modify the proposal after the fact.
+  * Context: The ContentAssistContext is provided by the framework according to the current cursor position in the document (cf. `ContentAssisParser`), semantic context (semantic element) computed with best match strategy (worst case you get the root element). Multiple contexts may be valid at the very same cursor position since the replace region may be different for different proposals.
+  * Various abstracts above the JFace stuff are available in Xtext, some of the ``over the top`` , others quite handy.
+Best Practices::
+  * List of follow elements can be supposed to be complete, no need to figure out them with regular expressions etc.
+  * in rare cases it is necessary to ``manually``  scan the text context, e.g. to get the variable name based on the variable type. → we will provider a utility class for that using regex. NEVER search on the text with simple string methods.
+  * In N4JSProposalProvider, override pre-generated methods (see `AbstractN4JSProposalProvider`) – do not overload (with concrete semantic element)
+  * how to implement complete-methods:
+  ** inspect context, examine current semantic element provide elements from scope or hard coded proposal: see <<sec:Proposals>>
+
+[[sec:Quick_Fixes]]
+====   Quick Fixes
+
+[quote,Eclipse Help]
+Users can select a problem marker and choose a Quick Fix from a popup containing the list of supplied fixes contributed for the marker.
+
+[horizontal]
+Examples::
+  Add Import, Add Override Annotation
+Eclipse API::
+  Based on ICompletionProposal (powerful)
+  +
+  * QuickFixes are registered to marker (marker attribute: is fixable or not – this attribute is a guess only, there does not need to be a quick fix)
+  * MarkerResolutionGenerator (can also be used to fix several markers at once)
+Xtext Specifics::
+  Based on ISematicModification (seemingly powerful but in fact weak) and IModification (less weak, but still very weak compared to ICompletionProposal) – only creates DocumentChanges.
+  +
+  Declarativ API that links to issue codes via annotations on 'fix' methods in AbstractDeclarativeQuickfixProvider.
+Best Practices::
+  ICompletionProposal vs. DocumentChanges, ICompletionProposal is much more powerful. IModifications can also provide semantic changes, but not really recommended
+  +
+  * Associated to isses via IssueCodes, @Fix similar to @Check API – only less powerful Xtext abstraction (no ICompletionProposal)
+  * use issue data to provide hints for fix labels (which should be fast!) or solution strategies (but only strings) → do not compute the label for the fix from the model!
+  * share code between checks and fixes → no built-in pattern, come up with utility methods (maybe define conventions)
+  * maybe Sebastian can add a solution that more information is available via @Fix-approach
+  * no order of quickfixes (sorted by name and priority, latter is not provided by default)
+  * there can be several @Fix for a single issue code, or pass arbitrary number of resolution to the acceptor
+  * for most cases simple Xtext quick fix api is good enough (e.g. all Xtend quick fixes use that)
+  +
+  → Xtext feature request: solve multiple markers at a time (possible to do that right now: bind custom `XtextQuickAssistProcessor`, override `MarkerResolutionGenerator.getAdaptedResolutions(List<IssueResolution>`) – return a WorkbenchMarkerResolution)
+
+[[sec:Quick_Assist]]
+====   Quick Assist
+
+[quote]
+"Quick assists perform local code transformations. They are invoked on a selection or a single cursor in the Java editor and use the same shortcut as quick fixes (Ctrl+1), but quick assist are usually hidden when an error is around. To show them even with errors present on the same line, press Ctrl+1 a second time."  (Eclipse Help)
+
+``like a quickfix without a problem``
+
+[horizontal]
+Examples::
+  Add/remove inferred types
+Eclipse API::
+  Takes cursor position
+Xtext::
+  no Xtext support, e.g. no default implementation (XtextQuickAssistProcessor is a quick fix provider, has nothing to do with QuickAssist) but: XtextQuickAssistProcessor, override canAssist, override computeQuickAssistProposals
+
+[[sec:Clean_Up_Actions]]
+====   Clean Up Actions
+
+[horizontal]
+Examples::
+  Remove unused local vars, sort members
+Eclipse API::
+  None, JDT specific (see ICleanUp)
+Xtext Specifics::
+  None
+Best Practice::
+  Monkey sees - Monkey does (look at JDT), In the end a it’s a CompositeRefactoring, which is a CompletionProposal
+
+[[sec:Save_Actions]]
+====   Save Actions
+
+Similar to clean up actions but performed on save
+
+[horizontal]
+Examples::
+  Format on save, Organize imports on save
+Eclipse API::
+  None, JDT specific (see IPostSaveListener)
+Xtext Specifics::
+  None
+Best Practice::
+  XtextDocumentProvider.doSaveDocument (maybe better solutions in the future ;-) )
+
+[[sec:Auto_Edit]]
+====   Auto Edit
+
+Auto edit is about closing braces that just have been typed, adding indentation after a line break the code snippet ``if (true)`` so basically it should be unobtrusive typing aids.
+
+By default, restore model structure when editing (guide the user to proper text formatting, help the parser). Should not be used for other purposes in order to not hinder the user’s flow of editing.
+
+
+[horizontal]
+Examples::
+  ( -> ( <cursor> )
+Eclipse API::
+  org.eclipse.jface.text.IAutoEditStrategy
+Xtext Specifics::
+  org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategy, some utility methods + implements VerifyKeyListener. May use the ISourceViewer via implements ISourceViewerAware
+Best Practices::
+  Keep it as it is.
+
+Fun example but not useful in practice cf. https://code.google.com/a/eclipselabs.org/p/xtext-forms-integration/source/browse/trunk/plugins/org.eclipse.xtext.example.domainmodel.ui/src/org/eclipse/xtext/example/ui/autoedit/FantasticAutoEditStrategy.java?r=19[FantasticAutoEditStrategy]
+
+[[sec:Template_Proposals]]
+====   Template Proposals
+
+More sophisticated edit utils that are invoked by means of content assist.
+
+[horizontal]
+Examples::
+  sysout -> System.out.println(``<cursor>`` );
+Eclipse API::
+  Part of the completion proposal API, e.g. ICompletionProposal
+Xtext Specifics::
+  org.eclipse.xtext.ui.editor.contentassist.ITemplateProposalProvider, template contexts along the grammar rules by default, need to be stripped down to become usable.
+Best Practice::
+  ship some: create them manually in workbench, export them as XML, fix XML file (add IDs, in Xtext documentation), put XML file in folder ``templates``  in UI plugin where propose a certain proposal: customize XtextTemplateContextTypeRegistry (bind subclass, override register context types) – by default too many context types are registered placeholders inside templates specific to Xtext – RTFM
+
+[[sec:Outline_View___Quick_Outline]]
+====   Outline View / Quick Outline
+
+Structural represenation of the file contents (usually with different filter and sorting strategies).
+
+[horizontal]
+Examples::
+  Outline View (but not Navigator nor package explorer), Quick Outline (in Xtext: same provider)
+Eclipse API::
+  org.eclipse.ui.views.contentoutline.IContentOutlinePage
+Xtext Specifics::
+  Lazy tree creation, syncing via EObject ranges, thread save access to the EObject from nodes. Declarative API to create the tree contents. org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
+  +
+  allow actions on outline nodes (e.g., goto referenced file in ``import``  of outline)
+Best Practice::
+  * Produced from semantic model, tree structure of outline nodes
+  ** show tree based on TypeModel, maybe filter out elements w/o SyntaxElements (with type model, this should be rather cheap!)
+  ** use icons and styled labels (first user impression!)
+  * May run in the background (BackgroundOutlineTreeProvider)
+  * done lazily
+  * workflow: reconceiler: outline is a model listener
+
+Helpful tools for icons in outline view:
+
+* http://marketplace.eclipse.org/content/eclipse-icon-archive-tool[Eclipse view] to show available Eclipse icons (that are of course licenced under EPL) with possibility to export them (http://bwgz-org.googlecode.com/files/EclipseIconArchiveTool-1.pdf[documentation])
+* overview of Eclipse icons: http://eclipse-icons.i24.cc/
+
+[[sec:Navigator__Package_Explorer__Project_Explorer]]
+====   Navigator, Package Explorer, Project Explorer
+
+//TODO: check section
+
+three ``explorers`` , Navigator ``latest``  and most extensible one
+
+[horizontal]
+Best Practices::
+  use Navigator only! (RTFM, nothing specific to Xtext yet)
+
+cf. http://projects.eclipse.org/projects/technology.handly ``read index and show it in the navigator``
+
+[[sec:Hyperlinking_and_Navigation]]
+====   Hyperlinking and Navigation
+
+Linking (propose multiple linking targets, e.g. goto declaration or goto implementation when CTRL (or other modifier) + Left Mouse Click on method when receiver type is interface - show all available implementations)
+
+[horizontal]
+Examples::
+  Go to declaration, Go to implementation, Go to super
+Eclipse API::
+  org.eclipse.jface.text.hyperlink.IHyperlinkDetector
+Xtext Specifics::
+  org.eclipse.xtext.ui.editor.hyperlinking.DefaultHyperlinkDetector, navigation to EObject URI most interesting: SIGNIFICANT cf. org.eclipse.xtext.resource.ILocationInFileProviderExtension.RegionDescription
+Best Practice::
+  * subclass and bind IHyperlinkHelper (returns an array of possible links, first one is the default)
+  * also see ILocationInFileProviderExtension (cf. navigation to syntax elements instead of types)
+
+[[sec:Syntax_and_Semantic_Coloring]]
+====   Syntax and Semantic Coloring
+
+Coloring based on the lexical tokens or based on the semantic tokens (the parsed model). The parser may treat certain lexical keywords as valid identifiers in some contexts. Some of those should not appear as keywords. Semantic coloring is usually more expensive to compute thus run in the background and with some delay
+
+[horizontal]
+Examples::
+  Numbers, String literals (lexical) Escape sequences in Strings, method calls, property read / write access (semantic)
+Eclipse API::
+  `org.eclipse.jface.text.presentation.IPresentationDamager` `org.eclipse.jface.text.presentation.IPresentationRepairer` `org.eclipse.jface.text.rules.ITokenScanner`
+  +
+  Scan for tokens and associate text attributes with tokens. Compute the region of the document that has to be recolored after a text change. Tokens may not overlap.
+  +
+  Also Eclipse provides Themes that are styled via CSS. Coloring can be adjusted to themes where the logical names are mapped to different default values.
+Xtext Specifics::
+  * `o.e.x.ui.editor.syntaxcoloring.ITextAttributeProvider` - associate Antlr token names with coloring styles (logical names of text coloring)
+  * `o.e.x.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper`- convert the antlr tokens to JFace ITokens with proper text applied
+  * `o.e.x.ui.editor.syntaxcoloring.IHighlightingConfiguration` - register logical text colorings with default values, yields a preference page and the proper configuration for the text attribute provider
+  * `o.e.x.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator` - traverse the AST and associate arbitrary ranges of the text with.
+  * logical coloring names (this is a key to a style stored in the preference store), if multiple styles are returned, styles will be merged if they overlap (and if possible); JFace constraints are implicitly fulfilled
+Best Practice::
+  * subclass DefaultSemanticHighlightingCalculator and bind ISemanticHighlightingCalculator
+  ** traverse resource from left to right (usually order of semantic elements – small performance improvement)
+  * provide new logical style: subclass DefaultHighlightingConfiguration and bind IHighlightingConfiguration; override configure (see overridden)
+  * semantic coloring always wins
+  * only a few decisions can me made in lexical coloring, override lexical:
+  ** subclass `DefaultAntlrTokenToAttributeIdMapper` bind `TokenTypeToStringMapper`
+  ** e.g., color jsdoc comments differently to multiline, regex
+  ** e.g. color tags inside jsdocs or regex inside, use semantic coloring
+  ** lexical: different kind of keywords (e.g., N4JS keywords vs. JS keywords)
+  * change coloring (via toggle button), possible approach:
+  ** (inject singleton into highlighter, state of singleton is changed by toggle button, listen to that object in the editor, calculator cannot be triggered from outside due to UI-thread issues)
+  ** prefered: store state in preference store and get the information then from there in the hightligher, inject PreferencestoreAccess in Calculator
+
+[[sec:Code_Formatter]]
+====   Code Formatter
+
+[horizontal]
+Examples::
+  Auto-Format Source Code, Auto-Format code inserted by code-rewrite
+Eclipse API::
+  `org.eclipse.jface.text.formatter.IContentFormatter` - here is the document and some range - modify at will
+Xtext Specifics::
+  Declarative Formatting API (to be deprecated) - associate formatting rules with grammar elements New formatting API (mixture of declarative and imperative) - here is the model, do what you want (space before, linebreak after, indentation increase / decrease), the engine will merge your advices and apply them to the document
+Best Practice::
+  wait for 2.8 (maybe in 2.7.x)
+
+[[sec:Wizards]]
+====   Wizards
+
+[quote,Eclipse Help]
+Wizards are used to guide the user through a sequenced set of tasks. Your plug-in can contribute wizards at predefined extension points in the workbench. It can also create and launch its own wizards.
+
+[horizontal]
+Examples::
+  New N4JS Class
+Eclipse API::
+Xtext Specifics::
+  * Xtend based Wizards
+  * also see Formular Editor for Embedded Xtext editor
+Best Practices::
+  * use preferences (could be hidden, so use them even if not made configurable to the user)
+  * use standard JFace wizard API, use Xtend template expressions for file templates
+
+[[sec:Cheat_Sheets]]
+====   Cheat Sheets
+
+[quote,Eclipse Help]
+____
+Composite cheat sheets provide guidance through complex problems by breaking the problem into a set of smaller tasks. Composite cheat sheets are registered using the the `org.eclipse.ui.cheatsheets.cheatSheetContent` extension point.
+____
+
+(In Scala IDE: Work Sheets), often combined with Code Snippets
+
+[horizontal]
+Examples::
+  Create Hello World Application
+Eclipse API::
+Xtext Specifics::
+  None, probably the embedded editor could be used in a REPL (Read-Evaluate-Print-Loop)
+
+[[sec:Context_sensitive_Help]]
+====   Context-sensitive Help
+
+[quote,Eclipse Help]
+____
+A focused set of help topics that is related to the current context can be shown to users on demand using context-sensitive help. This form of user assistance is delivered to users when a platform-specific trigger is activated (e.g. F1 key on Windows, Ctrl+F1 on GTK, Help key on Carbon). Until Eclipse 3.1, context-sensitive help was presented in infopop windows. Since 3.1, a new Help view is the preferred way to deliver context-sensitive information to the user.
+____
+
+[horizontal]
+Examples::
+  Help in Formular Editor, Help about syntax construct, API-Help
+Eclipse API::
+Xtext Specifics::
+  None
+
+[[sec:Hovers]]
+====   Hovers
+
+Hover allow to display additional information as soon as the cursor stays on a certain text region. Some hovers can be requested by shortcuts (e.g. F2) similar to sort of an online help.
+
+Different kind of hovers may appear depending on the context, e.g. the error hover will have higher prio than the documentation hover. Different modifier keys may be assigned to request different hover kinds while hovering a region with the mouse. (didn’t a proper code pointer, though)
+
+[horizontal]
+Examples::
+  Hover over method shows JSDoc, Signatures or inferred types, error / problem details
+Eclipse API::
+  `org.eclipse.jface.text.ITextHover` + `ITextHoverExtension*` - compute hover based on the region that is hovered. Various indirections with `IInformationControl` and `IInformationControlCreator` with many extension interfaces
+Xtext Specifics::
+  `org.eclipse.xtext.ui.editor.hover.IEObjectHover` - compute hover based on `EObjects`
+Best Practice::
+  see XBase hover stuff
+
+[[sec:Folding]]
+====   Folding
+
+Code folding allows to skip parts of the code that are mandatory semantically but usually do not provide added value for the reader, e.g. import sections
+
+[horizontal]
+Examples::
+  Import section folding, folding of arbitrary methods or comments
+Eclipse API::
+  Not much there, most of that stuff is implemented specific to JDT or ODE. Projections usually only work per line, that is, a subsection of a line cannot be folded, e.g. it’s not possible to show
++
+[source]
+----
+var x = new Map<String, List<Pair<String, Number>>>()
+----
++
+as
++
+[source]
+----
+var x = new Map<...>()
+----
++
+Line only limitation in SWT (a guess, didn’t work for Sebastian otherwise)
+Xtext Specifics::
+  * `org.eclipse.xtext.ui.editor.folding.DefaultFoldingRegionProvider` - here is the resource, compute the folding
+  * `org.eclipse.xtext.ui.editor.folding.DefaultFoldingStructureProvider` - bridge between editor and custom computation, preferences etc would be read from here
+  * no preference page for folding provided by Xtext
+Best Practice::
+  * maybe limit to blocks (subclass default, bind to interface)
+  * probably provide your own folding preference page
+
+[[sec:Customizable_validation___severity]]
+====   Customizable validation / severity
+
+Some problems are more important to the user than others so they want to change the severity.
+
+[horizontal]
+Examples::
+  Deprecation could be an error, warning or ignored (e.g. in test projects)
+Eclipse API::
+  None
+Xtext Specifics::
+  IssueSeverityProvider (since 2.6), Monkey sees monkey does: see subclasses of IssueSeverityProvider (we already do that)
+
+[[sec:Proposals]]
+====   Proposals
+
+Created by Content Assist, Quick Fixes, Quick Assist.
+
+Basics
+
+* simplest case: proposals are strings to be inserted
+* or displayed string is different from inserted one (e.g. FQN vs. simple)
+* ConfigurableCompletionProposal created via factory methods in AbstractN4JSProposalProvider (*create*Pro)
+* PrefixMatcher (by default CamelCase aware) – for filtering, it usually is not necessary to use it when computing the proposal (only if it expensive to compute proposals) – that is, prefix can be ignored when computing a proposal because the prefix matcher will filter out invalid proposals anyway
+* pass a filter (Guava preodicate) to filter out (semantically invalid) proposals, cf. lookupCrossReference(..) – for the things where there are proposals created by default
+* priority defined by an int – for sorting. Cf. ContentProposalPriorities → define default priorities (constant values) in N4JS, do not add some random integers!
+* modes: bind RepeatedContentAssistProcessor and enable modeaware in ProposalProvider (e.g. for private members which require a quickfix)
+* what could be done in the background: hover, lazy (not prepared) proposals (cf. JDT), Xtext 2.7.; different situations are processed in parallel
+
+Several changes (e.g. automatic import):
+
+* `ConfigurableCompletionProposal.setTextApplier`
+* TextApplier: can open dialogs etc., TextApplier is the callback
+* usual case: add text at cursor position and somewhere else:
+** get document in TextApplier
+** for performance, but also: do not use semantic changes in content assist, because model is broken (you will get funny things) – use model (AST) to get offset, but then insert line breaks etc. → maybe create utility class for retrieving current formattings which are then used in the text edit → maybe provide tools for retrieving certain locations (e.g. import section, field section, etc.)
+** do not create model (AST) fragments (which are then serialized), instead directly provide text
+** use TextEdit and MultiTextEdit
+** set TextViewer redraw to false and to true after the text edits were applied
+** have proper TESTS to ensure that file is not broken after the changes
+* *LinkedEditing*:
+** Linked-Editing mode in ConfigurableCompletionProposal with one editing group only (basically: move the cursor somewhere after editing it, see setSimpleLinkedMode)
+** do it manually: cf. LinkedPositionGroup (see call hierarchy of constructor) – used for quick fixes or refactorings rather for content assist
+
+[[sec:Non_Eclipse_UI_Concepts]]
+===  Non-Eclipse UI Concepts
+
+The following entries are not necessarily implemented yet.
+
+[[sec:Overlays]]
+====   Overlays
+
+An overlay is a small annotation similar to an hover, attached to a specific location in the editor and is moved with that location.
+
+[horizontal]
+Examples::
+  Show inferred types
+
+[[sec:Goto__Inferred__Type]]
+====   Goto (Inferred) Type
+
+Navigate to an inferred type (or other ``invisible``  information)
+
+[[sec:Postfix_Completion]]
+====   Postfix Completion
+
+(IntelliJ) Replace code _AFTER_ an expression
+
+== User Interface Resources
+
+=== Icons
+In parts, the N4JS IDE re-uses some of the icons that come with the Eclipse Platform as well as the Eclipse JDT development environment. However, in some cases we also provide our own icons to illustrate N4JS-specific concepts.
+
+==== Eclipse Platform Icons
+When re-using the Eclipse Platform Icons, the icons are usually copied over to the `icons/` folder of the `org.eclipse.n4js.ui` bundle. In this folder, the `README.adoc` file keeps book on the origin of all the collected icons (e.g. different Eclipse Projects).
+
+==== N4JS Specific Icons
+In some cases, the icons the Eclipse eco-system provides do not suffice to sensibly express N4JS concepts. In these cases we provide our own icons. When designing those we try to imitate the general Eclipse artstyle in order for our icons to integrate well with the overall appearance of Eclipse.
+
+For the creation of new icons, the `eclipse-svg-icons` repository (see https://github.com/Seung-Yoon/eclipse-svg-icons) has proven helpful. The repository contains raw SVG files which can be used to reproduce the bitmap icons that are contained in, for instance, the `org.eclipse.platform.ui` or `org.eclipse.jdt.ui` bundle. Based on that, common vector-graphics editing software may be used to further adapt color, form and style of existing icons (e.g. Inkscape https://inkscape.org/en/).
+
+==== High Resolution Icons
+
+With the Neon release, Eclipse SWT introduced explicit support for high-DPI monitors (see https://www.eclipse.org/eclipse/news/4.6/platform.php#swt-autoscale). In order to provide a good user experience, we want to provide high-DPI support for as many of our icons as possible. For that, it suffices to simply provide an alternative resource with higher resolution by appending the prefix @2x to its name (e.g. `class.png` and `class@2x.png`). Code-wise, no adjustments are required. In case of copied Eclipse Platform Icons, most of the time a corresponding 2x-version can be obtained from the original source. In case of N4JS Specific Icons, we export all icons in the resolutions 16x16 and 32x32. For that, it is of particular importance to make sure that the scaling is done in accordance with the native resolution (cf. pixel perfect scaling, also see https://en.wikipedia.org/wiki/Native_resolution).

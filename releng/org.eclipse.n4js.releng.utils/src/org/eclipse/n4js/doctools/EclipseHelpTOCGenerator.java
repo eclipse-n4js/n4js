@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2019 NumberFour AG and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
 package org.eclipse.n4js.doctools;
 
 import java.io.File;
@@ -64,7 +74,8 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 
 		File f = new File(in);
 		try {
-			String toc = generateTOC(f, linkPrefix);
+			EclipseHelpTOCGenerator handler = new EclipseHelpTOCGenerator();
+			String toc = handler.generateTOC(f, linkPrefix);
 			Files.write(Paths.get(tocName), toc.getBytes(), StandardOpenOption.CREATE,
 					StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (Exception ex) {
@@ -82,9 +93,9 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	}
 
 	/**
-	 * Creats an Eclipse help TOC from given asciidoc generated XML file.
+	 * Creates an Eclipse help TOC from given asciidoc generated XML file.
 	 */
-	public static String generateTOC(File file, String linkPrefix)
+	public String generateTOC(File file, String linkPrefix)
 			throws ParserConfigurationException, SAXException, IOException {
 
 		FileInputStream fis = new FileInputStream(file);
@@ -93,10 +104,9 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 			SAXParser parser = factory.newSAXParser();
 			XMLReader reader = parser.getXMLReader();
 
-			EclipseHelpTOCGenerator handler = new EclipseHelpTOCGenerator();
-			handler.dir = linkPrefix + file.getName().substring(0, file.getName().indexOf(".xml"));
+			dir = computeBasedir(file, linkPrefix);
 
-			reader.setContentHandler(handler);
+			reader.setContentHandler(this);
 			reader.setEntityResolver(new EntityResolver() {
 
 				@Override
@@ -109,24 +119,45 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 			InputSource input = new InputSource(fis);
 			reader.parse(input);
 
-			return handler.getResult();
+			return getResult();
 		} finally {
 			fis.close();
 		}
 	}
 
-	private static class Topic {
+	/**
+	 * Computes the base dir (to dir) in which all chapters reside. The folder is names after the main xml file. May be
+	 * overridden in subclasses.
+	 */
+	public String computeBasedir(File file, String linkPrefix) {
+		return linkPrefix + file.getName().substring(0, file.getName().indexOf(".xml"));
+	}
+
+	/**
+	 * Topic entry for TOC.
+	 */
+	protected static class Topic {
 		String id;
 		String label;
 		List<Topic> subtopics = new ArrayList<>(5);
+		/**
+		 * Not used for Eclipse Help but required for html index generation. In the Eclipse help, we use a topic
+		 * "Appendix".
+		 */
+		boolean isAppendix = false;
 	}
 
 	String title;
 	List<Topic> maintopics = new ArrayList<>(5);
+	List<Topic> appendix = new ArrayList<>(5);
 	Stack<Topic> topics = new Stack<>();
 	StringBuilder titleBuffer = new StringBuilder();
 	boolean requireTitle = false;
-	private String dir;
+
+	/**
+	 * The folder in which all files are found.
+	 */
+	protected String dir;
 
 	/**
 	 * Visible for testing.
@@ -139,24 +170,31 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 		super.startElement(uri, localName, qName, attributes);
 
 		if ("chapter".equals(qName)) {
-			startChapter(attributes);
+			startChapter(attributes, false);
 		} else if ("section".equals(qName)) {
 			startSection(attributes);
 		} else if ("book".equals(qName)) {
 			startBook();
+		} else if ("appendix".equals(qName)) {
+			startChapter(attributes, true);
 		}
-
 	}
 
 	private void startBook() {
 		requireTitle = true;
 	}
 
-	private void startChapter(Attributes attributes) {
+	private void startChapter(Attributes attributes, boolean isAppendix) {
 		requireTitle = true;
 		topics.clear();
 		Topic topic = new Topic();
-		maintopics.add(topic);
+		topic.isAppendix = isAppendix;
+		if (isAppendix) {
+			appendix.add(topic);
+		} else {
+			maintopics.add(topic);
+
+		}
 		topics.push(topic);
 
 		topic.id = attributes.getValue(XML_ID);
@@ -177,7 +215,7 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		super.endElement(uri, localName, qName);
 
-		if ("chapter".equals(qName)) {
+		if ("chapter".equals(qName) || "appendix".equals(qName)) {
 			endChapter();
 		} else if ("section".equals(qName)) {
 			endSection();
@@ -216,20 +254,34 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 	}
 
 	/**
-	 * Emits the result (xml) file as string. Package visible for testing.
+	 * Emits the result (xml) file as string. Maybe overridden if other formats are to be emitted.
 	 */
-	String getResult() {
+	protected String getResult() {
 		StringBuilder out = new StringBuilder();
+
 		out.append("<?xml version='1.0' encoding='utf-8' ?>\n");
 		out.append("<toc topic=\"" + dir + "/index.html\" label=\"" + title + "\">");
 		for (Topic topic : maintopics) {
 			appendTopic(out, "\t", topic, getFilename(topic.label));
 		}
+
+		if (!appendix.isEmpty()) {
+			out.append("\n<topic label=\"Appendix\">");
+			char appendixNo = 'A';
+			for (Topic topic : appendix) {
+				appendTopic(out, "\t", topic, getFilename("Appendix " + appendixNo + ": " + topic.label));
+				appendixNo++;
+			}
+			out.append("\n</topic>");
+		}
 		out.append("\n</toc>");
 		return out.toString();
 	}
 
-	private String getFilename(String label) {
+	/**
+	 * Returns the output file name of a specific topic. Maybe overridden if other formats are to be emitted.
+	 */
+	protected String getFilename(String label) {
 		String name = "index";
 		if (label != null) {
 			name = ChunkHelper.extractFileNameFromTitle(label, 0, label.length());
@@ -237,7 +289,10 @@ public class EclipseHelpTOCGenerator extends DefaultHandler {
 		return name + ".html";
 	}
 
-	private void appendTopic(StringBuilder out, String indent, Topic topic, String fileName) {
+	/**
+	 * Print out subtopics of a topic. Maybe overridden if other formats are to be emitted.
+	 */
+	protected void appendTopic(StringBuilder out, String indent, Topic topic, String fileName) {
 		out.append("\n" + indent);
 		String href = dir + "/" + fileName + "#" + topic.id;
 		out.append("<topic href=\"" + href + "\" label=\"" + topic.label + "\">");

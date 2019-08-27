@@ -148,7 +148,11 @@ class ImageFileNameCalculationHelper {
 	}
 
 	def dispatch String getImageFileName(TFunction tFunction) {
-		switch tFunction.typeAccessModifier {
+		return getFunctionFileName(tFunction.typeAccessModifier);
+	}
+
+	def private String getFunctionFileName(TypeAccessModifier accessModifier) {
+		switch accessModifier {
 			case TypeAccessModifier.PUBLIC: "n4js_function.png"
 			case TypeAccessModifier.PUBLIC_INTERNAL: "n4js_function.png"
 			case TypeAccessModifier.PROJECT: "n4js_function.png"
@@ -195,12 +199,23 @@ class ImageFileNameCalculationHelper {
 	}
 
 	def dispatch String getImageFileName(TVariable tVariable) {
-		return "var_simple.gif"
+		return getVariableFileName();
+	}
+
+	def private String getVariableFileName() {
+		return "var_simple.gif";
 	}
 
 	def dispatch String getImageFileName(IEObjectDescription description) {
 		val modifier = tryGetAccessModifier(description);
-		switch (description.EClass) {
+		val eClass = description.EClass;
+		if (TypesPackage.eINSTANCE.TFunction.isSuperTypeOf(eClass)) {
+			return getFunctionFileName(modifier);
+		}
+		if (TypesPackage.eINSTANCE.TVariable.isSuperTypeOf(eClass)) {
+			return getVariableFileName();
+		}
+		switch (eClass) {
 			case TypesPackage.eINSTANCE.TClass: getClassFileName(modifier)
 			case TypesPackage.eINSTANCE.TInterface: getInterfaceFileName(modifier)
 			case TypesPackage.eINSTANCE.TEnum: getEnumFileName(modifier)

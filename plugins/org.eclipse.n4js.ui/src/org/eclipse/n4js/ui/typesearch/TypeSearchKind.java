@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ui.typesearch;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -48,6 +47,31 @@ public enum TypeSearchKind {
 		@Override
 		public boolean matches(EClass eclass) {
 			return CLASS.matches(eclass) || INTERFACE.matches(eclass) || ENUM.matches(eclass);
+		}
+	},
+
+	/** The function search kind, not including methods. */
+	FUNCTION {
+		@Override
+		public boolean matches(EClass eclass) {
+			return TypesPackage.eINSTANCE.getTFunction().isSuperTypeOf(eclass)
+					&& !TypesPackage.eINSTANCE.getTMethod().isSuperTypeOf(eclass);
+		}
+	},
+
+	/** The search kind for variables, including const. */
+	VARIABLE {
+		@Override
+		public boolean matches(EClass eclass) {
+			return TypesPackage.eINSTANCE.getTVariable().isSuperTypeOf(eclass);
+		}
+	},
+
+	/** Search kind for all N4JS types and functions. */
+	EVERYTHING {
+		@Override
+		public boolean matches(EClass eclass) {
+			return ALL_TYPES.matches(eclass) || FUNCTION.matches(eclass) || VARIABLE.matches(eclass);
 		}
 	};
 

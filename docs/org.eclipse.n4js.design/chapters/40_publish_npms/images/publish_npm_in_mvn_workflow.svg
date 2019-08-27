@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="351 77 1119 731" width="1119" height="731">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica Neue" font-size="14" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Courier" font-size="14" units-per-em="1000" underline-position="-178.22266" underline-thickness="57.61719" slope="0" x-height="456.54297" cap-height="586.91406" ascent="753.90625" descent="-246.09375" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Courier"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 8 3 0 0 0 9 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="975.0061" descent="-216.99524" font-weight="700">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue-Bold"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica Neue" font-size="20" panose-1="2 0 8 3 0 0 0 9 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="975.0061" descent="-216.99524" font-weight="700">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue-Bold"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Monaco" font-size="14" units-per-em="1000" underline-position="-37.597656" underline-thickness="75.68359" slope="0" x-height="545.41016" cap-height="757.8125" ascent="1e3" descent="-250" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Monaco"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2019-08-02 07:33:48 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="351" y="77" width="1119" height="731"/>
+    <g id="Canvas_1: Docker">
+      <title>Docker</title>
+      <g id="Graphic_55">
+        <path d="M 599 131.5 L 840.5318 131.5 C 843.2932 131.5 845.5318 133.73858 845.5318 136.5 L 845.5318 801.9404 C 845.5318 804.7018 843.2932 806.9404 840.5318 806.9404 L 599 806.9404 C 596.2386 806.9404 594 804.7018 594 801.9404 L 594 136.5 C 594 133.73858 596.2386 131.5 599 131.5 Z" fill="white"/>
+        <path d="M 599 131.5 L 840.5318 131.5 C 843.2932 131.5 845.5318 133.73858 845.5318 136.5 L 845.5318 801.9404 C 845.5318 804.7018 843.2932 806.9404 840.5318 806.9404 L 599 806.9404 C 596.2386 806.9404 594 804.7018 594 801.9404 L 594 136.5 C 594 133.73858 596.2386 131.5 599 131.5 Z" stroke="#ff2600" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_54">
+        <path d="M 356.5 131.5 L 540.5 131.5 C 543.2614 131.5 545.5 133.73858 545.5 136.5 L 545.5 802.5 C 545.5 805.2614 543.2614 807.5 540.5 807.5 L 356.5 807.5 C 353.73858 807.5 351.5 805.2614 351.5 802.5 L 351.5 136.5 C 351.5 133.73858 353.73858 131.5 356.5 131.5 Z" fill="white"/>
+        <path d="M 356.5 131.5 L 540.5 131.5 C 543.2614 131.5 545.5 133.73858 545.5 136.5 L 545.5 802.5 C 545.5 805.2614 543.2614 807.5 540.5 807.5 L 356.5 807.5 C 353.73858 807.5 351.5 805.2614 351.5 802.5 L 351.5 136.5 C 351.5 133.73858 353.73858 131.5 356.5 131.5 Z" stroke="#ff2600" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_53">
+        <path d="M 1195.0318 130.9404 L 1464.5 130.9404 C 1467.2614 130.9404 1469.5 133.17897 1469.5 135.9404 L 1469.5 801.9404 C 1469.5 804.7018 1467.2614 806.9404 1464.5 806.9404 L 1195.0318 806.9404 C 1192.2703 806.9404 1190.0318 804.7018 1190.0318 801.9404 L 1190.0318 135.9404 C 1190.0318 133.17897 1192.2703 130.9404 1195.0318 130.9404 Z" fill="white"/>
+        <path d="M 1195.0318 130.9404 L 1464.5 130.9404 C 1467.2614 130.9404 1469.5 133.17897 1469.5 135.9404 L 1469.5 801.9404 C 1469.5 804.7018 1467.2614 806.9404 1464.5 806.9404 L 1195.0318 806.9404 C 1192.2703 806.9404 1190.0318 804.7018 1190.0318 801.9404 L 1190.0318 135.9404 C 1190.0318 133.17897 1192.2703 130.9404 1195.0318 130.9404 Z" stroke="#ff2600" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_52">
+        <path d="M 899.0318 131.5 L 1136.5318 131.5 C 1139.2932 131.5 1141.5318 133.73858 1141.5318 136.5 L 1141.5318 801.9404 C 1141.5318 804.7018 1139.2932 806.9404 1136.5318 806.9404 L 899.0318 806.9404 C 896.2703 806.9404 894.0318 804.7018 894.0318 801.9404 L 894.0318 136.5 C 894.0318 133.73858 896.2703 131.5 899.0318 131.5 Z" fill="white"/>
+        <path d="M 899.0318 131.5 L 1136.5318 131.5 C 1139.2932 131.5 1141.5318 133.73858 1141.5318 136.5 L 1141.5318 801.9404 C 1141.5318 804.7018 1139.2932 806.9404 1136.5318 806.9404 L 899.0318 806.9404 C 896.2703 806.9404 894.0318 804.7018 894.0318 801.9404 L 894.0318 136.5 C 894.0318 133.73858 896.2703 131.5 899.0318 131.5 Z" stroke="#ff2600" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+    </g>
+    <g id="Canvas_1: Workflow">
+      <title>Workflow</title>
+      <g id="Line_51">
+        <line x1="446.9202" y1="375.9665" x2="446.9202" y2="386.0667" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_50">
+        <path d="M 613.40675 217.2161 L 621.40675 209.2161 L 822.15675 209.2161 L 830.15675 217.2161 L 830.15675 257.8775 L 822.15675 265.8775 L 621.40675 265.8775 L 613.40675 257.8775 Z" fill="lime"/>
+        <path d="M 613.40675 217.2161 L 621.40675 209.2161 L 822.15675 209.2161 L 830.15675 217.2161 L 830.15675 257.8775 L 822.15675 265.8775 L 621.40675 265.8775 L 613.40675 257.8775 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(623.8255 211.4588)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="7.788726" y="14">Maven plugin </tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" y="14">exec-maven-</tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" x="40.29246" y="31.392">plugin </tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" y="31.392">executes</tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" x="3.8506243" y="48.783997">UpdateShippedCode</tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" y="48.783997"> MWE2</tspan>
+        </text>
+      </g>
+      <g id="Line_49">
+        <line x1="613.40675" y1="237.5468" x2="516.85277" y2="237.5468" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_48">
+        <text transform="translate(524.0741 211.5468)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">bound to</tspan>
+        </text>
+      </g>
+      <g id="Graphic_47">
+        <text transform="translate(603.03175 82.03589)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" x="56.614" y="16">org.eclipse.n4js.</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" x="26.046" y="35.46411">external.libraries.update</tspan>
+        </text>
+      </g>
+      <g id="Graphic_46">
+        <path d="M 1204.4682 433.3728 L 1212.4682 425.3728 L 1448 425.3728 L 1456 433.3728 L 1456 482.52263 L 1448 490.52263 L 1212.4682 490.52263 L 1204.4682 482.52263 Z" fill="lime"/>
+        <path d="M 1204.4682 433.3728 L 1212.4682 425.3728 L 1448 425.3728 L 1456 433.3728 L 1456 482.52263 L 1448 490.52263 L 1212.4682 490.52263 L 1204.4682 482.52263 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1215.7565 432.85973)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="26.256058" y="14">Maven </tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" y="14">exec-maven </tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" y="14">plugin</tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" y="14"> </tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="15.539577" y="30.392">publishes n4js-libs to local npm </tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="91.40558" y="46.783997">registry</tspan>
+        </text>
+      </g>
+      <g id="Line_45">
+        <line x1="1204.4682" y1="457.9477" x2="518.1127" y2="477.27935" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_44">
+        <text transform="translate(1096.9331 435.0605)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">bound to</tspan>
+        </text>
+      </g>
+      <g id="Graphic_43">
+        <path d="M 1204.4682 523.602 L 1212.4682 515.602 L 1448 515.602 L 1456 523.602 L 1456 572.7518 L 1448 580.7518 L 1212.4682 580.7518 L 1204.4682 572.7518 Z" fill="lime"/>
+        <path d="M 1204.4682 523.602 L 1212.4682 515.602 L 1448 515.602 L 1456 523.602 L 1456 572.7518 L 1448 580.7518 L 1212.4682 580.7518 L 1204.4682 572.7518 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1215.7565 522.2849)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="6.7071085" y="14">Maven </tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" y="14">failsafe</tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" y="14"> plugin executes </tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" x="43.065956" y="31.392">org.eclipse.n4js.</tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" x="30.15164" y="48.392">hlc.integrations</tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" y="48.392"> tests </tspan>
+        </text>
+      </g>
+      <g id="Line_42">
+        <line x1="1204.4682" y1="548.1769" x2="518.4318" y2="539.5895" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_41">
+        <text transform="translate(1098.4625 522.25326)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">bound to</tspan>
+        </text>
+      </g>
+      <g id="Graphic_40">
+        <path d="M 1204.4682 613.83114 L 1212.4682 605.83114 L 1448 605.83114 L 1456 613.83114 L 1456 662.98096 L 1448 670.98096 L 1212.4682 670.98096 L 1204.4682 662.98096 Z" fill="lime"/>
+        <path d="M 1204.4682 613.83114 L 1212.4682 605.83114 L 1448 605.83114 L 1456 613.83114 L 1456 662.98096 L 1448 670.98096 L 1212.4682 670.98096 L 1204.4682 662.98096 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1215.7565 621.21005)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="25.993476" y="14">Maven </tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" y="14">antrun</tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" y="14"> plugin stops </tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" x="76.671425" y="31.392">verdaccio</tspan>
+        </text>
+      </g>
+      <g id="Line_39">
+        <line x1="1204.4682" y1="638.40605" x2="518.42044" y2="604.4027" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_38">
+        <text transform="translate(1100.4749 609.8348)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">bound to</tspan>
+        </text>
+      </g>
+      <g id="Graphic_37">
+        <rect x="384.35993" y="158.495" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="384.35993" y="158.495" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(389.35993 168.95487)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="27.992417" y="15">compile</tspan>
+        </text>
+      </g>
+      <g id="Graphic_36">
+        <rect x="384.35993" y="217.86294" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="384.35993" y="217.86294" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(389.35993 219.0988)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="24.736417" y="15">process-</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="29.632417" y="33.448">classes</tspan>
+        </text>
+      </g>
+      <g id="Line_35">
+        <line x1="445.65635" y1="197.86273" x2="445.65635" y2="207.96294" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_34">
+        <rect x="385.6238" y="457.8742" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="385.6238" y="457.8742" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(390.6238 459.1101)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x=".58441724" y="15">pre-integration-</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="42.960417" y="33.448">test</tspan>
+        </text>
+      </g>
+      <g id="Graphic_33">
+        <rect x="385.93974" y="519.7817" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="385.93974" y="519.7817" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(390.93974 530.2416)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="1.9204172" y="15">integration-test</tspan>
+        </text>
+      </g>
+      <g id="Graphic_32">
+        <rect x="385.93974" y="638.5" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="385.93974" y="638.5" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(390.93974 648.95986)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="48.29642" y="15">…</tspan>
+        </text>
+      </g>
+      <g id="Line_31">
+        <line x1="445.65635" y1="137.12396" x2="445.65635" y2="148.595" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_30">
+        <rect x="385.6238" y="277.23087" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="385.6238" y="277.23087" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(390.6238 287.69073)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="48.29642" y="15">…</tspan>
+        </text>
+      </g>
+      <g id="Line_29">
+        <line x1="445.65635" y1="257.23066" x2="446.29584" y2="267.35057" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_28">
+        <line x1="446.9202" y1="316.5986" x2="446.9202" y2="326.6988" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_27">
+        <line x1="446.9202" y1="497.24194" x2="447.0974" y2="509.8827" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_26">
+        <rect x="385.93974" y="584.2288" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="385.93974" y="584.2288" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(390.93974 585.46465)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="37.328417" y="15">post-</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="1.9204172" y="33.448">integration-test</tspan>
+        </text>
+      </g>
+      <g id="Line_25">
+        <line x1="447.23616" y1="559.14944" x2="447.23616" y2="574.3288" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_24">
+        <line x1="447.23616" y1="623.5965" x2="447.23616" y2="628.6" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_23">
+        <rect x="385.6238" y="336.5988" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="385.6238" y="336.5988" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(390.6238 347.05865)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="42.960417" y="15">test</tspan>
+        </text>
+      </g>
+      <g id="Graphic_22">
+        <text transform="translate(373.5 89)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="20" font-weight="700" fill="black" x="12.4675" y="20">Maven phases </tspan>
+        </text>
+      </g>
+      <g id="Graphic_21">
+        <rect x="385.6238" y="395.9667" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="385.6238" y="395.9667" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(390.6238 406.4266)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="48.29642" y="15">…</tspan>
+        </text>
+      </g>
+      <g id="Graphic_20">
+        <text transform="translate(1235.2659 82.03589)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" x="32.364" y="16">org.eclipse.n4js.</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" x="20.74" y="35.46411">hlc.integrationtests</tspan>
+        </text>
+      </g>
+      <g id="Graphic_19">
+        <path d="M 1204.4682 344.5988 L 1212.4682 336.5988 L 1448 336.5988 L 1456 344.5988 L 1456 393.7486 L 1448 401.7486 L 1212.4682 401.7486 L 1204.4682 393.7486 Z" fill="lime"/>
+        <path d="M 1204.4682 344.5988 L 1212.4682 336.5988 L 1448 336.5988 L 1456 344.5988 L 1456 393.7486 L 1448 401.7486 L 1212.4682 401.7486 L 1204.4682 393.7486 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1215.7565 343.5857)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="25.867476" y="14">Maven </tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" y="14">antrun</tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" y="14"> plugin starts </tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" x="17.157425" y="31.392">verdaccio</tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" y="31.392">, local npm registry </tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="52.49258" y="47.783997">listens on port 4873</tspan>
+        </text>
+      </g>
+      <g id="Line_18">
+        <line x1="1204.4682" y1="369.1737" x2="518.0189" y2="466.3288" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_17">
+        <text transform="translate(1108.2748 357.5391) rotate(-8.055727)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">bound to</tspan>
+        </text>
+      </g>
+      <g id="Line_16">
+        <line x1="1330.2341" y1="401.7486" x2="1330.2341" y2="415.4728" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_15">
+        <line x1="1330.2341" y1="490.52263" x2="1330.2341" y2="505.702" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_14">
+        <line x1="1330.2341" y1="580.7518" x2="1330.2341" y2="595.93114" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_13">
+        <path d="M 1117.5 110.25 L 1117.5 92.75 L 1216.4841 92.75 L 1216.4841 84 L 1227.4841 101.5 L 1216.4841 119 L 1216.4841 110.25 Z" fill="white"/>
+        <path d="M 1117.5 110.25 L 1117.5 92.75 L 1216.4841 92.75 L 1216.4841 84 L 1227.4841 101.5 L 1216.4841 119 L 1216.4841 110.25 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1122.5 92.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="9.688062" y="15">built before</tspan>
+        </text>
+      </g>
+      <g id="Graphic_12">
+        <path d="M 920.7818 687.8802 L 928.7818 679.8802 L 1106.7818 679.8802 L 1114.7818 687.8802 L 1114.7818 737.03 L 1106.7818 745.03 L 928.7818 745.03 L 920.7818 737.03 Z" fill="lime"/>
+        <path d="M 920.7818 687.8802 L 928.7818 679.8802 L 1106.7818 679.8802 L 1114.7818 687.8802 L 1114.7818 737.03 L 1106.7818 745.03 L 928.7818 745.03 L 920.7818 737.03 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(930.6318 685.9786)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="1.1831656" y="14">Maven </tspan>
+          <tspan font-family="Monaco" font-size="14" font-weight="400" fill="black" y="14">exec-maven</tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" y="14"> plugin </tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="9.275849" y="33.168945">publishes </tspan>
+          <tspan font-family="Courier" font-size="14" font-weight="400" fill="black" y="33.168945">n4js-libs</tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" y="33.168945"> to </tspan>
+          <tspan font-family="Helvetica Neue" font-size="14" font-weight="400" fill="black" x="23.226002" y="49.560944">staging npm registry</tspan>
+        </text>
+      </g>
+      <g id="Graphic_11">
+        <text transform="translate(876.7708 82.03589)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" x="80.75487" y="16">org.eclipse.n4js.</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" x="92.23487" y="35.46411">product.build</tspan>
+        </text>
+      </g>
+      <g id="Graphic_10">
+        <path d="M 825.5 110.25 L 825.5 92.75 L 931.2341 92.75 L 931.2341 84 L 942.2341 101.5 L 931.2341 119 L 931.2341 110.25 Z" fill="white"/>
+        <path d="M 825.5 110.25 L 825.5 92.75 L 931.2341 92.75 L 931.2341 84 L 942.2341 101.5 L 931.2341 119 L 931.2341 110.25 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(830.5 92.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="13.063062" y="15">built before</tspan>
+        </text>
+      </g>
+      <g id="Line_9">
+        <line x1="446.9202" y1="435.33444" x2="446.9202" y2="447.9742" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_8">
+        <rect x="385.6238" y="692.7712" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="385.6238" y="692.7712" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(390.6238 703.2311)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="37.192417" y="15">verify</tspan>
+        </text>
+      </g>
+      <g id="Line_7">
+        <line x1="446.2883" y1="677.8677" x2="446.2883" y2="682.8712" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_6">
+        <rect x="385.6238" y="752.6664" width="122.59283" height="39.36772" fill="white"/>
+        <rect x="385.6238" y="752.6664" width="122.59283" height="39.36772" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(390.6238 763.12625)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="48.29642" y="15">…</tspan>
+        </text>
+      </g>
+      <g id="Line_5">
+        <line x1="446.9202" y1="732.1389" x2="446.9202" y2="742.7664" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_4">
+        <line x1="920.7818" y1="712.4551" x2="518.1166" y2="712.4551" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_3">
+        <text transform="translate(728.6176 694.4551)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">bound to</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

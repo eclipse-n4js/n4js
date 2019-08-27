@@ -1,0 +1,44 @@
+////
+Copyright (c) 2010 NumberFour AG and others,
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Execution Support
+
+WARNING: Parts of this document may be outdated.
+
+[[sec:Non_UI_Execution]]
+== Non-UI Execution
+
+[[sec:Non_UI_Debugging]]
+=== Non-UI Debugging
+
+not supported yet
+
+[[sec:UI_Execution]]
+== UI Execution
+
+The N4JS IDE supports launching a file via a so called "runner". That is, a selected file is started as main
+file with Node.js or Chrome, depending on the available runners.
+
+WARNING: Chrome support not available yet.
+
+For testing, a file, package, or even a whole project can be executed with a "tester". In that case, instead of directly executing the selected resource with Node.js (or other runners), the "mangelhaft" framework is used to run the selected resource or all its content as tests. For test support in general, see next chapter.
+
+Running or testing a resource is done via a launch configuration. This can be configured. 
+
+The node.js runner/tester allows for configuration of
+
+- the NODE_MODULE path. This can be adjusted if the automatically path is not suited.
+- other environment variables (simply as key=value pairs per line)
+- node.js options to be passed as arguments to node.js
+- the system loader to be used, this is "System.js" by default
+
+task::GH-716[]
+Since in the JavaScript world these configurations are often used, it is cumbersome, particularly for tests, to define them for every single file. Thus the N4JS IDE copies the node.js settings found in a project launch configuration to a resource specific launch configuration.

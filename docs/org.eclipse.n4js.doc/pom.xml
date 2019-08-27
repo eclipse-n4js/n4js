@@ -21,7 +21,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
         <asciidoctor.maven.plugin.version>1.6.0</asciidoctor.maven.plugin.version>
         <asciidoctorj.version>1.6.2</asciidoctorj.version>
         <jruby.version>9.2.7.0</jruby.version>
-        <asciidoctorj.pdf.version>1.5.0-alpha.17</asciidoctorj.pdf.version>
         <asciidoctor-epub3.version>1.5.0-alpha.9</asciidoctor-epub3.version>
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
 
@@ -29,8 +28,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
         <website.html>website-html</website.html>
 
         <epub.target.dir>${basedir}/target/epub</epub.target.dir>
-        <pdf.dir>${basedir}/target/pdf</pdf.dir>
-
+        
         <eclipseHelpBaseDir>${basedir}/target</eclipseHelpBaseDir>
         <eclipseHelpDir>${eclipseHelpBaseDir}/${eclipse.html}</eclipseHelpDir>
         <eclipseUserguidesDir>${eclipseHelpDir}/userguides</eclipseUserguidesDir>
@@ -107,11 +105,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                     </dependency>
                     <dependency>
                         <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj-pdf</artifactId>
-                        <version>${asciidoctorj.pdf.version}</version>
-                    </dependency>
-                        <dependency>
-                        <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctorj-epub3</artifactId>
                         <version>${asciidoctor-epub3.version}</version>
                     </dependency>
@@ -147,51 +140,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                                 <linkattrs>true</linkattrs>
                                 <reproducible>true</reproducible>
                             </attributes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- eclipse-help file list generation -->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <!-- userguides file list generation -->
-                    <execution>
-                        <id>userguide-page-list-creation</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <echo>Running directory listing dir=${eclipseUserguidesDir}</echo>
-                                <fileset id="eclipseuserguides.pages" dir="${eclipseUserguidesDir}" includes="*.html" excludes=""/>
-                                <pathconvert pathsep="${line.separator}" property="prop.dist.contents" refid="eclipseuserguides.pages">
-                                    <map from="${project.build.directory}" to="${dist}" />
-                                </pathconvert>
-                                <echo encoding="${file.encoding}" >${prop.dist.contents}</echo>
-                                <echo encoding="${file.encoding}" output="${indices.dir}/${help.userguides.list}">${prop.dist.contents}</echo>
-                            </target>
-                        </configuration>
-                    </execution>
-                    <!-- articles and features file list generation -->
-                    <execution>
-                        <id>article-page-list-creation</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <echo>Running directory listing dir=${eclipseHelpDir}</echo>
-                                <fileset id="eclipsehelp.articles.pages" dir="${eclipseHelpDir}" includes="**/*.html" excludes="index.html,userguides/*.html,_headers/**/*.html,generated-docs/**/*.html"/>
-                                <pathconvert pathsep="${line.separator}" property="prop.dist.contents" refid="eclipsehelp.articles.pages">
-                                    <map from="${project.build.directory}" to="${dist}" />
-                                </pathconvert>
-                                <echo encoding="${file.encoding}" >${prop.dist.contents}</echo>
-                                <echo encoding="${file.encoding}" output="${indices.dir}/${help.articles.list}">${prop.dist.contents}</echo>
-                            </target>
                         </configuration>
                     </execution>
                 </executions>
@@ -249,33 +197,73 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			    </executions>
 			</plugin>
 
-			<!-- Build N4JSDesign document -->
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
+			<!-- Build Eclipse Help files from specification documents -->
+			<!-- eclipse-help file list generation -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
 				<version>${maven-antrun-plugin.version}</version>
-				<executions>
+				
+                <executions>
+                    <!-- userguides file list generation -->
+                    <execution>
+                        <id>userguide-page-list-creation</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>Running directory listing dir=${eclipseUserguidesDir}</echo>
+                                <fileset id="eclipseuserguides.pages" dir="${eclipseUserguidesDir}" includes="*.html" excludes=""/>
+                                <pathconvert pathsep="${line.separator}" property="prop.dist.contents" refid="eclipseuserguides.pages">
+                                    <map from="${project.build.directory}" to="${dist}" />
+                                </pathconvert>
+                                <echo encoding="${file.encoding}" >${prop.dist.contents}</echo>
+                                <echo encoding="${file.encoding}" output="${indices.dir}/${help.userguides.list}">${prop.dist.contents}</echo>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <!-- articles and features file list generation -->
+                    <execution>
+                        <id>article-page-list-creation</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>Running directory listing dir=${eclipseHelpDir}</echo>
+                                <fileset id="eclipsehelp.articles.pages" dir="${eclipseHelpDir}" includes="**/*.html" excludes="index.html,userguides/*.html,_headers/**/*.html,generated-docs/**/*.html"/>
+                                <pathconvert pathsep="${line.separator}" property="prop.dist.contents" refid="eclipsehelp.articles.pages">
+                                    <map from="${project.build.directory}" to="${dist}" />
+                                </pathconvert>
+                                <echo encoding="${file.encoding}" >${prop.dist.contents}</echo>
+                                <echo encoding="${file.encoding}" output="${indices.dir}/${help.articles.list}">${prop.dist.contents}</echo>
+                            </target>
+                        </configuration>
+                    </execution>
 					<execution>
-						<id>build-n4jsdesign</id>
+						<id>build-n4jsidespec</id>
 						<phase>generate-resources</phase>
 						<goals>
 							<goal>run</goal>
 						</goals>
 						<configuration>
 							<target>
-							    <mkdir dir="${basedir}/../org.eclipse.n4js.design/generated-docs"/>
-								<!-- Generate N4JSDesign.html -->
-								<exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.design/">
+							    <mkdir dir="${basedir}/../org.eclipse.n4js.ide.spec/generated-docs"/>
+								<!-- Generate N4JSIDESpec.html -->
+								<exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.ide.spec/">
 									<arg value="direct"/>
 									<arg value="-a"/>
 									<arg value="-o"/>
                                     <arg value="-a eclipse-help-mode"/>
                                     <arg value="-D"/>
 									<arg value="generated-docs/"/>
-									<arg value="N4JSDesign.adoc"/>
+									<arg value="N4JSIDESpec.adoc"/>
 								</exec>
 
-                                <!-- Generate N4JSDesign.xml -->
-                                <exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.design/">
+                                <!-- Generate N4JSIDESpec.xml -->
+                                <exec executable="${basedir}/asciispec-tools/asciispec/bin/asciispec" spawn="false" dir="${basedir}/../org.eclipse.n4js.ide.spec/">
                                     <arg value="direct"/>
                                     <arg value="-b"/>
                                     <arg value="docbook"/>
@@ -284,29 +272,36 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                                     <arg value="-a eclipse-help-mode"/>
                                     <arg value="-D"/>
                                     <arg value="generated-docs/"/>
-                                    <arg value="N4JSDesign.adoc"/>
+                                    <arg value="N4JSIDESpec.adoc"/>
                                 </exec>
 
-                                <copy todir="${basedir}/../org.eclipse.n4js.design/generated-docs/.">
-                                    <fileset dir="${basedir}/../org.eclipse.n4js.design">
-                                        <include name="styles/**"/>
-                                        <include name="images/**"/>
-                                        <include name="scripts/**"/>
+                               <copy todir="${basedir}/../org.eclipse.n4js.ide.spec/generated-docs/.">
+                                    <fileset dir="${basedir}/../org.eclipse.n4js.ide.spec">
                                         <include name="chapters/**"/>
                                         <exclude name="chapters/**/*.adoc"/>
+                                        <exclude name="chapters/**/*.graffle"/>
                                     </fileset>
                                 </copy>
+                                
+                                <copy todir="${basedir}/../org.eclipse.n4js.ide.spec/generated-docs/.">
+                                    <fileset dir="${basedir}/../shared/eclipse-help">
+						                <include name="styles/**"/>
+						                <include name="images/**"/>
+						                <include name="scripts/**"/>
+						           	</fileset> 	
+						        </copy>
+		
 
 	                            <copy todir="${basedir}/generated-docs/.">
-									<fileset dir="${basedir}/../org.eclipse.n4js.design/generated-docs"/>
+									<fileset dir="${basedir}/../org.eclipse.n4js.ide.spec/generated-docs"/>
 								</copy>
-                                <delete dir="${basedir}/../org.eclipse.n4js.design/generated-docs"/>
+                                <delete dir="${basedir}/../org.eclipse.n4js.ide.spec/generated-docs"/>
 	                            <copy todir="${basedir}/doctools/src/org/eclipse/n4js/doctools/.">
 	                            	<fileset dir="${basedir}/../../releng/org.eclipse.n4js.releng.utils/src/org/eclipse/n4js/doctools/."/>
 	                            </copy>
 
 								<mkdir dir="${basedir}/doctools/bin"/>
-								<mkdir dir="${basedir}/dist/eclipse-html/N4JSDesign"/>
+								<mkdir dir="${basedir}/dist/eclipse-html/N4JSIDESpec"/>
 								<javac srcdir="${basedir}/doctools/src/." fork="yes" destdir="${basedir}/doctools/bin/."></javac>
 
 								<java classname="org.eclipse.n4js.doctools.Chunker"
@@ -320,20 +315,20 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 									<arg value="-f"/>
 									<arg value="&lt;div id=&quot;footer&quot;&gt;"/>
 									<arg value="-d"/>
-									<arg value="${basedir}/dist/eclipse-html/N4JSDesign/."/>
-									<arg value="${basedir}/generated-docs/N4JSDesign.html"/>
+									<arg value="${basedir}/dist/eclipse-html/N4JSIDESpec/."/>
+									<arg value="${basedir}/generated-docs/N4JSIDESpec.html"/>
 								</java>
 
 								<java classname="org.eclipse.n4js.doctools.EclipseHelpTOCGenerator"
 									 classpath="${basedir}/doctools/bin/.">
 									<arg value="-t"/>
-									<arg value="${basedir}/src-gen/indices/n4jsdesign.xml"/>
+									<arg value="${basedir}/src-gen/indices/n4jsidespec.xml"/>
 									<arg value="-p"/>
 									<arg value="dist/eclipse-html/"/>
-									<arg value="${basedir}/generated-docs/N4JSDesign.xml"/>
+									<arg value="${basedir}/generated-docs/N4JSIDESpec.xml"/>
 								</java>
 
-	                            <move todir="${basedir}/dist/eclipse-html/N4JSDesign/.">
+	                            <move todir="${basedir}/dist/eclipse-html/N4JSIDESpec/.">
 								  <fileset dir="${basedir}/generated-docs/."/>
 								</move>
 
@@ -342,14 +337,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 						</configuration>
 					</execution>
 
-				</executions>
-			</plugin>
-
-			<!-- Build N4JSSpec document -->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>${maven-antrun-plugin.version}</version>
-                <executions>
                     <execution>
                         <id>build-n4jsspec</id>
                         <phase>generate-resources</phase>
@@ -383,13 +370,20 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                                 </exec>
                                 <copy todir="${basedir}/../org.eclipse.n4js.spec/generated-docs/.">
                                     <fileset dir="${basedir}/../org.eclipse.n4js.spec">
-                                        <include name="styles/**"/>
-                                        <include name="images/**"/>
-                                        <include name="scripts/**"/>
                                         <include name="chapters/**"/>
                                         <exclude name="chapters/**/*.adoc"/>
+                                        <exclude name="chapters/**/*.graffle"/>
                                     </fileset>
                                 </copy>
+                                
+                                <copy todir="${basedir}/../org.eclipse.n4js.spec/generated-docs/.">
+                                    <fileset dir="${basedir}/../shared/eclipse-help">
+						                <include name="styles/**"/>
+						                <include name="images/**"/>
+						                <include name="scripts/**"/>
+						           	</fileset> 	
+						        </copy>
+		                        
 
                                 <copy todir="${basedir}/generated-docs/.">
                                     <fileset dir="${basedir}/../org.eclipse.n4js.spec/generated-docs"/>
@@ -438,16 +432,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                         </configuration>
                     </execution>
 
-                </executions>
-            </plugin>
-
-
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>${maven-antrun-plugin.version}</version>
-                <executions>
                     <execution>
-                        <id>clean-up-n4jsdesign-n4jsspec</id>
+                        <id>clean-up-n4jsidespec-n4jsspec</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>run</goal>

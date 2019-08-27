@@ -17,8 +17,9 @@ mathinclude::{find}commands.tex[]
 = N4JS Design Specification
 {docdatetime}
 
-[.n4jslogo]
-image::{find}images/n4jslogo.png[400,400,align="center"]
+//[.n4jslogo]
+//image::{find}images/n4jslogo.png[100,100,align="center"]
+
 
 [.center]
 *Last Updated: {docdate}*
@@ -26,8 +27,7 @@ image::{find}images/n4jslogo.png[400,400,align="center"]
 // Authors similar to N4JS Spec, since we may move things between design and spec.
 [.center]
 *Authors:* +
-Jens von Pilgrim, Jakub Siberski, Mark-Oliver Reiser, +
-Torsten Krämer, Ákos Kitta, Sebastian Zarnekow, Lorenzo Bettini, Jörg Reichert, Kristian Duske, Marcus Mews, Minh Quang Tran, Luca Beurer-Kellner
+Jens von Pilgrim, Jakub Siberski, Mark-Oliver Reiser, Torsten Krämer, Ákos Kitta, Sebastian Zarnekow, Lorenzo Bettini, Jörg Reichert, Kristian Duske, Marcus Mews, Minh Quang Tran, Luca Beurer-Kellner
 
 <<<
 
@@ -40,25 +40,48 @@ ifdef::backend-docbook5[<<<]
 include::{find}chapters/01_introduction/introduction.adoc[]
 include::{find}chapters/02_eclipseSetup/eclipseSetup.adoc[]
 include::{find}chapters/03_releng/releng.adoc[]
-
 include::{find}chapters/04_tipsTricks/tipsTricks.adoc[]
 include::{find}chapters/05_parser/parser.adoc[]
 include::{find}chapters/06_typesystem/typesystem.adoc[]
 include::{find}chapters/07_typeindex/typeindex.adoc[]
-include::{find}chapters/08_renameRefactoring/renameRefactoring.adoc[]
+include::{find}chapters/08_projectModel/projectModel.adoc[]
+include::{find}chapters/09_binding/binding.adoc[]
+include::{find}chapters/10_validation/validation.adoc[]
+include::{find}chapters/11_references/references.adoc[]
+include::{find}chapters/13_compilation/compilation.adoc[]
+include::{find}chapters/14_execution/execution.adoc[]
+include::{find}chapters/15_tests/tests.adoc[]
+include::{find}chapters/16_uiconcepts/uiconcepts.adoc[]
+include::{find}chapters/17_formatting/formatting.adoc[]
 
-include::{find}chapters/10_flowgraphs/flowgraphs.adoc[]
+
 include::{find}chapters/20_externalLibraries/externalLibraries.adoc[]
+include::{find}chapters/22_json/json.adoc[]
+include::{find}chapters/23_jsdoc/jsdoc.adoc[]
+include::{find}chapters/24_docexporter/docexporter.adoc[]
+include::{find}chapters/25_renameRefactoring/renameRefactoring.adoc[]
 
+include::{find}chapters/30_flowgraphs/flowgraphs.adoc[]
 
-// Appendix
+include::{find}chapters/40_publish_npms/publish_npms.adoc[]
 
-include::{find}acronyms.adoc[]
+[appendix]
+include::{find}chapters/a02_hints/hints.adoc[]
+
+[appendix]
+include::{find}chapters/a10_moduleLoading/moduleLoading.adoc[]
+
+[appendix]
 include::{find}chapters/a01_license/license.adoc[]
+
+[appendix]
+include::{find}acronyms.adoc[]
+
+[appendix]
+= Bibliography and Footnotes
+
+bibliography::[]
 
 :leveloffset: -1
 
-[appendix]
-== Bibliography
 
-bibliography::[]

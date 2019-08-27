@@ -145,10 +145,10 @@ public class SourceEntryFactory {
 	static private String getPath(RepoRelativePath rrp, String repository) {
 		if (repository.equals(NO_REPO))
 			return NO_PATH;
-		if (rrp.pathInRepository == null || rrp.pathInRepository.isEmpty())
+		if (rrp.pathOfProjectInRepo == null || rrp.pathOfProjectInRepo.isEmpty())
 			return NO_PATH;
 
-		String tPath = trim(rrp.pathInRepository);
+		String tPath = trim(rrp.pathOfProjectInRepo);
 		return tPath;
 	}
 

@@ -13,7 +13,7 @@
 /* XPECT output ---
 <==
 stdout:
-N4Annotation { name: 'Description', details: [ 'I\'m a real cool method' ] }
+Description - I'm a real cool method - 1
 stderr:
 ==>
 --- */
@@ -24,4 +24,7 @@ export public class SomeClass{
     }
 }
 
-console.log(SomeClass.n4type.methods()[0].annotations[0]);
+// Remark: avoid using x.toString() calls since different node versions emit different string literals!
+
+let annotation = SomeClass.n4type.methods()[0].annotations[0];
+console.log(annotation.name, "-", annotation.details[0], "-", annotation.details.length);
