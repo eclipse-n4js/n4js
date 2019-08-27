@@ -156,12 +156,10 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 		if (haveObject) {
 			typeRefsCleaned.add(objectTypeRef);
 		}
-		if (haveNull) {
-			typeRefsCleaned.add(nullTypeRef);
-		}
-		// NOTE: no need to add 'any' or 'undefined' here, because, if they were present, they have
-		// either rendered all other typeRefs obsolete (and we returned early above) OR they were
-		// rendered obsolete by the other typeRefs.
+		// NOTE: no need to add 'any' or 'null'/'undefined' here, because, if they were present,
+		// they have either rendered all other typeRefs obsolete (and we returned early above) OR
+		// they were rendered obsolete by the other typeRefs. The relation between 'null' and
+		// 'undefined' when not also having other type references was already handled above.
 
 		return typeRefsCleaned;
 	}

@@ -908,25 +908,18 @@ import com.google.inject.Inject;
 				}
 			}
 
+			final TypeRef receiverTypeRefUB = ts.upperBoundWithForce(G2, receiverTypeRef);
 			final IdentifiableElement prop = expr.getProperty();
 			final TypeRef propTypeRef;
 			if (prop instanceof TMethod && ((TMethod) prop).isConstructor()) {
 				// accessing the built-in constructor property ...
 				final TypeArgument ctorTypeArg;
-				if (receiverTypeRef instanceof TypeTypeRef) {
+				if (receiverTypeRefUB instanceof TypeTypeRef) {
 					// case "C.constructor"
 					ctorTypeArg = functionTypeRef(G);
-				} else if (receiverTypeRef instanceof ParameterizedTypeRef
-						|| receiverTypeRef instanceof BoundThisTypeRef) {
-					// case "c.constructor" or "this.constructor"
-					final Type declType;
-					if (receiverTypeRef instanceof BoundThisTypeRef) {
-						final ParameterizedTypeRef actualThisTypeRef = ((BoundThisTypeRef) receiverTypeRef)
-								.getActualThisTypeRef();
-						declType = actualThisTypeRef != null ? actualThisTypeRef.getDeclaredType() : null;
-					} else {
-						declType = receiverTypeRef.getDeclaredType();
-					}
+				} else {
+					// cases such as "c.constructor" or "this.constructor"
+					final Type declType = receiverTypeRefUB.getDeclaredType();
 					final boolean finalCtorSig = declType instanceof TClassifier
 							&& N4JSLanguageUtils.hasCovariantConstructor((TClassifier) declType);
 					if (finalCtorSig) {
@@ -936,13 +929,11 @@ import com.google.inject.Inject;
 					} else {
 						ctorTypeArg = null; // will boil down to UnknownTypeRef (see below)
 					}
-				} else {
-					ctorTypeArg = null;
 				}
 				propTypeRef = ctorTypeArg != null
 						? TypeUtils.createTypeTypeRef(ctorTypeArg, true)
 						: unknown();
-			} else if (receiverTypeRef.isDynamic() && prop != null && prop.eIsProxy()) {
+			} else if (receiverTypeRefUB.isDynamic() && prop != null && prop.eIsProxy()) {
 				// access to an unknown property of a dynamic type
 				propTypeRef = anyTypeRefDynamic(G2);
 			} else {

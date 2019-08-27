@@ -164,7 +164,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 					else
 						right.isReturnValueOptional;
 
-				if (leftReturnTypeRef.declaredType !== G.voidType) {
+				if (leftReturnTypeRef !== null && leftReturnTypeRef.declaredType !== G.voidType) {
 					// both are non-void
 					if (left.isReturnValueOptional && !isRightReturnOptional) {
 						return false;
