@@ -163,7 +163,7 @@ public final class ProjectsSettingsFilesLocator {
 	/**
 	 * If the argument is a file, than it is passed to {@link #processFile(File)}, if it is a folder, then its children
 	 * are passed recursively to itself. Doesn't traverse children of folders with names {@link #GIT},
-	 * {@link #NODE_MODULES}.
+	 * {@link N4JSGlobals#NODE_MODULES}.
 	 */
 	private void processContainer(File file) {
 		if (file.isFile())
