@@ -1,7 +1,6 @@
 package org.eclipse.n4js.xpect.common;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -53,47 +52,13 @@ public @interface LspCompatibleXpectTestFiles {
 	 */
 	public static class LspCompatibleXpectTestFileCollector extends XpectTestFileCollector {
 
-		/**
-		 * Adapt to default annotation type to allow using the base impl.
-		 */
-		private static XpectTestFiles asXpectTestFiles(LspCompatibleXpectTestFiles ctx) {
-			return new XpectTestFiles() {
-
-				@Override
-				public Class<? extends Annotation> annotationType() {
-					return XpectTestFiles.class;
-				}
-
-				@Override
-				public String baseDir() {
-					return ctx.baseDir();
-				}
-
-				@Override
-				public String[] fileExtensions() {
-					return ctx.fileExtensions();
-				}
-
-				@Override
-				public String[] files() {
-					return ctx.files();
-				}
-
-				@Override
-				public FileRoot relativeTo() {
-					return ctx.relativeTo();
-				}
-
-			};
-		}
-
 		private final UriExtensions uriExtensions = new UriExtensions();
 
 		/**
 		 * Constructor
 		 */
-		public LspCompatibleXpectTestFileCollector(Class<?> owner, LspCompatibleXpectTestFiles ctx) {
-			super(owner, asXpectTestFiles(ctx));
+		public LspCompatibleXpectTestFileCollector(Class<?> owner, XpectTestFiles ctx) {
+			super(owner, ctx);
 		}
 
 		@Override
@@ -110,7 +75,13 @@ public @interface LspCompatibleXpectTestFiles {
 		public Collection<URI> getAllURIs() {
 			List<URI> result = Lists.newArrayList(super.getAllURIs());
 			for (int i = 0; i < result.size(); i++) {
-				result.set(i, uriExtensions.withEmptyAuthority(result.get(i)));
+				try {
+					URI uri = uriExtensions.withEmptyAuthority(result.get(i));
+					result.set(i, uri);
+				} catch (Exception e) {
+					throw new IllegalArgumentException(
+							"Wrong URI (" + result.get(i) + "). Check given directory and/or files");
+				}
 			}
 			return result;
 		}
