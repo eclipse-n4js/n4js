@@ -24,6 +24,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Collections;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.binaries.BinariesCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
@@ -51,8 +52,6 @@ public class N4jsCliTest {
 	private static final int PORT = 4873;
 
 	private static final String LOCALHOST = "localhost";
-
-	private static final String NODE_MODULES = "node_modules";
 
 	private static final String PROJECT_NAME = "PSingleTestNpm";
 
@@ -90,7 +89,7 @@ public class N4jsCliTest {
 
 		// Create a fresh node_modules folder in WSP
 		File nodeModulesFolder = new File(
-				pathToProject(PROJECT_NAME).toString() + File.separatorChar + NODE_MODULES);
+				pathToProject(PROJECT_NAME).toString() + File.separatorChar + N4JSGlobals.NODE_MODULES);
 		if (nodeModulesFolder.exists()) {
 			nodeModulesFolder.delete();
 		}
@@ -126,7 +125,7 @@ public class N4jsCliTest {
 
 		// Step 3: Test that calling n4js-cli is OK
 		File outputLogFile = new File(TARGET, N4jsCliTest.class.getName() + ".testN4JSCliHelp.log");
-		String fullCmd = pathToProject(PROJECT_NAME).toString() + File.separatorChar + NODE_MODULES
+		String fullCmd = pathToProject(PROJECT_NAME).toString() + File.separatorChar + N4JSGlobals.NODE_MODULES
 				+ File.separatorChar
 				+ "n4js-cli/bin/n4jsc.js";
 		Process p = N4CliHelper.createAndStartProcessIntern(outputLogFile,

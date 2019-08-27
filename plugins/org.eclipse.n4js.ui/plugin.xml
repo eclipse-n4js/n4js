@@ -15,13 +15,6 @@ Contributors:
    <extension-point id="resourceDescriptionsPersisterContribution" name="Resource Descriptions Persister Contribution" schema="schema/resourceDescriptionsPersisterContribution.exsd"/>
    <extension-point id="workingSetManager" name="N4JS Working Set Manager" schema="schema/workingSetManager.exsd"/>
 
-  <extension
-        point="org.eclipse.xtext.ui.shared.overridingGuiceModule">
-     <module
-           class="org.eclipse.n4js.ui.MyReferenceSearchResultContentProviderCustomModule">
-     </module>
-   </extension>  
-  
 <!-- CUSTOM CODE -->
 <!--
   A specialized Types representation is registered for n4ts files that are loaded
