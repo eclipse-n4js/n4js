@@ -60,7 +60,7 @@ public class N4JSXpectRunner extends XpectRunner {
 			return baseDir;
 		}
 
-		baseDir = annotation.baseDir();
+		baseDir = annotation == null ? "" : annotation.baseDir();
 		if (!Strings.isEmpty(baseDir)) {
 			return baseDir;
 		}
@@ -74,7 +74,7 @@ public class N4JSXpectRunner extends XpectRunner {
 			return filesString.split(";");
 		}
 
-		String[] files = annotation.files();
+		String[] files = annotation == null ? new String[0] : annotation.files();
 		if (files != null && files.length > 0) {
 			return files;
 		}
