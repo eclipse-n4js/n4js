@@ -49,8 +49,7 @@ public class N4JSXpectRunner extends XpectRunner {
 			}
 		}
 
-		IXpectURIProvider provider = new LspCompatibleXpectTestFiles.LspCompatibleXpectTestFileCollector(clazz,
-				builder);
+		IXpectURIProvider provider = new SafeURIFileCollector(clazz, builder);
 		return provider;
 	}
 
