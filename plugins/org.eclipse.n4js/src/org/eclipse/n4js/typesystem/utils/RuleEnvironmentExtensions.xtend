@@ -98,9 +98,10 @@ class RuleEnvironmentExtensions {
 	public static final String GUARD_TYPE_CALL_EXPRESSION = "typeCallExpression";
 	public static final String GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION = "typePropertyAccessExpression";
 	public static final String GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT = "subtypeRefParameterizedTypeRef__struct";
-	public static final String GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS = "subtypeRefParameterizedTypeRef__args";
 	public static final String GUARD_SUBST_TYPE_VARS = "substTypeVariablesInParameterizedTypeRef";
+	public static final String GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD = "substTypeVars_implicitUpperBoundOfWildcard";
 	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER = "StructuralTypingComputer";
+	public static final String GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY = "N4JSTypeSystem#checkTypeArgumentCompatibility";
 	public static final String GUARD_REDUCER_IS_SUBTYPE_OF = "Reducer#isSubtypeOf";
 
 	/**

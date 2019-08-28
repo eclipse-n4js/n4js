@@ -1,0 +1,96 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
+
+
+class G<T> {
+	public fieldInG: T;
+}
+class H<T1, T2 extends G<T1>> {
+	public g: T2;
+	public fieldInH: T1;
+
+	m() {
+		// XPECT noerrors -->
+		this.g = this.g;
+		// XPECT noerrors -->
+		this.g.fieldInG = this.g.fieldInG;
+		// XPECT noerrors -->
+		this.fieldInH = this.fieldInH;
+	}
+}
+
+
+let h01: H<string,G<string>>;
+// XPECT noerrors -->
+h01.fieldInH = h01.g.fieldInG;
+// XPECT noerrors -->
+h01.g.fieldInG = h01.fieldInH;
+
+// XPECT noerrors -->
+let h02: H<string,? extends G<string>>;
+// XPECT noerrors -->
+h02.fieldInH = h02.g.fieldInG;
+// XPECT noerrors -->
+h02.g.fieldInG = h02.fieldInH;
+
+// XPECT noerrors -->
+let h03: H<string,?>;
+// XPECT noerrors -->
+h03.fieldInH = h03.g.fieldInG;
+// XPECT noerrors -->
+h03.g.fieldInG = h03.fieldInH;
+
+
+function <TF> foo(p:TF): TF {
+
+	let h11: H<TF,G<TF>>;
+	// XPECT noerrors -->
+	h11.fieldInH = h11.g.fieldInG;
+	// XPECT noerrors -->
+	h11.g.fieldInG = h11.fieldInH;
+
+	// XPECT noerrors -->
+	let h12: H<TF,? extends G<TF>>;
+	// XPECT noerrors -->
+	h12.fieldInH = h12.g.fieldInG;
+	// XPECT noerrors -->
+	h12.g.fieldInG = h12.fieldInH;
+
+	// XPECT noerrors -->
+	let h13: H<TF,?>;
+	// XPECT noerrors -->
+	h13.fieldInH = h13.g.fieldInG;
+	// XPECT noerrors -->
+	h13.g.fieldInG = h13.fieldInH;
+
+	return p;
+}
+
+
+let h21: H<?,G<?>>;
+// XPECT errors --> "? is not a subtype of ?." at "h21.g.fieldInG"
+h21.fieldInH = h21.g.fieldInG;
+// XPECT errors --> "? is not a subtype of ?." at "h21.fieldInH"
+h21.g.fieldInG = h21.fieldInH;
+
+let h22: H<?,? extends G<?>>;
+// XPECT errors --> "? is not a subtype of ?." at "h22.g.fieldInG"
+h22.fieldInH = h22.g.fieldInG;
+// XPECT errors --> "? is not a subtype of ?." at "h22.fieldInH"
+h22.g.fieldInG = h22.fieldInH;
+
+let h23: H<?,?>;
+// XPECT errors --> "? is not a subtype of ?." at "h23.g.fieldInG"
+h23.fieldInH = h23.g.fieldInG;
+// XPECT errors --> "? is not a subtype of ?." at "h23.fieldInH"
+h23.g.fieldInG = h23.fieldInH;

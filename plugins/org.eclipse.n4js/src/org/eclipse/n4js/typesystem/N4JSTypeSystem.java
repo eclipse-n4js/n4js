@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
@@ -232,7 +232,7 @@ public class N4JSTypeSystem {
 		if (rightArg instanceof Wildcard && ((Wildcard) rightArg).isImplicitUpperBoundInEffect()) {
 			// we're dealing with implicit upper bounds -> need to guard against infinite loop
 			final Pair<String, TypeArgument> guardKey = Pair.of(
-					GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS, rightArg);
+					GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY, rightArg);
 			final boolean isGuarded = G.get(guardKey) != null;
 			if (!isGuarded) {
 				// first time here for wildcard 'rightArg'

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.typesystem;
 
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBST_TYPE_VARS;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addInconsistentSubstitutions;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
@@ -36,6 +37,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -106,23 +108,60 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		@Override
 		public TypeArgument caseWildcard(Wildcard wildcard) {
 			// step #1: substitute type variables in upper and lower bound of given wildcard
-			TypeRef ub = wildcard.getDeclaredUpperBound();
-			if (ub != null) {
-				ub = substTypeVariables(G, ub, captureContainedWildcards);
-			}
-			TypeRef lb = wildcard.getDeclaredLowerBound();
-			if (lb != null) {
-				lb = substTypeVariables(G, lb, captureContainedWildcards);
-			}
-			if (ub != wildcard.getDeclaredUpperBound() || lb != wildcard.getDeclaredLowerBound()) {
-				Wildcard cpy = TypeUtils.copy(wildcard);
-				cpy.setDeclaredUpperBound(TypeUtils.copyIfContained(ub));
-				cpy.setDeclaredLowerBound(TypeUtils.copyIfContained(lb));
-				wildcard = cpy;
-			}
+			wildcard = internalSubstTypeVariablesInWildcard(wildcard);
 			// step #2: capture the wildcard (if requested)
 			if (captureContainedWildcards) {
-				return TypeUtils.captureWildcard(null, wildcard);
+				return TypeUtils.captureWildcard(null, wildcard); // FIXME null?
+			}
+			return wildcard;
+		}
+
+		@Override
+		public TypeArgument caseExistentialTypeRef(ExistentialTypeRef existentialTypeRef) {
+			// step #1: substitute type variables in corresponding wildcard
+			final Wildcard w = existentialTypeRef.getWildcard();
+			final Wildcard wSubst = internalSubstTypeVariablesInWildcard(w);
+			if (wSubst != w) {
+				final ExistentialTypeRef etfCpy = TypeUtils.copy(existentialTypeRef);
+				etfCpy.setWildcard(TypeUtils.copyIfContained(wSubst));
+				existentialTypeRef = etfCpy;
+			}
+			// step #2: capture a reopened ExistentialTypeRef (if requested)
+			if (captureContainedWildcards && existentialTypeRef.isReopened()) {
+				existentialTypeRef = TypeUtils.captureWildcard(null, existentialTypeRef.getWildcard()); // FIXME null?
+			}
+			return existentialTypeRef;
+		}
+
+		private Wildcard internalSubstTypeVariablesInWildcard(Wildcard wildcard) {
+			final RuleEnvironment G2;
+			final TypeRef ub;
+			if (wildcard.isImplicitUpperBoundInEffect()) {
+				final Pair<String, TypeArgument> guardKey = Pair.of(
+						GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD, wildcard);
+				final boolean isGuarded = G.get(guardKey) != null;
+				if (!isGuarded) {
+					// first time here for 'wildcard'
+					ub = wildcard.getDeclaredOrImplicitUpperBound();
+					G2 = wrap(G);
+					G2.put(guardKey, Boolean.TRUE);
+				} else {
+					// returned here for the same wildcard!
+					ub = null;
+					G2 = G;
+				}
+			} else {
+				ub = wildcard.getDeclaredOrImplicitUpperBound();
+				G2 = G;
+			}
+			final TypeRef lb = wildcard.getDeclaredLowerBound();
+			final TypeRef ubSubst = ub != null ? substTypeVariables(G2, ub, captureContainedWildcards) : null;
+			final TypeRef lbSubst = lb != null ? substTypeVariables(G2, lb, captureContainedWildcards) : null;
+			if (ubSubst != ub || lbSubst != lb) {
+				final Wildcard cpy = TypeUtils.copy(wildcard);
+				cpy.setDeclaredUpperBound(TypeUtils.copyIfContained(ubSubst));
+				cpy.setDeclaredLowerBound(TypeUtils.copyIfContained(lbSubst));
+				wildcard = cpy;
 			}
 			return wildcard;
 		}
@@ -216,7 +255,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			result = typeRef;
 
 			// (2) substitute type variables in declared type
-			Type typeRefDeclType = typeRef.getDeclaredType();
+			final Type typeRefDeclType = typeRef.getDeclaredType();
 			if (typeRefDeclType instanceof TypeVariable) {
 				final TypeVariable typeVar = (TypeVariable) typeRefDeclType;
 
@@ -257,22 +296,31 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 			// (3) substitute type variables in type arguments
 			if (typeRefDeclType != null && typeRefDeclType.isGeneric()) {
-				final int len = typeRef.getTypeArgs().size();
+				final List<TypeVariable> typeParams = typeRefDeclType.getTypeVars();
+				final List<TypeArgument> typeArgs = typeRef.getTypeArgs();
+
+				final int lenParams = typeParams.size();
+				final int lenArgs = typeArgs.size();
 
 				// (a) without changing 'result', perform substitution on all type arguments and remember if anyone has
 				// changed
+				final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
+				final TypeArgument[] argsChanged = new TypeArgument[lenArgs];
 				boolean haveSubstitution = false;
-				final TypeArgument[] argsChanged = new TypeArgument[len];
-				for (int i = 0; i < len; i++) {
-					final TypeArgument arg = typeRef.getTypeArgs().get(i);
+				for (int i = 0; i < lenArgs; i++) {
+					final TypeArgument arg = typeArgs.get(i);
 					final boolean captureContainedWildcardsNEW = arg instanceof Wildcard
 							? captureContainedWildcards
 							: false;
-					TypeArgument argSubst = substTypeVariables(G, arg, captureContainedWildcardsNEW);
+					TypeArgument argSubst = substTypeVariables(G2, arg, captureContainedWildcardsNEW);
 					if (argSubst != arg) {
 						// n.b.: will only add to argsChanged if changed! (otherwise argsChanged[i] will remain null)
 						argsChanged[i] = argSubst;
 						haveSubstitution = true;
+					}
+					if (i < lenParams) {
+						final TypeVariable param = typeParams.get(i);
+						RuleEnvironmentExtensions.addTypeMapping(G2, param, argSubst);
 					}
 				}
 
@@ -281,7 +329,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					if (result == typeRef) {
 						result = TypeUtils.copy(typeRef);
 					}
-					for (int i = 0; i < len; i++) {
+					for (int i = 0; i < lenArgs; i++) {
 						final TypeArgument argCh = argsChanged[i];
 						if (argCh != null) {
 							result.getTypeArgs().set(i, argCh);

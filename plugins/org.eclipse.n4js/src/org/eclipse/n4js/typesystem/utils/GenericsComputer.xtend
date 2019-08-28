@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -72,7 +73,12 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	 */
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
 		val declType = typeRef.declaredType;
-		if(typeRef instanceof BoundThisTypeRef) {
+		if(typeRef instanceof ExistentialTypeRef) {
+			val wildcard = typeRef.wildcard;
+			val wildcardUB = ts.upperBound(G, wildcard);
+			addSubstitutions(G, wildcardUB);
+		}
+		else if(typeRef instanceof BoundThisTypeRef) {
 			addSubstitutions(G,typeRef.actualThisTypeRef);
 		}
 		else if(declType instanceof TypeVariable) {

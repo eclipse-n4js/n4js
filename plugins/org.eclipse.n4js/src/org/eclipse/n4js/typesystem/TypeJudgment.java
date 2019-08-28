@@ -625,6 +625,8 @@ import com.google.inject.Inject;
 
 			if (!N4JSASTUtils.isWriteAccess(idref)) {
 				T = ts.substTypeVariablesWithCapture(G, T);
+			} else {
+				T = ts.substTypeVariablesWithoutCapture(G, T);
 			}
 
 			return T;
