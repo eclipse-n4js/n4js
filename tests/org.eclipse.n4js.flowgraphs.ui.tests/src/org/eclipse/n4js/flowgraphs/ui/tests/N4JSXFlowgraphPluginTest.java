@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.ui.tests;
 
 import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
+import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
 import org.eclipse.n4js.xpect.methods.FlowgraphsXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
@@ -18,7 +19,6 @@ import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 import org.eclipse.xpect.XpectImport;
-import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
 import org.eclipse.xpect.xtext.lib.tests.LinkingTest;
 import org.eclipse.xpect.xtext.lib.tests.ResourceDescriptionTest;
@@ -38,7 +38,7 @@ import org.junit.runner.RunWith;
 		OutputXpectMethod.class,
 		FindReferencesXpectMethod.class
 })
-@RunWith(XpectRunner.class)
+@RunWith(N4JSXpectRunner.class)
 @LspCompatibleXpectTestFiles(baseDir = "model")
 @XpectImport({ N4JSSuppressIssuesSetup.class })
 public class N4JSXFlowgraphPluginTest {

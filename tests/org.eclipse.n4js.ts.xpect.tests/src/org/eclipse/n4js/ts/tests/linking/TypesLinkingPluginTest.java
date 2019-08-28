@@ -11,13 +11,13 @@
 package org.eclipse.n4js.ts.tests.linking;
 
 import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
-import org.eclipse.xpect.runner.XpectRunner;
+import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.xpect.xtext.lib.tests.LinkingTest;
 import org.junit.runner.RunWith;
 
 /**
  */
-@RunWith(XpectRunner.class)
+@RunWith(N4JSXpectRunner.class)
 @LspCompatibleXpectTestFiles(baseDir = "model/linking")
 public class TypesLinkingPluginTest extends LinkingTest {
 	// nothing more required
