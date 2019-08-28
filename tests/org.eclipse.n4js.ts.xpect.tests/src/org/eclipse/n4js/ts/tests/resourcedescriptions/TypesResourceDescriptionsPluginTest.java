@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(N4JSXpectRunner.class)
 @XpectImport({ XtextStandaloneSetup.class, XtextWorkspaceSetup.class })
-@XpectTestFiles(baseDir = "model/resourcedescriptions", fileExtensions = "n4ts")
+@XpectTestFiles(baseDir = "model/resourcedescriptions")
 public class TypesResourceDescriptionsPluginTest extends ResourceDescriptionTest {
 	// nothing more required
 }
