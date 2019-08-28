@@ -11,7 +11,6 @@
 package org.eclipse.n4js.n4jsx.xpect.ui.tests;
 
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
-import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
 import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.n4js.xpect.config.Config;
 import org.eclipse.n4js.xpect.config.VarDef;
@@ -25,6 +24,7 @@ import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.lib.XpectTestResultTest;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.runner.XpectTestFiles;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 import org.junit.runner.RunWith;
 
@@ -48,7 +48,7 @@ import org.junit.runner.RunWith;
 })
 @XpectImport({ Config.class, VarDef.class, XpEnvironmentData.class, N4JSSuppressIssuesSetup.class })
 @RunWith(N4JSXpectRunner.class)
-@LspCompatibleXpectTestFiles(baseDir = "testdata_nonvalidating")
+@XpectTestFiles(baseDir = "testdata_nonvalidating")
 public class N4JSXNotValidatingXpectPluginUITest {
 	static {
 		EclipseGracefulUIShutdownEnabler.enableOnce();

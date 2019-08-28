@@ -11,12 +11,12 @@
 package org.eclipse.n4js.transpiler.es5.xpect.tests;
 
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
-import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
 import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.runner.XpectTestFiles;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 import org.junit.runner.RunWith;
 
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 })
 @RunWith(N4JSXpectRunner.class)
 @XpectImport({ N4JSStandaloneTestsModule.class, N4JSSuppressIssuesSetup.class })
-@LspCompatibleXpectTestFiles(baseDir = "testdata")
+@XpectTestFiles(baseDir = "testdata")
 public class CompileAndExecuteTest {
 	// nop
 }
