@@ -7,7 +7,7 @@
   "internalVersion": "2019-03-15T08:46:12Z",
   "description": "N4JS compiler and command line tools.",
   "scripts": {
-    "postinstall": "./npm-postinstall.js",
+    "postinstall": "node ./npm-postinstall.js",
     "build": "./npm-build.sh",
     "test": "eslint . && mocha tests"
   },
@@ -21,8 +21,8 @@
     "index.n4jsd"
   ],
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "mocha": "^3.5.3"
+    "eslint": "^6.2.2",
+    "mocha": "^6.2.0"
   },
   "eslintConfig": {
     "env": {

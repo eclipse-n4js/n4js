@@ -63,5 +63,6 @@ public class N4JSClusteringBuilderConfiguration extends AbstractModule {
 						new BuildScopeAwareParallelLoaderProvider());
 		bind(BuilderStateDiscarder.class);
 		bind(SharedStateContributionRegistryImpl.class).to(DefaultSharedContributionOverridingRegistry.class);
+		binder().install(new MyReferenceSearchResultContentProviderCustomModule());
 	}
 }

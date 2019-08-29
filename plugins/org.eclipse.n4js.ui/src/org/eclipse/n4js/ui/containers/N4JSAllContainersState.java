@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -148,7 +149,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 				return false;
 			}
 			if (delta.getResource() instanceof IFolder) {
-				if ("node_modules".equals(delta.getFullPath().lastSegment())) {
+				if (N4JSGlobals.NODE_MODULES.equals(delta.getFullPath().lastSegment())) {
 					return true;
 				}
 				return false;

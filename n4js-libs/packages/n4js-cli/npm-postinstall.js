@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /*
  * Copyright (c) 2018 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
