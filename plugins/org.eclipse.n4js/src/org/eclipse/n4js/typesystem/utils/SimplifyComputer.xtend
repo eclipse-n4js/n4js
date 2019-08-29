@@ -20,7 +20,9 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -33,6 +35,8 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * and intersection types.
  */
 package class SimplifyComputer extends TypeSystemHelperStrategy {
+
+	private static final UnknownTypeRef UNKNOWN_TYPE_REF = TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 
 	@Inject
 	private N4JSTypeSystem ts;
@@ -99,12 +103,19 @@ package class SimplifyComputer extends TypeSystemHelperStrategy {
 		// remove duplicates
 		val Set<TypeRef> set = new TreeSet<TypeRef>(typeCompareHelper.getTypeRefComparator);
 		set.addAll(typeRefs);
-		
-		// simplify cases related to the trivial types: any, Object, null, undefined
+
 		if (set.isEmpty) {
 			return Collections.emptyList();
+		} else if(set.size === 1) {
+			return Collections.singletonList(set.head);
 		}
 
+		set.remove(UNKNOWN_TYPE_REF);
+		if(set.size === 1) {
+			return Collections.singletonList(set.head);
+		}
+
+		// simplify cases related to the trivial types: any, Object, null, undefined
 		val anyTypeRef = G.anyTypeRef;
 		val objectTypeRef = G.objectTypeRef;
 		val nullTypeRef = G.nullTypeRef;
