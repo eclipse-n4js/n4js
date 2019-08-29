@@ -45,7 +45,8 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	public SafeURI<?> getLocation() {
 		String location = getRelativeLocation();
 		if (!Strings.isEmpty(location)) {
-			return project.getLocation().appendPath(getRelativeLocation());
+			String linuxPath = location.replaceAll("\\\\", "/");
+			return project.getLocation().appendPath(linuxPath);
 		}
 		return project.getLocation();
 	}

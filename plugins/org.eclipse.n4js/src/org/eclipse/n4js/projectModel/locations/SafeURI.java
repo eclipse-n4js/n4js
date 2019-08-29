@@ -60,15 +60,14 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	protected URI validate(URI given) throws IllegalArgumentException, NullPointerException {
 		Preconditions.checkNotNull(given);
 		List<String> segments = given.segmentsList();
-		if (given.hasTrailingPathSeparator()) {
-			for (int i = 0; i < segments.size() - 1; i++) {
-				Preconditions.checkArgument(segments.get(i).length() > 0, "'%s'", given);
-			}
-		} else {
-			for (String segment : segments) {
-				Preconditions.checkArgument(segment.length() > 0, "'%s'", given);
-			}
+
+		final int segCountMax = given.hasTrailingPathSeparator() ? segments.size() - 1 : segments.size();
+		for (int i = 0; i < segCountMax; i++) {
+			String segment = segments.get(i);
+			Preconditions.checkArgument(segment.length() > 0, "'%s'", given);
+			Preconditions.checkArgument(!segment.contains("\\")); // could happen on Windows platform
 		}
+
 		return given;
 	}
 
