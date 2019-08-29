@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.xpect.common;
 
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xpect.runner.IXpectURIProvider;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectTestFiles;
@@ -20,7 +21,7 @@ import org.junit.runners.model.InitializationError;
 
 /**
  * This override fixes the issue that single .xt files can not be executed as JUnit tests when using the
- * {@link XpectRunner}.
+ * {@link XpectRunner} because the {@link IXpectURIProvider} needs to create {@link SafeURI}s.
  */
 public class N4JSXpectRunner extends XpectRunner {
 
