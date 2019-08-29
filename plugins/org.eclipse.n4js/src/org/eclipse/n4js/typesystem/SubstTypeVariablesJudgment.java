@@ -155,8 +155,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				G2 = G;
 			}
 			final TypeRef lb = wildcard.getDeclaredLowerBound();
-			final TypeRef ubSubst = ub != null ? substTypeVariables(G2, ub, captureContainedWildcards) : null;
-			final TypeRef lbSubst = lb != null ? substTypeVariables(G2, lb, captureContainedWildcards) : null;
+			final TypeRef ubSubst = ub != null ? substTypeVariables(G2, ub, false) : null;
+			final TypeRef lbSubst = lb != null ? substTypeVariables(G2, lb, false) : null;
 			if (ubSubst != ub || lbSubst != lb) {
 				final Wildcard cpy = TypeUtils.copy(wildcard);
 				cpy.setDeclaredUpperBound(TypeUtils.copyIfContained(ubSubst));
