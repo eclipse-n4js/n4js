@@ -106,7 +106,7 @@ public final class BinariesConstants {
 	/** The label for {@code Node.js}. */
 	public static final String NODE_LABEL = "Node.js";
 	/** The {@code Node.js} binary name (OS specific). */
-	public static final String NODE_BINARY_NAME = isWindows() ? "node.exe" : "node";
+	public static final String NODE_BINARY_NAME = "node";
 	/** The argument for node.js to print out the version number */
 	public static final String VERSION_ARGUMENT = "-v";
 
@@ -124,11 +124,18 @@ public final class BinariesConstants {
 	/** The label for {@code yarn}. */
 	public static final String YARN_LABEL = "Yarn";
 	/** The {@code yarn} binary name (OS specific). */
-	public static final String YARN_BINARY_NAME = isWindows() ? "yarn.exe" : "yarn";
+	public static final String YARN_BINARY_NAME = "yarn";
 	/** The minimum {@code yarn} version. */
 	public static final VersionNumber YARN_MIN_VERSION = SemverUtils.createVersionNumber(1, 13, 0);
 	/** The argument for yarn to print out the version number */
 	public static final String YARN_VERSION_ARGUMENT = "-v";
+
+	/** File extensions for executable files on windows platform */
+	public static final String[] EXECS_WINDOWS = { ".bat", ".cmd", ".exe" };
+	/** File extensions for executable files on non-windows platforms */
+	public static final String[] EXECS_OTHERS = { "" };
+	/** File extensions for executable files */
+	public static final String[] EXECUTABLE_FILE_EXTENSIONS = isWindows() ? EXECS_WINDOWS : EXECS_OTHERS;
 
 	private BinariesConstants() {
 		// No initialization.
