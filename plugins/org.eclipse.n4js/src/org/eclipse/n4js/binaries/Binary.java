@@ -10,19 +10,29 @@
  */
 package org.eclipse.n4js.binaries;
 
+import static java.util.Collections.emptyList;
+
+import java.io.File;
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
 
 /**
  * Representation of a binary.
  */
-public interface Binary {
+abstract public class Binary {
+
+	/** Preference store of binaries */
+	@Inject
+	protected BinariesPreferenceStore preferenceStore;
 
 	/**
 	 * The {@code PATH} environment variable.
@@ -35,14 +45,14 @@ public interface Binary {
 	 *
 	 * @return the application specific unique identifier of the binary.
 	 */
-	String getId();
+	abstract public String getId();
 
 	/**
 	 * Returns with the human readable name of the binary.
 	 *
 	 * @return the human readable name of the binary.
 	 */
-	String getLabel();
+	abstract public String getLabel();
 
 	/**
 	 * Returns with a description about the current binary. This description should provide some hint for the end used.
@@ -54,7 +64,7 @@ public interface Binary {
 	 *
 	 * @return description for the binary.
 	 */
-	default String getDescription() {
+	public String getDescription() {
 		return null;
 	}
 
@@ -64,14 +74,30 @@ public interface Binary {
 	 *
 	 * @return the minimum desired version or {@code null} or {@code MISSING} if no requirements are specified.
 	 */
-	VersionNumber getMinimumVersion();
+	abstract public VersionNumber getMinimumVersion();
 
 	/**
 	 * The actual binary absolute path as a string that has to be called to execute the binary.
 	 *
-	 * @return the command of the binary to execute it.
+	 * @return the path string of the binary to execute.
 	 */
-	String getBinaryAbsolutePath();
+	public String getBinaryAbsolutePath() {
+		return getBinaryDirectory() + File.separator + getBinaryFileName();
+	}
+
+	/**
+	 * The actual binary directory where the executable can be found.
+	 *
+	 * @return the path string of the directory of the binary.
+	 */
+	abstract public String getBinaryDirectory();
+
+	/**
+	 * The actual binary name.
+	 *
+	 * @return the name of the binary.
+	 */
+	abstract public String getBinaryFileName();
 
 	/**
 	 * The version argument that is used to check and validate the version of the current binary. In lot cases this is
@@ -80,7 +106,7 @@ public interface Binary {
 	 *
 	 * @return the version argument for the binary.
 	 */
-	String getVersionArgument();
+	abstract public String getVersionArgument();
 
 	/**
 	 * Returns with the parent dependency of the binary. If a binary has a parent that means, that a binary is valid, if
@@ -88,7 +114,9 @@ public interface Binary {
 	 *
 	 * @return the parent binary , or {@code null} if has no parent.
 	 */
-	Binary getParent();
+	public Binary getParent() {
+		return null;
+	}
 
 	/**
 	 * Returns with the children binaries or an empty iterable if the binary has no child binaries. For instance
@@ -97,7 +125,9 @@ public interface Binary {
 	 *
 	 * @return an iterable of children binaries.
 	 */
-	Iterable<Binary> getChildren();
+	public Iterable<Binary> getChildren() {
+		return emptyList();
+	}
 
 	/**
 	 * Merges any specific properties to the environment map given as the argument and returns with the updated
@@ -107,7 +137,35 @@ public interface Binary {
 	 *            a map of key-values representing the environment.
 	 * @return the argument.
 	 */
-	Map<String, String> updateEnvironment(Map<String, String> environment);
+	public Map<String, String> updateEnvironment(Map<String, String> environment) {
+		final String additionalPath = getBinaryDirectory();
+		final String actualPathPropertyName = findActualPropertyNameOrDefault(environment, PATH);
+		final String newValue = environment.containsKey(actualPathPropertyName)
+				? environment.get(actualPathPropertyName) + File.pathSeparator + additionalPath
+				: additionalPath;
+
+		environment.put(actualPathPropertyName, newValue);
+		return environment;
+	}
+
+	/** Deals with case-insensitivity on environment variables on windows platform */
+	protected String findActualPropertyNameOrDefault(Map<String, String> environment, String defaultName) {
+		if (environment.containsKey(defaultName)) {
+			return defaultName;
+		}
+		if (OSInfo.isWindows()) {
+			if (System.getenv(PATH) == null) {
+				return defaultName;
+			}
+			final String lSimilarName = defaultName.toLowerCase();
+			for (String prop : environment.keySet()) {
+				if (lSimilarName.equals(prop.toLowerCase())) {
+					return prop;
+				}
+			}
+		}
+		return defaultName;
+	}
 
 	/**
 	 * Returns with the custom configured path for the binary. May return with {@code null}. If returns with
@@ -115,7 +173,9 @@ public interface Binary {
 	 *
 	 * @return the user configured path where the binary exist, when no user configuration is available.
 	 */
-	URI getUserConfiguredLocation();
+	public URI getUserConfiguredLocation() {
+		return preferenceStore.getPath(this);
+	}
 
 	/**
 	 * Validates the binaries whether it is available, the version fulfills the requirements and the binary can be
@@ -123,13 +183,13 @@ public interface Binary {
 	 *
 	 * @return a status representing the outcome of the validation process.
 	 */
-	IStatus validate();
+	abstract public IStatus validate();
 
 	/**
 	 * Returns the command for cleaning this binary's cache if applicable and supported; otherwise
 	 * {@link Optional#absent()} is returned.
 	 */
-	default Optional<String[]> getCacheCleanCommand() {
+	public Optional<String[]> getCacheCleanCommand() {
 		return Optional.absent();
 	}
 
@@ -137,7 +197,7 @@ public interface Binary {
 	 * Tells whether this binary can be used to install and uninstall npm packages, as is the case for tools such as
 	 * <code>npm</code> or <code>yarn</code>.
 	 */
-	default boolean canInstallNpmPackages() {
+	public boolean canInstallNpmPackages() {
 		return false;
 	}
 
@@ -152,7 +212,7 @@ public interface Binary {
 	 * @throws UnsupportedOperationException
 	 *             iff {@link #canInstallNpmPackages()} returns <code>false</code>.
 	 */
-	default String getNpmInstallCommand(boolean readPackagesFromPackageJson) {
+	public String getNpmInstallCommand(boolean readPackagesFromPackageJson) {
 		throw new UnsupportedOperationException("(un-)installation of npm packages not supported by this tool");
 	}
 
@@ -163,7 +223,7 @@ public interface Binary {
 	 * @throws UnsupportedOperationException
 	 *             iff {@link #canInstallNpmPackages()} returns <code>false</code>.
 	 */
-	default String getNpmUninstallCommand() {
+	public String getNpmUninstallCommand() {
 		throw new UnsupportedOperationException("(un-)installation of npm packages not supported by this tool");
 	}
 
@@ -176,7 +236,32 @@ public interface Binary {
 	 * @throws UnsupportedOperationException
 	 *             iff {@link #canInstallNpmPackages()} returns <code>false</code>.
 	 */
-	default Optional<Pair<String, String>> getNpmSaveOptions() {
+	public Optional<Pair<String, String>> getNpmSaveOptions() {
 		throw new UnsupportedOperationException("(un-)installation of npm packages not supported by this tool");
+	}
+
+	/**
+	 * Custom hashcode, used to persist settings in the map {@link BinariesPreferenceStore} internal map. Key part about
+	 * that hashCode is that it will be the same for every instance of this class, allowing to easily serialize
+	 * {@code Binary -> URI} setting even between platform runs.
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getId());
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Binary)) {
+			return false;
+		}
+		final Binary other = (Binary) obj;
+		return Objects.equals(getId(), other.getId());
 	}
 }
