@@ -154,12 +154,12 @@ abstract public class Binary {
 			return defaultName;
 		}
 		if (OSInfo.isWindows()) {
-			if (System.getenv(PATH) == null) {
+			if (System.getenv(defaultName) == null) {
 				return defaultName;
 			}
-			final String lSimilarName = defaultName.toLowerCase();
+
 			for (String prop : environment.keySet()) {
-				if (lSimilarName.equals(prop.toLowerCase())) {
+				if (defaultName.equalsIgnoreCase(prop)) {
 					return prop;
 				}
 			}
