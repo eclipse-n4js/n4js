@@ -529,9 +529,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	private boolean reduceFunctionTypeExprOrRef(FunctionTypeExprOrRef left, FunctionTypeExprOrRef right,
 			Variance variance) {
 		if (left.isGeneric() || right.isGeneric()) {
-			final FunctionTypeExprOrRef leftNonGen = ic.newInferenceVariablesFor(left);
-			final FunctionTypeExprOrRef rightNonGen = ic.newInferenceVariablesFor(right);
-			return reduceFunctionTypeExprOrRef(leftNonGen, rightNonGen, variance);
+			left = ic.newInferenceVariablesFor(left);
+			right = ic.newInferenceVariablesFor(right);
+			if (left.isGeneric() || right.isGeneric()) {
+				throw new IllegalStateException("still generic even after introducing inference variables");
+			}
 		}
 		boolean wasAdded = false;
 		// derive constraints for types of fpars

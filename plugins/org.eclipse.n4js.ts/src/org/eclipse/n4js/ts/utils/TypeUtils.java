@@ -12,6 +12,7 @@ package org.eclipse.n4js.ts.utils;
 
 import static java.util.Collections.singletonList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -1253,10 +1254,24 @@ public class TypeUtils {
 	 * Same as {@link EcoreUtil#copyAll(Collection)}, but takes care of special copy semantics for TypeRefs. See
 	 * {@link #copy(EObject)}.
 	 */
-	public static <T> Collection<T> copyAll(Collection<? extends T> sources) {
+	public static <T extends EObject> Collection<T> copyAll(Collection<? extends T> sources) {
 		final TypeCopier copier = new TypeCopier(true);
 		final Collection<T> result = copier.copyAll(sources);
 		copier.copyReferences();
+		return result;
+	}
+
+	/**
+	 * Same as {@link #copyAll(Collection)}, but only copies EObjects that are contained in another EObject or a
+	 * Resource.
+	 *
+	 * @see EcoreUtil2#cloneIfContained(EObject)
+	 */
+	public static <T extends EObject> Collection<T> copyAllIfContained(Collection<? extends T> sources) {
+		final List<T> result = new ArrayList<>(sources.size());
+		for (T source : sources) {
+			result.add(copyIfContained(source));
+		}
 		return result;
 	}
 

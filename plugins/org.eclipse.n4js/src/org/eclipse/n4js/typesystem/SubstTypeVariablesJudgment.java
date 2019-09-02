@@ -209,63 +209,94 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 		@Override
 		public TypeArgument caseFunctionTypeExprOrRef(FunctionTypeExprOrRef F) {
-			final FunctionTypeExpression result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
+			boolean haveReplacement = false;
 
-			// let posterity know that the newly created FunctionTypeExpression
-			// represents the binding of another FunctionTypeExprOrRef
-			result.setBinding(true);
-
-			// if the original 'typeRef' was a FunctionTypeRef, then retain the
-			// pointer to its declared type in the copied FunctionTypeExpression
-			// (see API doc of FunctionTypeExpression#declaredType for more info)
-			result.setDeclaredType(F.getFunctionType());
-
+			// collect type variables in 'F.typeVars' that do not have a type mapping in 'G' and perform substitution on
+			// their upper bounds
+			final List<TypeVariable> resultUnboundTypeVars = new ArrayList<>();
+			final List<TypeRef> resultUnboundTypeVarsUpperBounds = new ArrayList<>();
 			for (TypeVariable currTV : F.getTypeVars()) {
 				if (G.get(currTV) == null) {
-					// unbound type variable -> add to 'unboundTypeVars'
-					result.getUnboundTypeVars().add(currTV);
-					// substitution on upper bounds (if required)
-					performSubstitutionOnUpperBounds(F, currTV, result);
+					// 'currTV' is an unbound type variable (i.e. does not have type mapping in 'G')
+					// -> add to 'unboundTypeVars'
+					final int idxOfCurrTV = resultUnboundTypeVars.size();
+					resultUnboundTypeVars.add(currTV);
+					// substitution on upper bound of 'currTV' (if required)
+					haveReplacement |= performSubstitutionOnUpperBounds(F, currTV, idxOfCurrTV,
+							resultUnboundTypeVarsUpperBounds);
 				}
 			}
+			// The following is important for cases such as {function <T> foo():void}:
+			// if T is bound, i.e. has a type mapping in 'G', we want to create a new, non-generic
+			// FunctionTypeExpression even though there won't be any actual substitution happening inside F.
+			haveReplacement |= resultUnboundTypeVars.size() < F.getTypeVars().size();
 
 			// substitution on this type
-			if (F.getDeclaredThisType() != null) {
-				final TypeRef resultDeclaredThisType = substTypeVariables(G, F.getDeclaredThisType(), false);
-				result.setDeclaredThisType(TypeUtils.copy(resultDeclaredThisType));
-			}
+			final TypeRef declaredThisType = F.getDeclaredThisType();
+			final TypeRef resultDeclaredThisType = declaredThisType != null
+					? substTypeVariables(G, declaredThisType, false)
+					: null;
+			haveReplacement |= resultDeclaredThisType != declaredThisType;
 
 			// substitution on return type
-			if (F.getReturnTypeRef() != null) {
-				final TypeRef resultReturnTypeRef = substTypeVariables(G, F.getReturnTypeRef(), false);
-				result.setReturnTypeRef(TypeUtils.copyIfContained(resultReturnTypeRef));
-			}
-
-			result.setReturnValueMarkedOptional(F.isReturnValueOptional());
+			final TypeRef returnTypeRef = F.getReturnTypeRef();
+			final TypeRef resultReturnTypeRef = returnTypeRef != null
+					? substTypeVariables(G, returnTypeRef, false)
+					: null;
+			haveReplacement |= resultReturnTypeRef != returnTypeRef;
 
 			// substitution on parameter types
-			for (TFormalParameter fpar : F.getFpars()) {
-				if (fpar != null) {
-					final TFormalParameter newPar = TypesFactory.eINSTANCE.createTFormalParameter();
-					newPar.setName(fpar.getName());
-					newPar.setVariadic(fpar.isVariadic());
-					// astInitializer is not copied since it's part of the AST
-					newPar.setHasInitializerAssignment(fpar.isHasInitializerAssignment());
-
-					if (fpar.getTypeRef() != null) {
-						final TypeRef resultParTypeRef = substTypeVariables(G, fpar.getTypeRef(), false);
-						newPar.setTypeRef(TypeUtils.copyIfContained(resultParTypeRef));
-					}
-
-					result.getFpars().add(newPar);
-				} else {
-					result.getFpars().add(null);
+			final List<TFormalParameter> fpars = F.getFpars();
+			final List<TFormalParameter> resultFpars = new ArrayList<>(fpars.size());
+			for (TFormalParameter oldPar : fpars) {
+				if (oldPar == null) {
+					resultFpars.add(null);
+					continue;
 				}
+				final TFormalParameter newPar = TypesFactory.eINSTANCE.createTFormalParameter();
+				newPar.setName(oldPar.getName());
+				newPar.setVariadic(oldPar.isVariadic());
+				newPar.setHasInitializerAssignment(oldPar.isHasInitializerAssignment());
+				// note: property 'astInitializer' is not copied since it's part of the AST
+
+				if (oldPar.getTypeRef() != null) {
+					final TypeRef oldParTypeRef = oldPar.getTypeRef();
+					final TypeRef newParTypeRef = substTypeVariables(G, oldParTypeRef, false);
+					newPar.setTypeRef(TypeUtils.copyIfContained(newParTypeRef));
+					haveReplacement |= newParTypeRef != oldParTypeRef;
+				}
+
+				resultFpars.add(newPar);
 			}
 
-			TypeUtils.copyTypeModifiers(result, F);
+			if (haveReplacement) {
+				final FunctionTypeExpression result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
 
-			return result;
+				// let posterity know that the newly created FunctionTypeExpression
+				// represents the binding of another FunctionTypeExprOrRef
+				result.setBinding(true);
+
+				// if the original 'typeRef' was a FunctionTypeRef, then retain the
+				// pointer to its declared type in the copied FunctionTypeExpression
+				// (see API doc of FunctionTypeExpression#declaredType for more info)
+				result.setDeclaredType(F.getFunctionType());
+
+				result.getUnboundTypeVars().addAll(resultUnboundTypeVars);
+				result.getUnboundTypeVarsUpperBounds().addAll(
+						TypeUtils.copyAllIfContained(resultUnboundTypeVarsUpperBounds));
+
+				result.setDeclaredThisType(TypeUtils.copyIfContained(resultDeclaredThisType));
+
+				result.setReturnTypeRef(TypeUtils.copyIfContained(resultReturnTypeRef));
+				result.setReturnValueMarkedOptional(F.isReturnValueOptional());
+
+				result.getFpars().addAll(resultFpars); // no need to copy; all fpars were newly created above!
+
+				TypeUtils.copyTypeModifiers(result, F);
+
+				return result;
+			}
+			return F;
 		}
 
 		/**
@@ -281,28 +312,26 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		 * This has to be carefully aligned with {@link FunctionTypeExpression#getUnboundTypeVarsUpperBounds()} and
 		 * {@link FunctionTypeExpression#getTypeVarUpperBound(TypeVariable)}.
 		 */
-		private void performSubstitutionOnUpperBounds(FunctionTypeExprOrRef F, TypeVariable currTV,
-				FunctionTypeExpression result) {
+		private boolean performSubstitutionOnUpperBounds(FunctionTypeExprOrRef F, TypeVariable currTV,
+				int idxOfCurrTV, List<TypeRef> resultUnboundTypeVarsUpperBounds) {
 
 			final TypeRef currTV_declUB = currTV.getDeclaredUpperBound();
 			if (currTV_declUB != null) {
 				final TypeRef oldUB = F.getTypeVarUpperBound(currTV);
 				final TypeRef newUB = substTypeVariables(G, oldUB, false);
-				final boolean unchanged = (newUB == currTV_declUB); // note: identity compare is what we want
-				if (!unchanged) {
-					final int idx = result.getUnboundTypeVars().indexOf(currTV);
-					while (result.getUnboundTypeVarsUpperBounds().size() < idx) {
-						result.getUnboundTypeVarsUpperBounds().add(null); // add 'null' as padding entry
+				if (newUB != currTV_declUB) { // note: identity compare is what we want
+					while (resultUnboundTypeVarsUpperBounds.size() < idxOfCurrTV) {
+						resultUnboundTypeVarsUpperBounds.add(null); // add 'null' as padding entry
 					}
-					final TypeRef ubSubst = TypeUtils.copyIfContained(newUB);
-					result.getUnboundTypeVarsUpperBounds().add(ubSubst);
-				} else {
-					// upper bound after substitution is identical to the one stored in type variable; no need to copy
-					// it over to 'result' because operation FunctionTypeExpression#getTypeVarUpperBounds() will use
-					// currTV's original upper bound if 'unboundTypeVarsUpperBounds' doesn't contain an upper bound for
-					// currTV
+					resultUnboundTypeVarsUpperBounds.add(newUB);
+					return true;
 				}
 			}
+			// no upper bound OR upper bound after substitution is identical to the one stored in type variable:
+			// --> no need to copy it over to 'resultUnboundTypeVarsUpperBounds' because operation
+			// FunctionTypeExpression#getTypeVarUpperBounds() will use currTV's original upper bound
+			// if 'unboundTypeVarsUpperBounds' doesn't contain an upper bound for currTV
+			return false;
 		}
 
 		@Override
