@@ -21,17 +21,21 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.typeRefs.util.TypeRefsSwitch;
+import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TypeVariable;
+import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.BoundType;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -75,6 +79,16 @@ import com.google.common.base.Optional;
 			this.G = G;
 			this.boundType = boundType;
 			this.force = force;
+		}
+
+		// the following method is provided to increase readability of recursive invocations of #doSwitch()
+		private TypeRef bound(RuleEnvironment G_NEW, TypeArgument typeArg, BoundType boundTypeNEW, boolean forceNEW) {
+			if (G_NEW == G && boundTypeNEW == boundType && forceNEW == force) {
+				return doSwitch(typeArg);
+			} else {
+				final BoundSwitch nestedSwitch = new BoundSwitch(G_NEW, boundTypeNEW, forceNEW);
+				return nestedSwitch.doSwitch(typeArg);
+			}
 		}
 
 		@Override
@@ -205,7 +219,8 @@ import com.google.common.base.Optional;
 			return typeArg; // no change
 		}
 
-		// required due to multiple inheritance
+		// required due to multiple inheritance, to ensure FunctionTypeRef is handled like a FunctionTypeExpression,
+		// not as a ParameterizedTypeRef
 		@Override
 		public TypeRef caseFunctionTypeRef(FunctionTypeRef F) {
 			return caseFunctionTypeExprOrRef(F);
@@ -213,7 +228,56 @@ import com.google.common.base.Optional;
 
 		@Override
 		public TypeRef caseFunctionTypeExprOrRef(FunctionTypeExprOrRef F) {
-			return typeSystemHelper.createBoundOfFunctionTypeExprOrRef(G, F, boundType, force);
+			final FunctionTypeExpression result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
+
+			// let posterity know that the newly created FunctionTypeExpression
+			// represents the binding of another FunctionTypeExprOrRef
+			result.setBinding(true);
+
+			// retain the pointer to declared type of original FunctionTypeExprOrRef (if any)
+			// (see API doc of FunctionTypeExpression#declaredType for more info)
+			result.setDeclaredType(F.getFunctionType());
+
+			result.getUnboundTypeVars().addAll(F.getTypeVars());
+			if (F instanceof FunctionTypeExpression) {
+				result.getUnboundTypeVarsUpperBounds().addAll(TypeUtils.copyAll(
+						((FunctionTypeExpression) F).getUnboundTypeVarsUpperBounds()));
+			}
+
+			if (F.getDeclaredThisType() != null) {
+				result.setDeclaredThisType(
+						TypeUtils.copy(F.getDeclaredThisType()));
+			}
+
+			// upper/lower bound of return type
+			if (F.getReturnTypeRef() != null) {
+				final TypeRef resultReturnTypeRef = bound(G, F.getReturnTypeRef(), boundType, force);
+				result.setReturnTypeRef(TypeUtils.copyIfContained(resultReturnTypeRef));
+			}
+
+			// lower/upper bounds of parameter types
+			for (TFormalParameter fpar : F.getFpars()) {
+				if (fpar != null) {
+					final TFormalParameter newPar = TypesFactory.eINSTANCE.createTFormalParameter();
+					newPar.setName(fpar.getName());
+					newPar.setVariadic(fpar.isVariadic());
+					// astInitializer is not copied since it's part of the AST
+					newPar.setHasInitializerAssignment(fpar.isHasInitializerAssignment());
+
+					if (fpar.getTypeRef() != null) {
+						final TypeRef resultParTypeRef = bound(G, fpar.getTypeRef(), boundType.inverse(), force);
+						newPar.setTypeRef(TypeUtils.copyIfContained(resultParTypeRef));
+					}
+
+					result.getFpars().add(newPar);
+				} else {
+					result.getFpars().add(null);
+				}
+			}
+
+			TypeUtils.copyTypeModifiers(result, F);
+
+			return result;
 		}
 
 		@Override

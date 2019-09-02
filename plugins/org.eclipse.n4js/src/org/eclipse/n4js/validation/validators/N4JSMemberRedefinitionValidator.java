@@ -108,7 +108,6 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
-import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -152,8 +151,6 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	private ContainerTypesHelper containerTypesHelper;
 	@Inject
 	private N4JSTypeSystem ts;
-	@Inject
-	private TypeSystemHelper tsh;
 	@Inject
 	private MemberVisibilityChecker memberVisibilityChecker;
 	@Inject
@@ -1270,8 +1267,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	/** Returns a copy of the given {@link FunctionTypeExprOrRef} with its return type changed to <code>void</code>. */
 	private FunctionTypeExpression changeReturnTypeToVoid(RuleEnvironment G, FunctionTypeExprOrRef typeRef) {
 		final RuleEnvironment G_empty = RuleEnvironmentExtensions.newRuleEnvironment(G);
-		final FunctionTypeExpression result = tsh.createSubstitutionOfFunctionTypeExprOrRef(G_empty, typeRef, false,
-				false);
+		final FunctionTypeExpression result = (FunctionTypeExpression) ts.substTypeVariables(G_empty, typeRef);
 		result.setReturnTypeRef(null); // TODO use RuleEnvironmentExtensions.voidTypeRef(G) here
 		return result;
 	}

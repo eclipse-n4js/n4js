@@ -30,7 +30,6 @@ import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -84,8 +83,6 @@ class TypeSystemHelper {
 	//   forwarding of utility methods implemented in strategy classes
 	// *****************************************************************************************************
 
-	@Inject private DerivationComputer derivationComputer;
-
 	@Inject private GenericsComputer genericsComputer;
 
 	@Inject private SimplifyComputer simplifyComputer;
@@ -107,15 +104,6 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	return structuralTypingComputer;
 }
 
-
-	def FunctionTypeExpression createSubstitutionOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F,
-		boolean captureContainedWildcards, boolean captureUponSubstitution) {
-		derivationComputer.createSubstitutionOfFunctionTypeExprOrRef(G,F,captureContainedWildcards,captureUponSubstitution);
-	}
-	def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType,
-		boolean force) {
-		derivationComputer.createBoundOfFunctionTypeExprOrRef(G,F,boundType,force);
-	}
 
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
 		genericsComputer.addSubstitutions(G,typeRef)
