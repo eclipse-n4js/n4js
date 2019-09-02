@@ -10,16 +10,12 @@
  */
 package org.eclipse.n4js.binaries.nodejs;
 
-import static java.util.Collections.emptyList;
-
 import java.io.File;
 import java.net.URI;
 import java.util.Map;
-import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.BinariesConstants;
-import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -36,7 +32,7 @@ import com.google.inject.Singleton;
  * Note, that {@code npm} is not binary itself, but an executable (script) file added by the {@code npm} library.
  */
 @Singleton
-public class NpmrcBinary implements Binary {
+public class NpmrcBinary extends Binary {
 
 	private static final String NPM_CONFIG_USERCONFIG = "NPM_CONFIG_userconfig";
 
@@ -48,9 +44,6 @@ public class NpmrcBinary implements Binary {
 
 	@Inject
 	private Provider<NpmBinary> npmBinaryProvider;
-
-	@Inject
-	private BinariesPreferenceStore preferenceStore;
 
 	@Override
 	public String getId() {
@@ -76,8 +69,13 @@ public class NpmrcBinary implements Binary {
 	}
 
 	@Override
-	public String getBinaryAbsolutePath() {
-		return getUserNodePathOrDefault() + File.separator + BinariesConstants.NPMRC_BINARY_NAME;
+	public String getBinaryDirectory() {
+		return getUserNodePathOrDefault();
+	}
+
+	@Override
+	public String getBinaryFileName() {
+		return BinariesConstants.NPMRC_BINARY_NAME;
 	}
 
 	@Override
@@ -91,24 +89,15 @@ public class NpmrcBinary implements Binary {
 	}
 
 	@Override
-	public Iterable<Binary> getChildren() {
-		return emptyList();
-	}
-
-	@Override
 	public Map<String, String> updateEnvironment(final Map<String, String> environment) {
+		final String actualPathPropertyName = findActualPropertyNameOrDefault(environment, NPM_CONFIG_USERCONFIG);
 		final String additionalNodePath = getUserNodePathOrDefault() + File.separator
 				+ BinariesConstants.NPMRC_BINARY_NAME;
 
 		// overwrite
-		environment.put(NPM_CONFIG_USERCONFIG, additionalNodePath);
+		environment.put(actualPathPropertyName, additionalNodePath);
 
 		return environment;
-	}
-
-	@Override
-	public URI getUserConfiguredLocation() {
-		return preferenceStore.getPath(this);
 	}
 
 	@Override
@@ -121,31 +110,6 @@ public class NpmrcBinary implements Binary {
 			}
 		}
 		return validator.binaryExists(this);
-	}
-
-	/**
-	 * Custom hashcode, used to persist settings in the map {@link BinariesPreferenceStore} internal map. Key part about
-	 * that hashCode is that it will be the same for every instance of this class, allowing to easily serialize
-	 * {@code Binary -> URI} setting even between platform runs.
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(getId());
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof NpmrcBinary)) {
-			return false;
-		}
-		final NpmrcBinary other = (NpmrcBinary) obj;
-		return Objects.equals(getId(), other.getId());
 	}
 
 	/**
