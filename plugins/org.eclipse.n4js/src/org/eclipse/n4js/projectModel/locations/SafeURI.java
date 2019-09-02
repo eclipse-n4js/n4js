@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.base.Preconditions;
@@ -60,15 +61,16 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	protected URI validate(URI given) throws IllegalArgumentException, NullPointerException {
 		Preconditions.checkNotNull(given);
 		List<String> segments = given.segmentsList();
-		if (given.hasTrailingPathSeparator()) {
-			for (int i = 0; i < segments.size() - 1; i++) {
-				Preconditions.checkArgument(segments.get(i).length() > 0, "'%s'", given);
-			}
-		} else {
-			for (String segment : segments) {
-				Preconditions.checkArgument(segment.length() > 0, "'%s'", given);
+
+		final int segCountMax = given.hasTrailingPathSeparator() ? segments.size() - 1 : segments.size();
+		for (int i = 0; i < segCountMax; i++) {
+			String segment = segments.get(i);
+			Preconditions.checkArgument(segment.length() > 0, "'%s'", given);
+			if (OSInfo.isWindows()) {
+				Preconditions.checkArgument(!segment.contains(File.separator));
 			}
 		}
+
 		return given;
 	}
 
