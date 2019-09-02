@@ -24,6 +24,7 @@
 	language="")
 package org.eclipse.n4js.ts.typeRefs
 
+import java.util.UUID
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
@@ -37,6 +38,8 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils
+
+type UUID wraps UUID
 
 /*
  * Base class for all things that can provide a version. The returned value will be 0 in any language that does not
@@ -747,7 +750,7 @@ class ExistentialTypeRef extends TypeRef {
 	 * plain POJO identity comparison of two ExistentialTypeRefs cannot be used to check if
 	 * two {@code ExistentialTypeRef}s refer to the same capture.
 	 */
-	String ^id
+	UUID ^id
 	/*
 	 * If true, this existential type roughly behaves like the wildcard it was created from.
 	 * For detailed semantics see {@code SubtypeJudgment#applyExistentialTypeRef_Left|Right()}.

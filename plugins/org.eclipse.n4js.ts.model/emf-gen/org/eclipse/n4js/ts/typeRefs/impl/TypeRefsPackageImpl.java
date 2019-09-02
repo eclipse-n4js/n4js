@@ -12,6 +12,7 @@ package org.eclipse.n4js.ts.typeRefs.impl;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
@@ -265,6 +266,13 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	private EEnum optionalFieldStrategyEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType uuidEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -1982,6 +1990,16 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
+	public EDataType getUUID() {
+		return uuidEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public TypeRefsFactory getTypeRefsFactory() {
 		return (TypeRefsFactory)getEFactoryInstance();
 	}
@@ -2198,6 +2216,9 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 
 		// Create enums
 		optionalFieldStrategyEEnum = createEEnum(OPTIONAL_FIELD_STRATEGY);
+
+		// Create data types
+		uuidEDataType = createEDataType(UUID);
 	}
 
 	/**
@@ -2438,7 +2459,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getParameterizedTypeRefStructural__GetTypeRefAsString(), theEcorePackage.getEString(), "getTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(existentialTypeRefEClass, ExistentialTypeRef.class, "ExistentialTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getExistentialTypeRef_Id(), theEcorePackage.getEString(), "id", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExistentialTypeRef_Id(), this.getUUID(), "id", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExistentialTypeRef_Reopened(), theEcorePackage.getEBoolean(), "reopened", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getExistentialTypeRef_Wildcard(), this.getWildcard(), null, "wildcard", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getExistentialTypeRef_BoundTypeVariable(), theTypesPackage.getTypeVariable(), null, "boundTypeVariable", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2567,6 +2588,9 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		addEEnumLiteral(optionalFieldStrategyEEnum, OptionalFieldStrategy.OFF);
 		addEEnumLiteral(optionalFieldStrategyEEnum, OptionalFieldStrategy.GETTERS_OPTIONAL);
 		addEEnumLiteral(optionalFieldStrategyEEnum, OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL);
+
+		// Initialize data types
+		initEDataType(uuidEDataType, java.util.UUID.class, "UUID", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

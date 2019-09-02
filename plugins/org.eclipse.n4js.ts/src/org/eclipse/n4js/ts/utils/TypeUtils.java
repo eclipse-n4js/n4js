@@ -360,8 +360,11 @@ public class TypeUtils {
 	 * Creates a new {@link ExistentialTypeRef} as a capture of the given wildcard.
 	 */
 	public static ExistentialTypeRef captureWildcard(TypeVariable typeVar, Wildcard wildcard) {
+		// note on performance: creating random UUIDs isn't exactly cheap, but when testing this in two real-world
+		// projects of considerable size (stdlib, OPR) only about 13k captures were created per full build which
+		// amounted to <15ms for UUID creation.
 		final ExistentialTypeRef etr = TypeRefsFactory.eINSTANCE.createExistentialTypeRef();
-		etr.setId(UUID.randomUUID().toString()); // FIXME performance!!!!!
+		etr.setId(UUID.randomUUID());
 		etr.setWildcard(wildcard);
 		etr.setBoundTypeVariable(typeVar);
 		return etr;

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.typeRefs;
 
+import java.util.UUID;
+
 import org.eclipse.n4js.ts.types.TypeVariable;
 
 /**
@@ -74,12 +76,12 @@ public interface ExistentialTypeRef extends TypeRef {
 	 * two {@code ExistentialTypeRef}s refer to the same capture.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Id</em>' attribute.
-	 * @see #setId(String)
+	 * @see #setId(UUID)
 	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getExistentialTypeRef_Id()
-	 * @model unique="false"
+	 * @model unique="false" dataType="org.eclipse.n4js.ts.typeRefs.UUID"
 	 * @generated
 	 */
-	String getId();
+	UUID getId();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getId <em>Id</em>}' attribute.
@@ -89,7 +91,7 @@ public interface ExistentialTypeRef extends TypeRef {
 	 * @see #getId()
 	 * @generated
 	 */
-	void setId(String value);
+	void setId(UUID value);
 
 	/**
 	 * Returns the value of the '<em><b>Reopened</b></em>' attribute.

@@ -33,6 +33,8 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.eclipse.n4js.AnnotationDefinition;
@@ -439,8 +441,9 @@ import com.google.common.collect.Iterables;
 							&& rightTypeArg instanceof ExistentialTypeRef
 							&& !((ExistentialTypeRef) leftTypeArg).isReopened()
 							&& !((ExistentialTypeRef) rightTypeArg).isReopened()
-							&& ((ExistentialTypeRef) leftTypeArg).getId()
-									.equals(((ExistentialTypeRef) rightTypeArg).getId());
+							&& Objects.equals(
+									((ExistentialTypeRef) leftTypeArg).getId(),
+									((ExistentialTypeRef) rightTypeArg).getId());
 					if (!isSameCapture) {
 						return failure();
 					}
@@ -497,7 +500,7 @@ import com.google.common.collect.Iterables;
 			return success(); // performance tweak
 		}
 		if (right instanceof ExistentialTypeRef) {
-			String otherId = ((ExistentialTypeRef) right).getId();
+			UUID otherId = ((ExistentialTypeRef) right).getId();
 			if (otherId != null && otherId.equals(existentialTypeRef.getId())) {
 				return success(); // same capture
 			}
@@ -528,7 +531,7 @@ import com.google.common.collect.Iterables;
 			return success(); // performance tweak
 		}
 		if (left instanceof ExistentialTypeRef) {
-			String otherId = ((ExistentialTypeRef) left).getId();
+			UUID otherId = ((ExistentialTypeRef) left).getId();
 			if (otherId != null && otherId.equals(existentialTypeRef.getId())) {
 				return success(); // same capture
 			}
