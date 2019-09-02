@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.base.Preconditions;
@@ -65,7 +66,9 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 		for (int i = 0; i < segCountMax; i++) {
 			String segment = segments.get(i);
 			Preconditions.checkArgument(segment.length() > 0, "'%s'", given);
-			Preconditions.checkArgument(!segment.contains("\\")); // could happen on Windows platform
+			if (OSInfo.isWindows()) {
+				Preconditions.checkArgument(!segment.contains(File.separator));
+			}
 		}
 
 		return given;

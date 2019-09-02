@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.internal;
 
+import java.io.File;
+
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.Strings;
 
@@ -45,7 +48,7 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	public SafeURI<?> getLocation() {
 		String location = getRelativeLocation();
 		if (!Strings.isEmpty(location)) {
-			String linuxPath = location.replaceAll("\\\\", "/");
+			String linuxPath = OSInfo.isWindows() ? location.replace(File.separatorChar, '/') : location;
 			return project.getLocation().appendPath(linuxPath);
 		}
 		return project.getLocation();
