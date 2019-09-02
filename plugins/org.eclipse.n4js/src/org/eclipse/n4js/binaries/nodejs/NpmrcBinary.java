@@ -120,7 +120,7 @@ public class NpmrcBinary implements Binary {
 				return parentStatus;
 			}
 		}
-		return validator.validateBinaryFile(this);
+		return validator.binaryExists(this);
 	}
 
 	/**
