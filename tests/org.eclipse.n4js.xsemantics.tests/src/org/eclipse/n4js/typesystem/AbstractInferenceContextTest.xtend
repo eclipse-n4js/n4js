@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -186,7 +186,7 @@ public abstract class AbstractInferenceContextTest extends AbstractTypesystemTes
 
 
 	protected def Type selectType(String arg) {
-		val result = script.module.topLevelTypes.findFirst[name==arg];
+		val result = script.module.topLevelTypes.findFirst[name == arg];
 		Assert.assertNotNull(result);
 		return result;
 	}
@@ -196,98 +196,126 @@ public abstract class AbstractInferenceContextTest extends AbstractTypesystemTes
 		result.name = name;
 		return result;
 	}
+
 	protected def InferenceVariable createInfVar(String name) {
 		val result = TypesFactory.eINSTANCE.createInferenceVariable();
 		result.name = name;
 		return result;
 	}
 
-	def protected void assertSolution(Script script, TypeConstraint[] constraints, Pair<InferenceVariable,TypeRef>... expectedInstantiations) {
-		if(expectedInstantiations===null || expectedInstantiations.empty) {
-			throw new IllegalArgumentException("should provide one or more expected instantiations to #assertNoSolution()");
+
+	/**
+	 * Asserts that {@link InferenceContext} finds a solution for the given constraint system matching the given expected instantiations.
+	 */
+	def protected void assertSolution(Script script, TypeConstraint[] constraints, Pair<InferenceVariable, TypeRef>... expectedInstantiations) {
+		if (expectedInstantiations === null || expectedInstantiations.empty) {
+			throw new IllegalArgumentException("should provide one or more expected instantiations to #assertSolution()");
 		}
 
 		val solution = getSolutionFromInferenceContext(script, constraints, expectedInstantiations);
-		Assert.assertNotNull("expected a solution, but InferenceContext reported \"no solution found\"", solution);
+		if (solution === null) {
+			Assert.fail('''
+				expected a solution, but InferenceContext reported "no solution found"
+				«constraints.asString»''');
+		}
 
-		expectedInstantiations.forEach[p|
+		var haveIncorrect = false;
+		val instantiationsAsString = newArrayList;
+		for (p : expectedInstantiations) {
 			val infVar = p.key;
 			val expected = p.value;
-			if(expected!==null) {
+			if (expected !== null) {
 				val actual = solution.get(infVar);
-				Assert.assertNotNull("incomplete solution; instantiation of inference variable "+infVar.name+" is null", actual);
-				assertEqualTypeArgument(expected,actual);
+				if (actual === null) {
+					instantiationsAsString += "    " + infVar.name + " -> null (INCOMPLETE, instantiation of this inference variable)";
+					haveIncorrect = true;
+				} else if (!TypeCompareUtils.isEqual(expected, actual)) {
+					instantiationsAsString += "    " + infVar.name + " -> " + actual.typeRefAsString + " (INCORRECT, expected: " + expected.typeRefAsString + ")";
+					haveIncorrect = true;
+				} else {
+					instantiationsAsString += "    " + infVar.name + " -> " + actual.typeRefAsString + " (correct)";
+				}
 			}
-		]
+		}
+
+		if (haveIncorrect) {
+			Assert.fail('''
+				incorrect solution found by InferenceContext
+				«constraints.asString»
+				solution:
+				«instantiationsAsString.sort.join(System.lineSeparator)»''')
+		}
 	}
+
+	/**
+	 * Asserts that {@link InferenceContext} does *not* find a solution for the given constraint system.
+	 */
 	def protected void assertNoSolution(Script script, TypeConstraint[] constraints, InferenceVariable... inferenceVariables) {
-		if(inferenceVariables===null || inferenceVariables.empty) {
+		if (inferenceVariables === null || inferenceVariables.empty) {
 			throw new IllegalArgumentException("should provide one or more inference variables to #assertNoSolution()");
 		}
-		val solution = getSolutionFromInferenceContext(script, constraints, inferenceVariables.map[it->null]);
-		Assert.assertNull("expected no solution, but InferenceContext found a solution", solution);
+		val solution = getSolutionFromInferenceContext(script, constraints, inferenceVariables.map[it -> null]);
+		if (solution !== null) {
+			Assert.fail('''
+				expected no solution, but InferenceContext found a solution
+				«constraints.asString»
+				solution:
+				«solution.entrySet.map["    " + key.name + " -> " + value.typeRefAsString].sort.join(System.lineSeparator)»''');
+		}
 	}
-	def private Map<InferenceVariable,TypeRef> getSolutionFromInferenceContext(
-		Script script, TypeConstraint[] constraints, Pair<InferenceVariable,TypeRef>... expectedInstantiations) {
+
+	def private Map<InferenceVariable, TypeRef> getSolutionFromInferenceContext(Script script, TypeConstraint[] constraints, Pair<InferenceVariable, TypeRef>... expectedInstantiations) {
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(script)
 		val infVars = expectedInstantiations.map[key].toSet
-		val InferenceContext infCtx = new InferenceContext(ts,tsh,operationCanceledManager,CancelIndicator.NullImpl,G,infVars)
-		constraints.forEach[infCtx.addConstraint(left,right,variance)]
+		val InferenceContext infCtx = new InferenceContext(ts, tsh, operationCanceledManager, CancelIndicator.NullImpl, G, infVars)
+		constraints.forEach[infCtx.addConstraint(left, right, variance)]
 
 		val solution = infCtx.solve
 		return solution;
 	}
 
-	def protected void assertEqualTypeArgument(TypeArgument expected, TypeArgument actual) {
-		if(expected!==null) {
-			Assert.assertNotNull("expected TypeArgument was non-null, actual was null",actual);
-			Assert.assertTrue(
-				'''
-				semi-semantic equality check failed for:
-				    expected: «expected?.typeRefAsString»
-				    actual  : «actual?.typeRefAsString»
-				''',
-				TypeCompareUtils.isEqual(expected,actual));
-//			Assert.assertSame("same EClass",expected.eClass,actual.eClass);
-//			if(expected instanceof TypeRef) {
-//				Assert.assertSame("same declared type",expected.declaredType,(actual as TypeRef).declaredType);
-//			}
-//			if(expected instanceof ComposedTypeRef) {
-//				val actualCasted = actual as ComposedTypeRef;
-//				Assert.assertEquals("different number of types in ComposedTypeRef",expected.typeRefs.size,actualCasted.typeRefs.size);
-//				for(var idx=0;idx<expected.typeRefs.size;idx++) {
-//					assertEqualTypeArgument(expected.typeRefs.get(idx),actualCasted.typeRefs.get(idx));
-//				}
-//			}
-//			// TODO more assertions
-		}
-		else {
-			Assert.assertNull("expected TypeArgument was null, actual was non-null",actual);
-		}
+	def private String asString(TypeConstraint[] constraints) {
+		val lines = newArrayList;
+		lines += "constraints:";
+		lines += constraints.map["    " + it.toString];
+		return lines.join(System.lineSeparator);
 	}
 
+
 	def protected static TypeConstraint constraint(EObject left, String relation, EObject right) {
-		val TypeArgument leftTypeArg = switch(left) {
+		val TypeArgument leftTypeArg = switch (left) {
 			TypeArgument: left
 			Type: TypeUtils.createTypeRef(left)
-			default: throw new IllegalArgumentException("unsupported type of 'left': "+left.eClass.name)
+			default: throw new IllegalArgumentException("unsupported type of 'left': " + left.eClass.name)
 		}
-		val TypeArgument rightTypeArg = switch(right) {
+		val TypeArgument rightTypeArg = switch (right) {
 			TypeArgument: right
 			Type: TypeUtils.createTypeRef(right)
-			default: throw new IllegalArgumentException("unsupported type of 'left': "+left.eClass.name)
+			default: throw new IllegalArgumentException("unsupported type of 'left': " + left.eClass.name)
 		}
-		val Variance variance = switch(relation) {
+		val Variance variance = switch (relation) {
 			case "<:": Variance.CO
 			case ":>": Variance.CONTRA
 			case "=": Variance.INV
-			default: throw new IllegalArgumentException("unknown relation string: "+relation)
+			default: throw new IllegalArgumentException("unknown relation string: " + relation)
 		};
-		return new TypeConstraint(leftTypeArg,rightTypeArg,variance);
+		return new TypeConstraint(leftTypeArg, rightTypeArg, variance);
 	}
 
 
+	def protected Type top() {
+		return _G.topType;
+	}
+
+	def protected Type bottom() {
+		return _G.bottomType;
+	}
+
 	def protected Type any() {
 		return _G.anyType;
+	}
+
+	def protected Type undefined() {
+		return _G.undefinedType;
 	}
 }

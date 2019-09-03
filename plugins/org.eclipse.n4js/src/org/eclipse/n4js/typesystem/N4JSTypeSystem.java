@@ -15,6 +15,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTyp
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Spliterators;
 import java.util.stream.StreamSupport;
@@ -177,7 +178,7 @@ public class N4JSTypeSystem {
 	 * @param rightArg
 	 *            right type argument to check.
 	 * @param varianceOpt
-	 *            the variance. Usually this is the definition-site variance of the type corresponding parameter, but
+	 *            the variance. Usually this is the definition-site variance of the corresponding type parameter, but
 	 *            can be some special value in certain contexts (e.g. in {@link TypeTypeRef}s). If absent, invariance
 	 *            will be assumed.
 	 * @param useFancyErrMsg
@@ -209,7 +210,7 @@ public class N4JSTypeSystem {
 		TypeRef rightArgUpper = upperBoundHesitant(G, rightArg);
 		TypeRef rightArgLower = lowerBoundHesitant(G, rightArg);
 
-		// minor tweak to slightly improve error messages
+		// minor tweak to slightly beautify error messages
 		// (i.e. having "not equals to" instead of "not a subtype" in a random direction)
 		if (useFancyErrMsg
 				&& variance == Variance.INV
@@ -275,7 +276,7 @@ public class N4JSTypeSystem {
 	 * represent the compatibility check.
 	 */
 	public List<TypeConstraint> reduceTypeArgumentCompatibilityCheck(RuleEnvironment G,
-			TypeArgument leftArg, TypeArgument rightArg, Optional<Variance> varianceOpt) {
+			TypeArgument leftArg, TypeArgument rightArg, Optional<Variance> varianceOpt, boolean useFancyConstraints) {
 
 		final Variance variance = varianceOpt.or(Variance.INV);
 
@@ -285,6 +286,17 @@ public class N4JSTypeSystem {
 		final TypeRef leftArgLower = lowerBoundHesitant(G, leftArg);
 		final TypeRef rightArgUpper = upperBoundHesitant(G, rightArg);
 		final TypeRef rightArgLower = lowerBoundHesitant(G, rightArg);
+
+		// minor tweak to slightly beautify solutions of the constraint solver
+		// (i.e. having a single constraint ⟨ α = X ⟩ instead of two constraints ⟨ α :> X ⟩, ⟨ α <: X ⟩ helps the
+		// solver to avoid large unions in which one element is the super type of all others, in certain typical
+		// cases involving array/object literals)
+		if (useFancyConstraints
+				&& variance == Variance.INV
+				&& leftArgUpper == leftArg && leftArgLower == leftArg
+				&& rightArgUpper == rightArg && rightArgLower == rightArg) {
+			return Collections.singletonList(new TypeConstraint(leftArg, rightArg, Variance.INV));
+		}
 
 		final List<TypeConstraint> result = new ArrayList<>(2);
 

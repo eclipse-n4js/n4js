@@ -393,7 +393,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			} else {
 				variance = Variance.CO;
 			}
-			return ts.reduceTypeArgumentCompatibilityCheck(G, mtypes.key, mtypes.value, Optional.of(variance));
+			return ts.reduceTypeArgumentCompatibilityCheck(G, mtypes.key, mtypes.value, Optional.of(variance), false);
 		}
 	}
 

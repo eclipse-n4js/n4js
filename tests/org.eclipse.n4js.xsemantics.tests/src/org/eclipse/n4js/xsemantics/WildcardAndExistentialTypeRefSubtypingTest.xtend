@@ -67,49 +67,49 @@ class WildcardAndExistentialTypeRefSubtypingTest extends AbstractTypesystemTest 
 
 	@Test
 	def void testNoBoundOnRHS() {
-		assertSubtyping(false, wildcard(),         wildcard()         );
-		assertSubtyping(false, wildcardExtends(B), wildcard()         );
-		assertSubtyping(false, wildcardSuper(B),   wildcard()         );
-		assertSubtyping(false, B.ref,              wildcard()         );
+		assertSubtypeOfVariations(false, wildcard(),         wildcard()         );
+		assertSubtypeOfVariations(false, wildcardExtends(B), wildcard()         );
+		assertSubtypeOfVariations(false, wildcardSuper(B),   wildcard()         );
+		assertSubtypeOfVariations(false, B.ref,              wildcard()         );
 	}
 
 	@Test
 	def void testUpperBoundOnRHS() {
-		assertSubtyping(false, wildcard(),         wildcardExtends(B) );
-		assertSubtyping(false, wildcardExtends(A), wildcardExtends(B) );
-		assertSubtyping(false, wildcardExtends(B), wildcardExtends(B) );
-		assertSubtyping(false, wildcardExtends(C), wildcardExtends(B) );
-		assertSubtyping(false, wildcardSuper(C),   wildcardExtends(B) );
-		assertSubtyping(false, wildcardSuper(B),   wildcardExtends(B) );
-		assertSubtyping(false, wildcardSuper(A),   wildcardExtends(B) );
-		assertSubtyping(false, A.ref,              wildcardExtends(B) );
-		assertSubtyping(false, B.ref,              wildcardExtends(B) );
-		assertSubtyping(false, C.ref,              wildcardExtends(B) );
+		assertSubtypeOfVariations(false, wildcard(),         wildcardExtends(B) );
+		assertSubtypeOfVariations(false, wildcardExtends(A), wildcardExtends(B) );
+		assertSubtypeOfVariations(false, wildcardExtends(B), wildcardExtends(B) );
+		assertSubtypeOfVariations(false, wildcardExtends(C), wildcardExtends(B) );
+		assertSubtypeOfVariations(false, wildcardSuper(C),   wildcardExtends(B) );
+		assertSubtypeOfVariations(false, wildcardSuper(B),   wildcardExtends(B) );
+		assertSubtypeOfVariations(false, wildcardSuper(A),   wildcardExtends(B) );
+		assertSubtypeOfVariations(false, A.ref,              wildcardExtends(B) );
+		assertSubtypeOfVariations(false, B.ref,              wildcardExtends(B) );
+		assertSubtypeOfVariations(false, C.ref,              wildcardExtends(B) );
 	}
 
 	@Test
 	def void testLowerBoundOnRHS() {
-		assertSubtyping(false, wildcard(),         wildcardSuper(B)   );
-		assertSubtyping(false, wildcardExtends(A), wildcardSuper(B)   );
-		assertSubtyping(true,  wildcardExtends(B), wildcardSuper(B)   );
-		assertSubtyping(true,  wildcardExtends(C), wildcardSuper(B)   );
-		assertSubtyping(false, wildcardSuper(C),   wildcardSuper(B)   );
-		assertSubtyping(false, wildcardSuper(B),   wildcardSuper(B)   );
-		assertSubtyping(false, wildcardSuper(A),   wildcardSuper(B)   );
-		assertSubtyping(false, A.ref,              wildcardSuper(B)   );
-		assertSubtyping(true,  B.ref,              wildcardSuper(B)   );
-		assertSubtyping(true,  C.ref,              wildcardSuper(B)   );
+		assertSubtypeOfVariations(false, wildcard(),         wildcardSuper(B)   );
+		assertSubtypeOfVariations(false, wildcardExtends(A), wildcardSuper(B)   );
+		assertSubtypeOfVariations(true,  wildcardExtends(B), wildcardSuper(B)   );
+		assertSubtypeOfVariations(true,  wildcardExtends(C), wildcardSuper(B)   );
+		assertSubtypeOfVariations(false, wildcardSuper(C),   wildcardSuper(B)   );
+		assertSubtypeOfVariations(false, wildcardSuper(B),   wildcardSuper(B)   );
+		assertSubtypeOfVariations(false, wildcardSuper(A),   wildcardSuper(B)   );
+		assertSubtypeOfVariations(false, A.ref,              wildcardSuper(B)   );
+		assertSubtypeOfVariations(true,  B.ref,              wildcardSuper(B)   );
+		assertSubtypeOfVariations(true,  C.ref,              wildcardSuper(B)   );
 	}
 
 	@Test
 	def void testSimpleTypeOnRHS() {
-		assertSubtyping(false, wildcard(),         B.ref              );
-		assertSubtyping(true,  wildcardExtends(B), A.ref              );
-		assertSubtyping(true,  wildcardExtends(B), B.ref              );
-		assertSubtyping(false, wildcardExtends(B), C.ref              );
-		assertSubtyping(false, wildcardSuper(B),   A.ref              );
-		assertSubtyping(false, wildcardSuper(B),   B.ref              );
-		assertSubtyping(false, wildcardSuper(B),   C.ref              );
+		assertSubtypeOfVariations(false, wildcard(),         B.ref              );
+		assertSubtypeOfVariations(true,  wildcardExtends(B), A.ref              );
+		assertSubtypeOfVariations(true,  wildcardExtends(B), B.ref              );
+		assertSubtypeOfVariations(false, wildcardExtends(B), C.ref              );
+		assertSubtypeOfVariations(false, wildcardSuper(B),   A.ref              );
+		assertSubtypeOfVariations(false, wildcardSuper(B),   B.ref              );
+		assertSubtypeOfVariations(false, wildcardSuper(B),   C.ref              );
 	}
 
 	/**
@@ -121,7 +121,7 @@ class WildcardAndExistentialTypeRefSubtypingTest extends AbstractTypesystemTest 
 	 * are expected to behave the same way as wildcards. Therefore this methods also asserts these corresponding
 	 * cases, to avoid duplicating the test cases above.
 	 */
-	def private void assertSubtyping(boolean expectedResult, TypeArgument left, TypeArgument right) {
+	def private void assertSubtypeOfVariations(boolean expectedResult, TypeArgument left, TypeArgument right) {
 		// step #1: test type arguments as they were passed in
 		assertSubtype("", left, "", right, expectedResult);
 		// step #2: captured ExistentialTypeRefs must behave the same way as wildcards

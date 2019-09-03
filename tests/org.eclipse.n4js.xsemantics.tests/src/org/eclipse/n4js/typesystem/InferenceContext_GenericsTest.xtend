@@ -91,29 +91,29 @@ class InferenceContext_GenericsTest extends AbstractInferenceContextTest {
 
 	@Test
 	def void test_lhs_wildcard() {
-		script.assertSolution(
+		script.assertNoSolution(
 			#[
 				constraint(G.of(wildcard),'<:',G.of(alpha)) // ⟨ G<?> <: G<α> ⟩
 			],
-			alpha -> any.ref
+			alpha // only possible solution would be α := ?, but so far we assume that wildcards are not valid solutions in general
 		)
 	}
 	@Test
 	def void test_lhs_wildcard_upperBound() {
-		script.assertSolution(
+		script.assertNoSolution(
 			#[
 				constraint(G.of(wildcardExtends(B)),'<:',G.of(alpha)) // ⟨ G<? extends B> <: G<α> ⟩
 			],
-			alpha -> B.ref
+			alpha // same rationale as in #test_lhs_wildcard()
 		)
 	}
 	@Test
 	def void test_lhs_wildcard_lowerBound() {
-		script.assertSolution(
+		script.assertNoSolution(
 			#[
 				constraint(G.of(wildcardSuper(B)),'<:',G.of(alpha)) // ⟨ G<? super B> <: G<α> ⟩
 			],
-			alpha -> B.ref
+			alpha // same rationale as in #test_lhs_wildcard()
 		)
 	}
 
