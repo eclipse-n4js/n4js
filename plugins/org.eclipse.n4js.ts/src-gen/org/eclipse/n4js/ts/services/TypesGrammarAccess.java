@@ -3224,16 +3224,16 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getN4KeywordAccess().getRule();
 	}
 	
-	//terminal IDENTIFIER_WITH_DASH:
-	//	IDENTIFIER_START (IDENTIFIER_PART* '-')+ IDENTIFIER_PART+;
-	public TerminalRule getIDENTIFIER_WITH_DASHRule() {
-		return gaTypeExpressions.getIDENTIFIER_WITH_DASHRule();
-	}
-	
 	//terminal IDENTIFIER:
 	//	IDENTIFIER_START IDENTIFIER_PART*;
 	public TerminalRule getIDENTIFIERRule() {
 		return gaTypeExpressions.getIDENTIFIERRule();
+	}
+	
+	//terminal IDENTIFIER_WITH_DASH:
+	//	IDENTIFIER_START IDENTIFIER_PART+ ('-' IDENTIFIER_PART+)+;
+	public TerminalRule getIDENTIFIER_WITH_DASHRule() {
+		return gaTypeExpressions.getIDENTIFIER_WITH_DASHRule();
 	}
 	
 	//terminal INT returns ecore::EBigDecimal:

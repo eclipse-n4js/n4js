@@ -2442,8 +2442,8 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	private final IdentifierNameWithDashElements pIdentifierNameWithDash;
 	private final ReservedWordElements pReservedWord;
 	private final N4KeywordElements pN4Keyword;
-	private final TerminalRule tIDENTIFIER_WITH_DASH;
 	private final TerminalRule tIDENTIFIER;
+	private final TerminalRule tIDENTIFIER_WITH_DASH;
 	private final TerminalRule tINT;
 	private final TerminalRule tML_COMMENT;
 	private final TerminalRule tSL_COMMENT;
@@ -2517,8 +2517,8 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.pIdentifierNameWithDash = new IdentifierNameWithDashElements();
 		this.pReservedWord = new ReservedWordElements();
 		this.pN4Keyword = new N4KeywordElements();
-		this.tIDENTIFIER_WITH_DASH = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER_WITH_DASH");
 		this.tIDENTIFIER = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER");
+		this.tIDENTIFIER_WITH_DASH = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER_WITH_DASH");
 		this.tINT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.INT");
 		this.tML_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ML_COMMENT");
 		this.tSL_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SL_COMMENT");
@@ -3195,16 +3195,16 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getN4KeywordAccess().getRule();
 	}
 	
-	//terminal IDENTIFIER_WITH_DASH:
-	//	IDENTIFIER_START (IDENTIFIER_PART* '-')+ IDENTIFIER_PART+;
-	public TerminalRule getIDENTIFIER_WITH_DASHRule() {
-		return tIDENTIFIER_WITH_DASH;
-	}
-	
 	//terminal IDENTIFIER:
 	//	IDENTIFIER_START IDENTIFIER_PART*;
 	public TerminalRule getIDENTIFIERRule() {
 		return tIDENTIFIER;
+	}
+	
+	//terminal IDENTIFIER_WITH_DASH:
+	//	IDENTIFIER_START IDENTIFIER_PART+ ('-' IDENTIFIER_PART+)+;
+	public TerminalRule getIDENTIFIER_WITH_DASHRule() {
+		return tIDENTIFIER_WITH_DASH;
 	}
 	
 	//terminal INT returns ecore::EBigDecimal:
