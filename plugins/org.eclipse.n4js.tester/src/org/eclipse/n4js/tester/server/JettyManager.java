@@ -121,6 +121,7 @@ public class JettyManager implements HttpServerManager {
 				LOGGER.error("Cache failed to start new server instance at PORT=" + port, e);
 				if (server != null && server.isRunning()) {
 					server.stop();
+					server.join();
 				}
 				Throwables.throwIfUnchecked(e);
 				throw new RuntimeException(e);
@@ -197,6 +198,7 @@ public class JettyManager implements HttpServerManager {
 					final Server server = serverCache.getIfPresent(localPort);
 					if (null != server) {
 						server.stop();
+						server.join();
 						if (server.isStopped()) {
 							LOGGER.info("Jetty instance has successfully stopped on '" + localPort + "'.");
 							serverCache.invalidate(localPort);
