@@ -228,56 +228,69 @@ import com.google.common.base.Optional;
 
 		@Override
 		public TypeRef caseFunctionTypeExprOrRef(FunctionTypeExprOrRef F) {
-			final FunctionTypeExpression result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
-
-			// let posterity know that the newly created FunctionTypeExpression
-			// represents the binding of another FunctionTypeExprOrRef
-			result.setBinding(true);
-
-			// retain the pointer to declared type of original FunctionTypeExprOrRef (if any)
-			// (see API doc of FunctionTypeExpression#declaredType for more info)
-			result.setDeclaredType(F.getFunctionType());
-
-			result.getUnboundTypeVars().addAll(F.getTypeVars());
-			if (F instanceof FunctionTypeExpression) {
-				result.getUnboundTypeVarsUpperBounds().addAll(TypeUtils.copyAll(
-						((FunctionTypeExpression) F).getUnboundTypeVarsUpperBounds()));
-			}
-
-			if (F.getDeclaredThisType() != null) {
-				result.setDeclaredThisType(
-						TypeUtils.copy(F.getDeclaredThisType()));
-			}
+			boolean haveReplacement = false;
 
 			// upper/lower bound of return type
-			if (F.getReturnTypeRef() != null) {
-				final TypeRef resultReturnTypeRef = bound(G, F.getReturnTypeRef(), boundType, force);
-				result.setReturnTypeRef(TypeUtils.copyIfContained(resultReturnTypeRef));
-			}
+			final TypeRef returnTypeRef = F.getReturnTypeRef();
+			final TypeRef resultReturnTypeRef = returnTypeRef != null ? bound(G, F.getReturnTypeRef(), boundType, force)
+					: null;
+			haveReplacement |= resultReturnTypeRef != returnTypeRef;
 
 			// lower/upper bounds of parameter types
-			for (TFormalParameter fpar : F.getFpars()) {
-				if (fpar != null) {
-					final TFormalParameter newPar = TypesFactory.eINSTANCE.createTFormalParameter();
-					newPar.setName(fpar.getName());
-					newPar.setVariadic(fpar.isVariadic());
-					// astInitializer is not copied since it's part of the AST
-					newPar.setHasInitializerAssignment(fpar.isHasInitializerAssignment());
-
-					if (fpar.getTypeRef() != null) {
-						final TypeRef resultParTypeRef = bound(G, fpar.getTypeRef(), boundType.inverse(), force);
-						newPar.setTypeRef(TypeUtils.copyIfContained(resultParTypeRef));
-					}
-
-					result.getFpars().add(newPar);
-				} else {
-					result.getFpars().add(null);
+			final List<TFormalParameter> fpars = F.getFpars();
+			final List<TFormalParameter> resultFpars = new ArrayList<>(fpars.size());
+			for (TFormalParameter oldPar : fpars) {
+				if (oldPar == null) {
+					resultFpars.add(null);
+					continue;
 				}
+				final TFormalParameter newPar = TypesFactory.eINSTANCE.createTFormalParameter();
+				newPar.setName(oldPar.getName());
+				newPar.setVariadic(oldPar.isVariadic());
+				newPar.setHasInitializerAssignment(oldPar.isHasInitializerAssignment());
+				// note: property 'astInitializer' is not copied since it's part of the AST
+
+				final TypeRef oldParTypeRef = oldPar.getTypeRef();
+				if (oldParTypeRef != null) {
+					final TypeRef newParTypeRef = bound(G, oldParTypeRef, boundType.inverse(), force);
+					newPar.setTypeRef(TypeUtils.copyIfContained(newParTypeRef));
+					haveReplacement |= newParTypeRef != oldParTypeRef;
+				}
+
+				resultFpars.add(newPar);
 			}
 
-			TypeUtils.copyTypeModifiers(result, F);
+			if (haveReplacement) {
+				final FunctionTypeExpression result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
 
-			return result;
+				// let posterity know that the newly created FunctionTypeExpression
+				// represents the binding of another FunctionTypeExprOrRef
+				result.setBinding(true);
+
+				// retain the pointer to declared type of original FunctionTypeExprOrRef (if any)
+				// (see API doc of FunctionTypeExpression#declaredType for more info)
+				result.setDeclaredType(F.getFunctionType());
+
+				result.getUnboundTypeVars().addAll(F.getTypeVars());
+				if (F instanceof FunctionTypeExpression) {
+					result.getUnboundTypeVarsUpperBounds().addAll(TypeUtils.copyAll(
+							((FunctionTypeExpression) F).getUnboundTypeVarsUpperBounds()));
+				}
+
+				if (F.getDeclaredThisType() != null) {
+					result.setDeclaredThisType(TypeUtils.copyIfContained(F.getDeclaredThisType()));
+				}
+
+				result.setReturnTypeRef(TypeUtils.copyIfContained(resultReturnTypeRef));
+				result.setReturnValueMarkedOptional(F.isReturnValueOptional());
+
+				result.getFpars().addAll(resultFpars); // no need to copy; all fpars were newly created above!
+
+				TypeUtils.copyTypeModifiers(result, F);
+
+				return result;
+			}
+			return F;
 		}
 
 		@Override

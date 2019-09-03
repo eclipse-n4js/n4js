@@ -259,8 +259,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				newPar.setHasInitializerAssignment(oldPar.isHasInitializerAssignment());
 				// note: property 'astInitializer' is not copied since it's part of the AST
 
-				if (oldPar.getTypeRef() != null) {
-					final TypeRef oldParTypeRef = oldPar.getTypeRef();
+				final TypeRef oldParTypeRef = oldPar.getTypeRef();
+				if (oldParTypeRef != null) {
 					final TypeRef newParTypeRef = substTypeVariables(G, oldParTypeRef, false);
 					newPar.setTypeRef(TypeUtils.copyIfContained(newParTypeRef));
 					haveReplacement |= newParTypeRef != oldParTypeRef;
