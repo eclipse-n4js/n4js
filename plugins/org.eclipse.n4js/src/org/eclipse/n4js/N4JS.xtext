@@ -1539,7 +1539,8 @@ JSXSpreadAttribute:
 
 JSXAttributeIdentifierName:
 	IdentifierName
-	| IdentifierNameWithDash;
+	| IdentifierNameWithDash
+;
 
 
 JSXPropertyAttribute:
