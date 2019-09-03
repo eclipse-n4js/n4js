@@ -8216,9 +8216,18 @@ ruleJSXSpreadAttribute:
 	'}'
 ;
 
+// Rule JSXAttributeIdentifierName
+ruleJSXAttributeIdentifierName:
+	(
+		ruleIdentifierName
+		    |
+		ruleIdentifierNameWithDash
+	)
+;
+
 // Rule JSXPropertyAttribute
 ruleJSXPropertyAttribute:
-	ruleIdentifierName
+	ruleJSXAttributeIdentifierName
 	(
 		'='
 		(
@@ -8833,6 +8842,11 @@ ruleIdentifierName:
 	)
 ;
 
+// Rule IdentifierNameWithDash
+ruleIdentifierNameWithDash:
+	RULE_IDENTIFIER_WITH_DASH
+;
+
 // Rule ReservedWord
 ruleReservedWord:
 	(
@@ -9119,6 +9133,8 @@ RULE_NO_LINE_TERMINATOR : '//5';
 RULE_INCOMPLETE_ASYNC_ARROW : '@=';
 
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
+
+RULE_IDENTIFIER_WITH_DASH : RULE_IDENTIFIER_START (RULE_IDENTIFIER_PART* '-')+ RULE_IDENTIFIER_PART+;
 
 RULE_IDENTIFIER : RULE_IDENTIFIER_START RULE_IDENTIFIER_PART*;
 

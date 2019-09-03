@@ -9669,12 +9669,32 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_3() { return cRightCurlyBracketKeyword_3; }
 	}
+	public class JSXAttributeIdentifierNameElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXAttributeIdentifierName");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cIdentifierNameParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cIdentifierNameWithDashParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		
+		//JSXAttributeIdentifierName:
+		//	IdentifierName
+		//	| IdentifierNameWithDash;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//IdentifierName | IdentifierNameWithDash
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//IdentifierName
+		public RuleCall getIdentifierNameParserRuleCall_0() { return cIdentifierNameParserRuleCall_0; }
+		
+		//IdentifierNameWithDash
+		public RuleCall getIdentifierNameWithDashParserRuleCall_1() { return cIdentifierNameWithDashParserRuleCall_1; }
+	}
 	public class JSXPropertyAttributeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXPropertyAttribute");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cPropertyAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final CrossReference cPropertyIdentifiableElementCrossReference_0_0 = (CrossReference)cPropertyAssignment_0.eContents().get(0);
-		private final RuleCall cPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1 = (RuleCall)cPropertyIdentifiableElementCrossReference_0_0.eContents().get(1);
+		private final RuleCall cPropertyIdentifiableElementJSXAttributeIdentifierNameParserRuleCall_0_0_1 = (RuleCall)cPropertyIdentifiableElementCrossReference_0_0.eContents().get(1);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cEqualsSignKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
 		private final Alternatives cAlternatives_1_1 = (Alternatives)cGroup_1.eContents().get(1);
@@ -9687,22 +9707,22 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_1_1_1_2 = (Keyword)cGroup_1_1_1.eContents().get(2);
 		
 		//JSXPropertyAttribute:
-		//	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | '{'
-		//	jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?;
+		//	property=[types::IdentifiableElement|JSXAttributeIdentifierName] ('=' (jsxAttributeValue=StringLiteral
+		//	| '{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | '{'
+		//property=[types::IdentifiableElement|JSXAttributeIdentifierName] ('=' (jsxAttributeValue=StringLiteral | '{'
 		//jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?
 		public Group getGroup() { return cGroup; }
 		
-		//property=[types::IdentifiableElement|IdentifierName]
+		//property=[types::IdentifiableElement|JSXAttributeIdentifierName]
 		public Assignment getPropertyAssignment_0() { return cPropertyAssignment_0; }
 		
-		//[types::IdentifiableElement|IdentifierName]
+		//[types::IdentifiableElement|JSXAttributeIdentifierName]
 		public CrossReference getPropertyIdentifiableElementCrossReference_0_0() { return cPropertyIdentifiableElementCrossReference_0_0; }
 		
-		//IdentifierName
-		public RuleCall getPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1() { return cPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1; }
+		//JSXAttributeIdentifierName
+		public RuleCall getPropertyIdentifiableElementJSXAttributeIdentifierNameParserRuleCall_0_0_1() { return cPropertyIdentifiableElementJSXAttributeIdentifierNameParserRuleCall_0_0_1; }
 		
 		//('=' (jsxAttributeValue=StringLiteral | '{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?
 		public Group getGroup_1() { return cGroup_1; }
@@ -10316,6 +10336,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final JSXAttributesElements pJSXAttributes;
 	private final JSXAttributeElements pJSXAttribute;
 	private final JSXSpreadAttributeElements pJSXSpreadAttribute;
+	private final JSXAttributeIdentifierNameElements pJSXAttributeIdentifierName;
 	private final JSXPropertyAttributeElements pJSXPropertyAttribute;
 	private final VersionDeclarationElements pVersionDeclaration;
 	
@@ -10572,6 +10593,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pJSXAttributes = new JSXAttributesElements();
 		this.pJSXAttribute = new JSXAttributeElements();
 		this.pJSXSpreadAttribute = new JSXSpreadAttributeElements();
+		this.pJSXAttributeIdentifierName = new JSXAttributeIdentifierNameElements();
 		this.pJSXPropertyAttribute = new JSXPropertyAttributeElements();
 		this.pVersionDeclaration = new VersionDeclarationElements();
 	}
@@ -13332,9 +13354,20 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getJSXSpreadAttributeAccess().getRule();
 	}
 	
+	//JSXAttributeIdentifierName:
+	//	IdentifierName
+	//	| IdentifierNameWithDash;
+	public JSXAttributeIdentifierNameElements getJSXAttributeIdentifierNameAccess() {
+		return pJSXAttributeIdentifierName;
+	}
+	
+	public ParserRule getJSXAttributeIdentifierNameRule() {
+		return getJSXAttributeIdentifierNameAccess().getRule();
+	}
+	
 	//JSXPropertyAttribute:
-	//	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | '{'
-	//	jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?;
+	//	property=[types::IdentifiableElement|JSXAttributeIdentifierName] ('=' (jsxAttributeValue=StringLiteral
+	//	| '{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?;
 	public JSXPropertyAttributeElements getJSXPropertyAttributeAccess() {
 		return pJSXPropertyAttribute;
 	}
@@ -13908,6 +13941,16 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getIdentifierNameAccess().getRule();
 	}
 	
+	//IdentifierNameWithDash:
+	//	IDENTIFIER_WITH_DASH;
+	public TypeExpressionsGrammarAccess.IdentifierNameWithDashElements getIdentifierNameWithDashAccess() {
+		return gaTypeExpressions.getIdentifierNameWithDashAccess();
+	}
+	
+	public ParserRule getIdentifierNameWithDashRule() {
+		return getIdentifierNameWithDashAccess().getRule();
+	}
+	
 	//ReservedWord: // Keywords as of [ECM15] (11.6.2, pp. 165)
 	//	'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' |
 	//	'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' |
@@ -13947,6 +13990,12 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getN4KeywordRule() {
 		return getN4KeywordAccess().getRule();
+	}
+	
+	//terminal IDENTIFIER_WITH_DASH:
+	//	IDENTIFIER_START (IDENTIFIER_PART* '-')+ IDENTIFIER_PART+;
+	public TerminalRule getIDENTIFIER_WITH_DASHRule() {
+		return gaTypeExpressions.getIDENTIFIER_WITH_DASHRule();
 	}
 	
 	//terminal IDENTIFIER:

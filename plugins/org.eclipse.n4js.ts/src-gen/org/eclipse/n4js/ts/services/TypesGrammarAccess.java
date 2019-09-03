@@ -3173,6 +3173,16 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getIdentifierNameAccess().getRule();
 	}
 	
+	//IdentifierNameWithDash:
+	//	IDENTIFIER_WITH_DASH;
+	public TypeExpressionsGrammarAccess.IdentifierNameWithDashElements getIdentifierNameWithDashAccess() {
+		return gaTypeExpressions.getIdentifierNameWithDashAccess();
+	}
+	
+	public ParserRule getIdentifierNameWithDashRule() {
+		return getIdentifierNameWithDashAccess().getRule();
+	}
+	
 	//ReservedWord: // Keywords as of [ECM15] (11.6.2, pp. 165)
 	//	'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' |
 	//	'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' |
@@ -3212,6 +3222,12 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getN4KeywordRule() {
 		return getN4KeywordAccess().getRule();
+	}
+	
+	//terminal IDENTIFIER_WITH_DASH:
+	//	IDENTIFIER_START (IDENTIFIER_PART* '-')+ IDENTIFIER_PART+;
+	public TerminalRule getIDENTIFIER_WITH_DASHRule() {
+		return gaTypeExpressions.getIDENTIFIER_WITH_DASHRule();
 	}
 	
 	//terminal IDENTIFIER:

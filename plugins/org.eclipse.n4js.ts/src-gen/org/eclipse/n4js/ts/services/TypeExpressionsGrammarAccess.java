@@ -2071,6 +2071,17 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//N4Keyword
 		public RuleCall getN4KeywordParserRuleCall_2() { return cN4KeywordParserRuleCall_2; }
 	}
+	public class IdentifierNameWithDashElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IdentifierNameWithDash");
+		private final RuleCall cIDENTIFIER_WITH_DASHTerminalRuleCall = (RuleCall)rule.eContents().get(1);
+		
+		//IdentifierNameWithDash:
+		//	IDENTIFIER_WITH_DASH;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//IDENTIFIER_WITH_DASH
+		public RuleCall getIDENTIFIER_WITH_DASHTerminalRuleCall() { return cIDENTIFIER_WITH_DASHTerminalRuleCall; }
+	}
 	public class ReservedWordElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ReservedWord");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
@@ -2428,8 +2439,10 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	private final TypeVariableElements pTypeVariable;
 	private final BindingIdentifierElements pBindingIdentifier;
 	private final IdentifierNameElements pIdentifierName;
+	private final IdentifierNameWithDashElements pIdentifierNameWithDash;
 	private final ReservedWordElements pReservedWord;
 	private final N4KeywordElements pN4Keyword;
+	private final TerminalRule tIDENTIFIER_WITH_DASH;
 	private final TerminalRule tIDENTIFIER;
 	private final TerminalRule tINT;
 	private final TerminalRule tML_COMMENT;
@@ -2501,8 +2514,10 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.pTypeVariable = new TypeVariableElements();
 		this.pBindingIdentifier = new BindingIdentifierElements();
 		this.pIdentifierName = new IdentifierNameElements();
+		this.pIdentifierNameWithDash = new IdentifierNameWithDashElements();
 		this.pReservedWord = new ReservedWordElements();
 		this.pN4Keyword = new N4KeywordElements();
+		this.tIDENTIFIER_WITH_DASH = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER_WITH_DASH");
 		this.tIDENTIFIER = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER");
 		this.tINT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.INT");
 		this.tML_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ML_COMMENT");
@@ -3129,6 +3144,16 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getIdentifierNameAccess().getRule();
 	}
 	
+	//IdentifierNameWithDash:
+	//	IDENTIFIER_WITH_DASH;
+	public IdentifierNameWithDashElements getIdentifierNameWithDashAccess() {
+		return pIdentifierNameWithDash;
+	}
+	
+	public ParserRule getIdentifierNameWithDashRule() {
+		return getIdentifierNameWithDashAccess().getRule();
+	}
+	
 	//ReservedWord: // Keywords as of [ECM15] (11.6.2, pp. 165)
 	//	'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' |
 	//	'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' |
@@ -3168,6 +3193,12 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getN4KeywordRule() {
 		return getN4KeywordAccess().getRule();
+	}
+	
+	//terminal IDENTIFIER_WITH_DASH:
+	//	IDENTIFIER_START (IDENTIFIER_PART* '-')+ IDENTIFIER_PART+;
+	public TerminalRule getIDENTIFIER_WITH_DASHRule() {
+		return tIDENTIFIER_WITH_DASH;
 	}
 	
 	//terminal IDENTIFIER:

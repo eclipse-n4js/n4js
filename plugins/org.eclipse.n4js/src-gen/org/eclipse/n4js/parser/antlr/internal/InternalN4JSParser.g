@@ -33917,6 +33917,46 @@ ruleJSXSpreadAttribute returns [EObject current=null]
 	)
 ;
 
+// Entry rule entryRuleJSXAttributeIdentifierName
+entryRuleJSXAttributeIdentifierName returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getJSXAttributeIdentifierNameRule()); }
+	iv_ruleJSXAttributeIdentifierName=ruleJSXAttributeIdentifierName
+	{ $current=$iv_ruleJSXAttributeIdentifierName.current.getText(); }
+	EOF;
+
+// Rule JSXAttributeIdentifierName
+ruleJSXAttributeIdentifierName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getJSXAttributeIdentifierNameAccess().getIdentifierNameParserRuleCall_0());
+		}
+		this_IdentifierName_0=ruleIdentifierName
+		{
+			$current.merge(this_IdentifierName_0);
+		}
+		{
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getJSXAttributeIdentifierNameAccess().getIdentifierNameWithDashParserRuleCall_1());
+		}
+		this_IdentifierNameWithDash_1=ruleIdentifierNameWithDash
+		{
+			$current.merge(this_IdentifierNameWithDash_1);
+		}
+		{
+			afterParserOrEnumRuleCall();
+		}
+	)
+;
+
 // Entry rule entryRuleJSXPropertyAttribute
 entryRuleJSXPropertyAttribute returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getJSXPropertyAttributeRule()); }
@@ -33943,7 +33983,7 @@ ruleJSXPropertyAttribute returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getJSXPropertyAttributeAccess().getPropertyIdentifiableElementCrossReference_0_0());
 				}
-				ruleIdentifierName
+				ruleJSXAttributeIdentifierName
 				{
 					afterParserOrEnumRuleCall();
 				}
@@ -37212,6 +37252,30 @@ ruleIdentifierName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRule
 			afterParserOrEnumRuleCall();
 		}
 	)
+;
+
+// Entry rule entryRuleIdentifierNameWithDash
+entryRuleIdentifierNameWithDash returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getIdentifierNameWithDashRule()); }
+	iv_ruleIdentifierNameWithDash=ruleIdentifierNameWithDash
+	{ $current=$iv_ruleIdentifierNameWithDash.current.getText(); }
+	EOF;
+
+// Rule IdentifierNameWithDash
+ruleIdentifierNameWithDash returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	this_IDENTIFIER_WITH_DASH_0=RULE_IDENTIFIER_WITH_DASH
+	{
+		$current.merge(this_IDENTIFIER_WITH_DASH_0);
+	}
+	{
+		newLeafNode(this_IDENTIFIER_WITH_DASH_0, grammarAccess.getIdentifierNameWithDashAccess().getIDENTIFIER_WITH_DASHTerminalRuleCall());
+	}
 ;
 
 // Entry rule entryRuleReservedWord

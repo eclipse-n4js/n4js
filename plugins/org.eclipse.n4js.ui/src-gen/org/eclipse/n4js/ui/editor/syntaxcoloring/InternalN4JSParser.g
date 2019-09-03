@@ -19242,6 +19242,24 @@ ruleJSXSpreadAttribute
 )
 ;
 
+// Entry rule entryRuleJSXAttributeIdentifierName
+entryRuleJSXAttributeIdentifierName
+	:
+	ruleJSXAttributeIdentifierName
+	EOF;
+
+// Rule JSXAttributeIdentifierName
+ruleJSXAttributeIdentifierName
+@init {
+}
+:
+(
+	ruleIdentifierName
+	    |
+	ruleIdentifierNameWithDash
+)
+;
+
 // Entry rule entryRuleJSXPropertyAttribute
 entryRuleJSXPropertyAttribute
 	:
@@ -19255,8 +19273,8 @@ ruleJSXPropertyAttribute
 (
 	(
 		(
-			PropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1=ruleIdentifierName{
-				announce($PropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1.start, $PropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1.stop, grammarAccess.getJSXPropertyAttributeAccess().getPropertyAssignment_0());
+			PropertyIdentifiableElementJSXAttributeIdentifierNameParserRuleCall_0_0_1=ruleJSXAttributeIdentifierName{
+				announce($PropertyIdentifiableElementJSXAttributeIdentifierNameParserRuleCall_0_0_1.start, $PropertyIdentifiableElementJSXAttributeIdentifierNameParserRuleCall_0_0_1.stop, grammarAccess.getJSXPropertyAttributeAccess().getPropertyAssignment_0());
 			}
 		)
 	)
@@ -20992,6 +21010,20 @@ ruleIdentifierName
 	    |
 	ruleN4Keyword
 )
+;
+
+// Entry rule entryRuleIdentifierNameWithDash
+entryRuleIdentifierNameWithDash
+	:
+	ruleIdentifierNameWithDash
+	EOF;
+
+// Rule IdentifierNameWithDash
+ruleIdentifierNameWithDash
+@init {
+}
+:
+RULE_IDENTIFIER_WITH_DASH
 ;
 
 // Entry rule entryRuleReservedWord

@@ -15730,7 +15730,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     JSXPropertyAttribute returns JSXPropertyAttribute
 	 *
 	 * Constraint:
-	 *     (property=[IdentifiableElement|IdentifierName] (jsxAttributeValue=StringLiteral | jsxAttributeValue=AssignmentExpression)?)
+	 *     (property=[IdentifiableElement|JSXAttributeIdentifierName] (jsxAttributeValue=StringLiteral | jsxAttributeValue=AssignmentExpression)?)
 	 */
 	protected void sequence_JSXPropertyAttribute(ISerializationContext context, JSXPropertyAttribute semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
