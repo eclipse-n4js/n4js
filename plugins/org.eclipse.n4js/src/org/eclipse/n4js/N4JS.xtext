@@ -1537,9 +1537,17 @@ JSXAttribute:
 JSXSpreadAttribute:
 	'{' '...' expression=AssignmentExpression<In=false, Yield=false> '}';
 
+JSXAttributeIdentifierName:
+	IdentifierName
+	| IdentifierNameWithDash;
+
+
 JSXPropertyAttribute:
-	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | ('{'
-	jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')))?;
+	property=[types::IdentifiableElement|JSXAttributeIdentifierName]
+	('='	(	jsxAttributeValue=StringLiteral
+			|	('{' jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')
+			)
+	)?;
 
 
 /* Version (N4IDL) related rules */

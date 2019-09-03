@@ -301,6 +301,10 @@ IdentifierName:
 	IDENTIFIER | ReservedWord | N4Keyword
 ;
 
+IdentifierNameWithDash:
+	IDENTIFIER_WITH_DASH
+;
+
 ReservedWord:
 	// Keywords as of [ECM15] (11.6.2, pp. 165)
 	'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete'
@@ -334,6 +338,9 @@ N4Keyword:
 	| 'out'
 ;
 
+terminal IDENTIFIER_WITH_DASH:
+	IDENTIFIER_START (IDENTIFIER_PART* '-')+ IDENTIFIER_PART+;
+
 terminal IDENTIFIER:
 	IDENTIFIER_START IDENTIFIER_PART*;
 
@@ -363,6 +370,7 @@ terminal fragment IDENTIFIER_START:
 	| '$'
 	| '_'
 	| UNICODE_ESCAPE_FRAGMENT;
+
 
 terminal fragment IDENTIFIER_PART:
 	  UNICODE_LETTER_FRAGMENT
