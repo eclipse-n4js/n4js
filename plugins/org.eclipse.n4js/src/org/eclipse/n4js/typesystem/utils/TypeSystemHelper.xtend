@@ -253,8 +253,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 			// don't use these types to type variables, fields, properties -> replace with any
 			return G.anyTypeRef;
 		}
-		val typeReopened = ts.reopenExistentialTypes(G, typeUB); // FIXME probably no longer required! (due to "withForce" above)
-		return typeReopened;
+		return typeUB;
 	}
 
 	public def returnStatements(FunctionDefinition definition) {
