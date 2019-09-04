@@ -13,7 +13,6 @@
 
 const lib_path = require("path");
 const lib_fs = require("fs");
-const lib_child_process = require("child_process");
 const log = require("npmlog");
 const env = process.env;
 const jarPath = env.N4JSC_JAR;
@@ -28,12 +27,20 @@ if (jarPath) {
 
     // minimal dep just against wget
     if (/^https?:\/\//.test(jarPath)) {
-        lib_child_process
-            .spawn("wget", ["-O", outPath, jarPath], {
-                stdio: "inherit",
-                env: process.env
-            })
-            .on("exit", code => process.exit(code));
+        const stream = lib_fs.createWriteStream(outPath);
+        const download = (url) => {
+            require(/^http:\/\//.test(url) ? "http" : "https").get(url, resp => {
+                if (Math.trunc(resp.statusCode /100) === 3 && resp.headers.location) { // redirect
+                    download(resp.headers.location);
+                } else {
+                    if (resp.statusCode !== 200) {
+                        throw new Error(`Request on ${url} failed: ${resp.statusCode}`);
+                    }
+                    resp.pipe(stream);
+                }
+            });
+        };
+        download(jarPath);
     } else {
         lib_fs.copyFileSync(jarPath, outPath);
     }

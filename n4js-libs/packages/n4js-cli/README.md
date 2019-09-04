@@ -17,6 +17,8 @@ For more information about N4JS, please refer to the official [project home](htt
 When installing the package, you can replace the packaged `n4jsc.jar` using the environment variable `N4JSC_JAR` referencing
 either a filesystem path or a HTTP/HTTPS URL.
 
+See [download page](https://download.enfore.com/n4js/).
+
 ## License
 
 Copyright (c) 2016 NumberFour AG.
