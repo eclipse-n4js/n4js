@@ -15,9 +15,11 @@ import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -49,6 +51,7 @@ class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 	private TClass B;
 	private TClass C;
 	private TClass List;
+	private TClass Pair;
 
 
 	@Before
@@ -58,6 +61,7 @@ class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 			class B extends A {}
 			class C extends B {}
 			class List<T> {}
+			class Pair<T1,T2> {}
 		''');
 
 		G = script.newRuleEnvironment;
@@ -67,18 +71,20 @@ class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 		B = types.filter[name=="B"].head as TClass;
 		C = types.filter[name=="C"].head as TClass;
 		List = types.filter[name=="List"].head as TClass;
+		Pair = types.filter[name=="Pair"].head as TClass;
 		assertNotNull(A);
 		assertNotNull(B);
 		assertNotNull(C);
 		assertNotNull(List);
+		assertNotNull(Pair);
 	}
 
 	@Test
 	def void testCaptureIdentity() {
 		val typeRef = List.of(wildcard);
-		val capture1 = ts.substTypeVariablesWithCapture(G, typeRef);
+		val capture1 = ts.substTypeVariablesWithFullCapture(G, typeRef);
 		val capture1Cpy = TypeUtils.copy(capture1);
-		val capture2 = ts.substTypeVariablesWithCapture(G, typeRef);
+		val capture2 = ts.substTypeVariablesWithFullCapture(G, typeRef);
 
 		// trivial case: capture compared to itself
 		assertTrue("capture #1 should be a subtype of capture #1", ts.subtypeSucceeded(G, capture1, capture1));
@@ -95,9 +101,34 @@ class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 	}
 
 	@Test
+	def void testFullVsPartialCapture() {
+		val TX = TypesFactory.eINSTANCE.createTypeVariable() => [name = "TX"];
+		val typeRef = Pair.of(wildcard, TX.ref); // Pair<?, TX>
+
+		val G2 = G.wrap;
+		G2.addTypeMapping(TX, wildcard);
+
+		val typeRefCaptureNone = ts.substTypeVariables(G2, typeRef);
+		val typeRefCaptureFull = ts.substTypeVariablesWithFullCapture(G2, typeRef);
+		val typeRefCapturePartial = ts.substTypeVariablesWithPartialCapture(G2, typeRef);
+
+		val typeArgsOfCaptureNone = (typeRefCaptureNone as ParameterizedTypeRef).typeArgs;
+		assertTrue(typeArgsOfCaptureNone.get(0) instanceof Wildcard);
+		assertTrue(isReopenedExistentialTypeRef(typeArgsOfCaptureNone.get(1))); // this reopened existential will act like a wildcard (was converted only for technical reasons)
+
+		val typeArgsOfCaptureFull = (typeRefCaptureFull as ParameterizedTypeRef).typeArgs;
+		assertTrue(isClosedExistentialTypeRef(typeArgsOfCaptureFull.get(0)));
+		assertTrue(isClosedExistentialTypeRef(typeArgsOfCaptureFull.get(1)));
+
+		val typeArgsOfCapturePartial = (typeRefCapturePartial as ParameterizedTypeRef).typeArgs;
+		assertTrue(typeArgsOfCapturePartial.get(0) instanceof Wildcard);
+		assertTrue(isClosedExistentialTypeRef(typeArgsOfCapturePartial.get(1)));
+	}
+
+	@Test
 	def void testMustNotCaptureWildcardsContainedInUpperBoundsOfWildcard() {
 		val typeRef = List.of(wildcardExtends(List.of(wildcard))); // List<? extends List<?>>>
-		val typeRefCaptured = ts.substTypeVariablesWithCapture(G, typeRef);
+		val typeRefCaptured = ts.substTypeVariablesWithFullCapture(G, typeRef);
 
 		// the higher-level wildcard must have been captured
 		val typeArg1 = (typeRefCaptured as ParameterizedTypeRef).typeArgs.get(0);
@@ -112,7 +143,7 @@ class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 	@Test
 	def void testMustNotCaptureWildcardsContainedInLowerBoundsOfWildcard() {
 		val typeRef = List.of(wildcardSuper(List.of(wildcard))); // List<? super List<?>>>
-		val typeRefCaptured = ts.substTypeVariablesWithCapture(G, typeRef);
+		val typeRefCaptured = ts.substTypeVariablesWithFullCapture(G, typeRef);
 
 		// the higher-level wildcard must have been captured
 		val typeArg1 = (typeRefCaptured as ParameterizedTypeRef).typeArgs.get(0);
@@ -122,5 +153,13 @@ class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 		val lowerBoundOfTypeArg1 = (typeArg1 as ExistentialTypeRef).wildcard.declaredLowerBound;
 		val typeArg2 = (lowerBoundOfTypeArg1 as ParameterizedTypeRef).typeArgs.get(0);
 		assertEquals("lower-level type argument should still be a wildcard", TypeRefsPackage.eINSTANCE.wildcard, typeArg2.eClass);
+	}
+
+	def private static boolean isClosedExistentialTypeRef(TypeArgument typeArg) {
+		return if (typeArg instanceof ExistentialTypeRef) !typeArg.reopened else false;
+	}
+
+	def private static boolean isReopenedExistentialTypeRef(TypeArgument typeArg) {
+		return if (typeArg instanceof ExistentialTypeRef) typeArg.reopened else false;
 	}
 }

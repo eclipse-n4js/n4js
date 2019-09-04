@@ -195,8 +195,7 @@ import com.google.inject.Inject;
 							return anyTypeRef(G2);
 						} else {
 							// bind type variables in function type's parameter type
-							return ts.substTypeVariables(G2, paramType, false, true); // FIXME substitute on typeRef of
-							// ctor instead!
+							return ts.substTypeVariables(G2, paramType);
 						}
 					}
 				}
@@ -229,8 +228,6 @@ import com.google.inject.Inject;
 						} else {
 							final RuleEnvironment G2 = wrap(G);
 
-							// FIXME substitution really needed here??? targetTypeRef/F should have been
-							// substituted/captured already in type judgment!
 							typeSystemHelper.addSubstitutions(G2, expr, F);
 
 							if (expr.getTarget() instanceof SuperLiteral) {

@@ -624,8 +624,9 @@ import com.google.inject.Inject;
 			}
 
 			if (!N4JSASTUtils.isWriteAccess(idref)) {
-				T = ts.substTypeVariablesWithCapture(G, T);
+				T = ts.substTypeVariablesWithFullCapture(G, T);
 			} else {
+				// in case of write access: we must not capture wildcards!
 				T = ts.substTypeVariables(G, T);
 			}
 
@@ -945,8 +946,19 @@ import com.google.inject.Inject;
 				}
 			}
 
-			TypeRef T;
-			T = ts.substTypeVariables(G2, propTypeRef, !N4JSASTUtils.isWriteAccess(expr), true);
+			TypeRef T = propTypeRef;
+
+			// Because 'propTypeRef' was taken from the TMember in the TModule and therefore does not have any context
+			// information, we just "lost" all substitution / capturing that might have been performed on
+			// 'receiverTypeRef' by other #case...() methods. Therefore, we have to perform substitution / capturing in
+			// much the same was as in method #caseIdentifierRef():
+			if (!N4JSASTUtils.isWriteAccess(expr)) {
+				T = ts.substTypeVariablesWithFullCapture(G2, T);
+			} else {
+				// in case of write access: we must not capture contained wildcards!
+				T = ts.substTypeVariablesWithPartialCapture(G2, T);
+			}
+
 			T = n4idlVersionResolver.resolveVersion(T, receiverTypeRef);
 
 			if (expr.getTarget() instanceof SuperLiteral && T instanceof FunctionTypeExprOrRef) {

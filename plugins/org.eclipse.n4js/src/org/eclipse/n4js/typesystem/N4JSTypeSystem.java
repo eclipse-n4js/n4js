@@ -356,23 +356,20 @@ public class N4JSTypeSystem {
 		return substTypeVariablesJudgment.apply(G, typeArgument, false, false);
 	}
 
-	public TypeRef substTypeVariablesWithCapture(RuleEnvironment G, TypeRef typeRef) {
-		return (TypeRef) substTypeVariablesWithCapture(G, (TypeArgument) typeRef);
+	public TypeRef substTypeVariablesWithFullCapture(RuleEnvironment G, TypeRef typeRef) {
+		return (TypeRef) substTypeVariablesWithFullCapture(G, (TypeArgument) typeRef);
 	}
 
-	public TypeArgument substTypeVariablesWithCapture(RuleEnvironment G, TypeArgument typeArgument) {
+	public TypeArgument substTypeVariablesWithFullCapture(RuleEnvironment G, TypeArgument typeArgument) {
 		return substTypeVariablesJudgment.apply(G, typeArgument, true, true);
 	}
 
-	public TypeRef substTypeVariables(RuleEnvironment G, TypeRef typeRef,
-			boolean captureContainedWildcards, boolean captureUponSubstitution) {
-		return (TypeRef) substTypeVariables(G, (TypeArgument) typeRef, captureContainedWildcards,
-				captureUponSubstitution);
+	public TypeRef substTypeVariablesWithPartialCapture(RuleEnvironment G, TypeRef typeRef) {
+		return (TypeRef) substTypeVariablesWithPartialCapture(G, (TypeArgument) typeRef);
 	}
 
-	public TypeArgument substTypeVariables(RuleEnvironment G, TypeArgument typeArgument,
-			boolean captureContainedWildcards, boolean captureUponSubstitution) {
-		return substTypeVariablesJudgment.apply(G, typeArgument, captureContainedWildcards, captureUponSubstitution);
+	public TypeArgument substTypeVariablesWithPartialCapture(RuleEnvironment G, TypeArgument typeArgument) {
+		return substTypeVariablesJudgment.apply(G, typeArgument, false, true);
 	}
 
 	public TypeRef reopenExistentialTypes(RuleEnvironment G, TypeRef typeRef) {

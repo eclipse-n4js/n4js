@@ -227,8 +227,8 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 
 		val G = newRuleEnvironment(script);
 		val open = TypeUtils.copy(ctorTypeRefFromAST);
-		val closed1 = ts.substTypeVariablesWithCapture(G, open) as TypeTypeRef;
-		val closed2 = ts.substTypeVariablesWithCapture(G, open) as TypeTypeRef;
+		val closed1 = ts.substTypeVariablesWithFullCapture(G, open) as TypeTypeRef;
+		val closed2 = ts.substTypeVariablesWithFullCapture(G, open) as TypeTypeRef;
 		val reopened = ts.reopenExistentialTypes(G, closed1) as TypeTypeRef;
 
 		val openCpy = TypeUtils.copy(open);

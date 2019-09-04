@@ -41,6 +41,13 @@ class G<T> {
 let g: G<?>;
 
 
+let arr: Array<?>;
+// XPECT errors --> "Array<?> is not a subtype of Array<?>." at "arr"
+g.field2 = arr;
+// XPECT noerrors -->
+g.field2b = arr;
+
+
 // XPECT errors --> "? is not a subtype of ?." at "g.field1"
 g.field1 = g.field1;
 // XPECT errors --> "Array<?> is not a subtype of Array<?>." at "g.field2"
