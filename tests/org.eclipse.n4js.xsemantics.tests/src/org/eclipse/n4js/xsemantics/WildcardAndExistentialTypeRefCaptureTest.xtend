@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.xsemantics
 
+import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
@@ -17,6 +18,8 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.utils.TypeCompareHelper
+import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
@@ -37,12 +40,16 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 @InjectWith(N4JSInjectorProviderWithIssueSuppression)
 class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 
+	@Inject
+	private TypeCompareHelper typeCompareHelper;
+
 	private RuleEnvironment G;
 	private Script script;
 	private TClass A;
 	private TClass B;
 	private TClass C;
 	private TClass List;
+
 
 	@Before
 	def void before() {
@@ -64,6 +71,27 @@ class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 		assertNotNull(B);
 		assertNotNull(C);
 		assertNotNull(List);
+	}
+
+	@Test
+	def void testCaptureIdentity() {
+		val typeRef = List.of(wildcard);
+		val capture1 = ts.substTypeVariablesWithCapture(G, typeRef);
+		val capture1Cpy = TypeUtils.copy(capture1);
+		val capture2 = ts.substTypeVariablesWithCapture(G, typeRef);
+
+		// trivial case: capture compared to itself
+		assertTrue("capture #1 should be a subtype of capture #1", ts.subtypeSucceeded(G, capture1, capture1));
+		assertTrue("capture #1 should be a subtype of capture #1", ts.subtypeSucceeded(G, capture1, capture1));
+		assertTrue("capture #1 should be equal to itself according to semi-semantics equality check", typeCompareHelper.compare(capture1, capture1) === 0);
+
+		assertTrue("capture #1 should be a subtype of copy of capture #1", ts.subtypeSucceeded(G, capture1, capture1Cpy));
+		assertTrue("copy of capture #1 should be a subtype of capture #1", ts.subtypeSucceeded(G, capture1Cpy, capture1));
+		assertTrue("capture #1 and its copy should be equal according to semi-semantics equality check", typeCompareHelper.compare(capture1, capture1Cpy) === 0);
+
+		assertFalse("capture #1 should not be a subtype of capture #2", ts.subtypeSucceeded(G, capture1, capture2));
+		assertFalse("capture #2 should not be a subtype of capture #1", ts.subtypeSucceeded(G, capture2, capture1));
+		assertFalse("capture #1 and capture #2 should be equal according to semi-semantics equality check", typeCompareHelper.compare(capture1, capture2) === 0);
 	}
 
 	@Test
