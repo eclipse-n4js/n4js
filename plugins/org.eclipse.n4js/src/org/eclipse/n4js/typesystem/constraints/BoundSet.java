@@ -537,7 +537,7 @@ import com.google.common.collect.SetMultimap;
 	private TypeRef substituteInferenceVariable(TypeRef typeRef, InferenceVariable infVar, TypeArgument typeArg) {
 		final RuleEnvironment Gtemp = RuleEnvironmentExtensions.wrap(this.G);
 		RuleEnvironmentExtensions.addTypeMapping(Gtemp, infVar, typeArg);
-		final TypeRef result = this.ts.substTypeVariablesWithoutCapture(Gtemp, typeRef);
+		final TypeRef result = this.ts.substTypeVariables(Gtemp, typeRef);
 		// note: infVar may still occur in result, if infVar->typeArg is not a valid type mapping!
 		// assert !(TypeVarUtils.occursIn(infVar, result));
 		return result;

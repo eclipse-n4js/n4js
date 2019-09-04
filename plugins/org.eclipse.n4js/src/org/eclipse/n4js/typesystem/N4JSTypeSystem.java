@@ -194,21 +194,10 @@ public class N4JSTypeSystem {
 
 		// !!! keep the following aligned with below method #reduceTypeArgumentCompatibilityCheck() !!!
 
-		// FIXME delete the following
-		// final boolean leftArgIsOpen = leftArg instanceof Wildcard
-		// || (leftArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) leftArg).isReopened());
-		// final boolean rightArgIsOpen = rightArg instanceof Wildcard
-		// || (rightArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightArg).isReopened());
-		//
-		// TypeRef leftArgUpper = leftArgIsOpen ? upperBound(G, leftArg) : (TypeRef) leftArg;
-		// TypeRef leftArgLower = leftArgIsOpen ? lowerBound(G, leftArg) : (TypeRef) leftArg;
-		// TypeRef rightArgUpper = rightArgIsOpen ? upperBound(G, rightArg) : (TypeRef) rightArg;
-		// TypeRef rightArgLower = rightArgIsOpen ? lowerBound(G, rightArg) : (TypeRef) rightArg;
-
-		TypeRef leftArgUpper = upperBoundHesitant(G, leftArg);
-		TypeRef leftArgLower = lowerBoundHesitant(G, leftArg);
-		TypeRef rightArgUpper = upperBoundHesitant(G, rightArg);
-		TypeRef rightArgLower = lowerBoundHesitant(G, rightArg);
+		TypeRef leftArgUpper = upperBound(G, leftArg);
+		TypeRef leftArgLower = lowerBound(G, leftArg);
+		TypeRef rightArgUpper = upperBound(G, rightArg);
+		TypeRef rightArgLower = lowerBound(G, rightArg);
 
 		// minor tweak to slightly beautify error messages
 		// (i.e. having "not equals to" instead of "not a subtype" in a random direction)
@@ -282,10 +271,10 @@ public class N4JSTypeSystem {
 
 		// !!! keep the following aligned with above method #checkTypeArgumentCompatibility() !!!
 
-		final TypeRef leftArgUpper = upperBoundHesitant(G, leftArg);
-		final TypeRef leftArgLower = lowerBoundHesitant(G, leftArg);
-		final TypeRef rightArgUpper = upperBoundHesitant(G, rightArg);
-		final TypeRef rightArgLower = lowerBoundHesitant(G, rightArg);
+		final TypeRef leftArgUpper = upperBound(G, leftArg);
+		final TypeRef leftArgLower = lowerBound(G, leftArg);
+		final TypeRef rightArgUpper = upperBound(G, rightArg);
+		final TypeRef rightArgLower = lowerBound(G, rightArg);
 
 		// minor tweak to slightly beautify solutions of the constraint solver
 		// (i.e. having a single constraint ⟨ α = X ⟩ instead of two constraints ⟨ α :> X ⟩, ⟨ α <: X ⟩ helps the
@@ -317,20 +306,12 @@ public class N4JSTypeSystem {
 		return boundJudgment.applyUpperBound(G, typeArgument, false);
 	}
 
-	public TypeRef upperBoundHesitant(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument, false);
-	}
-
 	public TypeRef upperBoundWithForce(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyUpperBound(G, typeArgument, true);
 	}
 
 	/** Returns the lower bound of the given type. Never returns <code>null</code>. */
 	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument, false);
-	}
-
-	public TypeRef lowerBoundHesitant(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyLowerBound(G, typeArgument, false);
 	}
 
@@ -381,14 +362,6 @@ public class N4JSTypeSystem {
 
 	public TypeArgument substTypeVariablesWithCapture(RuleEnvironment G, TypeArgument typeArgument) {
 		return substTypeVariablesJudgment.apply(G, typeArgument, true, true);
-	}
-
-	public TypeRef substTypeVariablesWithoutCapture(RuleEnvironment G, TypeRef typeRef) {
-		return (TypeRef) substTypeVariablesWithoutCapture(G, (TypeArgument) typeRef);
-	}
-
-	public TypeArgument substTypeVariablesWithoutCapture(RuleEnvironment G, TypeArgument typeArgument) {
-		return substTypeVariablesJudgment.apply(G, typeArgument, false, false);
 	}
 
 	public TypeRef substTypeVariables(RuleEnvironment G, TypeRef typeRef,

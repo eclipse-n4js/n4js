@@ -258,7 +258,7 @@ import com.google.inject.Inject;
 							}
 
 							// bind type variables in function type's parameter type
-							final TypeRef paramTypeRefSubst = ts.substTypeVariablesWithoutCapture(G2, paramTypeRef);
+							final TypeRef paramTypeRefSubst = ts.substTypeVariables(G2, paramTypeRef);
 
 							return paramTypeRefSubst;
 						}

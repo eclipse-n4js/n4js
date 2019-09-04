@@ -419,13 +419,13 @@ import com.google.common.base.Optional;
 		}
 		boolean wasAdded = false;
 		if (variance == CO || variance == INV) {
-			final TypeRef ubLeft = ts.upperBoundHesitant(G, left);
-			final TypeRef lbRight = ts.lowerBoundHesitant(G, right);
+			final TypeRef ubLeft = ts.upperBound(G, left);
+			final TypeRef lbRight = ts.lowerBound(G, right);
 			wasAdded |= reduce(ubLeft, lbRight, CO);
 		}
 		if (variance == CONTRA || variance == INV) {
-			final TypeRef lbLeft = ts.lowerBoundHesitant(G, left);
-			final TypeRef ubRight = ts.upperBoundHesitant(G, right);
+			final TypeRef lbLeft = ts.lowerBound(G, left);
+			final TypeRef ubRight = ts.upperBound(G, right);
 			wasAdded |= reduce(ubRight, lbLeft, CO);
 		}
 		return wasAdded;
@@ -434,11 +434,11 @@ import com.google.common.base.Optional;
 	private boolean reduceWildcardRight(TypeRef left, Wildcard right, Variance variance) {
 		boolean wasAdded = false;
 		if (variance == CO || variance == INV) {
-			final TypeRef lbRight = ts.lowerBoundHesitant(G, right);
+			final TypeRef lbRight = ts.lowerBound(G, right);
 			wasAdded = reduce(left, lbRight, variance);
 		}
 		if (variance == CONTRA || variance == INV) {
-			final TypeRef ubRight = ts.upperBoundHesitant(G, right);
+			final TypeRef ubRight = ts.upperBound(G, right);
 			wasAdded |= reduce(left, ubRight, CONTRA);
 		}
 		return wasAdded;
@@ -669,8 +669,7 @@ import com.google.common.base.Optional;
 			final TypeArgument leftArg = leftArgs.get(idx);
 			final TypeVariable leftParam = leftParams.get(idx);
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
-				final TypeRef leftParamSubst = ts.substTypeVariablesWithoutCapture(Gx,
-						TypeUtils.createTypeRef(leftParam));
+				final TypeRef leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam));
 				final Variance defSiteVariance = leftParam.getVariance();
 				wasAdded |= reduceTypeArgumentCompatibilityCheck(leftParamSubst, leftArg, defSiteVariance);
 			}
@@ -780,14 +779,6 @@ import com.google.common.base.Optional;
 		final TypeRef rightSubst = ts.substTypeVariables(G_temp, right);
 		// step 2: now, perform subtype check reusing existing logic
 		return ts.subtypeSucceeded(G, leftSubst, rightSubst);
-	}
-
-	private TypeRef bottom() {
-		return RuleEnvironmentExtensions.bottomTypeRef(G);
-	}
-
-	private TypeRef top() {
-		return RuleEnvironmentExtensions.topTypeRef(G);
 	}
 
 	private void log(final String message) {

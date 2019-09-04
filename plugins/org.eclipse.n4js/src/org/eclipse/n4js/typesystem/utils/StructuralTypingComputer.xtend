@@ -514,8 +514,8 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		tsh.addSubstitutions(G_left, info.left);
 		tsh.addSubstitutions(G_right, info.right);
 
-		val typeLeft = ts.substTypeVariablesWithoutCapture(G_left, typeLeftRaw);
-		val typeRight = ts.substTypeVariablesWithoutCapture(G_right, typeRightRaw);
+		val typeLeft = ts.substTypeVariables(G_left, typeLeftRaw);
+		val typeRight = ts.substTypeVariables(G_right, typeRightRaw);
 
 		return typeLeft -> typeRight;
 	}

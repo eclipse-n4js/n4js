@@ -70,7 +70,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		        // this is the normal case
 				val fType = ts.type(G2, fofa);
 				if (fType instanceof FunctionTypeExprOrRef) {
-					return ts.substTypeVariablesWithoutCapture(G2, fType.returnTypeRef);
+					return ts.substTypeVariables(G2, fType.returnTypeRef);
 				}
 		    }
 
