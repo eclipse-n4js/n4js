@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.xsemantics
 
+import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
+import org.eclipse.n4js.WildcardCaptureTestHelper
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
-import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
@@ -35,6 +35,9 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProviderWithIssueSuppression)
 class WildcardAndExistentialTypeRefSubtypingTest extends AbstractTypesystemTest {
+
+	@Inject
+	private WildcardCaptureTestHelper wildcardCaptureTestHelper;
 
 	private RuleEnvironment G;
 	private Script script;
@@ -122,31 +125,11 @@ class WildcardAndExistentialTypeRefSubtypingTest extends AbstractTypesystemTest 
 	 * cases, to avoid duplicating the test cases above.
 	 */
 	def private void assertSubtypeOfVariations(boolean expectedResult, TypeArgument left, TypeArgument right) {
-		// step #1: test type arguments as they were passed in
-		assertSubtype("", left, "", right, expectedResult);
-		// step #2: captured ExistentialTypeRefs must behave the same way as wildcards
-		val left2 = if (left instanceof Wildcard) capture(left) else left;
-		val right2 = if (right instanceof Wildcard) capture(right) else right;
-		if (left2 !== left) {
-			assertSubtype("captured", left2, "", right, expectedResult);
-		}
-		if (right2 !== right) {
-			assertSubtype("", left, "captured", right2, expectedResult);
-		}
-		if (left2 !== left && right2 !== right) {
-			assertSubtype("captured", left2, "captured", right2, expectedResult);
-		}
-		// step #3: captured and then reopened ExistentialTypeRefs must behave the same way as wildcards
-		val left3 = if (left instanceof Wildcard) captureAndReopen(left) else left;
-		val right3 = if (right instanceof Wildcard) captureAndReopen(right) else right;
-		if (left3 !== left) {
-			assertSubtype("captured-and-reopened", left3, "", right, expectedResult);
-		}
-		if (right3 !== right) {
-			assertSubtype("", left, "captured-and-reopened", right3, expectedResult);
-		}
-		if (left3 !== left && right3 !== right) {
-			assertSubtype("captured-and-reopened", left3, "captured-and-reopened", right3, expectedResult);
+		val variations = wildcardCaptureTestHelper.createCaptureVariations(G, #[left, right]);
+		for (variation : variations) {
+			val currLeft = variation.get(0);
+			val currRight = variation.get(1);
+			assertSubtype(currLeft.captureInfo, currLeft, currRight.captureInfo, currRight, expectedResult);
 		}
 	}
 
@@ -162,14 +145,11 @@ class WildcardAndExistentialTypeRefSubtypingTest extends AbstractTypesystemTest 
 		}
 	}
 
-	def private TypeRef captureAndReopen(Wildcard wildcard) {
-		val captured = capture(wildcard);
-		val reopened = ts.reopenExistentialTypes(G, captured);
-		return reopened;
-	}
-
-	def private TypeRef capture(Wildcard wildcard) {
-		val captured = TypeUtils.captureWildcard(List.typeVars.head, wildcard);
-		return captured;
+	def private String getCaptureInfo(TypeArgument typeArg) {
+		return if (typeArg instanceof ExistentialTypeRef) {
+			if (typeArg.reopened) "captured-and-reopened" else "captured"
+		} else {
+			""
+		};
 	}
 }

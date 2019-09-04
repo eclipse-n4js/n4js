@@ -11,14 +11,11 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
-import java.util.List
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
+import org.eclipse.n4js.WildcardCaptureTestHelper
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.InferenceVariable
-import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -28,14 +25,18 @@ import org.junit.runner.RunWith
 /**
  * Here we test constraints having bare wildcards on the top level (not wildcards as type argument
  * within a ParameterizedTypeRef, which is tested in {@link InferenceContext_GenericsTest}.
+ * <p>
+ * PART 1 of 2:<br>
+ * wildcards and captured-and-reopened wildcards (i.e. ExistentialTypeRefs with reopened === true) are tested here.
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProviderWithIssueSuppression)
-class InferenceContext_WildcardAndExistentialTypeRefTest extends AbstractInferenceContextTest {
+class InferenceContext_WildcardAndExistentialTypeRef1Test extends AbstractInferenceContextTest {
 
 	@Inject
-	private N4JSTypeSystem ts;
+	private WildcardCaptureTestHelper wildcardCaptureTestHelper;
 
+	// --------------------------------------------------------------------------------------------
 
 	@Test
 	def void test_rhs_wildcard() {
@@ -81,6 +82,7 @@ class InferenceContext_WildcardAndExistentialTypeRefTest extends AbstractInferen
 		)
 	}
 
+	// --------------------------------------------------------------------------------------------
 
 	@Test
 	def void test_lhs_wildcard() {
@@ -126,6 +128,7 @@ class InferenceContext_WildcardAndExistentialTypeRefTest extends AbstractInferen
 		)
 	}
 
+	// --------------------------------------------------------------------------------------------
 
 	@Test
 	def void test_both_wildcard_lhs_infVar() {
@@ -135,18 +138,21 @@ class InferenceContext_WildcardAndExistentialTypeRefTest extends AbstractInferen
 			],
 			alpha -> bottom.ref
 		)
+
 		script.assertNoSolutionOfVariations(
 			#[
 				constraint(wildcardSuper(alpha),'<:',wildcardExtends(B)) // ⟨ ? super α <: ? extends B ⟩
 			],
 			alpha
 		)
+
 		script.assertSolutionOfVariations(
 			#[
 				constraint(wildcardExtends(alpha),'<:',wildcardSuper(B)) // ⟨ ? extends α <: ? super B ⟩
 			],
 			alpha -> B.ref
 		)
+
 		script.assertNoSolutionOfVariations(
 			#[
 				constraint(wildcardSuper(alpha),'<:',wildcardSuper(B)) // ⟨ ? super α <: ? super B ⟩
@@ -163,18 +169,21 @@ class InferenceContext_WildcardAndExistentialTypeRefTest extends AbstractInferen
 			],
 			alpha
 		)
+
 		script.assertNoSolutionOfVariations(
 			#[
 				constraint(wildcardSuper(B),'<:',wildcardExtends(alpha)) // ⟨ ? super B <: ? extends α ⟩
 			],
 			alpha
 		)
+
 		script.assertSolutionOfVariations(
 			#[
 				constraint(wildcardExtends(B),'<:',wildcardSuper(alpha)) // ⟨ ? extends B <: ? super α ⟩
 			],
 			alpha -> B.ref
 		)
+
 		script.assertSolutionOfVariations(
 			#[
 				constraint(wildcardSuper(B),'<:',wildcardSuper(alpha)) // ⟨ ? super B <: ? super α ⟩
@@ -183,6 +192,7 @@ class InferenceContext_WildcardAndExistentialTypeRefTest extends AbstractInferen
 		)
 	}
 
+	// --------------------------------------------------------------------------------------------
 
 	/**
 	 * Same as {@code #assertSolution()} from super class, but runs several test cases in one go:
@@ -193,64 +203,16 @@ class InferenceContext_WildcardAndExistentialTypeRefTest extends AbstractInferen
 	 * cases, to avoid duplicating the test cases above.
 	 */
 	def protected void assertSolutionOfVariations(Script script, TypeConstraint[] constraints, Pair<InferenceVariable,TypeRef>... expectedInstantiations) {
-		val variations = createVariations(constraints);
+		val variations = wildcardCaptureTestHelper.createCaptureVariationsForConstraints(_G, constraints, true);
 		for (variation : variations) {
 			script.assertSolution(variation, expectedInstantiations);
 		}
 	}
 
 	def protected void assertNoSolutionOfVariations(Script script, TypeConstraint[] constraints, InferenceVariable... inferenceVariables) {
-		val variations = createVariations(constraints);
+		val variations = wildcardCaptureTestHelper.createCaptureVariationsForConstraints(_G, constraints, true);
 		for (variation : variations) {
 			script.assertNoSolution(variation, inferenceVariables);
 		}
-	}
-
-	def private List<TypeConstraint[]> createVariations(TypeConstraint[] constraints) {
-		val result = newArrayList();
-		var mask = 0;
-		while (true) {
-			val variationCapture = createVariation(constraints, mask, false);
-			val variationCaptureAndReopen = createVariation(constraints, mask, true);
-			if (variationCapture === null || variationCaptureAndReopen === null) {
-				return result;
-			}
-			result += variationCapture;
-			result += variationCaptureAndReopen;
-			mask++;
-		}
-	}
-
-	def private TypeConstraint[] createVariation(TypeConstraint[] constraints, long mask, boolean reopen) {
-		var m = mask;
-		val result = newArrayList;
-		for (constraint : constraints) {
-			val TypeArgument[] args = #[constraint.left, constraint.right];
-			for (var i = 0; i < 2; i++) {
-				val arg = args.get(i);
-				if (arg instanceof Wildcard) {
-					if (m.bitwiseAnd(1) !== 0) {
-						args.set(i, if (reopen) captureAndReopen(arg) else capture(arg));
-					}
-					m = m >> 1;
-				}
-			}
-			result += new TypeConstraint(args.get(0), args.get(1), constraint.variance);
-		}
-		if (mask !== 0) {
-			return null;
-		}
-		return result;
-	}
-
-	def private TypeRef captureAndReopen(Wildcard wildcard) {
-		val captured = capture(wildcard);
-		val reopened = ts.reopenExistentialTypes(_G, captured);
-		return reopened;
-	}
-
-	def private TypeRef capture(Wildcard wildcard) {
-		val captured = TypeUtils.captureWildcard(null, wildcard);
-		return captured;
 	}
 }
