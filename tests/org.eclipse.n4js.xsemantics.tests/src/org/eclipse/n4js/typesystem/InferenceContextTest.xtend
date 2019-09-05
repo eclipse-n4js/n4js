@@ -312,7 +312,6 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 				constraint(A,    '<:',alpha),
 				constraint(alpha,'<:',A),
 				constraint(_G.arrayTypeRef(beta.ref),'<:',_G.iterableTypeRef(wildcardExtends(alpha))) // Array<β> <: Iterable<? extends α>
-//				constraint(Gsub.of(beta.ref),'<:',G.of(wildcardExtends(alpha))) // Gsub<β> <: G<? extends α>
 			],
 			alpha -> A.ref,
 			beta -> A.ref

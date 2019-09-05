@@ -97,16 +97,14 @@ var v24 : G<? super A> = fooG(gb);
 // XPECT typeArgs of fooG --> B
 var v25 : G<? super C> = fooG(gb);
 
-// TODO IDE-1653: constraint solver provides incorrect solution in v26a and v26b (but non-critical, because still an error is shown)
-
  // argument is generic type with wildcard => cannot choose a non-wildcard T such that G<T> is a super type
-// IDE-1653 XPECT FIXME errors ---
+// XPECT errors ---
 // "G<? extends B> is not a subtype of G<T>." at "gextb"
 // "G<T> is not a subtype of G<B>." at "fooG(gextb)"
 // ---
 var v26a : G<B> = fooG(gextb);
  // argument is generic type with wildcard => cannot choose a non-wildcard T such that G<T> is a super type
-// IDE-1653 XPECT FIXME errors ---
+// XPECT errors ---
 // "G<? super B> is not a subtype of G<T>." at "gsupb"
 // "G<T> is not a subtype of G<B>." at "fooG(gsupb)"
 // ---
