@@ -213,7 +213,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 				tsh.addSubstitutions(G_subst, targetTypeRef);
 			}
 			for (int i : 0 ..< typeArgs.size) {
-				G_subst.addTypeMappingWithEnforcedCapture(typeVars.get(i), typeArgs.get(i), false);
+				G_subst.addTypeMapping(typeVars.get(i), typeArgs.get(i));
 			}
 			// actually check provided type arguments
 			for (int i : 0 ..< minTypeVariables) {
