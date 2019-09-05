@@ -11,15 +11,15 @@
 package org.eclipse.n4js
 
 import com.google.common.collect.Lists
-import com.google.inject.Inject
 import java.util.Collection
 import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.UtilN4.DigitIterator
@@ -28,10 +28,6 @@ import org.eclipse.n4js.utils.UtilN4.DigitIterator
  * Helper methods of dealing with capturing wildcards in tests.
  */
 class WildcardCaptureTestHelper {
-
-	@Inject
-	private N4JSTypeSystem ts;
-
 
 	/**
 	 * Creates variations of the given constraint system by capturing and/or reopening any wildcards.
@@ -123,14 +119,36 @@ class WildcardCaptureTestHelper {
 		];
 	}
 
-	def private TypeRef captureAndReopen(RuleEnvironment G, Wildcard wildcard) {
+	def public TypeRef capture(Wildcard wildcard) {
+		val captured = TypeUtils.captureWildcard(null, wildcard);
+		return captured;
+	}
+
+	def public TypeRef captureAndReopen(RuleEnvironment G, Wildcard wildcard) {
 		val captured = capture(wildcard);
-		val reopened = ts.reopenExistentialTypes(G, captured);
+		val reopened = reopenExistentialTypes(G, captured);
 		return reopened;
 	}
 
-	def private TypeRef capture(Wildcard wildcard) {
-		val captured = TypeUtils.captureWildcard(null, wildcard);
-		return captured;
+	def public TypeRef reopenExistentialTypes(RuleEnvironment G, TypeRef typeRef) {
+		return reopenExistentialTypes(G, typeRef as TypeArgument) as TypeRef;
+	}
+
+	def public TypeArgument reopenExistentialTypes(RuleEnvironment G, TypeArgument typeArg) {
+		val isOrContainsClosedExistential = typeArg.isClosedExistentialTypeRef
+				|| typeArg.eAllContents().exists[isClosedExistentialTypeRef];
+		if (isOrContainsClosedExistential) {
+			val cpy = TypeUtils.copy(typeArg);
+			if (cpy instanceof ExistentialTypeRef) {
+				cpy.setReopened(true);
+			}
+			cpy.eAllContents().filter(ExistentialTypeRef).forEach[reopened = true];
+			return cpy;
+		}
+		return typeArg;
+	}
+
+	def private static boolean isClosedExistentialTypeRef(EObject eObj) {
+		return if (eObj instanceof ExistentialTypeRef) !eObj.isReopened() else false;
 	}
 }

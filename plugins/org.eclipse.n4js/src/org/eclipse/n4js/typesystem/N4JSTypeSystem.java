@@ -17,8 +17,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Spliterators;
-import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -27,7 +25,6 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.postprocessing.TypeProcessor;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -370,31 +367,6 @@ public class N4JSTypeSystem {
 
 	public TypeArgument substTypeVariablesWithPartialCapture(RuleEnvironment G, TypeArgument typeArgument) {
 		return substTypeVariablesJudgment.apply(G, typeArgument, false, true);
-	}
-
-	public TypeRef reopenExistentialTypes(RuleEnvironment G, TypeRef typeRef) {
-		return (TypeRef) reopenExistentialTypes(G, (TypeArgument) typeRef);
-	}
-
-	// FIXME integrate this into substTypeVariables judgment!
-	public TypeArgument reopenExistentialTypes(RuleEnvironment G, TypeArgument typeArgument) {
-		boolean isOrContainsClosedExistential = //
-				(typeArgument instanceof ExistentialTypeRef && !((ExistentialTypeRef) typeArgument).isReopened())
-						|| StreamSupport
-								.stream(Spliterators.spliteratorUnknownSize(typeArgument.eAllContents(), 0), false)
-								.anyMatch(eobj -> eobj instanceof ExistentialTypeRef
-										&& !((ExistentialTypeRef) eobj).isReopened());
-		if (isOrContainsClosedExistential) {
-			TypeArgument cpy = TypeUtils.copy(typeArgument);
-			if (cpy instanceof ExistentialTypeRef) {
-				((ExistentialTypeRef) cpy).setReopened(true);
-			}
-			StreamSupport.stream(Spliterators.spliteratorUnknownSize(cpy.eAllContents(), 0), false)
-					.filter(eobj -> eobj instanceof ExistentialTypeRef)
-					.forEach(etr -> ((ExistentialTypeRef) etr).setReopened(true));
-			return cpy;
-		}
-		return typeArgument;
 	}
 
 	// ###############################################################################################################

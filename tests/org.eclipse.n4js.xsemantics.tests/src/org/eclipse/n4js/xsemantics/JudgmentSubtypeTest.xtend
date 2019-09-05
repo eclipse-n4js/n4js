@@ -13,6 +13,7 @@ package org.eclipse.n4js.xsemantics
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.N4JSTestHelper
+import org.eclipse.n4js.WildcardCaptureTestHelper
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
@@ -44,6 +45,9 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 
 	@Inject
 	extension N4JSTestHelper
+
+	@Inject
+	private WildcardCaptureTestHelper wildcardCaptureTestHelper;
 
 	@Test
 	def void testSubtypeSametype() {
@@ -229,7 +233,7 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 		val open = TypeUtils.copy(ctorTypeRefFromAST);
 		val closed1 = ts.substTypeVariablesWithFullCapture(G, open) as TypeTypeRef;
 		val closed2 = ts.substTypeVariablesWithFullCapture(G, open) as TypeTypeRef;
-		val reopened = ts.reopenExistentialTypes(G, closed1) as TypeTypeRef;
+		val reopened = wildcardCaptureTestHelper.reopenExistentialTypes(G, closed1) as TypeTypeRef;
 
 		val openCpy = TypeUtils.copy(open);
 		val closed1Cpy = TypeUtils.copy(closed1);
