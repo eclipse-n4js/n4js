@@ -12,8 +12,6 @@ package org.eclipse.n4js.ts.typeRefs;
 
 import java.util.UUID;
 
-import org.eclipse.n4js.ts.types.TypeVariable;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Existential Type Ref</b></em>'.
@@ -57,7 +55,6 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isReopened <em>Reopened</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getWildcard <em>Wildcard</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getBoundTypeVariable <em>Bound Type Variable</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getExistentialTypeRef()
@@ -140,28 +137,6 @@ public interface ExistentialTypeRef extends TypeRef {
 	 * @generated
 	 */
 	void setWildcard(Wildcard value);
-
-	/**
-	 * Returns the value of the '<em><b>Bound Type Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Bound Type Variable</em>' reference.
-	 * @see #setBoundTypeVariable(TypeVariable)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getExistentialTypeRef_BoundTypeVariable()
-	 * @model
-	 * @generated
-	 */
-	TypeVariable getBoundTypeVariable();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getBoundTypeVariable <em>Bound Type Variable</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Bound Type Variable</em>' reference.
-	 * @see #getBoundTypeVariable()
-	 * @generated
-	 */
-	void setBoundTypeVariable(TypeVariable value);
 
 	/**
 	 * <!-- begin-user-doc -->

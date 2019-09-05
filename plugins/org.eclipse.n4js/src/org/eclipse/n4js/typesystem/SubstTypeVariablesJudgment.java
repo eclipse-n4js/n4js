@@ -115,7 +115,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			wildcard = internalSubstTypeVariablesInWildcard(wildcard);
 			// step #2: capture the wildcard (if requested)
 			if (captureContainedWildcards) {
-				return TypeUtils.captureWildcard(null, wildcard); // FIXME null?
+				return TypeUtils.captureWildcard(wildcard);
 			}
 			return wildcard;
 		}
@@ -132,7 +132,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			}
 			// step #2: capture a reopened ExistentialTypeRef (if requested)
 			if (captureContainedWildcards && existentialTypeRef.isReopened()) {
-				existentialTypeRef = TypeUtils.captureWildcard(null, existentialTypeRef.getWildcard()); // FIXME null?
+				existentialTypeRef = TypeUtils.captureWildcard(existentialTypeRef.getWildcard());
 			}
 			return existentialTypeRef;
 		}
@@ -476,7 +476,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				if (captureUponSubstitution) {
 					// standard case: capturing is not suppressed
 					// -> simply capture the wildcard and proceed as normal
-					replacement = TypeUtils.captureWildcard(typeVar, (Wildcard) replacementArg);
+					replacement = TypeUtils.captureWildcard((Wildcard) replacementArg);
 				} else {
 					// special case: capturing of wildcards is suppressed
 					// -> we cannot just keep the wildcard, because Wildcard does not inherit from TypeRef but the
@@ -484,7 +484,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					// therefore be usable in all locations where a type variable, i.e. a TypeRef, may appear.
 					// As a solution, we convert to an ExistentialTypeRef in this case, too, and mark the
 					// ExistentialTypeRef as "reopened":
-					final ExistentialTypeRef capture = TypeUtils.captureWildcard(typeVar, (Wildcard) replacementArg);
+					final ExistentialTypeRef capture = TypeUtils.captureWildcard((Wildcard) replacementArg);
 					capture.setReopened(true);
 					replacement = capture;
 				}

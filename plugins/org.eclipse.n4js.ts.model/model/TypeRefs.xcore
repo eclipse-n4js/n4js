@@ -758,7 +758,7 @@ class ExistentialTypeRef extends TypeRef {
 	boolean reopened
 
 	refers Wildcard wildcard
-	refers TypeVariable boundTypeVariable
+
 	/*
 	 * Always returns true for existential types.
 	 */

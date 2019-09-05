@@ -3766,22 +3766,13 @@ public interface TypeRefsPackage extends EPackage {
 	int EXISTENTIAL_TYPE_REF__WILDCARD = TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Bound Type Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE = TYPE_REF_FEATURE_COUNT + 3;
-
-	/**
 	 * The number of structural features of the '<em>Existential Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 4;
+	int EXISTENTIAL_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Contains Wildcards</em>' operation.
@@ -8316,17 +8307,6 @@ public interface TypeRefsPackage extends EPackage {
 	EReference getExistentialTypeRef_Wildcard();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getBoundTypeVariable <em>Bound Type Variable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Bound Type Variable</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getBoundTypeVariable()
-	 * @see #getExistentialTypeRef()
-	 * @generated
-	 */
-	EReference getExistentialTypeRef_BoundTypeVariable();
-
-	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isExistential() <em>Is Existential</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9844,14 +9824,6 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference EXISTENTIAL_TYPE_REF__WILDCARD = eINSTANCE.getExistentialTypeRef_Wildcard();
-
-		/**
-		 * The meta object literal for the '<em><b>Bound Type Variable</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE = eINSTANCE.getExistentialTypeRef_BoundTypeVariable();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Existential</b></em>' operation.

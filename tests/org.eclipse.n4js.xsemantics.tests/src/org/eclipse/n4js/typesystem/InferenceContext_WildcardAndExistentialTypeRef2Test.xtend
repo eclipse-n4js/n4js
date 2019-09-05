@@ -295,7 +295,7 @@ class InferenceContext_WildcardAndExistentialTypeRef2Test extends AbstractInfere
 	// --------------------------------------------------------------------------------------------
 
 	def protected TypeRef capture(Wildcard wildcard) {
-		val captured = TypeUtils.captureWildcard(G.typeVars.head, wildcard);
+		val captured = TypeUtils.captureWildcard(wildcard);
 		return captured;
 	}
 }

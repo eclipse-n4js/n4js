@@ -1310,16 +1310,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getExistentialTypeRef_BoundTypeVariable() {
-		return (EReference)existentialTypeRefEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EOperation getExistentialTypeRef__IsExistential() {
 		return existentialTypeRefEClass.getEOperations().get(0);
 	}
@@ -2133,7 +2123,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEAttribute(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF__ID);
 		createEAttribute(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF__REOPENED);
 		createEReference(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF__WILDCARD);
-		createEReference(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE);
 		createEOperation(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF___IS_EXISTENTIAL);
 		createEOperation(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF___IS_GENERIC);
 		createEOperation(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF___IS_PARAMETERIZED);
@@ -2462,7 +2451,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEAttribute(getExistentialTypeRef_Id(), this.getUUID(), "id", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExistentialTypeRef_Reopened(), theEcorePackage.getEBoolean(), "reopened", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getExistentialTypeRef_Wildcard(), this.getWildcard(), null, "wildcard", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getExistentialTypeRef_BoundTypeVariable(), theTypesPackage.getTypeVariable(), null, "boundTypeVariable", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getExistentialTypeRef__IsExistential(), theEcorePackage.getEBoolean(), "isExistential", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

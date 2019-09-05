@@ -120,7 +120,7 @@ class WildcardCaptureTestHelper {
 	}
 
 	def public TypeRef capture(Wildcard wildcard) {
-		val captured = TypeUtils.captureWildcard(null, wildcard);
+		val captured = TypeUtils.captureWildcard(wildcard);
 		return captured;
 	}
 

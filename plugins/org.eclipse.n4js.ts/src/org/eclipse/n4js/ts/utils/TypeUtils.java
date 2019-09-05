@@ -360,14 +360,13 @@ public class TypeUtils {
 	/**
 	 * Creates a new {@link ExistentialTypeRef} as a capture of the given wildcard.
 	 */
-	public static ExistentialTypeRef captureWildcard(TypeVariable typeVar, Wildcard wildcard) {
+	public static ExistentialTypeRef captureWildcard(Wildcard wildcard) {
 		// note on performance: creating random UUIDs isn't exactly cheap, but when testing this in two real-world
 		// projects of considerable size (stdlib, OPR) only about 13k captures were created per full build which
 		// amounted to <15ms for UUID creation.
 		final ExistentialTypeRef etr = TypeRefsFactory.eINSTANCE.createExistentialTypeRef();
 		etr.setId(UUID.randomUUID());
 		etr.setWildcard(wildcard);
-		etr.setBoundTypeVariable(typeVar);
 		return etr;
 	}
 
@@ -1032,8 +1031,7 @@ public class TypeUtils {
 			return false;
 		if (isRefToTypeVar(obj, checkForInfVars, typeVars))
 			return true;
-		if (obj instanceof ExistentialTypeRef) { // FIXME IDE-1378 find more elegant solution
-			// FIXME wrong if obj is not re-opened!!!!
+		if (obj instanceof ExistentialTypeRef) {
 			if (isOrContainsRefToTypeVar(((ExistentialTypeRef) obj).getWildcard(), checkForInfVars, typeVars)) {
 				return true;
 			}
@@ -1043,7 +1041,7 @@ public class TypeUtils {
 			EObject curr = iter.next();
 			if (isRefToTypeVar(curr, checkForInfVars, typeVars))
 				return true;
-			if (curr instanceof ExistentialTypeRef) { // FIXME IDE-1378 find more elegant solution
+			if (curr instanceof ExistentialTypeRef) {
 				if (isOrContainsRefToTypeVar(((ExistentialTypeRef) curr).getWildcard(), checkForInfVars, typeVars)) {
 					return true;
 				}
