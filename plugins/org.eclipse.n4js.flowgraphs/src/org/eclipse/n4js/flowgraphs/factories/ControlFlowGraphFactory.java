@@ -17,9 +17,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
@@ -35,6 +37,7 @@ import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -195,7 +198,12 @@ public class ControlFlowGraphFactory {
 				EdgeUtils.connectCF(jumpNode, catchNode, jumpToken);
 			}
 		} else {
-			EdgeUtils.connectCF(jumpNode, catchNode, newEdgeType);
+			try {
+				EdgeUtils.connectCF(jumpNode, catchNode, newEdgeType);
+			} catch (Exception e) {
+				printInfo(cnMapper, jumpNode, catchNode, newEdgeType);
+				throw e;
+			}
 		}
 
 		if (enteringFinallyBlock != null) {
@@ -205,6 +213,31 @@ public class ControlFlowGraphFactory {
 			Node exitFinallyBlock = cnBlock.getExit();
 			connectToJumpTarget(cnMapper, exitFinallyBlock, jumpToken);
 		}
+	}
+
+	private static void printInfo(ComplexNodeMapper cnMapper, Node jumpNode, Node catchNode,
+			ControlFlowType newEdgeType) {
+
+		System.out.println("ERROR");
+		System.out.println("jump from source: " + ASTUtils.getNodeDetailString(jumpNode));
+		System.out.println("jump to target  : " + ASTUtils.getNodeDetailString(catchNode));
+		System.out.println("jump type       : " + newEdgeType);
+		System.out.println("jump node tokens: " + String.join(", ",
+				jumpNode.jumpToken.stream().map(t -> t.toString()).collect(Collectors.joining(","))));
+
+		Script script = EcoreUtil2.getContainerOfType(jumpNode.getControlFlowElement(), Script.class);
+		String sourceText = FGUtils.getSourceText(script);
+		System.out.println("Source was      :");
+		System.out.println(sourceText);
+		System.out.println("All jump nodes  :");
+
+		for (ComplexNode cn : cnMapper.getAll()) {
+			Node jumpNode2 = cn.getJump();
+			if (jumpNode2 != null) {
+				System.out.println("   " + ASTUtils.getNodeDetailString(jumpNode2));
+			}
+		}
+		System.out.println("END ERROR.\n");
 	}
 
 	private static boolean equalEdgeExistsAlready(Node jumpNode, JumpToken jumpToken, Node catchNode) {

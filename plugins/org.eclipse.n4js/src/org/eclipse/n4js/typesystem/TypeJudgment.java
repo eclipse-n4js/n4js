@@ -1235,6 +1235,9 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseCommaExpression(CommaExpression e) {
+			if (e.getExprs().isEmpty()) {
+				return unknown();
+			}
 			final Expression last = e.getExprs().get(e.getExprs().size() - 1);
 			return ts.type(G, last);
 		}

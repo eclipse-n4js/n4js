@@ -29,9 +29,9 @@ pipeline {
                      ":/shared/common/apache-ant-1.9.6/bin"             +
                      ":/shared/common/maven/apache-maven-3.6.0/bin/"    +
                      ":/shared/common/node-v10.15.3-linux-x64/bin"      +
-                     ":/shared/common/java/openjdk/jdk11-x64/bin"
+                     ":/shared/common/java/openjdk/jdk-11/bin"
         MAVEN_OPTS = '-Xmx4G'
-        JAVA_HOME  = '/shared/common/java/openjdk/jdk11-x64'
+        JAVA_HOME  = '/shared/common/java/openjdk/jdk-11'
         TIMESTAMP  = new Date().format("yyyyMMddHHmm")
     }
 
