@@ -261,18 +261,7 @@ arrElemTypeRef = ts.upperBoundWithForce(G, arrElemTypeRef);
 				val currResultInfVarTypeRef = TypeUtils.createTypeRef(currResultInfVar);
 				val currExpectedTypeRef = if (currElem.spread) G.iterableTypeRef(TypeUtils.createWildcardExtends(currResultInfVarTypeRef)) else currResultInfVarTypeRef;
 				val currElemTypeRef = polyProcessor.processExpr(G, currElem.expression, currExpectedTypeRef, infCtx, cache);
-				val currElemTypeRefs = if (currElem.spread) extractSpreadTypeRefs(G, currElemTypeRef) else #[ currElemTypeRef ];
-				if (!currElemTypeRefs.empty) {
-					// TODO IDE-1653 this if-case is only required because re-opened ExistentialTypeRefs are
-					// ignored in Reducer#reduceStructuralTypeRef(TypeRef,TypeRef,Variance) (otherwise the
-					// code in the else-block could probably be used in all cases and #extractSpreadTypeRefs()
-					// would not be required here)
-					for (currTypeRef : currElemTypeRefs) {
-						infCtx.addConstraint(currTypeRef, TypeUtils.createTypeRef(currResultInfVar), Variance.CO);
-					}
-				} else {
-					infCtx.addConstraint(currElemTypeRef, currExpectedTypeRef, Variance.CO);
-				}
+				infCtx.addConstraint(currElemTypeRef, currExpectedTypeRef, Variance.CO);
 			}
 		}
 	}
