@@ -51,6 +51,10 @@ Contributors:
                name="aboutText"
                value="%aboutText">
          </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
       </product>
    </extension>
    <extension
