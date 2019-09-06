@@ -43,15 +43,22 @@
    </features>
 
    <configurations>
+      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
-      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
+      <property name="org.eclipse.core.resources.prefs/refresh.enabled" value="true" />
       <property name="org.eclipse.core.resources/encoding" value="UTF-8" />
+      <property name="org.eclipse.ui.editors.prefs/spacesForTabs" value="true" />
+      <property name="org.eclipse.ui.ide.prefs/EXIT_PROMPT_ON_CLOSE_LAST_WINDOW" value="false" />
+      <property name="org.eclipse.ui.ide.prefs/REFRESH_WORKSPACE_ON_STARTUP" value="true" />
+      <property name="org.eclipse.ui.ide.prefs/WELCOME_DIALOG" value="false" />
+      <property name="org.eclipse.ui.ide.prefs/tipsAndTricks" value="false" />
+      <property name="org.eclipse.ui.prefs/showIntro" value="false" />
       <property name="org.eclipse.ui/PERSPECTIVE_BAR_EXTRAS" value="org.eclipse.n4js.product.N4JSPerspective,org.eclipse.egit.ui.GitRepositoryExploring" />
-      <property name="org.eclipse.ui/SHOW_PROGRESS_ON_STARTUP" value="false" />
+      <property name="org.eclipse.ui/SHOW_PROGRESS_ON_STARTUP" value="true" />
       <property name="org.eclipse.ui/SHOW_TEXT_ON_PERSPECTIVE_BAR" value="false" />
       <property name="org.eclipse.ui/defaultPerspectiveId" value="org.eclipse.n4js.product.N4JSPerspective" />
       <property name="osgi.instance.area.default" value="@user.home/workspace" />
