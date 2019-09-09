@@ -55,6 +55,9 @@ Contributors:
                name="preferenceCustomization"
                value="plugin_customization.ini">
          </property>
+         <property name="startupForegroundColor" value="000000"/>
+         <property name="startupProgressRect" value="-5,290,465,5"/>
+         <property name="startupMessageRect" value="7,220,0,0"/>
       </product>
    </extension>
    <extension
