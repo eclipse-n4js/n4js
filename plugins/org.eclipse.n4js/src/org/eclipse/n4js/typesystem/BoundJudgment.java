@@ -193,17 +193,34 @@ import com.google.common.base.Optional;
 		private TypeArgument pushBoundOfTypeArgument(TypeArgument typeArg) {
 			if (typeArg instanceof Wildcard) {
 				final Wildcard wildcard = (Wildcard) typeArg;
-				final TypeRef declBound = boundType == BoundType.UPPER
-						? wildcard.getDeclaredOrImplicitUpperBound()
-						: wildcard.getDeclaredLowerBound();
-				if (declBound != null) {
-					TypeRef boundOfDeclBound = doSwitch(declBound);
-					if (boundOfDeclBound != declBound) {
+				final TypeRef upperBound = wildcard.getDeclaredOrImplicitUpperBound();
+				final TypeRef lowerBound = wildcard.getDeclaredLowerBound();
+				// STEP 1: decide which bound should be pushed into which direction
+				// If we are computing an upper bound of a ParameterizedTypeRef, we push upper bounds of wildcards up
+				// and lower bounds of wildcards down (i.e. we widen the range of accepted type arguments).
+				// If we are computing a lower bound of a ParameterizedTypeRef, we push upper bounds of wildcards down
+				// and lower bounds of wildcards up (i.e. we narrow the range of accepted type arguments).
+				final TypeRef boundToBePushed;
+				final BoundType pushDirection;
+				if (upperBound != null) {
+					boundToBePushed = upperBound;
+					pushDirection = boundType;
+				} else if (lowerBound != null) {
+					boundToBePushed = lowerBound;
+					pushDirection = boundType.inverse();
+				} else {
+					boundToBePushed = null;
+					pushDirection = null;
+				}
+				// STEP 2: actually push the bound into the desired direction
+				if (boundToBePushed != null) {
+					TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, force);
+					if (boundOfBoundToBePushed != boundToBePushed) {
 						final Wildcard wildcardCpy = TypeUtils.copy(wildcard);
-						if (boundType == BoundType.UPPER) {
-							wildcardCpy.setDeclaredUpperBound(TypeUtils.copyIfContained(boundOfDeclBound));
-						} else {
-							wildcardCpy.setDeclaredLowerBound(TypeUtils.copyIfContained(boundOfDeclBound));
+						if (upperBound != null) {
+							wildcardCpy.setDeclaredUpperBound(TypeUtils.copyIfContained(boundOfBoundToBePushed));
+						} else if (lowerBound != null) {
+							wildcardCpy.setDeclaredLowerBound(TypeUtils.copyIfContained(boundOfBoundToBePushed));
 						}
 						return wildcardCpy;
 					}

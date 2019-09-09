@@ -1,0 +1,91 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+let arr: Array<?>;
+let arrEB: Array<? extends B>;
+let arrSB: Array<? super B>;
+
+function <T> foo(p: Array<T>): T {return null;}
+function <T> bar(p: Array<T>): Array<T> {return null;}
+function <T> baz1(p: Array<T>): Array<?> {return null;}
+function <T> baz2(p: Array<T>): Array<? extends T> {return null;}
+function <T> baz3(p: Array<T>): Array<? super T> {return null;}
+
+
+// XPECT type of 'v01' --> any
+let v01 = foo(arr);
+// XPECT type of 'v02' --> B
+let v02 = foo(arrEB);
+// XPECT type of 'v03' --> any
+let v03 = foo(arrSB);
+
+// ------------------------------------------------
+
+// XPECT type of 'v11' --> Array<?>
+let v11 = bar(arr);
+// XPECT type of 'v12' --> Array<? extends B>
+let v12 = bar(arrEB);
+// XPECT type of 'v13' --> Array<? super B>
+let v13 = bar(arrSB);
+
+// XPECT noerrors -->
+v11 = new Array<A>();
+// XPECT noerrors -->
+v11 = new Array<C>();
+// XPECT errors --> "Array<A> is not a subtype of Array<? extends B>." at "new Array<A>()"
+v12 = new Array<A>();
+// XPECT noerrors -->
+v12 = new Array<C>();
+// XPECT noerrors -->
+v13 = new Array<A>();
+// XPECT errors --> "Array<C> is not a subtype of Array<? super B>." at "new Array<C>()"
+v13 = new Array<C>();
+
+// ------------------------------------------------
+
+// XPECT type of 'v21' --> Array<?>
+let v21 = baz1(arr);
+// XPECT type of 'v22a' --> Array<? extends B>
+let v22a = baz2(arrEB);
+// XPECT type of 'v22b' --> Array<? extends any>
+let v22b = baz2(arrSB);
+// XPECT type of 'v23a' --> Array<? super undefined>
+let v23a = baz3(arrEB);
+// XPECT type of 'v23b' --> Array<? super B>
+let v23b = baz3(arrSB);
+
+// XPECT noerrors -->
+v21 = new Array<A>();
+// XPECT noerrors -->
+v21 = new Array<C>();
+// XPECT errors --> "Array<A> is not a subtype of Array<? extends B>." at "new Array<A>()"
+v22a = new Array<A>();
+// XPECT noerrors -->
+v22a = new Array<C>();
+// XPECT noerrors -->
+v22b = new Array<A>();
+// XPECT noerrors -->
+v22b = new Array<C>();
+// XPECT noerrors -->
+v23a = new Array<A>();
+// XPECT noerrors -->
+v23a = new Array<C>();
+// XPECT noerrors -->
+v23b = new Array<A>();
+// XPECT errors --> "Array<C> is not a subtype of Array<? super B>." at "new Array<C>()"
+v23b = new Array<C>();
