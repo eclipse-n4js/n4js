@@ -116,7 +116,7 @@ pipeline {
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
                     cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip         /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
                     cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.dmg         /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
-                    cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.jar         /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
+                    cp     n4js/tools/org.eclipse.n4js.hlc/target/n4jsc.jar                         /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
 
                     rm -rf /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
