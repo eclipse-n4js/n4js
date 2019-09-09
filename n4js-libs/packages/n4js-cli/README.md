@@ -18,6 +18,8 @@ When installing the package, you can replace the packaged `n4jsc.jar` using the 
 either a filesystem path or a HTTP/HTTPS URL.
 
 Download the latest n4jsc.jar from [here](https://www.eclipse.org/downloads/download.php?file=/n4js/products/nightly/LATEST/n4jsc.jar).
+See [download page](https://www.eclipse.org/n4js/downloads.html) for third party downloads of the `n4jsc.jar`.
+
 
 ## License
 
