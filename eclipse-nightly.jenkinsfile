@@ -51,6 +51,7 @@ pipeline {
                                 //'--quiet',
                                 '--update-snapshots',
                                 '--show-version',
+                                '-DnoTests',
                                 '-Dtycho.localArtifacts=ignore',
                                 '-Dmaven.test.failure.ignore',
                                 '-DWORKSPACE=' + env.WORKSPACE,
