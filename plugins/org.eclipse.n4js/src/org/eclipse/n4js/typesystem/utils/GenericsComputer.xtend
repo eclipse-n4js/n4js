@@ -10,8 +10,11 @@
  */
 package org.eclipse.n4js.typesystem.utils
 
+import com.google.common.base.Optional
 import com.google.inject.Inject
+import java.util.ArrayList
 import java.util.Collection
+import java.util.Collections
 import java.util.List
 import java.util.Set
 import org.eclipse.emf.ecore.util.EcoreUtil
@@ -26,16 +29,20 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping
+import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.RecursionGuard
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
@@ -361,6 +368,140 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		typeRef.postponedSubstitutions.forEach[currMapping|
 			G.put(currMapping.typeVar, TypeUtils.copy(currMapping.typeArg));
 		]
+	}
+
+
+	/**
+	 * Checks compatibility of the given type arguments, e.g. as required as part of a subtype check such as
+	 * {@code G<T> <: G<S>}. In case of wildcards and open existential types, a bounds check will be performed.
+	 *
+	 * @param leftArg
+	 *            left type argument to check.
+	 * @param rightArg
+	 *            right type argument to check.
+	 * @param varianceOpt
+	 *            the variance. Usually this is the definition-site variance of the corresponding type parameter, but
+	 *            can be some special value in certain contexts (e.g. in {@link TypeTypeRef}s). If absent, invariance
+	 *            will be assumed.
+	 * @param useFancyErrMsg
+	 *            if <code>true</code>, will use methods {@link #equaltype(RuleEnvironment, TypeArgument, TypeArgument)
+	 *            #equaltype()} and {@link #supertype(RuleEnvironment, TypeArgument, TypeArgument) #supertype()} instead
+	 *            of plain subtype checks. Will only affect error messages.
+	 * @return a result of the appropriate subtype check(s).
+	 */
+	def public Result checkTypeArgumentCompatibility(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg,
+		Optional<Variance> varianceOpt, boolean useFancyErrMsg) {
+
+		val variance = varianceOpt.or(Variance.INV);
+
+		// !!! keep the following aligned with below method #reduceTypeArgumentCompatibilityCheck() !!!
+
+		val leftArgUpper = ts.upperBound(G, leftArg);
+		val leftArgLower = ts.lowerBound(G, leftArg);
+		var rightArgUpper = ts.upperBound(G, rightArg);
+		val rightArgLower = ts.lowerBound(G, rightArg);
+
+		// minor tweak to slightly beautify error messages
+		// (i.e. having "not equals to" instead of "not a subtype" in a random direction)
+		if (useFancyErrMsg
+				&& variance === Variance.INV
+				&& leftArgUpper === leftArg && leftArgLower === leftArg
+				&& rightArgUpper === rightArg && rightArgLower === rightArg) {
+			return ts.equaltype(G, leftArg, rightArg);
+		}
+
+		// guard against infinite recursion due to recursive implicit upper bounds, such as in
+		//
+		// class A<T extends A<?>> {}
+		//
+		// and
+		//
+		// class X<T extends B<?>> {}
+		// class Y<T extends X<?>> {}
+		// class B<T extends Y<?>> {}
+		//
+		var RuleEnvironment G2;
+		if (rightArg instanceof Wildcard && (rightArg as Wildcard).isImplicitUpperBoundInEffect()) {
+			// we're dealing with implicit upper bounds -> need to guard against infinite loop
+			val guardKey = Pair.of(GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY, rightArg);
+			val isGuarded = G.get(guardKey) !== null;
+			if (!isGuarded) {
+				// first time here for wildcard 'rightArg'
+				// -> continue as usual but add guard to rule environment
+				G2 = wrap(G);
+				G2.put(guardKey, Boolean.TRUE);
+			} else {
+				// returned here for the same wildcard!
+				// -> ignore implicit upper bound on right-hand side to break infinite loop
+				rightArgUpper = topTypeRef(G);
+				G2 = G; // won't add another guard, so no need to wrap G
+			}
+		} else {
+			// not dealing with implicit upper bounds -> just continue as usual without guarding
+			G2 = G;
+		}
+
+		// require leftArgUpper <: rightArgUpper, except we have contravariance
+		if (variance !== Variance.CONTRA) {
+			val result = ts.subtype(G2, leftArgUpper, rightArgUpper);
+			if (result.isFailure()) {
+				return result;
+			}
+		}
+		// require rightArgLower <: leftArgLower, except we have covariance
+		if (variance !== Variance.CO) {
+			val result = if (useFancyErrMsg) {
+					ts.supertype(G2, leftArgLower, rightArgLower)
+				} else {
+					ts.subtype(G2, rightArgLower, leftArgLower)
+				};
+			if (result.isFailure()) {
+				return result;
+			}
+		}
+		return Result.success();
+	}
+
+	/**
+	 * Same as {@link #checkTypeArgumentCompatibility(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)},
+	 * but instead of actually performing the compatibility check, 0..2 {@link TypeConstraint}s are returned that
+	 * represent the compatibility check.
+	 */
+	def List<TypeConstraint> reduceTypeArgumentCompatibilityCheck(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg,
+		Optional<Variance> varianceOpt, boolean useFancyConstraints) {
+
+		val variance = varianceOpt.or(Variance.INV);
+
+		// !!! keep the following aligned with above method #checkTypeArgumentCompatibility() !!!
+
+		val leftArgUpper = ts.upperBound(G, leftArg);
+		val leftArgLower = ts.lowerBound(G, leftArg);
+		val rightArgUpper = ts.upperBound(G, rightArg);
+		val rightArgLower = ts.lowerBound(G, rightArg);
+
+		// minor tweak to slightly beautify solutions of the constraint solver
+		// (i.e. having a single constraint ⟨ α = X ⟩ instead of two constraints ⟨ α :> X ⟩, ⟨ α <: X ⟩ helps the
+		// solver to avoid large unions in which one element is the super type of all others, in certain typical
+		// cases involving array/object literals)
+		if (useFancyConstraints
+				&& variance === Variance.INV
+				&& leftArgUpper === leftArg && leftArgLower === leftArg
+				&& rightArgUpper === rightArg && rightArgLower === rightArg) {
+			return Collections.singletonList(new TypeConstraint(leftArg, rightArg, Variance.INV));
+		}
+
+		val List<TypeConstraint> result = new ArrayList(2);
+
+		// require leftArgUpper <: rightArgUpper, except we have contravariance
+		if (variance !== Variance.CONTRA) {
+			result.add(new TypeConstraint(leftArgUpper, rightArgUpper, Variance.CO));
+		}
+		// require rightArgLower <: leftArgLower, except we have covariance
+		if (variance !== Variance.CO) {
+			result.add(new TypeConstraint(rightArgLower, leftArgLower, Variance.CO));
+		}
+
+		return result;
 	}
 
 

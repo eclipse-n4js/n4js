@@ -350,7 +350,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 				variance = Variance.CO;
 			}
 
-			val result = ts.checkTypeArgumentCompatibility(G, mtypes.key, mtypes.value, Optional.of(variance), true);
+			val result = tsh.checkTypeArgumentCompatibility(G, mtypes.key, mtypes.value, Optional.of(variance), true);
 			if (result.failure) {
 				info.wrongMembers.add(right.name + " failed: " + result.failureMessage);
 			}
@@ -393,7 +393,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			} else {
 				variance = Variance.CO;
 			}
-			return ts.reduceTypeArgumentCompatibilityCheck(G, mtypes.key, mtypes.value, Optional.of(variance), false);
+			return tsh.reduceTypeArgumentCompatibilityCheck(G, mtypes.key, mtypes.value, Optional.of(variance), false);
 		}
 	}
 

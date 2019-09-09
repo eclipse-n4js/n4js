@@ -625,9 +625,9 @@ import com.google.common.collect.Iterables;
 
 	/**
 	 * Minor increment on top of
-	 * {@link N4JSTypeSystem#checkTypeArgumentCompatibility(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)
-	 * #checkTypeArgumentCompatibility()} in {@link N4JSTypeSystem}, just adding some more sophisticated error message
-	 * generation, which is better suited for the use cases in this class.
+	 * {@code #checkTypeArgumentCompatibility(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)} in
+	 * {@code GenericsComputer}, just adding some more sophisticated error message generation, which is better suited
+	 * for the use cases in this class.
 	 *
 	 * @param leftContainingTypeRef
 	 *            The reference containing 'leftArg'. Only used for error reporting.
@@ -638,7 +638,7 @@ import com.google.common.collect.Iterables;
 			TypeRef leftContainingTypeRef, TypeRef rightContainingTypeRef,
 			TypeArgument leftArg, TypeArgument rightArg, Optional<Variance> varianceOpt) {
 
-		Result tempResult = ts.checkTypeArgumentCompatibility(G, leftArg, rightArg, varianceOpt, false);
+		Result tempResult = tsh.checkTypeArgumentCompatibility(G, leftArg, rightArg, varianceOpt, false);
 		if (tempResult.isFailure()) {
 			if (tempResult.isOrIsCausedByPriority()) {
 				// fail with a custom message including the nested custom failure message:

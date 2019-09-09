@@ -31,6 +31,8 @@ import com.google.inject.Inject;
 	@Inject
 	protected N4JSTypeSystem ts;
 	@Inject
+	protected TypeSystemHelper tsh;
+	@Inject
 	protected TypeSystemHelper typeSystemHelper;
 	@Inject
 	protected ContainerTypesHelper containerTypesHelper;

@@ -46,7 +46,6 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
-import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer;
 import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.StructuralMembersTriple;
@@ -678,13 +677,13 @@ import com.google.common.base.Optional;
 	}
 
 	/**
-	 * Implementation located in {@link N4JSTypeSystem} to facilitate keeping it aligned to the corresponding method
+	 * Implementation located in {@code GenericsComputer} to facilitate keeping it aligned to the corresponding method
 	 * used in subtype checks; for all details see
-	 * {@link N4JSTypeSystem#reduceTypeArgumentCompatibilityCheck(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)}.
+	 * {@code GenericsComputer#reduceTypeArgumentCompatibilityCheck(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)}.
 	 */
 	private boolean reduceTypeArgumentCompatibilityCheck(TypeArgument leftArg, TypeArgument rightArg,
 			Variance variance) {
-		final List<TypeConstraint> constraints = ts.reduceTypeArgumentCompatibilityCheck(G, leftArg, rightArg,
+		final List<TypeConstraint> constraints = tsh.reduceTypeArgumentCompatibilityCheck(G, leftArg, rightArg,
 				Optional.of(variance), true);
 		return reduce(constraints);
 	}
@@ -705,8 +704,7 @@ import com.google.common.base.Optional;
 		}
 		// now, variance is either CO or INV
 
-		final StructuralTypingComputer stc = tsh.getStructuralTypingComputer();
-		final RuleEnvironment G2 = G; // RuleEnvironmentExtensions.wrap(G); // FIXME!!!!
+		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
 		final StructTypingInfo infoFaked = new StructTypingInfo(G2, left, right, // <- G2 will be changed!
 				left.getTypingStrategy(), right.getTypingStrategy());
 
@@ -727,14 +725,14 @@ import com.google.common.base.Optional;
 			final List<TypeConstraint> constraints = new ArrayList<>();
 			switch (variance) {
 			case CO:
-				constraints.addAll(stc.reduceMembers(G2, left, l, r, infoFaked));
+				constraints.addAll(tsh.reduceMembers(G2, left, l, r, infoFaked));
 				break;
 			case CONTRA:
-				constraints.addAll(stc.reduceMembers(G2, left, r, l, infoFaked));
+				constraints.addAll(tsh.reduceMembers(G2, left, r, l, infoFaked));
 				break;
 			case INV:
-				constraints.addAll(stc.reduceMembers(G2, left, l, r, infoFaked));
-				constraints.addAll(stc.reduceMembers(G2, left, r, l, infoFaked));
+				constraints.addAll(tsh.reduceMembers(G2, left, l, r, infoFaked));
+				constraints.addAll(tsh.reduceMembers(G2, left, r, l, infoFaked));
 				break;
 			}
 			wasAdded |= reduce(constraints);

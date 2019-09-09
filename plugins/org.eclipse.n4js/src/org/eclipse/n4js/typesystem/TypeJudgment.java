@@ -164,7 +164,6 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
-import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
@@ -192,8 +191,6 @@ import com.google.inject.Inject;
 	private JavaScriptVariantHelper javaScriptVariantHelper;
 	@Inject
 	private ReactHelper reactHelper;
-	@Inject
-	private TypeSystemHelper tsh;
 
 	/**
 	 * See {@link N4JSTypeSystem#type(RuleEnvironment, TypableElement)} and

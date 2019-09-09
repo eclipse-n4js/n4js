@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.typesystem.utils
 
+import com.google.common.base.Optional
 import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -45,13 +46,17 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeExtensions
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.constraints.TypeConstraint
+import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
@@ -100,9 +105,6 @@ class TypeSystemHelper {
 def StructuralTypesHelper getStructuralTypesHelper() {
 	return structuralTypesHelper;
 }
-def StructuralTypingComputer getStructuralTypingComputer() {
-	return structuralTypingComputer;
-}
 
 
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
@@ -122,6 +124,18 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	}
 	def void restorePostponedSubstitutionsFrom(RuleEnvironment G, StructuralTypeRef typeRef) {
 		genericsComputer.restorePostponedSubstitutionsFrom(G, typeRef);
+	}
+	/** See {@link GenericsComputer#checkTypeArgumentCompatibility(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)}. */
+	def Result checkTypeArgumentCompatibility(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg,
+		Optional<Variance> varianceOpt, boolean useFancyErrMsg) {
+
+		return genericsComputer.checkTypeArgumentCompatibility(G, leftArg, rightArg, varianceOpt, useFancyErrMsg);
+	}
+	/** See {@link GenericsComputer#reduceTypeArgumentCompatibilityCheck(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)}. */
+	def List<TypeConstraint> reduceTypeArgumentCompatibilityCheck(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg,
+		Optional<Variance> varianceOpt, boolean useFancyConstraints) {
+		
+		return genericsComputer.reduceTypeArgumentCompatibilityCheck(G, leftArg, rightArg, varianceOpt, useFancyConstraints);
 	}
 
 	def TypeRef createUnionType(RuleEnvironment G, TypeRef... elements) {
@@ -174,6 +188,9 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 
 	def StructuralTypingResult isStructuralSubtype(RuleEnvironment G,TypeRef left, TypeRef right) {
 		return structuralTypingComputer.isStructuralSubtype(G, left, right);
+	}
+	def public List<TypeConstraint> reduceMembers(RuleEnvironment G, TypeRef leftTypeRef, TMember left, TMember right, StructTypingInfo info) {
+		return structuralTypingComputer.reduceMembers(G, leftTypeRef, left, right, info);
 	}
 
 	/** @see ExpectedTypeComputer#getExpectedTypeOfReturnValueExpression(RuleEnvironment,Expression) */
