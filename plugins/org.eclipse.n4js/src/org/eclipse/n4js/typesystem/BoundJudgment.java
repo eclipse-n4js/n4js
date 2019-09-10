@@ -14,6 +14,8 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.bottom
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTypeRef;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -34,8 +36,10 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.typeRefs.util.TypeRefsSwitch;
 import org.eclipse.n4js.ts.types.TFormalParameter;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
+import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.BoundType;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -138,7 +142,7 @@ import com.google.common.base.Optional;
 
 		@Override
 		public TypeRef caseUnionTypeExpression(UnionTypeExpression union) {
-			final Optional<List<TypeRef>> typeRefsBounds = mapCompare(union.getTypeRefs(), this::doSwitch);
+			final Optional<List<TypeRef>> typeRefsBounds = mapAndCompare(union.getTypeRefs(), this::doSwitch);
 			if (typeRefsBounds.isPresent()) {
 				final UnionTypeExpression result = TypeUtils
 						.createNonSimplifiedUnionType(typeRefsBounds.get());
@@ -150,7 +154,7 @@ import com.google.common.base.Optional;
 
 		@Override
 		public TypeRef caseIntersectionTypeExpression(IntersectionTypeExpression intersection) {
-			final Optional<List<TypeRef>> typeRefsBounds = mapCompare(intersection.getTypeRefs(), this::doSwitch);
+			final Optional<List<TypeRef>> typeRefsBounds = mapAndCompare(intersection.getTypeRefs(), this::doSwitch);
 			if (typeRefsBounds.isPresent()) {
 				final IntersectionTypeExpression result = TypeUtils
 						.createNonSimplifiedIntersectionType(typeRefsBounds.get());
@@ -160,25 +164,7 @@ import com.google.common.base.Optional;
 			return intersection;
 		}
 
-		@Override
-		public TypeRef caseParameterizedTypeRef(ParameterizedTypeRef ptr) {
-			if (ptr.getDeclaredType() instanceof TypeVariable) {
-				return ptr; // do not return the declaredLowerBounds here! (a type variable is not an existential type)
-			} else {
-				final List<TypeArgument> typeArgs = ptr.getTypeArgs();
-				final Optional<List<TypeArgument>> typeArgsBounds = mapCompare(typeArgs, this::pushBoundOfTypeArgument);
-				if (typeArgsBounds.isPresent()) {
-					final ParameterizedTypeRef ptrCpy = TypeUtils.copyPartial(ptr,
-							TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_TypeArgs());
-					ptrCpy.getTypeArgs().clear();
-					ptrCpy.getTypeArgs().addAll(TypeUtils.copyAll(typeArgsBounds.get()));
-					return ptrCpy;
-				}
-				return ptr;
-			}
-		}
-
-		private <T extends TypeArgument> Optional<List<T>> mapCompare(List<T> typeArgs, Function<T, T> fn) {
+		private <T extends TypeArgument> Optional<List<T>> mapAndCompare(List<T> typeArgs, Function<T, T> fn) {
 			final List<T> typeArgsBounds = new ArrayList<>(typeArgs.size());
 			boolean haveChange = false;
 			for (T typeArg : typeArgs) {
@@ -189,8 +175,35 @@ import com.google.common.base.Optional;
 			return haveChange ? Optional.of(typeArgsBounds) : Optional.absent();
 		}
 
-		// TODO add support for def-site variance
-		private TypeArgument pushBoundOfTypeArgument(TypeArgument typeArg) {
+		@Override
+		public TypeRef caseParameterizedTypeRef(ParameterizedTypeRef ptr) {
+			final Type declType = ptr.getDeclaredType();
+			if (declType instanceof TypeVariable) {
+				return ptr; // do not return the declaredLowerBounds here! (a type variable is not an existential type)
+			} else {
+				final Iterator<TypeVariable> typeParamsIter = declType != null ? declType.getTypeVars().iterator()
+						: Collections.emptyIterator();
+				final List<TypeArgument> typeArgsPushed = new ArrayList<>();
+				boolean haveChange = false;
+				for (TypeArgument typeArg : ptr.getTypeArgs()) {
+					final TypeVariable typeParam = typeParamsIter.hasNext() ? typeParamsIter.next() : null;
+					final Variance defSiteVariance = typeParam != null ? typeParam.getVariance() : Variance.INV;
+					final TypeArgument typeArgPushed = pushBoundOfTypeArgument(typeArg, defSiteVariance);
+					typeArgsPushed.add(typeArgPushed);
+					haveChange |= typeArgPushed != typeArg;
+				}
+				if (haveChange) {
+					final ParameterizedTypeRef ptrCpy = TypeUtils.copyPartial(ptr,
+							TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_TypeArgs());
+					ptrCpy.getTypeArgs().clear();
+					ptrCpy.getTypeArgs().addAll(TypeUtils.copyAll(typeArgsPushed));
+					return ptrCpy;
+				}
+				return ptr;
+			}
+		}
+
+		private TypeArgument pushBoundOfTypeArgument(TypeArgument typeArg, Variance defSiteVariance) {
 			if (typeArg instanceof Wildcard) {
 				final Wildcard wildcard = (Wildcard) typeArg;
 				final TypeRef upperBound = wildcard.getDeclaredOrImplicitUpperBound();
@@ -225,13 +238,31 @@ import com.google.common.base.Optional;
 						return wildcardCpy;
 					}
 				}
-			} else if (typeArg instanceof ExistentialTypeRef) {
-				final ExistentialTypeRef etr = (ExistentialTypeRef) typeArg;
-				if (force || etr.isReopened()) {
-					final Wildcard wildcard = etr.getWildcard();
-					final Wildcard wildcardPushed = (Wildcard) pushBoundOfTypeArgument(wildcard);
-					return wildcardPushed;
+			} else if (typeArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) typeArg).isReopened()) {
+				final Wildcard wildcard = ((ExistentialTypeRef) typeArg).getWildcard();
+				final Wildcard wildcardPushed = (Wildcard) pushBoundOfTypeArgument(wildcard, defSiteVariance);
+				return wildcardPushed;
+			} else if (defSiteVariance == Variance.CO) {
+				// treat 'typeArg' like the upper bound of a wildcard
+				final TypeRef boundToBePushed = (TypeRef) typeArg; // n.b. we know 'typeArg' isn't a Wildcard
+				final BoundType pushDirection = boundType;
+				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, force);
+				if (boundOfBoundToBePushed != boundToBePushed) {
+					return boundOfBoundToBePushed;
 				}
+			} else if (defSiteVariance == Variance.CONTRA) {
+				// treat 'typeArg' like the lower bound of a wildcard
+				final TypeRef boundToBePushed = (TypeRef) typeArg; // n.b. we know 'typeArg' isn't a Wildcard
+				final BoundType pushDirection = boundType.inverse();
+				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, force);
+				if (boundOfBoundToBePushed != boundToBePushed) {
+					return boundOfBoundToBePushed;
+				}
+			} else if (typeArg instanceof ExistentialTypeRef && force) {
+				// NOTE: don't merge this case with the above case for ExistentialTypeRef, because order matters!
+				final Wildcard wildcard = ((ExistentialTypeRef) typeArg).getWildcard();
+				final Wildcard wildcardPushed = (Wildcard) pushBoundOfTypeArgument(wildcard, defSiteVariance);
+				return wildcardPushed;
 			}
 			return typeArg; // no change
 		}
@@ -341,7 +372,7 @@ import com.google.common.base.Optional;
 			}
 			// ordinary handling of type argument
 			final TypeArgument typeArg = ct.getTypeArg();
-			final TypeArgument typeArgBound = pushBoundOfTypeArgument(typeArg);
+			final TypeArgument typeArgBound = pushBoundOfTypeArgument(typeArg, Variance.INV);
 			if (typeArgBound != typeArg) {
 				TypeTypeRef ctCpy = TypeUtils.copyPartial(ct, TypeRefsPackage.eINSTANCE.getTypeTypeRef_TypeArg());
 				ctCpy.setTypeArg(TypeUtils.copyIfContained(typeArgBound));
