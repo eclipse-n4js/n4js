@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.n4js.external.ExternalLibraryHelper;
 import org.eclipse.n4js.external.ExternalProject;
 import org.eclipse.n4js.external.N4JSExternalProject;
-import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore.StoreUpdatedListener;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -52,9 +51,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 	/* Internal type is used to avoid cyclic dependencies */
 	@Inject
 	private EclipseBasedN4JSWorkspace userWorkspace;
-
-	@Inject
-	private NpmLogger npmLogger;
 
 	static private class UninitializedMappings extends ExternalProjectMappings {
 		public UninitializedMappings() {
@@ -112,7 +108,6 @@ public class ExternalProjectProvider implements StoreUpdatedListener {
 			try {
 				Map<FileURI, Pair<N4JSExternalProject, ProjectDescription>> completeCache = computeProjectsUncached();
 				mappings = new ExternalProjectMappings(userWorkspace, externalLibraryPreferenceStore, completeCache);
-				npmLogger.logInfo("external locations updated");
 
 			} finally {
 				semaphore.release();
