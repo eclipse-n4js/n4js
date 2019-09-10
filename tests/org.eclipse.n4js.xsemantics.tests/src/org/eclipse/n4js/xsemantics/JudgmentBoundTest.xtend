@@ -14,8 +14,10 @@ import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.N4JSTestHelper
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -74,15 +76,53 @@ class JudgmentBoundTest extends AbstractTypesystemTest {
 
 
 	@Test
+	def void testModes() {
+		val captureExtC = TypeUtils.captureWildcard(wildcardExtends(C));
+		val captureSupC = TypeUtils.captureWildcard(wildcardSuper(C));
+		val thisOfC = TypeUtils.createBoundThisTypeRef(C.ref as ParameterizedTypeRef);
+		val typeVarBelowC = (TypesFactory.eINSTANCE.createTypeVariable() => [name = "T";declaredUpperBound = C.ref]).ref;
+
+		assertTypeEquals(captureExtC,      ts.upperBound(_G, captureExtC));
+		assertTypeEquals(captureSupC,      ts.upperBound(_G, captureSupC));
+		assertTypeEquals(thisOfC,          ts.upperBound(_G, thisOfC));
+		assertTypeEquals(typeVarBelowC,    ts.upperBound(_G, typeVarBelowC));
+
+		assertTypeEquals(captureExtC,      ts.lowerBound(_G, captureExtC));
+		assertTypeEquals(captureSupC,      ts.lowerBound(_G, captureSupC));
+		assertTypeEquals(thisOfC,          ts.lowerBound(_G, thisOfC));
+		assertTypeEquals(typeVarBelowC,    ts.lowerBound(_G, typeVarBelowC));
+
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopen(_G, captureExtC));
+		assertTypeEquals(_G.topTypeRef,    ts.upperBoundWithReopen(_G, captureSupC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopen(_G, thisOfC));
+		assertTypeEquals(typeVarBelowC,    ts.upperBoundWithReopen(_G, typeVarBelowC));
+
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopen(_G, captureExtC));
+		assertTypeEquals(C.ref,            ts.lowerBoundWithReopen(_G, captureSupC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopen(_G, thisOfC));
+		assertTypeEquals(typeVarBelowC,    ts.lowerBoundWithReopen(_G, typeVarBelowC));
+
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, captureExtC));
+		assertTypeEquals(_G.topTypeRef,    ts.upperBoundWithReopenAndResolve(_G, captureSupC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, thisOfC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, typeVarBelowC));
+
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, captureExtC));
+		assertTypeEquals(C.ref,            ts.lowerBoundWithReopenAndResolve(_G, captureSupC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, thisOfC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, typeVarBelowC));
+	}
+
+	@Test
 	def void testParameteriedTypeRef_wildcards() {
 		val captureExtC = TypeUtils.captureWildcard(wildcardExtends(C));
 		val captureSupC = TypeUtils.captureWildcard(wildcardSuper(C));
 
-		assertTypeEquals(G.of(wildcardExtends(C)),              ts.upperBoundWithForce(_G, G.of(captureExtC)));
-		assertTypeEquals(G.of(wildcardExtends(C)),              ts.upperBoundWithForce(_G, G.of(wildcardExtends(captureExtC))));
-		assertTypeEquals(G.of(wildcardExtends(_G.anyType)),     ts.upperBoundWithForce(_G, G.of(wildcardExtends(captureSupC))));
-		assertTypeEquals(G.of(wildcardSuper(_G.undefinedType)), ts.upperBoundWithForce(_G, G.of(wildcardSuper(captureExtC))));
-		assertTypeEquals(G.of(wildcardSuper(C)),                ts.upperBoundWithForce(_G, G.of(wildcardSuper(captureSupC))));
+		assertTypeEquals(G.of(wildcardExtends(C)),              ts.upperBoundWithReopen(_G, G.of(captureExtC)));
+		assertTypeEquals(G.of(wildcardExtends(C)),              ts.upperBoundWithReopen(_G, G.of(wildcardExtends(captureExtC))));
+		assertTypeEquals(G.of(wildcardExtends(_G.anyType)),     ts.upperBoundWithReopen(_G, G.of(wildcardExtends(captureSupC))));
+		assertTypeEquals(G.of(wildcardSuper(_G.undefinedType)), ts.upperBoundWithReopen(_G, G.of(wildcardSuper(captureExtC))));
+		assertTypeEquals(G.of(wildcardSuper(C)),                ts.upperBoundWithReopen(_G, G.of(wildcardSuper(captureSupC))));
 	}
 
 	@Test
@@ -90,11 +130,11 @@ class JudgmentBoundTest extends AbstractTypesystemTest {
 		val captureExtC = TypeUtils.captureWildcard(wildcardExtends(C));
 		val captureSupC = TypeUtils.captureWildcard(wildcardSuper(C));
 
-		assertTypeEquals(G.of(wildcardExtends(C)), ts.upperBoundWithForce(_G, G.of(captureExtC)));
-		assertTypeEquals(GO.of(C),                 ts.upperBoundWithForce(_G, GO.of(captureExtC)));
-		assertTypeEquals(GO.of(_G.anyType),        ts.upperBoundWithForce(_G, GO.of(captureSupC)));
-		assertTypeEquals(GI.of(_G.undefinedType),  ts.upperBoundWithForce(_G, GI.of(captureExtC)));
-		assertTypeEquals(GI.of(C),                 ts.upperBoundWithForce(_G, GI.of(captureSupC)));
+		assertTypeEquals(G.of(wildcardExtends(C)), ts.upperBoundWithReopen(_G, G.of(captureExtC)));
+		assertTypeEquals(GO.of(C),                 ts.upperBoundWithReopen(_G, GO.of(captureExtC)));
+		assertTypeEquals(GO.of(_G.anyType),        ts.upperBoundWithReopen(_G, GO.of(captureSupC)));
+		assertTypeEquals(GI.of(_G.undefinedType),  ts.upperBoundWithReopen(_G, GI.of(captureExtC)));
+		assertTypeEquals(GI.of(C),                 ts.upperBoundWithReopen(_G, GI.of(captureSupC)));
 	}
 
 

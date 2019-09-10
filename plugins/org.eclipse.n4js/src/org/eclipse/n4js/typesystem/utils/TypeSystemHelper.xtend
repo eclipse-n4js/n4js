@@ -240,14 +240,6 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	//   small utility methods that do not have their own strategy class
 	// *****************************************************************************************************
 
-	/** see {@link N4JSTypeSystem#resolveType(RuleEnvironment,TypeArgument)} */
-	public def TypeRef resolveType(RuleEnvironment G, TypeArgument typeArg) {
-		var typeRef = if(typeArg !== null) ts.upperBoundWithForce(G, typeArg);
-		typeRef = if(typeRef !== null) TypeUtils.resolveTypeVariable(typeRef);
-		// TODO IDE-2367 recursively resolve the resulting 'typeRef' until it is stable (requires refactoring of upper/lower bound judgment!)
-		return typeRef;
-	}
-
 	public def boolean allEqualType(RuleEnvironment G, TypeRef... typeRefs) {
 		val len = typeRefs.size;
 		if(len>=2) {
@@ -264,7 +256,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
-		val typeUB = ts.upperBoundWithForce(G, typeRaw); // take upper bound to get rid of wildcards, etc. (if any)
+		val typeUB = ts.upperBoundWithReopen(G, typeRaw); // take upper bound to get rid of wildcards, etc. (if any)
 		val declType = typeUB.declaredType
 		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
 			// don't use these types to type variables, fields, properties -> replace with any
@@ -439,7 +431,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef ctorTypeRef) {
 		var typeArg = ctorTypeRef.typeArg;
 		while(typeArg instanceof Wildcard || typeArg instanceof ExistentialTypeRef || typeArg instanceof BoundThisTypeRef) {
-			typeArg = ts.upperBoundWithForce(G, typeArg);
+			typeArg = ts.upperBoundWithReopen(G, typeArg);
 		}
 		return typeArg as TypeRef;
 	}

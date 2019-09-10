@@ -881,21 +881,6 @@ public class TypeUtils {
 	}
 
 	/**
-	 * If the given type reference points to a type variable that has a declared upper bound, this method will return
-	 * the upper bound; in all other cases, the given type reference is returned.
-	 */
-	public static TypeRef resolveTypeVariable(TypeRef typeRef) {
-		final Type declType = typeRef != null ? typeRef.getDeclaredType() : null;
-		if (declType instanceof TypeVariable) {
-			final TypeRef ub = ((TypeVariable) declType).getDeclaredUpperBound();
-			if (ub != null) {
-				return ub;
-			}
-		}
-		return typeRef;
-	}
-
-	/**
 	 * Convenience method returning the type of the given member. Returns the return type for getters and methods and
 	 * the type of the single fpar for setters.
 	 */

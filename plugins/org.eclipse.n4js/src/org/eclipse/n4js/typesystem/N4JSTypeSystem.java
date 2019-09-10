@@ -21,6 +21,7 @@ import org.eclipse.n4js.postprocessing.TypeProcessor;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -184,42 +185,86 @@ public class N4JSTypeSystem {
 	 * Returns the upper bound of type arguments that represent a range of types; other types are returned unchanged.
 	 * Never returns <code>null</code>.
 	 * <p>
-	 * In particular, this method returns the declared or implicit upper bound of {@link Wildcard}s and reopened(!)
-	 * {@link ExistentialTypeRef}s. It does not return the upper bound of closed (i.e. non-reopened)
-	 * {@code ExistentialTypeRef}s and {@link BoundThisTypeRef}s; use method
-	 * {@link #upperBoundWithForce(RuleEnvironment, TypeArgument)} for this purpose.
+	 * In particular, this method returns the declared or implicit upper bound of
+	 * <ul>
+	 * <li>{@link Wildcard}s and
+	 * <li>reopened(!) {@link ExistentialTypeRef}s.
+	 * </ul>
+	 * It does not return the upper bound of
+	 * <ul>
+	 * <li>closed (i.e. non-reopened) {@code ExistentialTypeRef}s,
+	 * <li>{@link BoundThisTypeRef}s, and
+	 * <li>{@link TypeVariable}s.
+	 * </ul>
+	 * Use methods {@link #upperBoundWithReopen(RuleEnvironment, TypeArgument) #upperBoundWithReopen()} or
+	 * {@link #upperBoundWithReopenAndResolve(RuleEnvironment, TypeArgument) #upperBoundWithReopenAndResolve()} for this
+	 * purpose.
 	 */
 	public TypeRef upperBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument, false);
+		return boundJudgment.applyUpperBound(G, typeArgument, false, false);
 	}
 
 	/**
 	 * Same as {@link #upperBound(RuleEnvironment, TypeArgument)}, but also returns the upper bound for closed (i.e.
-	 * non-reopened) {@code ExistentialTypeRef}s and {@link BoundThisTypeRef}s.
+	 * non-reopened) {@code ExistentialTypeRef}s and {@link BoundThisTypeRef}s (but *not* for {@link TypeVariable}s).
 	 */
-	public TypeRef upperBoundWithForce(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument, true);
+	public TypeRef upperBoundWithReopen(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyUpperBound(G, typeArgument, true, false);
+	}
+
+	/**
+	 * Same as {@link #upperBoundWithReopen(RuleEnvironment, TypeArgument)}, but also returns the upper bound for
+	 * {@link TypeVariable}s.
+	 * <p>
+	 * NOTE: unlike {@link Wildcard}s, {@link ExistentialTypeRef}s, and {@link BoundThisTypeRef}s, type variables are
+	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
+	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
+	 */
+	public TypeRef upperBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyUpperBound(G, typeArgument, true, true);
 	}
 
 	/**
 	 * Returns the lower bound of type arguments that represent a range of types; other types are returned unchanged.
 	 * Never returns <code>null</code>.
 	 * <p>
-	 * In particular, this method returns the lower upper bound of {@link Wildcard}s and reopened(!)
-	 * {@link ExistentialTypeRef}s. It does not return the lower bound of closed (i.e. non-reopened)
-	 * {@code ExistentialTypeRef}s and {@link BoundThisTypeRef}s; use method
-	 * {@link #lowerBoundWithForce(RuleEnvironment, TypeArgument)} for this purpose.
+	 * In particular, this method returns the lower bound of
+	 * <ul>
+	 * <li>{@link Wildcard}s and
+	 * <li>reopened(!) {@link ExistentialTypeRef}s.
+	 * </ul>
+	 * It does *not* return the lower bound of
+	 * <ul>
+	 * <li>closed (i.e. non-reopened) {@code ExistentialTypeRef}s,
+	 * <li>{@link BoundThisTypeRef}s, and
+	 * <li>{@link TypeVariable}s.
+	 * </ul>
+	 * Use methods {@link #lowerBoundWithReopen(RuleEnvironment, TypeArgument) #lowerBoundWithReopen()} or
+	 * {@link #lowerBoundWithReopenAndResolve(RuleEnvironment, TypeArgument) #lowerBoundWithReopenAndResolve()} for this
+	 * purpose.
 	 */
 	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument, false);
+		return boundJudgment.applyLowerBound(G, typeArgument, false, false);
 	}
 
 	/**
 	 * Same as {@link #lowerBound(RuleEnvironment, TypeArgument)}, but also returns the lower bound for closed (i.e.
-	 * non-reopened) {@code ExistentialTypeRef}s and {@link BoundThisTypeRef}s.
+	 * non-reopened) {@code ExistentialTypeRef}s and {@link BoundThisTypeRef}s (but *not* for {@link TypeVariable}s).
 	 */
-	public TypeRef lowerBoundWithForce(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument, true);
+	public TypeRef lowerBoundWithReopen(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyLowerBound(G, typeArgument, true, false);
+	}
+
+	/**
+	 * Same as {@link #lowerBoundWithReopen(RuleEnvironment, TypeArgument)}, but also returns the lower bound for
+	 * {@link TypeVariable}s.
+	 * <p>
+	 * NOTE: unlike {@link Wildcard}s, {@link ExistentialTypeRef}s, and {@link BoundThisTypeRef}s, type variables are
+	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
+	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
+	 */
+	public TypeRef lowerBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyLowerBound(G, typeArgument, true, true);
 	}
 
 	/**
@@ -446,14 +491,6 @@ public class N4JSTypeSystem {
 			}
 		}
 		return G;
-	}
-
-	/**
-	 * Get rid of types such as wildcards, ExistentialTypeRef, bound this types, and type variables by replacing them
-	 * with their upper bound.
-	 */
-	public TypeRef resolveType(RuleEnvironment G, TypeArgument typeArgument) {
-		return tsh.resolveType(G, typeArgument);
 	}
 
 	/**

@@ -800,7 +800,7 @@ import com.google.inject.Inject;
 			// standard case:
 
 			TypeRef targetTypeRef = ts.type(G, expr.getTarget());
-			targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef);
+			targetTypeRef = ts.upperBoundWithReopenAndResolve(G, targetTypeRef);
 
 			TypeRef indexTypeRef = ts.type(G, expr.getIndex());
 
@@ -908,7 +908,7 @@ import com.google.inject.Inject;
 				}
 			}
 
-			final TypeRef receiverTypeRefUB = ts.upperBoundWithForce(G2, receiverTypeRef);
+			final TypeRef receiverTypeRefUB = ts.upperBoundWithReopen(G2, receiverTypeRef);
 			final IdentifiableElement prop = expr.getProperty();
 			final TypeRef propTypeRef;
 			if (prop instanceof TMethod && ((TMethod) prop).isConstructor()) {
@@ -1035,7 +1035,7 @@ import com.google.inject.Inject;
 						//         }
 						//     }
 						// @formatter:on
-						T = ts.upperBoundWithForce(G2, T); // taking upper bound turns this[C] into C
+						T = ts.upperBoundWithReopen(G2, T); // taking upper bound turns this[C] into C
 					}
 				}
 				return T;

@@ -519,7 +519,7 @@ import com.google.common.collect.Iterables;
 			// --> all we know is the picked type lies within the bounds
 			// --> subtype check succeeds if and only if: P<:'right' for *ALL* types P that may have been picked for the
 			// existential
-			final TypeRef upperExt = ts.upperBoundWithForce(G, existentialTypeRef);
+			final TypeRef upperExt = ts.upperBoundWithReopen(G, existentialTypeRef);
 			return requireAllSuccess(
 					ts.subtype(G, upperExt, right));
 		}
@@ -550,7 +550,7 @@ import com.google.common.collect.Iterables;
 			// --> all we know is the picked type lies within the bounds
 			// --> subtype check succeeds if and only if: 'left'<:P for *ALL* types P that may have been picked for the
 			// existential
-			final TypeRef lowerExt = ts.lowerBoundWithForce(G, existentialTypeRef);
+			final TypeRef lowerExt = ts.lowerBoundWithReopen(G, existentialTypeRef);
 			return requireAllSuccess(
 					ts.subtype(G, left, lowerExt));
 		}
@@ -581,7 +581,7 @@ import com.google.common.collect.Iterables;
 		if (boundThisTypeRef == right) {
 			return success();
 		}
-		final TypeRef upperExt = ts.upperBoundWithForce(G, boundThisTypeRef);
+		final TypeRef upperExt = ts.upperBoundWithReopen(G, boundThisTypeRef);
 		return requireAllSuccess(
 				ts.subtype(G, upperExt, right));
 	}
