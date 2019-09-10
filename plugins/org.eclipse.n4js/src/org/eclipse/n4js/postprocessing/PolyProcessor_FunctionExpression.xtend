@@ -34,6 +34,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 
@@ -49,6 +50,8 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	@Inject
 	private N4JSTypeSystem ts;
+	@Inject
+	private TypeSystemHelper tsh;
 	@Inject
 	private ASTProcessor astProcessor;
 
@@ -249,7 +252,12 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		FunctionTypeExpression resultTypeRef, Optional<Map<InferenceVariable, TypeRef>> solution
 	) {
 		val solution2 = if (solution.present) solution.get else infCtx.createPseudoSolution(G.anyTypeRef);
-		val resultSolved = resultTypeRef.applySolution(G, solution2) as FunctionTypeExprOrRef;
+		// sanitize parameter types
+		val returnTypeInfVar = resultTypeRef.returnTypeRef?.declaredType; // this infVar's solution must not be sanitized as it's not a parameter
+		val solution3 = new HashMap(solution2);
+		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfParameterInFunctionExpression(G, v) else v];
+		// apply solution to resultTypeRef
+		val resultSolved = resultTypeRef.applySolution(G, solution3) as FunctionTypeExprOrRef;
 		// store type of funExpr in cache ...
 		cache.storeType(funExpr, resultSolved);
 		// update the defined function in the TModule

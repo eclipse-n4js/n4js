@@ -87,7 +87,7 @@ fc4;
 let fc5 = function (z=undefined) {}
 fc5;
 
-// type 'any' would be nicer XPECT type of 'z' --> null
+// XPECT type of 'z' --> any
 let fc6 = function (z=null) {}
 fc6;
 
@@ -117,7 +117,7 @@ fd4;
 let fd5 = (z=undefined) => {}
 fd5;
 
-// type 'any' would be nicer XPECT type of 'z' --> null
+// XPECT type of 'z' --> any
 let fd6 = (z=null) => {}
 fd6;
 
