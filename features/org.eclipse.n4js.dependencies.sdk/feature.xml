@@ -57,7 +57,6 @@ Contributors:
       <import plugin="org.eclipse.equinox.common"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="org.eclipse.osgi"/>
-      <import plugin="com.ibm.icu"/>
       <import plugin="org.objectweb.asm"/>
       <import plugin="org.eclipse.xtext.ecore"/>
       <import plugin="org.junit"/>
