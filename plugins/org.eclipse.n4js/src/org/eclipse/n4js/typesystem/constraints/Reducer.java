@@ -496,17 +496,44 @@ import com.google.common.base.Optional;
 	}
 
 	private boolean reduceTypeTypeRef(TypeTypeRef left, TypeTypeRef right, Variance variance) {
-		final TypeArgument leftStatic = TypeUtils.copy(left.getTypeArg());
-		final TypeArgument rightStatic = TypeUtils.copy(right.getTypeArg());
-		if (!left.isConstructorRef() && !right.isConstructorRef()) {
-			// both sides are plain TypeTypeRefs
-			return reduce(leftStatic, rightStatic, variance);
-		} else {
-			// at least one side is constructor{...}
-			return reduce(leftStatic, rightStatic, INV); // TODO this is wrong
-			// instead:
-			// ⟨ constructor{D} <: constructor{C} ⟩ implies ⟨ D <: C ⟩ (as above) and ⟨ D#constructor <: C#constructor ⟩
+		boolean wasAdded = false;
+		if (variance == CO || variance == INV) {
+			wasAdded |= reduceTypeTypeRef(left, right);
 		}
+		if (variance == CONTRA || variance == INV) {
+			wasAdded |= reduceTypeTypeRef(right, left);
+		}
+		return wasAdded;
+	}
+
+	private boolean reduceTypeTypeRef(TypeTypeRef left, TypeTypeRef right) {
+		final TypeArgument leftTypeArg = left.getTypeArg();
+		final TypeArgument rightTypeArg = right.getTypeArg();
+		if (leftTypeArg == null || rightTypeArg == null) {
+			return giveUp(left, right, Variance.CO);
+		}
+
+		final boolean leftIsCtorRef = left.isConstructorRef();
+		final boolean rightIsCtorRef = right.isConstructorRef();
+
+		if (!leftIsCtorRef && rightIsCtorRef) {
+			// case: type{} <: constructor{}
+			return giveUp(left, right, Variance.CO);
+
+		}
+
+		// check type arguments
+		boolean wasAdded = false;
+		wasAdded |= reduceTypeArgumentCompatibilityCheck(leftTypeArg, rightTypeArg, Variance.CO);
+
+		final boolean rightArgIsOpen = rightTypeArg instanceof Wildcard
+				|| (rightTypeArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightTypeArg).isReopened());
+		if (!rightArgIsOpen && rightIsCtorRef && !ic.isDoomed()) {
+			// ⟨ constructor{D} <: constructor{C} ⟩ implies ⟨ D#constructor <: C#constructor ⟩
+			// TODO constraint missing! (see SubtypeJudgment#applyTypeTypeRef() for details)
+		}
+
+		return wasAdded;
 	}
 
 	/**
