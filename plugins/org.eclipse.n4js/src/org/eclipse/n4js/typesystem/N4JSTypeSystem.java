@@ -207,6 +207,9 @@ public class N4JSTypeSystem {
 	/**
 	 * Same as {@link #upperBound(RuleEnvironment, TypeArgument)}, but also returns the upper bound for closed (i.e.
 	 * non-reopened) {@code ExistentialTypeRef}s and {@link BoundThisTypeRef}s (but *not* for {@link TypeVariable}s).
+	 * <p>
+	 * Note that exceptions, i.e. closed {@link ExistentialTypeRef}s that must *not* be turned into their upper bound,
+	 * can be defined via {@link RuleEnvironmentExtensions#addFixedCapture(RuleEnvironment, ExistentialTypeRef)}.
 	 */
 	public TypeRef upperBoundWithReopen(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyUpperBound(G, typeArgument, true, false);
@@ -250,6 +253,9 @@ public class N4JSTypeSystem {
 	/**
 	 * Same as {@link #lowerBound(RuleEnvironment, TypeArgument)}, but also returns the lower bound for closed (i.e.
 	 * non-reopened) {@code ExistentialTypeRef}s and {@link BoundThisTypeRef}s (but *not* for {@link TypeVariable}s).
+	 * <p>
+	 * Note that exceptions, i.e. closed {@link ExistentialTypeRef}s that must *not* be turned into their lower bound,
+	 * can be defined via {@link RuleEnvironmentExtensions#addFixedCapture(RuleEnvironment, ExistentialTypeRef)}.
 	 */
 	public TypeRef lowerBoundWithReopen(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyLowerBound(G, typeArgument, true, false);

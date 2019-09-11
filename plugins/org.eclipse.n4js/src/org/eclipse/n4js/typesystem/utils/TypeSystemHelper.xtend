@@ -252,22 +252,12 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return true;
 	}
 
-	public def TypeRef sanitizeTypeOfVariableFieldProperty(RuleEnvironment G, TypeArgument typeRaw) {
-		return sanitizeTypeOfTypedElement(G, typeRaw, true);
-	}
-	public def TypeRef sanitizeTypeOfParameterInFunctionExpression(RuleEnvironment G, TypeArgument typeRaw) {
-		return sanitizeTypeOfTypedElement(G, typeRaw, false);
-	}
-	private def TypeRef sanitizeTypeOfTypedElement(RuleEnvironment G, TypeArgument typeRaw, boolean reopen) {
+	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw) {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
 		// take upper bound to get rid of wildcards, etc. (if any)
-		val typeUB = if (reopen) {
-			ts.upperBoundWithReopen(G, typeRaw)
-		} else {
-			ts.upperBound(G, typeRaw)
-		};
+		val typeUB = ts.upperBoundWithReopen(G, typeRaw);
 		// replace silly types
 		val declType = typeUB.declaredType
 		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {

@@ -320,7 +320,7 @@ import com.google.inject.Inject;
 				T = property.getDeclaredTypeRef();
 			} else if (property.getExpression() != null) {
 				final TypeRef E = ts.type(G, property.getExpression());
-				T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
+				T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E);
 			} else {
 				T = anyTypeRef(G);
 			}
@@ -335,7 +335,7 @@ import com.google.inject.Inject;
 				T = fieldDecl.getDeclaredTypeRef();
 			} else if (fieldDecl.getExpression() != null) {
 				final TypeRef E = ts.type(G, fieldDecl.getExpression());
-				T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
+				T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E);
 			} else {
 				T = anyTypeRef(G);
 			}
@@ -372,7 +372,7 @@ import com.google.inject.Inject;
 					final TypeRef ofPartTypeRef = ts.type(G2, forOfStmnt.getExpression());
 					final TypeArgument elemType = tsh.extractIterableElementType(G2, ofPartTypeRef);
 					if (elemType != null) {
-						T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G2, elemType);
+						T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G2, elemType);
 					} else {
 						T = unknown();
 					}
@@ -404,7 +404,7 @@ import com.google.inject.Inject;
 						// inferred type and do *not* convert it to 'any', as #sanitizeTypeOfVariableFieldProperty()
 						// in the else-block would do.
 					} else {
-						E = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G2, E);
+						E = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G2, E);
 					}
 					if (E.getDeclaredType() == undefinedType(G)
 							|| E.getDeclaredType() == nullType(G)
@@ -489,7 +489,7 @@ import com.google.inject.Inject;
 				final Expression initExpr = fpar.getInitializer();
 				if (initExpr != null) {
 					final TypeRef E = ts.type(G, initExpr);
-					T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
+					T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E);
 				} else {
 					T = anyTypeRef(G);
 				}

@@ -140,7 +140,7 @@ import com.google.common.base.Optional;
 
 		@Override
 		public TypeRef caseExistentialTypeRef(ExistentialTypeRef existentialTypeRef) {
-			if (reopen || existentialTypeRef.isReopened()) {
+			if (existentialTypeRef.isReopened() || shouldBeReopened(existentialTypeRef)) {
 				TypeRef result = caseWildcard(existentialTypeRef.getWildcard());
 				result = TypeUtils.copy(result);
 				TypeUtils.copyTypeModifiers(result, existentialTypeRef);
@@ -280,7 +280,7 @@ import com.google.common.base.Optional;
 				if (boundOfBoundToBePushed != boundToBePushed) {
 					return boundOfBoundToBePushed;
 				}
-			} else if (typeArg instanceof ExistentialTypeRef && reopen) {
+			} else if (typeArg instanceof ExistentialTypeRef && shouldBeReopened((ExistentialTypeRef) typeArg)) {
 				// NOTE: don't merge this case with the above case for ExistentialTypeRef, because order matters!
 				final Wildcard wildcard = ((ExistentialTypeRef) typeArg).getWildcard();
 				final Wildcard wildcardPushed = (Wildcard) pushBoundOfTypeArgument(wildcard, defSiteVariance);
@@ -402,6 +402,10 @@ import com.google.common.base.Optional;
 				return ctCpy;
 			}
 			return ct;
+		}
+
+		private boolean shouldBeReopened(ExistentialTypeRef etr) {
+			return reopen && !RuleEnvironmentExtensions.isFixedCapture(G, etr);
 		}
 	}
 }

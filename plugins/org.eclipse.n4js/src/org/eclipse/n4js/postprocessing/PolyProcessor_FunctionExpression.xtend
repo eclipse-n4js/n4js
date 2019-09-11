@@ -11,6 +11,7 @@
 package org.eclipse.n4js.postprocessing
 
 import com.google.common.base.Optional
+import com.google.common.collect.Iterators
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.HashMap
@@ -21,6 +22,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -253,9 +255,17 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	) {
 		val solution2 = if (solution.present) solution.get else infCtx.createPseudoSolution(G.anyTypeRef);
 		// sanitize parameter types
+		// (but do not turn close ExistentialTypeRefs into their upper bound that also appear in the return type,
+		// by defining them as "fixed captures" via RuleEnvironmentExtensions#addFixedCapture())
+		val G2 = G.wrap;
 		val returnTypeInfVar = resultTypeRef.returnTypeRef?.declaredType; // this infVar's solution must not be sanitized as it's not a parameter
+		val resultReturnTypeRef = solution2.get(returnTypeInfVar) ?: G.voidTypeRef;
+		val capturesInReturnTypeRefs = Iterators.concat(Iterators.singletonIterator(resultReturnTypeRef), resultReturnTypeRef.eAllContents)
+			.filter(ExistentialTypeRef)
+			.filter[!reopened];
+		capturesInReturnTypeRefs.forEach[G2.addFixedCapture(it)];
 		val solution3 = new HashMap(solution2);
-		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfParameterInFunctionExpression(G, v) else v];
+		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfVariableFieldPropertyParameter(G2, v) else v];
 		// apply solution to resultTypeRef
 		val resultSolved = resultTypeRef.applySolution(G, solution3) as FunctionTypeExprOrRef;
 		// store type of funExpr in cache ...

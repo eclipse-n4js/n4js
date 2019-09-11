@@ -27,6 +27,7 @@ import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
@@ -49,6 +50,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.RecursionGuard
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -92,6 +94,16 @@ class RuleEnvironmentExtensions {
 	 * the context of a rule environment. Used when dealing with replacing an API by its implementation project.
 	 */
 	private static final String KEY__TYPE_REPLACEMENT = "typeReplacement";
+
+	/**
+	 * Key for storing IDs of captures that should *not* be reopened by method
+	 * {@link N4JSTypeSystem#upperBoundWithReopen(RuleEnvironment, TypeArgument)}, and similar methods.
+	 * <p>
+	 * Client code should not use this constant directly, but should instead use methods
+	 * {@link #addFixedCapture(RuleEnvironment, ExistentialTypeRef)} and
+	 * {@link #isFixedCapture(RuleEnvironment, ExistentialTypeRef)}.
+	 */
+	private static final String KEY__FIXED_CAPTURE_ID = "fixedCaptureId";
 
 	public static final String GUARD_VARIABLE_DECLARATION = "varDecl";
 	public static final String GUARD_TYPE_CALL_EXPRESSION = "typeCallExpression";
@@ -313,6 +325,26 @@ class RuleEnvironmentExtensions {
 		val replacementProvider = G.get(KEY__TYPE_REPLACEMENT) as ITypeReplacementProvider;
 		val replacement = replacementProvider?.getReplacement(type);
 		return if(replacement!==null) replacement else type;
+	}
+
+	/**
+	 * The {@link ExistentialTypeRef}s with the given IDs will *not* be reopened by method
+	 * {@link N4JSTypeSystem#upperBoundWithReopen(RuleEnvironment, TypeArgument)}, and similar methods.
+	 */
+	def static void addFixedCapture(RuleEnvironment G, ExistentialTypeRef etr) {
+		val id = etr.id;
+		if (id !== null) {
+			G.put(KEY__FIXED_CAPTURE_ID -> id, Boolean.TRUE);
+		}
+	}
+
+	/**
+	 * Tells whether the given {@link ExistentialTypeRef}s has an ID that was registered via
+	 * {@link #addFixedCapture(RuleEnvironment, ExistentialTypeRef)} to avoid it to be reopened by method
+	 * {@link N4JSTypeSystem#upperBoundWithReopen(RuleEnvironment, TypeArgument)}, and similar methods.
+	 */
+	def static boolean isFixedCapture(RuleEnvironment G, ExistentialTypeRef etr) {
+		return G.get(KEY__FIXED_CAPTURE_ID -> etr.id) !== null;
 	}
 
 	def static TypeRef createTypeRefFromUpperBound(TypeVariable typeVar) {
