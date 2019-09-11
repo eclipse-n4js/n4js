@@ -26,6 +26,11 @@ class H<T1, T2 extends G<T1>> {
 		this.g.fieldInG = this.g.fieldInG;
 		// XPECT noerrors -->
 		this.fieldInH = this.fieldInH;
+
+		// XPECT noerrors -->
+		this.g.fieldInG = this.fieldInH;
+		// XPECT noerrors -->
+		this.fieldInH = this.g.fieldInG;
 	}
 }
 
