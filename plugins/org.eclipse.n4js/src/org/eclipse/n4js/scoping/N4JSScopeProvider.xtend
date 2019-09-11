@@ -224,24 +224,21 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
 	private def getScopeByShortcut(EObject context, EReference reference) {
-		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
+		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE) {
+			return new FilteringScope(getTypeScope(context, false),
+				context.getTypesFilterCriteria(reference));
+		} else if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
 				val namespace = context.astNamespace;
 				if (namespace!==null) {
 					return createScopeForNamespaceAccess(namespace, context);
 				}
 			}
-		}
-		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
-			|| reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE) {
 			return new ValidatingScope(getTypeScope(context, false),
 				context.getTypesFilterCriteria(reference));
-		}
-
-		if (reference.EReferenceType == N4JSPackage.Literals.LABELLED_STATEMENT) {
+		} else if (reference.EReferenceType == N4JSPackage.Literals.LABELLED_STATEMENT) {
 			return scope_LabelledStatement(context);
 		}
-
 		return IScope.NULLSCOPE;
 	}
 
