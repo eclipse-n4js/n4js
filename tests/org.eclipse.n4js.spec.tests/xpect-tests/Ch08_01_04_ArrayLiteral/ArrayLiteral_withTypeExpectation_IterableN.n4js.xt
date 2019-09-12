@@ -29,13 +29,13 @@ var x : X;
 // make sure that array literal gets inferred to Array<T>
 // if we do *not* have an IterableN as type expectation
 
-// XPECT type of '[b,c,b]' --> Array<union{B,C}>
+// XPECT type of '[b,c,b]' --> Array<B>
 var v01 : Iterable<B> = [b,c,b];
 // XPECT type of '[b,c,b]' --> Array<B>
 var v02 : Array<B> = [b,c,b];
-// XPECT type of '[b,c,b]' --> Array<union{B,C}>
+// XPECT type of '[b,c,b]' --> Array<B>
 var v03 = [b,c,b];
-// XPECT errors --> "Array<union{B,C}> is not a subtype of X." at "[b,c,b]"
+// XPECT errors --> "Array<B> is not a subtype of X." at "[b,c,b]"
 var v04 : X = [b,c,b];
 
 
@@ -55,7 +55,7 @@ var v12 : Iterable3<B,B,B> = [b,x,b];
 
 // literal is longer:
 
-// case all remaining match XPECT type of '[b,c,b,b,b,c,b]' --> Iterable3<B,C,union{B,C}>
+// case all remaining match XPECT type of '[b,c,b,b,b,c,b]' --> Iterable3<B,C,B>
 var v13 : Iterable3<B,B,B> = [b,c,b,b,b,c,b];
 
 // found during IDE-1852: XPECT FIXME noerrors
@@ -99,5 +99,5 @@ var v22 : union{Iterable2<A,A>,Iterable2<A,B>} = [a,x];
 
 // expectation is a union containing a non-iterable type
 
-// XPECT errors --> "Array<union{A,B}> is not a subtype of union{Iterable2<A,A>,X}." at "[a,b]"
+// XPECT errors --> "Array<A> is not a subtype of union{Iterable2<A,A>,X}." at "[a,b]"
 var v23 : union{Iterable2<A,A>,X} = [a,b];  // maybe in such a case, type inference of ArrayLiteral could be further improved (to get rid of error)

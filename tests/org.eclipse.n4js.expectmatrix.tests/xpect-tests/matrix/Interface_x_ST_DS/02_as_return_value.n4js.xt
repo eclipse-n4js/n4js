@@ -34,7 +34,7 @@ class C1 {
 	// return value must be nominal type XPECT errors --> "Structural type ~Object with { x: int; foo: {function():void} } is not a subtype of non-structural type I<int>." at "{x: 3, foo: this.f}"
 	public f1 () : I<int> { return {x: 3, foo: this.f}; };
 
-	// return value must be ~I, missing foo field XPECT errors --> "~Object with { x: ~int } is not a structural subtype of ~I<int>: missing method foo." at "{x: 3}"
+	// return value must be ~I, missing foo field XPECT errors --> "~Object with { x: union{int,~int} } is not a structural subtype of ~I<int>: missing method foo." at "{x: 3}"
 	public f2a () : ~I<int> { return {x: 3}; };
 
 	// return value must be ~I, all well XPECT noerrors -->

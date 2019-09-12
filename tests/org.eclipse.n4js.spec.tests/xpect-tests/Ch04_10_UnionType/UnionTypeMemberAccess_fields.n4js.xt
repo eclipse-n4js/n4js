@@ -60,9 +60,9 @@ u.f_onlyInT2;
 u.f1;
 // private fields are visible inside same module XPECT noerrors -->
 u.f2;
-// XPECT type of 'u.f3' --> union{A,ASub}
+// XPECT type of 'u.f3' --> A
 u.f3;
-// XPECT expectedType at 'null' --> intersection{A,ASub}
+// XPECT expectedType at 'null' --> ASub
 u.f3 = null;
 // XPECT type of 'u.f4' --> union{A,B}
 u.f4;

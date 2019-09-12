@@ -12,8 +12,10 @@ package org.eclipse.n4js.validation.validators
 
 import com.google.common.collect.ArrayListMultimap
 import com.google.inject.Inject
+import java.util.Collection
 import java.util.LinkedList
 import java.util.List
+import java.util.TreeSet
 import org.eclipse.emf.common.util.EList
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Argument
@@ -79,6 +81,7 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.types.util.Variance
+import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -109,6 +112,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
+	@Inject
+	private TypeCompareHelper typeCompareHelper;
 
 	@Inject
 	private N4JSScopeProvider n4jsScopeProvider;
@@ -517,7 +522,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		} else if (expression instanceof ArrayLiteral) {
 			if (!expectedTypeRef.typeArgs.empty) {
 				val arrayElementType = expectedTypeRef.typeArgs.get(0);
-				val typeArgTypeRef = ts.resolveType(G, arrayElementType);
+				val typeArgTypeRef = ts.upperBoundWithReopenAndResolve(G, arrayElementType);
 				for (arrElem : expression.elements) {
 					val arrExpr = arrElem.expression;
 					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, typeArgTypeRef, arrExpr);
@@ -845,12 +850,23 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private List<TypeRef> extractNonStructTypeRefs(ComposedTypeRef ctr) {
-		val G = ctr.newRuleEnvironment;
-		val List<TypeRef> tRefs = tsh.getSimplifiedTypeRefs(G, ctr);
-		return extractNonStructTypeRefs(tRefs);
+		val typeRefs = new TreeSet<TypeRef>(typeCompareHelper.getTypeRefComparator);
+		collectAndFlattenElementTypeRefs(ctr, typeRefs);
+		return extractNonStructTypeRefs(typeRefs);
 	}
 
-	def private List<TypeRef> extractNonStructTypeRefs(List<TypeRef> simplifiedTypeRefs) {
+	def private void collectAndFlattenElementTypeRefs(ComposedTypeRef ctr, Collection<TypeRef> addHere) {
+		val composedTypeKind = ctr.eClass;
+		for (tr : ctr.typeRefs) {
+			if (composedTypeKind.isInstance(tr)) {
+				collectAndFlattenElementTypeRefs(tr as ComposedTypeRef, addHere);
+			} else {
+				addHere += tr;
+			}
+		}
+	}
+
+	def private List<TypeRef> extractNonStructTypeRefs(Iterable<TypeRef> simplifiedTypeRefs) {
 		val List<TypeRef> tClassRefs = new LinkedList();
 		for (TypeRef tR : simplifiedTypeRefs) {
 			if (tR!==null) { // may happen if argument has been a result of a computation

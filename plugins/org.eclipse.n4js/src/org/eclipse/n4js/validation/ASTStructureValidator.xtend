@@ -1405,12 +1405,7 @@ class ASTStructureValidator {
 		if(elem!==null && elem.spread) {
 			if(!DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)) {
 				// use of spread in an array literal that is *not* used as a destructuring pattern
-				// --> always error (legal in ES6 but not yet supported; might be supported later)
-				val nodes = NodeModelUtils.findNodesForFeature(elem, N4JSPackage.eINSTANCE.arrayElement_Spread);
-				producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(elem)
-				producer.addDiagnostic(
-					new DiagnosticMessage(IssueCodes.getMessageForAST_SPREAD_IN_ARRAY_LITERAL_UNSUPPORTED,
-						IssueCodes.getDefaultSeverity(IssueCodes.AST_SPREAD_IN_ARRAY_LITERAL_UNSUPPORTED), IssueCodes.AST_SPREAD_IN_ARRAY_LITERAL_UNSUPPORTED))
+				// --> valid at any position
 			}
 			else {
 				// use of spread in an array literal that *is* used as a destructuring pattern

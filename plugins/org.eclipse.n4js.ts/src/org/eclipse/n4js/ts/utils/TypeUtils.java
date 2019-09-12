@@ -12,6 +12,7 @@ package org.eclipse.n4js.ts.utils;
 
 import static java.util.Collections.singletonList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -331,16 +333,6 @@ public class TypeUtils {
 	}
 
 	/**
-	 * Creates a new ExistentialTypeRef.
-	 */
-	public static ExistentialTypeRef createExistentialTypeRef(TypeVariable typeVar, Wildcard wildcard) {
-		final ExistentialTypeRef etr = TypeRefsFactory.eINSTANCE.createExistentialTypeRef();
-		etr.setWildcard(wildcard);
-		etr.setBoundTypeVariable(typeVar);
-		return etr;
-	}
-
-	/**
 	 * Creates a new unbounded wildcard.
 	 */
 	public static Wildcard createWildcard() {
@@ -366,15 +358,16 @@ public class TypeUtils {
 	}
 
 	/**
-	 * If the given type argument is a {@link Wildcard}, then a new {@link ExistentialTypeRef} will be created and
-	 * returned; otherwise the given type argument will be returned without change.
+	 * Creates a new {@link ExistentialTypeRef} as a capture of the given wildcard.
 	 */
-	public static TypeRef captureWildcard(TypeVariable typeVar, TypeArgument typeArg) {
-		if (typeArg instanceof Wildcard)
-			return createExistentialTypeRef(typeVar, (Wildcard) typeArg);
-		else
-			// note: typeArg must be a TypeRef now, because Wildcard was the only other option below TypeArgument
-			return (TypeRef) typeArg;
+	public static ExistentialTypeRef captureWildcard(Wildcard wildcard) {
+		// note on performance: creating random UUIDs isn't exactly cheap, but when testing this in two real-world
+		// projects of considerable size (stdlib, OPR) only about 13k captures were created per full build which
+		// amounted to <15ms for UUID creation.
+		final ExistentialTypeRef etr = TypeRefsFactory.eINSTANCE.createExistentialTypeRef();
+		etr.setId(UUID.randomUUID());
+		etr.setWildcard(wildcard);
+		return etr;
 	}
 
 	/**
@@ -888,21 +881,6 @@ public class TypeUtils {
 	}
 
 	/**
-	 * If the given type reference points to a type variable that has a declared upper bound, this method will return
-	 * the upper bound; in all other cases, the given type reference is returned.
-	 */
-	public static TypeRef resolveTypeVariable(TypeRef typeRef) {
-		final Type declType = typeRef != null ? typeRef.getDeclaredType() : null;
-		if (declType instanceof TypeVariable) {
-			final TypeRef ub = ((TypeVariable) declType).getDeclaredUpperBound();
-			if (ub != null) {
-				return ub;
-			}
-		}
-		return typeRef;
-	}
-
-	/**
 	 * Convenience method returning the type of the given member. Returns the return type for getters and methods and
 	 * the type of the single fpar for setters.
 	 */
@@ -1038,10 +1016,21 @@ public class TypeUtils {
 			return false;
 		if (isRefToTypeVar(obj, checkForInfVars, typeVars))
 			return true;
+		if (obj instanceof ExistentialTypeRef) {
+			if (isOrContainsRefToTypeVar(((ExistentialTypeRef) obj).getWildcard(), checkForInfVars, typeVars)) {
+				return true;
+			}
+		}
 		final Iterator<EObject> iter = obj.eAllContents();
 		while (iter.hasNext()) {
-			if (isRefToTypeVar(iter.next(), checkForInfVars, typeVars))
+			EObject curr = iter.next();
+			if (isRefToTypeVar(curr, checkForInfVars, typeVars))
 				return true;
+			if (curr instanceof ExistentialTypeRef) {
+				if (isOrContainsRefToTypeVar(((ExistentialTypeRef) curr).getWildcard(), checkForInfVars, typeVars)) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -1248,10 +1237,24 @@ public class TypeUtils {
 	 * Same as {@link EcoreUtil#copyAll(Collection)}, but takes care of special copy semantics for TypeRefs. See
 	 * {@link #copy(EObject)}.
 	 */
-	public static <T> Collection<T> copyAll(Collection<? extends T> sources) {
+	public static <T extends EObject> Collection<T> copyAll(Collection<? extends T> sources) {
 		final TypeCopier copier = new TypeCopier(true);
 		final Collection<T> result = copier.copyAll(sources);
 		copier.copyReferences();
+		return result;
+	}
+
+	/**
+	 * Same as {@link #copyAll(Collection)}, but only copies EObjects that are contained in another EObject or a
+	 * Resource.
+	 *
+	 * @see EcoreUtil2#cloneIfContained(EObject)
+	 */
+	public static <T extends EObject> Collection<T> copyAllIfContained(Collection<? extends T> sources) {
+		final List<T> result = new ArrayList<>(sources.size());
+		for (T source : sources) {
+			result.add(copyIfContained(source));
+		}
 		return result;
 	}
 

@@ -11,8 +11,15 @@
 package org.eclipse.n4js.xsemantics
 
 import com.google.inject.Inject
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
+import org.eclipse.n4js.N4JSTestHelper
+import org.eclipse.n4js.WildcardCaptureTestHelper
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
+import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.typeRefs.Wildcard
+import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -22,7 +29,6 @@ import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static org.junit.Assert.*
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 
 /*
  * Tests for judgment subtype, see n4js.xsemantics for judgment, axiom and rules.
@@ -31,12 +37,17 @@ import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 @InjectWith(N4JSInjectorProviderWithIssueSuppression)
 class JudgmentSubtypeTest extends AbstractTypesystemTest {
 
-
 	@Inject
 	extension ParseHelper<Script>
 
 	@Inject
 	extension ValidationTestHelper
+
+	@Inject
+	extension N4JSTestHelper
+
+	@Inject
+	private WildcardCaptureTestHelper wildcardCaptureTestHelper;
 
 	@Test
 	def void testSubtypeSametype() {
@@ -46,7 +57,7 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 			class A{}
 			var a1: A;
 			var a2: A;
-		'''.parse()
+		'''.parseAndValidateSuccessfully()
 //		val classDecl = script.scriptElements.head as N4ClassDeclaration
 //		val AType = classDecl.definedType
 
@@ -109,7 +120,7 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 	def void testSubtypeUnknownType_04() {
 		val script = '''
 			var s: String
-		'''.parse
+		'''.parseAndValidateSuccessfully
 		val given = script.scriptElements.head.variableStatementDeclaredType
 		val unknown = TypeRefsFactory.eINSTANCE.createUnknownTypeRef
 
@@ -135,7 +146,7 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 			var b: B;
 			var c: C;
 			var x: any;
-		'''.parse()
+		'''.parseAndValidateSuccessfully()
 
 		val G = newRuleEnvironment(script);
 
@@ -193,16 +204,13 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 	}
 
 	@Test
-	def void testSubTypeFunctionRefs() {
+	def void testSubtypeFunctionRefs() {
 		// class A{}
 		val script = '''
 			var f1: {function()};
 			var f2: {function()};
-		'''.parse()
+		'''.parseAndValidateSuccessfully()
 
-		val issues = script.validate();
-//		println(issues)
-		assertEquals(0, issues.size) // TODO improve issue checking
 		val f1 = script.scriptElements.get(0).variableStatementDeclaredType
 		val f2 = script.scriptElements.get(0).variableStatementDeclaredType
 
@@ -211,5 +219,54 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 		assertSubtype(result, true)
 	}
 
+	@Test
+	def void testSubtypeConstructorTypeRefWithWildcard() {
+		val script = '''
+			class C {}
+			let ctor: constructor{? extends C};
+		'''.parseAndValidateSuccessfully()
 
+		val ctorTypeRefFromAST = script.eAllContents.filter(TypeTypeRef).head;
+		assertTrue(ctorTypeRefFromAST.isConstructorRef);
+
+		val G = newRuleEnvironment(script);
+		val open = TypeUtils.copy(ctorTypeRefFromAST);
+		val closed1 = ts.substTypeVariablesWithFullCapture(G, open) as TypeTypeRef;
+		val closed2 = ts.substTypeVariablesWithFullCapture(G, open) as TypeTypeRef;
+		val reopened = wildcardCaptureTestHelper.reopenExistentialTypes(G, closed1) as TypeTypeRef;
+
+		val openCpy = TypeUtils.copy(open);
+		val closed1Cpy = TypeUtils.copy(closed1);
+
+		// ensure our tests data (i.e. type references open, closed1, etc.) has exactly the properties we want to test:
+		assertNotSame(closed1, open);
+		assertNotSame(closed2, open);
+		assertNotSame(openCpy, open);
+		assertNotSame(closed1Cpy, closed1);
+		assertNotSame(reopened, closed1);
+		assertTrue(open.typeArg instanceof Wildcard);
+		assertFalse((closed1.typeArg as ExistentialTypeRef).reopened);
+		assertFalse((closed1Cpy.typeArg as ExistentialTypeRef).reopened);
+		assertFalse((closed2.typeArg as ExistentialTypeRef).reopened);
+		assertTrue((reopened.typeArg as ExistentialTypeRef).reopened);
+		assertNotEquals((closed1.typeArg as ExistentialTypeRef).id, (closed2.typeArg as ExistentialTypeRef).id);
+		assertEquals((closed1Cpy.typeArg as ExistentialTypeRef).id, (closed1.typeArg as ExistentialTypeRef).id);
+
+		// now the actual tests:
+
+		assertTrue(ts.subtypeSucceeded(G, openCpy, open));
+		assertTrue(ts.subtypeSucceeded(G, closed1, open));
+		assertTrue(ts.subtypeSucceeded(G, closed2, open));
+		assertTrue(ts.subtypeSucceeded(G, reopened, open));
+
+		assertFalse(ts.subtypeSucceeded(G, open, closed1));
+		assertTrue(ts.subtypeSucceeded(G, closed1Cpy, closed1));
+		assertFalse(ts.subtypeSucceeded(G, closed2, closed1));
+		assertFalse(ts.subtypeSucceeded(G, reopened, closed1));
+
+		assertTrue(ts.subtypeSucceeded(G, openCpy, reopened));
+		assertTrue(ts.subtypeSucceeded(G, closed1, reopened));
+		assertTrue(ts.subtypeSucceeded(G, closed2, reopened));
+		assertTrue(ts.subtypeSucceeded(G, reopened, reopened));
+	}
 }
