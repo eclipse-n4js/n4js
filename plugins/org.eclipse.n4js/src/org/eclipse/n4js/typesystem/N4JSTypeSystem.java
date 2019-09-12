@@ -19,6 +19,11 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.postprocessing.TypeProcessor;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -26,6 +31,7 @@ import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypableElement;
+import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -33,6 +39,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.xtext.EcoreUtil2;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -120,7 +127,26 @@ public class N4JSTypeSystem {
 		return expectedTypeJudgment.apply(G, container, expression);
 	}
 
-	/** Tells if {@code left} is a subtype of {@code right}. Never returns <code>null</code>. */
+	/**
+	 * Tells if {@code left} is a subtype of {@code right}. Never returns <code>null</code>.
+	 * <p>
+	 * If a type argument representing a range of types (e.g. a wildcard) appears on one or both sides, this method will
+	 * check whether the subtype relation holds for *all* types represented by the range. For example, given classes A,
+	 * B, and C with C &lt;: B &lt;: A, the following applies:
+	 *
+	 * <pre>
+	 * C !&lt;: ? extends B
+	 * C &lt;: ? super B
+	 * A !&lt;: ? super B
+	 * ? extends C &lt;: ? super A
+	 * ? extends A !&lt;: ? super C
+	 * </pre>
+	 *
+	 * In particular, this method never performs bounds checks, i.e. it never checks whether one type argument lies
+	 * within the range of types represented by another type argument; use method
+	 * {@link TypeSystemHelper#checkTypeArgumentCompatibility(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)}
+	 * for such bounds checks.
+	 */
 	public Result subtype(RuleEnvironment G, TypeArgument left, TypeArgument right) {
 		return subtypeJudgment.apply(G, left, right);
 	}
@@ -155,14 +181,96 @@ public class N4JSTypeSystem {
 		return equaltype(G, left, right).isSuccess();
 	}
 
-	/** Returns the upper bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
+	/**
+	 * Returns the upper bound of type arguments that represent a range of types; other types are returned unchanged.
+	 * Never returns <code>null</code>.
+	 * <p>
+	 * In particular, this method returns the declared or implicit upper bound of
+	 * <ul>
+	 * <li>{@link Wildcard}s and
+	 * <li>reopened(!) {@link ExistentialTypeRef}s.
+	 * </ul>
+	 * It does not return the upper bound of
+	 * <ul>
+	 * <li>closed (i.e. non-reopened) {@code ExistentialTypeRef}s,
+	 * <li>{@link BoundThisTypeRef}s, and
+	 * <li>{@link TypeVariable}s.
+	 * </ul>
+	 * Use methods {@link #upperBoundWithReopen(RuleEnvironment, TypeArgument) #upperBoundWithReopen()} or
+	 * {@link #upperBoundWithReopenAndResolve(RuleEnvironment, TypeArgument) #upperBoundWithReopenAndResolve()} for this
+	 * purpose.
+	 */
 	public TypeRef upperBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument);
+		return boundJudgment.applyUpperBound(G, typeArgument, false, false);
 	}
 
-	/** Returns the lower bound of the given type wrapped in a {@link Result}. Never returns <code>null</code>. */
+	/**
+	 * Same as {@link #upperBound(RuleEnvironment, TypeArgument)}, but also returns the upper bound for closed (i.e.
+	 * non-reopened) {@code ExistentialTypeRef}s and {@link BoundThisTypeRef}s (but *not* for {@link TypeVariable}s).
+	 * <p>
+	 * Note that exceptions, i.e. closed {@link ExistentialTypeRef}s that must *not* be turned into their upper bound,
+	 * can be defined via {@link RuleEnvironmentExtensions#addFixedCapture(RuleEnvironment, ExistentialTypeRef)}.
+	 */
+	public TypeRef upperBoundWithReopen(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyUpperBound(G, typeArgument, true, false);
+	}
+
+	/**
+	 * Same as {@link #upperBoundWithReopen(RuleEnvironment, TypeArgument)}, but also returns the upper bound for
+	 * {@link TypeVariable}s.
+	 * <p>
+	 * NOTE: unlike {@link Wildcard}s, {@link ExistentialTypeRef}s, and {@link BoundThisTypeRef}s, type variables are
+	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
+	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
+	 */
+	public TypeRef upperBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyUpperBound(G, typeArgument, true, true);
+	}
+
+	/**
+	 * Returns the lower bound of type arguments that represent a range of types; other types are returned unchanged.
+	 * Never returns <code>null</code>.
+	 * <p>
+	 * In particular, this method returns the lower bound of
+	 * <ul>
+	 * <li>{@link Wildcard}s and
+	 * <li>reopened(!) {@link ExistentialTypeRef}s.
+	 * </ul>
+	 * It does *not* return the lower bound of
+	 * <ul>
+	 * <li>closed (i.e. non-reopened) {@code ExistentialTypeRef}s,
+	 * <li>{@link BoundThisTypeRef}s, and
+	 * <li>{@link TypeVariable}s.
+	 * </ul>
+	 * Use methods {@link #lowerBoundWithReopen(RuleEnvironment, TypeArgument) #lowerBoundWithReopen()} or
+	 * {@link #lowerBoundWithReopenAndResolve(RuleEnvironment, TypeArgument) #lowerBoundWithReopenAndResolve()} for this
+	 * purpose.
+	 */
 	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument);
+		return boundJudgment.applyLowerBound(G, typeArgument, false, false);
+	}
+
+	/**
+	 * Same as {@link #lowerBound(RuleEnvironment, TypeArgument)}, but also returns the lower bound for closed (i.e.
+	 * non-reopened) {@code ExistentialTypeRef}s and {@link BoundThisTypeRef}s (but *not* for {@link TypeVariable}s).
+	 * <p>
+	 * Note that exceptions, i.e. closed {@link ExistentialTypeRef}s that must *not* be turned into their lower bound,
+	 * can be defined via {@link RuleEnvironmentExtensions#addFixedCapture(RuleEnvironment, ExistentialTypeRef)}.
+	 */
+	public TypeRef lowerBoundWithReopen(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyLowerBound(G, typeArgument, true, false);
+	}
+
+	/**
+	 * Same as {@link #lowerBoundWithReopen(RuleEnvironment, TypeArgument)}, but also returns the lower bound for
+	 * {@link TypeVariable}s.
+	 * <p>
+	 * NOTE: unlike {@link Wildcard}s, {@link ExistentialTypeRef}s, and {@link BoundThisTypeRef}s, type variables are
+	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
+	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
+	 */
+	public TypeRef lowerBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyLowerBound(G, typeArgument, true, true);
 	}
 
 	/**
@@ -175,16 +283,17 @@ public class N4JSTypeSystem {
 
 	/**
 	 * Same as {@link #substTypeVariables(RuleEnvironment, TypeArgument)}, but makes explicit the rule that you get a
-	 * {@link TypeRef} back if you put in a {@code TypeRef}.
+	 * {@link TypeRef} back if you pass in a {@code TypeRef}.
 	 */
 	public TypeRef substTypeVariables(RuleEnvironment G, TypeRef typeRef) {
 		return (TypeRef) substTypeVariables(G, (TypeArgument) typeRef);
 	}
 
 	/**
-	 * Substitutes type variables, i.e. replaces type variables with actual values taken from the
-	 * type-variable-to-type-argument mappings in the given rule environment. Never returns <code>null</code>, EXCEPT if
-	 * <code>null</code> is passed in as type argument.
+	 * Substitutes type variables, i.e. replaces type variables with actual type arguments taken from the
+	 * {@link RuleEnvironmentExtensions#addTypeMapping(RuleEnvironment, TypeVariable, TypeArgument)
+	 * type-variable-to-type-argument mappings} in the given rule environment. Never returns <code>null</code>, EXCEPT
+	 * if <code>null</code> is passed in as type argument.
 	 * <p>
 	 * The given {@code typeArgument} will never be changed, instead a copy will be created to reflect the substitution.
 	 * If nothing was substituted (i.e. given type argument does not contain any type variable or only type variables
@@ -192,14 +301,73 @@ public class N4JSTypeSystem {
 	 * returned. Therefore, client code can do an identity check on the return value to find out if a substitution was
 	 * performed.
 	 * <p>
-	 * TODO currently unnecessary copies are created in a few cases; clean-up code to make last statement valid!
+	 * INVARIANT: if you pass in a {@link TypeRef}, you'll get a {@code TypeRef} back (only other case: pass in a
+	 * {@link Wildcard} and you'll get a {@code Wildcard} back). But this is not true for subclasses of {@code TypeRef},
+	 * e.g. pass in a {@link FunctionTypeRef} and you might get a {@link FunctionTypeExpression} back.
 	 * <p>
-	 * Invariant: if you put in a TypeRef, you'll get a TypeRef back (only other case: put in a Wildcard and you'll get
-	 * a Wildcard). But this is not true for subclasses of TypeRef, e.g. put in a FunctionTypeRef and you might get a
-	 * FunctionTypeExpression back.
+	 * NOTE: in some cases, this method converts nested {@code Wildcard}s to an {@link ExistentialTypeRef} with
+	 * {@code reopened == true}, because due to substitution {@code Wildcard}s may end up in positions where only
+	 * {@link TypeRef}s may appear; however, this is a pure implementation detail and does not have anything to do with
+	 * capturing of wildcards and should not have any semantical effect.
 	 */
 	public TypeArgument substTypeVariables(RuleEnvironment G, TypeArgument typeArgument) {
-		return substTypeVariablesJudgment.apply(G, typeArgument);
+		return substTypeVariablesJudgment.apply(G, typeArgument, false, false);
+	}
+
+	/**
+	 * Same as {@link #substTypeVariablesWithFullCapture(RuleEnvironment, TypeArgument)}, but makes explicit the rule
+	 * that you get a {@link TypeRef} back if you pass in a {@code TypeRef}.
+	 */
+	public TypeRef substTypeVariablesWithFullCapture(RuleEnvironment G, TypeRef typeRef) {
+		return (TypeRef) substTypeVariablesWithFullCapture(G, (TypeArgument) typeRef);
+	}
+
+	/**
+	 * Same as {@link #substTypeVariables(RuleEnvironment, TypeArgument)}, but also captures wildcards, i.e. converts
+	 * {@link Wildcard}s into closed, i.e. non-reopened, {@link ExistentialTypeRef}s.
+	 * <p>
+	 * Note that in some cases partial capturing is required instead; see
+	 * {@link #substTypeVariablesWithPartialCapture(RuleEnvironment, TypeArgument)} for details.
+	 */
+	public TypeArgument substTypeVariablesWithFullCapture(RuleEnvironment G, TypeArgument typeArgument) {
+		return substTypeVariablesJudgment.apply(G, typeArgument, true, true);
+	}
+
+	/**
+	 * Same as {@link #substTypeVariablesWithPartialCapture(RuleEnvironment, TypeArgument)}, but makes explicit the rule
+	 * that you get a {@link TypeRef} back if you pass in a {@code TypeRef}.
+	 */
+	public TypeRef substTypeVariablesWithPartialCapture(RuleEnvironment G, TypeRef typeRef) {
+		return (TypeRef) substTypeVariablesWithPartialCapture(G, (TypeArgument) typeRef);
+	}
+
+	/**
+	 * Same as {@link #substTypeVariablesWithFullCapture(RuleEnvironment, TypeArgument)}, but only captures some
+	 * wildcards:
+	 * <ul>
+	 * <li>wildcards already contained in the given {@code typeArgument} will *not* be captured,
+	 * <li>wildcards being substituted into the given {@code typeArgument} as a replacement for a type variable
+	 * contained in the given {@code typeArgument} will be captured.
+	 * </ul>
+	 * To illustrate the motivation for the above distinction, consider the following example:
+	 *
+	 * <pre>
+	 * class G&lt;T> {
+	 *     public field1: Array&lt;?>;
+	 *     public field2: Array&lt;T>;
+	 * }
+	 * let g: G&lt;?> = ...
+	 * // XPECT noerrors -->
+	 * g.field1 = g.field1;
+	 * // XPECT errors --> "Array<capture#1 of ?> is not a subtype of Array<capture#2 of ?>." at "g.field2"
+	 * g.field2 = g.field2;
+	 * </pre>
+	 *
+	 * On the right-hand side of the two assignments, both contained and substituted wildcards have to be captured,
+	 * whereas on the left-hand side only substituted but not contained wildcards must be captured.
+	 */
+	public TypeArgument substTypeVariablesWithPartialCapture(RuleEnvironment G, TypeArgument typeArgument) {
+		return substTypeVariablesJudgment.apply(G, typeArgument, false, true);
 	}
 
 	// ###############################################################################################################
@@ -329,14 +497,6 @@ public class N4JSTypeSystem {
 			}
 		}
 		return G;
-	}
-
-	/**
-	 * Get rid of types such as wildcards, ExistentialTypeRef, bound this types, and type variables by replacing them
-	 * with their upper bound.
-	 */
-	public TypeRef resolveType(RuleEnvironment G, TypeArgument typeArgument) {
-		return tsh.resolveType(G, typeArgument);
 	}
 
 	/**

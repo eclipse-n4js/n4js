@@ -39,7 +39,7 @@ g.f1(function(a : any) {})
 g.f1(function(a : A) {})
 // XPECT noerrors --> "f(A)<:f(? extends A)"
 g.f1(function(a) {
-	// XPECT errors --> "A is not a subtype of X." at "a"
+	// XPECT errors --> "? extends A is not a subtype of X." at "a"
 	var test : X = a;
 })
 
@@ -61,6 +61,6 @@ g.f3(function(a : C<? extends A>, b : A) {})
 g.f3(function(a,b) {
 	// XPECT errors --> "C<? extends A> is not a subtype of X." at "a"
 	var test1 : X = a;
-	// XPECT errors --> "A is not a subtype of X." at "b"
+	// XPECT errors --> "? extends A is not a subtype of X." at "b"
 	var test2 : X = b;
 })

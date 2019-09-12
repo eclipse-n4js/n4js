@@ -44,6 +44,38 @@ public abstract class N4JSASTUtils {
 	public static final String CONSTRUCTOR = "constructor";
 
 	/**
+	 * Tells if the given {@link EObject} represents a write access, e.g. left-hand side of an assignment.
+	 */
+	public static boolean isWriteAccess(EObject reference) {
+		EObject parent = reference.eContainer();
+		while (parent instanceof ParameterizedPropertyAccessExpression
+				&& ((ParameterizedPropertyAccessExpression) parent).getTarget() == reference) {
+			reference = parent;
+			parent = parent.eContainer();
+		}
+		if (parent == null) {
+			return false;
+		}
+
+		if (parent instanceof AssignmentExpression) {
+			AssignmentExpression ae = (AssignmentExpression) parent;
+			return ae.getLhs() == reference;
+		}
+		if (parent instanceof ForStatement) {
+			ForStatement fs = (ForStatement) parent;
+			return fs.getInitExpr() == reference;
+		}
+
+		DestructNode dNode = DestructureUtils.getCorrespondingDestructNode(reference);
+		if (dNode != null) {
+			dNode = dNode.findNodeForElement(parent);
+			return dNode != null;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the containing variable environment scope for the given identifiable element, depending on whether the
 	 * element is block scoped (i.e. variables declared with let, const) or not.
 	 *

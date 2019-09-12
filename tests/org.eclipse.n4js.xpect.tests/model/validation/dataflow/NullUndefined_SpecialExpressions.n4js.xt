@@ -44,7 +44,6 @@ function f1c() {
 }
 
 function f1d() {
-	// XPECT warnings --> "The type of this expression is undefined, so it will never evaluate to a value other than undefined." at "condition() ? null : undefined"
 	let a : int = condition() ? null : undefined;
 	// XPECT warnings --> "Variable a is null or undefined" at "a"
 	a.toString();

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.typeRefs.impl;
 
+import java.util.UUID;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -99,6 +101,8 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 		switch (eDataType.getClassifierID()) {
 			case TypeRefsPackage.OPTIONAL_FIELD_STRATEGY:
 				return createOptionalFieldStrategyFromString(eDataType, initialValue);
+			case TypeRefsPackage.UUID:
+				return createUUIDFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -114,6 +118,8 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 		switch (eDataType.getClassifierID()) {
 			case TypeRefsPackage.OPTIONAL_FIELD_STRATEGY:
 				return convertOptionalFieldStrategyToString(eDataType, instanceValue);
+			case TypeRefsPackage.UUID:
+				return convertUUIDToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -346,6 +352,24 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 */
 	public String convertOptionalFieldStrategyToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UUID createUUIDFromString(EDataType eDataType, String initialValue) {
+		return (UUID)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertUUIDToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

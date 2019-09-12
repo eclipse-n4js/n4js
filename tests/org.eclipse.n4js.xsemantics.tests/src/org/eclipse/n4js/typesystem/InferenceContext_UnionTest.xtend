@@ -154,7 +154,7 @@ class InferenceContext_UnionTest extends AbstractInferenceContextTest {
 				constraint(B1,'<:',union(beta.ref,G.of(delta)))
 			],
 			//
-			alpha -> union(A.ref,B2.ref),
+			alpha -> A.ref,
 			beta -> B1.ref,
 			delta -> null // FIXME don't use null as test expectation!
 		)

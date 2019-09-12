@@ -250,7 +250,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 			val memberInTModule = propAssignm.definedMember;
 			if (memberInTModule !== null) {
 				val memberType = getMemberType(G, solution, quickMode, propPair);
-				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldProperty(G, memberType);
+				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, memberType);
 				EcoreUtilN4.doWithDeliver(false, [
 					memberInTModule.typeOfMember = TypeUtils.copy(memberTypeSane);
 				], memberInTModule);

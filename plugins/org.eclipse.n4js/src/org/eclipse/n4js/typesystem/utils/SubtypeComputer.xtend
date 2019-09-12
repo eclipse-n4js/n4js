@@ -121,7 +121,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 			// the following is required in a method override scenario where 'left' is the overriding
 			// and 'right' the overridden method
 			if (left.declaredType?.eContainer instanceof TClassifier)
-				addSubstitutions(G2, TypeUtils.createTypeRef(left.declaredType.eContainer as TClassifier));
+				tsh.addSubstitutions(G2, TypeUtils.createTypeRef(left.declaredType.eContainer as TClassifier));
 
 			return isMatchingTypeVariableBounds(G2, leftTypeVars, rightTypeVars);
 		}
@@ -164,7 +164,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 					else
 						right.isReturnValueOptional;
 
-				if (leftReturnTypeRef.declaredType !== G.voidType) {
+				if (leftReturnTypeRef !== null && leftReturnTypeRef.declaredType !== G.voidType) {
 					// both are non-void
 					if (left.isReturnValueOptional && !isRightReturnOptional) {
 						return false;

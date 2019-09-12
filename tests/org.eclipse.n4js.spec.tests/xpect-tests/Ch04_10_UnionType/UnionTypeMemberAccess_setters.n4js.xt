@@ -56,7 +56,7 @@ u.s_onlyInT2 = null;
 u.s1 = null;
 // private members are visible inside module XPECT noerrors
 u.s2 = null;
-// XPECT expectedType at 'null' --> intersection{A,ASub}
+// XPECT expectedType at 'null' --> ASub
 u.s3 = null;
 // XPECT expectedType at 'null' --> intersection{A,B}
 u.s4 = null;

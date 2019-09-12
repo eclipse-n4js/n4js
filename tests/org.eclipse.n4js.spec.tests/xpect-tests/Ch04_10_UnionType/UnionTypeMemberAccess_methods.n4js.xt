@@ -56,7 +56,7 @@ u.m_onlyInT2;
 u.m1();
 // private members are visible inside module XPECT noerrors
 u.m2();
-// XPECT type of 'u.m3()' --> union{A,ASub}
+// XPECT type of 'u.m3()' --> A
 u.m3();
 // XPECT type of 'u.m4()' --> union{A,B}
 u.m4();

@@ -369,12 +369,7 @@ public final class InferenceContext {
 		if (DEBUG) {
 			log("****** Reduction");
 		}
-		for (final TypeConstraint constraint : constraints) {
-			reducer.reduce(constraint);
-			if (isDoomed()) {
-				break;
-			}
-		}
+		reducer.reduce(constraints);
 		// clearing the list of constraints is ok given their information has been transferred to the bound set,
 		// to which bounds are added but never removed.
 		constraints.clear();
@@ -494,7 +489,6 @@ public final class InferenceContext {
 		final boolean preferUpperOverLower = lowerAreUninteresting && upperBoundsPreview != null
 				&& upperBoundsPreview.length > 0;
 		if (lowerBounds.length > 0 && !preferUpperOverLower) {
-			// TODO IDE-1653 reconsider:
 			// take upper bound of all lower bounds
 			// (if we have a type bound `α :> ? extends A` this will give us A as a lower bound for α)
 			for (int i = 0; i < lowerBounds.length; i++) {
@@ -506,7 +500,10 @@ public final class InferenceContext {
 		} else {
 			final TypeRef[] upperBounds = currentBounds.collectUpperBounds(infVar, true, true);
 			if (upperBounds.length > 0) {
-				// TODO IDE-1653 should we here take lower bound of all upperBounds? (for consistency with above)
+				// take lower bound of all upper bounds
+				for (int i = 0; i < upperBounds.length; i++) {
+					upperBounds[i] = ts.lowerBound(G, upperBounds[i]);
+				}
 				final TypeRef result = tsh.createIntersectionType(G, upperBounds);
 				assert TypeUtils.isProper(result) : "not a proper GLB: " + str(result);
 				return result;

@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
+
+
+class C {}
+class D extends C {}
+
+class G<T> {
+	public add(p: T) {}
+}
+
+
+let g: G<? extends C>;
+// XPECT errors --> "D is not a subtype of ? extends C." at "new D()"
+g.add(new D());
+
+
+let gg: G<G<? extends C>>;
+// XPECT noerrors --> "G<D> is not a subtype of G<? extends C>." at "new G<D>()"
+gg.add(new G<D>());
+
+
+let gctor: G<constructor{? extends C}>;
+let ctor: constructor{? extends C};
+// XPECT noerrors -->
+gctor.add(ctor);

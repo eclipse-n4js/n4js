@@ -133,7 +133,7 @@ fd7;
 class B extends A {}
 class C extends B {}
 
-// XPECT type of 'function (x=new A()) : void {}' --> {function(union{A,B}=…):void}
+// XPECT type of 'function (x=new A()) : void {}' --> {function(A=…):void}
 let fe1: {function(B=)} = function (x=new A()) : void {};
 fe1;
 
@@ -141,7 +141,7 @@ fe1;
 let fe2: {function(B=)} = function (x=new B()) : void {};
 fe2;
 
-// XPECT type of 'function (x=new C()) : void {}' --> {function(union{B,C}=…):void}
+// XPECT type of 'function (x=new C()) : void {}' --> {function(B=…):void}
 let fe3: {function(B=)} = function (x=new C()) : void {};
 fe3;
 
@@ -160,7 +160,7 @@ fe6;
 
 /** Now the same tests on Arrow Function Expressions */
 
-// XPECT type of '(x=new A()) : void => {}' --> {function(union{A,B}=…):void}
+// XPECT type of '(x=new A()) : void => {}' --> {function(A=…):void}
 let ff1: {function(B=)} = (x=new A()) : void => {};
 ff1;
 
@@ -168,7 +168,7 @@ ff1;
 let ff2: {function(B=)} = (x=new B()) : void => {};
 ff2;
 
-// XPECT type of '(x=new C()) : void => {}' --> {function(union{B,C}=…):void}
+// XPECT type of '(x=new C()) : void => {}' --> {function(B=…):void}
 let ff3: {function(B=)} = (x=new C()) : void => {};
 ff3;
 

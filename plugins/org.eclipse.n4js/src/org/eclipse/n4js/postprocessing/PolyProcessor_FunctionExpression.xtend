@@ -11,6 +11,7 @@
 package org.eclipse.n4js.postprocessing
 
 import com.google.common.base.Optional
+import com.google.common.collect.Iterators
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.HashMap
@@ -21,6 +22,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -34,6 +36,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 
@@ -49,6 +52,8 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	@Inject
 	private N4JSTypeSystem ts;
+	@Inject
+	private TypeSystemHelper tsh;
 	@Inject
 	private ASTProcessor astProcessor;
 
@@ -98,7 +103,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 			};
 
 		// register onSolved handlers to add final types to cache (i.e. may not contain inference variables)
-		infCtx.onSolved [ solution | handleOnSolved(G, cache, infCtx, funExpr, resultTypeRef, solution)];
+		infCtx.onSolved [ solution | handleOnSolved(G, cache, infCtx, funExpr, expectedTypeRef, resultTypeRef, solution)];
 
 		// return temporary type of funExpr (i.e. may contain inference variables)
 		return resultTypeRef;
@@ -246,10 +251,25 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	 * Writes final types to cache
 	 */
 	private def void handleOnSolved(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx, FunctionExpression funExpr,
-		FunctionTypeExpression resultTypeRef, Optional<Map<InferenceVariable, TypeRef>> solution
+		TypeRef expectedTypeRef, FunctionTypeExpression resultTypeRef, Optional<Map<InferenceVariable, TypeRef>> solution
 	) {
 		val solution2 = if (solution.present) solution.get else infCtx.createPseudoSolution(G.anyTypeRef);
-		val resultSolved = resultTypeRef.applySolution(G, solution2) as FunctionTypeExprOrRef;
+		// sanitize parameter types
+		// (but do not turn closed ExistentialTypeRefs into their upper bound that also appear in the expected type,
+		// by defining them as "fixed captures" via RuleEnvironmentExtensions#addFixedCapture())
+		val G2 = G.wrap;
+		val returnTypeInfVar = resultTypeRef.returnTypeRef?.declaredType; // this infVar's solution must not be sanitized as it's not a parameter
+		val expectedTypeRefSubst = expectedTypeRef.applySolution(G, solution2);
+		if (expectedTypeRefSubst !== null) {
+			val capturesInExpectedTypeRef = Iterators.concat(Iterators.singletonIterator(expectedTypeRefSubst), expectedTypeRefSubst.eAllContents)
+				.filter(ExistentialTypeRef)
+				.filter[!reopened];
+			capturesInExpectedTypeRef.forEach[G2.addFixedCapture(it)];
+		}
+		val solution3 = new HashMap(solution2);
+		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfVariableFieldPropertyParameter(G2, v) else v];
+		// apply solution to resultTypeRef
+		val resultSolved = resultTypeRef.applySolution(G, solution3) as FunctionTypeExprOrRef;
 		// store type of funExpr in cache ...
 		cache.storeType(funExpr, resultSolved);
 		// update the defined function in the TModule
