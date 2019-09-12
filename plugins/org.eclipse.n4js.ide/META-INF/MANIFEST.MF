@@ -18,6 +18,7 @@ Require-Bundle: org.eclipse.n4js,
  com.google.gson,
  org.eclipse.n4js.ts.ide
 Export-Package: org.eclipse.n4js.ide,
+ org.eclipse.n4js.ide.server,
  org.eclipse.n4js.ide.server.hover,
  org.eclipse.n4js.ide.contentassist.antlr,
  org.eclipse.n4js.ide.contentassist.antlr.internal,

@@ -76,6 +76,8 @@ Contributors:
 		<maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
 		<maven-verifier-plugin.version>1.1</maven-verifier-plugin.version>
 		<xslt-generator-maven-plugin.version>1.8</xslt-generator-maven-plugin.version>
+		<addjars-maven-plugin.version>1.0.5</addjars-maven-plugin.version>
+		<maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
 
 		<!-- Flags for the java compiler, e.g. -g For debug-information (see http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html) -->
 		<java-compiler-arguments></java-compiler-arguments>

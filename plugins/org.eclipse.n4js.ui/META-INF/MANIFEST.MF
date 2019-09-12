@@ -8,6 +8,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.xtext.ui,
  org.eclipse.ui.editors,
+ com.ibm.icu,
  org.eclipse.xtext.ui.shared,
  org.eclipse.ui,
  org.eclipse.core.runtime,
