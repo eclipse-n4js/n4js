@@ -24,6 +24,7 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtext.resource.IEObjectDescription
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 
 /**
  * Poor mans filter to reduce number of elements, filtering out elements which are not valid in a certain context, although
@@ -46,7 +47,7 @@ class TypesScopeFilter {
 		}
 		var EObject container = context
 		var EReference containmentFeature = null
-		while(container instanceof TypeRef) {
+		while(container instanceof TypeRef && !(container instanceof FunctionTypeExpression)) {
 			containmentFeature = container.eContainingFeature as EReference
 			container = container.eContainer
 		}
@@ -66,6 +67,8 @@ class TypesScopeFilter {
 			TFormalParameter:
 				parameterTypeCriteria
 			TFunction:
+				returnTypeCriteria
+			FunctionTypeExpression:
 				returnTypeCriteria
 			default:
 				Predicates.alwaysTrue
