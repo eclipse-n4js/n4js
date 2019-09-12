@@ -103,7 +103,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 			};
 
 		// register onSolved handlers to add final types to cache (i.e. may not contain inference variables)
-		infCtx.onSolved [ solution | handleOnSolved(G, cache, infCtx, funExpr, resultTypeRef, solution)];
+		infCtx.onSolved [ solution | handleOnSolved(G, cache, infCtx, funExpr, expectedTypeRef, resultTypeRef, solution)];
 
 		// return temporary type of funExpr (i.e. may contain inference variables)
 		return resultTypeRef;
@@ -251,19 +251,21 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	 * Writes final types to cache
 	 */
 	private def void handleOnSolved(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx, FunctionExpression funExpr,
-		FunctionTypeExpression resultTypeRef, Optional<Map<InferenceVariable, TypeRef>> solution
+		TypeRef expectedTypeRef, FunctionTypeExpression resultTypeRef, Optional<Map<InferenceVariable, TypeRef>> solution
 	) {
 		val solution2 = if (solution.present) solution.get else infCtx.createPseudoSolution(G.anyTypeRef);
 		// sanitize parameter types
-		// (but do not turn close ExistentialTypeRefs into their upper bound that also appear in the return type,
+		// (but do not turn closed ExistentialTypeRefs into their upper bound that also appear in the expected type,
 		// by defining them as "fixed captures" via RuleEnvironmentExtensions#addFixedCapture())
 		val G2 = G.wrap;
 		val returnTypeInfVar = resultTypeRef.returnTypeRef?.declaredType; // this infVar's solution must not be sanitized as it's not a parameter
-		val resultReturnTypeRef = solution2.get(returnTypeInfVar) ?: G.voidTypeRef;
-		val capturesInReturnTypeRefs = Iterators.concat(Iterators.singletonIterator(resultReturnTypeRef), resultReturnTypeRef.eAllContents)
-			.filter(ExistentialTypeRef)
-			.filter[!reopened];
-		capturesInReturnTypeRefs.forEach[G2.addFixedCapture(it)];
+		val expectedTypeRefSubst = expectedTypeRef.applySolution(G, solution2);
+		if (expectedTypeRefSubst !== null) {
+			val capturesInExpectedTypeRef = Iterators.concat(Iterators.singletonIterator(expectedTypeRefSubst), expectedTypeRefSubst.eAllContents)
+				.filter(ExistentialTypeRef)
+				.filter[!reopened];
+			capturesInExpectedTypeRef.forEach[G2.addFixedCapture(it)];
+		}
 		val solution3 = new HashMap(solution2);
 		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfVariableFieldPropertyParameter(G2, v) else v];
 		// apply solution to resultTypeRef

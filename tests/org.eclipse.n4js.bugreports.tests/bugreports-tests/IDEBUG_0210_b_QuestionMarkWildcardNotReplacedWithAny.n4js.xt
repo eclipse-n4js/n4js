@@ -12,10 +12,14 @@
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportPendingTest END_SETUP  */
 
 interface I<T> {}
-class G<T> implements I<T> {}
+class G<T> implements I<T> {
+    public put(p: T) {}
+    public take(): T { return undefined; }
+}
 
-function <T> foo(i : I<T>, cb : {function(T)}) { }
+function <T> foo(i : I<T>, cb : {function(T):T}) { }
 function <T> bar(i : I<T>, cb : {function(Array<T>):Array<T>}) { }
+function <T> baz(i : I<T>, cb : {function(G<T>, G<T>)}) { }
 
 var g : G<?>;
 
@@ -24,11 +28,17 @@ var g : G<?>;
 // variable 'g's value in order to obtain the first argument of the call expression)
 
 // XPECT noerrors -->
-foo(g, function(x){})
+foo(g, function(x){return x;})
+// XPECT noerrors -->
+foo(g, x=>x)
 // XPECT noerrors -->
 bar(g, function(x){return x;})
 // XPECT noerrors -->
 bar(g, x=>x)
+// XPECT noerrors -->
+baz(g, function(x,y) { x.put(y.take()); })
+// XPECT noerrors -->
+baz(g, (x,y)=>{ x.put(y.take()); })
 
 // contrast the above with the following similar but different case (which should produce an error):
 
