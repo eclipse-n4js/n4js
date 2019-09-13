@@ -306,7 +306,9 @@ Contributors:
 									</dependency>
 									</dependencies>
 								<includes>
-									<include>**/CheckDefaultPreferencesPluginUITest.java</include>
+                              <!--       <include>**/CheckDefaultPreferencesPluginUITest.java</include>
+                                    <include>**/HyperlinkPluginUITest.java</include> -->
+                                    <include>**/*PluginUITest.java</include>
 								</includes>
 								<excludes>
 									<exclude>**/*IntegrationPluginUITest.java</exclude>
