@@ -313,6 +313,7 @@ Contributors:
 								<excludes>
 									<exclude>**/*IntegrationPluginUITest.java</exclude>
 								</excludes>
+								<runOrder>alphabetical</runOrder>
 							</configuration>
 							<goals>
 								<goal>test</goal>
