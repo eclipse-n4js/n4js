@@ -386,7 +386,7 @@ Contributors:
 								<application>org.eclipse.ui.ide.workbench</application>
 								-->
 								<product>org.eclipse.n4js.product.product</product>
-								<application>org.eclipse.n4js.product.application</application>
+								<!-- <application>org.eclipse.n4js.product.application</application> -->
 								<showEclipseLog>true</showEclipseLog>
 								<dependencies>
 									<!-- since Eclipse 4.4 and Tycho 0.20.0 PluginUI tests were not starting,
