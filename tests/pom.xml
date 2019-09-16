@@ -26,7 +26,105 @@ Contributors:
 	<modules>
 		<!-- ************************************** JUnit Tests -->
 
+		<!-- Release Engineering Tools Tests -->
+		<module>org.eclipse.n4js.releng.utils.tests</module>
+
+		<!-- JSDoc tests -->
+		<module>org.eclipse.n4js.jsdoc2spec.tests</module>
+
+		<!-- Type system tests -->
+		<module>org.eclipse.n4js.ts.model.tests</module>
+		<module>org.eclipse.n4js.ts.tests</module>
+		<module>org.eclipse.n4js.ts.xpect.tests</module>
+
+		<!-- Tester tests -->
+		<module>org.eclipse.n4js.tester.tests</module>
+
+		<!-- Regex tests -->
+		<module>org.eclipse.n4js.regex.tests</module>
+
+		<!-- JS tests -->
+		<module>org.eclipse.n4js.lang.tests</module>
+		<module>org.eclipse.n4js.spec.tests</module>
+		<module>org.eclipse.n4js.tests.ecmatestsuite</module>
+		<module>org.eclipse.n4js.xpect.tests</module>
+
+		<!-- Xsemantics tests -->
+		<module>org.eclipse.n4js.xsemantics.tests</module>
+
+		<!-- transpiler tests -->
+		<module>org.eclipse.n4js.transpiler.tests</module>
+		<module>org.eclipse.n4js.transpiler.es5.tests</module>
+		<module>org.eclipse.n4js.transpiler.es.tests</module>
+		<module>org.eclipse.n4js.generator.headless.tests</module>
+
+		<!-- Package.json tests -->
+		<module>org.eclipse.n4js.packagejson.xpect.tests</module>
+		<module>org.eclipse.n4js.packagejson.xpect.ui.tests</module>
+
+		<!-- access control tests -->
+		<module>org.eclipse.n4js.accesscontrol.tests</module>
+
+		<!-- JSON tests -->
+		<module>org.eclipse.n4js.json.tests</module>
+		<module>org.eclipse.n4js.json.xpect.tests</module>
+		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
+
+		<!-- SEMVER tests -->
+		<module>org.eclipse.n4js.semver.tests</module>
+
+		<!-- ************************************** JUnit Plugin Tests -->
+
+		<!-- JS tests -->
+		<!--
+			This ...n4js.ui.tests execution intentionally happens after the SWTBot one.
+			Jenkins jobs on Windows cannot run git checkout shell scripts, so git repositories are managed and checked out from Java code.
+			The low memory plug-in UI tests run with lower memory settings, so those cannot check out git repositories via Java (test) code.
+			SWTBot tests can run with the common heap size settings and can check out the required git repositories that is why they 
+			should run earlier than plug-in UI tests.
+		 -->
 		<module>org.eclipse.n4js.ui.tests</module>
+		<module>org.eclipse.n4js.xpect.ui.tests</module>
+		<module>org.eclipse.n4js.n4ide.spec.tests</module> 
+		<module>org.eclipse.n4js.smith.ui.tests</module>
+
+				<!-- Runner tests -->
+		<module>org.eclipse.n4js.runner.ui.tests</module>
+
+		<!--  **************************************Other tests -->
+
+		<!-- Smoke tests -->
+		<module>org.eclipse.n4js.smoke.tests</module>
+		<module>org.eclipse.n4js.jsdoc.tests</module>
+		<!-- utils -->
+		<module>org.eclipse.n4js.utils.tests</module>
+		<!-- Expect Matrix test -->
+		<module>org.eclipse.n4js.expectmatrix.tests</module>
+		<!-- Bug reports -->
+		<module>org.eclipse.n4js.bugreports.tests</module>
+		<!-- Spec Examples test -->
+		<module>org.eclipse.n4js.spec.examples.xpect.tests</module>
+
+		<!-- *************************************** Tests testing the test helpers -->
+		<module>org.eclipse.n4js.test.helpers.tests</module>
+
+		<!-- *************************************** Headless Tools Tests -->
+		<module>org.eclipse.n4js.hlc.tests</module>
+		<module>org.eclipse.n4js.hlc.integrationtests</module>
+
+		<!-- *************************************** n4jsx Tests -->
+		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
+		<module>org.eclipse.n4js.n4jsx.spec.ui.tests</module>
+		<module>org.eclipse.n4js.n4jsx.xpect.ui.tests</module>
+		<module>org.eclipse.n4js.n4jsx.ui.tests</module>
+
+		<!-- *************************************** flow graph tests -->
+		<module>org.eclipse.n4js.flowgraphs.tests</module>
+		<module>org.eclipse.n4js.flowgraphs.ui.tests</module>
+
+		<!-- *************************************** N4IDL Tests -->
+		<module>org.eclipse.n4js.n4idl.lang.tests</module>
+		<module>org.eclipse.n4js.n4idl.spec.tests</module>
 
 	</modules>
 
@@ -230,6 +328,7 @@ Contributors:
 							<!-- IDE-1435 unbound by default, rebind in profile to phase "integration-test" -->
 							<phase />
 							<configuration>
+                                <runOrder>alphabetical</runOrder>
 								<!-- 30 Minutes timeout (plus 1sec to simplify search for this timeout in log) -->
 								<forkedProcessTimeoutInSeconds>1801</forkedProcessTimeoutInSeconds>
 								<!-- argLine needs to be one line, if you atoformat line break will break tests -->
@@ -265,6 +364,7 @@ Contributors:
 							<!-- IDE-1435 unbound by default, rebind in profile to phase "integration-test" -->
 							<phase />
 							<configuration>
+                                <runOrder>alphabetical</runOrder>
 								<systemProperties>
 									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
@@ -306,14 +406,11 @@ Contributors:
 									</dependency>
 									</dependencies>
 								<includes>
-                              <!--       <include>**/CheckDefaultPreferencesPluginUITest.java</include>
-                                    <include>**/HyperlinkPluginUITest.java</include> -->
-                                    <include>**/*PluginUITest.java</include>
+									<include>**/*PluginUITest.java</include>
 								</includes>
 								<excludes>
 									<exclude>**/*IntegrationPluginUITest.java</exclude>
 								</excludes>
-								<runOrder>alphabetical</runOrder>
 							</configuration>
 							<goals>
 								<goal>test</goal>
@@ -363,6 +460,7 @@ Contributors:
 							</goals>
 							<phase>test</phase>
 							<configuration>
+                                <runOrder>alphabetical</runOrder>
 								<systemProperties>
 									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
