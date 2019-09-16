@@ -85,7 +85,8 @@ Contributors:
 		<!-- headless compiler options, used in tools/org.eclipse.n4js.hlc -->
 		<hlc.name>n4jsc</hlc.name>
 		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
-		
+		<cli.fat.jar.classifier>jar-with-dependencies</cli.fat.jar.classifier>
+
 		<excludeJRE>false</excludeJRE>
 		
 		<!-- some memory -->

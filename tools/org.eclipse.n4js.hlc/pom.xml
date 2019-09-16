@@ -32,7 +32,6 @@ Contributors:
 		<dir.lib>${project.build.directory}/lib</dir.lib>
 		<plugins.file>plugins-list.txt</plugins.file>
 		<path.dot>.</path.dot>
-		<cli.fat.jar.classifier>jar-with-dependencies</cli.fat.jar.classifier>
 	</properties>
 
 

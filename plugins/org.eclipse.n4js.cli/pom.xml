@@ -24,6 +24,10 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<properties>
+		<cli.jar-longname>${project.artifactId}-${project.version}-${cli.fat.jar.classifier}.jar</cli.jar-longname>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -173,8 +177,30 @@ Contributors:
 								</filter> 
 							</filters>
 							<shadedArtifactAttached>true</shadedArtifactAttached>
-							<shadedClassifierName>ls</shadedClassifierName>
+							<shadedClassifierName>${cli.fat.jar.classifier}</shadedClassifierName>
 							<minimizeJar>true</minimizeJar>    
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			
+			<!-- copy the longname-jar to a usable shorthand name. -->
+			<plugin>
+				<groupId>com.coderplus.maven.plugins</groupId>
+				<artifactId>copy-rename-maven-plugin</artifactId>
+				<version>${codehaus-copy-rename-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>copy-file</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<sourceFile>${project.build.directory}/${cli.jar-longname}</sourceFile>
+							<destinationFile>${project.build.directory}/new_${hlc.jar-shortname}</destinationFile>
+							<overWrite>true</overWrite>
 						</configuration>
 					</execution>
 				</executions>
