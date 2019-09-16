@@ -74,7 +74,7 @@ class AutoEditPluginUITest extends AbstractCStyleLanguageAutoEditTest {
 		// Some test cases of class AbstractCStyleLanguageAutoEditTest expect tabs,
 		// hence we need to set the default to tabs instead of spaces.
 		prefsUiEditors = new ScopedPreferenceStore(InstanceScope.INSTANCE, ORG_ECLIPSE_UI_EDITORS);
-		val prefsUiEditors_spacesForTabs = prefsUiEditors.getBoolean(SPACES_FOR_TABS);
+		prefsUiEditors_spacesForTabs = prefsUiEditors.getBoolean(SPACES_FOR_TABS);
 		if (prefsUiEditors_spacesForTabs) {
 			prefsUiEditors.setValue(SPACES_FOR_TABS, false);
 		}
@@ -84,7 +84,7 @@ class AutoEditPluginUITest extends AbstractCStyleLanguageAutoEditTest {
 	override void tearDown() throws Exception {
 		closeEditors();
 		// Restore initial setting
-		prefsUiEditors.setValue(SPACES_FOR_TABS, false);
+		prefsUiEditors.setValue(SPACES_FOR_TABS, prefsUiEditors_spacesForTabs);
 	}
 
 	override protected String getEditorId() {
