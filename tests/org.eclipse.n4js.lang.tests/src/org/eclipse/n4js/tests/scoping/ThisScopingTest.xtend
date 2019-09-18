@@ -98,7 +98,7 @@ class ThisScopingTest {
 					assertEquals("nested", thisLiteral.containingFunction.name)
 					assertNotEquals(classifierType, boundType); // global or undef, not the object literal
 				} else {
-					val upperBoundResult = ts.upperBound(G, boundType);
+					val upperBoundResult = ts.upperBoundWithReopen(G, boundType);
 					assertNotNull(
 						"Cannot retrieve upper bound of this type ref: " + boundType,
 						upperBoundResult

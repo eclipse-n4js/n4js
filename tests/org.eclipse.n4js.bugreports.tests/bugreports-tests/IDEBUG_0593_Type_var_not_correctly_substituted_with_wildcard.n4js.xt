@@ -22,9 +22,7 @@ class C {
 	select(p : PS<?,?>) : PS<?,?> {return p;}
 
 	f(p : pathSelector<?>) : void {
-		// old error:
-		// X!PECT FIXME noerrors --> "pathSelector<?> is not a subtype of pathSelector<T_C>." at "p"
-		// XPECT FIXME noerrors --> "pathSelector<?> is not a subtype of pathSelector<any>." at "p"
+		// XPECT noerrors --> "pathSelector<?> is not a subtype of pathSelector<T_C>." at "p"
 		this.select(ps(p));
 	}
 
@@ -37,5 +35,5 @@ class G<T> {}
 function <TF> foo(p : G<TF>) {}
 
 var gw : G<?>;
-// XPECT FIXME noerrors -->  "G<?> is not a subtype of G<any>." at "gw"
+// XPECT noerrors -->  "G<?> is not a subtype of G<TF>." at "gw"
 foo(gw);

@@ -90,7 +90,7 @@ class N6_1_07_IndexedAccessExpressionTypeInferenceTest extends AbstractTypesyste
 		assertIndexedAccessExpressionType("int", '''[1,2,3]''');
 		assertIndexedAccessExpressionType("number", '''[n1]''');
 		assertIndexedAccessExpressionType("number", '''[n1,n2]''');
-		assertIndexedAccessExpressionType("union{int,number}", '''[n1,2,3]''');
+		assertIndexedAccessExpressionType("number", '''[n1,2,3]''');
 		assertIndexedAccessExpressionType("string", '''[s1]''');
 		assertIndexedAccessExpressionType("string", '''[s1,s2]''');
 		assertIndexedAccessExpressionType("A", '''[a]''');
@@ -103,9 +103,9 @@ class N6_1_07_IndexedAccessExpressionTypeInferenceTest extends AbstractTypesyste
 		assertIndexedAccessExpressionType("union{number,string}", '''["Walter", 1"]'''); // syntax error was intended (I guess)
 		assertIndexedAccessExpressionType("union{A,int,string}", '''["Walter", a, 1]''');
 		assertIndexedAccessExpressionType("union{A,number,string}", '''["Walter", a, 1"]'''); // syntax error was intended (I guess)
-		assertIndexedAccessExpressionType("union{A,B}", '''[a,b]''');
-		assertIndexedAccessExpressionType("union{A,B}", '''[a,b,a]''');
-		assertIndexedAccessExpressionType("union{A,B}", '''[a,b,a,b,a,a,b]''');
+		assertIndexedAccessExpressionType("A", '''[a,b]''');
+		assertIndexedAccessExpressionType("A", '''[a,b,a]''');
+		assertIndexedAccessExpressionType("A", '''[a,b,a,b,a,a,b]''');
 	}
 
 	@Test
@@ -119,9 +119,9 @@ class N6_1_07_IndexedAccessExpressionTypeInferenceTest extends AbstractTypesyste
 		assertIndexedAccessExpressionType("union{number,string}", '''[,"Walter", 1"]'''); // syntax error was intended (I guess)
 		assertIndexedAccessExpressionType("union{A,int,string}", '''["Walter", a, 1,]''');
 		assertIndexedAccessExpressionType("union{A,number,string}", '''["Walter", a, 1",]'''); // syntax error was intended (I guess)
-		assertIndexedAccessExpressionType("union{A,B}", '''[a,b,,]''');
-		assertIndexedAccessExpressionType("union{A,B}", '''[a,b,a,,,]''');
-		assertIndexedAccessExpressionType("union{A,B}", '''[a,b,a,,a,,b]''');
+		assertIndexedAccessExpressionType("A", '''[a,b,,]''');
+		assertIndexedAccessExpressionType("A", '''[a,b,a,,,]''');
+		assertIndexedAccessExpressionType("A", '''[a,b,a,,a,,b]''');
 	}
 
 	@Test

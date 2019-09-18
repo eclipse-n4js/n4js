@@ -151,7 +151,7 @@ public class N4IDLVersionResolver {
 
 	private def VersionedParameterizedTypeRef copyParameterizedTypeRef(ParameterizedTypeRef typeRef, int requestedVersion) {
 		val VersionedParameterizedTypeRef result = switch (typeRef) {
-			FunctionTypeRef: 					TypeUtils.copy(typeRef, TypeRefsPackage.eINSTANCE.versionedParameterizedTypeRef) as VersionedFunctionTypeRef
+			FunctionTypeRef: 					TypeUtils.copy(typeRef, TypeRefsPackage.eINSTANCE.versionedFunctionTypeRef) as VersionedFunctionTypeRef
 			ParameterizedTypeRefStructural: 	TypeUtils.copy(typeRef, TypeRefsPackage.eINSTANCE.versionedParameterizedTypeRefStructural) as VersionedParameterizedTypeRefStructural
 			default: 								TypeUtils.copy(typeRef, TypeRefsPackage.eINSTANCE.versionedParameterizedTypeRef) as VersionedParameterizedTypeRef
 		}

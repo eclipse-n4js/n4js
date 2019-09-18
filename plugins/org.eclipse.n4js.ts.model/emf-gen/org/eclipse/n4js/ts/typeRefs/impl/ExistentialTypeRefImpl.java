@@ -12,6 +12,8 @@ package org.eclipse.n4js.ts.typeRefs.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
+import java.util.UUID;
+
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
@@ -27,8 +29,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 
-import org.eclipse.n4js.ts.types.TypeVariable;
-
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Existential Type Ref</b></em>'.
@@ -37,13 +37,54 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl#isReopened <em>Reopened</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl#getWildcard <em>Wildcard</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl#getBoundTypeVariable <em>Bound Type Variable</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTypeRef {
+	/**
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final UUID ID_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected UUID id = ID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isReopened() <em>Reopened</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReopened()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean REOPENED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isReopened() <em>Reopened</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReopened()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean reopened = REOPENED_EDEFAULT;
+
 	/**
 	 * The cached value of the '{@link #getWildcard() <em>Wildcard</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -53,16 +94,6 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	 * @ordered
 	 */
 	protected Wildcard wildcard;
-
-	/**
-	 * The cached value of the '{@link #getBoundTypeVariable() <em>Bound Type Variable</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getBoundTypeVariable()
-	 * @generated
-	 * @ordered
-	 */
-	protected TypeVariable boundTypeVariable;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -81,6 +112,52 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	@Override
 	protected EClass eStaticClass() {
 		return TypeRefsPackage.Literals.EXISTENTIAL_TYPE_REF;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public UUID getId() {
+		return id;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setId(UUID newId) {
+		UUID oldId = id;
+		id = newId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID, oldId, id));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isReopened() {
+		return reopened;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setReopened(boolean newReopened) {
+		boolean oldReopened = reopened;
+		reopened = newReopened;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.EXISTENTIAL_TYPE_REF__REOPENED, oldReopened, reopened));
 	}
 
 	/**
@@ -121,46 +198,6 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 		wildcard = newWildcard;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.EXISTENTIAL_TYPE_REF__WILDCARD, oldWildcard, wildcard));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TypeVariable getBoundTypeVariable() {
-		if (boundTypeVariable != null && boundTypeVariable.eIsProxy()) {
-			InternalEObject oldBoundTypeVariable = (InternalEObject)boundTypeVariable;
-			boundTypeVariable = (TypeVariable)eResolveProxy(oldBoundTypeVariable);
-			if (boundTypeVariable != oldBoundTypeVariable) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypeRefsPackage.EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE, oldBoundTypeVariable, boundTypeVariable));
-			}
-		}
-		return boundTypeVariable;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public TypeVariable basicGetBoundTypeVariable() {
-		return boundTypeVariable;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setBoundTypeVariable(TypeVariable newBoundTypeVariable) {
-		TypeVariable oldBoundTypeVariable = boundTypeVariable;
-		boundTypeVariable = newBoundTypeVariable;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE, oldBoundTypeVariable, boundTypeVariable));
 	}
 
 	/**
@@ -216,12 +253,13 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID:
+				return getId();
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__REOPENED:
+				return isReopened();
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__WILDCARD:
 				if (resolve) return getWildcard();
 				return basicGetWildcard();
-			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE:
-				if (resolve) return getBoundTypeVariable();
-				return basicGetBoundTypeVariable();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -234,11 +272,14 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID:
+				setId((UUID)newValue);
+				return;
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__REOPENED:
+				setReopened((Boolean)newValue);
+				return;
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__WILDCARD:
 				setWildcard((Wildcard)newValue);
-				return;
-			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE:
-				setBoundTypeVariable((TypeVariable)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -252,11 +293,14 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__REOPENED:
+				setReopened(REOPENED_EDEFAULT);
+				return;
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__WILDCARD:
 				setWildcard((Wildcard)null);
-				return;
-			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE:
-				setBoundTypeVariable((TypeVariable)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -270,10 +314,12 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__REOPENED:
+				return reopened != REOPENED_EDEFAULT;
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__WILDCARD:
 				return wildcard != null;
-			case TypeRefsPackage.EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE:
-				return boundTypeVariable != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -321,6 +367,24 @@ public class ExistentialTypeRefImpl extends TypeRefImpl implements ExistentialTy
 				return getTypeRefAsString();
 		}
 		return super.eInvoke(operationID, arguments);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (id: ");
+		result.append(id);
+		result.append(", reopened: ");
+		result.append(reopened);
+		result.append(')');
+		return result.toString();
 	}
 
 } //ExistentialTypeRefImpl

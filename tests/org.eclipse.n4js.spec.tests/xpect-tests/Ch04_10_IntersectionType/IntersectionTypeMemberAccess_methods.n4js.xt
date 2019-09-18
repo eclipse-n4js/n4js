@@ -235,7 +235,7 @@ i12.defaultFparBoth(a);
 i12.complicated1(undefined, undefined, undefined);
 
 // complicated2(a:string=…, n:int|number=…, ...b:int);
-// XPECT type of 'complicated2' --> {function(string=…,union{int,number}=…,...int):void}
+// XPECT type of 'complicated2' --> {function(string=…,number=…,...int):void}
 i12.complicated2();
 
 

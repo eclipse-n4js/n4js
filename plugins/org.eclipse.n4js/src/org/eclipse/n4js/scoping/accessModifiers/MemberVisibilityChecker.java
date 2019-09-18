@@ -24,7 +24,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.SuperLiteral;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
@@ -213,7 +213,7 @@ public class MemberVisibilityChecker {
 				return classifier.getDefinedType();
 			}
 		}
-		if (receiverType instanceof FunctionTypeExpression) {
+		if (receiverType instanceof FunctionTypeExprOrRef) {
 			if (resourceSet == null)
 				return null;
 			// Change receiverType to implicit super class Function.

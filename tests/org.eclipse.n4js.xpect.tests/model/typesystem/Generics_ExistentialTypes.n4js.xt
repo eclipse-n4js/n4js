@@ -33,24 +33,24 @@ var ga2 : G<? extends A>;
 // passing through an existential type (expected to work fine)
 
 // XPECT type of 'v01' --> any
-// TODO IDE-1653 XPECT FIXME noerrors -->
+// XPECT noerrors -->
 var v01 = foo1(g);
 
 // XPECT type of 'v11' --> A
-// TODO IDE-1653 XPECT FIXME noerrors -->
+// XPECT noerrors -->
 var v11 = foo1(ga);
 
 
 
 // matching distinct existential types onto a single inference variable (should fail)
 
-// TODO IDE-1653 XPECT FIXME errors ---
+// XPECT errors ---
 // "G<?> is not a subtype of G<T>." at "g1"
 // "G<?> is not a subtype of G<T>." at "g2"
 // ---
 var v02 = foo2(g1,g2);
 
-// TODO IDE-1653 XPECT FIXME errors ---
+// XPECT errors ---
 // "G<? extends A> is not a subtype of G<T>." at "ga1"
 // "G<? extends A> is not a subtype of G<T>." at "ga2"
 // ---
@@ -61,9 +61,9 @@ var v12 = foo2(ga1,ga2);
 // matching distinct existential types onto two separate inference variables (ok)
 
 // XPECT type of 'v03' --> union{any,any}
-// TODO IDE-1653 XPECT FIXME noerrors -->
+// XPECT noerrors -->
 var v03 = foo3(g1,g2);
 
 // XPECT type of 'v13' --> union{A,A}
-// TODO IDE-1653 XPECT FIXME noerrors -->
+// XPECT noerrors -->
 var v13 = foo3(ga1,ga2);

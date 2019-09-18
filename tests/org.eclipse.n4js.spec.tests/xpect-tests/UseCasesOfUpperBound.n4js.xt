@@ -82,6 +82,6 @@ ol.prop;
 
 async function fooAsync() {
 	var p : Promise<? extends A,any>;
-	// XPECT errors --> "A is not a subtype of string." at "await p"
+	// XPECT errors --> "? extends A is not a subtype of string." at "await p"
 	var test : string = await p;
 }

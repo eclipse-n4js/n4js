@@ -35,8 +35,6 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private N4JSTypeSystem ts;
-	@Inject
-	private TypeSystemHelper tsh;
 
 	/**
 	 * Returns the expected type of an expression which be used to compute the return value of its containing function.

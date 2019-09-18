@@ -12,20 +12,20 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 class X {
-    // XPECT errors --> "Cannot cast from this[X] to Y" at "this as Y"
+    // XPECT errors --> "Cannot cast from X to Y" at "this as Y"
     field = this as Y;
     m() {
 
-        // XPECT errors --> "Cannot cast from this[X] to Y" at "this as Y"
+        // XPECT errors --> "Cannot cast from X to Y" at "this as Y"
         this as Y;
 
-        // XPECT warnings --> "Unnecessary cast from this[X] to X" at "this as X"
+        // XPECT warnings --> "Unnecessary cast from X to X" at "this as X"
         let th = this as X;
         // XPECT errors --> "Cannot cast from X to Y" at "th as Y"
         th as Y;
 
         let th2 = this;
-        // XPECT errors --> "Cannot cast from this[X] to Y" at "th2 as Y"
+        // XPECT errors --> "Cannot cast from X to Y" at "th2 as Y"
         th2 as Y;
     }
 }

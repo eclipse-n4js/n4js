@@ -94,7 +94,7 @@ class MeetComputer extends TypeSystemHelperStrategy {
 		if (containedAny !== null) {
 			intersectTRs.add(containedAny);
 		} else {
-			intersectTRs.addAll(getSubtypesOnly(G, flattenedTypeRefs));
+			intersectTRs.addAll(tsh.getSubtypesOnly(G, flattenedTypeRefs));
 		}
 
 		if (intersectTRs.size() == 1) {

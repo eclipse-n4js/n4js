@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
@@ -340,5 +341,68 @@ public class UtilN4 {
 	public static boolean isN4jsRepoRoot(File folder) {
 		return folder.isDirectory()
 				&& new File(folder, "plugins/" + UtilN4.class.getPackage().getName()).isDirectory();
+	}
+
+	/**
+	 * Utility for iterating over the digits of a natural number in the numeral system defined by the given base.
+	 */
+	public static class DigitIterator implements Iterator<Integer> {
+
+		private final int base;
+		private int value;
+		private int valueConsumed;
+
+		/**
+		 * Creates an instance for iterating over the digits of 'initialValue' in the numeral system with base 'base'.
+		 */
+		public DigitIterator(int initialValue, int base) {
+			this.base = base;
+			setValue(initialValue);
+		}
+
+		/** Increments current value and resets the digit iterator. */
+		public void inc() {
+			if (value == Integer.MAX_VALUE) {
+				throw new IllegalStateException("integer overflow");
+			}
+			setValue(value + 1);
+		}
+
+		/** Decrements current value and resets the digit iterator. */
+		public void dec() {
+			setValue(value - 1);
+		}
+
+		/** Sets the value and resets the digit iterator. */
+		public void setValue(int value) {
+			if (value < 0) {
+				throw new IllegalArgumentException("value must be non-negative, but was: " + value);
+			}
+			this.value = value;
+			this.valueConsumed = value;
+		}
+
+		/** Returns the current value. To obtain individual digits use {@link #nextDigit()} or {@link #next()}. */
+		public int getValue() {
+			return value;
+		}
+
+		/** Returns the next digit. */
+		public int nextDigit() {
+			final int digit = valueConsumed % base;
+			valueConsumed = valueConsumed / base;
+			return digit;
+		}
+
+		@Override
+		public Integer next() {
+			return nextDigit();
+		}
+
+		/** Tells if there are more non-zero digits not yet returned by the "next" methods. */
+		@Override
+		public boolean hasNext() {
+			return valueConsumed > 0;
+		}
 	}
 }

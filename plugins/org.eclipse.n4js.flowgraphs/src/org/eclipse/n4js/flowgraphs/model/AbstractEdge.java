@@ -14,24 +14,29 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Objects;
 
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
+
 /** Represents any kind of edges between two {@link Node}s. */
 abstract public class AbstractEdge {
 	/** Start node of the edge */
 	public final Node start;
 	/** End node of the edge */
 	public final Node end;
+	/** The type of the control flow */
+	public final ControlFlowType cfType;
 
 	private final int cachedHash;
 
 	/** Constructor */
-	public AbstractEdge(Node start, Node end) {
+	public AbstractEdge(Node start, Node end, ControlFlowType cfType) {
 		checkState(start != null, "Start node must not be null");
 		checkState(end != null, "End node must not be null");
 		checkState(start != end, "Edge must not have same Start/End nodes");
 
 		this.start = start;
 		this.end = end;
-		this.cachedHash = Objects.hash(start, end);
+		this.cfType = cfType;
+		this.cachedHash = Objects.hash(start, end, cfType);
 	}
 
 	@Override
@@ -43,6 +48,7 @@ abstract public class AbstractEdge {
 		boolean equals = true;
 		equals &= start.id == edge.start.id;
 		equals &= end.id == edge.end.id;
+		equals &= cfType == edge.cfType;
 		return equals;
 	}
 

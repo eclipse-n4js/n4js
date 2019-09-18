@@ -14,26 +14,6 @@ import org.junit.Test
 
 class ES_UnsupportedES6FeaturesTest extends AbstractParserTest {
 
-	// spread in array literal temporarily disallowed (not supported by V8 yet)
-	@Test
-	def void testArrayInitializer_NoSpread() {
-		val script = 'x = [1,...2,3]'.parse
-		assertEquals(1,script.eResource.errors.size)
-		assertEquals(
-				"Spread operator in array literals is unsupported at the moment (only allowed in array destructuring patterns).",
-				script.eResource.errors.get(0).message)
-	}
-
-	// spread in array literal allowed in certain cases ...
-	@Test
-	def void testArrayInitializer_SpreadPositiveCases() {
-		val script = '''
-			([a,...b]=null); // simple case
-			([a,{prop:[b,...c]},[x,[...d],y]]=null); // nesting cases
-		'''.parse
-		assertTrue(script.eResource.errors.toString,script.eResource.errors.empty);
-	}
-
 	// single name syntax in object literal temporarily disallowed (not supported by V8 yet)
 	@Test
 	def void testObjectInitializer_NoSingleName() {
