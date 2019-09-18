@@ -1,4 +1,4 @@
-package org.eclipse.n4js.cli;
+package org.eclipse.n4js.cli.lsp;
 
 import java.net.InetSocketAddress
 import java.nio.channels.AsynchronousServerSocketChannel
@@ -9,14 +9,29 @@ import org.eclipse.lsp4j.services.LanguageClient
 import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl
 import com.google.common.util.concurrent.Futures
 import org.eclipse.n4js.ide.N4JSIdeSetup
+import org.eclipse.n4js.cli.N4jscOptions
 
-class RunServer {
+class LspServer {
+	val final N4jscOptions options;
 
 	def static void main(String[] args) throws Exception {
-		println("RunServer start");
+		start(new N4jscOptions());
+	}
+	
+	def static void start(N4jscOptions options) throws Exception {
+		val server = new LspServer(options);
+		server.start();
+	}
+	
+	new(N4jscOptions options) {
+		this.options = options;
+	}
+	
+	def void start() throws Exception {
+		println("LspServer start");
 		
 		val injector = new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
-		val serverSocket = AsynchronousServerSocketChannel.open.bind(new InetSocketAddress("localhost", 5007))
+		val serverSocket = AsynchronousServerSocketChannel.open.bind(new InetSocketAddress("localhost", options.port))
 		val threadPool = Executors.newCachedThreadPool()
 
 		try {
@@ -36,7 +51,7 @@ class RunServer {
 			}
 		
 		} finally {
-			println("RunServer end.");
+			println("LspServer end.");
 		}
 	}
 }	
