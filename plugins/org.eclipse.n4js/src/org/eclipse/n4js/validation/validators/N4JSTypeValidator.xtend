@@ -180,17 +180,16 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// this validation might be removed in the future, see GHOLD-204
-		if (declaredType instanceof TFunction) {
-			if (!(paramTypeRef.eContainer instanceof TypeTypeRef)) { // avoid duplicate error message
-				addIssue(getMessageForTYS_FUNCTION_DISALLOWED_AS_TYPE(), paramTypeRef, TYS_FUNCTION_DISALLOWED_AS_TYPE);
-				return;
-			}
-		}
+//		if (declaredType instanceof TFunction) {
+//			if (!(paramTypeRef.eContainer instanceof TypeTypeRef)) { // avoid duplicate error message
+//				addIssue(getMessageForTYS_FUNCTION_DISALLOWED_AS_TYPE(), paramTypeRef, TYS_FUNCTION_DISALLOWED_AS_TYPE);
+//				return;
+//			}
+//		}
 
 		val isInTypeTypeRef = paramTypeRef.eContainer instanceof TypeTypeRef || (
 			paramTypeRef.eContainer instanceof Wildcard && paramTypeRef.eContainer.eContainer instanceof TypeTypeRef);
 
-		internalCheckValidLocationForVoid(paramTypeRef);
 		if (isInTypeTypeRef) {
 			internalCheckValidTypeInTypeTypeRef(paramTypeRef);
 		} else {
@@ -208,31 +207,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRef) {
 		if (typeRef.declaredType instanceof PrimitiveType && typeRef.typingStrategy != TypingStrategy.NOMINAL) {
 			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRef, TYS_STRUCTURAL_PRIMITIVE);
-		}
-	}
-
-	/**
-	 * Requirements 13, Void type.
-	 */
-	def private void internalCheckValidLocationForVoid(ParameterizedTypeRef typeRef) {
-		if (typeRef.declaredType instanceof VoidType) {
-			val isValidLocationForVoid = (
-					typeRef.eContainer instanceof FunctionDefinition &&
-				typeRef.eContainmentFeature === N4JSPackage.eINSTANCE.functionDefinition_ReturnTypeRef
-				) || (
-					typeRef.eContainer instanceof FunctionTypeExpression &&
-				typeRef.eContainmentFeature === TypeRefsPackage.eINSTANCE.functionTypeExpression_ReturnTypeRef
-				) || (
-					typeRef.eContainer instanceof TFunction && typeRef.eContainmentFeature === TypesPackage.eINSTANCE.TFunction_ReturnTypeRef
-				) || (
-					// void is not truly allowed as the return type of a getter, but there's a separate validation for
-					// that; so treat this case as legal here:
-					typeRef.eContainer instanceof GetterDeclaration &&
-				typeRef.eContainmentFeature === N4JSPackage.eINSTANCE.typedElement_DeclaredTypeRef
-				);
-			if (!isValidLocationForVoid) {
-				addIssue(IssueCodes.getMessageForTYS_VOID_AT_WRONG_LOCATION, typeRef, TYS_VOID_AT_WRONG_LOCATION);
-			}
 		}
 	}
 
