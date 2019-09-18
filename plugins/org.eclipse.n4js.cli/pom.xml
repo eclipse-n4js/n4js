@@ -132,7 +132,7 @@ Contributors:
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>org.eclipse.n4js.cli.RunServer</mainClass>
+									<mainClass>org.eclipse.n4js.cli.N4jscMain</mainClass>
 								</transformer>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
