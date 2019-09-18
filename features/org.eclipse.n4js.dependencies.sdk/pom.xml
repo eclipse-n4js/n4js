@@ -72,7 +72,6 @@ Contributors:
 						<plugin id="org.eclipse.equinox.common"/>
 						<plugin id="org.eclipse.emf.ecore.xmi"/>
 						<plugin id="org.eclipse.osgi"/>
-						<plugin id="com.ibm.icu"/>
 						<plugin id="org.objectweb.asm"/>
 						<plugin id="org.eclipse.xtext.ecore"/>
 						<plugin id="org.junit"/>
