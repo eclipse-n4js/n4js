@@ -37,7 +37,7 @@ N4Interface, N4Member, N4Method, N4NamedElement, N4Object, N4Provider, N4StringB
 N4StringBasedEnumType, N4Type, N4ApiNotImplementedError,
 Number, Object, Promise, RangeError, ReferenceError, RegExp, String, Symbol, SyntaxError,
 TEMP_ReturnTypeOfMatchExec, TypeError, URIError,
-any, boolean, console, i18nKey, number, int, pathSelector, string, symbol, typeName
+any, undefined, boolean, console, i18nKey, number, int, pathSelector, string, symbol, typeName
 ---*/
 	any name: "o",
 	complex: function() {
