@@ -174,14 +174,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		// this validation might be removed in the future, see GHOLD-204
-//		if (declaredType instanceof TFunction) {
-//			if (!(paramTypeRef.eContainer instanceof TypeTypeRef)) { // avoid duplicate error message
-//				addIssue(getMessageForTYS_FUNCTION_DISALLOWED_AS_TYPE(), paramTypeRef, TYS_FUNCTION_DISALLOWED_AS_TYPE);
-//				return;
-//			}
-//		}
-
 		val isInTypeTypeRef = paramTypeRef.eContainer instanceof TypeTypeRef || (
 			paramTypeRef.eContainer instanceof Wildcard && paramTypeRef.eContainer.eContainer instanceof TypeTypeRef);
 

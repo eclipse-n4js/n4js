@@ -232,12 +232,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 					return createScopeForNamespaceAccess(namespace, context);
 				}
 			}
-			if (context instanceof TypeRef) {
-				return new FilteringScope(getTypeScope(context, false), [
-					// in the source code, 'null' is never a valid type
-					TypesPackage.Literals.NULL_TYPE != it.getEClass()
-				]);
-			}
 			return getTypeScope(context, false);
 		} else if (reference.EReferenceType == N4JSPackage.Literals.LABELLED_STATEMENT) {
 			return scope_LabelledStatement(context);

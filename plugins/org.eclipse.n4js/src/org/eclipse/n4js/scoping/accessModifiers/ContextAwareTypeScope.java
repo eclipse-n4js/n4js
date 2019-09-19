@@ -30,6 +30,7 @@ import org.eclipse.xtext.scoping.IScope;
  */
 public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 
+	private final boolean isValidLocationForNull;
 	private final boolean isValidLocationForVoid;
 	private final boolean isValidLocationForFunctionType;
 
@@ -39,6 +40,8 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 
 		final EObject container = context.eContainer();
 		final EReference eRef = context.eContainmentFeature();
+
+		this.isValidLocationForNull = false; // in the source code, 'null' is never a valid type
 
 		this.isValidLocationForVoid = eRef == N4JSPackage.eINSTANCE.getFunctionDefinition_ReturnTypeRef()
 				|| eRef == TypeRefsPackage.eINSTANCE.getFunctionTypeExpression_ReturnTypeRef()
@@ -57,7 +60,10 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 	@Override
 	protected boolean isAccepted(IEObjectDescription originalDescr) {
 		final EClass eClass = originalDescr.getEClass();
-		if (!isValidLocationForVoid && TypesPackage.Literals.VOID_TYPE == eClass) {
+		if (!isValidLocationForNull && eClass == TypesPackage.Literals.NULL_TYPE) {
+			return false;
+		}
+		if (!isValidLocationForVoid && eClass == TypesPackage.Literals.VOID_TYPE) {
 			return false; // Requirements 13, Void type.
 		}
 		if (!isValidLocationForFunctionType && TypesPackage.Literals.TFUNCTION.isSuperTypeOf(eClass)) {
@@ -69,6 +75,9 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 	@Override
 	protected IEObjectDescriptionWithError wrapFilteredDescription(IEObjectDescription originalDescr) {
 		final EClass eClass = originalDescr.getEClass();
+		if (!isValidLocationForNull && eClass == TypesPackage.Literals.NULL_TYPE) {
+			return null; // 'null' will filter out this element completely (i.e. not custom error message)
+		}
 		if (!isValidLocationForVoid && eClass == TypesPackage.Literals.VOID_TYPE) {
 			return new DisallowedTypeDescription(originalDescr,
 					IssueCodes.getMessageForTYS_VOID_AT_WRONG_LOCATION(),
@@ -79,7 +88,7 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 					IssueCodes.getMessageForTYS_FUNCTION_DISALLOWED_AS_TYPE(),
 					IssueCodes.TYS_FUNCTION_DISALLOWED_AS_TYPE);
 		}
-		return null;
+		return null; // should never happen, because #isAccepted() has returned true
 	}
 
 	private static final class DisallowedTypeDescription extends AbstractDescriptionWithError {
