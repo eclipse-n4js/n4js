@@ -13,13 +13,10 @@ package org.eclipse.n4js.scoping.accessModifiers;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope;
@@ -33,25 +30,28 @@ import org.eclipse.xtext.scoping.IScope;
  */
 public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 
-	private final EObject context;
 	private final boolean isValidLocationForVoid;
+	private final boolean isValidLocationForFunctionType;
 
 	/** See {@link ContextAwareTypeScope}. */
 	public ContextAwareTypeScope(IScope parent, EObject context) {
 		super(parent);
+
 		final EObject container = context.eContainer();
-		final EReference ref = context.eContainmentFeature();
-		this.context = context;
-		this.isValidLocationForVoid = (container instanceof FunctionDefinition
-				&& ref == N4JSPackage.eINSTANCE.getFunctionDefinition_ReturnTypeRef())
-				|| (container instanceof FunctionTypeExpression
-						&& ref == TypeRefsPackage.eINSTANCE.getFunctionTypeExpression_ReturnTypeRef())
-				|| (container instanceof TFunction && ref == TypesPackage.eINSTANCE.getTFunction_ReturnTypeRef())
-				|| (
+		final EReference eRef = context.eContainmentFeature();
+
+		this.isValidLocationForVoid = eRef == N4JSPackage.eINSTANCE.getFunctionDefinition_ReturnTypeRef()
+				|| eRef == TypeRefsPackage.eINSTANCE.getFunctionTypeExpression_ReturnTypeRef()
+				|| eRef == TypesPackage.eINSTANCE.getTFunction_ReturnTypeRef()
 				// void is not truly allowed as the return type of a getter, but there's a separate validation for
 				// that; so treat this case as legal here:
-				container instanceof GetterDeclaration
-						&& ref == N4JSPackage.eINSTANCE.getTypedElement_DeclaredTypeRef());
+				|| container instanceof GetterDeclaration
+						&& eRef == N4JSPackage.eINSTANCE.getTypedElement_DeclaredTypeRef();
+
+		this.isValidLocationForFunctionType =
+				// function types are not truly allowed within TypeTypeRefs (i.e. inside 'type{...}'), but there's a
+				// separate validation for that; so treat this case as legal here:
+				eRef == TypeRefsPackage.eINSTANCE.getTypeTypeRef_TypeArg();
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 		if (!isValidLocationForVoid && TypesPackage.Literals.VOID_TYPE == eClass) {
 			return false; // Requirements 13, Void type.
 		}
-		if (TypesPackage.Literals.TFUNCTION.isSuperTypeOf(eClass)) {
+		if (!isValidLocationForFunctionType && TypesPackage.Literals.TFUNCTION.isSuperTypeOf(eClass)) {
 			return false;
 		}
 		return true;
@@ -74,7 +74,7 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 					IssueCodes.getMessageForTYS_VOID_AT_WRONG_LOCATION(),
 					IssueCodes.TYS_VOID_AT_WRONG_LOCATION);
 		}
-		if (TypesPackage.Literals.TFUNCTION.isSuperTypeOf(eClass)) {
+		if (!isValidLocationForFunctionType && TypesPackage.Literals.TFUNCTION.isSuperTypeOf(eClass)) {
 			return new DisallowedTypeDescription(originalDescr,
 					IssueCodes.getMessageForTYS_FUNCTION_DISALLOWED_AS_TYPE(),
 					IssueCodes.TYS_FUNCTION_DISALLOWED_AS_TYPE);
