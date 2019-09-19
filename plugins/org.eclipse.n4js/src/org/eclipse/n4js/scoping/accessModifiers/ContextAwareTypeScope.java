@@ -51,10 +51,12 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 				|| container instanceof GetterDeclaration
 						&& eRef == N4JSPackage.eINSTANCE.getTypedElement_DeclaredTypeRef();
 
-		this.isValidLocationForFunctionType =
+		this.isValidLocationForFunctionType = false
+				// the following is only required for content assist in JSXElements (main scoping works without this)
+				|| eRef == N4JSPackage.eINSTANCE.getJSXElement_JsxElementName()
 				// function types are not truly allowed within TypeTypeRefs (i.e. inside 'type{...}'), but there's a
 				// separate validation for that; so treat this case as legal here:
-				eRef == TypeRefsPackage.eINSTANCE.getTypeTypeRef_TypeArg();
+				|| eRef == TypeRefsPackage.eINSTANCE.getTypeTypeRef_TypeArg();
 	}
 
 	@Override
