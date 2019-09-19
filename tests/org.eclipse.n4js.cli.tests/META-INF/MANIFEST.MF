@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.n4js.cli.tests
+Bundle-Vendor: org.eclipse.n4js
+Bundle-Version: 0.0.1.qualifier
+Bundle-SymbolicName: org.eclipse.n4js.cli.tests; singleton:=true
+Fragment-Host: org.eclipse.n4js.cli
+Require-Bundle: org.eclipse.core.resources,
+ org.eclipse.xtext.testing,
+ org.junit
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: org.eclipse.n4js.cli.tests
