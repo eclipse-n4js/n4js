@@ -1,9 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ide
-Bundle-SymbolicName: org.eclipse.n4js.ide
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.n4js.cli;singleton:=true
 Bundle-Version: 0.0.1.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.n4js,
+ org.eclipse.n4js.ide,
  org.eclipse.n4js.hlc.base,
  org.eclipse.n4js.ts,
  org.eclipse.n4js.generator.headless,
@@ -11,17 +14,18 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.utils,
  org.eclipse.xtext,
  org.eclipse.xtext.ide,
+ org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.xtext.xbase.lib,
+ org.eclipse.emf.ecore.xcore.lib,
  org.eclipse.lsp4j.jsonrpc,
  org.eclipse.lsp4j,
  com.google.inject,
  com.google.gson,
- org.eclipse.n4js.ts.ide
-Export-Package: org.eclipse.n4js.ide,
- org.eclipse.n4js.ide.server,
- org.eclipse.n4js.ide.server.hover,
- org.eclipse.n4js.ide.contentassist.antlr,
- org.eclipse.n4js.ide.contentassist.antlr.internal,
- org.eclipse.n4js.ide.contentassist.antlr.lexer
-Automatic-Module-Name: org.eclipse.n4js.ide
+ org.kohsuke.args4j;bundle-version="2.33.0",
+ org.eclipse.n4js.ts.ide,
+ org.eclipse.n4js.smith
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.n4js.cli
+Automatic-Module-Name: org.eclipse.n4js.cli
 Bundle-RequiredExecutionEnvironment: JavaSE-11
