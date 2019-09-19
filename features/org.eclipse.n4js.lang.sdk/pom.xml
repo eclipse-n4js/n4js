@@ -24,24 +24,4 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>tycho-source-feature-plugin</artifactId>
-				<configuration>
-					<excludes>
-	
-						<plugin id="org.eclipse.n4js.doc" />
-						
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-p2-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
 </project>
