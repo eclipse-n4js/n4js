@@ -17,13 +17,13 @@ public interface Comparable {}
 public interface MyInterface {}
 public function myFunction() : any
 
-// XPECT scope at MyInterface --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, !string, !void
-// XPECT scope at MySuperDuperClass --> MySuperClass, MySuperDuperClass, N4Class, N4Object, !string, !any
-// XPECT scope at Comparable --> MyRole, Comparable, !any, !string, !void
+// XPECT scope at MyInterface --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, ...
+// XPECT scope at MySuperDuperClass --> MySuperClass, MySuperDuperClass, N4Class, N4Object, ...
+// XPECT scope at Comparable --> MyRole, Comparable, ...
 public class MySuperClass<T extends MyInterface > extends MySuperDuperClass implements Comparable {
-// XPECT scope at number --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, !void
+// XPECT scope at number --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, ...
 	private counter: number;
-// XPECT scope at T --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, !void
-// XPECT scope at any --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, void, !undefined
+// XPECT scope at T --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, ...
+// XPECT scope at any --> Comparable, MyInterface, MyRole, MySuperClass, MySuperDuperClass, T, any, number, string, ...
 	protected doStuff(input: T): any;
 }
