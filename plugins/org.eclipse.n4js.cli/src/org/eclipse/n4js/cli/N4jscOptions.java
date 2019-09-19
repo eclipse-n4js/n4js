@@ -216,6 +216,7 @@ public class N4jscOptions {
 	private void interpretAndAdjust() {
 		if (options.help) {
 			options.goal = N4jscGoal.help;
+			options.help = false;
 		}
 	}
 
@@ -302,7 +303,9 @@ public class N4jscOptions {
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */
 	public void printUsage(PrintStream out) {
 		out.println(N4jscOptions.USAGE);
-		parser.printUsage(out);
+
+		N4JSCmdLineParser parserWithDefault = new N4JSCmdLineParser(new Options());
+		parserWithDefault.printUsage(out);
 	}
 
 	/** @return a string that lists all relevant settings of n4jsc.jar */

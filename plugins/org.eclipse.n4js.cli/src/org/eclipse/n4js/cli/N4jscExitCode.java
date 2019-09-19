@@ -28,8 +28,10 @@ public enum N4jscExitCode {
 
 	// General errors
 
+	/** Unexpected error */
+	ERROR_UNEXPECTED(1, "Unexpected error"),
 	/** Feature is not implemented */
-	NOT_IMPLEMENTED(1, "Feature is not implemented"),
+	NOT_IMPLEMENTED(2, "Feature is not implemented"),
 
 	// Errors on N4jsc frontend
 
