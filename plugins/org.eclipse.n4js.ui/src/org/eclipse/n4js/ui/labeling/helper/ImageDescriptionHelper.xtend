@@ -11,19 +11,19 @@
 package org.eclipse.n4js.ui.labeling.helper
 
 import com.google.inject.Inject
-import org.eclipse.n4js.resource.N4JSCache
-import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.ui.internal.N4JSActivator
-import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
-import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
-import org.eclipse.n4js.ts.types.TypeAccessModifier
 import java.util.List
 import java.util.Optional
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.jface.resource.ImageDescriptor
+import org.eclipse.jface.resource.ResourceLocator
 import org.eclipse.jface.viewers.IDecoration
+import org.eclipse.n4js.resource.N4JSCache
+import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
+import org.eclipse.n4js.ts.types.TypeAccessModifier
+import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.ui.ISharedImages
 import org.eclipse.ui.PlatformUI
 import org.eclipse.xtext.EcoreUtil2
@@ -341,7 +341,7 @@ class ImageDescriptionHelper {
 	def ImageDescriptor createSimpleImageDescriptor(String imageFileName) {
 		if(imageFileName !== null) {
 			val existingImageDescriptor = labelProvider.asImageDescriptor(imageFileName)
-			existingImageDescriptor ?: N4JSActivator.imageDescriptorFromPlugin(PLUGIN_ID, "icons/" + imageFileName)
+			existingImageDescriptor ?: ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, "icons/" + imageFileName).orElse(null)
 		} else {
 			N4JSLabelProvider.getDefaultImageDescriptor
 		}

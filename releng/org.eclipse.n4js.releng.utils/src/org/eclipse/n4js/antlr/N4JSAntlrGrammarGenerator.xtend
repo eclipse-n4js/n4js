@@ -78,9 +78,9 @@ class N4JSAntlrGrammarGenerator extends AntlrGrammarGenerator {
 	def public void injectCode(String lexerGrammarFileName, String parserGrammarFileName) {
 		if (lexerGrammarFileName !== null) {
 			try {
-				var String lexerGrammarContent = Files.toString(new File(lexerGrammarFileName), Charsets.UTF_8);
+				var String lexerGrammarContent = Files.asCharSource(new File(lexerGrammarFileName), Charsets.UTF_8).read();
 				lexerGrammarContent = processLexerGrammar(lexerGrammarContent);
-				Files.write(lexerGrammarContent, new File(lexerGrammarFileName), Charsets.UTF_8);
+				Files.asCharSink(new File(lexerGrammarFileName), Charsets.UTF_8).write(lexerGrammarContent);
 			} catch (IOException e) {
 				throw new RuntimeException();
 			}
@@ -88,9 +88,9 @@ class N4JSAntlrGrammarGenerator extends AntlrGrammarGenerator {
 
 		if (parserGrammarFileName !== null) {
 			try {
-				var String parserGrammarContent = Files.toString(new File(parserGrammarFileName), Charsets.UTF_8);
+				var String parserGrammarContent = Files.asCharSource(new File(parserGrammarFileName), Charsets.UTF_8).read();
 				parserGrammarContent = processParserGrammar(parserGrammarContent);
-				Files.write(parserGrammarContent, new File(parserGrammarFileName), Charsets.UTF_8);
+				Files.asCharSink(new File(parserGrammarFileName), Charsets.UTF_8).write(parserGrammarContent);
 			} catch (IOException e) {
 				throw new RuntimeException();
 			}

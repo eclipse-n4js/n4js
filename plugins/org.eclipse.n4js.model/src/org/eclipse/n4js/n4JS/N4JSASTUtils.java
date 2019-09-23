@@ -437,6 +437,6 @@ public abstract class N4JSASTUtils {
 		if (source == null) {
 			throw new IllegalStateException("resource does not have a valid parse result: " + resource.getURI());
 		}
-		return Hashing.md5().hashString(source, Charsets.UTF_8).toString();
+		return Hashing.goodFastHash(32).hashString(source, Charsets.UTF_8).toString();
 	}
 }

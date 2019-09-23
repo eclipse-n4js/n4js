@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.smith.ui;
 
+import static org.eclipse.jface.resource.ResourceLocator.imageDescriptorFromBundle;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -35,18 +37,24 @@ public class Activator extends AbstractUIPlugin {
 	private SourceGraphView view;
 
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_SNAPSHOT = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "snapshot.png");
+	public final ImageDescriptor ICON_SNAPSHOT = imageDescriptorFromBundle(PLUGIN_ID, ICON_FOLDER + "snapshot.png")
+			.orElse(null);
+
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_SNAPSHOT_SAVE = imageDescriptorFromPlugin(PLUGIN_ID,
-			ICON_FOLDER + "snapshot_save.png");
+	public final ImageDescriptor ICON_SNAPSHOT_SAVE = imageDescriptorFromBundle(PLUGIN_ID,
+			ICON_FOLDER + "snapshot_save.png").orElse(null);
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_PAUSE = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "pause.png");
+	public final ImageDescriptor ICON_PAUSE = imageDescriptorFromBundle(PLUGIN_ID, ICON_FOLDER + "pause.png")
+			.orElse(null);
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_GRAPH_AST = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphAST.png");
+	public final ImageDescriptor ICON_GRAPH_AST = imageDescriptorFromBundle(PLUGIN_ID, ICON_FOLDER + "graphAST.png")
+			.orElse(null);
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_GRAPH_CF = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphCF.png");
+	public final ImageDescriptor ICON_GRAPH_CF = imageDescriptorFromBundle(PLUGIN_ID, ICON_FOLDER + "graphCF.png")
+			.orElse(null);
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_GRAPH_DF = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphDF.png");
+	public final ImageDescriptor ICON_GRAPH_DF = imageDescriptorFromBundle(PLUGIN_ID, ICON_FOLDER + "graphDF.png")
+			.orElse(null);
 
 	/**
 	 * The constructor
