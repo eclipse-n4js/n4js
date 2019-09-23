@@ -13,6 +13,8 @@ package org.eclipse.n4js.xpect.methods.scoping;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 
 import com.google.common.collect.Iterators;
@@ -40,9 +42,11 @@ class ScopeAwareIterable implements Iterable<String> {
 
 	@Override
 	public Iterator<String> iterator() {
-		return Iterators
-				.transform(scope.getAllElements().iterator(), new EObjectDescriptionToNameWithPositionMapper(
-						getCurrentURI(), withLineNumber));
+		final Iterator<IEObjectDescription> iter1 = scope.getAllElements().iterator();
+		final Iterator<IEObjectDescription> iter2 = Iterators.filter(iter1,
+				desc -> !IEObjectDescriptionWithError.isErrorDescription(desc));
+		return Iterators.transform(iter2,
+				new EObjectDescriptionToNameWithPositionMapper(getCurrentURI(), withLineNumber));
 	}
 
 	/**
