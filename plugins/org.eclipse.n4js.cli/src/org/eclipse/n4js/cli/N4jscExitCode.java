@@ -35,12 +35,14 @@ public enum N4jscExitCode {
 
 	// Errors on N4jsc frontend
 
-	/** Invalid command line options and/or arguments */
-	CMD_LINE_PARSE_INVALID(10, "Invalid command line options and/or arguments"),
-	/** Invalid argument */
-	ARGUMENT_INVALID(11, "Invalid argument"),
+	/** Invalid command line string */
+	CMD_LINE_PARSE_INVALID(10, "Invalid command line string"),
+	/** Invalid goal */
+	ARGUMENT_GOAL_INVALID(11, "Invalid goal"),
+	/** Invalid file(s) */
+	ARGUMENT_FILES_INVALID(12, "Invalid file(s)"),
 	/** Invalid option */
-	OPTION_INVALID(12, "Invalid option"),
+	OPTION_INVALID(13, "Invalid option"),
 
 	// Errors on N4jsc goal compile
 

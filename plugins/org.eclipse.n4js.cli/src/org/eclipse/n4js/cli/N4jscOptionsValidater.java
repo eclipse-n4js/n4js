@@ -72,7 +72,7 @@ public class N4jscOptionsValidater {
 	private static void validateGoalCompileOptions(N4jscOptions options) throws N4jscException {
 		validateFilesAndDirectories(options);
 
-		if (null != options.getTestCatalog()) {
+		if (options.getTestCatalog() != null) {
 			validateTestCatalogFile(options);
 		}
 	}
@@ -100,18 +100,25 @@ public class N4jscOptionsValidater {
 	private static void validateFilesAndDirectories(N4jscOptions options) throws N4jscException {
 		if (options.getSrcFiles().isEmpty()) {
 			String msg = "n4js file(s) or project(s) missing";
-			throw new N4jscException(N4jscExitCode.ARGUMENT_INVALID, msg);
+			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
 		}
 
-		StringJoiner sj = new StringJoiner(",");
+		StringJoiner notExisting = new StringJoiner(",");
+		StringJoiner neitherFileNorDir = new StringJoiner(",");
 		for (File srcFile : options.getSrcFiles()) {
-			if (!srcFile.isFile() && !srcFile.isDirectory()) {
-				sj.add(srcFile.toString());
+			if (!srcFile.exists()) {
+				notExisting.add(srcFile.toString());
+			} else if (!srcFile.isFile() && !srcFile.isDirectory()) {
+				neitherFileNorDir.add(srcFile.toString());
 			}
 		}
-		if (!sj.toString().isEmpty()) {
-			String msg = "Invalid files or projects (neither file nor directory): " + sj.toString();
-			throw new N4jscException(N4jscExitCode.ARGUMENT_INVALID, msg);
+		if (!notExisting.toString().isEmpty()) {
+			String msg = "file(s) do not exist: " + notExisting.toString();
+			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
+		}
+		if (!neitherFileNorDir.toString().isEmpty()) {
+			String msg = "file(s) are neither a file nor a directory: " + neitherFileNorDir.toString();
+			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
 		}
 	}
 

@@ -18,10 +18,16 @@ import java.util.Stack;
  */
 public class N4jscConsole {
 	private static final Stack<String> moduleNames = new Stack<>();
+	private static PrintStream printStream = System.out;
 
 	/** @return the output stream for user directed output */
 	static public PrintStream getPrintStream() {
-		return System.out;
+		return printStream;
+	}
+
+	/** Sets the output stream for user directed output. Used for testing. */
+	static public void setPrintStream(PrintStream printStream) {
+		N4jscConsole.printStream = printStream;
 	}
 
 	/** Prints a message on the console */

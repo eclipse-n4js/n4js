@@ -19,6 +19,9 @@ import org.eclipse.n4js.cli.lsp.LspServer;
  */
 public class N4jscMain {
 
+	/** Set to true by some test cases to test front-end user output */
+	public static boolean TESTFLAG_NO_PERFORM = false;
+
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {
 
@@ -82,6 +85,9 @@ public class N4jscMain {
 	}
 
 	private static void performGoal(N4jscOptions options) throws Exception {
+		if (TESTFLAG_NO_PERFORM && options.getGoal() != N4jscGoal.help) {
+			return;
+		}
 		switch (options.getGoal()) {
 		case help:
 			options.printUsage(N4jscConsole.getPrintStream());
