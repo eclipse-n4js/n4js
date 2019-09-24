@@ -69,7 +69,7 @@ public class N4jscOptions {
 	 * <li/>Eclipse adds the 'final' modifier to all effectively final private fields. (Can only be disabled globally)
 	 * </ul>
 	 */
-	static private class Options {
+	static class Options {
 
 		// OPTIONS
 

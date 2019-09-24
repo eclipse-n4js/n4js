@@ -19,18 +19,18 @@ import com.google.inject.Injector;
 /**
  *
  */
-public class N4jsCompiler {
+public class N4jscCompiler {
 	private final N4jscOptions options;
 	private final Injector injector;
 	private final N4JSLanguageServerImpl languageServer;
 
 	/** Starts the compiler in a blocking fashion */
 	static public void start(N4jscOptions options) throws Exception {
-		N4jsCompiler compiler = new N4jsCompiler(options);
+		N4jscCompiler compiler = new N4jscCompiler(options);
 		compiler.start();
 	}
 
-	private N4jsCompiler(N4jscOptions options) {
+	private N4jscCompiler(N4jscOptions options) {
 		this.options = options;
 		this.injector = N4jscFactory.createInjector();
 		this.languageServer = N4jscFactory.createLanguageServer(injector);

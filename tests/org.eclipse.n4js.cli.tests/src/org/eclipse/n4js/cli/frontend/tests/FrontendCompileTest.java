@@ -15,26 +15,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.eclipse.n4js.cli.N4jscMain;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
 public class FrontendCompileTest extends AbstractCliFrontendTest {
 	private static final String FILE_TC = "file.tc";
-
-	/** Set the flag */
-	@Before
-	public void before2() {
-		N4jscMain.TESTFLAG_NO_PERFORM = true;
-	}
-
-	/** Restore the flag */
-	@After
-	public void after2() {
-		N4jscMain.TESTFLAG_NO_PERFORM = false;
-	}
 
 	/**  */
 	@Test

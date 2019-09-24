@@ -20,7 +20,7 @@ import org.eclipse.n4js.cli.lsp.LspServer;
 public class N4jscMain {
 
 	/** Set to true by some test cases to test front-end user output */
-	public static boolean TESTFLAG_NO_PERFORM = false;
+	static boolean TESTFLAG_NO_PERFORM = false;
 
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {

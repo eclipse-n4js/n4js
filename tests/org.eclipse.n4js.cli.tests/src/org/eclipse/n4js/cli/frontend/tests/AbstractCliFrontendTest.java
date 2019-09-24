@@ -10,115 +10,29 @@
  */
 package org.eclipse.n4js.cli.frontend.tests;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.security.Permission;
-
-import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscMain;
-import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.N4jscNoPerformFlag;
+import org.eclipse.n4js.cli.tests.AbstractCliTest;
 import org.junit.After;
 import org.junit.Before;
 
 /**  */
-public class AbstractCliFrontendTest {
+public class AbstractCliFrontendTest extends AbstractCliTest<String[]> {
 
-	private ByteArrayOutputStream baos;
+	@Override
+	public void doMain(String[] args) {
+		N4jscMain.main(args);
+	}
 
-	/** Sets up the System outputs and Security Manager */
+	/** Set the flag */
 	@Before
-	final public void before() throws UnsupportedEncodingException {
-		baos = new ByteArrayOutputStream();
-		PrintStream ps = new PrintStream(baos, true, "UTF-8");
-		N4jscConsole.setPrintStream(ps);
-		System.setSecurityManager(new NoExitSecurityManager());
+	public void before2() {
+		N4jscNoPerformFlag.set();
 	}
 
-	/** Restores everything. */
+	/** Restore the flag */
 	@After
-	final public void after() throws IOException {
-		baos.close();
-		System.setSecurityManager(null); // restore original security manager
-	}
-
-	/** Convenience version of {@link #main(String[], int)} with exist code == 0 */
-	protected String main(String[] args) {
-		return main(args, 0);
-	}
-
-	/** Convenience version of {@link #main(String[], int, boolean)} with exist code == 0 and removeUsage == true */
-	protected String main(String[] args, int exitCode) {
-		return main(args, exitCode, true);
-	}
-
-	/**
-	 * Calls main entry point of N4jsc with the given args. Checks that the given exit code equals the actual exit code
-	 * of the invocation. Removes {@link N4jscOptions#USAGE} text if desired.
-	 */
-	protected String main(String[] args, int exitCode, boolean removeUsage) {
-		String consoleLog = "";
-		try {
-			baos.reset();
-			N4jscMain.main(args);
-		} catch (SystemExitException e) {
-			assertEquals(exitCode, e.status);
-		}
-		consoleLog = getConsoleOutput();
-		if (removeUsage) {
-			consoleLog = consoleLog.replace(N4jscOptions.USAGE, "");
-		}
-		return consoleLog.trim();
-	}
-
-	/**  */
-	protected String getConsoleOutput() {
-		try {
-			String output = baos.toString("UTF-8");
-			return output;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
-
-	static class SystemExitException extends SecurityException {
-		public final int status;
-
-		public SystemExitException(int status) {
-			this.status = status;
-		}
-	}
-
-	private static class NoExitSecurityManager extends SecurityManager {
-		private final SecurityManager securityManager;
-
-		NoExitSecurityManager() {
-			this.securityManager = System.getSecurityManager();
-		}
-
-		@Override
-		public void checkPermission(Permission perm) {
-			if (securityManager != null) {
-				securityManager.checkPermission(perm);
-			}
-		}
-
-		@Override
-		public void checkPermission(Permission perm, Object context) {
-			if (securityManager != null) {
-				securityManager.checkPermission(perm, context);
-			}
-		}
-
-		@Override
-		public void checkExit(int status) {
-			super.checkExit(status);
-			throw new SystemExitException(status);
-		}
-
+	public void after2() {
+		N4jscNoPerformFlag.unset();
 	}
 }
