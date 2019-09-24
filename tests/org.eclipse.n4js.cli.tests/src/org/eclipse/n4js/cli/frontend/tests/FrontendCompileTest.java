@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
-public class FrontendCompileTest extends AbstractCliTest {
+public class FrontendCompileTest extends AbstractCliFrontendTest {
 	private static final String FILE_TC = "file.tc";
 
 	/** Set the flag */

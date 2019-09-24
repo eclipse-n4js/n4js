@@ -18,7 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
-public class FrontendLspTest extends AbstractCliTest {
+public class FrontendLspTest extends AbstractCliFrontendTest {
 	/** Set the flag */
 	@Before
 	public void before2() {

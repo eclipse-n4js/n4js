@@ -25,7 +25,7 @@ import org.junit.After;
 import org.junit.Before;
 
 /**  */
-public class AbstractCliTest {
+public class AbstractCliFrontendTest {
 
 	private ByteArrayOutputStream baos;
 

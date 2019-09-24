@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
-public class FrontendHelpTest extends AbstractCliTest {
+public class FrontendHelpTest extends AbstractCliFrontendTest {
 	/** Set the flag */
 	@Before
 	public void before2() {
