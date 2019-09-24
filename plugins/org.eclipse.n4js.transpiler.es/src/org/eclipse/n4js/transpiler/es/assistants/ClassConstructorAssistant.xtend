@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import java.util.Collection
 import java.util.LinkedHashSet
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
@@ -246,22 +247,26 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		if (fieldDecl.hasNonTrivialInitExpression) {
 			// here we create:
 			//
-			//     this.fieldName = 'fieldName' in spec ? spec.fieldName : <INIT_EXPRESSION>;
+			//     this.fieldName = spec.fieldName === undefined ? <INIT_EXPRESSION> : spec.fieldName;
+			//
+			// NOTE: don't use something like "'fieldName' in spec" as the condition above, because that would
+			// not have the same behavior as destructuring in method #createFieldInitCodeForSeveralSpeccedFields()
+			// in case the property is present but has value 'undefined'!
 			//
 			return _ExprStmnt(_AssignmentExpr(
 				_PropertyAccessExpr(_ThisLiteral, fieldSTE),
 				// ? :
 				_ConditionalExpr(
-					// 'fieldName' in spec
-					_RelationalExpr(_StringLiteralForSTE(fieldSTE), RelationalOperator.IN, _IdentRef(specFparSTE)),
-					// spec.fieldName
-					_PropertyAccessExpr(specFparSTE, fieldSTE),
+					// spec.fieldName === undefined
+					_EqualityExpr(_PropertyAccessExpr(specFparSTE, fieldSTE), EqualityOperator.SAME, undefinedRef()),
 					// <INIT_EXPRESSION>
 					if(fieldDecl.expression!==null) {
 						copy(fieldDecl.expression) // need to copy expression here, because it will be used again!
 					} else {
 						undefinedRef()
-					}
+					},
+					// spec.fieldName
+					_PropertyAccessExpr(specFparSTE, fieldSTE)
 				)
 			));
 		} else {
