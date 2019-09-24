@@ -110,7 +110,7 @@ public class FrontendHelpTest extends AbstractCliTest {
 						"  noTests=false\n" +
 						"  port=5007\n" +
 						"  srcFiles=Optional.empty\n" +
-						"  Current execution directory=/Users/marcus.mews/Eclipses/ECL2/git/n4js/tests/org.eclipse.n4js.cli.tests/."));
+						"  Current execution directory="));
 	}
 
 }
