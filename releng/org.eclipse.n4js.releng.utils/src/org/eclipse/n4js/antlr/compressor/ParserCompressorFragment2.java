@@ -93,7 +93,7 @@ public class ParserCompressorFragment2 extends AbstractXtextGeneratorFragment {
 			File file = new File(fileName);
 			String javaSource = null;
 			try {
-				javaSource = Files.toString(file, Charsets.UTF_8);
+				javaSource = Files.asCharSource(file, Charsets.UTF_8).read();
 			} catch (Exception ex) {
 				LOGGER.error("Error reading file " + fileName + ": " + ex.getMessage());
 			}
@@ -113,7 +113,7 @@ public class ParserCompressorFragment2 extends AbstractXtextGeneratorFragment {
 				}
 
 				try {
-					Files.write(compressed, file, Charsets.UTF_8);
+					Files.asCharSink(file, Charsets.UTF_8).write(compressed);
 				} catch (IOException e) {
 					LOGGER.error("Error writing compressed file " + readableFileName(file) + ": " + e.getMessage());
 				}

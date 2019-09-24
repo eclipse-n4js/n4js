@@ -12,13 +12,13 @@ package org.eclipse.n4js.json.ui.labeling;
 
 import static com.google.common.base.Optional.absent;
 import static java.io.File.separator;
-import static org.eclipse.ui.plugin.AbstractUIPlugin.imageDescriptorFromPlugin;
 
 import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.n4js.json.ui.internal.JsonActivator;
 import org.eclipse.swt.graphics.Image;
 
@@ -46,8 +46,8 @@ public enum JSONImageDescriptorCache {
 	 */
 	public static enum ImageRef {
 
-		JSON_OBJECT("json_object.png"), JSON_ARRAY("json_array.png"), JSON_VALUE_PAIR("public_co.png"), JSON_VALUE(
-				"json_value.png");
+		JSON_OBJECT("json_object.png"), JSON_ARRAY("json_array.png"), JSON_VALUE_PAIR("public_co.png"),
+		JSON_VALUE("json_value.png");
 
 		private static final Logger LOGGER = Logger.getLogger(ImageRef.class);
 
@@ -106,7 +106,7 @@ public enum JSONImageDescriptorCache {
 		ImageDescriptor descriptor = registry.getDescriptor(ref.fileName);
 		if (null == descriptor) {
 			final String imageFilePath = ICON_FOLDER + separator + ref.fileName;
-			descriptor = imageDescriptorFromPlugin(PLUGIN_ID, imageFilePath);
+			descriptor = ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, imageFilePath).orElse(null);
 			registry.put(ref.fileName, descriptor);
 		}
 		return Optional.fromNullable(descriptor);

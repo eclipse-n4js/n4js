@@ -11,8 +11,8 @@
 package org.eclipse.n4js.ui.wizard.project;
 
 import static com.google.common.base.CharMatcher.breakingWhitespace;
+import static com.google.common.base.CharMatcher.inRange;
 import static com.google.common.base.CharMatcher.is;
-import static com.google.common.base.CharMatcher.javaLetter;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.FluentIterable.from;
@@ -396,7 +396,8 @@ public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProject
 			// Implementation ID is optional
 			if (!isNullOrEmpty(implementationId)) {
 				final char leadingChar = implementationId.charAt(0);
-				if (!is('_').or(javaLetter()).matches(leadingChar)) {
+
+				if (is('_').or(inRange('a', 'z').or(inRange('A', 'Z'))).matches(leadingChar)) {
 					setErrorMessage("Implementation ID should start either an upper or a lower case character "
 							+ "from the Latin alphabet or with the underscore character.");
 					return false;

@@ -38,6 +38,6 @@ public class TypesBuilderMD5HexTest {
 	@Test
 	public void testMD5Hex() throws Exception {
 		final Script script = n4jsParseHelper.parse("let hi = 'Hello World';");
-		assertEquals("e4fc7566be440d22c524846f2939dfda", N4JSASTUtils.md5Hex((XtextResource) script.eResource()));
+		assertEquals("8e001ae691340ada4e82784c12c62606", N4JSASTUtils.md5Hex((XtextResource) script.eResource()));
 	}
 }

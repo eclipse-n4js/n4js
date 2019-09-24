@@ -90,7 +90,7 @@ class TaskWriteFiles implements IRunnableWithProgress {
 			}
 
 			file.createNewFile();
-			Files.write(newContent, file, Charsets.UTF_8);
+			Files.asCharSink(file, Charsets.UTF_8).write(newContent);
 			monitor.worked(1);
 
 			CheckCanceled.checkUserCanceled(monitor);
