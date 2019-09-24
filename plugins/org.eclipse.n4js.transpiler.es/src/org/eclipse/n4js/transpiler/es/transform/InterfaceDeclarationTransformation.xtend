@@ -12,7 +12,6 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
 import java.util.List
-import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
@@ -21,6 +20,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.BootstrapCallAssistant
+import org.eclipse.n4js.transpiler.es.assistants.ClassConstructorAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TInterface
 
@@ -35,6 +35,7 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 class InterfaceDeclarationTransformation extends Transformation {
 
 	@Inject BootstrapCallAssistant bootstrapCallAssistant;
+	@Inject ClassConstructorAssistant classConstructorAssistant;
 	@Inject TypeAssistant typeAssistant;
 
 
@@ -91,14 +92,16 @@ class InterfaceDeclarationTransformation extends Transformation {
 		return _ExprStmnt(_AssignmentExpr()=>[
 			lhs = _PropertyAccessExpr(ifcSTE, $fieldInitSTE);
 			// _fieldInit needs to be called via "call(this, ...)" to bind this correctly and avoid unnecessary rewrite of "this"
-			rhs = _FunExpr(false, ifcDecl.name + '_fieldInit', #[ _Fpar("spec"), _Fpar("mixinExclusion") ])=>[
-				body.statements += createInstanceFieldInitializations(ifcDecl);
+			val specFpar = _Fpar("spec");
+			val specFparSTE = findSymbolTableEntryForElement(specFpar, true);
+			rhs = _FunExpr(false, ifcDecl.name + '_fieldInit', #[ specFpar, _Fpar("mixinExclusion") ])=>[
+				body.statements += createInstanceFieldInitializations(ifcDecl, specFparSTE);
 				body.statements += createDelegationToFieldInitOfExtendedInterfaces(ifcDecl);
 			];
 		]);
 	}
 
-	def private Statement[] createInstanceFieldInitializations(N4InterfaceDeclaration ifcDecl) {
+	def private Statement[] createInstanceFieldInitializations(N4InterfaceDeclaration ifcDecl, SymbolTableEntry specFparSTE) {
 		// if(spec) {
 		//      if(!(mixinExclusion.hasOwnProperty("field") || this.hasOwnProperty("field"))) {
 		//     	    this.field = spec.field === undefined ? 42 : spec.field;
@@ -116,21 +119,11 @@ class InterfaceDeclarationTransformation extends Transformation {
 			for(field : fields) {
 				val fieldSTE = findSymbolTableEntryForElement(field, true);
 				// target.field = spec.field === undefined ? 42 : spec.field;
-				val specStmnt = _ExprStmnt(_AssignmentExpr(
-					_PropertyAccessExpr(_Snippet("this"), fieldSTE),
-					_ConditionalExpr(
-						_EqualityExpr(_PropertyAccessExpr(_Snippet("spec"), fieldSTE), EqualityOperator.SAME, _IdentRef(steFor_undefined)),
-						{if(field.expression!==null) copy(field.expression) else undefinedRef()},
-						_PropertyAccessExpr(_Snippet("spec"), fieldSTE)
-					)
-				));
+				val specStmnt = classConstructorAssistant.createFieldInitCodeForSingleSpeccedField(field, specFparSTE);
 				fieldInitsFromSpec += ifStmntMixinExclusionORtarget(hasOwnPropertySTE,fieldSTE,specStmnt);
 
-				// if(!(mixinExclusion.hasOwnProperty("field") || target.hasOwnProperty("field"))) {target.field = 42;}
-				val trueBody = _ExprStmnt(_AssignmentExpr(
-					_PropertyAccessExpr(_Snippet("this"), fieldSTE),
-					{if(field.expression!==null) copy(field.expression) else undefinedRef()}
-				));
+				// target.field = 42;
+				val trueBody = classConstructorAssistant.createFieldInitCodeForSingleField(field);
 				fieldInitsNormal += ifStmntMixinExclusionORtarget(hasOwnPropertySTE,fieldSTE,trueBody);
 			}
 			// if(spec) {...} else {...}
@@ -143,6 +136,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		return #[];
 	}
 
+	// if(!(mixinExclusion.hasOwnProperty("field") || target.hasOwnProperty("field"))) { ... }
 	def private ifStmntMixinExclusionORtarget(SymbolTableEntry hasOwnPropertySTE, SymbolTableEntry fieldSTE, Statement trueBody ){
 		return _IfStmnt(
 			_NOT(_Parenthesis(_OR(

@@ -190,7 +190,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		return #[ fieldDecls.createFieldInitCodeForSeveralSpeccedFields(specFparSTE) ];
 	}
 
-	def private Statement createFieldInitCodeForSingleField(N4FieldDeclaration fieldDecl) {
+	def public Statement createFieldInitCodeForSingleField(N4FieldDeclaration fieldDecl) {
 		// here we create:
 		//
 		//     this.fieldName = <INIT_EXPRESSION>;
@@ -242,7 +242,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		);
 	}
 
-	def private Statement createFieldInitCodeForSingleSpeccedField(N4FieldDeclaration fieldDecl, SymbolTableEntry specFparSTE) {
+	def public Statement createFieldInitCodeForSingleSpeccedField(N4FieldDeclaration fieldDecl, SymbolTableEntry specFparSTE) {
 		val fieldSTE = findSymbolTableEntryForElement(fieldDecl, true);
 		if (fieldDecl.hasNonTrivialInitExpression) {
 			// here we create:
