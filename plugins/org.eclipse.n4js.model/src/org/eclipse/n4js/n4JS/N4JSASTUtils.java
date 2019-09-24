@@ -39,6 +39,8 @@ import com.google.common.hash.Hashing;
  * Hint: use <code>import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*</code> in Xtend
  */
 public abstract class N4JSASTUtils {
+	/** Seed for hashing algorithm */
+	private static final int SEED = 9415;
 
 	/** The reserved {@value} keyword. */
 	public static final String CONSTRUCTOR = "constructor";
@@ -437,6 +439,6 @@ public abstract class N4JSASTUtils {
 		if (source == null) {
 			throw new IllegalStateException("resource does not have a valid parse result: " + resource.getURI());
 		}
-		return Hashing.goodFastHash(32).hashString(source, Charsets.UTF_8).toString();
+		return Hashing.murmur3_128(SEED).hashString(source, Charsets.UTF_8).toString();
 	}
 }
