@@ -128,7 +128,7 @@ public class RepoRelativePath {
 			return null;
 		}
 		try {
-			String configStr = Files.toString(config, Charset.defaultCharset());
+			String configStr = Files.asCharSource(config, Charset.defaultCharset()).read();
 			Config cfg = new Config();
 
 			cfg.fromText(configStr);

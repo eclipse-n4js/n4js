@@ -123,7 +123,7 @@ class WizardGeneratorHelper {
 	 * Returns the content of the file as a string.
 	 */
 	public def String readFileAsString(IFile file) throws IOException, CoreException, UnsupportedEncodingException {
-		Files.toString(file.location.toFile, Charset.defaultCharset);
+		Files.asCharSource(file.location.toFile, Charset.defaultCharset).read();
 	}
 
 	/**

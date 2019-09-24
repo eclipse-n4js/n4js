@@ -113,7 +113,7 @@ import com.jcraft.jsch.Session;
 
 	private boolean isEncrypted(File keyFile) {
 		try {
-			String s = Files.toString(keyFile, Charset.defaultCharset());
+			String s = Files.asCharSource(keyFile, Charset.defaultCharset()).read();
 			return s.indexOf("ENCRYPTED") >= 0;
 		} catch (IOException e) {
 			return false;
