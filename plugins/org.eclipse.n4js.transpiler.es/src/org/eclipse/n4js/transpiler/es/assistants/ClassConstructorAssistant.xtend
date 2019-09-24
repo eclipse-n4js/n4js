@@ -377,7 +377,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		val $fieldInitSTE =  steFor_$fieldInit;
 		val implementedIfcSTEs = typeAssistant.getSuperInterfacesSTEs(classDecl).filter [
 			// regarding the cast to TInterface: see preconditions of ClassDeclarationTransformation
-			// GHOLD-388: Generate $fieldInit call only if the interface is neither built-in nor provided by runtime nor external without @N4JS
+			// regarding the entire line: generate $fieldInit call only if the interface is neither built-in nor provided by runtime nor external without @N4JS
 			!(originalTarget as TInterface).builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation;
 		];
 

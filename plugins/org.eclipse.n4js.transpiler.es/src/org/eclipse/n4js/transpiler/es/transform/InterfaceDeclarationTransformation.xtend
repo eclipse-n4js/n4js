@@ -11,10 +11,11 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import java.util.List
+import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
-import org.eclipse.n4js.n4JS.RelationalOperator
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.transpiler.Transformation
@@ -28,7 +29,6 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import java.util.List
 
 /**
  */
@@ -101,11 +101,11 @@ class InterfaceDeclarationTransformation extends Transformation {
 	def private Statement[] createInstanceFieldInitializations(N4InterfaceDeclaration ifcDecl) {
 		// if(spec) {
 		//      if(!(mixinExclusion.hasOwnProperty("field") || this.hasOwnProperty("field"))) {
-		//     	    target.field = 'field' in spec ? spec.field : 42;
+		//     	    this.field = spec.field === undefined ? 42 : spec.field;
 		//      }
 		// } else {
 		//     if(!(mixinExclusion.hasOwnProperty("field") || this.hasOwnProperty("field"))) {
-		//         target.field = 42;
+		//         this.field = 42;
 		//     }
 		// }
 		val fields = ifcDecl.ownedFields.filter[!static].toList;
@@ -115,13 +115,13 @@ class InterfaceDeclarationTransformation extends Transformation {
 			val fieldInitsNormal = <Statement>newArrayList;
 			for(field : fields) {
 				val fieldSTE = findSymbolTableEntryForElement(field, true);
-				// target.field = 'field' in spec ? spec.field : 42;
+				// target.field = spec.field === undefined ? 42 : spec.field;
 				val specStmnt = _ExprStmnt(_AssignmentExpr(
 					_PropertyAccessExpr(_Snippet("this"), fieldSTE),
 					_ConditionalExpr(
-						_RelationalExpr(_StringLiteralForSTE(fieldSTE), RelationalOperator.IN, _Snippet("spec")),
-						_PropertyAccessExpr(_Snippet("spec"), fieldSTE),
-						{if(field.expression!==null) copy(field.expression) else undefinedRef()}
+						_EqualityExpr(_PropertyAccessExpr(_Snippet("spec"), fieldSTE), EqualityOperator.SAME, _IdentRef(steFor_undefined)),
+						{if(field.expression!==null) copy(field.expression) else undefinedRef()},
+						_PropertyAccessExpr(_Snippet("spec"), fieldSTE)
 					)
 				));
 				fieldInitsFromSpec += ifStmntMixinExclusionORtarget(hasOwnPropertySTE,fieldSTE,specStmnt);
@@ -160,7 +160,7 @@ class InterfaceDeclarationTransformation extends Transformation {
 		val $fieldInitSTE = steFor_$fieldInit;
 		val superIfcSTEs = typeAssistant.getSuperInterfacesSTEs(ifcDecl).filter [
 			// regarding the cast to TInterface: see preconditions of ClassDeclarationTransformation
-			// GHOLD-388: Generate $fieldInit call only if the interface is neither built-in nor provided by runtime nor external without @N4JS
+			// regarding the entire next line: generate $fieldInit call only if the interface is neither built-in nor provided by runtime nor external without @N4JS
 			!(originalTarget as TInterface).builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation;
 		];
 
