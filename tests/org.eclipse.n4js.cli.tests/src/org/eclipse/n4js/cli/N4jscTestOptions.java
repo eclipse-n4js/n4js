@@ -17,47 +17,66 @@ import java.util.List;
 /** Helper class to create n4jsc option programmatically */
 public class N4jscTestOptions extends N4jscOptions {
 
-	/** @return a new instance of {@link N4jscTestOptions} */
-	static public N4jscTestOptions get() {
-		return new N4jscTestOptions();
+	/** @return a new instance of {@link N4jscTestOptions} with goal compile */
+	static public N4jscTestOptions COMPILE(File... files) {
+		return COMPILE(Arrays.asList(files));
 	}
 
-	Options options;
-
-	/** Set goal to compile */
-	public N4jscTestOptions COMPILE() {
-		options.goal = N4jscGoal.compile;
-		return this;
+	/** @return a new instance of {@link N4jscTestOptions} with goal compile */
+	static public N4jscTestOptions COMPILE(List<File> files) {
+		N4jscTestOptions instance = new N4jscTestOptions();
+		instance.options.goal = N4jscGoal.compile;
+		return instance.f(files);
 	}
 
-	/** Set goal to compile */
-	public N4jscTestOptions LSP() {
-		options.goal = N4jscGoal.lsp;
-		return this;
+	/** @return a new instance of {@link N4jscTestOptions} with goal clean */
+	static public N4jscTestOptions CLEAN(File... files) {
+		return CLEAN(Arrays.asList(files));
 	}
 
-	/** Set goal to compile */
-	public N4jscTestOptions CLEAN() {
-		options.goal = N4jscGoal.clean;
-		return this;
+	/** @return a new instance of {@link N4jscTestOptions} with goal clean */
+	static public N4jscTestOptions CLEAN(List<File> files) {
+		N4jscTestOptions instance = new N4jscTestOptions();
+		instance.options.goal = N4jscGoal.clean;
+		return instance.f(files);
 	}
 
-	/** Set goal to compile */
-	public N4jscTestOptions HELP() {
-		options.goal = N4jscGoal.help;
-		return this;
+	/** @return a new instance of {@link N4jscTestOptions} with goal watch */
+	static public N4jscTestOptions WATCH(File... files) {
+		return COMPILE(Arrays.asList(files));
 	}
 
-	/** Set goal to compile */
-	public N4jscTestOptions WATCH() {
-		options.goal = N4jscGoal.watch;
-		return this;
+	/** @return a new instance of {@link N4jscTestOptions} with goal watch */
+	static public N4jscTestOptions WATCH(List<File> files) {
+		N4jscTestOptions instance = new N4jscTestOptions();
+		instance.options.goal = N4jscGoal.watch;
+		return instance.f(files);
 	}
 
-	/** Set goal to compile */
-	public N4jscTestOptions API() {
-		options.goal = N4jscGoal.api;
-		return this;
+	/** @return a new instance of {@link N4jscTestOptions} with goal api */
+	static public N4jscTestOptions API(File... files) {
+		return API(Arrays.asList(files));
+	}
+
+	/** @return a new instance of {@link N4jscTestOptions} with goal api */
+	static public N4jscTestOptions API(List<File> files) {
+		N4jscTestOptions instance = new N4jscTestOptions();
+		instance.options.goal = N4jscGoal.api;
+		return instance.f(files);
+	}
+
+	/** @return a new instance of {@link N4jscTestOptions} with goal help */
+	static public N4jscTestOptions HELP() {
+		N4jscTestOptions instance = new N4jscTestOptions();
+		instance.options.goal = N4jscGoal.help;
+		return instance;
+	}
+
+	/** @return a new instance of {@link N4jscTestOptions} with goal lsp */
+	static public N4jscTestOptions LSP() {
+		N4jscTestOptions instance = new N4jscTestOptions();
+		instance.options.goal = N4jscGoal.lsp;
+		return instance;
 	}
 
 	/** Set goal to compile */

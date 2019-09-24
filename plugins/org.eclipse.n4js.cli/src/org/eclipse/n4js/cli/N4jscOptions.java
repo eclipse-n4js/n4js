@@ -178,8 +178,10 @@ public class N4jscOptions {
 		List<File> srcFiles = new ArrayList<>();
 	}
 
-	private final Options options;
-	private final N4JSCmdLineParser parser;
+	/** Internal data store of options */
+	protected final Options options;
+	/** Internal parser */
+	protected final N4JSCmdLineParser parser;
 
 	/** Constructor */
 	public N4jscOptions() {
