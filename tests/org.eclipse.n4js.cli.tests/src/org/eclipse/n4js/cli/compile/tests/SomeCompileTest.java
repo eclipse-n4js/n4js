@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.GeneratedJSFilesCounter;
 import org.junit.Test;
 
 /**
@@ -31,9 +33,18 @@ public class SomeCompileTest extends AbstractCliCompileTest {
 
 		String output = main(options);
 
-		assertEquals("Initialized", output);
+		assertEquals(
+				"file:///probands/basic/P1/package.json\n"
+						+ "   [Error] (1:9): The package name \"P15\" does not match the name of the project folder \"P1\" on the file system.\n"
+						+ "   [Error] (4:17): Missing dependency to n4js-runtime (mandatory for all N4JS projects of type library, application, test).\n"
+						+ "file:///probands/basic/P1/src/A.n4js\n"
+						+ "   [Error] (11:7): no viable alternative at input 'A'\n"
+						+ "   [Error] (11:9): no viable alternative at input '{'\n"
+						+ "   [Error] (11:0): Couldn't resolve reference to IdentifiableElement 'classl'.\n"
+						+ "   [Error] (13:0): missing EOF at '}'",
+				output);
 
-		int jsFileCount = GeneratedJSFilesCounter.countFilesCompiledToES("probands/basic/P1");
+		int jsFileCount = GeneratedJSFilesCounter.countFilesCompiledToES(file);
 		assertEquals(4, jsFileCount);
 	}
 

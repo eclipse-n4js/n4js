@@ -10,15 +10,21 @@
  */
 package org.eclipse.n4js.cli.compiler;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
+
+import com.google.common.collect.ComparisonChain;
 
 /**
  *
@@ -33,12 +39,27 @@ public class N4jscCallback implements LanguageClient {
 
 	@Override
 	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
-		if (diagnostics.getDiagnostics().isEmpty()) {
+		List<Diagnostic> issueList = diagnostics.getDiagnostics();
+		if (issueList.isEmpty()) {
 			return;
 		}
 
+		Comparator<Diagnostic> comparator = new Comparator<>() {
+			@Override
+			public int compare(Diagnostic d1, Diagnostic d2) {
+				Position p1 = d1.getRange().getStart();
+				Position p2 = d2.getRange().getStart();
+				int result = ComparisonChain.start()
+						.compare(p1.getLine(), p2.getLine())
+						.compare(p2.getCharacter(), p2.getCharacter())
+						.result();
+				return result;
+			}
+		};
+
+		Collections.sort(issueList, comparator);
 		N4jscConsole.println(IssueSerializer.uri(diagnostics.getUri()));
-		for (Diagnostic diag : diagnostics.getDiagnostics()) {
+		for (Diagnostic diag : issueList) {
 			N4jscConsole.println(IssueSerializer.diagnostics(diag));
 		}
 	}

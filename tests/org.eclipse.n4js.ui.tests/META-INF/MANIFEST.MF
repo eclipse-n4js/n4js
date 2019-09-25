@@ -35,6 +35,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.tester.nodejs,
  org.eclipse.n4js.tester.nodejs.ui,
  org.eclipse.n4js.tests.helper,
+ org.eclipse.n4js.cli.tests.helper,
  org.junit,
  org.eclipse.n4js.json
 Export-Package: org.eclipse.n4js.ui.outline

@@ -11,7 +11,6 @@
 package org.eclipse.n4js.cli.frontend.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -84,7 +83,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	public void testShowSetup() {
 		String args[] = { "lsp", "--showSetup" };
 		String consoleLog = main(args, 0, false);
-		assertTrue(consoleLog.startsWith(
+		assertEquals(
 				"N4jsc.options=\n" +
 						"  goal=lsp\n" +
 						"  showSetup=true\n" +
@@ -96,7 +95,8 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 						"  noTests=false\n" +
 						"  port=5007\n" +
 						"  srcFiles=Optional.empty\n" +
-						"  Current execution directory="));
+						"  Current execution directory=/.",
+				consoleLog);
 	}
 
 }

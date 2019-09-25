@@ -12,7 +12,7 @@ package org.eclipse.n4js.cli.frontend.tests;
 
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscNoPerformFlag;
-import org.eclipse.n4js.cli.tests.AbstractCliTest;
+import org.eclipse.n4js.cli.helper.AbstractCliTest;
 import org.junit.After;
 import org.junit.Before;
 

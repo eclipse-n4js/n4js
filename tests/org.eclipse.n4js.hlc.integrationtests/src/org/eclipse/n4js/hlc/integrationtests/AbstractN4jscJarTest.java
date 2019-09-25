@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.eclipse.n4js.cli.helper.N4CliHelper;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;

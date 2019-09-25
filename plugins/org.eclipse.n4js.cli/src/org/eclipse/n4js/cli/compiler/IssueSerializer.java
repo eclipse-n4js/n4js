@@ -27,7 +27,7 @@ public class IssueSerializer {
 	}
 
 	public static String uri(String uri) {
-		String s = "In " + uri;
+		String s = uri;
 		return s;
 	}
 

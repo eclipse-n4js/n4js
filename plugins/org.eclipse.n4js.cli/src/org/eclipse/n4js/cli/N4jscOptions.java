@@ -322,7 +322,7 @@ public class N4jscOptions {
 		s += "\n  testOnly=" + options.testOnly;
 		s += "\n  noTests=" + options.noTests;
 		s += "\n  port=" + options.port;
-		s += "\n  srcFiles=" + options.srcFiles.stream().map(f -> f.toString()).reduce((a, b) -> a + ", " + b);
+		s += "\n  srcFiles=" + options.srcFiles.stream().map(f -> f.getAbsolutePath()).reduce((a, b) -> a + ", " + b);
 		s += "\n  Current execution directory=" + new File(".").getAbsolutePath();
 		return s;
 	}
@@ -337,7 +337,7 @@ public class N4jscOptions {
 			s += " " + od.name();
 			s += value == null ? "" : " " + value;
 		}
-		s += " " + String.join(", ", getSrcFiles().stream().map(f -> f.getName()).collect(Collectors.toList()));
+		s += " " + String.join(", ", getSrcFiles().stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList()));
 		return s;
 	}
 
@@ -353,5 +353,10 @@ public class N4jscOptions {
 			}
 		}
 		return nameFieldMap;
+	}
+
+	@Override
+	public String toString() {
+		return toCallString();
 	}
 }
