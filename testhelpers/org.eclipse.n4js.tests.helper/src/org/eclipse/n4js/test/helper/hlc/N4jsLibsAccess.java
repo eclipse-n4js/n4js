@@ -37,6 +37,7 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.libs.build.BuildN4jsLibs;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -368,8 +369,13 @@ public class N4jsLibsAccess {
 				"******************************************************************\n" +
 				"Maybe you forgot to run MWE2 workflow " + BuildN4jsLibs.class.getSimpleName() + "?\n" +
 				"******************************************************************";
-		Assert.assertTrue("not a symbolic link pointing to package \"" + N4JSGlobals.N4JS_RUNTIME + "\": "
-				+ n4jsRuntimeLink + warning, Files.isSymbolicLink(n4jsRuntimeLink));
+		if (OSInfo.isWindows()) {
+			// yarn does not create symbolic links on windows, so we check for a folder:
+			Assert.assertTrue("not a folder: " + n4jsRuntimeLink + warning, Files.isDirectory(n4jsRuntimeLink));
+		} else {
+			Assert.assertTrue("not a symbolic link pointing to package \"" + N4JSGlobals.N4JS_RUNTIME + "\": "
+					+ n4jsRuntimeLink + warning, Files.isSymbolicLink(n4jsRuntimeLink));
+		}
 		Assert.assertTrue("src-gen folder in n4js-runtime does not exist: " + n4jsRuntimeSrcGen + warning,
 				Files.isDirectory(n4jsRuntimeSrcGen));
 	}
