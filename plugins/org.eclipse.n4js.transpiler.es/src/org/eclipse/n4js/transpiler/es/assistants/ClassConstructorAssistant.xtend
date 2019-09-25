@@ -15,7 +15,6 @@ import java.util.Collection
 import java.util.LinkedHashSet
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.EqualityOperator
-import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -32,7 +31,6 @@ import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.transform.SuperLiteralTransformation
-import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.types.MemberAccessModifier
@@ -190,7 +188,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		return #[ fieldDecls.createFieldInitCodeForSeveralSpeccedFields(specFparSTE) ];
 	}
 
-	def public Statement createFieldInitCodeForSingleField(N4FieldDeclaration fieldDecl) {
+	def private Statement createFieldInitCodeForSingleField(N4FieldDeclaration fieldDecl) {
 		// here we create:
 		//
 		//     this.fieldName = <INIT_EXPRESSION>;
@@ -242,7 +240,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		);
 	}
 
-	def public Statement createFieldInitCodeForSingleSpeccedField(N4FieldDeclaration fieldDecl, SymbolTableEntry specFparSTE) {
+	def private Statement createFieldInitCodeForSingleSpeccedField(N4FieldDeclaration fieldDecl, SymbolTableEntry specFparSTE) {
 		val fieldSTE = findSymbolTableEntryForElement(fieldDecl, true);
 		if (fieldDecl.hasNonTrivialInitExpression) {
 			// here we create:
@@ -372,14 +370,14 @@ class ClassConstructorAssistant extends TransformationAssistant {
 
 	def private Statement[] createDelegationToFieldInitOfImplementedInterfaces(N4ClassDeclaration classDecl, FormalParameter /*nullable*/ specFpar ) {
 
-		// I.$fieldInit(this, undefined, {});
-		val result = newArrayList;
-		val $fieldInitSTE =  steFor_$fieldInit;
 		val implementedIfcSTEs = typeAssistant.getSuperInterfacesSTEs(classDecl).filter [
 			// regarding the cast to TInterface: see preconditions of ClassDeclarationTransformation
 			// regarding the entire line: generate $fieldInit call only if the interface is neither built-in nor provided by runtime nor external without @N4JS
 			!(originalTarget as TInterface).builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation;
 		];
+		if (implementedIfcSTEs.empty) {
+			return #[];
+		}
 
 		val LinkedHashSet<String> ownedInstanceDataFieldsSupressMixin = newLinkedHashSet
 		ownedInstanceDataFieldsSupressMixin.addAll(classDecl.ownedFields.filter[!isConsumedFromInterface].map[name])
@@ -387,24 +385,25 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		ownedInstanceDataFieldsSupressMixin.addAll(classDecl.ownedSetters.filter[!isConsumedFromInterface].map[name])
 
 		val specFparSTE = if(specFpar!==null) findSymbolTableEntryForElement(specFpar, false);
-		val ()=>Expression refTo_specFpar_or_undefined = if(specFpar === null ) [undefinedRef()] else [_IdentRef(specFparSTE) ];
+		val $initFieldsFromInterfacesSTE = steFor_$initFieldsFromInterfaces;
 
-		for(implementedIfcSTE : implementedIfcSTEs) {
-			// InterfaceName.$fieldInit.call(this, ...) to bind this in field initializer correctly
-			result += _ExprStmnt(
-				_CallExpr(
-					__NSSafe_PropertyAccessExpr(implementedIfcSTE, $fieldInitSTE, steFor_call()),
-					_ThisLiteral,
-					refTo_specFpar_or_undefined.apply(),
-					_ObjLit(
-						ownedInstanceDataFieldsSupressMixin.map[
-							_PropertyNameValuePair(it, undefinedRef())
-						]
-					)
+		return #[ _ExprStmnt(
+			_CallExpr(
+				_IdentRef($initFieldsFromInterfacesSTE),
+				_ThisLiteral,
+				_ArrLit(implementedIfcSTEs.map[_IdentRef(it)]),
+				if (specFparSTE !== null) {
+					_IdentRef(specFparSTE)
+				} else {
+					undefinedRef()
+				},
+				_ObjLit(
+					ownedInstanceDataFieldsSupressMixin.map[
+						_PropertyNameValuePair(it, _TRUE)
+					]
 				)
-			);
-		}
-		return result;
+			)
+		)];
 	}
 
 	// ################################################################################################################
@@ -464,15 +463,5 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		val accessModifier = ModifierUtils.convertToMemberAccessModifier(memberDecl.declaredModifiers,
 			memberDecl.annotations);
 		return accessModifier === MemberAccessModifier.PUBLIC;
-	}
-
-	def private boolean hasNonTrivialInitExpression(N4FieldDeclaration fieldDecl) {
-		val expr = fieldDecl?.expression;
-		if (expr instanceof IdentifierRef_IM) {
-			if (expr.originalTargetOfRewiredTarget === state.G.globalObjectScope.fieldUndefined) {
-				return false;
-			}
-		}
-		return expr !== null && !state.G.isUndefinedLiteral(expr);
 	}
 }
