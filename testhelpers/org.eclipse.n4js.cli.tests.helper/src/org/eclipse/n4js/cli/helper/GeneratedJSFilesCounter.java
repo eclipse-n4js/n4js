@@ -8,9 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.cli.compile.tests;
-
-import static com.google.common.collect.Sets.newHashSet;
+package org.eclipse.n4js.cli.helper;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +17,9 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.n4js.N4JSGlobals;
@@ -35,16 +35,14 @@ public class GeneratedJSFilesCounter {
 	 * {@link N4JSLanguageConstants#DEFAULT_PROJECT_SRC} and output in
 	 * {@link N4JSLanguageConstants#DEFAULT_PROJECT_OUTPUT}.
 	 *
-	 * @param workspaceRootPath
+	 * @param workspaceRoot
 	 *            the directory to recursively search
 	 * @return the number of files ending in .js
 	 */
-	static public int countFilesCompiledToES(String workspaceRootPath) throws IOException {
-		final File workspaceRoot = new File(workspaceRootPath);
-
+	static public int countFilesCompiledToES(File workspaceRoot) throws IOException {
 		final File gitRoot = new File(new File("").getAbsolutePath()).getParentFile().getParentFile();
 		final File n4jsLibrariesRoot = new File(gitRoot, N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
-		final Collection<String> n4jsLibraryNames = newHashSet(n4jsLibrariesRoot.list());
+		final Collection<String> n4jsLibraryNames = new HashSet<>(Arrays.asList(n4jsLibrariesRoot.list()));
 
 		final AtomicInteger counter = new AtomicInteger();
 		Files.walkFileTree(workspaceRoot.toPath(), new FileVisitor<Path>() {

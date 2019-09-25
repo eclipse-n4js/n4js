@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.test.helper.hlc;
+package org.eclipse.n4js.cli.helper;
 
 import java.io.File;
 import java.io.IOException;

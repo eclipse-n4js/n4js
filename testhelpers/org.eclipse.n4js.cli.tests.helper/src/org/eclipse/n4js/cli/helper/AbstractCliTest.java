@@ -8,12 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.cli.tests;
+package org.eclipse.n4js.cli.helper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -74,6 +75,9 @@ abstract public class AbstractCliTest<ArgType> {
 			fail(e.getMessage());
 		}
 		consoleLog = getConsoleOutput();
+		String curDirPath = new File("").getAbsolutePath();
+		consoleLog = consoleLog.replace(curDirPath, "");
+
 		if (removeUsage) {
 			consoleLog = consoleLog.replace(N4jscOptions.USAGE, "");
 		}

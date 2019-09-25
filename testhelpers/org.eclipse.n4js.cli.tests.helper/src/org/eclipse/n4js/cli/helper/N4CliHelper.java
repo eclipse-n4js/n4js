@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.test.helper.hlc;
+package org.eclipse.n4js.cli.helper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileCopier;
@@ -44,7 +43,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
 /**
- * Central helper in running tests with the command line tools (e.g. {@code n4jsc.jar} or {@link N4jscBase}}.
+ * Central helper in running tests with the command line tools (e.g. {@code n4jsc.jar} or {@code N4jscBase}}.
  */
 public class N4CliHelper {
 
