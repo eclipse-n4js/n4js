@@ -40,7 +40,7 @@ D :: sp1 : sp1Spec
 D :: sp2 : undefined
 D :: sp3 : sp3D
 D :: sp4 : undefined
-D :: sp4 : sp5R2
+D :: sp5 : sp5R2
 stderr:
 ==>
 --- */
@@ -105,4 +105,4 @@ valCheck("D", "sp1", d.sp1, "sp1Spec");
 valCheck("D", "sp2", d.sp2, undefined);
 valCheck("D", "sp3", d.sp3, "sp3D");
 valCheck("D", "sp4", d.sp4, undefined);
-valCheck("D", "sp4", d.sp5, "sp5R2");
+valCheck("D", "sp5", d.sp5, "sp5R2");
