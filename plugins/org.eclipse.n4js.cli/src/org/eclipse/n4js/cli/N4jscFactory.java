@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.cli;
 
+import org.eclipse.n4js.cli.compiler.N4jscCallback;
 import org.eclipse.n4js.ide.N4JSIdeSetup;
 import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
 
@@ -20,15 +21,35 @@ import com.google.inject.Injector;
  */
 public class N4jscFactory {
 
+	static N4jscFactory INSTANCE = new N4jscFactory();
+
 	/** Creates a new injector */
 	public static Injector createInjector() {
-		return new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
+		return INSTANCE.internalCreateInjector();
 	}
 
 	/** @return the {@link N4JSLanguageServerImpl} instance from the given injector */
 	public static N4JSLanguageServerImpl createLanguageServer(Injector injector) {
+		return INSTANCE.internalCreateLanguageServer(injector);
+	}
+
+	/** @return the {@link N4jscCallback} instance from the given injector */
+	public static N4jscCallback createCallback(Injector injector) {
+		return INSTANCE.internalCreateN4jscCallback(injector);
+	}
+
+	Injector internalCreateInjector() {
+		return new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
+	}
+
+	N4JSLanguageServerImpl internalCreateLanguageServer(Injector injector) {
 		N4JSLanguageServerImpl languageServer = injector.getInstance(N4JSLanguageServerImpl.class);
 		return languageServer;
+	}
+
+	N4jscCallback internalCreateN4jscCallback(Injector injector) {
+		N4jscCallback callback = injector.getInstance(N4jscCallback.class);
+		return callback;
 	}
 
 }

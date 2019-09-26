@@ -32,6 +32,10 @@ public class N4jscOptionsValidater {
 		validateGoalDefinitions(options);
 
 		switch (options.getGoal()) {
+		case version:
+			// User asked for version. Don't bother him.
+			break;
+
 		case help:
 			// User asked for help. Don't bother him.
 			break;

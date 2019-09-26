@@ -25,11 +25,18 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 
 import com.google.common.collect.ComparisonChain;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
- *
+ * Overrides the lsp {@link LanguageClient} callback when used as a CLI utility
  */
+@Singleton
 public class N4jscCallback implements LanguageClient {
+
+	/***/
+	@Inject
+	protected IssueSerializer issueSerializer;
 
 	@Override
 	public void telemetryEvent(Object object) {
@@ -44,6 +51,15 @@ public class N4jscCallback implements LanguageClient {
 			return;
 		}
 
+		sortDiagnostics(issueList);
+		N4jscConsole.println(issueSerializer.uri(diagnostics.getUri()));
+		for (Diagnostic diag : issueList) {
+			N4jscConsole.println(issueSerializer.diagnostics(diag));
+		}
+	}
+
+	/** Sort issues according to line and position */
+	protected void sortDiagnostics(List<Diagnostic> issueList) {
 		Comparator<Diagnostic> comparator = new Comparator<>() {
 			@Override
 			public int compare(Diagnostic d1, Diagnostic d2) {
@@ -58,10 +74,6 @@ public class N4jscCallback implements LanguageClient {
 		};
 
 		Collections.sort(issueList, comparator);
-		N4jscConsole.println(IssueSerializer.uri(diagnostics.getUri()));
-		for (Diagnostic diag : issueList) {
-			N4jscConsole.println(IssueSerializer.diagnostics(diag));
-		}
 	}
 
 	@Override

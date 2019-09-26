@@ -24,7 +24,7 @@ import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
 import com.google.inject.Injector;
 
 /**
- *
+ * The entry point for all cli calls with the goal 'compile'
  */
 public class N4jscCompiler {
 	private final N4jscOptions options;
@@ -39,10 +39,10 @@ public class N4jscCompiler {
 	}
 
 	private N4jscCompiler(N4jscOptions options) {
-		this.options = options;
 		this.injector = N4jscFactory.createInjector();
+		this.options = options;
 		this.languageServer = N4jscFactory.createLanguageServer(injector);
-		this.callback = new N4jscCallback();
+		this.callback = N4jscFactory.createCallback(injector);
 		this.languageServer.connect(callback);
 	}
 
@@ -61,6 +61,7 @@ public class N4jscCompiler {
 			params.setRootUri(firstDir.toURI().toString());
 			languageServer.initialize(params).get();
 			languageServer.initialized(new InitializedParams());
+			languageServer.joinInitialized();
 			languageServer.shutdown();
 			languageServer.exit();
 

@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import java.lang.reflect.Field;
 import java.util.Iterator;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
@@ -18,6 +20,7 @@ import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.FileEvent;
+import org.eclipse.lsp4j.InitializedParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.projectModel.lsp.ex.IProjectConfigEx;
@@ -44,6 +47,25 @@ public class N4JSLanguageServerImpl extends LanguageServerImpl {
 	public void registerExtensions(HeadlessExtensionRegistrationHelper helper) {
 		helper.unregisterExtensions();
 		helper.registerExtensions();
+	}
+
+	/**
+	 * Call this method after calling {@link #initialized(InitializedParams)}
+	 * <p>
+	 * TODO: Fix this in Xtext
+	 */
+	@SuppressWarnings("unchecked")
+	public void joinInitialized() {
+		try {
+			Field field = LanguageServerImpl.class.getDeclaredField("initialized");
+			field.setAccessible(true);
+			Object value = field.get(this);
+
+			CompletableFuture<InitializedParams> initialized = (CompletableFuture<InitializedParams>) value;
+			initialized.join();
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	@Override

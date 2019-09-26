@@ -73,15 +73,19 @@ public class N4jscOptions {
 
 		// OPTIONS
 
-		@Option(name = "--help", aliases = "-h", usage = "same as goal help", //
+		@Option(name = "--help", aliases = "-h", usage = "prints help and exits", //
 				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
 		boolean help = false;
 
-		@Option(name = "--showSetup", usage = "print information about the current n4jsc setup", //
+		@Option(name = "--version", aliases = "-v", usage = "prints version and exits", //
+				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+		boolean version = false;
+
+		@Option(name = "--showSetup", usage = "prints n4jsc setup", //
 				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
 		boolean showSetup = false;
 
-		@Option(name = "--verbose", aliases = "-v", usage = "enables verbose output", //
+		@Option(name = "--verbose", usage = "enables verbose output", //
 				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
 		boolean verbose = false;
 
@@ -89,7 +93,7 @@ public class N4jscOptions {
 				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
 		boolean log = false;
 
-		@Option(name = "--logfile", hidden = true, usage = "[default 'n4jsc.log']", //
+		@Option(name = "--logfile", hidden = true, usage = "specifies the log file name", //
 				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)
 		String logFile = "n4jsc.log";
 
@@ -163,7 +167,6 @@ public class N4jscOptions {
 
 		@Argument(metaVar = "GOAL", multiValued = false, index = 0, required = false, //
 				usage = "Goals are:"
-						+ "\n\t help     Prints help"
 						+ "\n\t compile  Compiles with given options"
 						+ "\n\t clean    Cleans with given options"
 						+ "\n\t lsp      Starts LSP server"
@@ -219,6 +222,10 @@ public class N4jscOptions {
 		if (options.help) {
 			options.goal = N4jscGoal.help;
 			options.help = false;
+		}
+		if (options.version) {
+			options.goal = N4jscGoal.version;
+			options.version = false;
 		}
 	}
 

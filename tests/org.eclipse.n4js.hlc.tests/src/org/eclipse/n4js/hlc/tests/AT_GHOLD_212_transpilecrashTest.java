@@ -11,12 +11,14 @@
 package org.eclipse.n4js.hlc.tests;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -52,9 +54,9 @@ public class AT_GHOLD_212_transpilecrashTest extends AbstractCliCompileTest {
 
 		N4jscOptions options = COMPILE(proot);
 
-		main(options);
+		CliResult result = main(options);
 
 		// Make sure, we get here and have exactly one file compiled:
-		assertFilesCompiledToES(1, proot);
+		assertEquals(1, result.getTranspiledFilesCount());
 	}
 }

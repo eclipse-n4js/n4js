@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli.frontend.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.n4js.cli.helper.CliResult;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
@@ -21,41 +22,41 @@ public class FrontendLspTest extends AbstractCliFrontendTest {
 	@Test
 	public void testLspNoOpts() {
 		String args[] = { "lsp" };
-		String consoleLog = main(args, 0);
-		assertEquals("", consoleLog);
+		CliResult result = main(args, 0);
+		assertEquals("", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testLspPortMissingOpt() {
 		String args[] = { "lsp", "--port" };
-		String consoleLog = main(args, 10);
+		CliResult result = main(args, 10);
 		assertEquals("ERROR-10 (Invalid command line string):  Option \"--port (-p)\" takes an operand",
-				consoleLog);
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testLspPortOk() {
 		String args[] = { "lsp", "--port", "9415" };
-		String consoleLog = main(args);
-		assertEquals("", consoleLog);
+		CliResult result = main(args);
+		assertEquals("", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testLspPortNegative() {
 		String args[] = { "lsp", "--port", "-42" };
-		String consoleLog = main(args, 13);
-		assertEquals("ERROR-13 (Invalid option):  Port is out of range: -42", consoleLog);
+		CliResult result = main(args, 13);
+		assertEquals("ERROR-13 (Invalid option):  Port is out of range: -42", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testLspPortTooHigh() {
 		String args[] = { "lsp", "--port", "65537" };
-		String consoleLog = main(args, 13);
-		assertEquals("ERROR-13 (Invalid option):  Port is out of range: 65537", consoleLog);
+		CliResult result = main(args, 13);
+		assertEquals("ERROR-13 (Invalid option):  Port is out of range: 65537", result.getStdOut());
 	}
 
 }

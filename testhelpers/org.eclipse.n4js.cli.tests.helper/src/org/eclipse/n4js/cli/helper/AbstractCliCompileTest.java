@@ -10,15 +10,14 @@
  */
 package org.eclipse.n4js.cli.helper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
+import org.eclipse.n4js.cli.runner.helper.NodejsExecuter;
+import org.eclipse.n4js.cli.runner.helper.NodejsResult;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.util.Arrays;
@@ -41,27 +40,19 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	/** name of test data set for npm scopes */
 	protected static final String TEST_DATA_SET__NPM_SCOPES = "npmScopes";
 
+	NodejsExecuter nodejsExecuter = new NodejsExecuter();
+
 	@Override
-	public void doMain(N4jscOptions options) throws Exception {
+	public void doMain(N4jscOptions options, CliResult result) throws Exception {
 		N4jscCompiler.start(options);
+
+		File workspaceRoot = options.getSrcFiles().get(0);
+		result.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot);
 	}
 
-	/**
-	 * Asserts number of files generated to the {@code JS} files. Delegates to
-	 * {@link GeneratedJSFilesCounter#countFilesCompiledToES(File)} to find the JS files.
-	 *
-	 * @param expectedCompiledModuleCount
-	 *            expected number of compiled '.js' files found in the tree where root is the provided folder.
-	 * @param workspaceRoot
-	 *            subtree to search in passed as argument to {@link File}
-	 */
-	protected void assertFilesCompiledToES(int expectedCompiledModuleCount, File workspaceRoot) {
-		try {
-			int filesCompiledToES = GeneratedJSFilesCounter.countFilesCompiledToES(workspaceRoot);
-			assertEquals("Files expected", expectedCompiledModuleCount, filesCompiledToES);
-		} catch (IOException e) {
-			fail();
-		}
+	/** {@link NodejsExecuter#run(Path, Path)} */
+	public NodejsResult run(Path workingDir, Path runFile) {
+		return nodejsExecuter.run(workingDir, runFile);
 	}
 
 	/**

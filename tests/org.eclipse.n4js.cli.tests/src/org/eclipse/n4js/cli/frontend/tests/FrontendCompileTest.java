@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.eclipse.n4js.cli.helper.CliResult;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
@@ -25,172 +26,175 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void testNoArgsImplicitGoal() {
 		String args[] = {};
-		String consoleLog = main(args, 12);
+		CliResult result = main(args, 12);
 		assertEquals(
 				"ERROR-12 (Invalid file(s)):  n4js file(s) or project(s) missing",
-				consoleLog);
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testNoArgs() {
 		String args[] = { "compile" };
-		String consoleLog = main(args, 12);
+		CliResult result = main(args, 12);
 		assertEquals(
 				"ERROR-12 (Invalid file(s)):  n4js file(s) or project(s) missing",
-				consoleLog);
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testArgsFileImplicitGoal() {
 		String args[] = { "compile", "test.n4js" };
-		String consoleLog = main(args, 12);
+		CliResult result = main(args, 12);
 		assertEquals(
 				"ERROR-12 (Invalid file(s)):  file(s) do not exist: test.n4js",
-				consoleLog);
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testArgsFile() {
 		String args[] = { "test.n4js" };
-		String consoleLog = main(args, 12);
+		CliResult result = main(args, 12);
 		assertEquals(
 				"ERROR-12 (Invalid file(s)):  file(s) do not exist: test.n4js",
-				consoleLog);
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testArgsCurDirImplicitGoal() {
 		String args[] = { "." };
-		String consoleLog = main(args);
-		assertEquals("", consoleLog);
+		CliResult result = main(args);
+		assertEquals("", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testArgsCurDir() {
 		String args[] = { "compile", "." };
-		String consoleLog = main(args);
-		assertEquals("", consoleLog);
+		CliResult result = main(args);
+		assertEquals("", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkNoTestsOk() {
 		String args[] = { ".", "--noTests" };
-		String consoleLog = main(args);
-		assertEquals("", consoleLog);
+		CliResult result = main(args);
+		assertEquals("", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkNoTestsWrongGoal() {
 		String args[] = { "lsp", ".", "--noTests" };
-		String consoleLog = main(args, 13);
+		CliResult result = main(args, 13);
 		assertEquals(
 				"ERROR-13 (Invalid option):  Given option --noTests requires goal(s) compile, but goal lsp was given.",
-				consoleLog);
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkTestOnlyOk() {
 		String args[] = { ".", "--testOnly" };
-		String consoleLog = main(args);
-		assertEquals("", consoleLog);
+		CliResult result = main(args);
+		assertEquals("", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkTestOnlyWrongGoal() {
 		String args[] = { "lsp", ".", "--testOnly" };
-		String consoleLog = main(args, 13);
+		CliResult result = main(args, 13);
 		assertEquals(
 				"ERROR-13 (Invalid option):  Given option --testOnly requires goal(s) compile, but goal lsp was given.",
-				consoleLog);
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkTestOnlyPlusNoTests() {
 		String args[] = { ".", "--testOnly", "--noTests" };
-		String consoleLog = main(args, 10);
+		CliResult result = main(args, 10);
 
-		assertTrue(consoleLog.startsWith("ERROR-10 (Invalid command line string):  option"));
-		assertTrue(consoleLog.contains("cannot be used with the option(s)"));
+		String stdOut = result.getStdOut();
+		assertTrue(stdOut.startsWith("ERROR-10 (Invalid command line string):  option"));
+		assertTrue(stdOut.contains("cannot be used with the option(s)"));
 	}
 
 	/**  */
 	@Test
 	public void checkMaxErrsOk() {
 		String args[] = { ".", "--maxErrs", "1" };
-		String consoleLog = main(args);
-		assertEquals("", consoleLog);
+		CliResult result = main(args);
+		assertEquals("", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkMaxErrsMissingOp() {
 		String args[] = { ".", "--maxErrs" };
-		String consoleLog = main(args, 10);
-		assertEquals("ERROR-10 (Invalid command line string):  Option \"--maxErrs\" takes an operand", consoleLog);
+		CliResult result = main(args, 10);
+		assertEquals("ERROR-10 (Invalid command line string):  Option \"--maxErrs\" takes an operand",
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkMaxErrsWrongGoal() {
 		String args[] = { "lsp", ".", "--maxErrs", "1" };
-		String consoleLog = main(args, 13);
+		CliResult result = main(args, 13);
 		assertEquals(
 				"ERROR-13 (Invalid option):  Given option --maxErrs requires goal(s) compile, but goal lsp was given.",
-				consoleLog);
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkMaxWarnsOk() {
 		String args[] = { ".", "--maxErrs", "1" };
-		String consoleLog = main(args);
-		assertEquals("", consoleLog);
+		CliResult result = main(args);
+		assertEquals("", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkMaxWarnsMissingOp() {
 		String args[] = { ".", "--maxWarns" };
-		String consoleLog = main(args, 10);
-		assertEquals("ERROR-10 (Invalid command line string):  Option \"--maxWarns\" takes an operand", consoleLog);
+		CliResult result = main(args, 10);
+		assertEquals("ERROR-10 (Invalid command line string):  Option \"--maxWarns\" takes an operand",
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkMaxWarnsWrongGoal() {
 		String args[] = { "lsp", ".", "--maxWarns", "1" };
-		String consoleLog = main(args, 13);
+		CliResult result = main(args, 13);
 		assertEquals(
 				"ERROR-13 (Invalid option):  Given option --maxWarns requires goal(s) compile, but goal lsp was given.",
-				consoleLog);
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkCleanOk() {
 		String args[] = { ".", "--clean" };
-		String consoleLog = main(args);
-		assertEquals("", consoleLog);
+		CliResult result = main(args);
+		assertEquals("", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkCleanWrongGoal() {
 		String args[] = { "lsp", ".", "--clean" };
-		String consoleLog = main(args, 13);
+		CliResult result = main(args, 13);
 		assertEquals(
 				"ERROR-13 (Invalid option):  Given option --clean requires goal(s) compile, but goal lsp was given.",
-				consoleLog);
+				result.getStdOut());
 	}
 
 	/**  */
@@ -198,8 +202,8 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkTestCatalogOk() {
 		try {
 			String args[] = { ".", "--testCatalog", FILE_TC };
-			String consoleLog = main(args);
-			assertEquals("", consoleLog);
+			CliResult result = main(args);
+			assertEquals("", result.getStdOut());
 
 		} finally {
 			tryDeleteTC();
@@ -211,9 +215,9 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkTestCatalogMissingOp() {
 		try {
 			String args[] = { ".", "--testCatalog" };
-			String consoleLog = main(args, 10);
+			CliResult result = main(args, 10);
 			assertEquals("ERROR-10 (Invalid command line string):  Option \"--testCatalog (-tc)\" takes an operand",
-					consoleLog);
+					result.getStdOut());
 
 		} finally {
 			tryDeleteTC();
@@ -225,10 +229,10 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkTestCatalogWrongGoal() {
 		try {
 			String args[] = { "lsp", ".", "--testCatalog", FILE_TC };
-			String consoleLog = main(args, 13);
+			CliResult result = main(args, 13);
 			assertEquals(
 					"ERROR-13 (Invalid option):  Given option --testCatalog requires goal(s) compile, but goal lsp was given.",
-					consoleLog);
+					result.getStdOut());
 
 		} finally {
 			tryDeleteTC();

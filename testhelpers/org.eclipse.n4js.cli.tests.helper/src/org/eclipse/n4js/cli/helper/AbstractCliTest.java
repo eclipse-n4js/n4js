@@ -13,49 +13,44 @@ package org.eclipse.n4js.cli.helper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.security.Permission;
+import java.util.concurrent.TimeUnit;
 
-import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.junit.After;
-import org.junit.Before;
+import org.eclipse.n4js.cli.N4jscTestFactory;
+
+import com.google.common.base.Stopwatch;
 
 /**  */
 abstract public class AbstractCliTest<ArgType> {
-
-	private ByteArrayOutputStream baos;
+	final private SystemOutRedirecter systemOutRedirecter = new SystemOutRedirecter();
 
 	/** Invokes the starting method of this test class */
-	abstract public void doMain(ArgType arg) throws Exception;
+	abstract public void doMain(ArgType arg, CliResult cliResult) throws Exception;
 
 	/** Sets up the System outputs and Security Manager */
-	@Before
-	final public void before() throws UnsupportedEncodingException {
-		baos = new ByteArrayOutputStream();
-		PrintStream ps = new PrintStream(baos, true, "UTF-8");
-		N4jscConsole.setPrintStream(ps);
+	final public void setN4jscRedirections() throws UnsupportedEncodingException {
+		systemOutRedirecter.setRedirections();
 		System.setSecurityManager(new NoExitSecurityManager());
+		N4jscTestFactory.set();
 	}
 
 	/** Restores everything. */
-	@After
-	final public void after() throws IOException {
-		baos.close();
-		System.setSecurityManager(null); // restore original security manager
+	final public void unsetN4jscRedirections() {
+		systemOutRedirecter.unsetRedirections();
+		System.setSecurityManager(null);
+		N4jscTestFactory.unset();
 	}
 
 	/** Convenience version of {@link #main(Object, int)} with exist code == 0 */
-	protected String main(ArgType args) {
+	protected CliResult main(ArgType args) {
 		return main(args, 0);
 	}
 
 	/** Convenience version of {@link #main(Object, int, boolean)} with exist code == 0 and removeUsage == true */
-	protected String main(ArgType args, int exitCode) {
+	protected CliResult main(ArgType args, int exitCode) {
 		return main(args, exitCode, true);
 	}
 
@@ -63,36 +58,42 @@ abstract public class AbstractCliTest<ArgType> {
 	 * Calls main entry point of N4jsc with the given args. Checks that the given exit code equals the actual exit code
 	 * of the invocation. Removes {@link N4jscOptions#USAGE} text if desired.
 	 */
-	protected String main(ArgType args, int exitCode, boolean removeUsage) {
-		String consoleLog = "";
+	protected CliResult main(ArgType args, int exitCode, boolean removeUsage) {
+		CliResult cliResult = new CliResult();
+		Stopwatch sw = Stopwatch.createStarted();
+
 		try {
-			baos.reset();
-			doMain(args);
+			setN4jscRedirections();
+			doMain(args, cliResult);
+
 		} catch (SystemExitException e) {
+			cliResult.exitCode = e.status;
 			assertEquals(exitCode, e.status);
 		} catch (Exception e) {
+			cliResult.cause = e;
 			e.printStackTrace();
 			fail(e.getMessage());
+		} finally {
+			cliResult.duration = sw.stop().elapsed(TimeUnit.MILLISECONDS);
+
+			cliResult.stdOut = systemOutRedirecter.getSystemOut();
+			cliResult.errOut = systemOutRedirecter.getSystemErr();
+			unsetN4jscRedirections();
 		}
-		consoleLog = getConsoleOutput();
 		String curDirPath = new File("").getAbsolutePath();
-		consoleLog = consoleLog.replace(curDirPath, "");
+
+		cliResult.stdOut = cliResult.stdOut.replace(curDirPath, "");
+		cliResult.errOut = cliResult.errOut.replace(curDirPath, "");
 
 		if (removeUsage) {
-			consoleLog = consoleLog.replace(N4jscOptions.USAGE, "");
+			cliResult.stdOut = cliResult.stdOut.replace(N4jscOptions.USAGE, "");
+			cliResult.errOut = cliResult.errOut.replace(N4jscOptions.USAGE, "");
 		}
-		return consoleLog.trim();
-	}
 
-	/** @return console output */
-	protected String getConsoleOutput() {
-		try {
-			String output = baos.toString("UTF-8");
-			return output;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return "";
-		}
+		cliResult.stdOut = cliResult.stdOut.trim();
+		cliResult.errOut = cliResult.errOut.trim();
+
+		return cliResult;
 	}
 
 	static class SystemExitException extends SecurityException {

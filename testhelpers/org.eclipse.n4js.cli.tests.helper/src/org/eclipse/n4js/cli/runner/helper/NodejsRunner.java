@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli.runner.helper;
 import static com.google.common.base.CharMatcher.breakingWhitespace;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,23 +25,16 @@ import java.util.concurrent.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
-import org.eclipse.n4js.runner.IExecutor;
-import org.eclipse.n4js.runner.IRunner;
 import org.eclipse.n4js.runner.RunConfiguration;
-import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
-import org.eclipse.n4js.runner.extension.RunnerDescriptorImpl;
-import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * Concrete runner, i.e. runner implementation for node.js engine.
  */
-public class NodejsRunner implements IRunner {
+public class NodejsRunner {
 
 	/** Name of environment variable used by node to obtain list of search paths. */
 	private static final String NODE_PATH = "NODE_PATH";
@@ -54,55 +48,19 @@ public class NodejsRunner implements IRunner {
 	 */
 	private static final Splitter OPTIONS_SPLITTER = Splitter.on(breakingWhitespace()).omitEmptyStrings().trimResults();
 
-	/** ID of the Node.js runner as defined in the plugin.xml. */
-	public static final String ID = "org.eclipse.n4js.runner.nodejs.NODEJS";
+	final private NodeJsBinary nodeJsBinary;
 
-	/**
-	 * Class for providing descriptors for the Node.js runner with the same information as defined in the plugin.xml
-	 * (used only by N4jsc). Supports instance supplying with injection.
-	 */
-	public static final class NodeRunnerDescriptorProvider implements Provider<IRunnerDescriptor> {
-
-		@Inject
-		private Provider<NodejsRunner> nodeRunnerProvider;
-
-		@Override
-		public IRunnerDescriptor get() {
-			return new RunnerDescriptorImpl(ID, "Node.js Runner", RuntimeEnvironment.NODEJS, nodeRunnerProvider.get());
-		}
-
+	/** Constructor */
+	public NodejsRunner(NodeJsBinary nodeJsBinary) {
+		this.nodeJsBinary = nodeJsBinary;
 	}
 
-	/**
-	 * Descriptor for the Node.js runner with the same information as defined in the plugin.xml (used only by N4jsc).
-	 */
-	public static final IRunnerDescriptor DESCRIPTOR = new RunnerDescriptorImpl(ID, "Node.js Runner",
-			RuntimeEnvironment.NODEJS, new NodejsRunner());
-
-	@Inject
-	private Provider<NodeJsBinary> nodeJsBinaryProvider;
-
-	@Override
-	public RunConfiguration createConfiguration() {
-		return new RunConfiguration();
-	}
-
-	@Override
-	public void prepareConfiguration(RunConfiguration config) {
-		// no special preparations required
-	}
-
-	@Override
-	public Process run(RunConfiguration runConfig, IExecutor executor) throws ExecutionException {
-
-		final NodeJsBinary nodeJsBinary = nodeJsBinaryProvider.get();
+	/** @return a started nodejs process configured with the given configuration */
+	public Process run(RunConfiguration runConfig) throws ExecutionException {
 		final IStatus status = nodeJsBinary.validate();
 		if (!status.isOK()) {
 			Exceptions.sneakyThrow(new IllegalBinaryStateException(nodeJsBinary, status));
 		}
-
-		final String[] cmd = createCommand(runConfig);
-
 		final Path workingDirectory = runConfig.getWorkingDirectory();
 		if (workingDirectory == null) {
 			throw new IllegalArgumentException("run configuration does not specify a working directory");
@@ -116,14 +74,25 @@ public class NodejsRunner implements IRunner {
 		}
 		env = nodeJsBinary.updateEnvironment(env);
 
-		return executor.exec(cmd, workingDirectory.toFile(), env);
+		final String[] cmd = createCommand(runConfig);
+
+		ProcessBuilder pb = new ProcessBuilder(cmd);
+		pb.environment().putAll(env);
+		pb.directory(workingDirectory.toFile());
+		// pb.inheritIO(); // output is captured in NodejsExecuter
+
+		try {
+			return pb.start();
+		} catch (IOException e) {
+			throw new ExecutionException(e);
+		}
 	}
 
 	private String[] createCommand(RunConfiguration runConfig) {
 		final ArrayList<String> cmd = new ArrayList<>();
 
 		// start command line with absolute path to node binary
-		cmd.add(nodeJsBinaryProvider.get().getBinaryAbsolutePath());
+		cmd.add(nodeJsBinary.getBinaryAbsolutePath());
 
 		// activate esm
 		cmd.add("-r");
@@ -154,4 +123,5 @@ public class NodejsRunner implements IRunner {
 	private Iterable<String> splitOptions(String optionsString) {
 		return optionsString != null ? OPTIONS_SPLITTER.split(optionsString.trim()) : Collections.emptyList();
 	}
+
 }

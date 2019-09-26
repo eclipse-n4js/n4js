@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.cli;
 
+import static org.eclipse.n4js.cli.N4jscGoal.help;
+import static org.eclipse.n4js.cli.N4jscGoal.version;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
+import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.cli.lsp.LspServer;
 
 /**
@@ -85,13 +89,17 @@ public class N4jscMain {
 	}
 
 	private static void performGoal(N4jscOptions options) throws Exception {
-		if (TESTFLAG_NO_PERFORM && options.getGoal() != N4jscGoal.help) {
+		if (TESTFLAG_NO_PERFORM && options.getGoal() != help && options.getGoal() != version) {
 			return;
 		}
+
 		switch (options.getGoal()) {
 		case help:
 			options.printUsage(N4jscConsole.getPrintStream());
 			return;
+
+		case version:
+			throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
 
 		case lsp:
 			LspServer.start(options);
@@ -101,7 +109,8 @@ public class N4jscMain {
 			throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
 
 		case compile:
-			throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
+			N4jscCompiler.start(options);
+			return;
 
 		case api:
 			throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);

@@ -10,14 +10,25 @@
  */
 package org.eclipse.n4js.cli.compiler;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
- *
+ * Serializer for issues to be displayed on the user console
  */
+@Singleton
 public class IssueSerializer {
 
-	static public String diagnostics(Diagnostic diagnostic) {
+	@Inject
+	N4JSWorkspaceManager workspaceManager;
+
+	/** @return user string for an issue */
+	public String diagnostics(Diagnostic diagnostic) {
 		String s = "   ";
 		s += "[" + diagnostic.getSeverity() + "]";
 		s += " (" + diagnostic.getRange().getStart().getLine();
@@ -26,9 +37,15 @@ public class IssueSerializer {
 		return s;
 	}
 
-	public static String uri(String uri) {
-		String s = uri;
-		return s;
+	/** @return user string for a file in the workspace */
+	public String uri(String uri) {
+		URI baseDir = workspaceManager.getBaseDir();
+		FileURI fileUri = new FileURI(URI.createURI(uri));
+
+		URI relativeUri = fileUri.toURI().deresolve(baseDir);
+		String relativeFileString = relativeUri.toFileString();
+
+		return relativeFileString;
 	}
 
 }

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.hlc.tests;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
@@ -56,10 +58,11 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractCliCompileTest {
 
 		N4jscOptions options = COMPILE(proot);
 
-		main(options);
+		CliResult result = main(options);
 
 		// Make sure, we get here and have exactly one file compiled:
-		assertFilesCompiledToES(0, proot.toPath().resolve("APIx").toFile());
-		assertFilesCompiledToES(1, proot.toPath().resolve("IMPLx").toFile());
+
+		assertEquals(0, result.getTranspiledFilesCount(proot.toPath().resolve("APIx")));
+		assertEquals(1, result.getTranspiledFilesCount(proot.toPath().resolve("IMPLx")));
 	}
 }

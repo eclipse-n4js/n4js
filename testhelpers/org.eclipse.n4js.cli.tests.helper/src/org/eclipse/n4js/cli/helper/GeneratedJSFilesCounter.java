@@ -20,7 +20,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
@@ -39,12 +40,14 @@ public class GeneratedJSFilesCounter {
 	 *            the directory to recursively search
 	 * @return the number of files ending in .js
 	 */
-	static public int countFilesCompiledToES(File workspaceRoot) throws IOException {
+	static public TreeMap<Path, HashSet<File>> getTranspiledFiles(File workspaceRoot) throws IOException {
 		final File gitRoot = new File(new File("").getAbsolutePath()).getParentFile().getParentFile();
 		final File n4jsLibrariesRoot = new File(gitRoot, N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
 		final Collection<String> n4jsLibraryNames = new HashSet<>(Arrays.asList(n4jsLibrariesRoot.list()));
 
-		final AtomicInteger counter = new AtomicInteger();
+		final AtomicReference<TreeMap<Path, HashSet<File>>> genFilesRef = new AtomicReference<>();
+		genFilesRef.set(new TreeMap<>());
+
 		Files.walkFileTree(workspaceRoot.toPath(), new FileVisitor<Path>() {
 
 			@Override
@@ -65,7 +68,12 @@ public class GeneratedJSFilesCounter {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				if (file.getFileName().toString().endsWith(".js")) {
-					counter.incrementAndGet();
+					TreeMap<Path, HashSet<File>> fileMap = genFilesRef.get();
+					Path directory = file.getParent();
+					if (!fileMap.containsKey(directory)) {
+						fileMap.put(directory, new HashSet<>());
+					}
+					fileMap.get(directory).add(file.toFile());
 					return FileVisitResult.CONTINUE;
 				}
 				return FileVisitResult.CONTINUE;
@@ -84,6 +92,6 @@ public class GeneratedJSFilesCounter {
 			}
 		});
 
-		return counter.get();
+		return genFilesRef.get();
 	}
 }

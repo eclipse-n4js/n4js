@@ -11,16 +11,18 @@
 package org.eclipse.n4js.hlc.tests;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
 import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.cli.runner.helper.NodejsRunner;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.cli.runner.helper.NodejsResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -34,9 +36,7 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractCliCompileTe
 	File workspace;
 	static String WS_IDEBUG_654 = "IDEBUG-654";
 
-	/**
-	 * Setup workspace.
-	 */
+	/** Setup workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
 		workspace = setupWorkspace(WS_IDEBUG_654, false, N4JSGlobals.N4JS_RUNTIME);
@@ -48,21 +48,18 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractCliCompileTe
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	/***/
+	/**  */
 	@Test
-	public void compileCheckModuleExportFromPlainJsFile_ExpectAvailable() throws ExitCodeException, IOException {
+	public void compileCheckModuleExportFromPlainJsFile_ExpectAvailable() {
+		Path projectDir = workspace.toPath().resolve("IDEBUG-654");
+		Path fileToRun = projectDir.resolve("src-gen/Client.js");
 
-		File proot = new File(workspace, PACKAGES);
+		N4jscOptions options = COMPILE(workspace);
+		CliResult cliResult = main(options);
+		assertEquals(6, cliResult.getTranspiledFilesCount(workspace.toPath()));
 
-		N4jscOptions options = COMPILE(proot);
-
-		final String out = main(options);
-
-		assertFilesCompiledToES(0, proot);
-
-		NodejsRunner runner = new NodejsRunner();
-		final String fileToRun = workspace.getAbsolutePath().toString() + "/IDEBUG-654/src/Client.n4js";
-		N4CliHelper.assertExpectedOutput("foo === 36: true, bar === 'bar': true", out);
+		NodejsResult nodejsResult = run(projectDir, fileToRun);
+		N4CliHelper.assertExpectedOutput("foo === 36: true, bar === 'bar': true", nodejsResult.getStdOut());
 	}
 
 }

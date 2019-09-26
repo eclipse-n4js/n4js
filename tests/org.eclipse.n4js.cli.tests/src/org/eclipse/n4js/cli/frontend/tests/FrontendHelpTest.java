@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli.frontend.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.n4js.cli.helper.CliResult;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
@@ -19,32 +20,59 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 
 	/**  */
 	@Test
+	public void testGoalVersion() {
+		String args[] = { "version" };
+		CliResult result = main(args, 2, false);
+		assertEquals(getVersionExpectation(), result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void testOptionVersion() {
+		String args[] = { "--version" };
+		CliResult result = main(args, 2, false);
+		assertEquals(getVersionExpectation(), result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void testAnotherGoalWithOptionVersion() {
+		String args[] = { "lsp", "--version" };
+		CliResult result = main(args, 2, false);
+		assertEquals(getVersionExpectation(), result.getStdOut());
+	}
+
+	/**  */
+	@Test
 	public void testGoalHelp() {
 		String args[] = { "help" };
-		String consoleLog = main(args, 0, false);
-		assertEquals(getUsageExpectation(), consoleLog);
+		CliResult result = main(args, 0, false);
+		assertEquals(getUsageExpectation(), result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testOptionHelp() {
 		String args[] = { "--help" };
-		String consoleLog = main(args, 0, false);
-		assertEquals(getUsageExpectation(), consoleLog);
+		CliResult result = main(args, 0, false);
+		assertEquals(getUsageExpectation(), result.getStdOut());
 	}
 
 	/**  */
 	@Test
-	public void testGoalWithOptionHelp() {
+	public void testAnotherGoalWithOptionHelp() {
 		String args[] = { "lsp", "--help" };
-		String consoleLog = main(args, 0, false);
-		assertEquals(getUsageExpectation(), consoleLog);
+		CliResult result = main(args, 0, false);
+		assertEquals(getUsageExpectation(), result.getStdOut());
+	}
+
+	private String getVersionExpectation() {
+		return "ERROR-2 (Feature is not implemented)";
 	}
 
 	private String getUsageExpectation() {
 		return "Usage: java -jar n4jsc.jar [GOAL] [FILE(s)] [OPTION(s)]\n" +
 				" GOAL                           : Goals are:\n" +
-				"                                  	 help     Prints help\n" +
 				"                                  	 compile  Compiles with given options\n" +
 				"                                  	 clean    Cleans with given options\n" +
 				"                                  	 lsp      Starts LSP server\n" +
@@ -57,7 +85,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				"                                  directories\n" +
 				" --clean (-c)                   : [compile] output folders are cleaned before\n" +
 				"                                  compilation. (default: false)\n" +
-				" --help (-h)                    : same as goal help (default: false)\n" +
+				" --help (-h)                    : prints help and exits (default: false)\n" +
 				" --maxErrs N                    : [compile] set the maximum number of errors to\n" +
 				"                                  print (default: 0)\n" +
 				" --maxWarns N                   : [compile] set the maximum number of warnings\n" +
@@ -66,8 +94,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				"                                  (default: false)\n" +
 				" --port (-p) N                  : [lsp] set the port of the lsp server\n" +
 				"                                  (default: 5007)\n" +
-				" --showSetup                    : print information about the current n4jsc\n" +
-				"                                  setup (default: false)\n" +
+				" --showSetup                    : prints n4jsc setup (default: false)\n" +
 				" --testCatalog (-tc) FILE       : [compile] generates a test catalog file to\n" +
 				"                                  the given location. The test catalog lists\n" +
 				"                                  all available tests among the compiled\n" +
@@ -75,14 +102,15 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				"                                  replaced.\n" +
 				" --testOnly                     : [compile] only transpile contents of test\n" +
 				"                                  folders (default: false)\n" +
-				" --verbose (-v)                 : enables verbose output (default: false)";
+				" --verbose                      : enables verbose output (default: false)\n" +
+				" --version (-v)                 : prints version and exits (default: false)";
 	}
 
 	/**  */
 	@Test
 	public void testShowSetup() {
 		String args[] = { "lsp", "--showSetup" };
-		String consoleLog = main(args, 0, false);
+		CliResult result = main(args, 0, false);
 		assertEquals(
 				"N4jsc.options=\n" +
 						"  goal=lsp\n" +
@@ -96,7 +124,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 						"  port=5007\n" +
 						"  srcFiles=Optional.empty\n" +
 						"  Current execution directory=/.",
-				consoleLog);
+				result.getStdOut());
 	}
 
 }

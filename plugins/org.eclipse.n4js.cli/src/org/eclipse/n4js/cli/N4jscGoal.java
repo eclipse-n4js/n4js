@@ -28,6 +28,8 @@ import com.google.common.base.Strings;
 public enum N4jscGoal {
 	/** Prints help */
 	help,
+	/** Prints version */
+	version,
 	/** Compiles with given options */
 	compile,
 	/** Cleans with given options */
