@@ -92,7 +92,7 @@ echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 if [ "$DESTINATION" = "public" ]; then
     echo "==== STEP 4/9: Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
 
-    # Obtain the latest commit on npm registry, using the representative
+    # Obtain the latest commit on npm registry, using the representative (always for tag 'latest', even if a dist-tag is requested in version.json!)
     N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.["dist-tags"].latest'`
     echo "  - version of latest published n4js-libs       : $N4JS_LIBS_VERSION_PUBLIC"
 
@@ -124,8 +124,11 @@ if [ "$DESTINATION" = "public" ]; then
     echo "==== STEP 6/9: Compute new version number for publishing ..."
     VERSION_MAJOR_REQUESTED=`jq -r '.major' version.json`
     VERSION_MINOR_REQUESTED=`jq -r '.minor' version.json`
+    VERSION_PRE_RELEASE_REQUESTED=`jq -r '."pre-release"' version.json`
+    VERSION_DIST_TAG_REQUESTED=`jq -r '.tag' version.json`
     echo "Requested major segment       : ${VERSION_MAJOR_REQUESTED} (from file n4js-libs/version.json)"
     echo "Requested minor segment       : ${VERSION_MINOR_REQUESTED} (from file n4js-libs/version.json)"
+    echo "Requested dist tag            : ${VERSION_DIST_TAG_REQUESTED} (from file n4js-libs/version.json)"
     echo "Latest published version      : ${N4JS_LIBS_VERSION_PUBLIC}"
     MAJOR_MINOR_PATTERN="([0-9]+)\\.([0-9]+)\\..*"
     if [[ "${N4JS_LIBS_VERSION_PUBLIC}" =~ ${MAJOR_MINOR_PATTERN} ]]; then
@@ -149,6 +152,14 @@ if [ "$DESTINATION" = "public" ]; then
     else
         echo "ERROR: requested major/minor segment must not be lower than latest published major/minor segment!"
         exit -1
+    fi
+    if [ \( "$VERSION_DIST_TAG_REQUESTED" != "null" \) -a \( "$VERSION_DIST_TAG_REQUESTED" != "" \) ]; then
+        if [ "$VERSION_DIST_TAG_REQUESTED" != "${NPM_TAG}" ]; then
+            echo "Npm dist-tag requested -> appending a generated pre-release segment to version"
+            VERSION_DIST_TAG_TIMESTAMP=`date "+%Y%m%d.%H%M"`
+            PUBLISH_VERSION="${PUBLISH_VERSION}-${VERSION_DIST_TAG_REQUESTED}.${VERSION_DIST_TAG_TIMESTAMP}"
+            NPM_TAG="${VERSION_DIST_TAG_REQUESTED}"
+        fi
     fi
     echo "Bumped version for publishing : ${PUBLISH_VERSION}"
 
