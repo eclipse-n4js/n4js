@@ -368,8 +368,8 @@ public class N4jsLibsAccess {
 				"******************************************************************\n" +
 				"Maybe you forgot to run MWE2 workflow " + BuildN4jsLibs.class.getSimpleName() + "?\n" +
 				"******************************************************************";
-		Assert.assertTrue("not a symbolic link pointing to package \"" + N4JSGlobals.N4JS_RUNTIME + "\": "
-				+ n4jsRuntimeLink + warning, Files.isSymbolicLink(n4jsRuntimeLink));
+		Assert.assertTrue("n4js-runtime does not exist in node_modules folder: " + n4jsRuntimeLink + warning,
+				Files.exists(n4jsRuntimeLink));
 		Assert.assertTrue("src-gen folder in n4js-runtime does not exist: " + n4jsRuntimeSrcGen + warning,
 				Files.isDirectory(n4jsRuntimeSrcGen));
 	}
