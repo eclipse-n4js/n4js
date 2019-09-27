@@ -10,12 +10,18 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
 import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.hlc.base.BuildType;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.cli.runner.helper.NodejsResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +33,7 @@ import com.google.common.base.Predicates;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
-public class InstallCompileRunN4jscExternalImportsTest extends AbstractN4jscTest {
+public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompileTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -48,22 +54,22 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractN4jscTest
 	 */
 	@Test
 	@Ignore // remove @Ignore when GH-887 is merged
-	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
+	// continue here
+	public void testCompileAndRunWithExternalDependencies() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/external.project/src/Main.n4js";
+		final String fileToRun = packages + "/external.project/src-gen/Main.js";
 
-		final String[] args = {
-				"--installMissingDependencies",
-				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--projectlocations", packages,
-				"--buildType", BuildType.allprojects.toString()
-		};
-		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(
-				"react is not undefined true\nreact-dom is not undefined true\nimports from libs are different true",
-				out);
+		N4jscOptions options = COMPILE(workspace);
+		CliResult cliResult = main(options);
+		assertEquals(cliResult.toString(), 69, cliResult.getTranspiledFilesCount());
+
+		String expectedString = "react is not undefined true\n"
+				+ "react-dom is not undefined true\n"
+				+ "imports from libs are different true";
+
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRun));
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 }

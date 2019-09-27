@@ -59,7 +59,7 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 
 		N4jscOptions options = COMPILE(workspace);
 		CliResult cliResult = main(options);
-		assertEquals(5, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());
 
 		NodejsResult nodejsResult = run(projectDir, fileToRun);
 		N4CliHelper.assertExpectedOutput("A.a == 5: true", nodejsResult.getStdOut());

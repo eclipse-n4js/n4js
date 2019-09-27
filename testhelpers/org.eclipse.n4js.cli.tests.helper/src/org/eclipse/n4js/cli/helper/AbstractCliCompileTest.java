@@ -46,7 +46,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		N4jscCompiler.start(options);
 
 		File workspaceRoot = options.getSrcFiles().get(0);
-		result.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot);
+		result.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
 	}
 
 	/** {@link NodejsExecuter#run(Path, Path)} */

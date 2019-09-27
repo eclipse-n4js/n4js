@@ -23,7 +23,7 @@ public class FrontendLspTest extends AbstractCliFrontendTest {
 	public void testLspNoOpts() {
 		String args[] = { "lsp" };
 		CliResult result = main(args, 0);
-		assertEquals("", result.getStdOut());
+		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
 	/**  */
@@ -31,7 +31,8 @@ public class FrontendLspTest extends AbstractCliFrontendTest {
 	public void testLspPortMissingOpt() {
 		String args[] = { "lsp", "--port" };
 		CliResult result = main(args, 10);
-		assertEquals("ERROR-10 (Invalid command line string):  Option \"--port (-p)\" takes an operand",
+		assertEquals(result.toString(),
+				"ERROR-10 (Invalid command line string):  Option \"--port (-p)\" takes an operand",
 				result.getStdOut());
 	}
 
@@ -40,7 +41,7 @@ public class FrontendLspTest extends AbstractCliFrontendTest {
 	public void testLspPortOk() {
 		String args[] = { "lsp", "--port", "9415" };
 		CliResult result = main(args);
-		assertEquals("", result.getStdOut());
+		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
 	/**  */
@@ -48,7 +49,7 @@ public class FrontendLspTest extends AbstractCliFrontendTest {
 	public void testLspPortNegative() {
 		String args[] = { "lsp", "--port", "-42" };
 		CliResult result = main(args, 13);
-		assertEquals("ERROR-13 (Invalid option):  Port is out of range: -42", result.getStdOut());
+		assertEquals(result.toString(), "ERROR-13 (Invalid option):  Port is out of range: -42", result.getStdOut());
 	}
 
 	/**  */
@@ -56,7 +57,7 @@ public class FrontendLspTest extends AbstractCliFrontendTest {
 	public void testLspPortTooHigh() {
 		String args[] = { "lsp", "--port", "65537" };
 		CliResult result = main(args, 13);
-		assertEquals("ERROR-13 (Invalid option):  Port is out of range: 65537", result.getStdOut());
+		assertEquals(result.toString(), "ERROR-13 (Invalid option):  Port is out of range: 65537", result.getStdOut());
 	}
 
 }

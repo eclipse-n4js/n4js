@@ -54,9 +54,9 @@ public class AT_GHOLD_212_transpilecrashTest extends AbstractCliCompileTest {
 
 		N4jscOptions options = COMPILE(proot);
 
-		CliResult result = main(options);
+		CliResult cliResult = main(options);
 
 		// Make sure, we get here and have exactly one file compiled:
-		assertEquals(1, result.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 	}
 }

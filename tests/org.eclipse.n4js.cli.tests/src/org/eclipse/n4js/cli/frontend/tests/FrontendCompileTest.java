@@ -27,7 +27,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void testNoArgsImplicitGoal() {
 		String args[] = {};
 		CliResult result = main(args, 12);
-		assertEquals(
+		assertEquals(result.toString(),
 				"ERROR-12 (Invalid file(s)):  n4js file(s) or project(s) missing",
 				result.getStdOut());
 	}
@@ -37,7 +37,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void testNoArgs() {
 		String args[] = { "compile" };
 		CliResult result = main(args, 12);
-		assertEquals(
+		assertEquals(result.toString(),
 				"ERROR-12 (Invalid file(s)):  n4js file(s) or project(s) missing",
 				result.getStdOut());
 	}
@@ -47,7 +47,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void testArgsFileImplicitGoal() {
 		String args[] = { "compile", "test.n4js" };
 		CliResult result = main(args, 12);
-		assertEquals(
+		assertEquals(result.toString(),
 				"ERROR-12 (Invalid file(s)):  file(s) do not exist: test.n4js",
 				result.getStdOut());
 	}
@@ -57,7 +57,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void testArgsFile() {
 		String args[] = { "test.n4js" };
 		CliResult result = main(args, 12);
-		assertEquals(
+		assertEquals(result.toString(),
 				"ERROR-12 (Invalid file(s)):  file(s) do not exist: test.n4js",
 				result.getStdOut());
 	}
@@ -67,7 +67,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void testArgsCurDirImplicitGoal() {
 		String args[] = { "." };
 		CliResult result = main(args);
-		assertEquals("", result.getStdOut());
+		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
 	/**  */
@@ -75,7 +75,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void testArgsCurDir() {
 		String args[] = { "compile", "." };
 		CliResult result = main(args);
-		assertEquals("", result.getStdOut());
+		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
 	/**  */
@@ -83,7 +83,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkNoTestsOk() {
 		String args[] = { ".", "--noTests" };
 		CliResult result = main(args);
-		assertEquals("", result.getStdOut());
+		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
 	/**  */
@@ -91,7 +91,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkNoTestsWrongGoal() {
 		String args[] = { "lsp", ".", "--noTests" };
 		CliResult result = main(args, 13);
-		assertEquals(
+		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Given option --noTests requires goal(s) compile, but goal lsp was given.",
 				result.getStdOut());
 	}
@@ -101,7 +101,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkTestOnlyOk() {
 		String args[] = { ".", "--testOnly" };
 		CliResult result = main(args);
-		assertEquals("", result.getStdOut());
+		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
 	/**  */
@@ -109,7 +109,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkTestOnlyWrongGoal() {
 		String args[] = { "lsp", ".", "--testOnly" };
 		CliResult result = main(args, 13);
-		assertEquals(
+		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Given option --testOnly requires goal(s) compile, but goal lsp was given.",
 				result.getStdOut());
 	}
@@ -130,7 +130,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkMaxErrsOk() {
 		String args[] = { ".", "--maxErrs", "1" };
 		CliResult result = main(args);
-		assertEquals("", result.getStdOut());
+		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
 	/**  */
@@ -138,7 +138,8 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkMaxErrsMissingOp() {
 		String args[] = { ".", "--maxErrs" };
 		CliResult result = main(args, 10);
-		assertEquals("ERROR-10 (Invalid command line string):  Option \"--maxErrs\" takes an operand",
+		assertEquals(result.toString(),
+				"ERROR-10 (Invalid command line string):  Option \"--maxErrs\" takes an operand",
 				result.getStdOut());
 	}
 
@@ -147,7 +148,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkMaxErrsWrongGoal() {
 		String args[] = { "lsp", ".", "--maxErrs", "1" };
 		CliResult result = main(args, 13);
-		assertEquals(
+		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Given option --maxErrs requires goal(s) compile, but goal lsp was given.",
 				result.getStdOut());
 	}
@@ -157,7 +158,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkMaxWarnsOk() {
 		String args[] = { ".", "--maxErrs", "1" };
 		CliResult result = main(args);
-		assertEquals("", result.getStdOut());
+		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
 	/**  */
@@ -165,7 +166,8 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkMaxWarnsMissingOp() {
 		String args[] = { ".", "--maxWarns" };
 		CliResult result = main(args, 10);
-		assertEquals("ERROR-10 (Invalid command line string):  Option \"--maxWarns\" takes an operand",
+		assertEquals(result.toString(),
+				"ERROR-10 (Invalid command line string):  Option \"--maxWarns\" takes an operand",
 				result.getStdOut());
 	}
 
@@ -174,7 +176,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkMaxWarnsWrongGoal() {
 		String args[] = { "lsp", ".", "--maxWarns", "1" };
 		CliResult result = main(args, 13);
-		assertEquals(
+		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Given option --maxWarns requires goal(s) compile, but goal lsp was given.",
 				result.getStdOut());
 	}
@@ -184,7 +186,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkCleanOk() {
 		String args[] = { ".", "--clean" };
 		CliResult result = main(args);
-		assertEquals("", result.getStdOut());
+		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
 	/**  */
@@ -192,7 +194,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkCleanWrongGoal() {
 		String args[] = { "lsp", ".", "--clean" };
 		CliResult result = main(args, 13);
-		assertEquals(
+		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Given option --clean requires goal(s) compile, but goal lsp was given.",
 				result.getStdOut());
 	}
@@ -203,7 +205,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		try {
 			String args[] = { ".", "--testCatalog", FILE_TC };
 			CliResult result = main(args);
-			assertEquals("", result.getStdOut());
+			assertEquals(result.toString(), "", result.getStdOut());
 
 		} finally {
 			tryDeleteTC();
@@ -216,7 +218,8 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		try {
 			String args[] = { ".", "--testCatalog" };
 			CliResult result = main(args, 10);
-			assertEquals("ERROR-10 (Invalid command line string):  Option \"--testCatalog (-tc)\" takes an operand",
+			assertEquals(result.toString(),
+					"ERROR-10 (Invalid command line string):  Option \"--testCatalog (-tc)\" takes an operand",
 					result.getStdOut());
 
 		} finally {
@@ -230,7 +233,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		try {
 			String args[] = { "lsp", ".", "--testCatalog", FILE_TC };
 			CliResult result = main(args, 13);
-			assertEquals(
+			assertEquals(result.toString(),
 					"ERROR-13 (Invalid option):  Given option --testCatalog requires goal(s) compile, but goal lsp was given.",
 					result.getStdOut());
 

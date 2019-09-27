@@ -56,7 +56,7 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractCliCompileTe
 
 		N4jscOptions options = COMPILE(workspace);
 		CliResult cliResult = main(options);
-		assertEquals(6, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 6, cliResult.getTranspiledFilesCount());
 
 		NodejsResult nodejsResult = run(projectDir, fileToRun);
 		N4CliHelper.assertExpectedOutput("foo === 36: true, bar === 'bar': true", nodejsResult.getStdOut());

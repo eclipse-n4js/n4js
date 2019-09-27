@@ -23,7 +23,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	public void testGoalVersion() {
 		String args[] = { "version" };
 		CliResult result = main(args, 2, false);
-		assertEquals(getVersionExpectation(), result.getStdOut());
+		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
 	/**  */
@@ -31,7 +31,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	public void testOptionVersion() {
 		String args[] = { "--version" };
 		CliResult result = main(args, 2, false);
-		assertEquals(getVersionExpectation(), result.getStdOut());
+		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
 	/**  */
@@ -39,7 +39,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	public void testAnotherGoalWithOptionVersion() {
 		String args[] = { "lsp", "--version" };
 		CliResult result = main(args, 2, false);
-		assertEquals(getVersionExpectation(), result.getStdOut());
+		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
 	/**  */
@@ -47,7 +47,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	public void testGoalHelp() {
 		String args[] = { "help" };
 		CliResult result = main(args, 0, false);
-		assertEquals(getUsageExpectation(), result.getStdOut());
+		assertEquals(result.toString(), getUsageExpectation(), result.getStdOut());
 	}
 
 	/**  */
@@ -55,7 +55,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	public void testOptionHelp() {
 		String args[] = { "--help" };
 		CliResult result = main(args, 0, false);
-		assertEquals(getUsageExpectation(), result.getStdOut());
+		assertEquals(result.toString(), getUsageExpectation(), result.getStdOut());
 	}
 
 	/**  */
@@ -63,7 +63,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	public void testAnotherGoalWithOptionHelp() {
 		String args[] = { "lsp", "--help" };
 		CliResult result = main(args, 0, false);
-		assertEquals(getUsageExpectation(), result.getStdOut());
+		assertEquals(result.toString(), getUsageExpectation(), result.getStdOut());
 	}
 
 	private String getVersionExpectation() {
@@ -111,7 +111,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	public void testShowSetup() {
 		String args[] = { "lsp", "--showSetup" };
 		CliResult result = main(args, 0, false);
-		assertEquals(
+		assertEquals(result.toString(),
 				"N4jsc.options=\n" +
 						"  goal=lsp\n" +
 						"  showSetup=true\n" +

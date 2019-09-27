@@ -22,8 +22,6 @@ import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliResult;
 import org.eclipse.n4js.cli.helper.N4CliHelper;
 import org.eclipse.n4js.cli.runner.helper.NodejsResult;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -81,7 +79,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 
 		N4jscOptions options = COMPILE(workspace);
 		CliResult cliResult = main(options);
-		assertEquals(69, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 69, cliResult.getTranspiledFilesCount());
 	}
 
 	String fileToExecute_direct(String filename) {
@@ -110,10 +108,6 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 				"--runWith", "nodejs",
 				"--run", execPath
 		};
-	}
-
-	void run(String[] args) throws ExitCodeException {
-		new N4jscBase().doMain(args);
 	}
 
 	/**

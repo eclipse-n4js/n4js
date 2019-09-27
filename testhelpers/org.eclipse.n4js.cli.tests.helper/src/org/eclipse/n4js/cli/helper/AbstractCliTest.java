@@ -17,10 +17,12 @@ import java.io.File;
 import java.security.Permission;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 
 import com.google.common.base.Stopwatch;
+import com.google.inject.Injector;
 
 /**  */
 abstract public class AbstractCliTest<ArgType> {
@@ -87,6 +89,15 @@ abstract public class AbstractCliTest<ArgType> {
 
 			cliResult.stdOut = systemOutRedirecter.getSystemOut();
 			cliResult.errOut = systemOutRedirecter.getSystemErr();
+
+			Injector lastCreatedInjector = N4jscTestFactory.getLastCreatedInjector();
+			if (lastCreatedInjector != null) {
+				N4jscTestCallback callback = (N4jscTestCallback) N4jscFactory
+						.createCallback(lastCreatedInjector);
+				cliResult.errors = callback.errors;
+				cliResult.warnings = callback.warnings;
+			}
+
 			unsetN4jscRedirections();
 		}
 		String curDirPath = new File("").getAbsolutePath();
