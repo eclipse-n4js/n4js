@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.cli.runner.helper.NodejsExecuter;
 import org.eclipse.n4js.cli.runner.helper.NodejsResult;
@@ -25,7 +26,7 @@ import org.eclipse.xtext.util.Arrays;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-/**  */
+/** Subclass this class for test cases that compile n4js code and run js code */
 public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	/** name of workspace sub-folder (inside target folder) */
 	private static final String WSP = "wsp";
@@ -40,8 +41,6 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	/** name of test data set for npm scopes */
 	protected static final String TEST_DATA_SET__NPM_SCOPES = "npmScopes";
 
-	NodejsExecuter nodejsExecuter = new NodejsExecuter();
-
 	@Override
 	public void doMain(N4jscOptions options, CliResult result) throws Exception {
 		N4jscCompiler.start(options);
@@ -52,6 +51,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 
 	/** {@link NodejsExecuter#run(Path, Path)} */
 	public NodejsResult run(Path workingDir, Path runFile) {
+		NodejsExecuter nodejsExecuter = new NodejsExecuter(N4jscTestFactory.getLastCreatedInjector());
 		return nodejsExecuter.run(workingDir, runFile);
 	}
 

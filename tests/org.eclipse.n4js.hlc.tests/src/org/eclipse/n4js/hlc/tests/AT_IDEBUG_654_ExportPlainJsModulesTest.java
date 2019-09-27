@@ -51,12 +51,12 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractCliCompileTe
 	/**  */
 	@Test
 	public void compileCheckModuleExportFromPlainJsFile_ExpectAvailable() {
-		Path projectDir = workspace.toPath().resolve("IDEBUG-654");
+		Path projectDir = workspace.toPath().resolve(WS_IDEBUG_654);
 		Path fileToRun = projectDir.resolve("src-gen/Client.js");
 
 		N4jscOptions options = COMPILE(workspace);
 		CliResult cliResult = main(options);
-		assertEquals(6, cliResult.getTranspiledFilesCount(workspace.toPath()));
+		assertEquals(6, cliResult.getTranspiledFilesCount());
 
 		NodejsResult nodejsResult = run(projectDir, fileToRun);
 		N4CliHelper.assertExpectedOutput("foo === 36: true, bar === 'bar': true", nodejsResult.getStdOut());

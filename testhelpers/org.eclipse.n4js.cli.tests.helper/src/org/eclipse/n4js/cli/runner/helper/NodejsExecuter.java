@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
-import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.runner.RunConfiguration;
 
 import com.google.inject.Injector;
@@ -26,8 +25,7 @@ public class NodejsExecuter {
 	final private NodejsRunner runner;
 
 	/** Constructor */
-	public NodejsExecuter() {
-		Injector injector = N4jscFactory.createInjector();
+	public NodejsExecuter(Injector injector) {
 		NodeJsBinary nodeJsBinary = injector.getInstance(NodeJsBinary.class);
 		runner = new NodejsRunner(nodeJsBinary);
 	}

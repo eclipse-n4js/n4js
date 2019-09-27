@@ -23,6 +23,11 @@ public class N4jscFactory {
 
 	static N4jscFactory INSTANCE = new N4jscFactory();
 
+	/** @return the {@link N4jscBackend} instance from the given injector */
+	public static N4jscBackend createBackend() throws Exception {
+		return INSTANCE.internalCreateBackend();
+	}
+
 	/** Creates a new injector */
 	public static Injector createInjector() {
 		return INSTANCE.internalCreateInjector();
@@ -36,6 +41,10 @@ public class N4jscFactory {
 	/** @return the {@link N4jscCallback} instance from the given injector */
 	public static N4jscCallback createCallback(Injector injector) {
 		return INSTANCE.internalCreateN4jscCallback(injector);
+	}
+
+	N4jscBackend internalCreateBackend() throws Exception {
+		return new N4jscBackend();
 	}
 
 	Injector internalCreateInjector() {

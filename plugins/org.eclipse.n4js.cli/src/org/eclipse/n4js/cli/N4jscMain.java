@@ -10,21 +10,13 @@
  */
 package org.eclipse.n4js.cli;
 
-import static org.eclipse.n4js.cli.N4jscGoal.help;
-import static org.eclipse.n4js.cli.N4jscGoal.version;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
-import org.eclipse.n4js.cli.compiler.N4jscCompiler;
-import org.eclipse.n4js.cli.lsp.LspServer;
 
 /**
  * Entry point of n4jsc compiler
  */
 public class N4jscMain {
-
-	/** Set to true by some test cases to test front-end user output */
-	static boolean TESTFLAG_NO_PERFORM = false;
 
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {
@@ -89,9 +81,7 @@ public class N4jscMain {
 	}
 
 	private static void performGoal(N4jscOptions options) throws Exception {
-		if (TESTFLAG_NO_PERFORM && options.getGoal() != help && options.getGoal() != version) {
-			return;
-		}
+		N4jscBackend backend = N4jscFactory.createBackend();
 
 		switch (options.getGoal()) {
 		case help:
@@ -102,58 +92,25 @@ public class N4jscMain {
 			throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
 
 		case lsp:
-			LspServer.start(options);
+			backend.goalLsp(options);
 			return;
 
 		case clean:
-			throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
+			backend.goalClean(options);
+			return;
 
 		case compile:
-			N4jscCompiler.start(options);
+			backend.goalCompile(options);
 			return;
 
 		case api:
-			throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
+			backend.goalApi(options);
+			return;
 
 		case watch:
-			throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
+			backend.goalWatch(options);
+			return;
 		}
 	}
-
-	// private static void doStuff(N4jscOptions options) {
-	// // Injection should not be called before making sure the argument parsing successfully finished. Such as
-	// // help.
-	// initInjection(refProperties());
-	//
-	// // Register extensions manually
-	// headlessExtensionRegistrationHelper.registerExtensions();
-	//
-	// // compute build set based on user settings (e.g. #buildmode, #srcFiles, #projectlocations)
-	// BuildSet buildSet = computeBuildSet();
-	//
-	// // make sure all projects in the build set are registered with the workspace
-	// registerProjects(buildSet);
-	//
-	// if (clean) {
-	// // clean without compiling anything.
-	// clean();
-	// return SuccessExitStatus.INSTANCE;
-	// }
-	//
-	// final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet(buildSet.getAllProjects());
-	// // make sure all newly installed dependencies are registered with the workspace
-	// registerProjects(targetPlatformBuildSet);
-	//
-	// // add newly installed external libraries to the discoveredProjects of the buildSet
-	// buildSet = BuildSet.combineDiscovered(buildSet, targetPlatformBuildSet);
-	//
-	// // run and dispatch.
-	// doCompileAndTestAndRun(buildSet);
-	//
-	// Injector injector = new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
-	// N4JSLanguageServerImpl languageServer = injector.getInstance(N4JSLanguageServerImpl.class);
-	//
-	// writePerformanceReport();
-	// }
 
 }

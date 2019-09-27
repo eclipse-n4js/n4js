@@ -14,6 +14,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
+import org.junit.Assert;
+
 /**
  * Test for checking whether plain JS files have the proper module export.
  */
@@ -24,16 +26,21 @@ public class SystemOutRedirecter {
 	private ByteArrayOutputStream redirectErr;
 
 	/** Sets up the System outputs and Security Manager */
-	final public void setRedirections() throws UnsupportedEncodingException {
+	final public void setRedirections() {
 		oldSystemOut = System.out;
 		oldSystemErr = System.err;
 
 		redirectOut = new ByteArrayOutputStream();
 		redirectErr = new ByteArrayOutputStream();
-		PrintStream psOut = new PrintStream(redirectOut, true, "UTF-8");
-		PrintStream psErr = new PrintStream(redirectErr, true, "UTF-8");
-		System.setOut(psOut);
-		System.setErr(psErr);
+
+		try {
+			PrintStream psOut = new PrintStream(redirectOut, true, "UTF-8");
+			PrintStream psErr = new PrintStream(redirectErr, true, "UTF-8");
+			System.setOut(psOut);
+			System.setErr(psErr);
+		} catch (UnsupportedEncodingException e) {
+			Assert.fail("Could not redirect output streams");
+		}
 	}
 
 	/** Restores everything. */

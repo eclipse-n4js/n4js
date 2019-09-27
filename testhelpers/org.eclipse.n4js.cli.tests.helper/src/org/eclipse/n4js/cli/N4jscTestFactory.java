@@ -22,7 +22,12 @@ public class N4jscTestFactory extends N4jscFactory {
 
 	/** Enable overwriting bindings */
 	static public void set() {
-		N4jscFactory.INSTANCE = new N4jscTestFactory();
+		N4jscFactory.INSTANCE = new N4jscTestFactory(false);
+	}
+
+	/** Enable overwriting bindings. Deactivates the cli backend. */
+	static public void setAndDeactivateBackend() {
+		N4jscFactory.INSTANCE = new N4jscTestFactory(true);
 	}
 
 	/** Disable overwriting bindings */
@@ -30,9 +35,65 @@ public class N4jscTestFactory extends N4jscFactory {
 		N4jscFactory.INSTANCE = new N4jscFactory();
 	}
 
+	static private Injector injector;
+
+	final private boolean deactivateBackend;
+
+	N4jscTestFactory(boolean deactivateBackend) {
+		this.deactivateBackend = deactivateBackend;
+	}
+
+	/** Thrown when the backend is called. */
+	static class NoopBackend extends N4jscBackend {
+		@Override
+		public void goalApi(N4jscOptions options) {
+			// do nothing
+		}
+
+		@Override
+		public void goalClean(N4jscOptions options) {
+			// do nothing
+		}
+
+		@Override
+		public void goalCompile(N4jscOptions options) {
+			// do nothing
+		}
+
+		@Override
+		public void goalLsp(N4jscOptions options) {
+			// do nothing
+		}
+
+		@Override
+		public void goalWatch(N4jscOptions options) {
+			// do nothing
+		}
+	}
+
 	@Override
-	N4jscCallback internalCreateN4jscCallback(Injector injector) {
-		N4jscCallback callback = injector.getInstance(N4jscTestCallback.class);
+	N4jscBackend internalCreateBackend() throws Exception {
+		if (deactivateBackend) {
+			return new NoopBackend();
+		} else {
+			return super.internalCreateBackend();
+		}
+	}
+
+	@Override
+	Injector internalCreateInjector() {
+		injector = super.internalCreateInjector();
+		return injector;
+	}
+
+	/** @return the last {@link Injector} that was created by {@link N4jscFactory#createInjector()} */
+	static public Injector getLastCreatedInjector() {
+		return injector;
+	}
+
+	@Override
+	N4jscCallback internalCreateN4jscCallback(Injector pInjector) {
+		N4jscCallback callback = pInjector.getInstance(N4jscTestCallback.class);
 		return callback;
 	}
 

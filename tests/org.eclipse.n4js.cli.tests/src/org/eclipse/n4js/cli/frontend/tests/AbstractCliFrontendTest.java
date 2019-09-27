@@ -11,29 +11,19 @@
 package org.eclipse.n4js.cli.frontend.tests;
 
 import org.eclipse.n4js.cli.N4jscMain;
-import org.eclipse.n4js.cli.N4jscNoPerformFlag;
 import org.eclipse.n4js.cli.helper.AbstractCliTest;
 import org.eclipse.n4js.cli.helper.CliResult;
-import org.junit.After;
-import org.junit.Before;
 
 /**  */
 public class AbstractCliFrontendTest extends AbstractCliTest<String[]> {
 
 	@Override
 	public void doMain(String[] args, CliResult result) {
-		N4jscMain.main(args);
-	}
-
-	/** Set the flag */
-	@Before
-	public void before2() {
-		N4jscNoPerformFlag.set();
-	}
-
-	/** Restore the flag */
-	@After
-	public void after2() {
-		N4jscNoPerformFlag.unset();
+		try {
+			setN4jscRedirectionsDeactivateBackend();
+			N4jscMain.main(args);
+		} finally {
+			unsetN4jscRedirections();
+		}
 	}
 }

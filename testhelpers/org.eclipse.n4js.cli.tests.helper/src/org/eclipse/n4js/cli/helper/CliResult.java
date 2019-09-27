@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -83,7 +84,11 @@ public class CliResult {
 
 	/** @return number of all files that where transpiled to js files */
 	public int getTranspiledFilesCount() {
-		return transpiledFiles.size();
+		int totalCount = 0;
+		for (Set<File> files : transpiledFiles.values()) {
+			totalCount += files.size();
+		}
+		return totalCount;
 	}
 
 	/** @return number of all files that where transpiled to js files in the given directory */

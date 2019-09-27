@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.security.Permission;
 import java.util.concurrent.TimeUnit;
 
@@ -31,10 +30,20 @@ abstract public class AbstractCliTest<ArgType> {
 	abstract public void doMain(ArgType arg, CliResult cliResult) throws Exception;
 
 	/** Sets up the System outputs and Security Manager */
-	final public void setN4jscRedirections() throws UnsupportedEncodingException {
+	final public void setN4jscRedirections() {
+		internalSetN4jscRedirections();
+		N4jscTestFactory.set();
+	}
+
+	/** Sets up the System outputs and Security Manager */
+	final public void setN4jscRedirectionsDeactivateBackend() {
+		internalSetN4jscRedirections();
+		N4jscTestFactory.setAndDeactivateBackend();
+	}
+
+	private void internalSetN4jscRedirections() {
 		systemOutRedirecter.setRedirections();
 		System.setSecurityManager(new NoExitSecurityManager());
-		N4jscTestFactory.set();
 	}
 
 	/** Restores everything. */
