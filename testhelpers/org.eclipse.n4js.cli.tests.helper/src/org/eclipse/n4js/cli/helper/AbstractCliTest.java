@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
+import org.eclipse.xtext.testing.GlobalRegistries;
+import org.junit.Before;
 
 import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
@@ -30,6 +32,12 @@ abstract public class AbstractCliTest<ArgType> {
 
 	/** Invokes the starting method of this test class */
 	abstract public void doMain(ArgType arg, CliResult cliResult) throws Exception;
+
+	/** Clear registries from previous test case executions */
+	@Before
+	final public void before() {
+		GlobalRegistries.clearGlobalRegistries();
+	}
 
 	/** Sets up the System outputs and Security Manager */
 	final public void setN4jscRedirections() {
