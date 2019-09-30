@@ -10,29 +10,34 @@
  */
 package org.eclipse.n4js.cli.helper;
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
+
+import org.eclipse.n4js.cli.N4jscMain;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- *
+ * Data class that holds all information after {@link N4jscMain} was executed
  */
 public class CliResult {
 	String stdOut;
 	String errOut;
 	int exitCode;
+	Map<String, String> projects = new LinkedHashMap<>();
 	Exception cause;
 	Multimap<String, String> errors = HashMultimap.create();
 	Multimap<String, String> warnings = HashMultimap.create();
@@ -67,6 +72,11 @@ public class CliResult {
 	/** @return number of all warnings */
 	public int getWrns() {
 		return getWrnMsgs().size();
+	}
+
+	/** @return map of all projects and their locations */
+	public Map<String, String> getProjects() {
+		return projects;
 	}
 
 	/** @return list of all error messages found in the given sources */
@@ -131,11 +141,15 @@ public class CliResult {
 
 	@Override
 	public String toString() {
-		List<String> fileNameList = getTranspiledFiles().stream().map(f -> f.toString()).collect(Collectors.toList());
+		List<String> fileNameList = getTranspiledFiles().stream().map(f -> f.toString()).collect(toList());
+		List<String> projectNameList = getProjects().entrySet().stream().map(e -> e.getKey() + " at " + e.getValue())
+				.collect(toList());
 
 		String s = "CLI Result:\n"
-				+ "    duration   " + duration + "ms\n"
-				+ "    exit code  " + exitCode + "\n"
+				+ "    duration:  " + duration + "ms\n"
+				+ "    exit code: " + exitCode + "\n"
+				+ "    projects (" + getProjects().size() + "):\n"
+				+ "       " + String.join("\n       ", projectNameList) + "\n"
 				+ "    transpiled (" + getTranspiledFilesCount() + "):\n"
 				+ (getTranspiledFilesCount() > 0 ? "       " : "")
 				+ String.join("\n       ", fileNameList) + "\n"

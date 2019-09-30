@@ -100,7 +100,7 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 	}
 
 	@Override
-	protected IWorkspaceConfig getWorkspaceConfig() {
+	public IWorkspaceConfig getWorkspaceConfig() {
 		return super.getWorkspaceConfig();
 	}
 }

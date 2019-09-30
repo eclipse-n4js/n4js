@@ -13,20 +13,27 @@ package org.eclipse.n4js.cli.helper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.cli.runner.helper.NodejsExecuter;
 import org.eclipse.n4js.cli.runner.helper.NodejsResult;
+import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.util.Arrays;
+import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.inject.Injector;
 
 /** Subclass this class for test cases that compile n4js code and run js code */
+@SuppressWarnings("restriction")
 public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	/** name of workspace sub-folder (inside target folder) */
 	private static final String WSP = "wsp";
@@ -45,13 +52,27 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	public void doMain(N4jscOptions options, CliResult result) throws Exception {
 		N4jscCompiler.start(options);
 
+		// save transpiled files
 		File workspaceRoot = options.getSrcFiles().get(0);
 		result.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
+
+		// save projects
+		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
+		N4JSWorkspaceManager workspaceManager = lastInjector.getInstance(N4JSWorkspaceManager.class);
+		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
+		Map<String, String> projectMap = new TreeMap<>();
+		for (IProjectConfig pConfig : projects) {
+			Path projectPath = Path.of(pConfig.getPath().toFileString());
+			Path relativeProjectPath = workspaceRoot.toPath().relativize(projectPath);
+			projectMap.put(pConfig.getName(), relativeProjectPath.toString());
+		}
+		result.projects = projectMap;
 	}
 
 	/** {@link NodejsExecuter#run(Path, Path)} */
 	public NodejsResult run(Path workingDir, Path runFile) {
-		NodejsExecuter nodejsExecuter = new NodejsExecuter(N4jscTestFactory.getLastCreatedInjector());
+		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
+		NodejsExecuter nodejsExecuter = new NodejsExecuter(lastInjector);
 		return nodejsExecuter.run(workingDir, runFile);
 	}
 
