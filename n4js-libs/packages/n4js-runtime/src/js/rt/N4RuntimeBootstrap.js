@@ -20,6 +20,7 @@
     function defineN4TypeGetter(instance, factoryFn) {
         var n4type;
         Object.defineProperty(instance, "n4type", {
+            configurable: true, // for hot reloading/patching
             get: function() {
                 return n4type || (n4type = factoryFn());
             }
