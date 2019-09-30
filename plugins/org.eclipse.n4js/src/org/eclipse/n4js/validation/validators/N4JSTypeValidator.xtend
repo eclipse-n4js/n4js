@@ -25,9 +25,7 @@ import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList
 import org.eclipse.n4js.n4JS.ExpressionStatement
-import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
-import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
@@ -52,7 +50,6 @@ import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -77,9 +74,7 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -179,18 +174,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		// this validation might be removed in the future, see GHOLD-204
-		if (declaredType instanceof TFunction) {
-			if (!(paramTypeRef.eContainer instanceof TypeTypeRef)) { // avoid duplicate error message
-				addIssue(getMessageForTYS_FUNCTION_DISALLOWED_AS_TYPE(), paramTypeRef, TYS_FUNCTION_DISALLOWED_AS_TYPE);
-				return;
-			}
-		}
-
 		val isInTypeTypeRef = paramTypeRef.eContainer instanceof TypeTypeRef || (
 			paramTypeRef.eContainer instanceof Wildcard && paramTypeRef.eContainer.eContainer instanceof TypeTypeRef);
 
-		internalCheckValidLocationForVoid(paramTypeRef);
 		if (isInTypeTypeRef) {
 			internalCheckValidTypeInTypeTypeRef(paramTypeRef);
 		} else {
@@ -208,31 +194,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRef) {
 		if (typeRef.declaredType instanceof PrimitiveType && typeRef.typingStrategy != TypingStrategy.NOMINAL) {
 			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRef, TYS_STRUCTURAL_PRIMITIVE);
-		}
-	}
-
-	/**
-	 * Requirements 13, Void type.
-	 */
-	def private void internalCheckValidLocationForVoid(ParameterizedTypeRef typeRef) {
-		if (typeRef.declaredType instanceof VoidType) {
-			val isValidLocationForVoid = (
-					typeRef.eContainer instanceof FunctionDefinition &&
-				typeRef.eContainmentFeature === N4JSPackage.eINSTANCE.functionDefinition_ReturnTypeRef
-				) || (
-					typeRef.eContainer instanceof FunctionTypeExpression &&
-				typeRef.eContainmentFeature === TypeRefsPackage.eINSTANCE.functionTypeExpression_ReturnTypeRef
-				) || (
-					typeRef.eContainer instanceof TFunction && typeRef.eContainmentFeature === TypesPackage.eINSTANCE.TFunction_ReturnTypeRef
-				) || (
-					// void is not truly allowed as the return type of a getter, but there's a separate validation for
-					// that; so treat this case as legal here:
-					typeRef.eContainer instanceof GetterDeclaration &&
-				typeRef.eContainmentFeature === N4JSPackage.eINSTANCE.typedElement_DeclaredTypeRef
-				);
-			if (!isValidLocationForVoid) {
-				addIssue(IssueCodes.getMessageForTYS_VOID_AT_WRONG_LOCATION, typeRef, TYS_VOID_AT_WRONG_LOCATION);
-			}
 		}
 	}
 

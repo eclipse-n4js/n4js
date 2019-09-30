@@ -37,7 +37,7 @@ class SubCallee extends Callee {
 		/* XPECT scope at 'this.|myNonStaticField' ---
 		   !myStaticField,
 		   !myStaticMethod,
-		   !myPrivateStaticAccessor
+		   !myStaticAccessor
 		   myNonStaticField,
 		   myNonStaticMethod,
 		   myRoleNonStaticField,
@@ -50,7 +50,7 @@ class SubCallee extends Callee {
 		/* XPECT scope at 'this.|myStaticField' ---
 		   myStaticField,
 		   myStaticMethod,
-		   myPrivateStaticAccessor,
+		   myStaticAccessor,
 		   !myNonStaticField,
 		   !myNonStaticMethod,
 		   !myRoleNonStaticField,

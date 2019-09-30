@@ -16,7 +16,7 @@ class MyClassX {
 	Array, Boolean, Date, Error, EvalError, Function,
 	JSON, Math, N4Object, Number, Object,  RangeError,
 	ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError, any, boolean,
-	i18nKey, myFun1, number, pathSelector, string, typeName, !arguments, ...
+	i18nKey, !myFun1, number, pathSelector, string, typeName, !arguments, !void, ...
 ---*/
 	field : string;
 
@@ -30,7 +30,7 @@ class MyClassX {
 	RegExp, String,
 	SyntaxError, TypeError, URIError,
 	any, boolean,
-	i18nKey, number,
+	!myFun1, i18nKey, number,
 	pathSelector, string, typeName,
 	void, !arguments, ...
 ---*/
@@ -48,8 +48,8 @@ class MyClassX {
 	 Array, Boolean, Date, Error, EvalError, Function,
 	 JSON, Math, N4Object, Number, Object,  RangeError,
 	ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError,
-	any, boolean, myFun1, i18nKey, number, pathSelector, string, typeName,
-	void, ...
+	any, boolean, !myFun1, i18nKey, number, pathSelector, string, typeName,
+	!void, ...
 ---*/
 var myBooleanVar : boolean;
 
@@ -57,8 +57,8 @@ var myBooleanVar : boolean;
 	!arguments, Array, Boolean, Date, Error, EvalError, Function,
 	 JSON, Math, N4Object, Number, Object,  RangeError,
 	ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError,
-	any, boolean, i18nKey, number, pathSelector, string, typeName, void,
-	...
+	any, boolean, !myFun1, i18nKey, number, pathSelector, string, typeName,
+	!void, ...
 ---*/
 var myPathSelector : pathSelector<String>;
 
@@ -66,8 +66,8 @@ var myPathSelector : pathSelector<String>;
 	!arguments, Array, Boolean, Date, Error, EvalError, Function,
 	 JSON, Math, N4Object, Number, Object,  RangeError,
 	ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError,
-	any, boolean, i18nKey, number, pathSelector, string, typeName, void,
-	...
+	any, boolean, !myFun1, i18nKey, number, pathSelector, string, typeName,
+	!void, ...
 ---*/
 class MyClassY<T extends MyClassX> {
 
@@ -85,7 +85,8 @@ function myFun1() : void {
 		!arguments, Array, Boolean, Date, Error, EvalError, Function,
 		 JSON, Math, N4Object, Number, Object,  RangeError,
 		ReferenceError, RegExp, String, SyntaxError, TypeError,  URIError,
-		any, boolean, i18nKey, number, pathSelector, string, typeName, ...
+		any, boolean, !myFun1, i18nKey, number, pathSelector, string, typeName,
+		!void, ...
 	---*/
 	var myFun2Var = function myFun2(a : Object) :
 	/* XPECT scope at void ---

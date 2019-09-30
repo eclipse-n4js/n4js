@@ -59,7 +59,7 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 		try {
 			val javaFile = absoluteParserFileName.replaceAll("\\.g$", getParserFileNameSuffix());
 
-			val content = Files.toString(new File(javaFile), Charset.forName(encoding));
+			val content = Files.asCharSource(new File(javaFile), Charset.forName(encoding)).read();
 			val normalizedContent = content.replace("\r\n", "\n");
 
 			val newContent = fixIdentifierAsKeywordWithEOLAwareness(normalizedContent);
@@ -70,7 +70,7 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 			}
 
 			if (!content.equals(newContent)) {
-				Files.write(newContent, new File(javaFile), Charset.forName(encoding));
+				Files.asCharSink(new File(javaFile), Charset.forName(encoding)).write(newContent);
 			}
 
 		} catch (IOException e) {

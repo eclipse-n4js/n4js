@@ -39,6 +39,7 @@ public interface ISourceFolderEx extends ISourceFolder {
 	/**
 	 * TODO ADD JAVADOC
 	 */
+	@Override
 	default boolean contains(URI uri) {
 		URI path = getPath();
 		path = path.hasTrailingPathSeparator() ? path : path.appendSegment("");

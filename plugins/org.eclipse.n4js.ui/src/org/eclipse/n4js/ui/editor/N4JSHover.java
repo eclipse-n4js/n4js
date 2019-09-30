@@ -30,17 +30,21 @@ import org.eclipse.xtext.ui.editor.model.XtextDocumentUtil;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
+import com.google.inject.Inject;
+
 /**
  * Minor customization of the default {@link DispatchingEObjectTextHover} to avoid blocking the UI thread.
  */
 public class N4JSHover extends DispatchingEObjectTextHover {
+	@Inject
+	private XtextDocumentUtil xtextDocUtil;
 
 	/**
 	 * Method copied from super class with only a minor change: call to "readOnly" changed to "tryReadOnly".
 	 */
 	@Override
 	public IRegion getHoverRegion(final ITextViewer textViewer, final int offset) {
-		IXtextDocument xtextDocument = XtextDocumentUtil.get(textViewer);
+		IXtextDocument xtextDocument = xtextDocUtil.getXtextDocument(textViewer);
 		if (xtextDocument == null)
 			return null;
 		if (!(xtextDocument instanceof N4JSDocument)) {
@@ -75,7 +79,7 @@ public class N4JSHover extends DispatchingEObjectTextHover {
 	public Object getHoverInfo2(final ITextViewer textViewer, final IRegion hoverRegion) {
 		if (hoverRegion == null)
 			return null;
-		IXtextDocument xtextDocument = XtextDocumentUtil.get(textViewer);
+		IXtextDocument xtextDocument = xtextDocUtil.getXtextDocument(textViewer);
 		if (xtextDocument == null)
 			return null;
 		try {

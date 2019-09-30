@@ -12,13 +12,13 @@ package org.eclipse.n4js.ui;
 
 import static com.google.common.base.Optional.absent;
 import static java.io.File.separator;
-import static org.eclipse.ui.plugin.AbstractUIPlugin.imageDescriptorFromPlugin;
 
 import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.graphics.Image;
@@ -202,7 +202,7 @@ public enum ImageDescriptorCache {
 		ImageDescriptor descriptor = registry.getDescriptor(ref.fileName);
 		if (null == descriptor) {
 			final String imageFilePath = ICON_FOLDER + separator + ref.fileName;
-			descriptor = imageDescriptorFromPlugin(PLUGIN_ID, imageFilePath);
+			descriptor = ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, imageFilePath).orElse(null);
 			registry.put(ref.fileName, descriptor);
 		}
 		return Optional.fromNullable(descriptor);

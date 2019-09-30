@@ -177,11 +177,11 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="n4js.target.platform"
-      defaultValue="N4JS_2019_06"
+      defaultValue="N4JS_2019_09"
       storageURI="scope://Workspace">    <!-- label! -->
     <choice
-        value="N4JS_2019_06"
-        label="N4JS_2019_06"/>    <!-- label! -->
+        value="N4JS_2019_09"
+        label="N4JS_2019_09"/>    <!-- label! -->
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -200,9 +200,9 @@
       label="Xcore">
     <requirement
         name="org.eclipse.emf.ecore.xcore.sdk.feature.group"
-        versionRange="[1.10.0,1.10.1)"/>
+        versionRange="[1.11.0,1.11.1)"/>
     <repository
-        url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.18"/>
+        url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.19"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -210,12 +210,12 @@
       label="Xtext/Xtend">
     <requirement
         name="org.eclipse.xtend.sdk.feature.group"
-        versionRange="[2.18.0,2.18.1)"/>
+        versionRange="[2.19.0,2.19.1)"/>
     <requirement
         name="org.eclipse.xtext.sdk.feature.group"
-        versionRange="[2.18.0,2.18.1)"/>
+        versionRange="[2.19.0,2.19.1)"/>
     <repository
-        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.18.0"/>
+        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.19.0"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -232,9 +232,9 @@
       label="MWE">
     <requirement
         name="org.eclipse.emf.mwe2.language.sdk.feature.group"
-        versionRange="[2.10.0,2.10.1)"/>
+        versionRange="[2.11.0,2.11.1)"/>
     <repository
-        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.10.0"/>
+        url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.11.0"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -284,7 +284,7 @@
     <requirement
         name="org.eclipse.linuxtools.docker.feature.feature.group"/>
     <repository
-        url="http://download.eclipse.org/releases/2019-06"/>
+        url="http://download.eclipse.org/releases/2019-09"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -300,7 +300,7 @@
     <requirement
         name="org.eclipse.epp.mpc.feature.group"/>
     <repository
-        url="http://download.eclipse.org/mpc/releases/1.7.6"/>
+        url="http://download.eclipse.org/mpc/releases/1.8.0"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -316,7 +316,7 @@
     <requirement
         name="org.eclipse.lsp4j.sdk.feature.group"/>
     <repository
-        url="http://download.eclipse.org/lsp4j/updates/releases/0.7.0"/>
+        url="http://download.eclipse.org/lsp4j/updates/releases/0.8.0"/>
   </setupTask>
   <setupTask
       xsi:type="git:GitCloneTask"
@@ -399,41 +399,41 @@
         </predicate>
       </sourceLocator>
       <repositoryList
-          name="N4JS_2019_06">    <!-- label! -->
+          name="N4JS_2019_09">    <!-- label! -->
         <repository
-            url="http://download.eclipse.org/eclipse/updates/4.12"/>
+            url="http://download.eclipse.org/eclipse/updates/4.13"/>
         <repository
-            url="http://download.eclipse.org/egit/updates-5.4"/>
+            url="http://download.eclipse.org/egit/updates-5.5"/>
         <repository
-            url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.18.v20190429"/>
+            url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.20.v20190813"/>
         <repository
             url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.18"/>
         <repository
-            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.10.0"/>
+            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.11.0"/>
         <repository
             url="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201605260315"/>
         <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.18.0"/>
+            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.19.0"/>
         <repository
             url="http://download.eclipse.org/technology/swtbot/releases/2.8.0"/>
         <repository
-            url="https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository"/>
+            url="https://download.eclipse.org/tools/orbit/downloads/drops/R20190827152740/repository"/>
         <repository
             url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/20/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license/1.0.1.v20140414-1359"/>
         <repository
-            url="https://download.eclipse.org/webtools/downloads/drops/R3.14.0/R-3.14.0-20190612230649/repository"/>
+            url="https://download.eclipse.org/webtools/downloads/drops/R3.15.0/R-3.15.0-20190830034720/repository"/>
         <repository
             url="http://download.eclipse.org/tm/updates/4.5.0/repository"/>
         <repository
             url="http://download.eclipse.org/tools/gef/updates/legacy/releases/4.0.0_gef-master_1952"/>
         <repository
-            url="http://download.eclipse.org/mpc/releases/1.7.6"/>
+            url="http://download.eclipse.org/mpc/releases/1.8.0"/>
         <repository
             url="http://download.eclipse.org/usssdk/drops/release/1.2.0"/>
         <repository
-            url="http://download.eclipse.org/lsp4j/updates/releases/0.7.0"/>
+            url="http://download.eclipse.org/lsp4j/updates/releases/0.8.0"/>
       </repositoryList>
     </targlet>
   </setupTask>
@@ -556,7 +556,7 @@
     <description>Launch that creates a config.ini</description>
   </setupTask>
   <stream name="master"
-      label="master (2019_06)"/>    <!-- label! -->
+      label="master (2019_09)"/>    <!-- label! -->
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>

@@ -24,11 +24,11 @@ export class Callee implements CT.CalleeTrait {
 		return "myNonStaticMethod";
    }   
    
-   project static get myPrivateStaticAccessor() {
+   project static get myStaticAccessor() {
    		return this.myPrivateStaticField;
    }
    
-   project static set myPrivateStaticAccessor(myPrivateStaticParam : string) {
+   project static set myStaticAccessor(myPrivateStaticParam : string) {
    		Callee.myPrivateStaticField = myPrivateStaticParam;
    }   
 }
