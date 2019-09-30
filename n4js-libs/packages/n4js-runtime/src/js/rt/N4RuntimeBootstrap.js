@@ -17,29 +17,6 @@
         ArraySlice = Array.prototype.slice,
         noop = function() {};
 
-    if (typeof __REACT_HOT_LOADER__ !== "undefined") {
-        var defineProperties = Object.defineProperties.bind(Object),
-            defineProperty = Object.defineProperty.bind(Object);
-
-        Object.defineProperties = function(fn, props) {
-            for (var k in props) {
-                var prop = props[k];
-                prop.configurable = true;
-                if (prop.value) {
-                    prop.writable = true;
-                }
-            }
-            return defineProperties(fn, props);
-        };
-        Object.defineProperty = function(fn, name, prop) {
-            prop.configurable = true;
-            if (prop.value) {
-                prop.writable = true;
-            }
-            return defineProperty(fn, name, prop);
-        };
-    }
-
     function defineN4TypeGetter(instance, factoryFn) {
         var n4type;
         Object.defineProperty(instance, "n4type", {
