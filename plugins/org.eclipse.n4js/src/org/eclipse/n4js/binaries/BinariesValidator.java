@@ -55,11 +55,11 @@ public class BinariesValidator {
 	 */
 	public IStatus validate(final Binary binary) {
 
-		IStatus simpleValidation = validateBinaryFile(binary);
+		IStatus simpleValidation = binaryExists(binary);
 		if (!simpleValidation.isOK())
 			return simpleValidation;
 
-		final File file = new File(binary.getBinaryAbsolutePath());
+		final File file = findExecutableFile(binary);
 		if (!file.canExecute()) {
 			return error(binary, "Cannot execute '" + binary.getLabel() + "' binary at: " + file + ".");
 		}
@@ -114,19 +114,37 @@ public class BinariesValidator {
 	 *            the binary to validate.
 	 * @return a status representing the outcome of the validation process.
 	 */
-	public IStatus validateBinaryFile(final Binary binary) {
-
-		final File file = new File(binary.getBinaryAbsolutePath());
-		if (!file.exists()) {
-			return error(binary, "'" + binary.getLabel() + "' binary does not exist at " + file
-					+ ". Please check your preferences.");
+	public IStatus binaryExists(final Binary binary) {
+		for (String exec : BinariesConstants.EXECUTABLE_FILE_EXTENSIONS) {
+			final File file = new File(binary.getBinaryAbsolutePath() + exec);
+			if (file.exists()) {
+				if (file.isFile()) {
+					return OK_STATUS;
+				} else {
+					return error(binary, "Invalid '" + binary.getLabel() + "' configuration. Expected file at: " + file
+							+ ". Got a directory instead.");
+				}
+			}
 		}
-		if (!file.isFile()) {
-			return error(binary, "Invalid '" + binary.getLabel() + "' configuration. Expected file at: " + file
-					+ ". Got a directory instead.");
-		}
-		return OK_STATUS;
 
+		return error(binary, "'" + binary.getLabel() + "' binary does not exist at " + binary.getBinaryAbsolutePath()
+				+ ". Please check your preferences.");
+	}
+
+	/**
+	 * Searches the binary file by checking all platform extensions (e.g. '.exe' on windows) that allow to execute a
+	 * file.
+	 *
+	 * @return the found and existing file. null otherwise.
+	 */
+	public File findExecutableFile(final Binary binary) {
+		for (String exec : BinariesConstants.EXECUTABLE_FILE_EXTENSIONS) {
+			final File file = new File(binary.getBinaryAbsolutePath() + exec);
+			if (file.isFile()) {
+				return file;
+			}
+		}
+		return null;
 	}
 
 	private IStatus error(final Binary binary, final String message) {

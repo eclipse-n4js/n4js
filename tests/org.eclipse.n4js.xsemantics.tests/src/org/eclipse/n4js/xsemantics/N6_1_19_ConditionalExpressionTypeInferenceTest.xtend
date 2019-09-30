@@ -35,7 +35,7 @@ class N6_1_19_ConditionalExpressionTypeInferenceTest extends AbstractTypesystemT
 	 */
 	@Test
 	def void testConditional() {
-		"a : b".assertTypeNameOfConditional("union{A,B}")
+		"a : b".assertTypeNameOfConditional("A")
 		"a : c".assertTypeNameOfConditional("union{A,C}")
 		"b : d".assertTypeNameOfConditional("union{B,D}")
 	}
@@ -47,7 +47,7 @@ class N6_1_19_ConditionalExpressionTypeInferenceTest extends AbstractTypesystemT
 
 	@Test
 	def void testConditionalLinearizationWithNestedUnionTypes() {
-		"(true ? a : b) : (true ? c : d)".assertTypeNameOfConditional("union{A,B,C,D}")
+		"(true ? a : b) : (true ? c : d)".assertTypeNameOfConditional("union{A,C,D}")
 	}
 
 	@Test

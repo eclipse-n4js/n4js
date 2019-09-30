@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
@@ -68,7 +69,7 @@ public class ProjectDescriptionUtils {
 			// "events", "fs", "http", "https", "module", "net", "os", "path", "punycode", "querystring", "readline",
 			// "repl", "stream", "string_decoder", "sys", "timers", "tls", "tty", "url", "util", "vm", "zlib",
 			// other reserved names
-			"node_modules", "favicon.ico");
+			N4JSGlobals.NODE_MODULES, "favicon.ico");
 
 	/**
 	 * Tells if the given N4JS project name includes an npm scope, i.e. if it is of the form

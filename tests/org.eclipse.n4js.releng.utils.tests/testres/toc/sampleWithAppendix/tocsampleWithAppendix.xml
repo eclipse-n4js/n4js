@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="sampleWithAppendix/index.html" label="Sample">
+	<topic href="sampleWithAppendix/chapter_title.html#_introduction" label="Chapter Title">
+		<topic href="sampleWithAppendix/chapter_title.html#_notation" label="Main Section">
+			<topic href="sampleWithAppendix/chapter_title.html#_grammar-notation" label="Subsection"></topic>
+		</topic>
+	</topic>
+<topic label="Appendix">
+	<topic href="sampleWithAppendix/appendix_a_hints.html#_hints" label="Hints"></topic>
+	<topic href="sampleWithAppendix/appendix_b_license.html#_license" label="License"></topic>
+</topic>
+</toc>

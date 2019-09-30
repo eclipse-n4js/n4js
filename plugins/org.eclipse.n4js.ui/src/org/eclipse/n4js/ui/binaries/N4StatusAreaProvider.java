@@ -15,6 +15,8 @@ import static org.eclipse.swt.SWT.FILL;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.n4js.binaries.Binary;
+import org.eclipse.n4js.binaries.BinaryStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -24,9 +26,6 @@ import org.eclipse.ui.internal.statushandlers.InternalDialog;
 import org.eclipse.ui.internal.statushandlers.WorkbenchStatusDialogManagerImpl;
 import org.eclipse.ui.statushandlers.AbstractStatusAreaProvider;
 import org.eclipse.ui.statushandlers.StatusAdapter;
-
-import org.eclipse.n4js.binaries.Binary;
-import org.eclipse.n4js.binaries.BinaryStatus;
 
 /**
  * Status area provider for the {@link N4StatusHandler status handler} used in the N4JS IDE application.
@@ -46,6 +45,7 @@ public class N4StatusAreaProvider extends AbstractStatusAreaProvider {
 		this.manager = manager;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Control createSupportArea(final Composite parent, final StatusAdapter statusAdapter) {
 

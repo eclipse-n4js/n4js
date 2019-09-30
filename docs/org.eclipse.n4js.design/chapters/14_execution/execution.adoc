@@ -1,0 +1,309 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Execution
+:find:
+
+WARNING: This chapter may be outdated.
+
+There are many different use cases for executing N4JS code:
+
+* running project locally
+* running tests in CI
+* running application in the client
+* running processor on the server
+
+All those use cases may differ in their details, but can be divided into general phases:
+
+1.  execution environment preparation
+2.  bootstrapping
+3.  call to given n4js entry point
+4.  shutdown (optional)
+
+When N4JS execution is triggered, proper _Runner_ (see <<sec:Runners-introduction,Runners>>) is selected. In some cases it is done automatically, in others user needs to make a choice. Runner is responsible for perform all required preparations, according to <<sec:N4JS_Project_Execution_And_Linking_Model,N4JS Project Execution And Linking Model>>. Then JS execution environment (e.g. NodeJS, IOJS, Chrome, JavaScriptCore) performs bootstrapping according to <<sec:N4JS_Execution_And_Linking_File>>. As last step of bootstrap phase defend n4js entry point will be called which starts proper n4js execution phase. In some cases there may be shutdown phase, but that is highly dependent on use case and proceeding execution phases.
+
+[[sec:N4JS_Project_Execution_And_Linking_Model]]
+[.language-n4js]
+==  N4JS Project Execution And Linking Model
+
+N4JS project is compiled to JavaScript language, that in turn can be executed in some JS execution environment, Those environments (e.g. NodeJS, IOJS, Chrome, JavaScriptCore) will differ between each other in terms of JS APIs they expose and way JS code has to be provided to them, or the way it is triggered. We introduced systematic way of describing those features in terms of N4JS projects (see Components and Projects <<sec:N4_Components_and_IDE_Support,Components and IDE Support>>). N4JS project will be of different _PojectType_ that determines project purpose (see Package.json section <<sec:Package_json>>. When we want to execute some N4JS project, we can divide its dependency graph into 4 general areas
+
+1.  User Space, e.g. user code
+2.  System Space, e.g N4 Platform APIs
+3.  Runtime Space, e.g. EcmaScript APIs
+4.  Environment Space, e.g. execution environment APIs
+
+Example of that kind of graph can bee seen on <<fig:od_sampleProjectDependencyGraph>>
+
+[[fig:od_sampleProjectDependencyGraph]]
+[.center]
+image::{find}images/od_sampleProjectDependencyGraph.svg[title="Sample Project Dependency Graph"]
+
+All dependencies are compile time dependency (as they are checked by the compiler), but _tend_ to weaken, the lower in the dependency graph we are. _User Space_ objects will have strong load time and run time dependency to each other and to the _System Space_. _System Space_ have strong load time and run time dependency to each other and, only runtime dependency to _Runtime Space_. _Runtime Space_ objects should not have any load time dependencies between each other. In some cases they may have weak runtime dependency to each other. In many cases those components are just api definitions that describe execution environment native apis, but may contain polyfills code. _Environment Space_ has no dependency to other components, except the fact different __RuntimeEnvironemnt__s can extend each other (see <<sec:N4_Components_and_IDE_Support>>).
+
+Runner must configure JS execution environment in the way that all above areas of the dependency graph must be either
+
+* provided by execution environment itself (runtime libraries APIs - _n4jsd_ files)
+* loaded by defined runtime environment (self initialisation code)
+* available to load by environment explicitly (runtime libraries polyfills, system libraries)
+* available to load by other implicitly (system libraries, user libraries and projects)
+
+Testers, the same way as runners, must be able to execute n4js code. Main difference is that dependency graph for test case will be usually slightly bigger (dependencies to test libraries), and code that has to be triggered shifts a bit from given project to test library used in test code of tested project. Extending previously used example with test elements is shown in figure <<fig:od_sampleTestProjectDependencyGraph2>>.
+
+
+[[fig:od_sampleTestProjectDependencyGraph2]]
+[.center]
+image::{find}images/od_sampleTestProjectDependencyGraph.svg[title="Sample Test Project Dependency Graph"]
+
+[[fig:runners-testers]]
+[.center]
+image::{find}images/runners-testers.svg[title="Runners and Testers"]
+
+[[subsec:N4JS_Execution_With_NodeJS]]
+[.language-n4js]
+===  N4JS Execution With NodeJS
+This example shows in-depth details of N4JS code execution with NodeJS runner.
+
+In the workspace we have `Client` with `foo.n4js` that imports `bar.n4js` from `UserLib` that is also in the workspace.
+Those N4JS files use some ES5 APIs , e.g. `Math.random()` and `setTimeout()`. Those APIs are `Global` so there is 
+no impicit import, still they make user projects depend on runtime library `n4js-runtime-es2015`.
+Assuming user selects `foo.n4js` file for execution, the NodeRunner in the IDE will:
+
+* create working directory in temp folder, e.g. `/var/temp/N4JSNodeRun123/`
+* create `node_modules` folder inside working directory, to which projects will be linked
+* generate script, e.g. `n4jsELF.js` that will be responsible for booting execution (see <<sec:N4JS_Execution_And_Linking_File>>)
+* runner will put `/var/temp/N4JSNodeRun123/node_modules` into `NODE_PATH`
+* execute `/var/temp/N4JSNodeRun123/n4jsELF.js` with NodeJS
+
+For example with NodeJS environment if all projects from dependency graph are accessible in local file system, their
+paths would need to be put in NodeJS _NODE_PATH_ environment variable. In addition to configuring execution environment
+_Runner_ generates N4JS Elf file that is used by environment to bootstrap n4js execution 
+(see <<sec:N4JS_Execution_And_Linking_File>>).
+[[fig:od_sampleNodeProjectExecution]
+[.center]
+image::{find}images/od_sampleNodeProjectExecution.svg[title="Sample NodeJS Project Execution"]
+
+
+[[sec:N4JS_Execution_And_Linking_File]]
+[.language-n4js]
+==  N4JS Execution And Linking File
+
+JS execution environment not only needs to know from where it needs to obtain code to execute, but also _what is the entry point to the code that is supposed to be executed_ and _what code needs to be loaded before entry point is called_.
+
+All this information is generated by the runner based on the executed project dependency graph. The way this information
+is presented depends on concrete JS execution environment used, and on its configuration (e.g. user provided options, or
+configuration derived in other ways). But in either case file is generated with that information. Figure <<fig:n4js_elf>>
+shows examples how this information would look like for both testers and runners for both NodeJS or Chrome.
+
+[[fig:n4js_elf]]
+[.center]
+image::{find}images/n4js_elf.svg[title="N4JS ELF examples"]
+
+First segment of the n4js elf is responsible for loading _RuntimeEnvironment_ bootstrap code. Since __RuntimeEnvironment__s can extend each other, generated information would follow those dependencies. It is possible that __RuntimeEnvironment__s need to do some special work in regards of of provided __RuntimeLibraries__s, e.g. initiate initiate polyfills. That code can be either directly in _RuntimeEnvironment_ init code, or its init code can call modules from provided runtime libraries.
+
+Second segment of the n4js elf is responsible for loading _RuntimeEnvironment_ exec module. This is special module defined in package.json of the environment, that is used to call into user projects entry point directly, or (as in test case) call into runners of the test library.
+
+Last segment of the n4js elf is responsible for passing run/test data (generated by IDE/CLI) into initialised previously exec module.
+
+While first two segments are resolved from project dependencies and can be covered by generic approach on IDE/CLI side, last segment requires strong relation between given runner/tester and _RuntimeEnvironment_ / _TestEnvironment_. While some generic approaches can be used, for the moment we don’t specify concrete convention there.
+
+[[subsec:NodeJS_Specific_ELF]]
+[.language-n4js]
+===  NodeJS Specific ELF
+Concrete environments may need specific setup that is not common for other environemtns. For example for NodeJS runner
+needs to configure the node lookup paths for the module resolution. This is achieved by creating at runtime symlinks
+from `node_modules` pointing to concrete dependencies required during execution.
+
+[[sec:Runners-execution]]
+[.language-n4js]
+==  Runners
+
+It is specified above, that _Runner_ prepares concrete JS execution environment for executing given code and triggers execution process. What is not clear so far is how appropriate runner is selected for given project. In <<_n4components,N4 Components>> it was specified that N4JS projects do not depend directly on specific runners or JS execution environments. Instead, N4JS tooling should be able to select appropriate runner based on given project transitive dependencies. In this section we specify overall design of runners for both N4JS IDE and CLI tooling and how runners are selected for projects.
+
+INFO: In general any n4js code execution is governed by _runners_ and _testers_ depending on the use case.
+In this chapter _runners_ are described in detail.
+Information from this chapter applies to _Testers_, unless stated otherwise in chapter dedicated to testing N4JS code (<<_tests,Tests>>), were we specify
+testing specific use cases.
+
+[[subsec:N4_Runtime_Environments_Convention]]
+===  N4 Runtime Environments Convention
+
+Dependency between _Runner_ and _Runtime Environment_ crosses technical boundary between N4JS Projects (N4JS code) and N4JS tooling (IDE and CLI tools implemented with e.g. Java). We introduce convention to implement this dependency, yet letting N4JS projects and N4JS tools internals to be relatively independent.
+
+
+[[fig:cd_EnvironmentConvention]]
+[.center]
+image::{find}images/cd_EnvironmentConvention.svg[title="Runtime Environments Convention"]
+
+<<fig:cd_EnvironmentConvention>> convention that is used to communicate run time configuration of the N4JS projects (grey colour) and N4JSIDE (pink colour). JS projects declare dependencies on provided list of _Runtime Libraries_. Each combination of those corresponds to one predefined _Runtime Environment_ N4JS component. On N4JSIDE side there is separate list of __runtime environment__s maintained. Both lists correspond one to one to each other.
+
+[[subsec:Passing_Information_from_IDE_to_Execution_Code_in_Runtime_Environment]]
+[.language-n4js]
+===  Passing Information from IDE to Execution Code in Runtime Environment
+
+When launching an N4JS file, the IDE will compute some information on the containing N4JS project and its direct and indirect dependencies as well as the runtime environment in use. This information will be passed on to the execution module defined in the runtime environment, i.e. the code specified via property in the runtime environment’s package.json file. The information will be passed via a global variable ``$executionData``. The value will be a Javascript object with the following properties:
+
+* `userSelection`: the module the user had selected when initiating the launch. This will usually be the ``module to run``  , but in case of testing it will be the project, folder, or file the user had selected.
+* `projectNameMapping`: an object in which every key is the name of an API project among the direct or indirect dependencies of the project being run, and every value is the name of the corresponding implementation project being used. When running N4JS projects that do not make use of the API / implementation project technique, then this property will either hold an empty object or be undefined.
+* `testTree` (only when running tests): the test tree as defined in <<_tests,Tests>> containing information on the tests to be run, i.e. test classes, test methods, etc. The test tree will be encoded as JSON, so the value of this property will be of type string and should be passed to `JSON.parse()`.
+
+All calculations described above are based on the workspace available. This includes library manager functionality, see <<../20_externalLibraries/externalLibraries#:External_Library_Workspace, External Library Workspace>>.
+In specific setups, where workspace is not available runners provide helper utility `org.eclipse.n4js.runner.RunnerFileBasedShippedCodeConfigurationHelper.configureFromFileSystem()` that allows to configure given `RunConfiguration` using 
+plain file system to the external libraries. Note that in order to do this in a way that allows to re-use all computation logic based on <<../12_n4components/n4components#:N4MFContainerManagement, N4Containers>>,
+runners infrastructure provides its own subclasses of the few component types. Those specialized types are used only in scope of `RunnerFileBasedShippedCodeConfigurationHelper` and are not exposed to the rest of the system.
+
+
+Specific runners, e.g. the NodeJS or Chrome runner, may choose to provide more information via the execution data object.
+
+
+[[subsec:Runners_Design]]
+===  Runners Design
+
+As specified in section before N4JS projects will need to be executed on various JS execution environments, for which dedicated runners will be needed. While they will differ how they interact with concrete JS environment, they will have common parts when it comes to interaction with N4JS IDE or CLI. Those parts are provided in form of abstract _IDERunner_ _CLIRunner_ and _Runner_ _components_ (or bundles) that specific runners should use to interact with N4JS IDE or CLI.
+
+Runner by design consists of three parts:
+
+* _core_ part (green colour) - contains most logic, resources (e.g. JS execution environment binary)
+* _IDE_ part (blue colour) - responsible for working with N4JS IDE (enabling runner in ui, providing views)
+* _CLI_ part (yellow colour) - responsible for working with N4JS CLI (get command line parameters, provide console output)
+
+[[cd_RunnersIdeCli]]
+[.center]
+image::{find}images/cd_RunnersIdeCli.svg[title="Runner for N4JS IDE and CLI tooling"]
+
+Specific runner is connected to running N4JS IDE or CLI via extension points. This is done either by using them directly, or by using types exposed by abstract runner component.
+
+[[sec:Legacy_Execution_Engine]]
+[.language-n4js]
+==  Legacy Execution Engine
+
+Compilation of N4JS may target many platforms. For the moment it is hard to discuss what they will be exactly or if N4JSIDE will provide some integration or hooks to those platforms. On the other hand we want to have some execution environment for internal use to validate behaviour of compiled code. Since we know that V8 based platforms (e.g. Chrome, NodeJS) will be in our target platforms set we want to be able to execute compiled code on similar environment. As standalone V8 integration is quite challenging, we have decided to integrate in N4JSIDE NodeJS as execution environment. This is considered internal feature used for testing compilation of N4JS and N4JSIDE.
+
+[[sec:Design]]
+[.language-n4js]
+==  Design
+
+We provide NodeJS binaries for various OSes. Direct access to binaries is not exposed. Selection and institutionalization of the binary is done internally and is not configurable. Instead bundle containing binaries provides classes required to run code (in form of `String` or `File` with the code). Clients That want to do this may either use provided `Engine` class or can implement their own engine based on provided infrastructure. Main class that used in engine implementation is `EngineCommandBuilder`. This class is responsible for building proper command line commands that engine implementation must execute to run code with NodeJS.
+
+<<fig:cd_executionengine>> shows the most important classes of the NodeJS integration.
+
+[[fig:cd_executionengine]]
+[.center]
+image::{find}images/cd_executionengine.svg[title="NodeJS execution integration"]
+
+[[sec:Usage_Outside_N4JSIDE]]
+===  Usage Outside N4JSIDE
+
+In this use case we use provdied `Engine` class that allows to execute js code in form of `String` or `File` with the code. In return user receives `EngineOutput` object with two lists of strings containing standard output and error output of the node process, that were captured during execution.
+
+In this usage scenario execution api assumes valid JS code. User needs to ensure compilation of code prior to execution, if needed.
+
+That functionality is used in internal jUnit tests and in xpect tests of the compiler.
+
+[[sec:Use_Node_with_Maven]]
+====   Use Node with Maven
+
+Note on maven usage. For maven based builds we need to ensure that binary resources are available and are unpacked. To do this in pom of the project that will be calling engine we must include following listing:
+
+[source,xml]
+----
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.eclipse.n4js</groupId>
+                                    <artifactId>org.eclipse.n4js.js.engine</artifactId>
+                                    <version>0.0.1-SNAPSHOT</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${project.build.directory}/classes
+                                    </outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+----
+
+[[sec:Usage_Inside_N4JSIDE]]
+===  Usage Inside N4JSIDE
+
+In Eclipse platfrom based environment we use custom implementation of the engine, `PlatformEngine`. This implementation unlike default `Platform` is non blocking implementation that forwards output to platform console and allows platform to control lifecycle of the running engine. Additionally this version uses its own implementation of the `ResourceUrlResolver`. It is required to properly resolve urls that point inside platform bundles.
+
+This scenario we assume that user will run N4JS files or JS files. We have created proper UI hooks that allow user to do this either from editor or as selection menu. Based on name of the file that user commands to execute we find proper compiled file (compiled with our ES5 compiler - it is not configurable). When found we execute this file in our execution engine. If it is not found, execution engine will write appropriate error to N4JSIDE console.
+
+[[sec:Runtime_Injection]]
+[.langauge-n4js]
+==  Runtime Injection
+
+There is need to inject into runtime environment some special code, for example when compiling N4JS to ES5 (see N4JavaScriptSpecification,chapter N4 JS Compilation). To achieve this wee need to inject desired code when calling engine to run desired compiled code. Injection mechanism depends a lot on way we run engine. In this section injection of runtime is discussed based on NodeJs that is used as runtime environment.
+
+[[sec:Running_String_Code]]
+===  Running String Code
+
+We allow code execution where code is provided in form of `String`. In this case we are calling nodejs with parameters . To enrich execution environment in this case we are appending special runtime code at the end of file. It is important to append it at the end, to avoid changing line numbers of original code and decrease other potential side effects. So actual invocation of nodejs looks like
+
+This mechanism assumes:
+
+1.  injected code starts with new line - this makes ASI mechanism to finish user last statement if it was not properly finished by user, otherwise just creates
+2.  injected code does not have to be initiated manually - all exposed api is in named function declarations
+
+_Explanation_
+
+In first assumption we make workaround for user code that does not contain new line or semicolon at the end of last statement. This kind of code is incorrect and would result in last statement of user code and first statement of injected code to be interpreted as one JS statement. In most cases that would be invalid code. By having new line as first character of injected code, we are taking advantage of JS AutomaticSemicolonInjection mechanism. If user code AST is not finished properly this mechanism will finish close user AST. If user AST is finished properly, ASI will just insert empty statement between user code and injection code. In both cases we end up with proper AST.
+
+Second assumption avoids need for further user code modifications, as injected does not have to be manually called. Instead we take advantage of variable and function hoisting mechanism of JS. This assures that even though user code is first in AST, JS environment will first initiate named functions therefore when user code calls injected code it is already defined in scope in which user code executes.
+
+[[sec:Running_File_Code]]
+===  Running File Code
+
+Second method of code execution is to execute provided file with user code. Normal way of doing that with NodeJS is to make call. But since we need to inject special code without rewriting files, we use different mechanism. Basically we are executing injected code and in the same scope using node api. Additionally we are attaching injected code to global scope in node, ensuring this way that required file is executed in scope which contains injected code. Putting this all together we are making following call:
+
+This mechanism assumes that injected code attaches all exposed API to global scope .
+
+[[sec:Injection_Code_Example]]
+===  Injection Code Example
+
+Following is simple example of properly formed injection code.
+
+[source,n4js]
+----
+
+;
+function foo(){}
+function bar(){}
+function baz(){}
+
+(function(){
+ GLOBAL.foo = foo;
+ GLOBAL.bar = bar;
+ GLOBAL.baz = baz;
+})();
+;
+
+----
+
+. first line is empty line to trigger ASI
+. second line (optional) enters
+. lines 3-5 are defining runtime api in current scope (in which user code provided as a string is executed)
+. lines 6 (optional) is just a visual sugar
+. lines 7-11 are adding runtime api to global scope (to expose it when runnig user file with code)
+. lines 12-13 (optional) are there to separate injected code and invokation of user file (if running user provided file with code)

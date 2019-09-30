@@ -96,8 +96,8 @@ var c2 : intersection{B, I, C};
 
 
 // XPECT warnings ---
-// "An intersection type should not contain more than one class. Otherwise there cannot exist a value of such a type." at "G<A>"
-// "An intersection type should not contain more than one class. Otherwise there cannot exist a value of such a type." at "G<I>"
+// "An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<A>"
+// "An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "G<I>"
 // ---
 var c3 : intersection{G<A>, intersection{G<I>, I}};
 

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.typesystem.utils
 
+import com.google.common.base.Optional
 import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -30,7 +31,6 @@ import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -46,13 +46,17 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeExtensions
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.constraints.TypeConstraint
+import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
@@ -84,8 +88,6 @@ class TypeSystemHelper {
 	//   forwarding of utility methods implemented in strategy classes
 	// *****************************************************************************************************
 
-	@Inject private DerivationComputer derivationComputer;
-
 	@Inject private GenericsComputer genericsComputer;
 
 	@Inject private SimplifyComputer simplifyComputer;
@@ -96,29 +98,14 @@ class TypeSystemHelper {
 	@Inject private ExpectedTypeComputer expectedTypeCompuer;
 	@Inject private StructuralTypingComputer structuralTypingComputer;
 	@Inject private ThisTypeComputer thisTypeComputer;
+	@Inject private IterableComputer iterableComputer;
 
 
 @Inject private StructuralTypesHelper structuralTypesHelper;
 def StructuralTypesHelper getStructuralTypesHelper() {
 	return structuralTypesHelper;
 }
-def StructuralTypingComputer getStructuralTypingComputer() {
-	return structuralTypingComputer;
-}
 
-
-	def FunctionTypeExpression createSubstitutionOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
-		derivationComputer.createSubstitutionOfFunctionTypeExprOrRef(G,F);
-	}
-	def FunctionTypeExpression createUpperBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
-		derivationComputer.createUpperBoundOfFunctionTypeExprOrRef(G,F);
-	}
-	def FunctionTypeExpression createLowerBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F) {
-		derivationComputer.createLowerBoundOfFunctionTypeExprOrRef(G,F);
-	}
-	def FunctionTypeExpression createBoundOfFunctionTypeExprOrRef(RuleEnvironment G, FunctionTypeExprOrRef F, BoundType boundType) {
-		derivationComputer.createBoundOfFunctionTypeExprOrRef(G,F,boundType);
-	}
 
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
 		genericsComputer.addSubstitutions(G,typeRef)
@@ -138,6 +125,18 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def void restorePostponedSubstitutionsFrom(RuleEnvironment G, StructuralTypeRef typeRef) {
 		genericsComputer.restorePostponedSubstitutionsFrom(G, typeRef);
 	}
+	/** See {@link GenericsComputer#checkTypeArgumentCompatibility(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)}. */
+	def Result checkTypeArgumentCompatibility(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg,
+		Optional<Variance> varianceOpt, boolean useFancyErrMsg) {
+
+		return genericsComputer.checkTypeArgumentCompatibility(G, leftArg, rightArg, varianceOpt, useFancyErrMsg);
+	}
+	/** See {@link GenericsComputer#reduceTypeArgumentCompatibilityCheck(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)}. */
+	def List<TypeConstraint> reduceTypeArgumentCompatibilityCheck(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg,
+		Optional<Variance> varianceOpt, boolean useFancyConstraints) {
+		
+		return genericsComputer.reduceTypeArgumentCompatibilityCheck(G, leftArg, rightArg, varianceOpt, useFancyConstraints);
+	}
 
 	def TypeRef createUnionType(RuleEnvironment G, TypeRef... elements) {
 		simplifyComputer.createUnionType(G,elements)
@@ -148,9 +147,6 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	}
 	def <T extends ComposedTypeRef> TypeRef simplify(RuleEnvironment G, T composedType) {
 		simplifyComputer.simplify(G,composedType)
-	}
-	def List<TypeRef> getSimplifiedTypeRefs(RuleEnvironment G, ComposedTypeRef composedType) {
-		simplifyComputer.getSimplifiedTypeRefs(G,composedType)
 	}
 
 	/**
@@ -193,6 +189,9 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def StructuralTypingResult isStructuralSubtype(RuleEnvironment G,TypeRef left, TypeRef right) {
 		return structuralTypingComputer.isStructuralSubtype(G, left, right);
 	}
+	def public List<TypeConstraint> reduceMembers(RuleEnvironment G, TypeRef leftTypeRef, TMember left, TMember right, StructTypingInfo info) {
+		return structuralTypingComputer.reduceMembers(G, leftTypeRef, left, right, info);
+	}
 
 	/** @see ExpectedTypeComputer#getExpectedTypeOfReturnValueExpression(RuleEnvironment,Expression) */
 	def TypeRef getExpectedTypeOfReturnValueExpression(RuleEnvironment G, Expression returnValueExpr) {
@@ -214,20 +213,32 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		return thisTypeComputer.getThisTypeAtLocation(G, location);
 	}
 
+	/** @see IterableComputer#extractIterableElementTypesUBs(RuleEnvironment, TypeRef) */
+	public def Iterable<TypeRef> extractIterableElementTypesUBs(RuleEnvironment G, TypeRef typeRef) {
+		return iterableComputer.extractIterableElementTypesUBs(G, typeRef);
+	}
+
+	/** @see IterableComputer#extractIterableElementTypes(RuleEnvironment, TypeRef) */
+	public def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
+		return iterableComputer.extractIterableElementTypes(G, typeRef);
+	}
+
+	/** @see IterableComputer#extractIterableElementTypeUB(RuleEnvironment, TypeRef) */
+	public def TypeRef extractIterableElementTypeUB(RuleEnvironment G, TypeRef typeRef) {
+		return iterableComputer.extractIterableElementTypeUB(G, typeRef);
+	}
+
+	/** @see IterableComputer#extractIterableElementType(RuleEnvironment, TypeRef) */
+	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef) {
+		return iterableComputer.extractIterableElementType(G, typeRef);
+	}
+
 
 
 
 	// *****************************************************************************************************
 	//   small utility methods that do not have their own strategy class
 	// *****************************************************************************************************
-
-	/** see {@link N4JSTypeSystem#resolveType(RuleEnvironment,TypeArgument)} */
-	public def TypeRef resolveType(RuleEnvironment G, TypeArgument typeArg) {
-		var typeRef = if(typeArg !== null) ts.upperBound(G, typeArg);
-		typeRef = if(typeRef !== null) TypeUtils.resolveTypeVariable(typeRef);
-		// TODO IDE-2367 recursively resolve the resulting 'typeRef' until it is stable (requires refactoring of upper/lower bound judgment!)
-		return typeRef;
-	}
 
 	public def boolean allEqualType(RuleEnvironment G, TypeRef... typeRefs) {
 		val len = typeRefs.size;
@@ -241,14 +252,15 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		return true;
 	}
 
-	public def TypeRef sanitizeTypeOfVariableFieldProperty(RuleEnvironment G, TypeArgument typeRaw) {
+	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw) {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
-		val typeUB = ts.upperBound(G, typeRaw); // take upper bound to get rid of ExistentialTypeRef (if any)
+		// take upper bound to get rid of wildcards, etc. (if any)
+		val typeUB = ts.upperBoundWithReopen(G, typeRaw);
+		// replace silly types
 		val declType = typeUB.declaredType
 		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
-			// don't use these types to type variables, fields, properties -> replace with any
 			return G.anyTypeRef;
 		}
 		return typeUB;
@@ -420,7 +432,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef ctorTypeRef) {
 		var typeArg = ctorTypeRef.typeArg;
 		while(typeArg instanceof Wildcard || typeArg instanceof ExistentialTypeRef || typeArg instanceof BoundThisTypeRef) {
-			typeArg = ts.upperBound(G, typeArg);
+			typeArg = ts.upperBoundWithReopen(G, typeArg);
 		}
 		return typeArg as TypeRef;
 	}

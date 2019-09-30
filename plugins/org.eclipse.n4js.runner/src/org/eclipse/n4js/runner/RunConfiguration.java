@@ -162,7 +162,7 @@ public class RunConfiguration {
 	/**
 	 * Custom options passed to the execution engine (e.g. node.js), not the executed N4JS code (compare to
 	 * {@link #getRunOptions() run options}). The format of this string depends on the engine being used, but in any
-	 * case options should be separated with a {@link CharMatcher#BREAKING_WHITESPACE breaking whitespace} character.
+	 * case options should be separated with a {@link CharMatcher#breakingWhitespace breaking whitespace} character.
 	 *
 	 * @return the execution engine options as a string.
 	 */
@@ -271,8 +271,7 @@ public class RunConfiguration {
 	/**
 	 * Custom options passed to the executed N4JS code, not the execution engine (e.g. node.js; compare to
 	 * {@link #getEngineOptions() engine options}). The format of this string depends on the code being executed, but in
-	 * any case options should be separated with a {@link CharMatcher#BREAKING_WHITESPACE breaking whitespace}
-	 * character.
+	 * any case options should be separated with a {@link CharMatcher#breakingWhitespace breaking whitespace} character.
 	 *
 	 * @return the run options as a string.
 	 */

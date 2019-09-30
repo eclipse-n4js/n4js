@@ -1,0 +1,52 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= DocExporter
+:find:
+
+WARNING: This chapter may be outdated.
+
+The DocExporter exports JavaDoc from source files to adoc files.
+In particular it combines information about methods with tests in order to create specification documents.
+
+
+[[sec:Specification_Exporter]]
+== Specification Exporter
+
+The specification exporter creates and merges artifacts.
+<<fig:api_test_spec,Fig. API Test Spec>> sketches the relation between API (i.e., n4jsd files with classifiers),
+tests (i.e., N4JS test classes and methods), and specification (Documentation with JSDOC markers).
+
+[[fig:api_test_spec]]
+[.center]
+image::{find}images/api_test_spec.svg[title="Component/Class pseudo diagram: Relation API, Tests and Specification"]
+
+<<fig:cd_jsdocreader,Fig. Exporter>> shows the classes that read and analyze Java source documentation.
+
+[[fig:cd_jsdocreader]]
+[.center]
+image::{find}images/cd_jsdocreader.svg[title="Java reader classes"]
+
+
+<<fig:cd_adocexporter,Fig. Exporter>> shows the content classes of the exporter that contain the generated documentation contents.
+
+[[fig:cd_adocexporter]]
+[.center]
+image::{find}images/cd_adocexporter.svg[title="Exporter content classes"]
+
+
+<<fig:cd_docexporter_model,Fig. DocExporter Model>> shows the model, which may be used for other doc exporters as well.
+
+[[fig:cd_docexporter_model]]
+[.center]
+image::{find}images/cd_docexporter_model.svg[title="Exporter model classes"]
+
+

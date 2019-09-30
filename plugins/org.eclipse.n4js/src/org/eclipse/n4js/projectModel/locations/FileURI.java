@@ -56,6 +56,7 @@ public final class FileURI extends SafeURI<FileURI> {
 		super.validate(given);
 		Preconditions.checkNotNull(given.authority(), "%s", given);
 		Preconditions.checkArgument(given.isFile(), "%s", given);
+		Preconditions.checkArgument("file".equalsIgnoreCase(given.scheme()), "%s", given);
 		// String asString = given.toString();
 		// Preconditions.checkArgument(asString.lastIndexOf(':') == asString.indexOf(':'), given);
 		return given;

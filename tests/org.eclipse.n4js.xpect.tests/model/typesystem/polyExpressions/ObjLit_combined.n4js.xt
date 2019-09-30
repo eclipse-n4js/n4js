@@ -36,7 +36,7 @@ function <T1,T2> fooOL2(p : ~Object with {left: T1; right: T2; }) : G2<T1,T2> {r
 fooMerge( foo2( foo2( fooOL2(  { left: b, right: null }  ))))
 
 
-// XPECT type of '{ left: b, right: c }' --> ~Object with { left: union{B,C}; right: union{B,C} }
+// XPECT type of '{ left: b, right: c }' --> ~Object with { left: B; right: B }
 fooMerge( foo2( foo2( fooOL2(  { left: b, right: c }  ))))
 
 

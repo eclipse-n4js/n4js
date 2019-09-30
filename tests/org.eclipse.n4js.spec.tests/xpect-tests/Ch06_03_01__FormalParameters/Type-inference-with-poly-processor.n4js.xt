@@ -32,12 +32,12 @@ function (p0, p1 = 0) {}; f0b;
 
 
 let f1a: {function(A)} =
-// XPECT type of 'p0' --> union{A,B}
+// XPECT type of 'p0' --> A
 function (p0 = new B()) {}; f1a;
 
 
 let f1b: {function(B)} =
-// XPECT type of 'p0' --> union{A,B}
+// XPECT type of 'p0' --> A
 function (p0 = new A()) {}; f1b;
 
 
@@ -62,7 +62,7 @@ function (p0 = ) {}; f5;
 
 
 let f6: {function(any)} =
-// XPECT type of 'p0' --> union{any,int}
+// XPECT type of 'p0' --> any
 function (p0 = 6) {}; f6;
 
 
@@ -165,12 +165,12 @@ let a0b: (A)=>void =
 
 
 let a1a: (A)=>void =
-// XPECT type of 'p0' --> union{A,B}
+// XPECT type of 'p0' --> A
 (p0 = new B()) => {}; a1a;
 
 
 let a1b: (B)=>void =
-// XPECT type of 'p0' --> union{A,B}
+// XPECT type of 'p0' --> A
 (p0 = new A()) => {}; a1b;
 
 
@@ -195,7 +195,7 @@ let a5: (A)=>void =
 
 
 let a6: (any)=>void =
-// XPECT type of 'p0' --> union{any,int}
+// XPECT type of 'p0' --> any
 (p0 = 6) => {}; a6;
 
 

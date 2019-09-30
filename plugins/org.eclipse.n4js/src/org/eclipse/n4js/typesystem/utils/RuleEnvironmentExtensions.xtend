@@ -34,13 +34,10 @@ import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.ts.types.NullType
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -53,6 +50,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.RecursionGuard
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -92,25 +90,29 @@ class RuleEnvironmentExtensions {
 	private static final String KEY__INCONSISTENT_SUBSTITUTIONS = "inconsistentSubstitutions";
 
 	/**
-	 * Key for a List&lt;ExistentialTypeRef> with existential type references that should be re-opened during
-	 * type inference, i.e. they should be treated like the Wildcard they were created from.
-	 * For detailed semantics, see xsemantics rules subtypeRefExistentialTypeRefLeft/Right.
-	 */
-	private static final String KEY__REOPEN_EXISTENTIAL_TYPES = "reopenExistentialTypes";
-
-	/**
 	 * Key for storing an ITypeReplacementProvider defining a replacement of some types by other types within
 	 * the context of a rule environment. Used when dealing with replacing an API by its implementation project.
 	 */
 	private static final String KEY__TYPE_REPLACEMENT = "typeReplacement";
 
+	/**
+	 * Key for storing IDs of captures that should *not* be reopened by method
+	 * {@link N4JSTypeSystem#upperBoundWithReopen(RuleEnvironment, TypeArgument)}, and similar methods.
+	 * <p>
+	 * Client code should not use this constant directly, but should instead use methods
+	 * {@link #addFixedCapture(RuleEnvironment, ExistentialTypeRef)} and
+	 * {@link #isFixedCapture(RuleEnvironment, ExistentialTypeRef)}.
+	 */
+	private static final String KEY__FIXED_CAPTURE_ID = "fixedCaptureId";
+
 	public static final String GUARD_VARIABLE_DECLARATION = "varDecl";
 	public static final String GUARD_TYPE_CALL_EXPRESSION = "typeCallExpression";
 	public static final String GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION = "typePropertyAccessExpression";
 	public static final String GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT = "subtypeRefParameterizedTypeRef__struct";
-	public static final String GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS = "subtypeRefParameterizedTypeRef__args";
 	public static final String GUARD_SUBST_TYPE_VARS = "substTypeVariablesInParameterizedTypeRef";
+	public static final String GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD = "substTypeVars_implicitUpperBoundOfWildcard";
 	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER = "StructuralTypingComputer";
+	public static final String GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY = "N4JSTypeSystem#checkTypeArgumentCompatibility";
 	public static final String GUARD_REDUCER_IS_SUBTYPE_OF = "Reducer#isSubtypeOf";
 
 	/**
@@ -296,54 +298,6 @@ class RuleEnvironmentExtensions {
 		return if(storage!==null) storage.get(typeVar) else Collections.emptyList();
 	}
 
-	/**
-	 * For semantics, see xsemantics rules subtypeRefExistentialTypeRefLeft/Right.
-	 */
-	def static void addExistentialTypeToBeReopened(RuleEnvironment G, ExistentialTypeRef existentialTypeRef) {
-		if(existentialTypeRef.getWildcard!==null)
-			G.put(KEY__REOPEN_EXISTENTIAL_TYPES->existentialTypeRef.getWildcard,Boolean.TRUE,true);
-	}
-
-	/**
-	 * For semantics, see xsemantics rules subtypeRefExistentialTypeRefLeft/Right.
-	 */
-	def static boolean isExistentialTypeToBeReopened(RuleEnvironment G, ExistentialTypeRef existentialTypeRef) {
-		return existentialTypeRef.getWildcard!==null && G.get(KEY__REOPEN_EXISTENTIAL_TYPES->existentialTypeRef.getWildcard)!==null;
-	}
-
-	def static boolean isExistentialTypeToBeReopened(RuleEnvironment G, EObject obj, boolean searchContents) {
-		if(obj instanceof ExistentialTypeRef) {
-			if(G.isExistentialTypeToBeReopened(obj)) {
-				return true;
-			}
-		}
-		if(searchContents && obj!==null) {
-			return obj.eAllContents.filter(ExistentialTypeRef).exists[G.isExistentialTypeToBeReopened(it)];
-		}
-		return false;
-	}
-
-	def static ExistentialTypeRef createExistentialTypeRef(TypeVariable typeVar, Wildcard wildcard) {
-		var ExistentialTypeRef etr = TypeRefsFactory.eINSTANCE.createExistentialTypeRef();
-		etr.wildcard = wildcard
-		etr.boundTypeVariable = typeVar
-		return etr;
-	}
-
-	/**
-	 * For the moment we won't use that; it should also take intersection
-	 * types into consideration.
-	 */
-	def static ExistentialTypeRef createExistentialTypeRef(TypeVariable typeVar) {
-		createExistentialTypeRef(
-			typeVar,
-			TypeRefsFactory.eINSTANCE.createWildcard => [
-				val declUB = typeVar.declaredUpperBound;
-				declaredUpperBound = TypeUtils.copyIfContained(declUB);
-			]
-		)
-	}
-
 	def static void setTypeReplacement(RuleEnvironment G, ITypeReplacementProvider replacementProvider) {
 		G.put(KEY__TYPE_REPLACEMENT, replacementProvider);
 	}
@@ -371,6 +325,26 @@ class RuleEnvironmentExtensions {
 		val replacementProvider = G.get(KEY__TYPE_REPLACEMENT) as ITypeReplacementProvider;
 		val replacement = replacementProvider?.getReplacement(type);
 		return if(replacement!==null) replacement else type;
+	}
+
+	/**
+	 * The {@link ExistentialTypeRef}s with the given IDs will *not* be reopened by method
+	 * {@link N4JSTypeSystem#upperBoundWithReopen(RuleEnvironment, TypeArgument)}, and similar methods.
+	 */
+	def static void addFixedCapture(RuleEnvironment G, ExistentialTypeRef etr) {
+		val id = etr.id;
+		if (id !== null) {
+			G.put(KEY__FIXED_CAPTURE_ID -> id, Boolean.TRUE);
+		}
+	}
+
+	/**
+	 * Tells whether the given {@link ExistentialTypeRef}s has an ID that was registered via
+	 * {@link #addFixedCapture(RuleEnvironment, ExistentialTypeRef)} to avoid it to be reopened by method
+	 * {@link N4JSTypeSystem#upperBoundWithReopen(RuleEnvironment, TypeArgument)}, and similar methods.
+	 */
+	def static boolean isFixedCapture(RuleEnvironment G, ExistentialTypeRef etr) {
+		return G.get(KEY__FIXED_CAPTURE_ID -> etr.id) !== null;
 	}
 
 	def static TypeRef createTypeRefFromUpperBound(TypeVariable typeVar) {
@@ -848,11 +822,7 @@ class RuleEnvironmentExtensions {
 		// ignore invalid type mappings
 		if(!G.isValidTypeMapping(key,value))
 			return;
-
-		// resolve wildcards
-		val actualValue = TypeUtils.captureWildcard(key, value);  // TODO capture before calling #isValidMapping() and return FALSE from isValidMapping() for Wildcard!!!!
-
-		G.put(key, actualValue);
+		G.put(key, value);
 	}
 
 	/**
@@ -884,10 +854,6 @@ class RuleEnvironmentExtensions {
 		// ignore void (type 'void' is never a valid substitution for a type variable)
 		if (value instanceof ParameterizedTypeRef)
 			if (value.declaredType instanceof VoidType)
-				return false;
-		// ignore null (null does not provide any clue about key's type)
-		if (value instanceof ParameterizedTypeRef)
-			if (value.declaredType instanceof NullType)
 				return false;
 		return true;
 	}

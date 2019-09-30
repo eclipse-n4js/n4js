@@ -18,7 +18,6 @@ import java.nio.file.Path;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
-import org.eclipse.n4js.jsdoc2spec.adoc.SourceEntryFactory;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -44,39 +43,51 @@ public class RepoRelativePath {
 	 * Creates the RepoRelativePath from a given resource. Returns null, if resource is not contained in a repository.
 	 * If a repository is found, the simple name of the origin is used.
 	 */
-	public static RepoRelativePath compute(FileURI uri, IN4JSCore n4jsCore) {
-		Optional<? extends IN4JSProject> optProj = n4jsCore.findProject(uri.toURI());
+	public static RepoRelativePath compute(FileURI uriOfResource, IN4JSCore n4jsCore) {
+		Optional<? extends IN4JSProject> optProj = n4jsCore.findProject(uriOfResource.toURI());
 		if (!optProj.isPresent()) {
 			return null;
 		}
 
 		IN4JSProject project = optProj.get();
 
-		Path pathFile = uri.toFileSystemPath();
-		Path pathProj = project.getLocation().toFileSystemPath();
-		String fileRelString = pathProj.relativize(pathFile).toString();
+		Path pathOfResource = uriOfResource.toFileSystemPath();
+		Path pathOfProject = project.getLocation().toFileSystemPath();
+		String fileOfResourceInsideProject = pathOfProject.relativize(pathOfResource).toString();
 		// strip anchor part if present, i.e. path to type within the resource
-		int anchorIndex = fileRelString.indexOf("#");
+		int anchorIndex = fileOfResourceInsideProject.indexOf("#");
 		if (anchorIndex >= 0)
-			fileRelString = fileRelString.substring(0, anchorIndex);
+			fileOfResourceInsideProject = fileOfResourceInsideProject.substring(0, anchorIndex);
 
-		File file = pathProj.toAbsolutePath().resolve(fileRelString).toFile();
-		if (!file.exists()) {
+		File absolutePathOfResource = pathOfProject.toAbsolutePath().resolve(fileOfResourceInsideProject).toFile();
+		if (!absolutePathOfResource.exists()) {
 			return null;
 		}
 
-		File repoFolder = getRepoFolder(file);
-		String repoName = getRepoName(repoFolder);
-		String cloneFolder = repoFolder == null ? SourceEntryFactory.NO_FOLDER : repoFolder.getName();
-		N4JSProjectName projName = project.getProjectName();
-		String repoPath = getRepoPath(file.toString(), projName, cloneFolder);
+		// note: for retrieving the repo relative folder name, we must not rely on single path segments as they
+		// may appear more than once. E.g. "n4js" maybe the folder of the oomph installation, the simple name of the
+		// repository folder and a folder representing the package n4js.
+		File repoFolder = getRepoFolder(absolutePathOfResource);
+		// for resolving the repo relative path,
+		// we only care about the repo folder name, since the folder may be named differently
 
-		String projPath = '/' + fileRelString;
-		if (File.separatorChar != '/') {
-			projPath = projPath.replace(File.separatorChar, '/');
-			repoPath = repoPath.replace(File.separatorChar, '/');
+		String pathOfProjectInRepo = getRepoPath(repoFolder, pathOfProject.getParent().toFile());
+		if (pathOfProjectInRepo == null) {
+			return null;
 		}
-		return new RepoRelativePath(repoName, repoPath, projName, projPath, -1);
+		String pathOfResourceInProject = '/' + fileOfResourceInsideProject;
+
+		// ensure slashes
+		if (File.separatorChar != '/') {
+			pathOfResourceInProject = pathOfResourceInProject.replace(File.separatorChar, '/');
+			pathOfProjectInRepo = pathOfProjectInRepo.replace(File.separatorChar, '/');
+		}
+
+		N4JSProjectName projName = project.getProjectName();
+		String repoName = getRepoName(repoFolder);
+		return new RepoRelativePath(repoName, pathOfProjectInRepo, // repo relative
+				projName, pathOfResourceInProject, // project relative
+				-1);
 	}
 
 	private static File getRepoFolder(File file) {
@@ -117,7 +128,7 @@ public class RepoRelativePath {
 			return null;
 		}
 		try {
-			String configStr = Files.toString(config, Charset.defaultCharset());
+			String configStr = Files.asCharSource(config, Charset.defaultCharset()).read();
 			Config cfg = new Config();
 
 			cfg.fromText(configStr);
@@ -142,17 +153,16 @@ public class RepoRelativePath {
 		return null;
 	}
 
-	private static String getRepoPath(String absFileName, N4JSProjectName projName, String repoCloneName) {
-		int startIdx = -1;
-		String repoNameSlashes = "/" + repoCloneName + "/";
-		String projNameSlashes = "/" + projName.getRawName() + "/";
-		startIdx = absFileName.indexOf(repoNameSlashes) + repoNameSlashes.length();
-		int endIdx = absFileName.indexOf(projNameSlashes);
-		if (startIdx == -1 || endIdx == -1 || endIdx < startIdx) {
-			return "";
+	private static String getRepoPath(File repoFolder, File fileInsideRepo) {
+
+		String repoFolderAbs = repoFolder.getAbsolutePath();
+		String fileInsideRepoAbs = fileInsideRepo.getAbsolutePath();
+
+		if (fileInsideRepoAbs.startsWith(repoFolderAbs)) {
+			return fileInsideRepoAbs.substring(repoFolderAbs.length());
 		}
-		String repoPath = absFileName.substring(startIdx, endIdx);
-		return repoPath;
+
+		return null; // something went wrong
 	}
 
 	/**
@@ -160,10 +170,10 @@ public class RepoRelativePath {
 	 */
 	public final String repositoryName;
 	/**
-	 * Absolute path in repository (with leading slash). This may be empty; this happens if the project folder is a top
-	 * level folder of the project.
+	 * Absolute path of the project in repository (with leading slash). This may be empty; this happens if the project
+	 * folder is a top level folder of the repository.
 	 */
-	public final String pathInRepository;
+	public final String pathOfProjectInRepo;
 	/**
 	 * Name of the Eclipse project.
 	 */
@@ -177,13 +187,15 @@ public class RepoRelativePath {
 	 */
 	public final int lineNumber;
 
-	private RepoRelativePath(String repositoryName, String pathInRepository, N4JSProjectName projectName,
-			String pathInProject,
-			int lineNumber) {
+	/**
+	 * The parameters are copied to the fields (with the same name), see field description for their meaning.
+	 */
+	private RepoRelativePath(String repositoryName, String pathOfProjectInRepo, N4JSProjectName projectName,
+			String pathOfResourceInProject, int lineNumber) {
 		this.repositoryName = repositoryName;
-		this.pathInRepository = pathInRepository;
+		this.pathOfProjectInRepo = pathOfProjectInRepo;
 		this.projectName = projectName;
-		this.pathInProject = pathInProject;
+		this.pathInProject = pathOfResourceInProject;
 		this.lineNumber = lineNumber;
 	}
 
@@ -194,7 +206,7 @@ public class RepoRelativePath {
 		ICompositeNode node = NodeModelUtils.getNode(testMember.getAstElement());
 		if (node != null) {
 			final int line = node.getStartLine();
-			final RepoRelativePath rrp = new RepoRelativePath(repositoryName, pathInRepository, projectName,
+			final RepoRelativePath rrp = new RepoRelativePath(repositoryName, pathOfProjectInRepo, projectName,
 					pathInProject, line);
 			return rrp;
 		}
@@ -214,7 +226,7 @@ public class RepoRelativePath {
 		int d = repositoryName.compareTo(rrp.repositoryName);
 		if (d != 0)
 			return d;
-		d = pathInRepository.compareTo(rrp.pathInRepository);
+		d = pathOfProjectInRepo.compareTo(rrp.pathOfProjectInRepo);
 		if (d != 0)
 			return d;
 		d = projectName.compareTo(rrp.projectName);
@@ -230,7 +242,7 @@ public class RepoRelativePath {
 	@Override
 	public int hashCode() {
 		int hash = repositoryName.hashCode() * 31;
-		hash += (hash + pathInRepository.hashCode()) * 31;
+		hash += (hash + pathOfProjectInRepo.hashCode()) * 31;
 		hash += (hash + projectName.hashCode()) * 31;
 		hash += (hash + pathInProject.hashCode()) * 31;
 		return hash + lineNumber;
@@ -248,12 +260,12 @@ public class RepoRelativePath {
 	 * Returns the full path to the file
 	 */
 	public String getFullPath() {
-		return repositoryName + pathInRepository + projectName + pathInProject;
+		return repositoryName + pathOfProjectInRepo + projectName + pathInProject;
 	}
 
 	@Override
 	public String toString() {
-		return "repo: " + repositoryName + ", pir: " + pathInRepository + ", proj: " + projectName + ", pip: "
+		return "repo: " + repositoryName + ", pir: " + pathOfProjectInRepo + ", proj: " + projectName + ", pip: "
 				+ pathInProject + ":" + lineNumber;
 	}
 

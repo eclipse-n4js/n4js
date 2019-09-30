@@ -9,7 +9,7 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-[appendix]
+[[sec:Acronyms]]
 = Acronyms
 
 [[AC]]

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.xpect.ui.runner;
 
+import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.n4js.xpect.methods.AccessModifierXpectMethod;
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
 import org.eclipse.n4js.xpect.methods.FlowgraphsXpectMethod;
@@ -59,7 +60,7 @@ import org.junit.runner.RunWith;
 		RenameRefactoringXpectMethod.class
 })
 
-@RunWith(XpectRunner.class)
+@RunWith(N4JSXpectRunner.class)
 @XpectImport({ N4IDEXpectFileSetup.class })
 @N4IDEXpectTestFilesCollector
 public class N4IDEXpectTestClass {

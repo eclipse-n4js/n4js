@@ -29,9 +29,9 @@ pipeline {
                      ":/shared/common/apache-ant-1.9.6/bin"             +
                      ":/shared/common/maven/apache-maven-3.6.0/bin/"    +
                      ":/shared/common/node-v10.15.3-linux-x64/bin"      +
-                     ":/shared/common/java/openjdk/jdk11-x64/bin"
+                     ":/shared/common/java/openjdk/jdk-11/bin"
         MAVEN_OPTS = '-Xmx4G'
-        JAVA_HOME  = '/shared/common/java/openjdk/jdk11-x64'
+        JAVA_HOME  = '/shared/common/java/openjdk/jdk-11'
         TIMESTAMP  = new Date().format("yyyyMMddHHmm")
     }
 
@@ -115,6 +115,7 @@ pipeline {
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
                     cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip         /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
                     cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.dmg         /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
+                    cp     n4js/tools/org.eclipse.n4js.hlc/target/n4jsc.jar                         /home/data/httpd/download.eclipse.org/n4js/products/nightly/$TIMESTAMP
 
                     rm -rf /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
                     mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST

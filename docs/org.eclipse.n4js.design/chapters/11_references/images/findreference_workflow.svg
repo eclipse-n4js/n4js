@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="354.4462 -940.7537 1031.0538 821.8392" width="1031.0538" height="821.8392">
+  <defs>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 5 3 0 0 0 9 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="-750" x-height="517" cap-height="714" ascent="957.0007" descent="-212.99744" font-style="italic" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue-Italic"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 8 3 0 0 0 9 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="975.0061" descent="-216.99524" font-weight="700">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue-Bold"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2019-07-31 11:11:27 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="354.4462" y="-940.7537" width="1031.0538" height="821.8392"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_10">
+        <rect x="372.1962" y="-845.2908" width="183.5" height="78.5" fill="white"/>
+        <rect x="372.1962" y="-845.2908" width="183.5" height="78.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(377.1962 -815.2648)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="2.894" y="15">FindReferencesHandler</tspan>
+        </text>
+      </g>
+      <g id="Graphic_12">
+        <rect x="376.5" y="-654.5834" width="171.5" height="72.5" fill="white"/>
+        <rect x="376.5" y="-654.5834" width="171.5" height="72.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(381.5 -636.7814)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.406" y="15">N4JSReferenceQuery</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="48.902" y="33.448">Executor</tspan>
+        </text>
+      </g>
+      <g id="Graphic_16">
+        <rect x="772.5122" y="-652.1746" width="183.5" height="78.5" fill="yellow"/>
+        <rect x="772.5122" y="-652.1746" width="183.5" height="78.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(777.5122 -631.3726)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="4.446" y="15">InferredElementsTarget</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="41.134" y="33.448">URICollector</tspan>
+        </text>
+      </g>
+      <g id="Line_71">
+        <line x1="464.2988" y1="-766.7908" x2="465.218" y2="-664.483" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_72">
+        <rect x="424.24214" y="-732.4463" width="81" height="30" fill="white"/>
+        <text transform="translate(429.62214 -727.4463)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="7958079e-19" y="15">2. creates</tspan>
+        </text>
+      </g>
+      <g id="Line_48">
+        <line x1="772.5122" y1="-614.15904" x2="557.8991" y2="-617.0465" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_49">
+        <rect x="601.5333" y="-630.5311" width="138" height="30" fill="yellow"/>
+        <text transform="translate(606.6053 -625.5311)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">2.1 getTargetURIs</tspan>
+        </text>
+      </g>
+      <g id="Graphic_26">
+        <rect x="372.1962" y="-428.16676" width="175.5" height="78.5" fill="white"/>
+        <rect x="372.1962" y="-428.16676" width="175.5" height="78.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(377.1962 -407.36476)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.198" y="15">ConcreteSyntaxAware</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="23.934" y="33.448">ReferenceFinder</tspan>
+        </text>
+      </g>
+      <g id="Graphic_27">
+        <rect x="1201.5" y="-652.1746" width="183.5" height="78.5" fill="yellow"/>
+        <rect x="1201.5" y="-652.1746" width="183.5" height="78.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1206.5 -622.1486)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="26.294" y="15">InferredElements</tspan>
+        </text>
+      </g>
+      <g id="Line_28">
+        <line x1="1201.5" y1="-612.9246" x2="965.9122" y2="-612.9246" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_29">
+        <rect x="980.6696" y="-627.9246" width="205" height="30" fill="yellow"/>
+        <text transform="translate(985.8176 -622.9246)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="781597e-18" y="15">2.2 collectInferredElements</tspan>
+        </text>
+      </g>
+      <g id="Graphic_30">
+        <rect x="761.9181" y="-845.2908" width="190" height="78.5" fill="#c0c0ff"/>
+        <rect x="761.9181" y="-845.2908" width="190" height="78.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(766.9181 -815.2648)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="8.632" y="15">EObjectAtOffsetHelper</tspan>
+        </text>
+      </g>
+      <g id="Line_31">
+        <line x1="761.9181" y1="-806.0408" x2="565.5962" y2="-806.0408" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_32">
+        <rect x="585.42384" y="-821.0408" width="153" height="30" fill="#c0c0ff"/>
+        <text transform="translate(590.79584 -816.0408)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="61106675e-20" y="15">1. resolveElementAt</tspan>
+        </text>
+      </g>
+      <g id="Graphic_33">
+        <path d="M 796.4238 -910.1208 C 796.4238 -917.5571 793.7441 -918.4771 774.1697 -925.8365 L 773.9629 -925.9127 C 754.285 -933.349 754.0804 -933.349 733.88555 -933.349 C 706.9957 -933.349 585.42384 -933.349 585.42384 -933.349 L 585.42384 -854.849 L 796.4238 -854.849 L 796.4238 -910.1208 Z" fill="#c0c0ff"/>
+        <path d="M 796.4238 -910.1208 C 796.4238 -917.5571 793.7441 -918.4771 774.1697 -925.8365 L 773.9629 -925.9127 C 754.285 -933.349 754.0804 -933.349 733.88555 -933.349 C 706.9957 -933.349 585.42384 -933.349 585.42384 -933.349 L 585.42384 -854.849 L 796.4238 -854.849 L 796.4238 -910.1208 Z M 796.4238 -910.5039 C 796.4238 -917.5571 796.2171 -917.5571 754.0804 -917.5571 L 754.0804 -917.5571 C 754.0804 -933.272 754.0804 -933.349 735.122 -933.349" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(590.42384 -912.547)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-style="italic" font-weight="400" fill="black" x="7.764" y="15">Convert cursor position to </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-style="italic" font-weight="400" fill="black" x="8.188" y="33.448">declared element EObject</tspan>
+        </text>
+      </g>
+      <g id="Line_34">
+        <line x1="461.41643" y1="-582.0834" x2="460.3203" y2="-438.06647" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_35">
+        <path d="M 779.0333 -724.82076 C 779.0333 -733.6524 776.2774 -734.7451 756.1463 -743.4853 L 755.9336 -743.5758 C 735.6962 -752.4074 735.4857 -752.4074 714.71665 -752.4074 C 687.0622 -752.4074 562.0333 -752.4074 562.0333 -752.4074 L 562.0333 -659.1777 L 779.0333 -659.1777 L 779.0333 -724.82076 Z" fill="yellow"/>
+        <path d="M 779.0333 -724.82076 C 779.0333 -733.6524 776.2774 -734.7451 756.1463 -743.4853 L 755.9336 -743.5758 C 735.6962 -752.4074 735.4857 -752.4074 714.71665 -752.4074 C 687.0622 -752.4074 562.0333 -752.4074 562.0333 -752.4074 L 562.0333 -659.1777 L 779.0333 -659.1777 L 779.0333 -724.82076 Z M 779.0333 -725.2757 C 779.0333 -733.6524 778.8206 -733.6524 735.4857 -733.6524 L 735.4857 -733.6524 C 735.4857 -752.3161 735.4857 -752.4074 715.9883 -752.4074" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(567.0333 -724.7486)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-style="italic" font-weight="400" fill="black" x="11.636" y="15">Convert declared element </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-style="italic" font-weight="400" fill="black" x="18.988" y="34.448">EObject to </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="34.448">Target URIs</tspan>
+        </text>
+      </g>
+      <g id="Graphic_36">
+        <rect x="414.3248" y="-519.35413" width="93" height="30" fill="white"/>
+        <text transform="translate(419.6328 -514.35413)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">3. executes</tspan>
+        </text>
+      </g>
+      <g id="Graphic_37">
+        <rect x="753.2788" y="-197.91452" width="217" height="78.5" fill="#c0ffc0"/>
+        <rect x="753.2788" y="-197.91452" width="217" height="78.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(758.2788 -167.88852)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="9.268" y="15">N4JSResourceDescription</tspan>
+        </text>
+      </g>
+      <g id="Graphic_38">
+        <rect x="768.2788" y="-217.41452" width="217" height="78.5" fill="#c0ffc0"/>
+        <rect x="768.2788" y="-217.41452" width="217" height="78.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(773.2788 -187.38852)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="9.268" y="15">N4JSResourceDescription</tspan>
+        </text>
+      </g>
+      <g id="Graphic_39">
+        <rect x="782.7788" y="-242.91452" width="217" height="78.5" fill="#c0ffc0"/>
+        <rect x="782.7788" y="-242.91452" width="217" height="78.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(787.7788 -212.88852)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="9.268" y="15">N4JSResourceDescription</tspan>
+        </text>
+      </g>
+      <g id="Line_40">
+        <line x1="799.1488" y1="-217.41452" x2="546.41105" y2="-345.1998" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_41">
+        <rect x="573.0407" y="-300.47295" width="183" height="30" fill="#c0ffc0"/>
+        <text transform="translate(578.3407 -295.47295)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="7247536e-19" y="16">3.2 get</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">ImportedNames</tspan>
+        </text>
+      </g>
+      <g id="Graphic_42">
+        <rect x="847.5" y="-537.4101" width="175.5" height="78.5" fill="#c0ffc0"/>
+        <rect x="847.5" y="-537.4101" width="175.5" height="78.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(852.5 -507.3841)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="33.942" y="15">TargetURIKey</tspan>
+        </text>
+      </g>
+      <g id="Line_43">
+        <line x1="847.5" y1="-477.9917" x2="557.3446" y2="-411.3027" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_45">
+        <rect x="579.3606" y="-459.05844" width="241" height="30" fill="#c0ffc0"/>
+        <text transform="translate(584.7486 -454.05844)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="16">3.1 get </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">typesOrModulesToFind</tspan>
+        </text>
+      </g>
+      <g id="Graphic_50">
+        <rect x="358.3212" y="-235.08338" width="203.25" height="78.5" fill="white"/>
+        <rect x="358.3212" y="-235.08338" width="203.25" height="78.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(363.3212 -205.05738)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="5.657" y="15">LabellingReferenceFinder</tspan>
+        </text>
+      </g>
+      <g id="Line_51">
+        <line x1="459.9462" y1="-349.66676" x2="459.9462" y2="-244.98338" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_52">
+        <rect x="354.4462" y="-313.7561" width="211" height="30" fill="white"/>
+        <text transform="translate(359.7702 -308.7561)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">3.3 accept found references</tspan>
+        </text>
+      </g>
+      <g id="Graphic_56">
+        <path d="M 849.5 -379.56294 C 849.5 -386.43087 846.2424 -387.28057 822.4469 -394.07744 L 822.1956 -394.14777 C 798.2744 -401.0157 798.0256 -401.0157 773.476 -401.0157 C 740.7876 -401.0157 593 -401.0157 593 -401.0157 L 593 -328.5157 L 849.5 -328.5157 L 849.5 -379.56294 Z" fill="#c0ffc0"/>
+        <path d="M 849.5 -379.56294 C 849.5 -386.43087 846.2424 -387.28057 822.4469 -394.07744 L 822.1956 -394.14777 C 798.2744 -401.0157 798.0256 -401.0157 773.476 -401.0157 C 740.7876 -401.0157 593 -401.0157 593 -401.0157 L 593 -328.5157 L 849.5 -328.5157 L 849.5 -379.56294 Z M 849.5 -379.91674 C 849.5 -386.43087 849.2486 -386.43087 798.0256 -386.43087 L 798.0256 -386.43087 C 798.0256 -400.94464 798.0256 -401.0157 774.9791 -401.0157" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(598 -373.9897)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-style="italic" font-weight="400" fill="black" x=".57" y="15">Filter potential resources to search</tspan>
+        </text>
+      </g>
+      <g id="Line_58">
+        <line x1="666.86375" y1="-821.0408" x2="674.901" y2="-845.4458" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_61">
+        <line x1="703.9069" y1="-429.05844" x2="708.8931" y2="-410.57404" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_62">
+        <line x1="675.2685" y1="-300.47295" x2="689.5653" y2="-320.46317" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_63">
+        <ellipse cx="462.33555" cy="-921.2403" rx="19.7500315585624" ry="19.0134657346942" fill="white"/>
+        <ellipse cx="462.33555" cy="-921.2403" rx="19.7500315585624" ry="19.0134657346942" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_70">
+        <rect x="397.38936" y="-892.7537" width="153" height="30" fill="white"/>
+        <text transform="translate(402.47336 -887.7537)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">find references in UI</tspan>
+        </text>
+      </g>
+      <g id="Line_73">
+        <line x1="670.5333" y1="-630.5311" x2="670.5333" y2="-649.2777" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_74">
+        <path d="M 462.33555 -901.7269 L 462.33555 -873.8269 L 463.9462 -873.8269 L 463.9462 -855.6908" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

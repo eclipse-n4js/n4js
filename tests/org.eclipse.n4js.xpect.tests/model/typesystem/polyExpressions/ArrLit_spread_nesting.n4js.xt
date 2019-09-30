@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+class C2 extends B {}
+
+class G<T> {}
+
+let b: B;
+let c: C;
+
+function <T> foo(p : T) : T {return null;}
+function <T> fooArr(p : Array<T>) : G<T> {return null;}
+
+// XPECT noerrors -->
+// XPECT typeArgs of fooArr --> A
+// XPECT type of '[ b, c ]' --> Array<A>
+let v01: Array<G<A>> = [ ... foo([ fooArr( [ b, c ] ) ]) ];
+//                     α     β   γ δ       ε
+
+//[418d1c03] solving the following constraint set:
+//[418d1c03] ⟨ β <: any ⟩
+//[418d1c03] ⟨ δ <: any ⟩
+//[418d1c03] ⟨ B <: ε ⟩
+//[418d1c03] ⟨ C <: ε ⟩
+//[418d1c03] ⟨ Array<δ> :> Array<ε> ⟩
+//[418d1c03] ⟨ G<δ> <: γ ⟩
+//[418d1c03] ⟨ β :> Array<γ> ⟩
+//[418d1c03] ⟨ β <: Iterable<? extends α> ⟩
+//[418d1c03] ⟨ Array<α> <: Array<G<A>> ⟩
+//[418d1c03] inference variables: α, β, γ, δ, ε
+// ...
+//[418d1c03] SOLUTION:
+//[418d1c03] α -> G<A>
+//[418d1c03] β -> Array<G<A>>
+//[418d1c03] γ -> G<A>
+//[418d1c03] δ -> A
+//[418d1c03] ε -> A
+
+
+// XPECT noerrors -->
+// XPECT typeArgs of fooArr --> A
+// XPECT type of '[ b, c ]' --> Array<A>
+let v02: Array<G<A>> = foo([ ... foo([ fooArr( [ b, c ] ) ]) ]);
+
+
+// XPECT noerrors -->
+// XPECT typeArgs of fooArr --> A
+// XPECT type of '[ b, c ]' --> Array<B>
+// XPECT type of '[ ... [ b, c ], new C2() ]' --> Array<A>
+let v03: Array<G<A>> = foo([ ... foo([ fooArr( [ ... [ b, c ], new C2() ] ) ]) ]);

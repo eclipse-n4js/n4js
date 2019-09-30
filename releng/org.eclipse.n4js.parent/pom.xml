@@ -47,7 +47,7 @@ Contributors:
 		<tycho-version>1.4.0</tycho-version>
 
 		<!-- Xtext, Xtend and their runtime -->
-		<xtext-version>2.18.0</xtext-version>
+		<xtext-version>2.19.0</xtext-version>
 
 		<!-- maven plugins -->
 		<build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
@@ -76,6 +76,8 @@ Contributors:
 		<maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
 		<maven-verifier-plugin.version>1.1</maven-verifier-plugin.version>
 		<xslt-generator-maven-plugin.version>1.8</xslt-generator-maven-plugin.version>
+		<addjars-maven-plugin.version>1.0.5</addjars-maven-plugin.version>
+		<maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
 
 		<!-- Flags for the java compiler, e.g. -g For debug-information (see http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html) -->
 		<java-compiler-arguments></java-compiler-arguments>
@@ -83,7 +85,8 @@ Contributors:
 		<!-- headless compiler options, used in tools/org.eclipse.n4js.hlc -->
 		<hlc.name>n4jsc</hlc.name>
 		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
-		
+		<cli.fat.jar.classifier>jar-with-dependencies</cli.fat.jar.classifier>
+
 		<excludeJRE>false</excludeJRE>
 		
 		<!-- some memory -->
@@ -202,35 +205,6 @@ Contributors:
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-p2-repository-plugin</artifactId>
 					<version>${tycho-version}</version>
-				</plugin>
-				<!-- enable source feature generation (next two plug-ins required) -->
-				<plugin>
-					<groupId>org.eclipse.tycho.extras</groupId>
-					<artifactId>tycho-source-feature-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<executions>
-						<execution>
-							<id>source-feature</id>
-							<phase>package</phase>
-							<goals>
-								<goal>source-feature</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-p2-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<executions>
-						<execution>
-							<id>attach-p2-metadata</id>
-							<phase>package</phase>
-							<goals>
-								<goal>p2-metadata</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 
 				<!-- APACHE MAVEN PLUGINS -->

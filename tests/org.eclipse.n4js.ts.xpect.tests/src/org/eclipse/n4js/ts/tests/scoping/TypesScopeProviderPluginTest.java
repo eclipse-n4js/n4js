@@ -10,17 +10,17 @@
  */
 package org.eclipse.n4js.ts.tests.scoping;
 
-import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
-import org.eclipse.xpect.runner.XpectRunner;
+import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.runner.XpectTestFiles;
 import org.eclipse.xpect.xtext.lib.tests.ScopingTest;
 import org.junit.runner.RunWith;
 
 /**
  */
-@RunWith(XpectRunner.class)
+@RunWith(N4JSXpectRunner.class)
 @XpectSuiteClasses({ ScopingTest.class })
-@LspCompatibleXpectTestFiles(baseDir = "model/scoping")
+@XpectTestFiles(baseDir = "model/scoping")
 public class TypesScopeProviderPluginTest {
 	// nothing more required
 }

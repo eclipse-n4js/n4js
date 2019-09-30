@@ -10,18 +10,14 @@
  */
 package org.eclipse.n4js.binaries.nodejs;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Collections.singletonList;
 
 import java.io.File;
 import java.net.URI;
-import java.util.Map;
-import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.BinariesConstants;
 import org.eclipse.n4js.binaries.BinariesLocatorHelper;
-import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -35,7 +31,7 @@ import com.google.inject.Singleton;
  * Representation of a {@code Node.js} binary.
  */
 @Singleton
-public class NodeJsBinary implements Binary {
+public class NodeJsBinary extends Binary {
 
 	/** don't access directly, use {@link #getDefaultNodePath()} */
 	private String memoizedCalculatedNodePath = null;
@@ -45,9 +41,6 @@ public class NodeJsBinary implements Binary {
 
 	@Inject
 	private Provider<NpmBinary> npmBinaryProvider;
-
-	@Inject
-	private BinariesPreferenceStore preferenceStore;
 
 	@Inject
 	private BinariesLocatorHelper nodeBinaryLocatorHelper;
@@ -76,8 +69,13 @@ public class NodeJsBinary implements Binary {
 	}
 
 	@Override
-	public String getBinaryAbsolutePath() {
-		return getUserNodePathOrDefault() + File.separator + BinariesConstants.NODE_BINARY_NAME;
+	public String getBinaryDirectory() {
+		return getUserNodePathOrDefault();
+	}
+
+	@Override
+	public String getBinaryFileName() {
+		return BinariesConstants.NODE_BINARY_NAME;
 	}
 
 	@Override
@@ -86,60 +84,13 @@ public class NodeJsBinary implements Binary {
 	}
 
 	@Override
-	public Binary getParent() {
-		return null;
-	}
-
-	@Override
 	public Iterable<Binary> getChildren() {
 		return singletonList(npmBinaryProvider.get());
 	}
 
 	@Override
-	public Map<String, String> updateEnvironment(final Map<String, String> environment) {
-		final String additionalNodePath = getUserNodePathOrDefault();
-		final String currentPathValue = environment.get(PATH);
-		if (isNullOrEmpty(currentPathValue)) {
-			environment.put(PATH, additionalNodePath);
-		} else {
-			environment.put(PATH, currentPathValue + File.pathSeparator + additionalNodePath);
-		}
-		return environment;
-	}
-
-	@Override
-	public URI getUserConfiguredLocation() {
-		return preferenceStore.getPath(this);
-	}
-
-	@Override
 	public IStatus validate() {
 		return validator.validate(this);
-	}
-
-	/**
-	 * Custom hashcode, used to persist settings in the map {@link BinariesPreferenceStore} internal map. Key part about
-	 * that hashCode is that it will be the same for every instance of this class, allowing to easily serialize
-	 * {@code Binary -> URI} setting even between platform runs.
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(getId());
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof NodeJsBinary)) {
-			return false;
-		}
-		final NodeJsBinary other = (NodeJsBinary) obj;
-		return Objects.equals(getId(), other.getId());
 	}
 
 	/**

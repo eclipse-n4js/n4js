@@ -89,7 +89,7 @@ class NodeTestRunner  {
             testCatalog.testDescriptors = descriptors;
         }
         
-        const log = options.quiet ? function() {} : console.log.bind(console);
+        const log = options.quiet ? function(...p) {} : console.log.bind(console);
         this.consoleReporter.cliColor = cli_color_.default;
         this.consoleReporter.setLogger(log);
 

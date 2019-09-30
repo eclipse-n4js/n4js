@@ -10,20 +10,17 @@
  */
 package org.eclipse.n4js.common.unicode;
 
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.COMBINING_SPACING_MARK;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.CONNECTOR_PUNCTUATION;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.DECIMAL_DIGIT_NUMBER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.LETTER_NUMBER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.LOWERCASE_LETTER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.MODIFIER_LETTER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.NON_SPACING_MARK;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.OTHER_LETTER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.SPACE_SEPARATOR;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.TITLECASE_LETTER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.UPPERCASE_LETTER;
-
-import com.ibm.icu.lang.UCharacter;
-import com.ibm.icu.lang.UCharacterEnums.ECharacterCategory;
+import static java.lang.Character.COMBINING_SPACING_MARK;
+import static java.lang.Character.CONNECTOR_PUNCTUATION;
+import static java.lang.Character.DECIMAL_DIGIT_NUMBER;
+import static java.lang.Character.LETTER_NUMBER;
+import static java.lang.Character.LOWERCASE_LETTER;
+import static java.lang.Character.MODIFIER_LETTER;
+import static java.lang.Character.NON_SPACING_MARK;
+import static java.lang.Character.OTHER_LETTER;
+import static java.lang.Character.SPACE_SEPARATOR;
+import static java.lang.Character.TITLECASE_LETTER;
+import static java.lang.Character.UPPERCASE_LETTER;
 
 import org.eclipse.n4js.common.unicode.generator.UnicodeGrammarGenerator;
 
@@ -40,12 +37,11 @@ public class CharTypes {
 	 * </p>
 	 *
 	 * <p>
-	 * That is, {@code c} is either a {@link ECharacterCategory#NON_SPACING_MARK} or
-	 * {@link ECharacterCategory#COMBINING_SPACING_MARK}
+	 * That is, {@code c} is either a {@link Character#NON_SPACING_MARK} or {@link Character#COMBINING_SPACING_MARK}
 	 * </p>
 	 */
 	public static boolean isCombiningMark(int c) {
-		int type = UCharacter.getType(c);
+		int type = Character.getType(c);
 		boolean result = type == NON_SPACING_MARK || type == COMBINING_SPACING_MARK;
 		return result;
 	}
@@ -56,11 +52,11 @@ public class CharTypes {
 	 * </p>
 	 *
 	 * <p>
-	 * That is, {@code c} is a {@link ECharacterCategory#DECIMAL_DIGIT_NUMBER}
+	 * That is, {@code c} is a {@link Character#DECIMAL_DIGIT_NUMBER}
 	 * </p>
 	 */
 	public static boolean isDigit(int c) {
-		int type = UCharacter.getType(c);
+		int type = Character.getType(c);
 		boolean result = type == DECIMAL_DIGIT_NUMBER;
 		return result;
 	}
@@ -71,11 +67,11 @@ public class CharTypes {
 	 * </p>
 	 *
 	 * <p>
-	 * That is, {@code c} is a {@link ECharacterCategory#CONNECTOR_PUNCTUATION}
+	 * That is, {@code c} is a {@link Character#CONNECTOR_PUNCTUATION}
 	 * </p>
 	 */
 	public static boolean isConnectorPunctuation(int c) {
-		int type = UCharacter.getType(c);
+		int type = Character.getType(c);
 		boolean result = type == CONNECTOR_PUNCTUATION;
 		return result;
 	}
@@ -86,14 +82,13 @@ public class CharTypes {
 	 * </p>
 	 *
 	 * <p>
-	 * That is, {@code c} is either a {@link ECharacterCategory#UPPERCASE_LETTER},
-	 * {@link ECharacterCategory#LOWERCASE_LETTER}, {@link ECharacterCategory#TITLECASE_LETTER},
-	 * {@link ECharacterCategory#MODIFIER_LETTER}, {@link ECharacterCategory#OTHER_LETTER} or
-	 * {@link ECharacterCategory#LETTER_NUMBER}
+	 * That is, {@code c} is either a {@link Character#UPPERCASE_LETTER}, {@link Character#LOWERCASE_LETTER},
+	 * {@link Character#TITLECASE_LETTER}, {@link Character#MODIFIER_LETTER}, {@link Character#OTHER_LETTER} or
+	 * {@link Character#LETTER_NUMBER}
 	 * </p>
 	 */
 	public static boolean isLetter(int c) {
-		int type = UCharacter.getType(c);
+		int type = Character.getType(c);
 		boolean result = type == UPPERCASE_LETTER || type == LOWERCASE_LETTER || type == TITLECASE_LETTER
 				|| type == MODIFIER_LETTER || type == OTHER_LETTER || type == LETTER_NUMBER;
 		return result;
@@ -105,11 +100,11 @@ public class CharTypes {
 	 * </p>
 	 *
 	 * <p>
-	 * That is, {@code c} is a {@link ECharacterCategory#SPACE_SEPARATOR}
+	 * That is, {@code c} is a {@link Character#SPACE_SEPARATOR}
 	 * </p>
 	 */
 	public static boolean isSpaceSeparator(int c) {
-		int type = UCharacter.getType(c);
+		int type = Character.getType(c);
 		boolean result = type == SPACE_SEPARATOR;
 		return result;
 	}

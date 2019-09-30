@@ -19,21 +19,21 @@ var red : Color = Color.RED;
 // XPECT scopeWithPosition at 'Country.|US' --> DE - T15, US - T15, TR - T15, ...
 var us : Country = Country.US;
 /* XPECT scope at 'us.|value' ---
-__proto__, constructor, toString, toLocaleString,
+__proto__, toString, toLocaleString,
 valueOf, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable,
 name, value
 --- */
 var s : string = us.value;
 /* XPECT scope at 'red.|name' ---
-__proto__, constructor, toString, toLocaleString,
+__proto__, toString, toLocaleString,
 valueOf, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable,
 name, value
 --- */
 var s2 : string = red.name;
 /* XPECT scope at 'DE.|value' ---
-__proto__, constructor, toString, toLocaleString,
+__proto__, toString, toLocaleString,
 valueOf, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable,
 name, value

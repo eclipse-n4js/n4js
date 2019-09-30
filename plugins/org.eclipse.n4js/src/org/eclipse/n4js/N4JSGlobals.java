@@ -141,7 +141,7 @@ public final class N4JSGlobals {
 	 */
 	public static final String NPM = "npm";
 	/**
-	 * Name of the npm "node_modules" folder.
+	 * Name of the npm node_modules folder.
 	 */
 	public static final String NODE_MODULES = "node_modules";
 	/**

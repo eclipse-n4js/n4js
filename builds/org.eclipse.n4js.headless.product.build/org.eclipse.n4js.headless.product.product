@@ -34,7 +34,6 @@
       <plugin id="com.fasterxml.jackson.core.jackson-databind"/>
       <plugin id="com.google.guava"/>
       <plugin id="com.google.inject"/>
-      <plugin id="com.ibm.icu"/>
       <plugin id="com.jcraft.jsch"/>
       <plugin id="javaewah"/>
       <plugin id="javax.inject"/>

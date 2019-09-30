@@ -1,0 +1,287 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Binding
+:find:
+
+WARNING: This section may be outdated!
+
+[[sec:Binding_Design_Rationale]]
+[.language-n4js]
+== Design Rationale
+
+Binding references to declarations follows the Xtext mechanism based on local `N4JSScopeProvider` and a global `N4JSGlobalScopeProvider` scope providers. The basic question is: to which elements are references bound to. This in particular interesting for all kind of type declarations, including functions as they are interpreted as types. These declarations are Janus-faced: On the one side, they are targets of type references as `Type`, and on the other side they can also be target of identifier references bound to some so called `IdentifiableElement`. As explained in <<_type_index>>, special type objects (`TClass` etc.) are created from the original declarations. These type objects are used as targets for both kind of references. The following table summarizes the reference-target relations relevant for N4JS (not the standalone type grammar).
+
+// TODO: something missing from this table below
+.N4JS Cross References
+[cols="<,<"]
+|===
+|Reference |Target Type
+
+2+h|N4JS
+|ImportDeclaration.importedModule | TModule
+|NamedImportSpecifier.importedElement | types.IdentifiableElement
+|IdentifierRef.id | types.IdentifiableElement
+|ParameterizedPropertyAccessExpression.property | types.TMethod
+|PropertyAccessExpression.property | types.TMember
+|N4Getter/N4SetterDeclaration.field | N4FieldDeclaration
+|Continue/Break-Statement.label | LabelledStatement
+2+|Type Expressions
+|ParameterizedTypeRef.declaredType | Type
+|===
+
+<<fig:cd_scoping>> gives an overview over the most important classes in the scoping package, with the `N4JSScopeProvider` and the used customized scopes created by the scope providers.
+
+[[fig:cd_scoping]]
+[.center]
+image::{find}images/cd_scoping.svg[title="Overview Scoping Package"]
+
+
+[[sec:Binding_to_Members]]
+[.language-n4js]
+== Binding to Members
+
+Members of different types, such as classes and also record types or enumerations, are bound using the `MemberScopeProvider`. This often returns a `MemberScope`, which directly works on the members. Most types with members are implemented by subclasses of `ContainerType`, using `CollectMembersHelper` to collect all members and `FindMemberHelper` for retrieving a member by its name via `ContainerTypes`. Ensure that when types with members are added to override appropriate methods in all of these related classes (e.g., `CollectMembersHelper`, `AbstractHierachyTraverser` and `FindMemberHelper` uses polymorphic dispatch to handle different subtypes – so you won’t be able to find a member if you do not adjust these helpers).
+
+[[sec:Binding_Getter_Setter]]
+== Getter / Setter Binding
+
+For customized binding of getters / setters, see <<sec:Field_Accessors,Accessors>>.
+
+[[chap:Statics]]
+== Static Member Binding
+
+For customized binding of static members, see <<sec:Static_Members,Static Members>>.
+
+[[sec:Binding_Enumeration]]
+== Enumeration Literals Binding
+
+* introduced new type ref EnumTypeRef: it behaves comparable to ClassifierTypeRef, but with the difference that the MemberScopeProvider filters for a given EnumTypeRef filters all literals of the contained TEnum (in comparison the MemberScopeProvider filters for a given ClassifierTypeRef all static members of the contained classifier)
+* it isn’t possible to access literals on a enumeration literal itself, although this literal is typed as TEnum (that contains TEnumLiterals)
+* as there are currently no additional fields and operations for enumeration literals defined (in Java there is name and value()), the scope for literals is currently empty
+
+[[sec:Accessibility_of_types_and_members]]
+[.language-n4js]
+== Accessibility of types and members
+
+Member access and type access has to be constrained and validated against the accessibility rules of N4JS. Therefore, the scoping annotates certain elements as erroneous to detect invalid references.
+
+Basically two different approaches are used to implement that behavior:
+
+* The `VisibilityAwareTypeScope` and `VisibilityAwareMemberScope` decorate an existing scope to validate the result on access. This allows to lazily check the visibility of the returned element. If it is not accessible, it is wrapped in a `AbstractDescriptionWithError` which will be indentified as such by the `ErrorAwareLinkingService`. Before the binding is resolved and the EMF proxy is replaced, the error message is used to create an EMF diagnostic.
+* For other cases, the scopes are produced differently, e.g. if all elements are easily enumerable and have to be collected before the scope is created (e.g. for imported elements), the scoped elements are validated eagerly to put them into the correct layer of scopes. That is, the valid descriptions may shadow the invalid description. Since there are more error conditions for these cases, e.g. duplicate imports and similar cases, the accessibility is checked before the concrete member is accessed. All the instances `AbstractDescriptionWithError` are put into the `MapBasedScope` immediately.
+
+In that sense, accessibility checks are basically implemented as decorators for the scoping itself. Bindings are established but flagged as errors.
+
+Default visibility of members is calculated in `Types.xcore` (in `getTypeAccessModifier` and `getMemberAccessModifier` etc.). Visibility is checked in `org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker` and validators.
+
+
+[.language-n4js]
+[[sec:Member_Scope_Example]]
+== Member Scope Example
+In this section, we are going to have a look at the creation process of `MemberScope`.
+
+.C.n4js
+[source]
+----
+export public class C {
+	 private m1: int;
+	 public m2: int;
+}
+----
+
+.Test.n4js
+[source]
+----
+import { C } from "C";
+
+let c: C = new C();
+c.m1;  // Error -> The field m1 is not visible
+c.m2;  // OK    -> m2 is visible at this context
+----
+
+
+Assume that we need to figure out to which element the `ParameterizedPropertyAccessExpression c.m1` in the `ExpressionStatement c.m1` binds to. To answer this question, `N4JSScopeProvider.getScope(context, reference)` is triggered whereby `context` is the `ParameterizedPropertyAccessExpression` and `reference` is `EReference property` (`property` is the cross-reference element defined in `ParameterizedPropertyAccessExpression` 's grammar).
+
+`N4JSScopeProvider.getScope(context, reference)` does not implement the scoping but delegates to corresponding methods based on the type of `context`. In our example, since `context` is a `ParameterizedPropertyAccessExpression`, the scoping logic is delegated to the method that creates a *MemberScope* for the context `ParameterizedPropertyAccessExpression c.m1` based on the receiver type of `c` which is class `C`.
+The resulting scope instance returned by `N4JSScopeProvider.getScope()` in our example is of type `TypingStrategyAwareMemberScope` as shown in <<fig:memberscope-example>> .
+
+[[fig:memberscope-example]]
+image::{find}images/memberscope_example.svg[title="Member scope hierarchy", align=center]
+
+
+In the hierarchy, the top-level scope is the NULL scope. Directly below the NULL scope is a MemberScope which contains all members of `N4Object` since the class `C` implicitly inherits `N4Object`. The other `MemberScope` instance beneath contains all members of the class `C` *regardless of their visibility*. These members are `m1` and `m2`. While `m2` is can be accessed by `c.m2`, `m1` it not visible at `c.m1`. The `VisibilityAwareMemberScope` implements precisely this behavior. In particular, it returns all members of `C` that are visible at the current `context` (here the element `m2`),  while wrapping non-visible members (here the element `m`) in `InvisibleMemberDescription` instances. These `InvisibleMemberDescription` instances of type `IEObjectDescriptionWithError` contain issue code and error message related to accessibility problems and are recognized during the error-aware linking phase done by `ErrorAwareLinkingService`. It is worth to emphasize the motivation behind use of `IEObjectDescriptionWithError` is to provide more informative error messages to the user other than _Cannot reference element..._ Another example of `IEObjectDescriptionWithError` is `WrongWriteAccessDescription` that is used when we, try to write to a getter and no corresponding setter exists.
+
+
+[[sec:Scoping_for_Members_of_Composed_Type_Explained]]
+[.language-n4js]
+== Scoping for Members of Composed Type (Union/Intersection) Example
+In this section, we will have a look at how scoping is implemented for composed type, i.e. union or intersection type with an example of union type. Intersection is done similarly. Before reading this, it is strongly recommended to read <<sec:Member_Scope_Example>> first.
+
+
+.Defs.n4js
+[source]
+----
+export public class C {
+	 private m1: int;
+	 public m2: int;
+}
+
+export public class D {
+	 private m1: int;
+	 get m2(): int { return 42; };
+}
+----
+
+.Test.n4js
+[source]
+----
+import { C, D } from "Defs";
+
+let cud : C|D;
+
+cud.m2 = 10;
+----
+
+Assume that we need to find out to what element the `ParameterizedPropertyAccessExpression cud.m2` in the `ExpressionStatement cud.m2` binds to.
+This is a question for scoping. Since the receiver type of `cud` is a union type `C|D`, a `UnionMemberScope` is created that contains two subscopes, each of which corresponds to an individual type in the union. The resulting scope hierarchy is graphically depicted in <<fig:unionmemberscope-example>>.
+
+[[fig:unionmemberscope-example]]
+image::{find}images/unionmemberscope_example.svg[title="Union member scope hierarchy", align=center]
+
+The two subscopes are of type `TypingStrategyAwareMemberScope` and created exactly the same way as described in <<sec:Member_Scope_Example>>.
+The `UnionMemberScope` instance contains a list of subscopes for all types involved in the union and is responsible for constructing an `IEObjectDescription` instance for `m2` by merging all members of the name `m2` found in all subscopes.
+Merging members requires considering a variety of combinations (fields, setters getters, optional/variadic parameters etc.) and thus can become very complicated. To reduce the complexity, the recently refactored implementation splits the proccess into three separate steps.
+
+
+Step 1: Collect information
+
+During this phase, members with the name `m2` are looked up in each subscope and collected into an `ComposedMemberInfo` instance by `ComposedMemberInfoBuilder`.
+The first subscope (left branch in the <<fig:unionmemberscope-example>>) returns an `EObjectDescription` wrapping the `TField m2` of class `C` and hence `TField m2` is added to the `ComposedMemberInfo` instance. The second subscope (right branch in the <<fig:unionmemberscope-example>>) returns a `WrongWriteAccessDescription` wrapping the `TGetter m2` of class `D` and hence `TGetter m2` is added to `ComposedMemberInfo` instance. The reason for `WrongWriteAccessDescription` because `cud.m2` is trying to write to the getter of the same name in `D`.
+
+At the end of this step, two members `public TField m2: int` and `project TGetter m2(): int` are added to `ComposedMemberInfo`.
+
+Step 2: Merge members
+
+This phase merges members of the same name into a composed member based on the information about these members collected in Step 1. Note that merge rules can become quite complicated as many situations must be considered. Sometimes, it is not possible to merge at all. If the merge is possible, we need to consider the following properties, among others,
+
+* Member kind: what kind of member is the merge result. For instance, what do we get when we merge a field with a setter?
+* Type of merge member: What is the return/parameter type of the merge result?
+* Accessibility: what is the accessibility of the merge result?
+* Optionality/Variadic: Should a parameter of the merge be optional or variadic?
+
+
+The actual merge rules are implemented in the class `UnionMemberFactory` which delegates to either of the classes `UnionMethodFactory`, `UnionFieldFactory`, `UnionGetterFactory` and `UnionSetterFactory`.
+
+In our example,
+The merge result of `public TField m2: int` and `project TGetter m2(): int` are merged into a `project TGetter m2: int` .
+
+Step 3: Construct the scope entry
+
+In this final step, the actual IEObjectDescription for `m2` is constructed. In our example, since there exists one subscope exposing an `EObjectDescriptionWithError` (here `WrongWriteAccessDescription`), the final result is an instance of `UnionMemberDescriptionWithError`. This error instance is recognized during the linking phase and the error message of the subscope regarding `WrongWriteAccessDescription` is displayed: _Union combines fields and getters with name m2 and therefore property m2 is read-only._
+
+More details can be found in the API documentation in the code. A good starting point is the class `ComposedMemberScope`.
+
+
+[[sec:Binding_of_Structurally_References_Types]]
+[.language-n4js]
+== Structurally References Types
+
+Scoping of structurally referenced types is similar to binding of members. The structural typing modifier basically filters the members of a type. That is, the structural modifier filters out all non-public members, and the field-only modifier only accept fields. Thus, similar to accessibility aware scoping (<<sec:Accessibility_of_types_and_members>>), the `TypingStrategyAwareMemberScope` encapsulates an original scope and applies these additional filters.
+
+Bindings to additional members of a structurally referenced type is implemented in `MemberScopeProvider.members(ParameterizedTypeRefStructural ..)`. Note that the current implementation does not necessarily bind to the type model (TModule) instance, as these members are part of a type reference. That is, usually these bindings refer to the <<AC,AST>> elements. Thus, it is not possible to compare these members directly, instead, a structural comparison has to be applied.
+
+[[sec:Building]]
+== Building
+
+[[sec:Build_Phases]]
+=== Build Phases
+
+[horizontal]
+Phase 0::
+  Loading Resources
+Phase 1: prelinking::
+  Create symbols for all resources, includes creation of temporary pre-linked type models
+Phase 2: linking::
+  Resolve all links, includes fully-resolved typed models +
+  includes compilation
+
+That is, not each resource is loaded, pre-linked and linked separately. Instead, all resources are first loaded, then all resources are pre -inked, and only then all resources are linked.
+
+[[sec:Build_Scenarios]]
+=== Build Scenarios
+
+Consequences:
+
+* do not try to set any types in types builder, only create symbols there (probably not even members of types)
+
+[[sec:Lazy_linking_problem]]
+=== Lazy linking problem
+
+Lazy linking proxies in the indes may trigger reloading of AST (which leads to invalid disconnected type models):
+
+Lazy links (ending with |x in which x is an index entry of a temporary list used to resolve the link) must not be written into index.
+
+[[sec:Proxies_and_Proxy_Resolution]]
+[.language-n4js]
+== Proxies and Proxy Resolution (Overview)
+
+Here we give a brief overview of the different kinds of proxies and when / how they are created and resolved.
+
+[[xtexts-lazy-linking-proxies]]
+=== Xtext’s Lazy Linking Proxies
+
+* URI fragment is `|` $n$ (where $n$ is a non-negative integer). +
+`platform:/resource/Project/src/A.n4js#|3`
+* created by Xtext’s `LazyLinkingResource` in the AST after parsing (they are only ever created in the AST, but the types builder may copy them to the TModule, so they may appear there as well.
+* used to represent cross-references defined in the source code (i.e. name of an identifiable element used in source code to refer to that element). +
++
+Since the types builder sometimes copies proxies from AST to TModule (e.g. type of an element that was provided with an explicit type declaration in the source code), these proxies may also appear in the TModule, but only between the types builder phase and the end of the post-processing phase (or later, in case they are unresolvable).
+* resolution is handled by `pass:[#]getEObject(String)` in `LazyLinkingResource`, which recognizes lazy linking URI fragments and then forwards them to `pass:[#]getEObject(String,Triple)`, which in turn relies on the Xtext infrastructure.
+* latest time of resolution: post processing. After post processing has completed, they should all be gone (unless they are unresolvable, e.g. typo in source code).
+* fun facts:
+** the number after the pipe character is the index of a `Triple` stored in field `proxyInformation` in each `LazyLinkingResource`.
+** the resource given before the fragment (e.g. `A.n4js` in the above example) is not the resource the proxy is pointing to (i.e. the resource containing the target EObject), but the resource from where the link originates.
+
+[[standard-emf-proxies]]
+=== Standard EMF Proxies
+
+* URI fragment contains a path to an EObject, using reference names and indices: +
+`platform:/resource/Project/src/A.n4js#/1/@topLevelTypes.1/@ownedMembers.0`
+* created automatically by EMF
+** during deserialization of a TModule $M$ from the Xtext index for all references to a different TModule $M'$ (see `UserdataMapper`).
+** when unloading a resource.
+** ...
+* used to represent
+** cross-references from one TModule to another TModule.
+** `astElement` links from TModule to AST whenever the AST is not present (e.g. resource was loaded from Xtext index).
+** ``definedType`` links from AST to TModule after deleting the TModule (this happens in the incremental builder after the pre-linking phase).
+** all kinds of links after demand-loading an AST by resolving an `astElement` link (pathological case).
+* resolution is handled in two ways:
+** if the context `EObject` of the proxy, i.e. the one where the proxified cross-reference originates, is contained in an N4JSResource $R$, then resolution is handled by `N4JSResource#doResolveProxy()` (see also `ProxyResolvingResource` for details).
++
+In this case, special handling is performed to make sure that (a) the target resource is loaded from the index, if possible, and (b) post-processing of the target resource is initiated iff the target resource was loaded from AST (instead from the Xtext index) AND post-processing of resource $R$ is currently in progress or has already been completed.
+** otherwise, resolution is handled by standard EMF functionality.
+* latest time of resolution: none. In fact, some of those proxies (those representing `astElement` links from TModule to AST) must not be resolved at all, because this is not yet properly handled.
+
+
+=== How is Proxy Resolution Triggered?
+
+Resolution of proxies throughout the N4JS implementation is triggered as usually when using EMF, which means: whenever the getter of a EMF cross-reference is invoked and the value is still a proxy, the EMF-generated code of the getter will automatically trigger resolution of this proxy. For details look at the EMF-generated code of the getter of any cross-reference (`IdentifierRefImpl#getId()` would be a good example).
+
+
+=== When is Proxy Resolution Allowed?
+
+So, at what time is it legal to trigger such a proxy resolution? Or, more concretely, during which resource load states (<<sec:N4JS_Resource_Load_States>>) is it legal to trigger proxy resolution? In fact, asking the question in this way is incorrect or at least not very helpful, because the answer would be (almost) always. The better question is: which components of the system / which parts of the code base are allowed to trigger proxy resolution?
+
+For example, triggering resolution is disallowed in the `ASTStructureValidator` and `N4JSTypesBuilder`, but for the outside client code such as a JUnit test it is allowed to trigger proxy resolution as early as right after parsing. For an example of the latter see test `#testStateFullyProcessed_triggeredOnlyThroughProxyResolution()` in `N4JSResourceLoadStatesTest`.
+
+In summary, we can state the rule that the *internal N4JS implementation* must not trigger any proxy resolution until installation of the derived state has completed, i.e. not before resource load state "Fully Initialized", but *client code* may trigger proxy resolution as early as right after parsing, i.e. already in resource load state "Loaded".

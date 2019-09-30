@@ -18,6 +18,7 @@ import java.io.File;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.graphics.Image;
@@ -132,7 +133,7 @@ public class TesterUiActivator extends AbstractUIPlugin {
 	}
 
 	public ImageDescriptor imageDescriptor(final String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, PATH_TO_ICONS + path);
+		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, PATH_TO_ICONS + path).orElse(null);
 	}
 
 	/**

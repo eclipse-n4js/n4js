@@ -17,5 +17,19 @@ public enum BoundType {
 	/** Upper bound. */
 	UPPER,
 	/** Lower bound. */
-	LOWER
+	LOWER;
+
+	/**
+	 * Returns the inverse bound type, i.e. {@link #LOWER} for {@link #UPPER} and vice versa.
+	 */
+	public BoundType inverse() {
+		switch (this) {
+		case UPPER:
+			return LOWER;
+		case LOWER:
+			return UPPER;
+		default:
+			throw new UnsupportedOperationException("unsupported literal: " + this);
+		}
+	}
 }

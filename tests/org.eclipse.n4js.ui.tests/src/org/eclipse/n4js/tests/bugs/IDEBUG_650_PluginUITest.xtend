@@ -42,7 +42,7 @@ class IDEBUG_650_PluginUITest extends AbstractIDEBUG_Test {
 			getFile('''src-gen/n4/model/common/TimezoneRegion.js''');
 		assertTrue('TimezoneRegion.js compiled file does not exist.', file.exists);
 
-		val actualContent = Files.toString(file.location.toFile, Charset.defaultCharset());
+		val actualContent = Files.asCharSource(file.location.toFile, Charset.defaultCharset()).read();
 		assertTrue('Generated file content was empty: ' + file, !actualContent.nullOrEmpty)
 		val matcher = PATTERN.matcher(actualContent);
 		var matchCount = 0;

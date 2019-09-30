@@ -34,7 +34,26 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
- * Product launcher that is responsible for starting Equinox / Eclipse and then loading and running concrete bundles.
+ * Product launcher that is responsible for starting Equinox/Eclipse and then loading and running concrete bundles.
+ * <p>
+ * While the actual compiler implementation is done in {@code org.eclipse.hlc.base} and its transitive dependencies, the
+ * headless tool contains two small code parts related only to packaging and startup.
+ * <p>
+ * First is the custom class loader and main class. Since the headless tool is packaged as JAR-with-JARs, it requires a
+ * custom class loader to be able to load dependencies from within itself. Currently we use an implementation copied
+ * from the JDT tools see <a href=
+ * "https://github.com/eclipse/eclipse.jdt.ui/tree/master/org.eclipse.jdt.ui/jar%20in%20jar%20loader/org/eclipse/jdt/internal/jarinjarloader">jarinjarloader</a>
+ * <p>
+ * As for the main class we can highlight three classes that delegate to each other at startup of the application:
+ * <ul>
+ * <li/><b>org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader</b> is the main class from a plain JAR point of view.
+ * It is tightly integrated with the custom class loader. In general it is infrastructure level, and in principle it
+ * should not require any modifications (unless the packaging of the jar is changed).
+ * <li/><b>org.eclipse.n4js.hlc.ProductLauncher</b> is a middleware. It bootstraps Eclipse/Equinox platform and loads
+ * all the bundles.
+ * <li/><b>org.eclipse.n4js.hlc.base.N4jscBase</b> is the main entry point. This is the place were actual compiler code
+ * starts.
+ * </ul>
  */
 @SuppressWarnings("restriction")
 public class ProductLauncher {

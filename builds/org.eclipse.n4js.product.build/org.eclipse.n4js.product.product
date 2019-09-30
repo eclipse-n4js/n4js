@@ -3,6 +3,7 @@
 
 <product name="N4JS IDE" uid="org.eclipse.n4js.product.product" id="org.eclipse.n4js.product.product" application="org.eclipse.n4js.product.application" version="0.0.1.qualifier" useFeatures="true" includeLaunchers="true">
 
+
    <configIni use="default">
    </configIni>
 
@@ -16,17 +17,16 @@
    <windowImages i16="icons/n4_logo_16.png" i32="icons/n4_logo_32.png" i48="icons/n4_logo_48.png" i64="icons/n4_logo_64.png" i128="icons/n4_logo_128.png" i256="icons/n4_logo_256.png"/>
 
    <splash
-      location="org.eclipse.n4js.product"
-      startupProgressRect="5,275,445,15" />
+      location="org.eclipse.n4js.product" />
    <launcher name="n4jside">
       <linux icon="/icons/n4jside.xpm"/>
       <macosx icon="/icons/n4jside.icns"/>
-      <solaris/>
       <win useIco="true">
          <ico path="/icons/n4jside.ico"/>
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
    </vm>
@@ -43,17 +43,12 @@
    </features>
 
    <configurations>
+      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
-      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
-      <property name="org.eclipse.core.resources/encoding" value="UTF-8" />
-      <property name="org.eclipse.ui/PERSPECTIVE_BAR_EXTRAS" value="org.eclipse.n4js.product.N4JSPerspective,org.eclipse.egit.ui.GitRepositoryExploring" />
-      <property name="org.eclipse.ui/SHOW_PROGRESS_ON_STARTUP" value="false" />
-      <property name="org.eclipse.ui/SHOW_TEXT_ON_PERSPECTIVE_BAR" value="false" />
-      <property name="org.eclipse.ui/defaultPerspectiveId" value="org.eclipse.n4js.product.N4JSPerspective" />
       <property name="osgi.instance.area.default" value="@user.home/workspace" />
       <property name="osgi.requiredJavaVersion" value="11" />
    </configurations>

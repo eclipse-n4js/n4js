@@ -20,12 +20,12 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
+import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
-import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.xtext.lib.setup.XtextStandaloneSetup;
 import org.eclipse.xpect.xtext.lib.setup.XtextWorkspaceSetup;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
@@ -42,7 +42,7 @@ import com.google.inject.Inject;
  * This class provides a Xpect method to specify tests regarding the {@link IReferenceFinder}
  */
 @SuppressWarnings("restriction")
-@RunWith(XpectRunner.class)
+@RunWith(N4JSXpectRunner.class)
 @XpectImport({ XtextStandaloneSetup.class, XtextWorkspaceSetup.class })
 public class FindReferencesXpectMethod {
 

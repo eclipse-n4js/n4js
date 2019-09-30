@@ -128,7 +128,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 		Iterable<UnionTypeExpression> unionTypeRefs) {
 
 		if (nonUnionJoin === null && unionTypeRefs.size == 1) {
-			return G.simplify(unionTypeRefs.head)
+			return tsh.simplify(G, unionTypeRefs.head)
 		}
 
 		val union = TypeRefsFactory.eINSTANCE.createUnionTypeExpression();
@@ -136,7 +136,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 			union.typeRefs.add(TypeUtils.copyIfContained(nonUnionJoin));
 		}
 		union.typeRefs.addAll((unionTypeRefs.map[TypeUtils.copyIfContained(it)]))
-		return G.simplify(union)
+		return tsh.simplify(G, union)
 	}
 
 	/**
@@ -211,7 +211,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 									// (typeArgs.get(currentIndex) as TypeRef).declaredUpperBound
 									ts.upperBound(G, (typeArgs.get(currentIndex)))
 								])
-							val lowerBound = meet(G,
+							val lowerBound = tsh.meet(G,
 								parameterizedSuperTypes.map [
 									// (typeArgs.get(currentIndex) as TypeRef).declaredLowerBound
 									ts.lowerBound(G, (typeArgs.get(currentIndex)))
@@ -619,7 +619,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 
 		if (f1.returnTypeRef !== null && f2.returnTypeRef !== null) {
 			joinedFunctionTypeExpr.setReturnTypeRef(
-				TypeUtils.copyIfContained(join(G, f1.returnTypeRef, f2.returnTypeRef)));
+				TypeUtils.copyIfContained(tsh.join(G, f1.returnTypeRef, f2.returnTypeRef)));
 		}
 		joinedFunctionTypeExpr.returnValueMarkedOptional = f1.returnValueOptional || f2.returnValueOptional;
 
@@ -645,7 +645,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 				}
 
 				fpar = TypesFactory.eINSTANCE.createTFormalParameter();
-				val meet = meet(G, par1.typeRef, par2.typeRef);
+				val meet = tsh.meet(G, par1.typeRef, par2.typeRef);
 
 				if (meet === null) {
 					if (varOrOpt1 && varOrOpt2) {

@@ -53,6 +53,7 @@ import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.scoping.accessModifiers.ContextAwareTypeScope
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareCtorScope
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
@@ -60,10 +61,8 @@ import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope
-import org.eclipse.n4js.scoping.utils.N4JSTypesScopeFilter
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
 import org.eclipse.n4js.scoping.utils.ScopesHelper
-import org.eclipse.n4js.ts.scoping.ValidatingScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -74,6 +73,7 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TypeDefs
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
@@ -124,9 +124,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject
 	ResourceDescriptionsProvider resourceDescriptionsProvider;
-
-	/* Poor mans filter to reduce number of elements in getAllElements */
-	@Inject extension N4JSTypesScopeFilter
 
 	@Inject N4JSTypeSystem ts
 
@@ -224,24 +221,21 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
 	private def getScopeByShortcut(EObject context, EReference reference) {
-		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
+		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE) {
+			return new FilteringScope(getTypeScope(context, false), [
+				TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
+			]);
+		} else if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
 				val namespace = context.astNamespace;
 				if (namespace!==null) {
 					return createScopeForNamespaceAccess(namespace, context);
 				}
 			}
-		}
-		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE
-			|| reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE) {
-			return new ValidatingScope(getTypeScope(context, false),
-				context.getTypesFilterCriteria(reference));
-		}
-
-		if (reference.EReferenceType == N4JSPackage.Literals.LABELLED_STATEMENT) {
+			return getTypeScope(context, false);
+		} else if (reference.EReferenceType == N4JSPackage.Literals.LABELLED_STATEMENT) {
 			return scope_LabelledStatement(context);
 		}
-
 		return IScope.NULLSCOPE;
 	}
 
@@ -525,7 +519,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val G = propertyAccess.newRuleEnvironment;
 		val TypeRef typeRefRaw = ts.type(G, receiver);
 		// take upper bound to get rid of ExistentialTypeRefs, ThisTypeRefs, etc.
-		val TypeRef typeRef = ts.upperBound(G, typeRefRaw);
+		val TypeRef typeRef = ts.upperBoundWithReopen(G, typeRefRaw);
 
 		val staticAccess = typeRef instanceof TypeTypeRef;
 		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
@@ -555,9 +549,14 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	/**
-	 * Is entered (and later recursively called) to initially bind "T" in <pre>var x : T;</pre> or other parameterized type references.
+	 * Is entered to initially bind "T" in <pre>var x : T;</pre> or other parameterized type references.
 	 */
 	def public IScope getTypeScope(EObject context, boolean fromStaticContext) {
+		val internal = getTypeScopeInternal(context, fromStaticContext);
+		return new ContextAwareTypeScope(internal, context);
+	}
+
+	def private IScope getTypeScopeInternal(EObject context, boolean fromStaticContext) {
 		switch context {
 			Script: {
 				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, delegate);
@@ -567,25 +566,25 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 			N4FieldDeclaration: {
 				val isStaticContext = context.static;
-				return getTypeScope(context.eContainer, isStaticContext); // use new static access status for parent scope
+				return getTypeScopeInternal(context.eContainer, isStaticContext); // use new static access status for parent scope
 			}
 			N4FieldAccessor: {
 				val isStaticContext = context.static;
-				return getTypeScope(context.eContainer, isStaticContext); // use new static access status for parent scope
+				return getTypeScopeInternal(context.eContainer, isStaticContext); // use new static access status for parent scope
 			}
 			TypeDefiningElement: {
 				val isStaticContext = context instanceof N4MemberDeclaration && (context as N4MemberDeclaration).static;
-				val IScope parent = getTypeScope(context.eContainer, isStaticContext); // use new static access status for parent scope
+				val IScope parent = getTypeScopeInternal(context.eContainer, isStaticContext); // use new static access status for parent scope
 				val polyfilledOrOriginalType = context.getTypeOrPolyfilledType();
 
 				return scopeWithTypeAndItsTypeVariables(parent, polyfilledOrOriginalType, fromStaticContext); // use old static access status for current scope
 			}
 			TStructMethod: {
-				val parent = getTypeScope(context.eContainer, fromStaticContext);
+				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
 				return scopeWithTypeVarsOfTStructMethod(parent, context);
 			}
 			FunctionTypeExpression: {
-				val parent = getTypeScope(context.eContainer, fromStaticContext);
+				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
 				return scopeWithTypeVarsOfFunctionTypeExpression(parent, context);
 			}
 			TypeDefs: {
@@ -604,7 +603,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 							// area #1: upper/lower bound of type parameter of polyfill, e.g. the 2nd 'T' in:
 							// @@StaticPolyfillModule
 							// @StaticPolyfill export public class ToBeFilled<T,S extends T> extends ToBeFilled<T,S> {}
-							val IScope parent = getTypeScope(context.eContainer, false);
+							val IScope parent = getTypeScopeInternal(context.eContainer, false);
 							return scopeWithTypeAndItsTypeVariables(parent, container.definedType, fromStaticContext);
 						} else if (container.superClassRef === context) {
 							// area #2: super type reference of polyfill, e.g. everything after 'extends' in:
@@ -618,7 +617,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 					}
 				}
 
-				return getTypeScope(container, fromStaticContext);
+				return getTypeScopeInternal(container, fromStaticContext);
 			}
 		}
 	}
