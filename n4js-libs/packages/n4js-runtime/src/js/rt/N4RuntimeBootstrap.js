@@ -40,6 +40,15 @@
         };
     }
 
+    function defineN4TypeGetter(instance, factoryFn) {
+        var n4type;
+        Object.defineProperty(instance, "n4type", {
+            get: function() {
+                return n4type || (n4type = factoryFn());
+            }
+        });
+    }
+
     /** Call context is prototype object. */
     function mixinDefaultMethod(method) {
         var name = method && method.name;
@@ -80,9 +89,7 @@
         });
 
         if (n4typeFn) {
-            Object.defineProperty(ctor, "n4type", {
-                value: n4typeFn(proto, ctor)
-            });
+            defineN4TypeGetter(ctor, n4typeFn.bind(null, proto, ctor));
         }
 
         ctor.prototype = proto;
@@ -96,9 +103,7 @@
      */
     function $makeInterface(tinterface, n4typeFn) {
         if (n4typeFn) {
-            Object.defineProperty(tinterface, "n4type", {
-                value: n4typeFn(tinterface.$methods, tinterface)
-            });
+            defineN4TypeGetter(tinterface, n4typeFn.bind(null, tinterface.$methods, tinterface));
         }
 
         Object.defineProperty(tinterface, symHasInstance, {
@@ -130,9 +135,7 @@
         enumeration.prototype = Object.create(global.N4Enum.prototype, {});
 
         if (n4typeFn) {
-            Object.defineProperty(enumeration, "n4type", {
-                value: n4typeFn(noop)
-            });
+            defineN4TypeGetter(enumeration, n4typeFn.bind(null, noop));
         }
 
         Object.defineProperty(enumeration.prototype, "constructor", {
