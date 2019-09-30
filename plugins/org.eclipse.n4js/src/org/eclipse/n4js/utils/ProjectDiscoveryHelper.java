@@ -125,6 +125,9 @@ public class ProjectDiscoveryHelper {
 
 	private LinkedHashSet<Path> collectProjects(Path root) {
 		LinkedHashSet<Path> allProjectDirs = new LinkedHashSet<>();
+		if (!root.toFile().isDirectory()) {
+			return allProjectDirs;
+		}
 
 		try {
 			Files.walkFileTree(root, new SimpleFileVisitor<Path>() {

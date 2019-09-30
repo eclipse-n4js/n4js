@@ -16,6 +16,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -227,6 +228,14 @@ public class N4jscOptions {
 			options.goal = N4jscGoal.version;
 			options.version = false;
 		}
+
+		options.srcFiles = options.srcFiles.stream().map(f -> {
+			try {
+				return f.getCanonicalFile();
+			} catch (IOException e) {
+				return null;
+			}
+		}).filter(f -> f != null).collect(Collectors.toList());
 	}
 
 	/** @return list of all user defined options */

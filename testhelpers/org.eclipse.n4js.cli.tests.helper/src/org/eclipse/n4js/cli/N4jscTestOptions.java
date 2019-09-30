@@ -11,8 +11,10 @@
 package org.eclipse.n4js.cli;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /** Helper class to create n4jsc option programmatically */
 public class N4jscTestOptions extends N4jscOptions {
@@ -86,6 +88,14 @@ public class N4jscTestOptions extends N4jscOptions {
 
 	/** Set goal to compile */
 	public N4jscTestOptions f(List<File> files) {
+		files = files.stream().map(f -> {
+			try {
+				return f.getCanonicalFile();
+			} catch (IOException e) {
+				return null;
+			}
+		}).filter(f -> f != null).collect(Collectors.toList());
+
 		options.srcFiles = files;
 		return this;
 	}
