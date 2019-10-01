@@ -50,8 +50,6 @@ e instanceof E  true
  {} instanceof N4Enum=  false
  {} instanceof N4Object=  false
  {} instanceof Object=  true
- {} instanceof *Object.prototype =  false
- {} instanceof *N4Object.prototype =  false
  {} instanceof String =  false
  {} instanceof Number =  false
 ++++++
@@ -120,8 +118,6 @@ console.log("###############");
 console.log( " {} instanceof N4Enum= ", {} instanceof N4Enum )
 console.log( " {} instanceof N4Object= ", {} instanceof N4Object )
 console.log( " {} instanceof Object= ", {} instanceof Object )
-console.log( " {} instanceof *Object.prototype = ", {} instanceof (Object.prototype as type{ Object }))
-console.log( " {} instanceof *N4Object.prototype = ", {} instanceof (N4Object.prototype as type{N4Enum}) )
 console.log( " {} instanceof String = ", {} instanceof String )
 console.log( " {} instanceof Number = ", {} instanceof Number )
 console.log("++++++\n")
