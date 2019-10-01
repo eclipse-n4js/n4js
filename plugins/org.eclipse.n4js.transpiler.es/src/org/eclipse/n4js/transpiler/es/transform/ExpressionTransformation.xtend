@@ -23,6 +23,7 @@ import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
@@ -233,12 +234,22 @@ class ExpressionTransformation extends Transformation {
 						val id = targetOfTarget.originalTargetOfRewiredTarget;
 						if (id instanceof TClass) {
 							val value = switch(property) {
-								case n4NamedElement_name: id.name
-								case n4Element_origin: resourceNameComputer.generateProjectDescriptor(id.eResource.URI)
-								case n4Type_fqn: resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(id)
-								default: throw new IllegalStateException() // cannot happen
+								case n4NamedElement_name:
+									id.name
+								case n4Element_origin:
+									resourceNameComputer.generateProjectDescriptor(id.eResource.URI)
+								case n4Type_fqn:
+									// avoid optimizing this case for built-in types
+									// (we cannot know for sure the value of the 'fqn' property set in the .js files)
+									if (!N4Scheme.isFromResourceWithN4Scheme(id)) {
+										resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(id)
+									}
+								default:
+									throw new IllegalStateException() // should not happen (see above)
 							}
-							replace(propAccessExpr, _StringLiteral(value));
+							if (value !== null) {
+								replace(propAccessExpr, _StringLiteral(value));
+							}
 						}
 					}
 				}
