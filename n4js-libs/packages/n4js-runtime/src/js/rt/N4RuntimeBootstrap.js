@@ -52,7 +52,7 @@
      *                                interfaces defined in definition files without annotation @N4JS.
      * @param instanceMethods - An object holding the methods for the class instance and mixed in methods
      * @param staticMethods - An object holding the descriptors for the class static methods
-     * @param n4typeFn - Optional factory function to create the meta type.
+     * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
      */
     function $makeClass(ctor, superCtor, implementedInterfaces, instanceMethods, staticMethods, n4typeFn) {
         if (typeof superCtor === "function") {
@@ -77,7 +77,7 @@
      * Setup a interface. Methods and field initializers are already merged into the interface object.
      *
      * @param tinterface - The interface object.
-     * @param n4typeFn - Optional factory function to create the meta type.
+     * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
      */
     function $makeInterface(tinterface, n4typeFn) {
         if (n4typeFn) {
@@ -103,7 +103,7 @@
      * @param enumeration - the enumeration constructor function
      * @param members - An array of <String, String> tuples containing
      *                  information about the enum members
-     * @param n4typeFn - Optional factory function to create the meta type.
+     * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
      * @return The constructed enumeration type
      */
     function $makeEnum(enumeration, stringBased/* TODO obsolete */, members, n4typeFn) {
