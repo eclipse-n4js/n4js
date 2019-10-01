@@ -92,7 +92,11 @@
              * @return boolean
              */
             value: function(instance) {
-                return $implements(instance, tinterface.n4type.fqn);
+                if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
+                    return false;
+                }
+                const implementedInterface = tinterface.n4type.fqn;
+                return instance.constructor.n4type.allImplementedInterfaces.indexOf(implementedInterface) !== -1;
             }
         });
     }
@@ -138,21 +142,6 @@
         Object.defineProperty(enumeration, 'literals', {
             value: values
         });
-    }
-
-    /**
-     * Check whether a value is instance of a class implementing an interface.
-     *
-     * @param instance - The instance which type is to be checked whether it implements the interface
-     * @param implementedInterface - The fully qualified name of the interface including the package identifier
-     * @return boolean
-     * @deprecated
-     */
-    function $implements(instance, implementedInterface) {
-        if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
-            return false;
-        }
-        return instance.constructor.n4type.allImplementedInterfaces.indexOf(implementedInterface) !== -1;
     }
 
     /**
@@ -244,11 +233,6 @@
     global.$makeClass = $makeClass;
     global.$makeInterface = $makeInterface;
     global.$makeEnum = $makeEnum;
-
-    // @deprecated, remove:
-    global.$implements = $implements;    
-    // @deprecated, remove:
-    global.$instanceof = function(instance, supertype) { return instance instanceof supertype; };
 
     global.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
     global.$spawn = $spawn;
