@@ -474,7 +474,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	}
 
 	/**
-	 * Returns the built-in type "N4Element".
+	 * Returns the built-in type "N4NamedElement".
 	 */
 	public final TClass getN4NamedElementType() {
 		return getEObjectOrProxy(QN_N4NAMEDELEMENT);
