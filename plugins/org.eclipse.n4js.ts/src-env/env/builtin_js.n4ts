@@ -247,6 +247,13 @@ public providedByRuntime final object Function extends Object @Global {
 	// @see ES5, 15.3.4.2
 
 	/**
+	 * Returns the name of this function. Only available in ECMAScript 2015.
+	 *
+	 * @see ES6, 19.2.4.2
+	 */ 
+	public get name(): string
+
+	/**
 	 * Call each argArray element, collect the results inside a list and return the list
 	 * The length property of the apply method is 2
 	 *
