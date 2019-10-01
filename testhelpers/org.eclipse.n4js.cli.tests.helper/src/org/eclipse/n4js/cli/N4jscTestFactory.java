@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.cli;
 
-import org.eclipse.n4js.cli.compiler.N4jscCallback;
+import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.cli.helper.N4jscTestCallback;
 import org.eclipse.xtext.testing.GlobalRegistries;
 
@@ -94,8 +94,8 @@ public class N4jscTestFactory extends N4jscFactory {
 	}
 
 	@Override
-	N4jscCallback internalCreateN4jscCallback(Injector pInjector) {
-		N4jscCallback callback = pInjector.getInstance(N4jscTestCallback.class);
+	N4jscLanguageClient internalGetLanguageClient(Injector pInjector) {
+		N4jscLanguageClient callback = pInjector.getInstance(N4jscTestCallback.class);
 		return callback;
 	}
 

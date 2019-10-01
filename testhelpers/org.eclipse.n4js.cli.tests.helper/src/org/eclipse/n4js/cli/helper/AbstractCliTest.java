@@ -93,7 +93,7 @@ abstract public class AbstractCliTest<ArgType> {
 			Injector lastCreatedInjector = N4jscTestFactory.getLastCreatedInjector();
 			if (lastCreatedInjector != null) {
 				N4jscTestCallback callback = (N4jscTestCallback) N4jscFactory
-						.createCallback(lastCreatedInjector);
+						.getLanguageClient(lastCreatedInjector);
 				cliResult.errors = callback.errors;
 				cliResult.warnings = callback.warnings;
 			}

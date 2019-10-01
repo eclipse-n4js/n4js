@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
-import org.eclipse.n4js.cli.compiler.N4jscCallback;
+import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -24,7 +24,7 @@ import com.google.inject.Singleton;
  *
  */
 @Singleton
-public class N4jscTestCallback extends N4jscCallback {
+public class N4jscTestCallback extends N4jscLanguageClient {
 	Multimap<String, String> errors = HashMultimap.create();
 	Multimap<String, String> warnings = HashMultimap.create();
 

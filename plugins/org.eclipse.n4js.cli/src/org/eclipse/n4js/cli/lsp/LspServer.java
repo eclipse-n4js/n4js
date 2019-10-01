@@ -69,7 +69,7 @@ public class LspServer {
 			throws InterruptedException, ExecutionException, IOException {
 
 		Injector injector = N4jscFactory.createInjector();
-		N4JSLanguageServerImpl languageServer = N4jscFactory.createLanguageServer(injector);
+		N4JSLanguageServerImpl languageServer = N4jscFactory.getLanguageServer(injector);
 
 		N4jscConsole.println("Listening for LSP clients...");
 		AsynchronousSocketChannel socketChannel = serverSocket.accept().get();

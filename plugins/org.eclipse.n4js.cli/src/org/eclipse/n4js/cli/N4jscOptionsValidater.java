@@ -106,6 +106,10 @@ public class N4jscOptionsValidater {
 			String msg = "n4js file(s) or project(s) missing";
 			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
 		}
+		if (options.getSrcFiles().size() > 1) {
+			String msg = "Multiple project root directories not supported yet.";
+			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
+		}
 
 		StringJoiner notExisting = new StringJoiner(",");
 		StringJoiner neitherFileNorDir = new StringJoiner(",");

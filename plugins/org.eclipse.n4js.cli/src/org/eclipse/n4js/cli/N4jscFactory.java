@@ -10,9 +10,10 @@
  */
 package org.eclipse.n4js.cli;
 
-import org.eclipse.n4js.cli.compiler.N4jscCallback;
+import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.ide.N4JSIdeSetup;
 import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
+import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 
 import com.google.inject.Injector;
 
@@ -34,13 +35,18 @@ public class N4jscFactory {
 	}
 
 	/** @return the {@link N4JSLanguageServerImpl} instance from the given injector */
-	public static N4JSLanguageServerImpl createLanguageServer(Injector injector) {
-		return INSTANCE.internalCreateLanguageServer(injector);
+	public static N4JSLanguageServerImpl getLanguageServer(Injector injector) {
+		return INSTANCE.internalGetLanguageServer(injector);
 	}
 
-	/** @return the {@link N4jscCallback} instance from the given injector */
-	public static N4jscCallback createCallback(Injector injector) {
-		return INSTANCE.internalCreateN4jscCallback(injector);
+	/** @return the {@link N4jscLanguageClient} instance from the given injector */
+	public static N4jscLanguageClient getLanguageClient(Injector injector) {
+		return INSTANCE.internalGetLanguageClient(injector);
+	}
+
+	/** @return the {@link N4JSWorkspaceManager} instance from the given injector */
+	public static N4JSWorkspaceManager getWorkspaceManager(Injector injector) {
+		return INSTANCE.internalGetWorkspaceManager(injector);
 	}
 
 	N4jscBackend internalCreateBackend() throws Exception {
@@ -51,14 +57,18 @@ public class N4jscFactory {
 		return new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
 	}
 
-	N4JSLanguageServerImpl internalCreateLanguageServer(Injector injector) {
+	N4JSLanguageServerImpl internalGetLanguageServer(Injector injector) {
 		N4JSLanguageServerImpl languageServer = injector.getInstance(N4JSLanguageServerImpl.class);
 		return languageServer;
 	}
 
-	N4jscCallback internalCreateN4jscCallback(Injector injector) {
-		N4jscCallback callback = injector.getInstance(N4jscCallback.class);
+	N4jscLanguageClient internalGetLanguageClient(Injector injector) {
+		N4jscLanguageClient callback = injector.getInstance(N4jscLanguageClient.class);
 		return callback;
 	}
 
+	N4JSWorkspaceManager internalGetWorkspaceManager(Injector injector) {
+		N4JSWorkspaceManager workspaceManager = injector.getInstance(N4JSWorkspaceManager.class);
+		return workspaceManager;
+	}
 }

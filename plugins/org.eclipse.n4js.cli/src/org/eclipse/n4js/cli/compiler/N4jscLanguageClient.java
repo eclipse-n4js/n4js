@@ -32,7 +32,7 @@ import com.google.inject.Singleton;
  * Overrides the lsp {@link LanguageClient} callback when used as a CLI utility
  */
 @Singleton
-public class N4jscCallback implements LanguageClient {
+public class N4jscLanguageClient implements LanguageClient {
 
 	/***/
 	@Inject
