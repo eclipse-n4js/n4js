@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli;
 
 import org.eclipse.n4js.cli.compiler.N4jscCallback;
 import org.eclipse.n4js.cli.helper.N4jscTestCallback;
+import org.eclipse.xtext.testing.GlobalRegistries;
 
 import com.google.inject.Injector;
 
@@ -82,6 +83,7 @@ public class N4jscTestFactory extends N4jscFactory {
 
 	@Override
 	Injector internalCreateInjector() {
+		GlobalRegistries.clearGlobalRegistries();
 		injector = super.internalCreateInjector();
 		return injector;
 	}
