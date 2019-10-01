@@ -13,8 +13,8 @@ package org.eclipse.n4js.hlc.integrationtests;
 import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPACE_FOLDER;
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.n4js.cli.helper.N4CliHelper;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
-import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.junit.Ignore;
 import org.junit.Test;
 
