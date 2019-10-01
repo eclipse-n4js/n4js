@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.RelationalOperator
 import org.eclipse.n4js.n4JS.Statement
+import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.transform.SuperLiteralTransformation
@@ -116,11 +117,23 @@ class ClassConstructorAssistant extends TransformationAssistant {
 			}
 		}
 
+		// if we are in a spec-constructor: prepare a local variable for the spec-object and
+		// ensure it is never 'undefined' or 'null'
+		var specObjSTE = null as SymbolTableEntry;
+		if (specFpar !== null) {
+			// let $specObj = specFpar || {};
+			val specFparSTE = findSymbolTableEntryForElement(specFpar, true);
+			val specObjVarDecl = _VariableDeclaration("$specObj", _OR(_IdentRef(specFparSTE), _ObjLit));
+			body.statements += _VariableStatement(VariableStatementKeyword.CONST, specObjVarDecl);
+
+			specObjSTE = findSymbolTableEntryForElement(specObjVarDecl, true);
+		}
+
 		// add initialization code for fields
-		body.statements += createFieldInitCode(classDecl, specFpar);
+		body.statements += createFieldInitCode(classDecl, specFpar, specObjSTE);
 
 		// add delegation to field initialization functions of all directly implemented interfaces
-		body.statements += createDelegationToFieldInitOfImplementedInterfaces(classDecl, specFpar);
+		body.statements += createDelegationToFieldInitOfImplementedInterfaces(classDecl, specObjSTE);
 
 		// add main ctor code
 		// (the code following the explicit super call OR the entire body of the explicit ctor if
@@ -132,20 +145,12 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		return funDecl;
 	}
 
-	def private Statement[] createFieldInitCode(N4ClassDeclaration classDecl, FormalParameter specFpar) {
+	def private Statement[] createFieldInitCode(N4ClassDeclaration classDecl, FormalParameter specFpar, SymbolTableEntry specObjSTE) {
 		val allFields = classDecl.ownedFields.filter[!isStatic && !isConsumedFromInterface].toList;
 		if(specFpar!==null) {
 			// we have a spec-parameter -> we are in a spec-style constructor
 			val result = <Statement>newArrayList;
-			val specFparSTE = findSymbolTableEntryForElement(specFpar, true);
 			val structFields = specFpar.declaredTypeRef.structuralMembers;
-
-			// step #0: make sure value of specFpar will never be 'undefined' or 'null'
-			// spec = spec || {};
-			result += _ExprStmnt(_AssignmentExpr(
-				_IdentRef(specFparSTE),
-				_OR(_IdentRef(specFparSTE), _ObjLit)
-			));
 
 			// step #1: initialize all fields either with data from the specFpar OR or their initializer expression
 			val currFields = <N4FieldDeclaration>newArrayList;
@@ -155,18 +160,18 @@ class ClassConstructorAssistant extends TransformationAssistant {
 				if (isSpecced === currFieldsAreSpecced) {
 					currFields += field;
 				} else {
-					result += createFieldInitCodeForSeveralFields(currFields, currFieldsAreSpecced, specFparSTE);
+					result += createFieldInitCodeForSeveralFields(currFields, currFieldsAreSpecced, specObjSTE);
 					currFields.clear();
 					currFields += field;
 					currFieldsAreSpecced = isSpecced;
 				}
 			}
-			result += createFieldInitCodeForSeveralFields(currFields, currFieldsAreSpecced, specFparSTE);
+			result += createFieldInitCodeForSeveralFields(currFields, currFieldsAreSpecced, specObjSTE);
 
 			// step #2: invoke setters with data from specFpar
 			// (note: in case of undefined specFpar at runtime, setters should not be invoked, so we wrap in if statement)
 			val speccedSetters = classDecl.ownedSetters.filter[!isStatic && declaredModifiers.contains(N4Modifier.PUBLIC)].toList;
-			result += speccedSetters.map[createFieldInitCodeForSingleSpeccedSetter(specFparSTE)];
+			result += speccedSetters.map[createFieldInitCodeForSingleSpeccedSetter(specObjSTE)];
 
 			return result;
 		} else {
@@ -175,7 +180,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		}
 	}
 
-	def private Statement[] createFieldInitCodeForSeveralFields(Collection<N4FieldDeclaration> fieldDecls, boolean fieldsAreSpecced, SymbolTableEntry specFparSTE) {
+	def private Statement[] createFieldInitCodeForSeveralFields(Collection<N4FieldDeclaration> fieldDecls, boolean fieldsAreSpecced, SymbolTableEntry specObjSTE) {
 		if (fieldDecls.empty) {
 			return #[];
 		}
@@ -183,9 +188,9 @@ class ClassConstructorAssistant extends TransformationAssistant {
 			return fieldDecls.map[createFieldInitCodeForSingleField];
 		}
 		if (fieldDecls.size === 1) {
-			return #[ fieldDecls.head.createFieldInitCodeForSingleSpeccedField(specFparSTE) ];
+			return #[ fieldDecls.head.createFieldInitCodeForSingleSpeccedField(specObjSTE) ];
 		}
-		return #[ fieldDecls.createFieldInitCodeForSeveralSpeccedFields(specFparSTE) ];
+		return #[ fieldDecls.createFieldInitCodeForSeveralSpeccedFields(specObjSTE) ];
 	}
 
 	def private Statement createFieldInitCodeForSingleField(N4FieldDeclaration fieldDecl) {
@@ -212,7 +217,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		));
 	}
 
-	def private Statement createFieldInitCodeForSeveralSpeccedFields(Iterable<N4FieldDeclaration> fieldDecls, SymbolTableEntry specFparSTE) {
+	def private Statement createFieldInitCodeForSeveralSpeccedFields(Iterable<N4FieldDeclaration> fieldDecls, SymbolTableEntry specObjSTE) {
 		// here we create:
 		//
 		//     ({
@@ -234,13 +239,13 @@ class ClassConstructorAssistant extends TransformationAssistant {
 							};
 						]
 					),
-					_IdentRef(specFparSTE)
+					_IdentRef(specObjSTE)
 				)
 			)
 		);
 	}
 
-	def private Statement createFieldInitCodeForSingleSpeccedField(N4FieldDeclaration fieldDecl, SymbolTableEntry specFparSTE) {
+	def private Statement createFieldInitCodeForSingleSpeccedField(N4FieldDeclaration fieldDecl, SymbolTableEntry specObjSTE) {
 		val fieldSTE = findSymbolTableEntryForElement(fieldDecl, true);
 		if (fieldDecl.hasNonTrivialInitExpression) {
 			// here we create:
@@ -256,7 +261,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 				// ? :
 				_ConditionalExpr(
 					// spec.fieldName === undefined
-					_EqualityExpr(_PropertyAccessExpr(specFparSTE, fieldSTE), EqualityOperator.SAME, undefinedRef()),
+					_EqualityExpr(_PropertyAccessExpr(specObjSTE, fieldSTE), EqualityOperator.SAME, undefinedRef()),
 					// <INIT_EXPRESSION>
 					if(fieldDecl.expression!==null) {
 						copy(fieldDecl.expression) // need to copy expression here, because it will be used again!
@@ -264,7 +269,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 						undefinedRef()
 					},
 					// spec.fieldName
-					_PropertyAccessExpr(specFparSTE, fieldSTE)
+					_PropertyAccessExpr(specObjSTE, fieldSTE)
 				)
 			));
 		} else {
@@ -276,12 +281,12 @@ class ClassConstructorAssistant extends TransformationAssistant {
 			//
 			return _ExprStmnt(_AssignmentExpr(
 				_PropertyAccessExpr(_ThisLiteral, fieldSTE),
-				_PropertyAccessExpr(specFparSTE, fieldSTE)
+				_PropertyAccessExpr(specObjSTE, fieldSTE)
 			));
 		}
 	}
 
-	def private Statement createFieldInitCodeForSingleSpeccedSetter(N4SetterDeclaration setterDecl, SymbolTableEntry specFparSTE) {
+	def private Statement createFieldInitCodeForSingleSpeccedSetter(N4SetterDeclaration setterDecl, SymbolTableEntry specObjSTE) {
 		// here we create:
 		//
 		// 	if ('fieldName' in spec) {
@@ -292,12 +297,12 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		val setterSTE = findSymbolTableEntryForElement(setterDecl, true);
 		return _IfStmnt(
 			_RelationalExpr(
-				_StringLiteralForSTE(setterSTE), RelationalOperator.IN, _IdentRef(specFparSTE)
+				_StringLiteralForSTE(setterSTE), RelationalOperator.IN, _IdentRef(specObjSTE)
 			),
 			_ExprStmnt(
 				_AssignmentExpr(
 					_PropertyAccessExpr(_ThisLiteral, setterSTE),
-					_PropertyAccessExpr(specFparSTE, setterSTE)
+					_PropertyAccessExpr(specObjSTE, setterSTE)
 		)));
 	}
 
@@ -368,7 +373,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		return #[firstLine, remainingLines];
 	}
 
-	def private Statement[] createDelegationToFieldInitOfImplementedInterfaces(N4ClassDeclaration classDecl, FormalParameter /*nullable*/ specFpar ) {
+	def private Statement[] createDelegationToFieldInitOfImplementedInterfaces(N4ClassDeclaration classDecl, SymbolTableEntry /*nullable*/ specObjSTE ) {
 
 		val implementedIfcSTEs = typeAssistant.getSuperInterfacesSTEs(classDecl).filter [
 			// regarding the cast to TInterface: see preconditions of ClassDeclarationTransformation
@@ -384,7 +389,6 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		ownedInstanceDataFieldsSupressMixin.addAll(classDecl.ownedGetters.filter[!isConsumedFromInterface].map[name])
 		ownedInstanceDataFieldsSupressMixin.addAll(classDecl.ownedSetters.filter[!isConsumedFromInterface].map[name])
 
-		val specFparSTE = if(specFpar!==null) findSymbolTableEntryForElement(specFpar, false);
 		val $initFieldsFromInterfacesSTE = steFor_$initFieldsFromInterfaces;
 
 		return #[ _ExprStmnt(
@@ -392,8 +396,8 @@ class ClassConstructorAssistant extends TransformationAssistant {
 				_IdentRef($initFieldsFromInterfacesSTE),
 				_ThisLiteral,
 				_ArrLit(implementedIfcSTEs.map[_IdentRef(it)]),
-				if (specFparSTE !== null) {
-					_IdentRef(specFparSTE)
+				if (specObjSTE !== null) {
+					_IdentRef(specObjSTE)
 				} else {
 					undefinedRef()
 				},
