@@ -48,7 +48,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		String args[] = { "compile", "test.n4js" };
 		CliResult result = main(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid file(s)):  file(s) do not exist: test.n4js",
+				"ERROR-12 (Invalid file(s)):  file(s) do not exist: /test.n4js",
 				result.getStdOut());
 	}
 
@@ -58,7 +58,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		String args[] = { "test.n4js" };
 		CliResult result = main(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid file(s)):  file(s) do not exist: test.n4js",
+				"ERROR-12 (Invalid file(s)):  file(s) do not exist: /test.n4js",
 				result.getStdOut());
 	}
 
