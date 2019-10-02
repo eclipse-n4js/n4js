@@ -17,8 +17,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Scanner;
 
+import org.eclipse.n4js.cli.helper.N4CliHelper;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
-import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.junit.Test;
 
 /**

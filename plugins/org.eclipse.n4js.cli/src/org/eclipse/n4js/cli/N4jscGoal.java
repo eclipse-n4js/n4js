@@ -28,6 +28,8 @@ import com.google.common.base.Strings;
 public enum N4jscGoal {
 	/** Prints help */
 	help,
+	/** Prints version */
+	version,
 	/** Compiles with given options */
 	compile,
 	/** Cleans with given options */
@@ -53,7 +55,12 @@ public enum N4jscGoal {
 
 		@Override
 		public int parseArguments(Parameters params) throws CmdLineException {
-			return delegate.parseArguments(params);
+			try {
+				return delegate.parseArguments(params);
+			} catch (CmdLineException e) {
+				// This exception is thrown in case no goal was given
+				return 0;
+			}
 		}
 
 		@Override

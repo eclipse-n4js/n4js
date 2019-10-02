@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.debug.ui,
  org.eclipse.n4js.runner.ui,
  org.eclipse.n4js.runner.nodejs,
  org.eclipse.n4js.transpiler,
- org.eclipse.n4js.transpiler.es
+ org.eclipse.n4js.transpiler.es,
+ org.eclipse.n4js.cli.tests.helper
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.n4js.xpect.ui,
  org.eclipse.n4js.xpect.ui.common,

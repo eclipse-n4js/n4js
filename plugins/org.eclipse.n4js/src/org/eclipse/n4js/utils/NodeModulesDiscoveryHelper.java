@@ -148,8 +148,18 @@ public class NodeModulesDiscoveryHelper {
 		return Optional.absent();
 	}
 
+	/**
+	 * Note that this method is expensive, since it reads a package.json file.
+	 *
+	 * @return true iff the given folder contains a package.json file and this file has a {@code workspaces} property.
+	 */
+	public boolean isYarnWorkspaceRoot(File folder) {
+		return isYarnWorkspaceRoot(folder, Optional.absent(), new HashMap<>());
+	}
+
 	private boolean isYarnWorkspaceRoot(File folder, Optional<File> projectFolder,
 			Map<File, List<String>> workspacesCache) {
+
 		if (!folder.isDirectory()) {
 			return false;
 		}
