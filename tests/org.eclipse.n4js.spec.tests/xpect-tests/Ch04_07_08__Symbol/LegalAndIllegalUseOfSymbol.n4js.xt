@@ -63,6 +63,13 @@ var localSym1 = Symbol();
 var localSym2 = Symbol("description");
 
 
+// XPECT noerrors -->
+var sharedSym = Symbol.for("key");
+
+// XPECT noerrors -->
+var sharedKey = Symbol.keyFor(sharedSym);
+
+
 //
 // all other uses are bad, bad, bad:
 //
@@ -87,15 +94,6 @@ var iter3 = myAny[Symbol.iterator];
 
 // XPECT errors --> "Access of property Symbol.iterator only allowed for instances of Iterable and immediate instances of Object." at "myObjStruct[Symbol.iterator]"
 var iter4 = myObjStruct[Symbol.iterator];
-
-
-// other ECMAScript 6 uses of Symbol are bad ...
-
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'for'." at "for"
-var sharedSym = Symbol.for("key");
-
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'keyFor'." at "keyFor"
-var sharedKey = Symbol.keyFor(sharedSym);
 
 
 // wrong location (i.e. other than in a property access expression) is bad ...

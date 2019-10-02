@@ -1001,12 +1001,20 @@ public providedByRuntime final object Symbol extends Object @Global {
 	public const iterator: symbol
 
 	/**
-	 * Returns the symbol with the given key from the Javascript engine's symbol registry. Creates a new symbol if
-	 * not found.
-	 * 
+	 * Returns the shared symbol with the given key from the Javascript engine's shared symbol registry.
+	 * Creates a new symbol if not found.
+	 *
 	 * @see ES6, 19.4.2.1
 	 */
 	public static for(key: string): symbol
+
+	/**
+	 * Returns the key for the given shared symbol if found in the Javascript engine's shared symbol registry.
+	 * Otherwise 'undefined' is returned.
+	 *
+	 * @see ES6, 19.4.2.5
+	 */
+	public static keyFor(sym: symbol): string
 }
 
 /**
