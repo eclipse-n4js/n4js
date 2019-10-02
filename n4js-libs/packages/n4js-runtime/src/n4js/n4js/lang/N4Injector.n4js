@@ -31,8 +31,6 @@ export public interface InjectedTypeMeta {
 export public interface InjectedClassMeta {
     /** present if type is annotated with scope annotation, will contain name of the scope */
     public scope?: string;
-    /** present if type has super type, contains loaded type itself */
-    public superType?: constructor{? extends N4Object};
     /** present if type has own injected constructor, can be empty (if annotated ctor has no params) */
     public injectCtorParams?: InjectedTypeMeta[];
     /** present if type has own injected fields, includes overriden fields */
@@ -89,9 +87,12 @@ export public function hasDIMeta(type: type{N4Object}): boolean {
 
 /** exported just for testing*/
 @Internal
-export public function getInjectedClassMeta(type: type{N4Object}): InjectedClassMeta? {
-    let typeObj: Object = type;
-    return typeObj[DI_PROP_NAME] as InjectedClassMeta;
+export public function getOwnInjectedClassMeta(type: type{N4Object}): InjectedClassMeta? {
+    if (type.hasOwnProperty(DI_PROP_NAME)) {
+        let typeObj: Object = type;
+        return typeObj[DI_PROP_NAME] as InjectedClassMeta;
+    }
+    return undefined;
 }
 
 /** exported just for testing*/
@@ -379,7 +380,10 @@ export public class N4Injector{
      */
     private declaredSingleton(ctor: type{N4Object}): boolean{
         if (hasDIMeta(ctor)) {
-            return getInjectedClassMeta(ctor).scope === "Singleton";
+            const meta = getOwnInjectedClassMeta(ctor);
+            if (meta) {
+                return meta.scope === "Singleton";
+            }
         }
         return false;
     }
@@ -519,19 +523,20 @@ export public class N4Injector{
      * Will traverse to super types to check for inherited constructor
      * (if owned ctor not there).
      */
-    private getInjectorParams(type: constructor{? extends N4Object}): InjectedTypeMeta[] {
+    private getInjectorParams(type: type{? extends N4Object}): InjectedTypeMeta[] {
         if(hasDIMeta(type)){
-            let meta = getInjectedClassMeta(type);
+            let meta = getOwnInjectedClassMeta(type);
             //owned injected constructor
-            if(meta.injectCtorParams){
+            if(meta && meta.injectCtorParams){
                 //assumption here is compiler generates this property
                 //only for owned injected constructor, even if
                 //it has no params in which case it is empty array
                 return meta.injectCtorParams;
             }
             //search through parents
-            if(meta.superType){
-                return this.getInjectorParams(meta.superType);
+            const superType = getSuperType(type);
+            if(superType) {
+                return this.getInjectorParams(superType);
             }
         }
         return [];
@@ -546,20 +551,23 @@ export public class N4Injector{
      */
     private injectDataFields(instance: N4Object,type: type{N4Object}, usedNames: Set<string>, delegate: N4Injector, cachedInstances: Map<string, N4Object>): void{
         if(hasDIMeta(type)){
-            let meta = getInjectedClassMeta(type);
-            meta.fieldsInjectedTypes.forEach(f => {
-                if(!usedNames.has(f.name)){
-                    usedNames.add(f.name);
-                    //cahedNames is copied per injection point, otherwise every type
-                    //effectively becomes singleton during injection phase.
-                    //we want to make them singleton like only per injection chain
-                    //to break cyclic dependency
-                    let instanceObj: Object = instance;
-                    instanceObj[f.name] = delegate.createFromInjectedTypeMeta(f, delegate, new Map<string, N4Object>(cachedInstances));
-                }
-            });
-            if(meta.superType){
-                delegate.injectDataFields(instance, meta.superType, usedNames, delegate, cachedInstances)
+            let meta = getOwnInjectedClassMeta(type);
+            if (meta && meta.fieldsInjectedTypes) {
+                meta.fieldsInjectedTypes.forEach(f => {
+                    if(!usedNames.has(f.name)){
+                        usedNames.add(f.name);
+                        //cahedNames is copied per injection point, otherwise every type
+                        //effectively becomes singleton during injection phase.
+                        //we want to make them singleton like only per injection chain
+                        //to break cyclic dependency
+                        let instanceObj: Object = instance;
+                        instanceObj[f.name] = delegate.createFromInjectedTypeMeta(f, delegate, new Map<string, N4Object>(cachedInstances));
+                    }
+                });
+            }
+            const superType = getSuperType(type);
+            if(superType) {
+                delegate.injectDataFields(instance, superType, usedNames, delegate, cachedInstances)
             }
         }
     }
@@ -729,3 +737,13 @@ export public class N4Injector{
     }
 }
 
+
+function getSuperType(type: type{? extends N4Object}): type{? extends N4Object} {
+    const superType = Object.getPrototypeOf(type);
+    if (superType === null
+            || superType === Function || superType === Object || superType === Error
+            || superType === Function.prototype || superType === Object.prototype) {
+        return undefined;
+    }
+    return superType as constructor{? extends N4Object};
+}

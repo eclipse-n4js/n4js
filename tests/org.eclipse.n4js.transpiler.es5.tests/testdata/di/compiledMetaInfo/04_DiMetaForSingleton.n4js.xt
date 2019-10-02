@@ -16,8 +16,7 @@
 stdout:
 DI data is needed for singletons
 {
-	"scope": "Singleton",
-	"fieldsInjectedTypes": []
+	"scope": "Singleton"
 }
 stderr:
 ==>
