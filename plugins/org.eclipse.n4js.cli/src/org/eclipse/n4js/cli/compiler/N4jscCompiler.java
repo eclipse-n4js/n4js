@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializedParams;
+import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
@@ -85,7 +86,7 @@ public class N4jscCompiler {
 	private void warnIfNoProjectsFound() {
 		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
 		if (projects.isEmpty()) {
-			System.out.println("No projects found at the given location: " + options.getSrcFiles().get(0));
+			N4jscConsole.println("No projects found at the given location: " + options.getSrcFiles().get(0));
 		}
 	}
 
@@ -98,8 +99,8 @@ public class N4jscCompiler {
 						.map(p -> p.getName() + " at " + Path.of(p.getPath().toFileString()).relativize(workspace))
 						.collect(toList());
 
-				System.out.println("Projects:");
-				System.out.print("   " + String.join("\n   ", projectNameList));
+				N4jscConsole.println("Projects:");
+				N4jscConsole.print("   " + String.join("\n   ", projectNameList));
 			}
 		}
 	}

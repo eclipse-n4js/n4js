@@ -29,9 +29,19 @@ public class N4jscConsole {
 		println(getPrintStream(), msg);
 	}
 
+	/** Prints a message on the console */
+	static public void print(String msg) {
+		print(getPrintStream(), msg);
+	}
+
 	/** Prints a message on the given stream */
 	static public void println(PrintStream ps, String msg) {
-		ps.println(addModuleNamePrefix(msg));
+		print(ps, msg + System.lineSeparator());
+	}
+
+	/** Prints a message on the given stream */
+	static public void print(PrintStream ps, String msg) {
+		ps.print(addModuleNamePrefix(msg));
 	}
 
 	static private String addModuleNamePrefix(String msg) {
