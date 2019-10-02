@@ -77,7 +77,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		pathTo_one_api_execution = proot + "/" + project_one_api_execution;
 
 		N4jscOptions options = COMPILE(workspace);
-		CliResult cliResult = main(options);
+		CliResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 69, cliResult.getTranspiledFilesCount());
 	}
 
@@ -125,7 +125,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 	@Test
 	public void testImplemented_members() {
 		String fileToRunName = fileToExecute_direct("Exec_implemented_members.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js\n"
 				+ "OK: holds not undefined\n"
@@ -137,7 +137,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 	@Test
 	public void testMissing_field_in_class() {
 		String fileToRunName = fileToExecute_direct("Exec_missing_field_in_class.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
@@ -147,7 +147,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 	@Test
 	public void testMissing_getter_in_class() {
 		String fileToRunName = fileToExecute_direct("Exec_missing_getter_in_class.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
@@ -157,7 +157,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 	@Test
 	public void testMissing_method_in_class() {
 		String fileToRunName = fileToExecute_direct("Exec_missing_field_in_class.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
@@ -169,7 +169,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_missing_method2_in_class.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -180,7 +180,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_missing_setter_in_class.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -198,7 +198,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 				"OK: holds not undefined";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_Literal_in_existing_Enum.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -210,7 +210,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_literal_in_missing_Enum.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -222,7 +222,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_literal_in_missing_EnumSB.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -234,7 +234,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_missing_Literal_in_existing_Enum.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -246,7 +246,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_missing_Literal_in_existing_EnumSB.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -260,7 +260,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 				"OK: holds not undefined";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_normal_existing_EnumSB.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -276,7 +276,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_get_missing.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -288,7 +288,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 				"OK: holds not undefined";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_get.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -300,7 +300,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_method_missing.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -312,7 +312,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 				"OK: holds not undefined";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_method.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -323,7 +323,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_set_missing.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -334,7 +334,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_set.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -345,7 +345,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_method_missing.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -357,7 +357,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 				"OK: holds not undefined";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_method.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -368,7 +368,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_getter_missing.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -379,7 +379,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
 
 		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_setter_missing.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -393,7 +393,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.IF.n4js";
 
 		String fileToRunName = fileToExecute_if("Exec_AT_IDE-1510_Consumed_Members_of_Missing_Inteface.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -411,7 +411,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 
 		String fileToRunName = fileToExecute_if(
 				"Exec_AT_IDE-1510_Consumed_Members_of_Missing_Inteface_single_case.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -425,7 +425,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.VarFun.n4js";
 
 		String fileToRunName = fileToExecute_var_and_fun("Exec_AT_IDE-1510_Variable_And_Function_test_function.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -441,7 +441,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 
 		String fileToRunName = fileToExecute_var_and_fun(
 				"Exec_AT_IDE-1510_Variable_And_Function_test_global_variable.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -455,7 +455,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.StubRoute.n4js";
 
 		String fileToRunName = fileToExecute_routing("Exec_AT_IDE-1510_Subclass_missing_inherited.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -466,7 +466,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::p.StubRoute.n4js";
 
 		String fileToRunName = fileToExecute_routing("Exec_AT_IDE-1510_Subclass_normal_inherited.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -480,7 +480,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 
 		String fileToRunName = fileToExecute_routing(
 				"Exec_AT_IDE-1510_Internal_impl_Subclass_UsingDirectImplementation.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -494,7 +494,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 
 		String fileToRunName = fileToExecute_routing(
 				"Exec_AT_IDE-1510_Internal_impl_Subclass_UsingIndirectImplementation.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -508,7 +508,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_2.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -519,7 +519,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_3.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -530,7 +530,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_4.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -541,7 +541,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_5.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -552,7 +552,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_1.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -563,7 +563,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_6.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -574,7 +574,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_7.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -585,7 +585,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_8.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -596,7 +596,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_9.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -607,7 +607,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_A.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -618,7 +618,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_B.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -629,7 +629,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_C.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
@@ -640,7 +640,7 @@ public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
 
 		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_D.js");
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRunName));
 
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}

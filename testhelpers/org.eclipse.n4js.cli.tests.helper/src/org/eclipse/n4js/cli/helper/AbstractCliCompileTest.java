@@ -51,7 +51,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	protected static final String TEST_DATA_SET__NPM_SCOPES = "npmScopes";
 
 	@Override
-	public void doMain(N4jscOptions options, CliResult result) throws Exception {
+	public void doN4jsc(N4jscOptions options, CliResult result) throws Exception {
 		N4jscCompiler.start(options);
 
 		// save transpiled files
@@ -71,11 +71,25 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		result.projects = projectMap;
 	}
 
-	/** {@link TestProcessExecuter#run(Path, Path)} */
-	public ProcessResult run(Path workingDir, Path runFile) {
+	/** {@link TestProcessExecuter#runNodejs(Path, Path)} */
+	public ProcessResult runNodejs(Path workingDir, Path runFile) {
 		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
-		TestProcessExecuter nodejsExecuter = new TestProcessExecuter(lastInjector);
-		return nodejsExecuter.run(workingDir, runFile);
+		TestProcessExecuter tpExecuter = new TestProcessExecuter(lastInjector);
+		return tpExecuter.runNodejs(workingDir, runFile);
+	}
+
+	/** {@link TestProcessExecuter#npmInstall(Path)} */
+	public ProcessResult npmInstall(Path workingDir) {
+		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
+		TestProcessExecuter tpExecuter = new TestProcessExecuter(lastInjector);
+		return tpExecuter.npmInstall(workingDir);
+	}
+
+	/** {@link TestProcessExecuter#yarnInstall(Path)} */
+	public ProcessResult yarnInstall(Path workingDir) {
+		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
+		TestProcessExecuter tpExecuter = new TestProcessExecuter(lastInjector);
+		return tpExecuter.yarnInstall(workingDir);
 	}
 
 	/**

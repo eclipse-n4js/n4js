@@ -54,10 +54,10 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractCliCompileTe
 		Path fileToRun = projectDir.resolve("src-gen/Client.js");
 
 		N4jscOptions options = COMPILE(workspace);
-		CliResult cliResult = main(options);
+		CliResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 6, cliResult.getTranspiledFilesCount());
 
-		ProcessResult nodejsResult = run(projectDir, fileToRun);
+		ProcessResult nodejsResult = runNodejs(projectDir, fileToRun);
 		assertEquals(nodejsResult.toString(), "foo === 36: true, bar === 'bar': true", nodejsResult.getStdOut());
 	}
 

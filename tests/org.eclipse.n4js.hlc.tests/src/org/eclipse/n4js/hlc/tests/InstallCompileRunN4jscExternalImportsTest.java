@@ -58,14 +58,14 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompil
 		final String fileToRun = packages + "/external.project/src-gen/Main.js";
 
 		N4jscOptions options = COMPILE(workspace);
-		CliResult cliResult = main(options);
+		CliResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 1216, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "react is not undefined true\n"
 				+ "react-dom is not undefined true\n"
 				+ "imports from libs are different true";
 
-		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRun));
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 

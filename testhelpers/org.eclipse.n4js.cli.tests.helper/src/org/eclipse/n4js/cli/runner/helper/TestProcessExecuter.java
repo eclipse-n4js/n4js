@@ -39,7 +39,7 @@ public class TestProcessExecuter {
 	}
 
 	/** Runs node with the given {@code runFile} in the given {@code workingDir} */
-	public ProcessResult run(Path workingDir, Path runFile) {
+	public ProcessResult runNodejs(Path workingDir, Path runFile) {
 		return joinProcess(() -> processBuilder.nodejsRun(workingDir, runFile));
 	}
 

@@ -18,7 +18,7 @@ import org.eclipse.n4js.cli.helper.CliResult;
 public class AbstractCliFrontendTest extends AbstractCliTest<String[]> {
 
 	@Override
-	public void doMain(String[] args, CliResult result) {
+	public void doN4jsc(String[] args, CliResult result) {
 		try {
 			setN4jscRedirectionsDeactivateBackend();
 			N4jscMain.main(args);

@@ -58,7 +58,7 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractCliCompileTest {
 
 		N4jscOptions options = COMPILE(proot);
 
-		CliResult cliResult = main(options);
+		CliResult cliResult = n4jsc(options);
 
 		// Make sure, we get here and have exactly one file compiled:
 

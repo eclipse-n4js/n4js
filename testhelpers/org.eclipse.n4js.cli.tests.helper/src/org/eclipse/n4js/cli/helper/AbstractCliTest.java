@@ -31,7 +31,7 @@ abstract public class AbstractCliTest<ArgType> {
 	final private SystemOutRedirecter systemOutRedirecter = new SystemOutRedirecter();
 
 	/** Invokes the starting method of this test class */
-	abstract public void doMain(ArgType arg, CliResult cliResult) throws Exception;
+	abstract public void doN4jsc(ArgType arg, CliResult cliResult) throws Exception;
 
 	/** Sets up the System outputs and Security Manager */
 	final public void setN4jscRedirections() {
@@ -57,27 +57,27 @@ abstract public class AbstractCliTest<ArgType> {
 		N4jscTestFactory.unset();
 	}
 
-	/** Convenience version of {@link #main(Object, int)} with exist code == 0 */
-	protected CliResult main(ArgType args) {
-		return main(args, 0);
+	/** Convenience version of {@link #n4jsc(Object, int)} with exist code == 0 */
+	protected CliResult n4jsc(ArgType args) {
+		return n4jsc(args, 0);
 	}
 
-	/** Convenience version of {@link #main(Object, int, boolean)} with exist code == 0 and removeUsage == true */
-	protected CliResult main(ArgType args, int exitCode) {
-		return main(args, exitCode, true);
+	/** Convenience version of {@link #n4jsc(Object, int, boolean)} with exist code == 0 and removeUsage == true */
+	protected CliResult n4jsc(ArgType args, int exitCode) {
+		return n4jsc(args, exitCode, true);
 	}
 
 	/**
 	 * Calls main entry point of N4jsc with the given args. Checks that the given exit code equals the actual exit code
 	 * of the invocation. Removes {@link N4jscOptions#USAGE} text if desired.
 	 */
-	protected CliResult main(ArgType args, int exitCode, boolean removeUsage) {
+	protected CliResult n4jsc(ArgType args, int exitCode, boolean removeUsage) {
 		CliResult cliResult = new CliResult();
 		Stopwatch sw = Stopwatch.createStarted();
 
 		try {
 			setN4jscRedirections();
-			doMain(args, cliResult);
+			doN4jsc(args, cliResult);
 
 		} catch (SystemExitException e) {
 			cliResult.exitCode = e.status;

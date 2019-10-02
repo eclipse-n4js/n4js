@@ -59,7 +59,7 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 
 		N4jscOptions options = COMPILE(proot);
 
-		CliResult cliResult = main(options);
+		CliResult cliResult = n4jsc(options);
 
 		// Make sure, we get here and have exactly two files compiled:
 		assertEquals(cliResult.toString(), 0, cliResult.getTranspiledFilesCount(proot.toPath().resolve("APIx")));
