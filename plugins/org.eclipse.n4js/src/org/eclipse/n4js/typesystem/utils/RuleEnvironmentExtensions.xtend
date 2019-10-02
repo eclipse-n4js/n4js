@@ -681,6 +681,21 @@ class RuleEnvironmentExtensions {
 		createTypeRef(G.generatorType, typeArgs);
 	}
 
+	/* Returns built-in type {@code N4Element} */
+	public def static TClass n4ElementType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.n4ElementType
+	}
+
+	/* Returns built-in type {@code N4NamedElement} */
+	public def static TClass n4NamedElementType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.n4NamedElementType
+	}
+
+	/* Returns built-in type {@code N4Type} */
+	public def static TClass n4TypeType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.n4TypeType
+	}
+
 	/**
 	 * Returns true if the given type is one of the {@link BuiltInTypeScope#isNumeric(Type) numeric} primitive
 	 * built-in types.
