@@ -149,7 +149,7 @@
      * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
      * @return The constructed enumeration type
      */
-    function $makeEnum(enumeration, stringBased/* TODO obsolete */, members, n4typeFn) {
+    function $makeEnum(enumeration, members, n4typeFn) {
         var length, index, member, name, value, values, literal;
 
         Object.setPrototypeOf(enumeration, global.N4Enum);

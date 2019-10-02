@@ -225,7 +225,6 @@ class BootstrapCallAssistant extends TransformationAssistant {
 				target = _IdentRef(steFor_$makeEnum);
 				arguments += #[
 					_IdentRef(findSymbolTableEntryForElement(enumDecl, false)),
-					_BooleanLiteral(isStringBased),
 					enumLiteralArray,
 					createN4TypeMetaInfoFactoryFunction(enumDecl, null)
 				].map[_Argument(it)];
