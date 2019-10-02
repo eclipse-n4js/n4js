@@ -8,30 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+@@Global @@ProvidedByRuntime
 
-/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
-
-    ResourceSet {
-		File "Other.n4js" {}
-		ThisFile {}
-	}
-
-	END_SETUP
-*/
-
-
-import { C } from "expressions/optimizeAccessToNameOfFunctions/Other"
-
-console.log(C.name);
-
-new C();
-
-
-/* XPECT output ---
-<==
-stdout:
-module Other.n4js is being loaded ...
-C
-stderr:
-==>
---- */
+@Polyfill @Final export external public class Function extends Function {
+    public get name(): string;
+}

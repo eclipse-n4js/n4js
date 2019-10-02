@@ -54,7 +54,6 @@ class ExpressionTransformation extends Transformation {
 	@Inject private ResourceNameComputer resourceNameComputer;
 	@Inject private PromisifyHelper promisifyHelper;
 
-	private TGetter function_name;
 	private TGetter n4Object_n4type;
 	private TGetter n4NamedElement_name;
 	private TGetter n4Element_origin;
@@ -69,14 +68,12 @@ class ExpressionTransformation extends Transformation {
 	}
 
 	override analyze() {
-		function_name = state.G.functionType.findOwnedMember("name", false, false) as TGetter;
 		n4Object_n4type = state.G.n4ObjectType.findOwnedMember("n4type", false, true) as TGetter;
 		n4NamedElement_name = state.G.n4NamedElementType.findOwnedMember("name", false, false) as TGetter;
 		n4Element_origin = state.G.n4ElementType.findOwnedMember("origin", false, false) as TGetter;
 		n4Type_fqn = state.G.n4TypeType.findOwnedMember("fqn", false, false) as TGetter;
 
-		if (function_name === null
-			|| n4Object_n4type === null
+		if (n4Object_n4type === null
 			|| n4NamedElement_name === null
 			|| n4Element_origin === null
 			|| n4Type_fqn === null) {
@@ -97,7 +94,6 @@ class ExpressionTransformation extends Transformation {
 	}
 
 	def private dispatch void transformExpression(ParameterizedPropertyAccessExpression_IM propAccessExpr) {
-		transformAccessToNameOfFunctions(propAccessExpr);
 		transformTrivialUsageOfReflection(propAccessExpr);
 	}
 
@@ -213,28 +209,6 @@ class ExpressionTransformation extends Transformation {
 		}
 		// if anything goes awry, we just return callExpr as replacement, which means we simply remove the @Promisify
 		return callExpr;
-	}
-
-	/**
-	 * Replaces access to getter "name" of the built-in type {@code Function} by the resulting value (i.e. a string literal):
-	 * <pre>
-	 * MyClass.name
-	 * myFunction.name
-	 * </pre>
-	 * Thus, the function is not actually required at runtime.
-	 */
-	def private void transformAccessToNameOfFunctions(ParameterizedPropertyAccessExpression_IM propAccessExpr) {
-		val property = propAccessExpr.originalTargetOfRewiredTarget;
-		if (property === function_name) {
-			val target = propAccessExpr.target;
-			if (target instanceof IdentifierRef_IM) {
-				val id = target.originalTargetOfRewiredTarget;
-				if (id instanceof TClass
-					|| id instanceof TFunction) {
-					replace(propAccessExpr, _StringLiteral(id.name));
-				}
-			}
-		}
 	}
 
 	/**
