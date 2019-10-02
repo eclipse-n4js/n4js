@@ -21,7 +21,6 @@ classInjectedConstructorNoParams has ctor di meta of length 0 true
 classInjectedConstructorWith2Params has ctor di meta not undefiend true
 classInjectedConstructorWith2Params has ctor di meta of length 2 true
 classInheritedInejctedCtor has di meta true
-classInheritedInejctedCtor has di meta for ctor undefiend true
 stderr:
 ==>
 --- */
@@ -49,28 +48,31 @@ interface InjectedClassMeta{
 
 }
 
-function getInjectedClassMeta(type : Object): InjectedClassMeta?{
-    return type['$di'] as InjectedClassMeta;
+function getOwnInjectedClassMeta(type: type{N4Object}): InjectedClassMeta? {
+    if (type.hasOwnProperty("$di")) {
+        let typeObj: Object = type;
+        return typeObj["$di"] as InjectedClassMeta;
+    }
+    return undefined;
 }
 //==================================================================
 //=============================== tests ============================
 //==================================================================
 
 
-var metaA : InjectedClassMeta = getInjectedClassMeta(A);
+var metaA : InjectedClassMeta = getOwnInjectedClassMeta(A);
 console.log('classNoConstructor has ctor di meta undefiend', typeof metaA === 'undefined')
 
-var metaB : InjectedClassMeta = getInjectedClassMeta(B);
+var metaB : InjectedClassMeta = getOwnInjectedClassMeta(B);
 console.log('classNotInjectedConstructor has meta undefiend', typeof metaB === 'undefined')
 
-var metaC : InjectedClassMeta = getInjectedClassMeta(C);
+var metaC : InjectedClassMeta = getOwnInjectedClassMeta(C);
 console.log('classInjectedConstructorNoParams has ctor di meta not undefiend', typeof metaC !== 'undefined')
 console.log('classInjectedConstructorNoParams has ctor di meta of length 0', metaC.injectCtorParams.length === 0)
 
-var metaD : InjectedClassMeta = getInjectedClassMeta(D);
+var metaD : InjectedClassMeta = getOwnInjectedClassMeta(D);
 console.log('classInjectedConstructorWith2Params has ctor di meta not undefiend', typeof metaD !== 'undefined')
 console.log('classInjectedConstructorWith2Params has ctor di meta of length 2', metaD.injectCtorParams.length === 2)
 
-var metaE : InjectedClassMeta = getInjectedClassMeta(E);
-console.log('classInheritedInejctedCtor has di meta', typeof metaE !== 'undefined')
-console.log('classInheritedInejctedCtor has di meta for ctor undefiend', typeof metaE.injectCtorParams === 'undefined')
+var metaE : InjectedClassMeta = getOwnInjectedClassMeta(E);
+console.log('classInheritedInejctedCtor has di meta', typeof metaE === 'undefined')

@@ -100,8 +100,12 @@ interface DIComponentMeta extends InjectedClassMeta{
     binders : Array<constructor{N4Object}>;
 }
 
-function getInjectedClassMeta(type : any): InjectedClassMeta?{
-    return (type as Object)['$di'] as InjectedClassMeta;
+function getOwnInjectedClassMeta(type: type{N4Object}): InjectedClassMeta? {
+    if (type.hasOwnProperty("$di")) {
+        let typeObj: Object = type;
+        return typeObj["$di"] as InjectedClassMeta;
+    }
+    return undefined;
 }
 
 function getBinderMeta(type : any): BinderMeta?{
@@ -123,9 +127,7 @@ function getDIComponentMeta(type : any): DIComponentMeta?{
  */
 
 (function checkInjectedClassDeps(){
-	var meta = getInjectedClassMeta(Injected);
-
-    strictEqual(meta.superType.n4type.name, 'P', "Injected class super type not present");
+	var meta = getOwnInjectedClassMeta(Injected);
 
     strictEqual(meta.fieldsInjectedTypes[0].type.n4type.name, 'A', "injected field type not present");
     strictEqual(meta.fieldsInjectedTypes[1].typeVar.type.n4type.name, 'B', "injected provided type not present");

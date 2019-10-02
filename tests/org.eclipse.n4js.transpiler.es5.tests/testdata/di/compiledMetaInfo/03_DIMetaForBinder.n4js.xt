@@ -50,8 +50,7 @@ when needed DI data is there
 				}
 			]
 		}
-	],
-	"fieldsInjectedTypes": []
+	]
 }
 stderr:
 ==>

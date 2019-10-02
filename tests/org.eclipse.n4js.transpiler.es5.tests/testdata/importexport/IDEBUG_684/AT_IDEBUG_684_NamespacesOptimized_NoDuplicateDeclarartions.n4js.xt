@@ -45,12 +45,6 @@ $makeClass(ASD, N.Error, [], {}, {}, function(instanceProto, staticProto) {
 	});
 	return metaClass;
 });
-Object.defineProperty(ASD, '$di', {
-	value: {
-		superType: N.Error,
-		fieldsInjectedTypes: []
-	}
-});
 --- */
 
 import * as N from "importexport/IDEBUG_684/Err"
