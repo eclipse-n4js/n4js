@@ -20,8 +20,8 @@ import java.util.TreeMap;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
-import org.eclipse.n4js.cli.runner.helper.NodejsExecuter;
-import org.eclipse.n4js.cli.runner.helper.NodejsResult;
+import org.eclipse.n4js.cli.runner.helper.ProcessResult;
+import org.eclipse.n4js.cli.runner.helper.TestProcessExecuter;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -32,7 +32,9 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.inject.Injector;
 
-/** Subclass this class for test cases that compile n4js code and run js code */
+/**
+ * Subclass this class for test cases that compile n4js code and run js code
+ */
 @SuppressWarnings("restriction")
 public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	/** name of workspace sub-folder (inside target folder) */
@@ -69,10 +71,10 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		result.projects = projectMap;
 	}
 
-	/** {@link NodejsExecuter#run(Path, Path)} */
-	public NodejsResult run(Path workingDir, Path runFile) {
+	/** {@link TestProcessExecuter#run(Path, Path)} */
+	public ProcessResult run(Path workingDir, Path runFile) {
 		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
-		NodejsExecuter nodejsExecuter = new NodejsExecuter(lastInjector);
+		TestProcessExecuter nodejsExecuter = new TestProcessExecuter(lastInjector);
 		return nodejsExecuter.run(workingDir, runFile);
 	}
 
@@ -128,6 +130,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 			Predicate<N4JSProjectName> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
 		Path fixture = new File(testDataRoot, testDataSet).toPath();
 		Path root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_");
+		root = root.toFile().getCanonicalFile().toPath();
 		Path wsp = root.resolve(WSP);
 		N4CliHelper.setupWorkspace(fixture, wsp, n4jsLibrariesPredicate, createYarnWorkspace);
 		return wsp.toFile();

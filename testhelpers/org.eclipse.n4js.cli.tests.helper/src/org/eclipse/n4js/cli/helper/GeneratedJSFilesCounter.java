@@ -27,7 +27,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 
 /**
- *
+ * Counts all js files of all (sub-)directories starting at a given root folder.
  */
 public class GeneratedJSFilesCounter {
 

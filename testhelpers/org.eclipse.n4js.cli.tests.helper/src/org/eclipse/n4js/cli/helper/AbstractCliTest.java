@@ -24,7 +24,9 @@ import org.eclipse.n4js.cli.N4jscTestFactory;
 import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
 
-/**  */
+/**
+ * Abstract test class to be used when testing N4JS CLI related things.
+ */
 abstract public class AbstractCliTest<ArgType> {
 	final private SystemOutRedirecter systemOutRedirecter = new SystemOutRedirecter();
 
@@ -92,7 +94,7 @@ abstract public class AbstractCliTest<ArgType> {
 
 			Injector lastCreatedInjector = N4jscTestFactory.getLastCreatedInjector();
 			if (lastCreatedInjector != null) {
-				N4jscTestCallback callback = (N4jscTestCallback) N4jscFactory
+				N4jscTestLanguageClient callback = (N4jscTestLanguageClient) N4jscFactory
 						.getLanguageClient(lastCreatedInjector);
 				cliResult.errors = callback.errors;
 				cliResult.warnings = callback.warnings;
