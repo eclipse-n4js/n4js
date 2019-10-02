@@ -77,9 +77,13 @@
      * Setup a interface. Methods and field initializers are already merged into the interface object.
      *
      * @param tinterface - The interface object.
+     * @param extendedInterfacesFn - Optional function returning an array of interfaces extended by 'tinterface'.
+     *                               May be 'undefined' in case no interfaces are extended.
      * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
      */
-    function $makeInterface(tinterface, n4typeFn) {
+    function $makeInterface(tinterface, extendedInterfacesFn, n4typeFn) {
+        tinterface.$extends = extendedInterfacesFn || (()=>[]);
+
         if (n4typeFn) {
             defineN4TypeGetter(tinterface, n4typeFn.bind(null, tinterface.$methods, tinterface));
         }
@@ -99,6 +103,41 @@
                 return instance.constructor.n4type.allImplementedInterfaces.indexOf(implementedInterface) !== -1;
             }
         });
+    }
+
+    /**
+     * Initialize the fields declared by the given interfaces in the target object 'target'.
+     * Takes care of defaults defined in the interfaces and values provided via the optional
+     * 'spec' object. Will never override properties that already exist in the target object
+     * or that exist in the 'mixinExclusion' object.
+     *
+     * @param target - The object to be initialized. Usually a newly created instance of
+     *                 some class implementing the given interfaces.
+     * @param interfaces - Array of zero or more interfaces.
+     * @param spec - If invoked from a @Spec-constructor, this is the spec-object; otherwise 'undefined'.
+     * @param mixinExclusion - An object with properties that must not be overridden in the target object.
+     */
+    function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
+        for(const ifc of interfaces) {
+            const defs = ifc.$fieldDefaults || {};
+            for(const fieldName of Object.getOwnPropertyNames(defs)) {
+                if(target.hasOwnProperty(fieldName) || mixinExclusion.hasOwnProperty(fieldName)) {
+                    continue;
+                }
+                let value = undefined;
+                if(spec) {
+                    value = spec[fieldName];
+                }
+                if(value === undefined) {
+                    value = defs[fieldName];
+                    if (typeof value === "function") {
+                        value = value.call(target);
+                    }
+                }
+                target[fieldName] = value;
+            }
+            $initFieldsFromInterfaces(target, ifc.$extends(), spec, mixinExclusion);
+        }
     }
 
     /**
@@ -232,6 +271,7 @@
     //expose in global scope
     global.$makeClass = $makeClass;
     global.$makeInterface = $makeInterface;
+    global.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
     global.$makeEnum = $makeEnum;
 
     global.$sliceToArrayForDestruct = $sliceToArrayForDestruct;

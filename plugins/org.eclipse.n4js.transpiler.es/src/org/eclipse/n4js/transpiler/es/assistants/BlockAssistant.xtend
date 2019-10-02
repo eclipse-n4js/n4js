@@ -29,17 +29,20 @@ class BlockAssistant extends TransformationAssistant {
 	 * therefore factored out into this helper method.
 	 */
 	def public void assertArrowFunctionConditions() {
-		assertTrue(
-			"all arrow functions must have an original AST node "+
-			"(i.e. not allowed to add arrow functions programmatically in a transformation)",
-			state.im.eAllContents.filter(ArrowFunction).forall[
-				state.tracer.getOriginalASTNodeOfSameType(it, false)!==null
-			]);
+//		assertTrue(
+//			"all arrow functions must have an original AST node "+
+//			"(i.e. not allowed to add arrow functions programmatically in a transformation)",
+//			state.im.eAllContents.filter(ArrowFunction).forall[
+//				state.tracer.getOriginalASTNodeOfSameType(it, false)!==null
+//			]);
 	}
 
 	def public final boolean needsReturnInsertionForBody(ArrowFunction arrowFuncInIM) {
 		// unfortunately, we need a properly contained AST element below (see preconditions above)
-		val origAST = state.tracer.getOriginalASTNodeOfSameType(arrowFuncInIM, true);
+		val origAST = state.tracer.getOriginalASTNodeOfSameType(arrowFuncInIM, false);
+if (origAST === null) {
+	return true;
+}
 		if (!origAST.isSingleExprImplicitReturn) {
 			return false;
 		}
