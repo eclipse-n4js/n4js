@@ -165,7 +165,7 @@ public providedByRuntime object Object @Global {
 	 *
 	 * @see ES5, 15.2.4.5
 	 */
-	public hasOwnProperty(propertyName: string): boolean
+	public hasOwnProperty(propertyName: union{string, symbol}): boolean
 	/**
 	 * Returns true, if the given object is equal to the prototype of the current object (this method has been invoked on).
 	 *
@@ -999,6 +999,14 @@ public providedByRuntime final object Symbol extends Object @Global {
 	 * TODO doc
 	 */
 	public const iterator: symbol
+
+	/**
+	 * Returns the symbol with the given key from the Javascript engine's symbol registry. Creates a new symbol if
+	 * not found.
+	 * 
+	 * @see ES6, 19.4.2.1
+	 */
+	public static for(key: string): symbol
 }
 
 /**

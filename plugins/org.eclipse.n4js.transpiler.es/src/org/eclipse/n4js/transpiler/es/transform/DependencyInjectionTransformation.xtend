@@ -36,7 +36,8 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 
 /**
  * Generates DI meta information for the injector.
- * Information is attached to the compiled type in the '$di' property.
+ * Information is attached to the compiled type in the {@link N4JSLanguageConstants#DI_SYMBOL_KEY DI_SYMBOL_KEY}
+ * property.
  *
  * TODO the DI code below makes heavy use of TModule (probably) without true need; refactor this
  */
@@ -86,14 +87,16 @@ class DependencyInjectionTransformation extends Transformation {
 		if(propertiesForDI.empty) {
 			return null;
 		}
-		// Object.defineProperty(C, 'DI_PROP_NAME', {value: { ... }}
+		// Object.defineProperty(C, Symbol.for('<DI_SYMBOL_KEY>'), {value: { ... }}
 		val classSTE = findSymbolTableEntryForElement(classDecl, true);
 		val objectSTE = getSymbolTableEntryOriginal(state.G.objectType, true);
 		val definePropertySTE = getSymbolTableEntryForMember(state.G.objectType, "defineProperty", false, true, true);
+		val symbolObjectSTE = getSymbolTableEntryOriginal(state.G.symbolObjectType, true);
+		val forSTE = getSymbolTableEntryForMember(state.G.symbolObjectType, "for", false, true, true);
 		return _ExprStmnt(_CallExpr(
 			_PropertyAccessExpr(objectSTE, definePropertySTE),
 			_IdentRef(classSTE),
-			_StringLiteral(N4JSLanguageConstants.DI_PROP_NAME),
+			_CallExpr(_PropertyAccessExpr(symbolObjectSTE, forSTE), _StringLiteral(N4JSLanguageConstants.DI_SYMBOL_KEY)),
 			_ObjLit(
 				"value" -> _ObjLit(
 					propertiesForDI

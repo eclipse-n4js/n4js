@@ -9,7 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-const DI_PROP_NAME = '$di';
+const DI_SYMBOL_KEY = "org.eclipse.n4js/diInfo";
+const DI_PROP_NAME = Symbol.for(DI_SYMBOL_KEY);
 
 /**
  * Interface for DI hooks of an injected type;
