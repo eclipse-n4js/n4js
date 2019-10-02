@@ -21,8 +21,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliResult;
-import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.cli.runner.helper.NodejsResult;
+import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -58,8 +57,8 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractCliCompileTe
 		CliResult cliResult = main(options);
 		assertEquals(cliResult.toString(), 6, cliResult.getTranspiledFilesCount());
 
-		NodejsResult nodejsResult = run(projectDir, fileToRun);
-		N4CliHelper.assertExpectedOutput("foo === 36: true, bar === 'bar': true", nodejsResult.getStdOut());
+		ProcessResult nodejsResult = run(projectDir, fileToRun);
+		assertEquals(nodejsResult.toString(), "foo === 36: true, bar === 'bar': true", nodejsResult.getStdOut());
 	}
 
 }

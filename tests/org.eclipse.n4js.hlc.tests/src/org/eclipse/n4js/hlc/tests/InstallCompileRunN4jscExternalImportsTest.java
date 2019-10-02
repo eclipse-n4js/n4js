@@ -20,12 +20,10 @@ import java.nio.file.Path;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliResult;
-import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.cli.runner.helper.NodejsResult;
+import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -53,8 +51,7 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompil
 	 * running it with Common JS.
 	 */
 	@Test
-	@Ignore // remove @Ignore when GH-887 is merged
-	// continue here
+	// @Ignore // remove @Ignore when GH-887 is merged
 	public void testCompileAndRunWithExternalDependencies() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
@@ -62,14 +59,14 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompil
 
 		N4jscOptions options = COMPILE(workspace);
 		CliResult cliResult = main(options);
-		assertEquals(cliResult.toString(), 69, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 1216, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "react is not undefined true\n"
 				+ "react-dom is not undefined true\n"
 				+ "imports from libs are different true";
 
-		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRun));
-		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
+		ProcessResult nodejsResult = run(workspace.toPath(), Path.of(fileToRun));
+		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 
 }

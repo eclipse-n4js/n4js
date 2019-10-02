@@ -145,24 +145,24 @@ public class CliResult {
 		List<String> projectNameList = getProjects().entrySet().stream().map(e -> e.getKey() + " at " + e.getValue())
 				.collect(toList());
 
-		String s = "CLI Result:\n"
-				+ "    duration:  " + duration + "ms\n"
-				+ "    exit code: " + exitCode + "\n"
-				+ "    projects (" + getProjects().size() + "):\n"
-				+ "       " + String.join("\n       ", projectNameList) + "\n"
-				+ "    transpiled (" + getTranspiledFilesCount() + "):\n"
-				+ (getTranspiledFilesCount() > 0 ? "       " : "")
-				+ String.join("\n       ", fileNameList) + "\n"
-				+ "    warnings (" + getWrns() + "):\n" + (getWrns() > 0 ? "    " : "")
-				+ String.join("\n    ", getWrnMsgs()) + "\n"
-				+ "    errors (" + getErrs() + "):\n" + (getErrs() > 0 ? "    " : "")
-				+ String.join("\n    ", getErrMsgs()) + "\n"
-				+ ((cause != null) ? "    exception " + cause.getMessage() : "")
-				+ "    std out:\n"
-				+ (stdOut.isBlank() ? "" : ">>>>\n" + stdOut + "\n<<<<\n")
-				+ "    err out:\n"
-				+ (errOut.isBlank() ? "" : ">>>>\n" + errOut + "\n<<<<\n")
-				+ "CLI Result end\n";
+		String s = "CLI Result:\n";
+		s += "    duration:  " + duration + "ms\n";
+		s += "    exit code: " + exitCode + "\n";
+		s += "    projects (" + getProjects().size() + "):\n";
+		s += "       " + String.join("\n       ", projectNameList) + "\n";
+		s += "    transpiled (" + getTranspiledFilesCount() + "):\n";
+		s += (getTranspiledFilesCount() > 0 ? "       " : "");
+		s += String.join("\n       ", fileNameList) + "\n";
+		s += "    warnings (" + getWrns() + "):\n" + (getWrns() > 0 ? "    " : "");
+		s += String.join("\n    ", getWrnMsgs()) + "\n";
+		s += "    errors (" + getErrs() + "):\n" + (getErrs() > 0 ? "    " : "");
+		s += String.join("\n    ", getErrMsgs()) + "\n";
+		s += ((cause == null) ? "" : "    exception " + cause.getMessage());
+		s += "    std out:\n";
+		s += (stdOut.isBlank() ? "" : ">>>>\n" + stdOut + "\n<<<<\n");
+		s += "    err out:\n";
+		s += (errOut.isBlank() ? "" : ">>>>\n" + errOut + "\n<<<<\n");
+		s += "CLI Result End.\n";
 		return s;
 	}
 }

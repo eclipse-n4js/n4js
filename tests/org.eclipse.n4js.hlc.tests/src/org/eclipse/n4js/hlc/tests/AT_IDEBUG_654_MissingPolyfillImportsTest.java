@@ -21,8 +21,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliResult;
-import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.cli.runner.helper.NodejsResult;
+import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -61,8 +60,8 @@ public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractCliCompile
 		CliResult cliResult = main(options);
 		assertEquals(cliResult.toString(), 8, cliResult.getTranspiledFilesCount());
 
-		NodejsResult nodejsResult = run(projectDir, fileToRun);
-		N4CliHelper.assertExpectedOutput(
+		ProcessResult nodejsResult = run(projectDir, fileToRun);
+		assertEquals(nodejsResult.toString(),
 				"functionFromModuleA\n" +
 						"variableFromModuleB\n" +
 						"variableFromModuleC\n" +

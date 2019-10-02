@@ -21,8 +21,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliResult;
-import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.cli.runner.helper.NodejsResult;
+import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -61,8 +60,8 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 		CliResult cliResult = main(options);
 		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());
 
-		NodejsResult nodejsResult = run(projectDir, fileToRun);
-		N4CliHelper.assertExpectedOutput("A.a == 5: true", nodejsResult.getStdOut());
+		ProcessResult nodejsResult = run(projectDir, fileToRun);
+		assertEquals(nodejsResult.toString(), "A.a == 5: true", nodejsResult.getStdOut());
 	}
 
 }

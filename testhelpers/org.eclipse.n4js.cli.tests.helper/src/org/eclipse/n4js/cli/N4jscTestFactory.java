@@ -11,7 +11,7 @@
 package org.eclipse.n4js.cli;
 
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
-import org.eclipse.n4js.cli.helper.N4jscTestCallback;
+import org.eclipse.n4js.cli.helper.N4jscTestLanguageClient;
 import org.eclipse.xtext.testing.GlobalRegistries;
 
 import com.google.inject.Injector;
@@ -95,7 +95,7 @@ public class N4jscTestFactory extends N4jscFactory {
 
 	@Override
 	N4jscLanguageClient internalGetLanguageClient(Injector pInjector) {
-		N4jscLanguageClient callback = pInjector.getInstance(N4jscTestCallback.class);
+		N4jscLanguageClient callback = pInjector.getInstance(N4jscTestLanguageClient.class);
 		return callback;
 	}
 
