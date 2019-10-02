@@ -11,9 +11,9 @@
 package org.eclipse.n4js.cli.runner.helper;
 
 /**
- *
+ * Data class that holds all information after {@code node.js} was executed
  */
-public class NodejsResult {
+public class ProcessResult {
 
 	String stdOut;
 	String errOut;
@@ -40,4 +40,16 @@ public class NodejsResult {
 		return exitCode;
 	}
 
+	@Override
+	public String toString() {
+		String s = "Node.js Result:\n";
+		s += "    exit code: " + exitCode + "\n";
+		s += exception == null ? "" : "    Exception: " + exception.getMessage() + "\n";
+		s += "    std out:\n";
+		s += (stdOut.isBlank() ? "" : ">>>>\n" + stdOut + "\n<<<<\n");
+		s += "    err out:\n";
+		s += (errOut.isBlank() ? "" : ">>>>\n" + errOut + "\n<<<<\n");
+		s += "Node.js Result End.\n";
+		return s;
+	}
 }
