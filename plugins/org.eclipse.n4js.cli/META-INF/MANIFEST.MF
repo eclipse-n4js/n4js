@@ -26,6 +26,7 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.ts.ide,
  org.eclipse.n4js.smith
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.n4js.cli
+Export-Package: org.eclipse.n4js.cli,
+ org.eclipse.n4js.cli.compiler
 Automatic-Module-Name: org.eclipse.n4js.cli
 Bundle-RequiredExecutionEnvironment: JavaSE-11

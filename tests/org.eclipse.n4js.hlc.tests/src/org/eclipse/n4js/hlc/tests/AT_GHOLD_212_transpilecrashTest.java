@@ -10,11 +10,15 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -22,7 +26,7 @@ import org.junit.Test;
 
 /**
  */
-public class AT_GHOLD_212_transpilecrashTest extends AbstractN4jscTest {
+public class AT_GHOLD_212_transpilecrashTest extends AbstractCliCompileTest {
 
 	File workspace;
 	static String WSP_212 = "GHOLD-212";
@@ -44,16 +48,15 @@ public class AT_GHOLD_212_transpilecrashTest extends AbstractN4jscTest {
 
 	/** The Problem was, that nothing was compiled. */
 	@Test
-	public void testCompileOfExtendedIterator_from_RuntimeLibrary() throws ExitCodeException {
+	public void testCompileOfExtendedIterator_from_RuntimeLibrary() {
 
-		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
+		File proot = new File(workspace, PACKAGES);
 
-		String[] args = { "--projectlocations", proot, "--buildType", "allprojects" };
+		N4jscOptions options = COMPILE(proot);
 
-		// compile
-		new N4jscBase().doMain(args);
+		CliResult cliResult = main(options);
 
 		// Make sure, we get here and have exactly one file compiled:
-		assertFilesCompiledToES(1, proot);
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 	}
 }

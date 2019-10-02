@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,19 +25,24 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
+import com.google.inject.Singleton;
+
 /**
  *
  */
 @SuppressWarnings("restriction")
+// TODO: Xtext - make WorkspaceManager a @Singleton?
+@Singleton
 public class N4JSWorkspaceManager extends WorkspaceManager {
 
 	private Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
 
 	@Override
-	public void initialize(URI baseDir, Procedure2<? super URI, ? super Iterable<Issue>> pIssueAcceptor,
+	public void initialize(URI pBaseDir, Procedure2<? super URI, ? super Iterable<Issue>> pIssueAcceptor,
 			CancelIndicator cancelIndicator) {
 
-		super.initialize(baseDir, pIssueAcceptor, cancelIndicator);
+		super.initialize(pBaseDir, pIssueAcceptor, cancelIndicator);
+
 		this.issueAcceptor = pIssueAcceptor;
 	}
 
@@ -65,6 +71,26 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 	}
 
 	/**
+	 * TODO: Xtext - make accessible?
+	 *
+	 * @return the base directory of the current workspace
+	 */
+	public URI getBaseDir() {
+		try {
+			Field field = WorkspaceManager.class.getDeclaredField("baseDir");
+			field.setAccessible(true);
+			Object value = field.get(this);
+
+			URI baseDir = (URI) value;
+			return baseDir;
+		} catch (Exception e) {
+			// ignore
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
 	 * TODO: Integrate to IDE-API.
 	 * <p>
 	 * Clears all issues of the given URI
@@ -74,7 +100,7 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 	}
 
 	@Override
-	protected IWorkspaceConfig getWorkspaceConfig() {
+	public IWorkspaceConfig getWorkspaceConfig() {
 		return super.getWorkspaceConfig();
 	}
 }

@@ -16,6 +16,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -69,19 +70,23 @@ public class N4jscOptions {
 	 * <li/>Eclipse adds the 'final' modifier to all effectively final private fields. (Can only be disabled globally)
 	 * </ul>
 	 */
-	static private class Options {
+	static class Options {
 
 		// OPTIONS
 
-		@Option(name = "--help", aliases = "-h", usage = "same as goal help", //
+		@Option(name = "--help", aliases = "-h", usage = "prints help and exits", //
 				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
 		boolean help = false;
 
-		@Option(name = "--showSetup", usage = "print information about the current n4jsc setup", //
+		@Option(name = "--version", aliases = "-v", usage = "prints version and exits", //
+				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+		boolean version = false;
+
+		@Option(name = "--showSetup", usage = "prints n4jsc setup", //
 				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
 		boolean showSetup = false;
 
-		@Option(name = "--verbose", aliases = "-v", usage = "enables verbose output", //
+		@Option(name = "--verbose", usage = "enables verbose output", //
 				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
 		boolean verbose = false;
 
@@ -89,7 +94,7 @@ public class N4jscOptions {
 				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
 		boolean log = false;
 
-		@Option(name = "--logfile", hidden = true, usage = "[default 'n4jsc.log']", //
+		@Option(name = "--logfile", hidden = true, usage = "specifies the log file name", //
 				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)
 		String logFile = "n4jsc.log";
 
@@ -163,7 +168,6 @@ public class N4jscOptions {
 
 		@Argument(metaVar = "GOAL", multiValued = false, index = 0, required = false, //
 				usage = "Goals are:"
-						+ "\n\t help     Prints help"
 						+ "\n\t compile  Compiles with given options"
 						+ "\n\t clean    Cleans with given options"
 						+ "\n\t lsp      Starts LSP server"
@@ -178,8 +182,10 @@ public class N4jscOptions {
 		List<File> srcFiles = new ArrayList<>();
 	}
 
-	private final Options options;
-	private final N4JSCmdLineParser parser;
+	/** Internal data store of options */
+	protected final Options options;
+	/** Internal parser */
+	protected final N4JSCmdLineParser parser;
 
 	/** Constructor */
 	public N4jscOptions() {
@@ -216,7 +222,20 @@ public class N4jscOptions {
 	private void interpretAndAdjust() {
 		if (options.help) {
 			options.goal = N4jscGoal.help;
+			options.help = false;
 		}
+		if (options.version) {
+			options.goal = N4jscGoal.version;
+			options.version = false;
+		}
+
+		options.srcFiles = options.srcFiles.stream().map(f -> {
+			try {
+				return f.getCanonicalFile();
+			} catch (IOException e) {
+				return null;
+			}
+		}).filter(f -> f != null).collect(Collectors.toList());
 	}
 
 	/** @return list of all user defined options */
@@ -302,7 +321,9 @@ public class N4jscOptions {
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */
 	public void printUsage(PrintStream out) {
 		out.println(N4jscOptions.USAGE);
-		parser.printUsage(out);
+
+		N4JSCmdLineParser parserWithDefault = new N4JSCmdLineParser(new Options());
+		parserWithDefault.printUsage(out);
 	}
 
 	/** @return a string that lists all relevant settings of n4jsc.jar */
@@ -317,7 +338,7 @@ public class N4jscOptions {
 		s += "\n  testOnly=" + options.testOnly;
 		s += "\n  noTests=" + options.noTests;
 		s += "\n  port=" + options.port;
-		s += "\n  srcFiles=" + options.srcFiles.stream().map(f -> f.toString()).reduce((a, b) -> a + ", " + b);
+		s += "\n  srcFiles=" + options.srcFiles.stream().map(f -> f.getAbsolutePath()).reduce((a, b) -> a + ", " + b);
 		s += "\n  Current execution directory=" + new File(".").getAbsolutePath();
 		return s;
 	}
@@ -332,7 +353,7 @@ public class N4jscOptions {
 			s += " " + od.name();
 			s += value == null ? "" : " " + value;
 		}
-		s += " " + String.join(", ", getSrcFiles().stream().map(f -> f.getName()).collect(Collectors.toList()));
+		s += " " + String.join(", ", getSrcFiles().stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList()));
 		return s;
 	}
 
@@ -348,5 +369,10 @@ public class N4jscOptions {
 			}
 		}
 		return nameFieldMap;
+	}
+
+	@Override
+	public String toString() {
+		return toCallString();
 	}
 }

@@ -11,12 +11,7 @@
 package org.eclipse.n4js.ide.server;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.BuildSetComputer;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
@@ -39,6 +33,7 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
+import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
 
 import com.google.inject.Inject;
@@ -65,18 +60,26 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 	@Inject
 	private NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
 
+	@Inject
+	private ProjectDiscoveryHelper projectDiscoveryHelper;
+
 	@Override
 	public IN4JSWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI) {
 		try {
 			// TODO is this correct if we have multiple workspace URIs?
 			workspace.clear();
 
-			// TODO copied from N4jscBase
 			File workspaceRoot = new File(workspaceBaseURI.toFileString());
-			List<FileURI> allProjects = collectAllProjectDirs(workspaceRoot);
+			LinkedHashSet<Path> allProjectLocations = projectDiscoveryHelper
+					.collectAllProjectDirs(workspaceRoot.toPath());
 
-			headlessHelper.registerProjectsToFileBasedWorkspace(allProjects, workspace);
-			final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet(allProjects);
+			List<FileURI> allProjectURIs = new LinkedList<>();
+			for (Path path : allProjectLocations) {
+				allProjectURIs.add(new FileURI(path.toFile()));
+			}
+
+			headlessHelper.registerProjectsToFileBasedWorkspace(allProjectURIs, workspace);
+			final BuildSet targetPlatformBuildSet = computeTargetPlatformBuildSet(allProjectURIs);
 			// make sure all installed dependencies are registered with the workspace
 			headlessHelper.registerProjects(targetPlatformBuildSet, workspace);
 			return new N4JSWorkspaceConfig(n4jsCore);
@@ -106,46 +109,6 @@ public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
 
 		return buildSetComputer.createBuildSet(toBuild, Collections.emptyList(), Collections.emptyList(),
 				namesOfWorkspaceProjects);
-	}
-
-	private List<FileURI> collectAllProjectDirs(File workspaceRoot) {
-		final List<FileURI> result = new ArrayList<>();
-
-		Path start = workspaceRoot.toPath();
-
-		try {
-			Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
-				int nodeModuleFolderCounter = 0;
-
-				@Override
-				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
-						if (nodeModuleFolderCounter > 0) {
-							return FileVisitResult.SKIP_SUBTREE;
-						}
-						nodeModuleFolderCounter++;
-					}
-
-					return super.preVisitDirectory(dir, attrs);
-				}
-
-				@Override
-				public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
-					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
-						nodeModuleFolderCounter--;
-					}
-					File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
-					if (pckJson.isFile()) {
-						result.add(new FileURI(dir.toFile()));
-					}
-					return FileVisitResult.CONTINUE;
-				}
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return result;
 	}
 
 }

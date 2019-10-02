@@ -157,7 +157,11 @@ public abstract class FileUtils {
 					"Error while trying to create folder at " + parent + ".");
 		}
 		child.deleteOnExit();
-		return child.toPath();
+		try {
+			return child.getCanonicalFile().toPath();
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 	/**

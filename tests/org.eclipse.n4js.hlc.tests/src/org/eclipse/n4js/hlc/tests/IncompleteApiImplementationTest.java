@@ -10,12 +10,18 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
-import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.N4CliHelper;
+import org.eclipse.n4js.cli.runner.helper.NodejsResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +34,7 @@ import org.junit.runners.MethodSorters;
  */
 @Ignore("GH-1291") // when removing this @Ignore: check and maybe remove older @Ignore annotations below too!!
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class IncompleteApiImplementationTest extends AbstractN4jscTest {
+public class IncompleteApiImplementationTest extends AbstractCliCompileTest {
 
 	File workspace;
 
@@ -36,8 +42,8 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	 * Prepare workspace.
 	 */
 	@Before
-	public void setupWorkspace() throws IOException, ExitCodeException {
-		workspace = setupWorkspace(TEST_DATA_SET__API_IMPL, true);
+	public void setupWorkspace() throws IOException {
+		workspace = setupWorkspace(DIR_TEST_DATA_SET__API_IMPL, true);
 
 		compileAPI_And_API_Impl();
 	}
@@ -48,7 +54,8 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	private static final String TEST_DATA_SET__API_IMPL = "api-impl--stubs-if-incomplete";
+	private static final String DIR_SRC_GEN = "src-gen";
+	private static final String DIR_TEST_DATA_SET__API_IMPL = "api-impl--stubs-if-incomplete";
 	private String proot;
 	private String project_one_api_execution;
 	private String pathTo_one_api_execution;
@@ -64,39 +71,35 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	 *
 	 */
 
-	/**
-	 * Upfront compilation when loading this test-class.
-	 */
-	public void compileAPI_And_API_Impl() throws ExitCodeException {
-
+	/** Upfront compilation when loading this test-class. */
+	public void compileAPI_And_API_Impl() {
 		proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
-
-		project_one_api_execution = "one.api.execution";
+		project_one_api_execution = "one.api.execution/";
 		pathTo_one_api_execution = proot + "/" + project_one_api_execution;
 
-		String[] args = { "--projectlocations", proot, "--buildType", "allprojects" };
-
-		new N4jscBase().doMain(args);
+		N4jscOptions options = COMPILE(workspace);
+		CliResult cliResult = main(options);
+		assertEquals(cliResult.toString(), 69, cliResult.getTranspiledFilesCount());
 	}
 
 	String fileToExecute_direct(String filename) {
-		return pathTo_one_api_execution + "/src/direct/" + filename;
+		return pathTo_one_api_execution + DIR_SRC_GEN + "/direct/" + filename;
 	}
 
 	String fileToExecute_fields(String filename) {
-		return pathTo_one_api_execution + "/src/fields/" + filename;
+		return pathTo_one_api_execution + DIR_SRC_GEN + "/fields/" + filename;
 	}
 
 	String fileToExecute_if(String filename) {
-		return pathTo_one_api_execution + "/src/if/" + filename;
+		return pathTo_one_api_execution + DIR_SRC_GEN + "/if/" + filename;
 	}
 
 	String fileToExecute_routing(String filename) {
-		return pathTo_one_api_execution + "/src/routing/" + filename;
+		return pathTo_one_api_execution + DIR_SRC_GEN + "/routing/" + filename;
 	}
 
 	String fileToExecute_var_and_fun(String filename) {
-		return pathTo_one_api_execution + "/src/var_and_fun/" + filename;
+		return pathTo_one_api_execution + DIR_SRC_GEN + "/var_and_fun/" + filename;
 	}
 
 	String[] runArgs(String execPath) {
@@ -107,12 +110,8 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 		};
 	}
 
-	void run(String[] args) throws ExitCodeException {
-		new N4jscBase().doMain(args);
-	}
-
 	/**
-	 * Should be called as first line in test-mehtods.
+	 * Should be called as first line in test methods.
 	 *
 	 * Creates an log-file in the {@link #workspace}-folder based on the callers Class/Methodname. something like
 	 * "target/org.eclipse.n4js.hlc.test.N4jscSingleFileCompileIT.testHelp.log"
@@ -125,223 +124,265 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 
 	/** testing correct behavior of untouched elements. */
 	@Test
-	public void testImplemented_members() throws ExitCodeException, IOException {
+	public void testImplemented_members() {
+		String fileToRunName = fileToExecute_direct("Exec_implemented_members.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
 
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_implemented_members.n4js")));
-
-		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js"
-				+ "\n"
-				+ "OK: holds not undefined"
-				+ "\n"
+		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js\n"
+				+ "OK: holds not undefined\n"
 				+ "OK: holds not undefined";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testMissing_field_in_class() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_missing_field_in_class.n4js")));
+	public void testMissing_field_in_class() {
+		String fileToRunName = fileToExecute_direct("Exec_missing_field_in_class.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testMissing_getter_in_class() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_missing_getter_in_class.n4js")));
+	public void testMissing_getter_in_class() {
+		String fileToRunName = fileToExecute_direct("Exec_missing_getter_in_class.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testMissing_method_in_class() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_missing_method_in_class.n4js")));
+	public void testMissing_method_in_class() {
+		String fileToRunName = fileToExecute_direct("Exec_missing_field_in_class.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testMissing_method2_in_class() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_missing_method2_in_class.n4js")));
+	public void testMissing_method2_in_class() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_missing_method2_in_class.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testMissing_setter_in_class() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_direct("Exec_missing_setter_in_class.n4js")));
+	public void testMissing_setter_in_class() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_missing_setter_in_class.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
 	// Enums
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
 
-	/**  */
+	/** */
 	@Test
-	public void testEnums_Literal_in_existing_Enum() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE_1510_Enums_Literal_in_existing_Enum.n4js")));
+	public void testEnums_Literal_in_existing_Enum() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js" + "\n" +
 				"OK: holds not undefined" + "\n" +
 				"OK: holds not undefined" + "\n" +
 				"OK: holds not undefined";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_Literal_in_existing_Enum.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
 	@Ignore("IDE-1574 decide on Enum-strategy.")
-	public void testEnums_literal_in_missing_Enum() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE_1510_Enums_literal_in_missing_Enum.n4js")));
+	public void testEnums_literal_in_missing_Enum() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_literal_in_missing_Enum.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
 	@Ignore("IDE-1574 decide on Enum-strategy.")
-	public void testEnums_literal_in_missing_EnumSB() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE_1510_Enums_literal_in_missing_EnumSB.n4js")));
+	public void testEnums_literal_in_missing_EnumSB() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_literal_in_missing_EnumSB.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
 	@Ignore("IDE-1574 decide on Enum-strategy.")
-	public void testEnums_missing_Literal_in_existing_Enum() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE_1510_Enums_missing_Literal_in_existing_Enum.n4js")));
+	public void testEnums_missing_Literal_in_existing_Enum() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_missing_Literal_in_existing_Enum.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
 	@Ignore("IDE-1574 decide on Enum-strategy.")
-	public void testEnums_missing_Literal_in_existing_EnumSB() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE_1510_Enums_missing_Literal_in_existing_EnumSB.n4js")));
+	public void testEnums_missing_Literal_in_existing_EnumSB() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_missing_Literal_in_existing_EnumSB.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testEnums_normal_existing_EnumSB() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE_1510_Enums_normal_existing_EnumSB.n4js")));
+	public void testEnums_normal_existing_EnumSB() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js" + "\n" +
 				"OK: holds not undefined" + "\n" +
 				"OK: holds not undefined" + "\n" +
 				"OK: holds not undefined";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE_1510_Enums_normal_existing_EnumSB.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
-	// Intefaces
+	// Interfaces
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
 
-	/**  */
+	/** */
 	@Test
-	// @Ignore("IDE-1576 requires mix-in of stub")
-	public void testInterfaces_provided_get_missing() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_get_missing.n4js")));
+	@Ignore("IDE-1576 requires mix-in of stub")
+	public void testInterfaces_provided_get_missing() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_get_missing.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testInterfaces_provided_get() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_get.n4js")));
+	public void testInterfaces_provided_get() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js" + "\n" +
 				"OK: holds not undefined";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_get.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	// @Ignore("IDE-1576 requires mix-in of stub")
-	public void testInterfaces_provided_method_missing() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_method_missing.n4js")));
+	@Ignore("IDE-1576 requires mix-in of stub")
+	public void testInterfaces_provided_method_missing() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_method_missing.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testInterfaces_provided_method() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_method.n4js")));
+	public void testInterfaces_provided_method() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js" + "\n" +
 				"OK: holds not undefined";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_method.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testInterfaces_provided_set_missing() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_set_missing.n4js")));
+	public void testInterfaces_provided_set_missing() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_set_missing.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testInterfaces_provided_set() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_set.n4js")));
+	public void testInterfaces_provided_set() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_provided_set.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testInterfaces_static_method_missing() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_method_missing.n4js")));
+	public void testInterfaces_static_method_missing() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_method_missing.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testInterfaces_static_method() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_method.n4js")));
+	public void testInterfaces_static_method() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js" + "\n" +
 				"OK: holds not undefined";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_method.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testInterfaces_static_getter_missing() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_getter_missing.n4js")));
+	public void testInterfaces_static_getter_missing() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_getter_missing.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testInterfaces_static_setter_missing() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_setter_missing.n4js")));
+	public void testInterfaces_static_setter_missing() {
 		String expectedString = "Loaded Implementation one.x.impl::p.A.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_direct("Exec_AT_IDE-1510_Interfaces_static_setter_missing.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
@@ -349,11 +390,13 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
 	/** accumulative testing of combinations. */
 	@Test
-	public void testConsumed_Members_of_Missing_Inteface() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_if("Exec_AT_IDE-1510_Consumed_Members_of_Missing_Inteface.n4js")));
+	public void testConsumed_Members_of_Missing_Inteface() {
 		String expectedString = "Loaded Implementation one.x.impl::p.IF.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_if("Exec_AT_IDE-1510_Consumed_Members_of_Missing_Inteface.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	/**
@@ -364,186 +407,243 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	 */
 	@Ignore("Client side access to missing mixed-in-fields cannot be detected.")
 	@Test
-	public void testConsumed_Members_of_Missing_Inteface_single_case() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_if("Exec_AT_IDE-1510_Consumed_Members_of_Missing_Inteface_single_case.n4js")));
+	public void testConsumed_Members_of_Missing_Inteface_single_case() {
 		String expectedString = "Loaded Implementation one.x.impl::p.IF.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_if(
+				"Exec_AT_IDE-1510_Consumed_Members_of_Missing_Inteface_single_case.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
 	// global function
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
-	/**  */
+	/** */
 	@Test
-	public void testFunction_test_function() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_var_and_fun("Exec_AT_IDE-1510_Variable_And_Function_test_function.n4js")));
+	public void testFunction_test_function() {
 		String expectedString = "Loaded Implementation one.x.impl::p.VarFun.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_var_and_fun("Exec_AT_IDE-1510_Variable_And_Function_test_function.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
 	// global variable
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
-	/**  */
-	@Ignore("Variables not yet supported by Projectcomparison. Results in 'module cannot be loaded.'")
+	/** */
+	@Ignore("Variables not yet supported by project comparison. Results in 'module cannot be loaded.'")
 	@Test
-	public void testVariable_global_variable() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_var_and_fun("Exec_AT_IDE-1510_Variable_And_Function_test_global_variable.n4js")));
+	public void testVariable_global_variable() {
 		String expectedString = "Loaded Implementation one.x.impl::p.VarFun.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_var_and_fun(
+				"Exec_AT_IDE-1510_Variable_And_Function_test_global_variable.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
 	// routing
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
-	/**  */
+	/** */
 	@Test
-	public void testSubclass_missing_inherited() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_routing("Exec_AT_IDE-1510_Subclass_missing_inherited.n4js")));
+	public void testSubclass_missing_inherited() {
 		String expectedString = "Loaded Implementation one.x.impl::p.StubRoute.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_routing("Exec_AT_IDE-1510_Subclass_missing_inherited.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	/** */
 	@Test
-	public void testSubclass_normal_inherited() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(
-				runArgs(fileToExecute_routing("Exec_AT_IDE-1510_Subclass_normal_inherited.n4js")));
+	public void testSubclass_normal_inherited() {
 		String expectedString = "Loaded Implementation one.x.impl::p.StubRoute.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_routing("Exec_AT_IDE-1510_Subclass_normal_inherited.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	/** */
 	@Test
-	public void testInternal_impl_Subclass_UsingDirectImplementation() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(
-				fileToExecute_routing("Exec_AT_IDE-1510_Internal_impl_Subclass_UsingDirectImplementation.n4js")));
+	public void testInternal_impl_Subclass_UsingDirectImplementation() {
 		String expectedString = "Loaded Implementation one.x.impl::p.IF.n4js" + "\n"
 				+ "Loaded Implementation one.x.impl::p.IFuser.n4js" + "\n"
 				+ "OK: holds not undefined";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_routing(
+				"Exec_AT_IDE-1510_Internal_impl_Subclass_UsingDirectImplementation.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	/** */
 	@Test
-	public void testInternal_impl_Subclass_UsingIndirectImplementation() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(
-				fileToExecute_routing("Exec_AT_IDE-1510_Internal_impl_Subclass_UsingIndirectImplementation.n4js")));
+	public void testInternal_impl_Subclass_UsingIndirectImplementation() {
 		String expectedString = "Loaded Implementation one.x.impl::p.IF.n4js" + "\n"
 				+ "Loaded Implementation one.x.impl::p.IFuser.n4js" + "\n"
 				+ "OK: holds not undefined";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_routing(
+				"Exec_AT_IDE-1510_Internal_impl_Subclass_UsingIndirectImplementation.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
 	// field versus get/set from supertype.
 	// ++ ++ ++++++++ + + ++++ +++ + ++ +
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_1() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_2.n4js")));
+	public void testfield_vs_getset_1() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_2.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_2() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_3.n4js")));
+	public void testfield_vs_getset_2() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_3.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_3() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_4.n4js")));
+	public void testfield_vs_getset_3() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_4.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_4() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_5.n4js")));
+	public void testfield_vs_getset_4() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_5.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_5() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_1.n4js")));
+	public void testfield_vs_getset_5() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_1.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_6() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_6.n4js")));
+	public void testfield_vs_getset_6() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_6.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_7() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_7.n4js")));
+	public void testfield_vs_getset_7() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_7.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_8() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_8.n4js")));
+	public void testfield_vs_getset_8() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_8.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_9() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_9.n4js")));
+	public void testfield_vs_getset_9() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_9.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_A() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_A.n4js")));
+	public void testfield_vs_getset_A() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_A.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_B() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_B.n4js")));
+	public void testfield_vs_getset_B() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_B.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_C() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_C.n4js")));
+	public void testfield_vs_getset_C() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_C.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
-	/**  */
+	/** */
 	@Test
-	public void testfield_vs_getset_D() throws ExitCodeException, IOException {
-		String out = runAndCaptureOutput(runArgs(fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_D.n4js")));
+	public void testfield_vs_getset_D() {
 		String expectedString = "Loaded Implementation one.x.impl::fields.F.n4js";
-		N4CliHelper.assertExpectedOutput(expectedString, out);
+
+		String fileToRunName = fileToExecute_fields("Exec_AT_IDEBUG-505_field_vs_getset_D.js");
+		NodejsResult nodejsResult = run(workspace.toPath(), Path.of(fileToRunName));
+
+		N4CliHelper.assertExpectedOutput(expectedString, nodejsResult.getStdOut());
 	}
 
 }

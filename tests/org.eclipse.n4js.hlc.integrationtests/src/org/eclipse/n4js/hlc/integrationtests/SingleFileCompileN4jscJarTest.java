@@ -21,9 +21,9 @@ import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.helper.N4CliHelper;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.junit.Ignore;
 import org.junit.Test;
 
