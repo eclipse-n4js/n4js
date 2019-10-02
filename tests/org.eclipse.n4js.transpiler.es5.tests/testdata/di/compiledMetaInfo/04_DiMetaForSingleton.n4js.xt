@@ -26,6 +26,6 @@ stderr:
 class A{}
 
 var tA: Object = A;//just to supress validation of index access
-var diData = JSON.stringify(tA['$di'], null, '\t')
+var diData = JSON.stringify(tA[Symbol.for('org.eclipse.n4js/diInfo')], null, '\t')
 console.log('DI data is needed for singletons');
 console.log(diData);

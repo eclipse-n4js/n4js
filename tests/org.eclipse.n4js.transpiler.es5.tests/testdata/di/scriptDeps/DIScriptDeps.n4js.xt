@@ -101,19 +101,19 @@ interface DIComponentMeta extends InjectedClassMeta{
 }
 
 function getOwnInjectedClassMeta(type: type{N4Object}): InjectedClassMeta? {
-    if (type.hasOwnProperty("$di")) {
+    if (type.hasOwnProperty(Symbol.for('org.eclipse.n4js/diInfo'))) {
         let typeObj: Object = type;
-        return typeObj["$di"] as InjectedClassMeta;
+        return typeObj[Symbol.for('org.eclipse.n4js/diInfo')] as InjectedClassMeta;
     }
     return undefined;
 }
 
 function getBinderMeta(type : any): BinderMeta?{
-    return (type as Object)['$di'] as BinderMeta;
+    return (type as Object)[Symbol.for('org.eclipse.n4js/diInfo')] as BinderMeta;
 }
 
 function getDIComponentMeta(type : any): DIComponentMeta?{
-    return (type as Object)['$di'] as DIComponentMeta;
+    return (type as Object)[Symbol.for('org.eclipse.n4js/diInfo')] as DIComponentMeta;
 }
 
 
