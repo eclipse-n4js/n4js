@@ -96,7 +96,7 @@ public class TestProcessBuilder {
 			throw new IllegalArgumentException("run configuration does not specify a file to run");
 		}
 
-		List<String> cmd = getCommands(output_env, npmBinary, "-r", "esm", fileToRun.toString());
+		List<String> cmd = getCommands(output_env, nodeJsBinary, "-r", "esm", fileToRun.toString());
 		return cmd.toArray(new String[0]);
 	}
 
