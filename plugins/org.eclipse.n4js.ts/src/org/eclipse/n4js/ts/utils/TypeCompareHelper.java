@@ -12,13 +12,12 @@ package org.eclipse.n4js.ts.utils;
 
 import java.util.Comparator;
 
-import org.eclipse.xtext.naming.IQualifiedNameProvider;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+
+import com.google.inject.Inject;
 
 /**
  * Provides methods for comparing two types, two type references, etc. as well as corresponding implementations of

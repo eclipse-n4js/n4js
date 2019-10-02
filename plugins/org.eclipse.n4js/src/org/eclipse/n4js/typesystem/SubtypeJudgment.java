@@ -11,7 +11,6 @@
 package org.eclipse.n4js.typesystem;
 
 import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
@@ -19,7 +18,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collec
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getContextResource;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.intType;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isExistentialTypeToBeReopened;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isFunction;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObject;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4EnumType;
@@ -30,12 +28,13 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.number
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.objectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.eclipse.n4js.AnnotationDefinition;
@@ -73,6 +72,7 @@ import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
 /* package */ final class SubtypeJudgment extends AbstractJudgment {
@@ -344,72 +344,10 @@ import com.google.common.collect.Iterables;
 					final TypeArgument rightArg = right.getTypeArgs().get(i);
 					final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
 
-					TypeRef leftArgUpper = ts.upperBound(G, leftArg);
-					TypeRef leftArgLower = ts.lowerBound(G, leftArg);
-					TypeRef rightArgUpper = ts.upperBound(G, rightArg);
-					TypeRef rightArgLower = ts.lowerBound(G, rightArg);
-
-					// guard against infinite recursion due to recursive implicit upper bounds, such as in
-					//
-					// class A<T extends A<?>> {}
-					//
-					// and
-					//
-					// class X<T extends B<?>> {}
-					// class Y<T extends X<?>> {}
-					// class B<T extends Y<?>> {}
-					//
-					final RuleEnvironment G2;
-					if (rightArg instanceof Wildcard && ((Wildcard) rightArg).isImplicitUpperBoundInEffect()) {
-						// we're dealing with implicit upper bounds -> need to guard against infinite loop
-						final Pair<String, TypeArgument> guardKey = Pair.of(
-								GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS, rightArg);
-						final boolean isGuarded = G.get(guardKey) != null;
-						if (!isGuarded) {
-							// first time here for wildcard 'rightArg'
-							// -> continue as usual but add guard to rule environment
-							G2 = wrap(G);
-							G2.put(guardKey, Boolean.TRUE);
-						} else {
-							// returned here for the same wildcard!
-							// -> ignore implicit upper bound on right-hand side to break infinite loop
-							rightArgUpper = topTypeRef(G);
-							G2 = G; // won't add another guard, so no need to wrap G
-						}
-					} else {
-						// not dealing with implicit upper bounds -> just continue as usual without guarding
-						G2 = G;
-					}
-
-// @formatter:off
-// TODO IDE-1653 reconsider this logic
-// seems bogus because it allows G<?> <: G<E> (with E being a closed existential, i.e. ExistentialTypeRef)
-// why not just require type equality, i.e. L<:R && R<:L (without taking upper/lower bounds) and let the
-// subtype rules for WildCards / ExistentialTypeRefs do the heavy lifting?
-// @formatter:on
-					Result tempResult = success();
-					// require leftArg <: rightArg, except we have contravariance
-					if (variance != Variance.CONTRA) {
-						tempResult = ts.subtype(G2, leftArgUpper, rightArgUpper);
-					}
-					// require rightArg <: leftArg, except we have covariance
-					if (variance != Variance.CO) {
-						if (tempResult.isSuccess()) {
-							tempResult = ts.subtype(G2, rightArgLower, leftArgLower);
-						}
-					}
-
-					if (tempResult.isFailure()) {
-						if (tempResult.isOrIsCausedByPriority()) {
-							// fail with a custom message including the nested custom failure message:
-							return failure(left.getTypeRefAsString()
-									+ " is not a subtype of " + right.getTypeRefAsString()
-									+ " due to incompatible type arguments: "
-									+ tempResult.getPriorityFailureMessage());
-						} else {
-							// fail with our default message:
-							return failure();
-						}
+					final Result currResult = checkTypeArgumentCompatibility(G, left, right, leftArg, rightArg,
+							Optional.of(variance));
+					if (currResult.isFailure()) {
+						return currResult;
 					}
 				}
 				return success();
@@ -458,23 +396,29 @@ import com.google.common.collect.Iterables;
 			TypeTypeRef left, TypeTypeRef right) {
 		final TypeArgument leftTypeArg = left.getTypeArg();
 		final TypeArgument rightTypeArg = right.getTypeArg();
+		if (leftTypeArg == null || rightTypeArg == null) {
+			return failure();
+		}
+
 		final boolean leftIsCtorRef = left.isConstructorRef();
 		final boolean rightIsCtorRef = right.isConstructorRef();
-		final boolean rightHasTypeRef = rightTypeArg instanceof TypeRef;
 
 		if (!leftIsCtorRef && rightIsCtorRef) {
 			// case: type{} <: constructor{}
 			return failure();
+		}
 
-		} else if (rightHasTypeRef && !rightIsCtorRef) {
-			// case: type|constructor{} <: type{} AND right doesn't contain wildcard
+		// check type arguments
+		final Result typeArgCompatibilty = checkTypeArgumentCompatibility(G, left, right, leftTypeArg, rightTypeArg,
+				Optional.of(Variance.CO));
+		if (typeArgCompatibilty.isFailure()) {
+			return typeArgCompatibilty;
+		}
 
-			// check type arguments
-			return requireAllSuccess(
-					ts.subtype(G, leftTypeArg, rightTypeArg));
-
-		} else if (rightHasTypeRef && rightIsCtorRef) {
-			// constructor{} <: constructor{} AND right doesn't contain wildcard
+		final boolean rightArgIsOpen = rightTypeArg instanceof Wildcard
+				|| (rightTypeArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightTypeArg).isReopened());
+		if (!rightArgIsOpen && rightIsCtorRef) {
+			// constructor{} <: constructor{} AND right doesn't contain wildcard or open ExistentialTypeRef
 
 			final Type left_staticType = typeSystemHelper.getStaticType(G, left);
 			final Type right_staticType = typeSystemHelper.getStaticType(G, right);
@@ -486,21 +430,24 @@ import com.google.common.collect.Iterables;
 			final boolean leftHasCovariantConstructor = left_staticType instanceof TClassifier
 					&& N4JSLanguageUtils.hasCovariantConstructor((TClassifier) left_staticType);
 
-			// left must not contain a wildcard, (closed) existential type, this type
-			// (except we have a @CovariantConstructor)
+			// left must not contain a wildcard, (open or closed) existential type, this type
+			// (except we have a @CovariantConstructor or we have same capture on both sides)
 			if (!leftHasCovariantConstructor) {
 				final boolean hasDisallowedArg = leftTypeArg instanceof Wildcard
 						|| leftTypeArg instanceof ExistentialTypeRef
 						|| leftTypeArg instanceof ThisTypeRef;
 				if (hasDisallowedArg) {
-					return failure();
+					final boolean isSameCapture = leftTypeArg instanceof ExistentialTypeRef
+							&& rightTypeArg instanceof ExistentialTypeRef
+							&& !((ExistentialTypeRef) leftTypeArg).isReopened()
+							&& !((ExistentialTypeRef) rightTypeArg).isReopened()
+							&& Objects.equals(
+									((ExistentialTypeRef) leftTypeArg).getId(),
+									((ExistentialTypeRef) rightTypeArg).getId());
+					if (!isSameCapture) {
+						return failure();
+					}
 				}
-			}
-
-			// check type arguments
-			final Result result = ts.subtype(G, leftTypeArg, rightTypeArg);
-			if (!result.isSuccess()) {
-				return failure(result);
 			}
 
 			// check constructors
@@ -542,46 +489,37 @@ import com.google.common.collect.Iterables;
 				return requireAllSuccess(
 						ts.subtype(G, leftCtorRefSubst, rightCtorRefSubst));
 			}
-
-		} else {
-			// any combination except type{} <: constructor{} AND right contains wildcard
-
-			final TypeRef upperBoundLeft = ts.upperBound(G, leftTypeArg);
-			final TypeRef lowerBoundLeft = ts.lowerBound(G, leftTypeArg);
-			final TypeRef upperBoundRight = ts.upperBound(G, rightTypeArg);
-			final TypeRef lowerBoundRight = ts.lowerBound(G, rightTypeArg);
-
-			return requireAllSuccess(
-					ts.subtype(G, upperBoundLeft, upperBoundRight),
-					ts.subtype(G, lowerBoundRight, lowerBoundLeft));
 		}
+
+		return success();
 	}
 
 	private Result applyExistentialTypeRef_Left(RuleEnvironment G,
 			ExistentialTypeRef existentialTypeRef, TypeArgument right) {
-		if (isExistentialTypeToBeReopened(G, existentialTypeRef)) {
+		if (existentialTypeRef == right) {
+			return success(); // performance tweak
+		}
+		if (right instanceof ExistentialTypeRef) {
+			UUID otherId = ((ExistentialTypeRef) right).getId();
+			if (otherId != null && otherId.equals(existentialTypeRef.getId())) {
+				return success(); // same capture
+			}
+		}
+		if (existentialTypeRef.isReopened()) {
 			// special case: open existential
-			// --> we may pick any valid type we want for 'existentialTypeRef'
-			// --> only check that 'left' lies within the bounds
+			// --> treat it like a wildcard
 
 			// obtain wildcard from which existentialTypeRef was created
 			final Wildcard wildThing = existentialTypeRef.getWildcard();
-			// check upper and lower bounds
-			final TypeRef upperBound = ts.upperBound(G, wildThing);
-			final TypeRef lowerBound = ts.lowerBound(G, wildThing);
 			return requireAllSuccess(
-					ts.subtype(G, right, upperBound),
-					ts.subtype(G, lowerBound, right));
+					ts.subtype(G, wildThing, right));
 		} else {
 			// standard case: closed existential
 			// --> the type has been picked but we don't know it
 			// --> all we know is the picked type lies within the bounds
 			// --> subtype check succeeds if and only if: P<:'right' for *ALL* types P that may have been picked for the
 			// existential
-			if (existentialTypeRef == right) {
-				return success(); // performance tweak
-			}
-			final TypeRef upperExt = ts.upperBound(G, existentialTypeRef);
+			final TypeRef upperExt = ts.upperBoundWithReopen(G, existentialTypeRef);
 			return requireAllSuccess(
 					ts.subtype(G, upperExt, right));
 		}
@@ -589,29 +527,30 @@ import com.google.common.collect.Iterables;
 
 	private Result applyExistentialTypeRef_Right(RuleEnvironment G,
 			TypeArgument left, ExistentialTypeRef existentialTypeRef) {
-		if (isExistentialTypeToBeReopened(G, existentialTypeRef)) {
+		if (left == existentialTypeRef) {
+			return success(); // performance tweak
+		}
+		if (left instanceof ExistentialTypeRef) {
+			UUID otherId = ((ExistentialTypeRef) left).getId();
+			if (otherId != null && otherId.equals(existentialTypeRef.getId())) {
+				return success(); // same capture
+			}
+		}
+		if (existentialTypeRef.isReopened()) {
 			// special case: open existential
-			// --> we may pick any valid type we want for 'existentialTypeRef'
-			// --> only check that 'left' lies within the bounds
+			// --> treat it like a wildcard
 
 			// obtain wildcard from which existentialTypeRef was created
 			final Wildcard wildThing = existentialTypeRef.getWildcard();
-			// check upper and lower bounds
-			final TypeRef upperBound = ts.upperBound(G, wildThing);
-			final TypeRef lowerBound = ts.lowerBound(G, wildThing);
 			return requireAllSuccess(
-					ts.subtype(G, left, upperBound),
-					ts.subtype(G, lowerBound, left));
+					ts.subtype(G, left, wildThing));
 		} else {
 			// standard case: closed existential
 			// --> the type has been picked but we don't know it
 			// --> all we know is the picked type lies within the bounds
 			// --> subtype check succeeds if and only if: 'left'<:P for *ALL* types P that may have been picked for the
 			// existential
-			if (left == existentialTypeRef) {
-				return success(); // performance tweak
-			}
-			final TypeRef lowerExt = ts.lowerBound(G, existentialTypeRef);
+			final TypeRef lowerExt = ts.lowerBoundWithReopen(G, existentialTypeRef);
 			return requireAllSuccess(
 					ts.subtype(G, left, lowerExt));
 		}
@@ -642,7 +581,7 @@ import com.google.common.collect.Iterables;
 		if (boundThisTypeRef == right) {
 			return success();
 		}
-		final TypeRef upperExt = ts.upperBound(G, boundThisTypeRef);
+		final TypeRef upperExt = ts.upperBoundWithReopen(G, boundThisTypeRef);
 		return requireAllSuccess(
 				ts.subtype(G, upperExt, right));
 	}
@@ -682,6 +621,37 @@ import com.google.common.collect.Iterables;
 		} else {
 			return failure();
 		}
+	}
+
+	/**
+	 * Minor increment on top of
+	 * {@code #checkTypeArgumentCompatibility(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)} in
+	 * {@code GenericsComputer}, just adding some more sophisticated error message generation, which is better suited
+	 * for the use cases in this class.
+	 *
+	 * @param leftContainingTypeRef
+	 *            The reference containing 'leftArg'. Only used for error reporting.
+	 * @param rightContainingTypeRef
+	 *            The reference containing 'rightArg'. Only used for error reporting.
+	 */
+	private Result checkTypeArgumentCompatibility(RuleEnvironment G,
+			TypeRef leftContainingTypeRef, TypeRef rightContainingTypeRef,
+			TypeArgument leftArg, TypeArgument rightArg, Optional<Variance> varianceOpt) {
+
+		Result tempResult = tsh.checkTypeArgumentCompatibility(G, leftArg, rightArg, varianceOpt, false);
+		if (tempResult.isFailure()) {
+			if (tempResult.isOrIsCausedByPriority()) {
+				// fail with a custom message including the nested custom failure message:
+				return failure(leftContainingTypeRef.getTypeRefAsString()
+						+ " is not a subtype of " + rightContainingTypeRef.getTypeRefAsString()
+						+ " due to incompatible type arguments: "
+						+ tempResult.getPriorityFailureMessage());
+			} else {
+				// fail with our default message:
+				return failure();
+			}
+		}
+		return success();
 	}
 
 	// ################################################################################

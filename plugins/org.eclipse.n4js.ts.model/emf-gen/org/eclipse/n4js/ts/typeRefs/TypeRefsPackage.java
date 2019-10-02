@@ -12,6 +12,7 @@ package org.eclipse.n4js.ts.typeRefs;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
@@ -3738,22 +3739,31 @@ public interface TypeRefsPackage extends EPackage {
 	int EXISTENTIAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF__ID = TYPE_REF_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Reopened</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF__REOPENED = TYPE_REF_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Wildcard</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF__WILDCARD = TYPE_REF_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Bound Type Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE = TYPE_REF_FEATURE_COUNT + 1;
+	int EXISTENTIAL_TYPE_REF__WILDCARD = TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Existential Type Ref</em>' class.
@@ -3762,7 +3772,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 2;
+	int EXISTENTIAL_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Contains Wildcards</em>' operation.
@@ -7305,6 +7315,16 @@ public interface TypeRefsPackage extends EPackage {
 	 */
 	int OPTIONAL_FIELD_STRATEGY = 28;
 
+	/**
+	 * The meta object id for the '<em>UUID</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.util.UUID
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getUUID()
+	 * @generated
+	 */
+	int UUID = 29;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.Versionable <em>Versionable</em>}'.
@@ -8254,6 +8274,28 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getExistentialTypeRef();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getId()
+	 * @see #getExistentialTypeRef()
+	 * @generated
+	 */
+	EAttribute getExistentialTypeRef_Id();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isReopened <em>Reopened</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Reopened</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isReopened()
+	 * @see #getExistentialTypeRef()
+	 * @generated
+	 */
+	EAttribute getExistentialTypeRef_Reopened();
+
+	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getWildcard <em>Wildcard</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8263,17 +8305,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getExistentialTypeRef_Wildcard();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getBoundTypeVariable <em>Bound Type Variable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Bound Type Variable</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getBoundTypeVariable()
-	 * @see #getExistentialTypeRef()
-	 * @generated
-	 */
-	EReference getExistentialTypeRef_BoundTypeVariable();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isExistential() <em>Is Existential</em>}' operation.
@@ -8961,6 +8992,17 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getOptionalFieldStrategy();
+
+	/**
+	 * Returns the meta object for data type '{@link java.util.UUID <em>UUID</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>UUID</em>'.
+	 * @see java.util.UUID
+	 * @model instanceClass="java.util.UUID"
+	 * @generated
+	 */
+	EDataType getUUID();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -9760,20 +9802,28 @@ public interface TypeRefsPackage extends EPackage {
 		EClass EXISTENTIAL_TYPE_REF = eINSTANCE.getExistentialTypeRef();
 
 		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXISTENTIAL_TYPE_REF__ID = eINSTANCE.getExistentialTypeRef_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Reopened</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXISTENTIAL_TYPE_REF__REOPENED = eINSTANCE.getExistentialTypeRef_Reopened();
+
+		/**
 		 * The meta object literal for the '<em><b>Wildcard</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference EXISTENTIAL_TYPE_REF__WILDCARD = eINSTANCE.getExistentialTypeRef_Wildcard();
-
-		/**
-		 * The meta object literal for the '<em><b>Bound Type Variable</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE = eINSTANCE.getExistentialTypeRef_BoundTypeVariable();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Existential</b></em>' operation.
@@ -10338,6 +10388,16 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum OPTIONAL_FIELD_STRATEGY = eINSTANCE.getOptionalFieldStrategy();
+
+		/**
+		 * The meta object literal for the '<em>UUID</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.util.UUID
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getUUID()
+		 * @generated
+		 */
+		EDataType UUID = eINSTANCE.getUUID();
 
 	}
 

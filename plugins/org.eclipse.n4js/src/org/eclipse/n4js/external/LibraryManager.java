@@ -491,7 +491,7 @@ public class LibraryManager {
 		MultiStatus status = statusHelper.createMultiStatus(msg);
 		logger.logInfo(msg);
 
-		// trim package name and "node_modules" segments from packageURI:
+		// trim package name and node_modules segments from packageURI:
 		FileURI containingProjectURI = getParentOfMatchingLocation(packageURI,
 				name -> N4JSGlobals.NODE_MODULES.equals(name));
 		boolean usingYarn = npmCli.isYarnUsed(containingProjectURI.toJavaIoFile());

@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.util.StringJoiner;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.helper.N4CliHelper;
 import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;

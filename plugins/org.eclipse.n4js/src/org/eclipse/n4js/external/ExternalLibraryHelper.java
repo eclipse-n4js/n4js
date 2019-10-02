@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -29,7 +30,7 @@ import com.google.common.collect.ImmutableList;
 public final class ExternalLibraryHelper {
 
 	/** Unique name of the {@code npm} category. */
-	public static final String NPM_CATEGORY = "node_modules";
+	public static final String NPM_CATEGORY = N4JSGlobals.NODE_MODULES;
 
 	/** List of all categories. Latter entries shadow former entries. */
 	public static final List<String> CATEGORY_SHADOWING_ORDER = ImmutableList.<String> builder()

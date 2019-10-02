@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.xpect.ui.tests;
 
-import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
+import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.n4js.xpect.config.Config;
 import org.eclipse.n4js.xpect.config.VarDef;
 import org.eclipse.n4js.xpect.config.XpEnvironmentData;
@@ -21,8 +21,8 @@ import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.lib.XpectTestResultTest;
-import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.runner.XpectTestFiles;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 import org.junit.runner.RunWith;
 
@@ -44,8 +44,8 @@ import org.junit.runner.RunWith;
 		XpectTestResultTest.class
 })
 @XpectImport({ Config.class, VarDef.class, XpEnvironmentData.class, N4JSSuppressIssuesSetup.class })
-@RunWith(XpectRunner.class)
-@LspCompatibleXpectTestFiles(baseDir = "testdata_nonvalidating")
+@RunWith(N4JSXpectRunner.class)
+@XpectTestFiles(baseDir = "testdata_nonvalidating")
 public class N4JSNotValidatingXpectPluginUITest {
 	// NOOP
 }

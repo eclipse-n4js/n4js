@@ -72,7 +72,7 @@ class N4JSScopingTestWithIndexTest {
 				    <astElement href="#/0/@scriptElements.0/@exportedElement"/>
 				  </topLevelTypes>
 				</types:TModule>
-			''', "7db65ac965ae43f2b3673735d7296d9b");
+			''', "5ef0928a4a8827880a4bdb03ff26f5fc");
 	}
 
 	/*
@@ -101,7 +101,7 @@ class N4JSScopingTestWithIndexTest {
 				    <astElement href="#/0/@scriptElements.0/@exportedElement"/>
 				  </topLevelTypes>
 				</types:TModule>
-			''', "7a7bda036db41c8e954e99535f496cff");
+			''', "e6baa3799092e2c27e34ed45f7d5e461");
 	}
 
 	def void doTestImportExportMemberDeserialize(String supplierFileName, String supplierClassName,

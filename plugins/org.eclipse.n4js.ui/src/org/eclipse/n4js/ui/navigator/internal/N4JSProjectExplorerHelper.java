@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProject;
@@ -181,7 +182,7 @@ public class N4JSProjectExplorerHelper {
 	 *         {@code false}.
 	 */
 	public boolean isNodeModulesFolder(IContainer container) {
-		if ("node_modules".equals(container.getName()) && container instanceof IFolder) {
+		if (N4JSGlobals.NODE_MODULES.equals(container.getName()) && container instanceof IFolder) {
 			IPath path = container.getLocation();
 			FileURI locURI = new FileURI(path.toFile());
 			if (prefStore.getNodeModulesLocations().contains(locURI)) {

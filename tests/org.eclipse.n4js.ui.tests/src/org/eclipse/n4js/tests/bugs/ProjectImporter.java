@@ -23,8 +23,8 @@ import java.util.Collections;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 

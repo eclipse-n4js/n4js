@@ -13,8 +13,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.util,
  org.eclipse.n4js.releng.utils;resolution:=optional,
  org.eclipse.equinox.common;bundle-version="3.8.0";resolution:=optional,
- org.objectweb.asm;resolution:=optional,
- com.ibm.icu
+ org.objectweb.asm;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js.common.unicode,
  org.eclipse.n4js.common.unicode.serializer,

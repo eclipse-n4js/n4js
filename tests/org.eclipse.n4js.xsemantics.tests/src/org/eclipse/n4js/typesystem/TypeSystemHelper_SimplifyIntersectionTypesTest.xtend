@@ -51,22 +51,22 @@ class TypeSystemHelper_SimplifyIntersectionTypesTest extends AbstractTypeSystemH
 	@Test
 	def void testSimplifyDuplicates() {
 		assertSimplify("A", "intersection{A}");
-		assertSimplify("intersection{I1,I2}", "intersection{I1,I2}");
-		assertSimplify("intersection{I1,I2}", "intersection{I1,I2,I1}");
+		assertSimplify("I2", "intersection{I1,I2}");
+		assertSimplify("I2", "intersection{I1,I2,I1}");
 	}
 
 	@Test
 	def void testSimplifyNestedIntersections() {
-		assertSimplify("intersection{I1,I2}", "intersection{I1,I2,intersection{I1,I2}}");
+		assertSimplify("I2", "intersection{I1,I2,intersection{I1,I2}}");
 		assertSimplify("intersection{I1,I2,I3}", "intersection{I1,I2,intersection{I2,I3}}");
 	}
 
 	@Test
 	def void testSimplifyUndefinedAndNull() {
-		assertSimplify("intersection{I1,I2}", "intersection{I1,I2,undefined}");
-		assertSimplify("intersection{I1,I2}", "intersection{I1,undefined,I2}");
-		assertSimplify("A", "intersection{A,undefined}");
-		assertSimplify("A", "intersection{undefined,A}");
+		assertSimplify("undefined", "intersection{I1,I2,undefined}");
+		assertSimplify("undefined", "intersection{I1,undefined,I2}");
+		assertSimplify("undefined", "intersection{A,undefined}");
+		assertSimplify("undefined", "intersection{undefined,A}");
 		assertSimplify("undefined", "intersection{undefined,undefined}");
 	}
 

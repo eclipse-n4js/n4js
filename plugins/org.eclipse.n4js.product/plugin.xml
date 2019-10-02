@@ -41,7 +41,7 @@ Contributors:
          </property>
          <property
                name="windowImages"
-               value="icons/n4_logo_16.png,icons/n4_logo_32.png,icons/n4_logo_48.png,icons/n4_logo_64.png,icons/n4_logo_128.png,icons/n4_logo_256.png">
+               value="icons/n4_logo_16.png,icons/n4_logo_16@2x.png,icons/n4_logo_32.png,icons/n4_logo_32@2x.png,icons/n4_logo_48.png,icons/n4_logo_64.png,icons/n4_logo_64@2x.png,icons/n4_logo_128.png,icons/n4_logo_128@2x.png,icons/n4_logo_256.png">
          </property>
          <property
                name="aboutImage"
@@ -51,6 +51,13 @@ Contributors:
                name="aboutText"
                value="%aboutText">
          </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+         <property name="startupForegroundColor" value="000000"/>
+         <property name="startupProgressRect" value="-5,290,465,5"/>
+         <property name="startupMessageRect" value="7,220,0,0"/>
       </product>
    </extension>
    <extension

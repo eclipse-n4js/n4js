@@ -10,18 +10,12 @@
  */
 package org.eclipse.n4js.binaries.nodejs;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static java.util.Collections.emptyList;
-
 import java.io.File;
 import java.net.URI;
-import java.util.Map;
-import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.BinariesConstants;
 import org.eclipse.n4js.binaries.BinariesLocatorHelper;
-import org.eclipse.n4js.binaries.BinariesPreferenceStore;
 import org.eclipse.n4js.binaries.BinariesValidator;
 import org.eclipse.n4js.binaries.Binary;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -36,16 +30,13 @@ import com.google.inject.Singleton;
  * Representation of a {@code yarn} binary.
  */
 @Singleton
-public class YarnBinary implements Binary {
+public class YarnBinary extends Binary {
 
 	/** don't access directly, use {@link #getDefaultYarnPath()} */
 	private String memoizedCalculatedYarnPath = null;
 
 	@Inject
 	private BinariesValidator validator;
-
-	@Inject
-	private BinariesPreferenceStore preferenceStore;
 
 	@Inject
 	private BinariesLocatorHelper binariesLocatorHelper;
@@ -74,40 +65,18 @@ public class YarnBinary implements Binary {
 	}
 
 	@Override
-	public String getBinaryAbsolutePath() {
-		return getUserYarnPathOrDefault() + File.separator + BinariesConstants.YARN_BINARY_NAME;
+	public String getBinaryDirectory() {
+		return getUserYarnPathOrDefault();
+	}
+
+	@Override
+	public String getBinaryFileName() {
+		return BinariesConstants.YARN_BINARY_NAME;
 	}
 
 	@Override
 	public String getVersionArgument() {
 		return BinariesConstants.YARN_VERSION_ARGUMENT;
-	}
-
-	@Override
-	public Binary getParent() {
-		return null;
-	}
-
-	@Override
-	public Iterable<Binary> getChildren() {
-		return emptyList();
-	}
-
-	@Override
-	public Map<String, String> updateEnvironment(final Map<String, String> environment) {
-		final String additionalNodePath = getUserYarnPathOrDefault();
-		final String currentPathValue = environment.get(PATH);
-		if (isNullOrEmpty(currentPathValue)) {
-			environment.put(PATH, additionalNodePath);
-		} else {
-			environment.put(PATH, currentPathValue + File.pathSeparator + additionalNodePath);
-		}
-		return environment;
-	}
-
-	@Override
-	public URI getUserConfiguredLocation() {
-		return preferenceStore.getPath(this);
 	}
 
 	@Override
@@ -138,31 +107,6 @@ public class YarnBinary implements Binary {
 	@Override
 	public Optional<Pair<String, String>> getNpmSaveOptions() {
 		return Optional.of(new Pair<>("--save", "--no-save"));
-	}
-
-	/**
-	 * Custom hashcode, used to persist settings in the map {@link BinariesPreferenceStore} internal map. Key part about
-	 * that hashCode is that it will be the same for every instance of this class, allowing to easily serialize
-	 * {@code Binary -> URI} setting even between platform runs.
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(getId());
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof YarnBinary)) {
-			return false;
-		}
-		final YarnBinary other = (YarnBinary) obj;
-		return Objects.equals(getId(), other.getId());
 	}
 
 	/**

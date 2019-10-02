@@ -402,12 +402,12 @@ class N4JSScopingTest {
 			UserdataMapper.getDeserializedModuleFromDescriptionAsString(eoDescs.head, supplierResource.URI));
 
 		assertEquals("Separately stored md5 hash matches expectations",
-			"7db65ac965ae43f2b3673735d7296d9b", 
+			"5ef0928a4a8827880a4bdb03ff26f5fc", 
 			eoDescs.head.getUserData(UserdataMapper.USERDATA_KEY_AST_MD5));
 
 		val module = UserdataMapper.getDeserializedModuleFromDescription(eoDescs.head, supplierResource.URI);
 		assertEquals("During deserialization of a TModule the astMD5 hash is recovered from the separate user data slot",
-			"7db65ac965ae43f2b3673735d7296d9b",
+			"5ef0928a4a8827880a4bdb03ff26f5fc",
 			module.astMD5)
 
 		rs.resources.forEach[it.unload];

@@ -15,7 +15,7 @@ class G<T> implements I<T> {}
 function <T> foo(i : I<T>): T { return null; }
 
 var g : G<?>;
-// TODO IDE-1653 XPECT FIXME noerrors --> "? is not a subtype of ?." at "foo(g)"
+// XPECT noerrors --> "? is not a subtype of ?." at "foo(g)"
 var a = foo(g);
 
 //

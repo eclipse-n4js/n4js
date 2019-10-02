@@ -130,7 +130,7 @@ class StaticPolyfill_inheriting_from_filled_type__PluginTest extends AbstractSta
 		// assertExistence of compiled file.
 		assertTrue("No compiled file.",compiledFile.exists)
 
-		val actualContent = Files.toString(compiledFile.location.toFile, Charset.defaultCharset);
+		val actualContent = Files.asCharSource(compiledFile.location.toFile, Charset.defaultCharset).read();
 		assertTrue('Generated file content was empty: ' + compiledFile, !actualContent.nullOrEmpty)
 
 		assertEquals("static initializer not compiled:(ENUM_MAP=...)",1,matchCount( pattern_681_compiled_ENUM_Init, actualContent ) );

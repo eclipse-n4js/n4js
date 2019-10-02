@@ -248,9 +248,10 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 				// check bounds
 				val isExceptionCase = TypeUtils.isVoid(typeArgument); // in this case another validation will show an error (avoid duplicate messages)
 				if(!isExceptionCase) {
-					val upperBound = typeParameter.declaredUpperBound ?: N4JSLanguageUtils.getTypeVariableImplicitUpperBound(G_subst);
-					val substituted = ts.substTypeVariables(G_subst, upperBound);
-					val result = ts.subtype(G_subst, typeArgument, substituted);
+					val typeParamUB = typeParameter.declaredUpperBound ?: N4JSLanguageUtils.getTypeVariableImplicitUpperBound(G_subst);
+					val typeParamUBSubst = ts.substTypeVariables(G_subst, typeParamUB);
+					val typeArgSubst = ts.substTypeVariables(G_subst, typeArgument);
+					val result = ts.subtype(G_subst, typeArgSubst, typeParamUBSubst);
 					if (result.failure) {
 						createTypeError(result, typeArgument);
 					}

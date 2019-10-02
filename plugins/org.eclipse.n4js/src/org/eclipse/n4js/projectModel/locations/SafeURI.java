@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.common.base.Preconditions;
@@ -29,6 +30,9 @@ import com.google.common.base.Preconditions;
 /**
  * A data type that denotes a location based on a URI. The structure of the wrapped URI is asserted by
  * {@link #validate(URI)}.
+ *
+ * @param <U>
+ *            the self type. Should always be of the shape {@code X extends SafeURI<X>} in subtypes.
  */
 public abstract class SafeURI<U extends SafeURI<U>> {
 
@@ -55,9 +59,19 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	 * @return the URI if it
 	 */
 	protected URI validate(URI given) throws IllegalArgumentException, NullPointerException {
-		// Preconditions.checkArgument(!given.hasTrailingPathSeparator(), "%s must have a trailing path separator",
-		// given);
-		return Preconditions.checkNotNull(given);
+		Preconditions.checkNotNull(given);
+		List<String> segments = given.segmentsList();
+
+		final int segCountMax = given.hasTrailingPathSeparator() ? segments.size() - 1 : segments.size();
+		for (int i = 0; i < segCountMax; i++) {
+			String segment = segments.get(i);
+			Preconditions.checkArgument(segment.length() > 0, "'%s'", given);
+			if (OSInfo.isWindows()) {
+				Preconditions.checkArgument(!segment.contains(File.separator));
+			}
+		}
+
+		return given;
 	}
 
 	/**
@@ -69,11 +83,17 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 		return wrapped;
 	}
 
+	/**
+	 * The hashcode of the wrapped URI.
+	 */
 	@Override
 	public int hashCode() {
 		return wrapped.hashCode();
 	}
 
+	/**
+	 * Uses the wrapped URI and the type of this {@link SafeURI} as the criteria for equality.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -86,6 +106,9 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 		return wrapped.equals(other.wrapped);
 	}
 
+	/**
+	 * Returns the string representation of the wrapped URI.
+	 */
 	@Override
 	public String toString() {
 		return toURI().toString();
@@ -168,12 +191,27 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	 * Append the given path to this location. The result is normalized.
 	 */
 	public final U appendPath(String path) {
+		if (path == null) {
+			throw new IllegalArgumentException("Path may not be null");
+		}
 		return appendRelativeURI(URI.createURI(path));
 	}
 
 	private U appendRelativeURI(URI relativeURI) {
-		if (!URI.validSegments(relativeURI.segments())) {
+		String[] segments = relativeURI.segments();
+		if (segments.length == 0) {
+			throw new IllegalArgumentException("Cannot append empty URI.");
+		}
+		if (!URI.validSegments(segments)) {
 			throw new IllegalArgumentException(String.valueOf(relativeURI));
+		}
+		if (segments.length == 1 && segments[0].isEmpty()) {
+			throw new IllegalArgumentException("Use withTrailingPathDelimiter instead");
+		}
+		for (int i = 0; i < segments.length - 1; i++) {
+			if (segments[i].isEmpty()) {
+				throw new IllegalArgumentException("Cannot add intermediate empty segments");
+			}
 		}
 		URI base = withTrailingPathDelimiter().toURI();
 		URI result = relativeURI.resolve(base);
@@ -184,13 +222,13 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	 * Append the given segment to this location. The result is normalized.
 	 */
 	public final U appendSegment(String segment) {
-		return appendSegments(new String[] { segment });
+		return appendSegments(segment);
 	}
 
 	/**
 	 * Append the given segments to this location. The result is normalized.
 	 */
-	public final U appendSegments(String[] segments) {
+	public final U appendSegments(String... segments) {
 		return appendRelativeURI(URI.createHierarchicalURI(segments, null, null));
 	}
 
@@ -202,7 +240,8 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	}
 
 	/**
-	 * Return the parent of this location.
+	 * Return the parent of this location. If this URI has a trailing path separator, the result will simply be a URI
+	 * stripped by this trailing separator.
 	 */
 	public U getParent() {
 		URI uri = toURI();
@@ -245,6 +284,27 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 		return isDirectory() &&
 				(appendSegment(IN4JSProject.PACKAGE_JSON).isFile() ||
 						appendSegment(IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION).isFile());
+	}
+
+	/**
+	 * Return true if this URI ends with package.json or package.json.xt
+	 *
+	 * Does not access the file system for this check.
+	 */
+	public boolean isPackageJsonLocation() {
+		URI raw = toURI();
+		if (raw.hasTrailingPathSeparator()) {
+			return false;
+		}
+		String filename = raw.lastSegment();
+		if (IN4JSProject.PACKAGE_JSON.equals(filename) ||
+				filename.length() == IN4JSProject.PACKAGE_JSON.length() + 3 &&
+						filename.startsWith(IN4JSProject.PACKAGE_JSON) &&
+						filename.endsWith(N4JSGlobals.XT_FILE_EXTENSION) &&
+						filename.charAt(filename.length() - 3) == '.') {
+			return true;
+		}
+		return false;
 	}
 
 	/**

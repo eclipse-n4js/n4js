@@ -12,8 +12,10 @@ package org.eclipse.n4js.validation.validators
 
 import com.google.common.collect.ArrayListMultimap
 import com.google.inject.Inject
+import java.util.Collection
 import java.util.LinkedList
 import java.util.List
+import java.util.TreeSet
 import org.eclipse.emf.common.util.EList
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Argument
@@ -23,9 +25,7 @@ import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList
 import org.eclipse.n4js.n4JS.ExpressionStatement
-import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
-import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
@@ -50,7 +50,6 @@ import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -75,10 +74,9 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.types.util.Variance
+import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -109,6 +107,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
+	@Inject
+	private TypeCompareHelper typeCompareHelper;
 
 	@Inject
 	private N4JSScopeProvider n4jsScopeProvider;
@@ -174,18 +174,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		// this validation might be removed in the future, see GHOLD-204
-		if (declaredType instanceof TFunction) {
-			if (!(paramTypeRef.eContainer instanceof TypeTypeRef)) { // avoid duplicate error message
-				addIssue(getMessageForTYS_FUNCTION_DISALLOWED_AS_TYPE(), paramTypeRef, TYS_FUNCTION_DISALLOWED_AS_TYPE);
-				return;
-			}
-		}
-
 		val isInTypeTypeRef = paramTypeRef.eContainer instanceof TypeTypeRef || (
 			paramTypeRef.eContainer instanceof Wildcard && paramTypeRef.eContainer.eContainer instanceof TypeTypeRef);
 
-		internalCheckValidLocationForVoid(paramTypeRef);
 		if (isInTypeTypeRef) {
 			internalCheckValidTypeInTypeTypeRef(paramTypeRef);
 		} else {
@@ -203,31 +194,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRef) {
 		if (typeRef.declaredType instanceof PrimitiveType && typeRef.typingStrategy != TypingStrategy.NOMINAL) {
 			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRef, TYS_STRUCTURAL_PRIMITIVE);
-		}
-	}
-
-	/**
-	 * Requirements 13, Void type.
-	 */
-	def private void internalCheckValidLocationForVoid(ParameterizedTypeRef typeRef) {
-		if (typeRef.declaredType instanceof VoidType) {
-			val isValidLocationForVoid = (
-					typeRef.eContainer instanceof FunctionDefinition &&
-				typeRef.eContainmentFeature === N4JSPackage.eINSTANCE.functionDefinition_ReturnTypeRef
-				) || (
-					typeRef.eContainer instanceof FunctionTypeExpression &&
-				typeRef.eContainmentFeature === TypeRefsPackage.eINSTANCE.functionTypeExpression_ReturnTypeRef
-				) || (
-					typeRef.eContainer instanceof TFunction && typeRef.eContainmentFeature === TypesPackage.eINSTANCE.TFunction_ReturnTypeRef
-				) || (
-					// void is not truly allowed as the return type of a getter, but there's a separate validation for
-					// that; so treat this case as legal here:
-					typeRef.eContainer instanceof GetterDeclaration &&
-				typeRef.eContainmentFeature === N4JSPackage.eINSTANCE.typedElement_DeclaredTypeRef
-				);
-			if (!isValidLocationForVoid) {
-				addIssue(IssueCodes.getMessageForTYS_VOID_AT_WRONG_LOCATION, typeRef, TYS_VOID_AT_WRONG_LOCATION);
-			}
 		}
 	}
 
@@ -517,7 +483,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		} else if (expression instanceof ArrayLiteral) {
 			if (!expectedTypeRef.typeArgs.empty) {
 				val arrayElementType = expectedTypeRef.typeArgs.get(0);
-				val typeArgTypeRef = ts.resolveType(G, arrayElementType);
+				val typeArgTypeRef = ts.upperBoundWithReopenAndResolve(G, arrayElementType);
 				for (arrElem : expression.elements) {
 					val arrExpr = arrElem.expression;
 					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, typeArgTypeRef, arrExpr);
@@ -845,12 +811,23 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private List<TypeRef> extractNonStructTypeRefs(ComposedTypeRef ctr) {
-		val G = ctr.newRuleEnvironment;
-		val List<TypeRef> tRefs = tsh.getSimplifiedTypeRefs(G, ctr);
-		return extractNonStructTypeRefs(tRefs);
+		val typeRefs = new TreeSet<TypeRef>(typeCompareHelper.getTypeRefComparator);
+		collectAndFlattenElementTypeRefs(ctr, typeRefs);
+		return extractNonStructTypeRefs(typeRefs);
 	}
 
-	def private List<TypeRef> extractNonStructTypeRefs(List<TypeRef> simplifiedTypeRefs) {
+	def private void collectAndFlattenElementTypeRefs(ComposedTypeRef ctr, Collection<TypeRef> addHere) {
+		val composedTypeKind = ctr.eClass;
+		for (tr : ctr.typeRefs) {
+			if (composedTypeKind.isInstance(tr)) {
+				collectAndFlattenElementTypeRefs(tr as ComposedTypeRef, addHere);
+			} else {
+				addHere += tr;
+			}
+		}
+	}
+
+	def private List<TypeRef> extractNonStructTypeRefs(Iterable<TypeRef> simplifiedTypeRefs) {
 		val List<TypeRef> tClassRefs = new LinkedList();
 		for (TypeRef tR : simplifiedTypeRefs) {
 			if (tR!==null) { // may happen if argument has been a result of a computation

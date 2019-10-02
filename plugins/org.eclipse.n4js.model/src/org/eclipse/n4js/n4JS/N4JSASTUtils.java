@@ -39,9 +39,43 @@ import com.google.common.hash.Hashing;
  * Hint: use <code>import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*</code> in Xtend
  */
 public abstract class N4JSASTUtils {
+	/** Seed for hashing algorithm */
+	private static final int SEED = 9415;
 
 	/** The reserved {@value} keyword. */
 	public static final String CONSTRUCTOR = "constructor";
+
+	/**
+	 * Tells if the given {@link EObject} represents a write access, e.g. left-hand side of an assignment.
+	 */
+	public static boolean isWriteAccess(EObject reference) {
+		EObject parent = reference.eContainer();
+		while (parent instanceof ParameterizedPropertyAccessExpression
+				&& ((ParameterizedPropertyAccessExpression) parent).getTarget() == reference) {
+			reference = parent;
+			parent = parent.eContainer();
+		}
+		if (parent == null) {
+			return false;
+		}
+
+		if (parent instanceof AssignmentExpression) {
+			AssignmentExpression ae = (AssignmentExpression) parent;
+			return ae.getLhs() == reference;
+		}
+		if (parent instanceof ForStatement) {
+			ForStatement fs = (ForStatement) parent;
+			return fs.getInitExpr() == reference;
+		}
+
+		DestructNode dNode = DestructureUtils.getCorrespondingDestructNode(reference);
+		if (dNode != null) {
+			dNode = dNode.findNodeForElement(parent);
+			return dNode != null;
+		}
+
+		return false;
+	}
 
 	/**
 	 * Returns the containing variable environment scope for the given identifiable element, depending on whether the
@@ -405,6 +439,6 @@ public abstract class N4JSASTUtils {
 		if (source == null) {
 			throw new IllegalStateException("resource does not have a valid parse result: " + resource.getURI());
 		}
-		return Hashing.md5().hashString(source, Charsets.UTF_8).toString();
+		return Hashing.murmur3_128(SEED).hashString(source, Charsets.UTF_8).toString();
 	}
 }

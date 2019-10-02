@@ -36,7 +36,7 @@ class UnicodeGrammarGenerator {
 	 * The write-on-instantiation allows to use this generator in mwe2 as #bean
 	 */
 	new() throws IOException {
-		Files.write(generateUnicodeRules, new File('grammar-gen/org/eclipse/n4js/common/unicode/Unicode.xtext'), Charsets.UTF_8)
+		Files.asCharSink(new File('grammar-gen/org/eclipse/n4js/common/unicode/Unicode.xtext'), Charsets.UTF_8).write(generateUnicodeRules);
 	}
 
 	def static generateUnicodeRules() '''

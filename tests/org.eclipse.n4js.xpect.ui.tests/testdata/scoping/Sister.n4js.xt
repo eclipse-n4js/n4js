@@ -43,7 +43,8 @@ N4StringBasedEnum, N4StringBasedEnumType,
 N4Type, N4ApiNotImplementedError,
 Number, Object, Promise, RangeError, ReferenceError, RegExp, Sister, String, Symbol, SyntaxError,
 TEMP_ReturnTypeOfMatchExec, TypeError, URIError, any, boolean, console, i18nKey, number, int, pathSelector,
-scoping.Brother.Brother, scoping.Child.Child, scoping.Sister.Sister, string, symbol, typeName, void
+scoping.Brother.Brother, scoping.Child.Child, scoping.Sister.Sister, string, symbol, typeName,
+undefined, void
 ---*/
 	project getBrother() : Brother { return null; }
 	project getChild() : Child { return null; }

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide;
 
+import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
@@ -19,8 +20,7 @@ import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
-import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
-import org.eclipse.xtext.generator.IGenerator2;
+import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
@@ -62,8 +62,8 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSProjectDescriptionFactory.class;
 	}
 
-	public Class<? extends IGenerator2> bindIGenerator2() {
-		return EcmaScriptSubGenerator.class;
+	public Class<? extends IGenerator> bindIGenerator() {
+		return N4JSCompositeGenerator.class;
 	}
 
 	public Class<? extends OutputConfigurationProvider> bindOutputConfigurationProvider() {

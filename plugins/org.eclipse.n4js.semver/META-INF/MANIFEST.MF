@@ -13,7 +13,6 @@ Require-Bundle: org.eclipse.xtext.xbase,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.releng.utils,
  org.eclipse.xtext.testing,
- org.junit,
  org.eclipse.xtext.xtext.generator,
  org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: JavaSE-11

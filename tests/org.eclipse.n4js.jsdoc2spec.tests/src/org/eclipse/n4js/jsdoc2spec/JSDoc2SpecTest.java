@@ -12,10 +12,10 @@ package org.eclipse.n4js.jsdoc2spec;
 
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
 import org.eclipse.n4js.jsdoc2spec.xpect.SpecADocXpectMethod;
-import org.eclipse.n4js.xpect.common.LspCompatibleXpectTestFiles;
+import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.xpect.XpectImport;
-import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.runner.XpectTestFiles;
 import org.junit.runner.RunWith;
 
 /**
@@ -25,8 +25,8 @@ import org.junit.runner.RunWith;
 @XpectSuiteClasses({
 		SpecADocXpectMethod.class
 })
-@RunWith(XpectRunner.class)
-@LspCompatibleXpectTestFiles(baseDir = "xpect-tests")
+@RunWith(N4JSXpectRunner.class)
+@XpectTestFiles(baseDir = "xpect-tests")
 @XpectImport({ N4JSStandaloneTestsModule.class })
 public class JSDoc2SpecTest {
 	// nop

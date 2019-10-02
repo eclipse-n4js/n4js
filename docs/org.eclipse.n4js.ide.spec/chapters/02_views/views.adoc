@@ -61,7 +61,24 @@ The N4JS equivalent to the JUnit test view.
 
 === Source Graphs
 
-Shows the AST of the current source code in the editor windows.
+Shows the AST, type model (ie. TModule), and the control flow graph of the current source code in the editor window.
+The view is implemented in the bundle `org.eclipse.n4js.smith.graph`.
+
+There are two ways for showing an AST / type model in the view:
+
+Manually:: Open the view and an N4JS editor with some example code and click either the AST graph or the control flow graph button in the view.
+
+Programmatically:: Open the view while debugging code, add a call to method `UtilN4.takeSnapshotInGraphView(String, ResourceSet)` anywhere in the code to create an image of the AST graph.
+You can take several snapshots without deleting the previous ones.
+The pause button in the view will suppress programmatically triggered snapshots.
+
+When taking snapshots, the Xtext resources should not be modified in any way by the graph view, in particular, proxies won’t be resolved.
+If they are it is a bug.
+
+The graph view is intended for small test code and is expected to be customized in the source code to suit a particular debugging use case (e.g. to show more / other information in the graph).
+Therefore it won't work well / won't scale on large code bases and does not support all conceivable use cases out of the box.
+Main entry point for customizations is class `EMFGraphProvider`.
+
 
 === API Compare
 

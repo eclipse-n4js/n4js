@@ -25,7 +25,7 @@ THREE - T17, ...
 MyEnum.ONE;
 
 /* XPECT scope at 'MyEnum.ONE.|value' ---
-__proto__, constructor, toString, toLocaleString,
+__proto__, toString, toLocaleString,
 valueOf, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable,
 name, value

@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalIndexSynchronizer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -177,7 +178,7 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 			return true;
 		}
 		if (resource instanceof IFolder) {
-			if ("node_modules".equals(resource.getName())) {
+			if (N4JSGlobals.NODE_MODULES.equals(resource.getName())) {
 				accumulator.add(resource.getProject());
 			} else if ((delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED)
 					&& isSourceContainerModification(resource)) {

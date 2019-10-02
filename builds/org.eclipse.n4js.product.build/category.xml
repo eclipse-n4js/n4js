@@ -36,42 +36,6 @@
    <feature url="features/org.eclipse.n4js.xpect.sdk_0.0.1.qualifier.jar" id="org.eclipse.n4js.xpect.sdk" version="0.0.1.qualifier">
       <category name="org.eclipse.n4js.yard"/>
    </feature>
-   <feature id="org.eclipse.n4js.tests.helper.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.tests.helper.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.compiler.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.dependencies.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.dependencies.ui.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.regex.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.runner.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.tester.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.ts.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.unicode.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
-   <feature id="org.eclipse.n4js.xpect.sdk.source" version="0.0.1.qualifier">
-      <category name="org.eclipse.n4js.yard.sources"/>
-   </feature>
    <feature url="features/org.eclipse.n4js.json.sdk_0.0.1.qualifier.jar" id="org.eclipse.n4js.json.sdk" version="0.0.1.qualifier">
       <category name="org.eclipse.n4js.yard"/>
    </feature>
@@ -86,16 +50,6 @@
    <category-def name="org.eclipse.n4js.tests.helper.yard" label="Scaffolding for automated tests">
       <description>
          Additional things required when running unit-tests for N4JS-IDE-plugins.
-      </description>
-   </category-def>
-   <category-def name="org.eclipse.n4js.yard.sources" label="N4JS SDK Sources (only for N4JS-IDE plugin developers)">
-      <description>
-         Provides all the sources of the SDKs.
-      </description>
-   </category-def>
-   <category-def name="org.eclipse.n4js.tests.helper.yard.sources" label="Scaffolding for automated tests - Sources">
-      <description>
-         Sources of: Additional things required when running unit-tests for N4JS-IDE-plugins.
       </description>
    </category-def>
 </site>

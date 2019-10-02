@@ -12,11 +12,12 @@ package org.eclipse.n4js.ts.scoping
 
 import com.google.inject.Inject
 import com.google.inject.name.Named
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.IScopeProvider
@@ -25,7 +26,6 @@ import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 import org.eclipse.xtext.scoping.impl.MapBasedScope
 import org.eclipse.xtext.util.IResourceScopeCache
-import org.eclipse.n4js.ts.types.TModule
 
 /**
  * This class contains custom scoping description.
@@ -39,8 +39,6 @@ class TypesScopeProvider extends AbstractScopeProvider implements IDelegatingSco
 
 	@Inject
 	private IResourceScopeCache cache
-
-	@Inject extension TypesScopeFilter
 
 	@Inject
 	@Named(NAMED_DELEGATE)
@@ -64,7 +62,7 @@ class TypesScopeProvider extends AbstractScopeProvider implements IDelegatingSco
 	override getScope(EObject context, EReference reference) {
 		if (TypesPackage.Literals.TYPE.isSuperTypeOf(reference.EReferenceType)
 		) {
-			return new ValidatingScope(getTypeScope(context, reference), context.getTypesFilterCriteria(reference))
+			return getTypeScope(context, reference);
 		}
 		return delegateGetScope(context, reference)
 	}

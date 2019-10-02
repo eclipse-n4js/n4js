@@ -98,7 +98,7 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 					Path fullExpectationPath = adocRoot.toPath().resolve(expectedFile);
 					File fullExpectationFile = fullExpectationPath.toFile();
 					String fullExpectationPathStr = fullExpectationPath.toString();
-					String expectedADoc = Files.toString(fullExpectationFile, Charset.defaultCharset());
+					String expectedADoc = Files.asCharSource(fullExpectationFile, Charset.defaultCharset()).read();
 					String actualADoc = specFile.getNewContent();
 
 					if (UPDATE_EXPECTION && !actualADoc.equals(expectedADoc)) {

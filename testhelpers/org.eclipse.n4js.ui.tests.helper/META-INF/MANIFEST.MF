@@ -26,11 +26,13 @@ Require-Bundle: org.eclipse.n4js.ui,
  org.eclipse.n4js.json,
  org.eclipse.ui.navigator,
  org.eclipse.ui.navigator.resources,
- com.google.guava
+ com.google.guava,
+ org.eclipse.n4js.cli.tests.helper
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.annotation,
  org.eclipse.n4js.editor.syntaxcoloring,
  org.eclipse.n4js.tests.builder,
+ org.eclipse.n4js.tests.defaultPreferences,
  org.eclipse.n4js.tests.outline,
  org.eclipse.n4js.tests.util
 Automatic-Module-Name: org.eclipse.n4js.ui.tests.helper
