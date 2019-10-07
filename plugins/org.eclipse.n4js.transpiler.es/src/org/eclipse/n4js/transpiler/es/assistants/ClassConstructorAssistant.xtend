@@ -385,7 +385,6 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		}
 
 		val LinkedHashSet<String> ownedInstanceDataFieldsSupressMixin = newLinkedHashSet
-		ownedInstanceDataFieldsSupressMixin.addAll(classDecl.ownedFields.filter[!isConsumedFromInterface].map[name])
 		ownedInstanceDataFieldsSupressMixin.addAll(classDecl.ownedGetters.filter[!isConsumedFromInterface].map[name])
 		ownedInstanceDataFieldsSupressMixin.addAll(classDecl.ownedSetters.filter[!isConsumedFromInterface].map[name])
 
