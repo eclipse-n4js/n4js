@@ -15,27 +15,12 @@ import com.google.inject.Inject
 import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
-import java.util.Collection
-import org.antlr.runtime.CharStream
-import org.antlr.runtime.RecognitionException
-import org.antlr.runtime.TokenSource
 import org.eclipse.n4js.antlr.n4js.NoLineTerminatorHandlingInjector
-import org.eclipse.xtext.AbstractElement
 import org.eclipse.xtext.util.internal.Log
-import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
-import org.eclipse.xtext.xtext.generator.grammarAccess.GrammarAccessExtensions
-import org.eclipse.xtext.xtext.generator.model.FileAccessFactory
-import org.eclipse.xtext.xtext.generator.model.JavaFileAccess
-import org.eclipse.xtext.xtext.generator.parser.antlr.ContentAssistGrammarNaming
 import org.eclipse.xtext.xtext.generator.parser.antlr.GrammarNaming
 import org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
-import org.eclipse.xtext.xtext.generator.util.SyntheticTerminalDetector
 
 import static org.eclipse.n4js.antlr.replacements.Replacements.applyReplacement
-
-import static extension org.eclipse.xtext.GrammarUtil.*
-import static extension org.eclipse.xtext.xtext.generator.model.TypeReference.*
-import static extension org.eclipse.xtext.xtext.generator.parser.antlr.AntlrGrammarGenUtil.*
 
 /**
  * Customization of the {@link XtextAntlrGeneratorFragment2} applying some massaging
@@ -120,104 +105,4 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 		return c2;
 	}
 
-
-	// below is the fix for GH-39 - Content Assist doesn't reliably work in generator functions
-	// TODO will be available with Xtext 2.13 as part of the framework.
-	@Inject ReflectExtensions reflector
-	@Inject extension GrammarAccessExtensions grammarUtil
-	@Inject extension SyntheticTerminalDetector
-
-	private def <T> T reflectiveGet(String fieldName) {
-		try {
-			return reflector.get(this, fieldName);
-		} catch (Exception e) {
-			throw new RuntimeException(e)
-		}
-	}
-
-	protected override boolean hasSyntheticTerminalRule() {
-		grammar.allTerminalRules.exists[isSyntheticTerminalRule]
-	}
-
-	private def ContentAssistGrammarNaming getContentAssistNaming() {
-		return reflectiveGet("contentAssistNaming");
-	}
-
-	private def FileAccessFactory getFileFactory() {
-		return reflectiveGet("fileFactory");
-	}
-
-	private def boolean isPartialParsing() {
-		return <Boolean>reflectiveGet("partialParsing");
-	}
-
-	/**
-	 * This method was copied from the super class to extract the logic for {@link #initNameMappings()}
-	 * which needs access to the flattened grammar.
-	 */
-	override JavaFileAccess generateContentAssistParser() {
-		val extension naming = contentAssistNaming
-		val file = fileFactory.createGeneratedJavaFile(grammar.parserClass)
-		file.content = '''
-			public class «grammar.parserClass.simpleName» extends «grammar.getParserSuperClass(partialParsing)» {
-			
-				«grammar.initNameMappings()»
-			
-				@«Inject»
-				private «grammar.grammarAccess» grammarAccess;
-			
-				@Override
-				protected «grammar.internalParserClass» createParser() {
-					«grammar.internalParserClass» result = new «grammar.internalParserClass»(null);
-					result.setGrammarAccess(grammarAccess);
-					return result;
-				}
-			
-				«IF hasSyntheticTerminalRule»
-					@Override
-					protected «TokenSource» createLexer(«CharStream» stream) {
-						return new «grammar.tokenSourceClass»(super.createLexer(stream));
-					}
-					
-				«ENDIF»
-				@Override
-				protected String getRuleName(«AbstractElement» element) {
-					return nameMappings.getRuleName(element);
-				}
-			
-				@Override
-				protected «Collection»<«"org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement".typeRef»> getFollowElements(«grammar.internalParserSuperClass» parser) {
-					try {
-						«grammar.internalParserClass» typedParser = («grammar.internalParserClass») parser;
-						typedParser.«grammar.allParserRules.head.originalElement.entryRuleName»();
-						return typedParser.getFollowElements();
-					} catch(«RecognitionException» ex) {
-						throw new «RuntimeException»(ex);
-					}
-				}
-			
-				@Override
-				protected String[] getInitialHiddenTokens() {
-					return new String[] { «FOR hidden : grammar.initialHiddenTokens SEPARATOR ", "»"«hidden»"«ENDFOR» };
-				}
-			
-				public «grammar.grammarAccess» getGrammarAccess() {
-					return this.grammarAccess;
-				}
-			
-				public void setGrammarAccess(«grammar.grammarAccess» grammarAccess) {
-					this.grammarAccess = grammarAccess;
-				}
-			
-				public NameMappings getNameMappings() {
-					return nameMappings;
-				}
-			
-				public void setNameMappings(NameMappings nameMappings) {
-					this.nameMappings = nameMappings;
-				}
-			}
-		'''
-		file
-	}
 }

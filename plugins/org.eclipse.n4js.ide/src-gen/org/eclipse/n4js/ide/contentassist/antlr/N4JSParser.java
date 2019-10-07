@@ -13,15 +13,11 @@ package org.eclipse.n4js.ide.contentassist.antlr;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import java.util.Collection;
 import java.util.Map;
-import org.antlr.runtime.RecognitionException;
 import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.AbstractContentAssistParser;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.AbstractInternalContentAssistParser;
 
 public class N4JSParser extends AbstractContentAssistParser {
 
@@ -1067,17 +1063,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 	}
 
 	@Override
-	protected Collection<FollowElement> getFollowElements(AbstractInternalContentAssistParser parser) {
-		try {
-			InternalN4JSParser typedParser = (InternalN4JSParser) parser;
-			typedParser.entryRuleScript();
-			return typedParser.getFollowElements();
-		} catch(RecognitionException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-
-	@Override
 	protected String[] getInitialHiddenTokens() {
 		return new String[] { "RULE_WS", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL" };
 	}
@@ -1089,11 +1074,11 @@ public class N4JSParser extends AbstractContentAssistParser {
 	public void setGrammarAccess(N4JSGrammarAccess grammarAccess) {
 		this.grammarAccess = grammarAccess;
 	}
-
+	
 	public NameMappings getNameMappings() {
 		return nameMappings;
 	}
-
+	
 	public void setNameMappings(NameMappings nameMappings) {
 		this.nameMappings = nameMappings;
 	}
