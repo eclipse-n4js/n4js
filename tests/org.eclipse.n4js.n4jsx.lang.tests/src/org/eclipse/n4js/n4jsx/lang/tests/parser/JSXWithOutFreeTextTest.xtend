@@ -105,6 +105,56 @@ class JSXWithOutFreeTextTest extends AbstractN4JSXParserTest {
 		val attr = jsxElement.jsxAttributes.head as JSXPropertyAttribute
 		assertEquals("Test", (attr.jsxAttributeValue as StringLiteral).value)
 	}
+	
+	@Test
+	def void testAttributeNameWithDash() {
+		'''
+			<a attr-1="true"></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNameWithTrailingDash() {
+		'''
+			<a attr-></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNameWithTrailingDashes() {
+		'''
+			<a attr-1--000---></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNumberKinds() {
+		'''
+			<a attr-1-0x0-0b0-0o0-00a-0e='false'></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNameKeyword() {
+		'''
+			<a true="undefined"></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeValueJsxElement() {
+		'''
+			(<a attr=<b></b>></a>)
+			(<a attr=<b/>></a>)
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeValueJsxFragment() {
+		'''
+			<a attr=<></>></a>
+		'''.parseSuccessfully
+	}
 
 	/**
 	 * The example produces the same error when using the babel transpiler.
@@ -117,12 +167,24 @@ class JSXWithOutFreeTextTest extends AbstractN4JSXParserTest {
 			<div></div>
 		'''.parseWithError
 	}
-
+	
 	/**
-	 * The example produces the same error when using the babel transpiler.
+	 * The example can be parsed successfully with babel, too.
 	 */
 	@Test
-	def void testRegExAmbiguityContra() {
+	def void testRegExAmbiguityContra_01() {
+		'''
+			"Hello"
+
+			(<div></div>)
+		'''.parseSuccessfully
+	}
+
+	/**
+	 * The example can be parsed successfully with babel, too.
+	 */
+	@Test
+	def void testRegExAmbiguityContra_02() {
 		'''
 			<div></div>
 

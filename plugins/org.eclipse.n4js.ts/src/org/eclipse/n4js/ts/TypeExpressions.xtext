@@ -301,10 +301,6 @@ IdentifierName:
 	IDENTIFIER | ReservedWord | N4Keyword
 ;
 
-IdentifierNameWithDash:
-	IDENTIFIER_WITH_DASH
-;
-
 ReservedWord:
 	// Keywords as of [ECM15] (11.6.2, pp. 165)
 	'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete'
@@ -341,9 +337,6 @@ N4Keyword:
 
 terminal IDENTIFIER:
 	IDENTIFIER_START IDENTIFIER_PART*;
-
-terminal IDENTIFIER_WITH_DASH:
-	IDENTIFIER_START IDENTIFIER_PART+ ('-' IDENTIFIER_PART+)+;
 
 terminal INT returns ecore::EBigDecimal:
 	DECIMAL_INTEGER_LITERAL_FRAGMENT;

@@ -34,7 +34,7 @@ import com.google.inject.Singleton;
  * This helper will unregister all languages services that were registered by other injectors.
  */
 @Singleton
-public class N4JSStandloneRegistrationHelper {
+public class N4JSStandaloneRegistrationHelper {
 	/** Registration method that is executed on injector instantiation. */
 	@Inject
 	public void registerServiceProvider(Injector injector) {

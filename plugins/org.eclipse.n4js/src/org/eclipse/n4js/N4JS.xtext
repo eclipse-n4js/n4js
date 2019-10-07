@@ -1495,7 +1495,7 @@ terminal INCOMPLETE_ASYNC_ARROW:
 // ****************************************************************************************************
 
 JSXElement:
-	'<' jsxElementName=JSXElementName JSXAttributes
+	'<' jsxElementName=JSXElementName jsxAttributes+=JSXAttribute*
 	(
 		  '>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
 		| '/' '>'
@@ -1521,14 +1521,11 @@ JSXElementName:
 JSXElementNameExpression returns Expression:
 	IdentifierRef<false>
 	({ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<false>)*
-//	| JSXNamedspacedName not supported
+//	| JSXNamedspacedName not supported in N4JSX and not supported by React either
 ;
 
-//JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
+//JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX or even by React
 //JSXMemberExpression: JSXIdentifier '.' JSXIdentifier -- defined by means of ParameterizedPropertyAccessExpression
-
-fragment JSXAttributes *:
-	jsxAttributes+=JSXAttribute*;
 
 JSXAttribute:
 	  JSXSpreadAttribute
@@ -1537,15 +1534,20 @@ JSXAttribute:
 JSXSpreadAttribute:
 	'{' '...' expression=AssignmentExpression<In=false, Yield=false> '}';
 
-JSXAttributeIdentifierName:
-	IdentifierName
-	| IdentifierNameWithDash
+// Comments or whitespace inbetween is filtered by the value converter
+// Also we use a simplified version of the grammar. The spec would make 
+// this a valid snippet <Comp abstract- private> with two attributes whereas
+// we would consume this as a component with a single attribute that is marked
+// with an error because of the unexpected whitespace
+JSXIdentifier:
+	IdentifierName (('-'|'--') ->(INT | HEX_INT | BINARY_INT | OCTAL_INT | SCIENTIFIC_INT | LEGACY_OCTAL_INT | IdentifierName)?)*
 ;
 
-
 JSXPropertyAttribute:
-	property=[types::IdentifiableElement|JSXAttributeIdentifierName]
+	property=[types::IdentifiableElement|JSXIdentifier]
 	('='	(	jsxAttributeValue=StringLiteral
+			|	jsxAttributeValue=JSXElement
+			|	jsxAttributeValue=JSXFragment
 			|	('{' jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')
 			)
 	)?;
