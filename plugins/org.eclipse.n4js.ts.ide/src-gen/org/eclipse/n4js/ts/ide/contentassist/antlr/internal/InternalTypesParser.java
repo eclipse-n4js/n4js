@@ -35,7 +35,7 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AssignmnentCompatible", "ProtectedInternal", "ProvidedByRuntime", "PublicInternal", "AutoboxedType", "Intersection", "Constructor", "VirtualBase", "Implements", "Instanceof", "Promisify", "Interface", "Primitive", "Protected", "Undefined", "Abstract", "Continue", "Debugger", "External", "Function", "Default", "Extends", "Finally", "Indexed", "Private", "Project", "Delete", "Export", "Import", "Object", "Public", "Return", "Static", "Switch", "Target", "Typeof", "Async", "Await", "Break", "Catch", "Class", "Const", "False", "Final", "Super", "Throw", "Union", "While", "Yield", "This", "Case", "Else", "Enum", "From", "Null", "This_1", "True", "Type", "Void", "With", "FullStopFullStopFullStop", "Any", "For", "Get", "Let", "New", "Out", "Set", "Try", "Var", "EqualsSignGreaterThanSign", "As", "Do", "If", "In", "Of", "Ampersand", "LeftParenthesis", "RightParenthesis", "PlusSign", "Comma", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "LeftSquareBracket", "RightSquareBracket", "LeftCurlyBracket", "RightCurlyBracket", "Tilde", "RULE_SINGLE_STRING_CHAR", "RULE_STRING", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_STRUCTMODSUFFIX", "RULE_IDENTIFIER_START", "RULE_IDENTIFIER_PART", "RULE_IDENTIFIER", "RULE_IDENTIFIER_WITH_DASH", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_INT", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL", "RULE_WHITESPACE_FRAGMENT", "RULE_WS", "RULE_HEX_DIGIT", "RULE_UNICODE_ESCAPE_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ZWNJ", "RULE_ZWJ", "RULE_DOT_DOT", "RULE_VERSION", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ANY_OTHER"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AssignmnentCompatible", "ProtectedInternal", "ProvidedByRuntime", "PublicInternal", "AutoboxedType", "Intersection", "Constructor", "VirtualBase", "Implements", "Instanceof", "Promisify", "Interface", "Primitive", "Protected", "Undefined", "Abstract", "Continue", "Debugger", "External", "Function", "Default", "Extends", "Finally", "Indexed", "Private", "Project", "Delete", "Export", "Import", "Object", "Public", "Return", "Static", "Switch", "Target", "Typeof", "Async", "Await", "Break", "Catch", "Class", "Const", "False", "Final", "Super", "Throw", "Union", "While", "Yield", "This", "Case", "Else", "Enum", "From", "Null", "This_1", "True", "Type", "Void", "With", "FullStopFullStopFullStop", "Any", "For", "Get", "Let", "New", "Out", "Set", "Try", "Var", "EqualsSignGreaterThanSign", "As", "Do", "If", "In", "Of", "Ampersand", "LeftParenthesis", "RightParenthesis", "PlusSign", "Comma", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "LeftSquareBracket", "RightSquareBracket", "LeftCurlyBracket", "RightCurlyBracket", "Tilde", "RULE_SINGLE_STRING_CHAR", "RULE_STRING", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_STRUCTMODSUFFIX", "RULE_IDENTIFIER_START", "RULE_IDENTIFIER_PART", "RULE_IDENTIFIER", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_INT", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL", "RULE_WHITESPACE_FRAGMENT", "RULE_WS", "RULE_HEX_DIGIT", "RULE_UNICODE_ESCAPE_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ZWNJ", "RULE_ZWJ", "RULE_DOT_DOT", "RULE_VERSION", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ANY_OTHER"
     };
     public static final int Delete=30;
     public static final int Enum=56;
@@ -46,7 +46,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final int False=46;
     public static final int LessThanSign=89;
     public static final int LeftParenthesis=81;
-    public static final int RULE_VERSION=125;
+    public static final int RULE_VERSION=124;
     public static final int Throw=49;
     public static final int VirtualBase=11;
     public static final int Private=28;
@@ -54,33 +54,33 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final int GreaterThanSign=91;
     public static final int RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT=102;
     public static final int RULE_STRUCTMODSUFFIX=103;
-    public static final int RULE_EOL=113;
+    public static final int RULE_EOL=112;
     public static final int ProtectedInternal=5;
     public static final int Out=70;
-    public static final int RULE_ZWNJ=122;
+    public static final int RULE_ZWNJ=121;
     public static final int Project=29;
     public static final int Switch=37;
     public static final int PlusSign=83;
-    public static final int RULE_INT=109;
+    public static final int RULE_INT=108;
     public static final int Get=67;
-    public static final int RULE_ML_COMMENT=111;
+    public static final int RULE_ML_COMMENT=110;
     public static final int Object=33;
     public static final int LeftSquareBracket=94;
     public static final int If=77;
     public static final int Finally=26;
     public static final int Intersection=9;
     public static final int Set=71;
-    public static final int RULE_UNICODE_ESCAPE_FRAGMENT=117;
+    public static final int RULE_UNICODE_ESCAPE_FRAGMENT=116;
     public static final int In=78;
     public static final int Catch=43;
     public static final int Union=50;
     public static final int Case=54;
     public static final int Comma=84;
-    public static final int RULE_SL_COMMENT_FRAGMENT=129;
+    public static final int RULE_SL_COMMENT_FRAGMENT=128;
     public static final int Target=38;
     public static final int As=75;
     public static final int RULE_IDENTIFIER_PART=105;
-    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=128;
+    public static final int RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=127;
     public static final int Export=31;
     public static final int Solidus=86;
     public static final int RightCurlyBracket=97;
@@ -97,8 +97,8 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final int QuestionMark=92;
     public static final int PublicInternal=7;
     public static final int Else=55;
-    public static final int RULE_HEX_DIGIT=116;
-    public static final int RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=121;
+    public static final int RULE_HEX_DIGIT=115;
+    public static final int RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=120;
     public static final int Yield=52;
     public static final int Interface=15;
     public static final int New=69;
@@ -109,7 +109,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final int FullStopFullStopFullStop=64;
     public static final int RULE_IDENTIFIER_START=104;
     public static final int Implements=12;
-    public static final int RULE_WHITESPACE_FRAGMENT=114;
+    public static final int RULE_WHITESPACE_FRAGMENT=113;
     public static final int Super=48;
     public static final int Async=40;
     public static final int This=53;
@@ -123,12 +123,11 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final int Const=45;
     public static final int For=66;
     public static final int RightParenthesis=82;
-    public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=119;
+    public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=118;
     public static final int Public=34;
     public static final int Do=76;
     public static final int This_1=59;
-    public static final int RULE_IDENTIFIER_WITH_DASH=107;
-    public static final int RULE_DOT_DOT=124;
+    public static final int RULE_DOT_DOT=123;
     public static final int External=22;
     public static final int Class=44;
     public static final int Static=36;
@@ -136,33 +135,33 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final int RULE_SINGLE_STRING_CHAR=99;
     public static final int AssignmnentCompatible=4;
     public static final int RULE_IDENTIFIER=106;
-    public static final int RULE_ML_COMMENT_FRAGMENT=110;
+    public static final int RULE_ML_COMMENT_FRAGMENT=109;
     public static final int RULE_STRING=100;
     public static final int Continue=20;
     public static final int Any=65;
     public static final int With=63;
-    public static final int RULE_SL_COMMENT=112;
+    public static final int RULE_SL_COMMENT=111;
     public static final int Function=23;
     public static final int EqualsSign=90;
-    public static final int RULE_ZWJ=123;
+    public static final int RULE_ZWJ=122;
     public static final int Primitive=16;
-    public static final int RULE_UNICODE_DIGIT_FRAGMENT=120;
+    public static final int RULE_UNICODE_DIGIT_FRAGMENT=119;
     public static final int Instanceof=13;
     public static final int Colon=87;
     public static final int EOF=-1;
     public static final int Indexed=27;
     public static final int Return=35;
-    public static final int RULE_WS=115;
-    public static final int RULE_BOM=127;
+    public static final int RULE_WS=114;
+    public static final int RULE_BOM=126;
     public static final int LeftCurlyBracket=96;
     public static final int Tilde=98;
     public static final int While=51;
     public static final int From=57;
-    public static final int RULE_ANY_OTHER=130;
-    public static final int RULE_UNICODE_LETTER_FRAGMENT=118;
-    public static final int RULE_DECIMAL_DIGIT_FRAGMENT=126;
+    public static final int RULE_ANY_OTHER=129;
+    public static final int RULE_UNICODE_LETTER_FRAGMENT=117;
+    public static final int RULE_DECIMAL_DIGIT_FRAGMENT=125;
     public static final int Of=79;
-    public static final int RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=108;
+    public static final int RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=107;
     public static final int Let=68;
     public static final int Await=41;
 
@@ -56559,21 +56558,21 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     static final String dfa_18s = "\13\uffff";
     static final String dfa_19s = "\1\uffff\6\7\3\uffff\1\7";
     static final String dfa_20s = "\1\22\6\5\2\uffff\1\152\1\5";
-    static final String dfa_21s = "\1\152\6\175\2\uffff\1\152\1\175";
+    static final String dfa_21s = "\1\152\6\174\2\uffff\1\152\1\174";
     static final String dfa_22s = "\7\uffff\1\1\1\2\2\uffff";
     static final String dfa_23s = "\13\uffff}>";
     static final String[] dfa_24s = {
             "\1\3\10\uffff\1\5\36\uffff\1\4\3\uffff\1\1\2\uffff\1\2\50\uffff\1\6",
-            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\3\uffff\12\7\10\uffff\1\7\22\uffff\1\10",
-            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\3\uffff\12\7\10\uffff\1\7\22\uffff\1\10",
-            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\3\uffff\12\7\10\uffff\1\7\22\uffff\1\10",
-            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\3\uffff\12\7\10\uffff\1\7\22\uffff\1\10",
-            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\3\uffff\12\7\10\uffff\1\7\22\uffff\1\10",
-            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\1\uffff\1\11\1\uffff\12\7\10\uffff\1\7\22\uffff\1\10",
+            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\3\uffff\12\7\10\uffff\1\7\21\uffff\1\10",
+            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\3\uffff\12\7\10\uffff\1\7\21\uffff\1\10",
+            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\3\uffff\12\7\10\uffff\1\7\21\uffff\1\10",
+            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\3\uffff\12\7\10\uffff\1\7\21\uffff\1\10",
+            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\3\uffff\12\7\10\uffff\1\7\21\uffff\1\10",
+            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\1\uffff\1\11\1\uffff\12\7\10\uffff\1\7\21\uffff\1\10",
             "",
             "",
             "\1\12",
-            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\1\uffff\1\11\1\uffff\12\7\10\uffff\1\7\22\uffff\1\10"
+            "\1\7\1\uffff\1\7\1\uffff\30\7\1\uffff\15\7\1\uffff\20\7\1\uffff\11\7\1\uffff\5\7\1\uffff\4\7\1\uffff\1\11\1\uffff\12\7\10\uffff\1\7\21\uffff\1\10"
     };
 
     static final short[] dfa_18 = DFA.unpackEncodedString(dfa_18s);
@@ -56604,7 +56603,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     static final String dfa_25s = "\16\uffff";
     static final String dfa_26s = "\4\uffff\6\12\3\uffff\1\12";
     static final String dfa_27s = "\1\142\3\22\6\5\2\uffff\1\152\1\5";
-    static final String dfa_28s = "\1\142\3\152\6\175\2\uffff\1\152\1\175";
+    static final String dfa_28s = "\1\142\3\152\6\174\2\uffff\1\152\1\174";
     static final String dfa_29s = "\12\uffff\1\1\1\2\2\uffff";
     static final String dfa_30s = "\16\uffff}>";
     static final String[] dfa_31s = {
@@ -56612,16 +56611,16 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
             "\1\6\10\uffff\1\10\36\uffff\1\7\3\uffff\1\4\2\uffff\1\5\40\uffff\1\2\4\uffff\1\3\2\uffff\1\11",
             "\1\6\10\uffff\1\10\36\uffff\1\7\3\uffff\1\4\2\uffff\1\5\50\uffff\1\11",
             "\1\6\10\uffff\1\10\36\uffff\1\7\3\uffff\1\4\2\uffff\1\5\50\uffff\1\11",
-            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\3\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\22\uffff\1\13",
-            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\3\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\22\uffff\1\13",
-            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\3\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\22\uffff\1\13",
-            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\3\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\22\uffff\1\13",
-            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\3\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\22\uffff\1\13",
-            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\1\uffff\1\14\1\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\22\uffff\1\13",
+            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\3\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\21\uffff\1\13",
+            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\3\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\21\uffff\1\13",
+            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\3\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\21\uffff\1\13",
+            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\3\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\21\uffff\1\13",
+            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\3\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\21\uffff\1\13",
+            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\1\uffff\1\14\1\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\21\uffff\1\13",
             "",
             "",
             "\1\15",
-            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\1\uffff\1\14\1\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\22\uffff\1\13"
+            "\1\12\1\uffff\1\12\1\uffff\22\12\1\uffff\5\12\1\uffff\15\12\1\uffff\20\12\1\uffff\11\12\1\uffff\5\12\1\uffff\4\12\1\uffff\1\14\1\uffff\5\12\1\uffff\2\12\1\uffff\1\12\10\uffff\1\12\21\uffff\1\13"
     };
 
     static final short[] dfa_25 = DFA.unpackEncodedString(dfa_25s);
@@ -57712,7 +57711,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     static final String dfa_38s = "\10\uffff";
     static final String dfa_39s = "\1\2\7\uffff";
     static final String dfa_40s = "\1\5\1\11\2\uffff\1\31\1\11\1\0\1\31";
-    static final String dfa_41s = "\2\152\2\uffff\1\175\1\152\1\0\1\175";
+    static final String dfa_41s = "\2\152\2\uffff\1\174\1\152\1\0\1\174";
     static final String dfa_42s = "\2\uffff\1\2\1\1\4\uffff";
     static final String dfa_43s = "\6\uffff\1\0\1\uffff}>";
     static final String[] dfa_44s = {
@@ -57720,10 +57719,10 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
             "\2\3\7\uffff\1\3\10\uffff\1\3\26\uffff\1\3\7\uffff\2\3\1\uffff\2\3\2\uffff\1\3\4\uffff\1\3\7\uffff\1\3\15\uffff\1\3\3\uffff\1\3\1\uffff\1\3\7\uffff\1\4",
             "",
             "",
-            "\1\2\71\uffff\1\3\1\5\1\uffff\1\3\2\uffff\1\3\1\uffff\1\6\1\3\40\uffff\1\3",
+            "\1\2\71\uffff\1\3\1\5\1\uffff\1\3\2\uffff\1\3\1\uffff\1\6\1\3\37\uffff\1\3",
             "\2\3\7\uffff\1\3\10\uffff\1\3\26\uffff\1\3\7\uffff\2\3\1\uffff\2\3\2\uffff\1\3\4\uffff\1\3\7\uffff\1\3\15\uffff\1\3\3\uffff\1\3\1\uffff\1\3\7\uffff\1\7",
             "\1\uffff",
-            "\1\2\71\uffff\1\3\1\5\1\uffff\1\3\2\uffff\1\3\1\uffff\1\6\1\3\40\uffff\1\3"
+            "\1\2\71\uffff\1\3\1\5\1\uffff\1\3\2\uffff\1\3\1\uffff\1\6\1\3\37\uffff\1\3"
     };
 
     static final short[] dfa_38 = DFA.unpackEncodedString(dfa_38s);
@@ -57782,10 +57781,10 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
             "\2\3\7\uffff\1\3\10\uffff\1\3\26\uffff\1\3\7\uffff\2\3\1\uffff\2\3\2\uffff\1\3\4\uffff\1\3\7\uffff\1\3\15\uffff\1\3\3\uffff\1\3\1\uffff\1\3\7\uffff\1\4",
             "",
             "",
-            "\1\2\71\uffff\1\3\1\5\1\uffff\1\3\2\uffff\1\3\1\uffff\1\6\1\3\40\uffff\1\3",
+            "\1\2\71\uffff\1\3\1\5\1\uffff\1\3\2\uffff\1\3\1\uffff\1\6\1\3\37\uffff\1\3",
             "\2\3\7\uffff\1\3\10\uffff\1\3\26\uffff\1\3\7\uffff\2\3\1\uffff\2\3\2\uffff\1\3\4\uffff\1\3\7\uffff\1\3\15\uffff\1\3\3\uffff\1\3\1\uffff\1\3\7\uffff\1\7",
             "\1\uffff",
-            "\1\2\71\uffff\1\3\1\5\1\uffff\1\3\2\uffff\1\3\1\uffff\1\6\1\3\40\uffff\1\3"
+            "\1\2\71\uffff\1\3\1\5\1\uffff\1\3\2\uffff\1\3\1\uffff\1\6\1\3\37\uffff\1\3"
     };
     static final short[][] dfa_45 = unpackEncodedStringArray(dfa_45s);
 
@@ -57911,7 +57910,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final BitSet FOLLOW_75 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000400L});
     public static final BitSet FOLLOW_76 = new BitSet(new long[]{0x0000000000000000L,0x0000000004000000L});
     public static final BitSet FOLLOW_77 = new BitSet(new long[]{0x0004000000000000L});
-    public static final BitSet FOLLOW_78 = new BitSet(new long[]{0x0000000000000000L,0x2000000000000000L});
+    public static final BitSet FOLLOW_78 = new BitSet(new long[]{0x0000000000000000L,0x1000000000000000L});
     public static final BitSet FOLLOW_79 = new BitSet(new long[]{0x8000000000000000L,0x0000000002000000L});
     public static final BitSet FOLLOW_80 = new BitSet(new long[]{0x4400000008040000L,0x0000040400000002L});
     public static final BitSet FOLLOW_81 = new BitSet(new long[]{0x6C04000008040600L,0x0000041590004042L});

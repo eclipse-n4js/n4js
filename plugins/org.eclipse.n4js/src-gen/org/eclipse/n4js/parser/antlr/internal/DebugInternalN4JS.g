@@ -8136,7 +8136,8 @@ norm1_LiteralOrComputedPropertyName:
 ruleJSXElement:
 	'<'
 	ruleJSXElementName
-	ruleJSXAttributes
+	ruleJSXAttribute
+	*
 	(
 		'>'
 		ruleJSXChild
@@ -8193,12 +8194,6 @@ ruleJSXElementNameExpression:
 	)*
 ;
 
-// Rule JSXAttributes
-ruleJSXAttributes:
-	ruleJSXAttribute
-	*
-;
-
 // Rule JSXAttribute
 ruleJSXAttribute:
 	(
@@ -8216,22 +8211,47 @@ ruleJSXSpreadAttribute:
 	'}'
 ;
 
-// Rule JSXAttributeIdentifierName
-ruleJSXAttributeIdentifierName:
+// Rule JSXIdentifier
+ruleJSXIdentifier:
+	ruleIdentifierName
 	(
-		ruleIdentifierName
-		    |
-		ruleIdentifierNameWithDash
-	)
+		(
+			'-'
+			    |
+			'--'
+		)
+		(
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | RULE_INT | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_LEGACY_OCTAL_INT | RULE_IDENTIFIER)=>
+			(
+				RULE_INT
+				    |
+				RULE_HEX_INT
+				    |
+				RULE_BINARY_INT
+				    |
+				RULE_OCTAL_INT
+				    |
+				RULE_SCIENTIFIC_INT
+				    |
+				RULE_LEGACY_OCTAL_INT
+				    |
+				ruleIdentifierName
+			)
+		)?
+	)*
 ;
 
 // Rule JSXPropertyAttribute
 ruleJSXPropertyAttribute:
-	ruleJSXAttributeIdentifierName
+	ruleJSXIdentifier
 	(
 		'='
 		(
 			ruleStringLiteral
+			    |
+			ruleJSXElement
+			    |
+			ruleJSXFragment
 			    |
 			'{'
 			ruleAssignmentExpression
@@ -8842,11 +8862,6 @@ ruleIdentifierName:
 	)
 ;
 
-// Rule IdentifierNameWithDash
-ruleIdentifierNameWithDash:
-	RULE_IDENTIFIER_WITH_DASH
-;
-
 // Rule ReservedWord
 ruleReservedWord:
 	(
@@ -9135,8 +9150,6 @@ RULE_INCOMPLETE_ASYNC_ARROW : '@=';
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
 
 RULE_IDENTIFIER : RULE_IDENTIFIER_START RULE_IDENTIFIER_PART*;
-
-RULE_IDENTIFIER_WITH_DASH : RULE_IDENTIFIER_START RULE_IDENTIFIER_PART+ ('-' RULE_IDENTIFIER_PART+)+;
 
 RULE_INT : RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT;
 

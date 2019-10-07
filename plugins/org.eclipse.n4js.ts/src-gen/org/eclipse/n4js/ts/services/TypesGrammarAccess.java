@@ -82,7 +82,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ('@' name=IDENTIFIER)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//'@' name=IDENTIFIER
+		//('@' name=IDENTIFIER)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//'@'
@@ -688,7 +688,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//'['
 		public Keyword getLeftSquareBracketKeyword_0() { return cLeftSquareBracketKeyword_0; }
 		
-		//TypesSymbolLiteralComputedName | TypesStringLiteralComputedName
+		//(TypesSymbolLiteralComputedName | TypesStringLiteralComputedName)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//TypesSymbolLiteralComputedName
@@ -1439,8 +1439,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName) -> TFormalParameters)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
-		//TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName) -> TFormalParameters
+		//(declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
+		//TypeVariables? (name=TypesIdentifier | name=TypesComputedPropertyName) -> TFormalParameters)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//declaredMemberAccessModifier=MemberAccessModifier
@@ -1467,7 +1467,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//TypeVariables?
 		public RuleCall getTypeVariablesParserRuleCall_0_0_2() { return cTypeVariablesParserRuleCall_0_0_2; }
 		
-		//name=TypesIdentifier | name=TypesComputedPropertyName
+		//(name=TypesIdentifier | name=TypesComputedPropertyName)
 		public Alternatives getAlternatives_0_0_3() { return cAlternatives_0_0_3; }
 		
 		//name=TypesIdentifier
@@ -1551,7 +1551,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//'final'
 		public Keyword getDeclaredFinalFinalKeyword_1_2_0() { return cDeclaredFinalFinalKeyword_1_2_0; }
 		
-		//name=TypesIdentifier | name=TypesComputedPropertyName
+		//(name=TypesIdentifier | name=TypesComputedPropertyName)
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 		
 		//name=TypesIdentifier
@@ -1617,8 +1617,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//(name=TypesIdentifier | name=TypesComputedPropertyName))
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')? 'get'
-		//(name=TypesIdentifier | name=TypesComputedPropertyName)
+		//(declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')? 'get'
+		//(name=TypesIdentifier | name=TypesComputedPropertyName))
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//declaredMemberAccessModifier=MemberAccessModifier
@@ -1645,7 +1645,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//'get'
 		public Keyword getGetKeyword_0_0_2() { return cGetKeyword_0_0_2; }
 		
-		//name=TypesIdentifier | name=TypesComputedPropertyName
+		//(name=TypesIdentifier | name=TypesComputedPropertyName)
 		public Alternatives getAlternatives_0_0_3() { return cAlternatives_0_0_3; }
 		
 		//name=TypesIdentifier
@@ -1715,8 +1715,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//(name=TypesIdentifier | name=TypesComputedPropertyName))
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')? 'set'
-		//(name=TypesIdentifier | name=TypesComputedPropertyName)
+		//(declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')? 'set'
+		//(name=TypesIdentifier | name=TypesComputedPropertyName))
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//declaredMemberAccessModifier=MemberAccessModifier
@@ -1743,7 +1743,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//'set'
 		public Keyword getSetKeyword_0_0_2() { return cSetKeyword_0_0_2; }
 		
-		//name=TypesIdentifier | name=TypesComputedPropertyName
+		//(name=TypesIdentifier | name=TypesComputedPropertyName)
 		public Alternatives getAlternatives_0_0_3() { return cAlternatives_0_0_3; }
 		
 		//name=TypesIdentifier
@@ -3173,16 +3173,6 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getIdentifierNameAccess().getRule();
 	}
 	
-	//IdentifierNameWithDash:
-	//	IDENTIFIER_WITH_DASH;
-	public TypeExpressionsGrammarAccess.IdentifierNameWithDashElements getIdentifierNameWithDashAccess() {
-		return gaTypeExpressions.getIdentifierNameWithDashAccess();
-	}
-	
-	public ParserRule getIdentifierNameWithDashRule() {
-		return getIdentifierNameWithDashAccess().getRule();
-	}
-	
 	//ReservedWord: // Keywords as of [ECM15] (11.6.2, pp. 165)
 	//	'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' |
 	//	'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' |
@@ -3228,12 +3218,6 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	IDENTIFIER_START IDENTIFIER_PART*;
 	public TerminalRule getIDENTIFIERRule() {
 		return gaTypeExpressions.getIDENTIFIERRule();
-	}
-	
-	//terminal IDENTIFIER_WITH_DASH:
-	//	IDENTIFIER_START IDENTIFIER_PART+ ('-' IDENTIFIER_PART+)+;
-	public TerminalRule getIDENTIFIER_WITH_DASHRule() {
-		return gaTypeExpressions.getIDENTIFIER_WITH_DASHRule();
 	}
 	
 	//terminal INT returns ecore::EBigDecimal:
