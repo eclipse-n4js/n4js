@@ -201,6 +201,11 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public static final QualifiedName QN_MIGRATION_CONTEXT = QualifiedName.create("MigrationContext");
 
+	// Built-in classes related to reflection:
+	private static final QualifiedName QN_N4ELEMENT = QualifiedName.create("N4Element");
+	private static final QualifiedName QN_N4NAMEDELEMENT = QualifiedName.create("N4NamedElement");
+	private static final QualifiedName QN_N4TYPE = QualifiedName.create("N4Type");
+
 	private List<ParameterizedTypeRef> n4classifiersAllImplicitSuperTypeRefs;
 	private List<ParameterizedTypeRef> objectPrototypesAllImplicitSuperTypeRefs;
 	private List<ParameterizedTypeRef> functionTypesAllImplicitSuperTypeRefs;
@@ -459,6 +464,27 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public final TInterface getMigrationContextType() {
 		return getEObjectOrProxy(QN_MIGRATION_CONTEXT);
+	}
+
+	/**
+	 * Returns the built-in type "N4Element".
+	 */
+	public final TClass getN4ElementType() {
+		return getEObjectOrProxy(QN_N4ELEMENT);
+	}
+
+	/**
+	 * Returns the built-in type "N4NamedElement".
+	 */
+	public final TClass getN4NamedElementType() {
+		return getEObjectOrProxy(QN_N4NAMEDELEMENT);
+	}
+
+	/**
+	 * Returns the built-in type "N4Type".
+	 */
+	public final TClass getN4TypeType() {
+		return getEObjectOrProxy(QN_N4TYPE);
 	}
 
 	/**

@@ -21,11 +21,15 @@ import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
+import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
+import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.PromisifyHelper
+import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -44,8 +48,13 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 @ExcludesBefore(AsyncAwaitTransformation)
 class ExpressionTransformation extends Transformation {
 
+	@Inject private ResourceNameComputer resourceNameComputer;
 	@Inject private PromisifyHelper promisifyHelper;
 
+	private TGetter n4Object_n4type;
+	private TGetter n4NamedElement_name;
+	private TGetter n4Element_origin;
+	private TGetter n4Type_fqn;
 
 	override assertPreConditions() {
 		// true
@@ -56,7 +65,17 @@ class ExpressionTransformation extends Transformation {
 	}
 
 	override analyze() {
-		// ignore
+		n4Object_n4type = state.G.n4ObjectType.findOwnedMember("n4type", false, true) as TGetter;
+		n4NamedElement_name = state.G.n4NamedElementType.findOwnedMember("name", false, false) as TGetter;
+		n4Element_origin = state.G.n4ElementType.findOwnedMember("origin", false, false) as TGetter;
+		n4Type_fqn = state.G.n4TypeType.findOwnedMember("fqn", false, false) as TGetter;
+
+		if (n4Object_n4type === null
+			|| n4NamedElement_name === null
+			|| n4Element_origin === null
+			|| n4Type_fqn === null) {
+			throw new IllegalStateException("could not find required members of built-in types");
+		}
 	}
 
 	override transform() {
@@ -69,6 +88,10 @@ class ExpressionTransformation extends Transformation {
 
 	def private dispatch void transformExpression(CastExpression castExpr) {
 		replace(castExpr, castExpr.expression); // simply remove the cast
+	}
+
+	def private dispatch void transformExpression(ParameterizedPropertyAccessExpression_IM propAccessExpr) {
+		transformTrivialUsageOfReflection(propAccessExpr);
 	}
 
 	/**
@@ -156,5 +179,51 @@ class ExpressionTransformation extends Transformation {
 		}
 		// if anything goes awry, we just return callExpr as replacement, which means we simply remove the @Promisify
 		return callExpr;
+	}
+
+	/**
+	 * Replaces the following trivial uses of the reflection APIs by the resulting value (i.e. a string literal):
+	 * <pre>
+	 * MyClass.n4type.name
+	 * MyClass.n4type.origin
+	 * MyClass.n4type.fqn
+	 * </pre>
+	 * Thus, reflection will not actually be used in the output code in the above cases.
+	 */
+	def private void transformTrivialUsageOfReflection(ParameterizedPropertyAccessExpression_IM propAccessExpr) {
+		val property = propAccessExpr.originalTargetOfRewiredTarget;
+		if (property === n4NamedElement_name
+			|| property === n4Element_origin
+			|| property === n4Type_fqn) {
+			val target = propAccessExpr.target;
+			if (target instanceof ParameterizedPropertyAccessExpression_IM) {
+				val propertyOfTarget = target.originalTargetOfRewiredTarget;
+				if (propertyOfTarget === n4Object_n4type) {
+					val targetOfTarget = target.target;
+					if (targetOfTarget instanceof IdentifierRef_IM) {
+						val id = targetOfTarget.originalTargetOfRewiredTarget;
+						if (id instanceof TClass) {
+							val value = switch(property) {
+								case n4NamedElement_name:
+									id.name
+								case n4Element_origin:
+									resourceNameComputer.generateProjectDescriptor(id.eResource.URI)
+								case n4Type_fqn:
+									// avoid optimizing this case for built-in types
+									// (we cannot know for sure the value of the 'fqn' property set in the .js files)
+									if (!N4Scheme.isFromResourceWithN4Scheme(id)) {
+										resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(id)
+									}
+								default:
+									throw new IllegalStateException() // should not happen (see above)
+							}
+							if (value !== null) {
+								replace(propAccessExpr, _StringLiteral(value));
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

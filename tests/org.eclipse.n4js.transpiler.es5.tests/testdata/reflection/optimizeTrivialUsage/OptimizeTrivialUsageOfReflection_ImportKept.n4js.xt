@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+    ResourceSet {
+		File "Other.n4js" {}
+		ThisFile {}
+	}
+
+	END_SETUP
+*/
+
+
+import { C } from "reflection/optimizeTrivialUsage/Other"
+
+console.log(C.n4type.name);
+console.log(C.n4type.origin);
+console.log(C.n4type.fqn);
+
+new C();
+
+
+/* XPECT output ---
+<==
+stdout:
+module Other.n4js is being loaded ...
+C
+org.eclipse.n4js.transpiler.es5.tests
+reflection.optimizeTrivialUsage.Other.C
+stderr:
+==>
+--- */
