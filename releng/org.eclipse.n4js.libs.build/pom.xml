@@ -147,7 +147,7 @@ Contributors:
 							<arguments>
 								<argument>${project.basedir}/../../releng/utils/scripts/publish-n4js-libs.sh</argument>
 								<argument>local</argument>
-								<argument>http://localhost:4873</argument>
+								<argument>9999.0.0</argument>
 							</arguments>
 						</configuration>
 					</execution>
