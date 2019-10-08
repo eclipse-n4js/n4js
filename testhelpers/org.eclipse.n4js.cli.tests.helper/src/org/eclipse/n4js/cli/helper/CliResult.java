@@ -99,22 +99,32 @@ public class CliResult {
 		return getTranspiledFiles().size();
 	}
 
-	/** @return number of all files that where transpiled to js files in the given directory */
-	public int getTranspiledFilesCount(Path dir) {
-		return getTranspiledFiles(dir).size();
-	}
-
 	/** @return list of all files that where transpiled to js files */
 	public Collection<File> getTranspiledFiles() {
-		return getTranspiledFiles(null, false);
+		return getJSFiles(null, true, false);
 	}
 
-	/** @return list of all files that where transpiled to js files in the given directory */
-	public Collection<File> getTranspiledFiles(Path dir) {
-		return getTranspiledFiles(dir, false);
+	/** @return number of all js files */
+	public int getJSFilesCount() {
+		return getJSFiles().size();
 	}
 
-	private Collection<File> getTranspiledFiles(Path dir, boolean exclusive) {
+	/** @return number of all js files in the given directory */
+	public int getJSFilesCount(Path dir) {
+		return getJSFiles(dir).size();
+	}
+
+	/** @return list of all js files */
+	public Collection<File> getJSFiles() {
+		return getJSFiles(null, false, false);
+	}
+
+	/** @return list of all js files in the given directory */
+	public Collection<File> getJSFiles(Path dir) {
+		return getJSFiles(dir, false, false);
+	}
+
+	private Collection<File> getJSFiles(Path dir, boolean transpiledOnly, boolean exclusive) {
 		if (transpiledFiles.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -129,14 +139,27 @@ public class CliResult {
 		for (Iterator<Entry<Path, HashSet<File>>> it = tailMap.entrySet().iterator(); it.hasNext();) {
 			Entry<Path, HashSet<File>> next = it.next();
 			Path curDir = next.getKey();
-			if (dir == null || curDir.startsWith(dir)) {
-				filesInDir.addAll(next.getValue());
-			} else {
-				break;
+			if (!transpiledOnly || pathContainsSrcGen(curDir)) {
+				if (dir == null || curDir.startsWith(dir)) {
+					filesInDir.addAll(next.getValue());
+				} else {
+					break;
+				}
 			}
 		}
 
 		return filesInDir;
+	}
+
+	private boolean pathContainsSrcGen(Path path) {
+		if (path == null || path.getNameCount() == 0) {
+			return false;
+		}
+		Path pathName = path.getName(path.getNameCount() - 1);
+		if ("src-gen".equals(pathName.toString())) {
+			return true;
+		}
+		return pathContainsSrcGen(path.getParent());
 	}
 
 	@Override

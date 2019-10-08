@@ -57,9 +57,12 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompil
 		final String packages = wsRoot + "/packages";
 		final String fileToRun = packages + "/external.project/src-gen/Main.js";
 
+		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
+		assertEquals(yarnInstallResult.toString(), 1, yarnInstallResult.getExitCode());
+
 		N4jscOptions options = COMPILE(workspace);
 		CliResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 1216, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "react is not undefined true\n"
 				+ "react-dom is not undefined true\n"

@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.cli.runner.helper.TestProcessExecuter;
@@ -59,8 +59,8 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		result.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
 
 		// save projects
-		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
-		N4JSWorkspaceManager workspaceManager = lastInjector.getInstance(N4JSWorkspaceManager.class);
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		N4JSWorkspaceManager workspaceManager = injector.getInstance(N4JSWorkspaceManager.class);
 		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
 		Map<String, String> projectMap = new TreeMap<>();
 		for (IProjectConfig pConfig : projects) {
@@ -73,22 +73,22 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 
 	/** {@link TestProcessExecuter#runNodejs(Path, Path)} */
 	public ProcessResult runNodejs(Path workingDir, Path runFile) {
-		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(lastInjector);
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
 		return tpExecuter.runNodejs(workingDir, runFile);
 	}
 
 	/** {@link TestProcessExecuter#npmInstall(Path)} */
 	public ProcessResult npmInstall(Path workingDir) {
-		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(lastInjector);
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
 		return tpExecuter.npmInstall(workingDir);
 	}
 
 	/** {@link TestProcessExecuter#yarnInstall(Path)} */
 	public ProcessResult yarnInstall(Path workingDir) {
-		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(lastInjector);
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
 		return tpExecuter.yarnInstall(workingDir);
 	}
 

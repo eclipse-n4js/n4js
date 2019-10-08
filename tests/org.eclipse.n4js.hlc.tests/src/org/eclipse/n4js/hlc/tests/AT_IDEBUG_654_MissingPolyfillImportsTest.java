@@ -58,7 +58,7 @@ public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractCliCompile
 
 		N4jscOptions options = COMPILE(workspace);
 		CliResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 8, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());
 
 		ProcessResult nodejsResult = runNodejs(projectDir, fileToRun);
 		assertEquals(nodejsResult.toString(),

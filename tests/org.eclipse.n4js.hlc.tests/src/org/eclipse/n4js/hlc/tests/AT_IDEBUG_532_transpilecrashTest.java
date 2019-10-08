@@ -62,7 +62,7 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractCliCompileTest {
 
 		// Make sure, we get here and have exactly one file compiled:
 
-		assertEquals(cliResult.toString(), 0, cliResult.getTranspiledFilesCount(proot.toPath().resolve("APIx")));
-		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(proot.toPath().resolve("IMPLx")));
+		assertEquals(cliResult.toString(), 0, cliResult.getJSFilesCount(proot.toPath().resolve("APIx")));
+		assertEquals(cliResult.toString(), 1, cliResult.getJSFilesCount(proot.toPath().resolve("IMPLx")));
 	}
 }

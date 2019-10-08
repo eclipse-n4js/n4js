@@ -42,14 +42,14 @@ public class ProcessResult {
 
 	@Override
 	public String toString() {
-		String s = "Node.js Result:\n";
+		String s = "Result:\n";
 		s += "    exit code: " + exitCode + "\n";
 		s += exception == null ? "" : "    Exception: " + exception.getMessage() + "\n";
 		s += "    std out:\n";
 		s += (stdOut.isBlank() ? "" : ">>>>\n" + stdOut + "\n<<<<\n");
 		s += "    err out:\n";
 		s += (errOut.isBlank() ? "" : ">>>>\n" + errOut + "\n<<<<\n");
-		s += "Node.js Result End.\n";
+		s += "Result End.\n";
 		return s;
 	}
 }

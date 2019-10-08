@@ -10,15 +10,20 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.hlc.base.BuildType;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +31,7 @@ import org.junit.Test;
  * Downloads, installs, compiles and runs several packages that are known to be problematic in terms of how they define
  * main module.
  */
-public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractN4jscTest {
+public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractCliCompileTest {
 
 	File workspace;
 
@@ -47,35 +52,29 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractN4jscT
 	 * running it with Common JS.
 	 */
 	@Test
-	public void testCompileAndRunWithExternalDependencies()
-			throws IOException, ExitCodeException {
-
+	public void testCompileAndRunWithExternalDependencies() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/external.project.mm/src/Main.n4js";
+		final String fileToRun = packages + "/external.project.mm/src-gen/Main.js";
 
-		final String[] args = {
-				"--projectlocations", packages,
-				"--buildType", BuildType.allprojects.toString(),
-				"--installMissingDependencies",
-				"--runWith", "nodejs",
-				"--run", fileToRun
-		};
-		final String actual = runAndCaptureOutput(args);
-		StringBuilder expected = new StringBuilder()
-				.append("express imported").append("\n")
-				.append("jade imported").append("\n")
-				.append("lodash imported").append("\n")
-				.append("karma imported").append("\n")
-				.append("bar imported").append("\n")
-				.append("pouchdb-find imported").append("\n")
-				.append("next imported").append("\n")
-				.append("body-parser imported");
+		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
+		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
 
-		Assert.assertTrue(
-				"Actual output does not match with pattern.\nActual:\n" + actual + "\nExpected pattern:\n" + expected,
-				actual.matches(expected.toString()));
+		N4jscOptions options = COMPILE(workspace);
+		CliResult cliResult = n4jsc(options);
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
+		String expectedString = "express imported\n";
+		expectedString += "jade imported\n";
+		expectedString += "lodash imported\n";
+		expectedString += "karma imported\n";
+		expectedString += "bar imported\n";
+		expectedString += "pouchdb-find imported\n";
+		expectedString += "next imported\n";
+		expectedString += "body-parser imported";
+
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 
 }

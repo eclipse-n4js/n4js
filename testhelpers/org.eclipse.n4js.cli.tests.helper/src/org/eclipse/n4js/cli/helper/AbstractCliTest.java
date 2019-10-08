@@ -20,9 +20,9 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
+import org.junit.Before;
 
 import com.google.common.base.Stopwatch;
-import com.google.inject.Injector;
 
 /**
  * Abstract test class to be used when testing N4JS CLI related things.
@@ -32,6 +32,12 @@ abstract public class AbstractCliTest<ArgType> {
 
 	/** Invokes the starting method of this test class */
 	abstract public void doN4jsc(ArgType arg, CliResult cliResult) throws Exception;
+
+	/** Reset the injector setup */
+	@Before
+	public void before() {
+		N4jscTestFactory.resetInjector();
+	}
 
 	/** Sets up the System outputs and Security Manager */
 	final public void setN4jscRedirections() {
@@ -46,13 +52,13 @@ abstract public class AbstractCliTest<ArgType> {
 	}
 
 	private void internalSetN4jscRedirections() {
-		systemOutRedirecter.setRedirections();
+		// systemOutRedirecter.setRedirections();
 		System.setSecurityManager(new NoExitSecurityManager());
 	}
 
 	/** Restores everything. */
 	final public void unsetN4jscRedirections() {
-		systemOutRedirecter.unsetRedirections();
+		// systemOutRedirecter.unsetRedirections();
 		System.setSecurityManager(null);
 		N4jscTestFactory.unset();
 	}
@@ -92,10 +98,8 @@ abstract public class AbstractCliTest<ArgType> {
 			cliResult.stdOut = systemOutRedirecter.getSystemOut();
 			cliResult.errOut = systemOutRedirecter.getSystemErr();
 
-			Injector lastCreatedInjector = N4jscTestFactory.getLastCreatedInjector();
-			if (lastCreatedInjector != null) {
-				N4jscTestLanguageClient callback = (N4jscTestLanguageClient) N4jscFactory
-						.getLanguageClient(lastCreatedInjector);
+			if (N4jscTestFactory.isInjectorCreated()) {
+				N4jscTestLanguageClient callback = (N4jscTestLanguageClient) N4jscFactory.getLanguageClient();
 				cliResult.errors = callback.errors;
 				cliResult.warnings = callback.warnings;
 			}
