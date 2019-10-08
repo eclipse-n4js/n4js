@@ -191,6 +191,43 @@ class JSXWithOutFreeTextTest extends AbstractN4JSXParserTest {
 			"Hello"
 		'''.parseSuccessfully
 	}
-
+	
+	@Test
+	def void testInvalidAttributeNames_01() {
+		'''
+			<a attr/**/-attr></a>
+		'''.parseWithError("JSX attribute names may not contain whitespace or comments.")
+	}
+	
+	@Test
+	def void testInvalidAttributeNames_02() {
+		'''
+			<a attr -attr></a>
+		'''.parseWithError("JSX attribute names may not contain whitespace or comments.")
+	}
+	
+	@Test
+	def void testInvalidAttributeNames_03() {
+		'''
+			<a attr-- attr></a>
+		'''.parseWithError("JSX attribute names may not contain whitespace or comments.")
+	}
+	
+	@Test
+	def void testInvalidAttributeNames_04() {
+		'''
+			<a abcd\u0065="true"></a>
+		'''.parseWithError("Illegal character in identifier 'abcd\\u0065' (\\) at position 4.")
+	}
+	
+	protected def parseWithError(CharSequence js, String message) {
+		val script = js.parseN4JSX
+		val errors = script.eResource.errors
+		assertFalse(errors.toString, errors.empty)
+		if (!errors.map[it.message].contains(message)) {
+			assertEquals(errors.toString, "")
+		}
+		return script
+	}
 
 }
