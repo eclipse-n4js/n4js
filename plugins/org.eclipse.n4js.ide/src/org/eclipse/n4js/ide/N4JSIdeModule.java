@@ -13,6 +13,8 @@ package org.eclipse.n4js.ide;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
+import org.eclipse.n4js.ide.server.N4JSBuildManager;
+import org.eclipse.n4js.ide.server.N4JSInternalStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectManager;
@@ -20,9 +22,12 @@ import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
+import org.eclipse.xtext.build.IncrementalBuilder.InternalStatefulIncrementalBuilder;
 import org.eclipse.xtext.generator.IGenerator;
+import org.eclipse.xtext.generator.IShouldGenerate;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
+import org.eclipse.xtext.ide.server.BuildManager;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.IProjectDescriptionFactory;
 import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
@@ -35,7 +40,7 @@ import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 /**
  * Use this class to register ide components.
  */
-@SuppressWarnings({ "javadoc" })
+@SuppressWarnings({ "javadoc", "restriction" })
 public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public ClassLoader bindClassLoaderToInstance() {
@@ -84,6 +89,19 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends HoverService> bindHoverService() {
 		return N4JSHoverService.class;
+	}
+
+	public Class<? extends BuildManager> bindBuildManager() {
+		return N4JSBuildManager.class;
+	}
+
+	public Class<? extends InternalStatefulIncrementalBuilder> bindInternalStatefulIncrementalBuilder() {
+		return N4JSInternalStatefulIncrementalBuilder.class;
+	}
+
+	/** TODO: Fixes Xtext issue of double validation */
+	public Class<? extends IShouldGenerate> bindIShouldGenerate() {
+		return IShouldGenerate.Always.class;
 	}
 
 }
