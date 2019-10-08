@@ -5794,7 +5794,8 @@ ruleAssignmentOperator:
 		    |
 		'+='
 		    |
-		'-='
+		'-'
+		'='
 		    |
 		'<<='
 		    |

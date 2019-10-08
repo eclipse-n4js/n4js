@@ -6438,7 +6438,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cRhsAssignment_4_1_1 = (Assignment)cGroup_4_1.eContents().get(1);
 		private final RuleCall cRhsAssignmentExpressionParserRuleCall_4_1_1_0 = (RuleCall)cRhsAssignment_4_1_1.eContents().get(0);
 		
-		///*
+		///**
 		// * Assignment operators ([ECM11] 11.13)
 		// */ AssignmentExpression <In, Yield Expression:
 		//	AwaitExpression<In,Yield> | PromisifyExpression<In,Yield> | ArrowExpression<In,Yield> | <Yield> YieldExpression<In> |
@@ -6540,7 +6540,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSolidusEqualsSignKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
 		private final Keyword cPercentSignEqualsSignKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
 		private final Keyword cPlusSignEqualsSignKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
-		private final Keyword cHyphenMinusEqualsSignKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final Group cGroup_5 = (Group)cAlternatives.eContents().get(5);
+		private final Keyword cHyphenMinusKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_5_1 = (Keyword)cGroup_5.eContents().get(1);
 		private final Keyword cLessThanSignLessThanSignEqualsSignKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
 		private final Group cGroup_7 = (Group)cAlternatives.eContents().get(7);
 		private final Keyword cGreaterThanSignKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
@@ -6552,13 +6554,17 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cVerticalLineEqualsSignKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
 		
 		//AssignmentOperator AssignmentOperator:
-		//	'=' | '*=' | '/=' | '%=' | '+=' | '-='
+		//	'=' | '*=' | '/=' | '%=' | '+='
+		//	/* must be split into two literals since jsx attribute names may end with a dash as in attr-="value" */
+		//	| '-' '='
 		//	| '<<='
 		//	| '>' '>' '>'? '='
 		//	| '&=' | '^=' | '|=';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>' '>' '>'? '=' | '&=' | '^=' | '|='
+		//'=' | '*=' | '/=' | '%=' | '+='
+		///* must be split into two literals since jsx attribute names may end with a dash as in attr-="value" */ | '-' '=' |
+		//'<<=' | '>' '>' '>'? '=' | '&=' | '^=' | '|='
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'='
@@ -6576,8 +6582,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'+='
 		public Keyword getPlusSignEqualsSignKeyword_4() { return cPlusSignEqualsSignKeyword_4; }
 		
-		//'-='
-		public Keyword getHyphenMinusEqualsSignKeyword_5() { return cHyphenMinusEqualsSignKeyword_5; }
+		//'-' '='
+		public Group getGroup_5() { return cGroup_5; }
+		
+		//'-'
+		public Keyword getHyphenMinusKeyword_5_0() { return cHyphenMinusKeyword_5_0; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_5_1() { return cEqualsSignKeyword_5_1; }
 		
 		//'<<='
 		public Keyword getLessThanSignLessThanSignEqualsSignKeyword_6() { return cLessThanSignLessThanSignEqualsSignKeyword_6; }
@@ -6696,8 +6708,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cExprsAssignment_1_3_1 = (Assignment)cGroup_1_3.eContents().get(1);
 		private final RuleCall cExprsAssignmentExpressionParserRuleCall_1_3_1_0 = (RuleCall)cExprsAssignment_1_3_1.eContents().get(0);
 		
-		//// $<Comma operator (11.14)
-		//Expression <In, Yield>:
+		///**
+		// * Comma operator (11.14)
+		// */ Expression <In, Yield>:
 		//	AssignmentExpression<In,Yield> ({CommaExpression.exprs+=current} ',' exprs+=AssignmentExpression<In,Yield> (','
 		//	exprs+=AssignmentExpression<In,Yield>)*)?;
 		@Override public ParserRule getRule() { return rule; }
@@ -12237,7 +12250,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getConditionalExpressionAccess().getRule();
 	}
 	
-	///*
+	///**
 	// * Assignment operators ([ECM11] 11.13)
 	// */ AssignmentExpression <In, Yield Expression:
 	//	AwaitExpression<In,Yield> | PromisifyExpression<In,Yield> | ArrowExpression<In,Yield> | <Yield> YieldExpression<In> |
@@ -12262,7 +12275,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//AssignmentOperator AssignmentOperator:
-	//	'=' | '*=' | '/=' | '%=' | '+=' | '-='
+	//	'=' | '*=' | '/=' | '%=' | '+='
+	//	/* must be split into two literals since jsx attribute names may end with a dash as in attr-="value" */
+	//	| '-' '='
 	//	| '<<='
 	//	| '>' '>' '>'? '='
 	//	| '&=' | '^=' | '|=';
@@ -12296,8 +12311,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getPromisifyExpressionAccess().getRule();
 	}
 	
-	//// $<Comma operator (11.14)
-	//Expression <In, Yield>:
+	///**
+	// * Comma operator (11.14)
+	// */ Expression <In, Yield>:
 	//	AssignmentExpression<In,Yield> ({CommaExpression.exprs+=current} ',' exprs+=AssignmentExpression<In,Yield> (','
 	//	exprs+=AssignmentExpression<In,Yield>)*)?;
 	public ExpressionElements getExpressionAccess() {

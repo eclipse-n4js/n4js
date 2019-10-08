@@ -13,13 +13,15 @@ package org.eclipse.n4js.antlr
 import com.google.common.base.Charsets
 import com.google.common.io.Files
 import com.google.inject.Inject
-import java.io.File
-import java.io.IOException
-import java.util.List
+import org.eclipse.n4js.antlr.CodeIntoGrammarInjector
+import org.eclipse.n4js.antlr.UnicodeKeywordHelper
 import org.eclipse.n4js.antlr.n4js.AutomaticSemicolonInjector
 import org.eclipse.n4js.antlr.n4js.NoLineTerminatorHandlingInjector
 import org.eclipse.n4js.antlr.n4js.RegExDisambiguationInjector
 import org.eclipse.n4js.antlr.n4js.TemplateLiteralDisambiguationInjector
+import java.io.File
+import java.io.IOException
+import java.util.List
 import org.eclipse.xtext.Grammar
 import org.eclipse.xtext.xtext.generator.model.IXtextGeneratorFileSystemAccess
 import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrGrammarGenerator
@@ -35,7 +37,7 @@ class N4JSAntlrGrammarGenerator extends AntlrGrammarGenerator {
 
 	@Inject
 	RegExDisambiguationInjector regExDisambiguationInjector
-	
+
 	@Inject
 	TemplateLiteralDisambiguationInjector templateLiteralDisambiguationInjector
 

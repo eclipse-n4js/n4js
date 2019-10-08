@@ -905,7 +905,7 @@ LogicalOROperator returns BinaryLogicalOperator: '||';
 ConditionalExpression <In, Yield> returns Expression: LogicalORExpression<In,Yield>
 	(=> ({ConditionalExpression.expression=current} '?') trueExpression=AssignmentExpression<In=true,Yield> ':' falseExpression=AssignmentExpression<In,Yield>)?;
 
-/*
+/**
  * Assignment operators ([ECM11] 11.13)
  */
 AssignmentExpression <In, Yield> returns Expression:
@@ -921,7 +921,9 @@ YieldExpression <In> returns Expression:
 ;
 
 AssignmentOperator returns AssignmentOperator:
-	  '=' | '*=' | '/=' | '%=' | '+=' | '-='
+	  '=' | '*=' | '/=' | '%=' | '+='
+	  /* must be split into two literals since jsx attribute names may end with a dash as in attr-="value" */ 
+	| '-' '=' 
 	| '<<='
 	| '>' '>' '>'? '='
 	| '&=' | '^=' | '|='
@@ -936,8 +938,9 @@ AwaitExpression <In, Yield> returns Expression:
 PromisifyExpression <In, Yield> returns Expression:
 	=>({PromisifyExpression} '@' 'Promisify') expression=AssignmentExpression<In,Yield>;
 
-	// $<Comma operator (11.14)
-
+/**
+ * Comma operator (11.14)
+ */ 
 Expression <In, Yield>:
 	AssignmentExpression<In,Yield> ({CommaExpression.exprs+=current} ',' exprs+=AssignmentExpression<In,Yield> (','	exprs+=AssignmentExpression<In,Yield>)*)?
 ;

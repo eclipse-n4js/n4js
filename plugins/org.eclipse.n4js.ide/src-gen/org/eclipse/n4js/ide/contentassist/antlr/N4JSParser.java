@@ -422,6 +422,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAssignmentExpressionAccess().getGroup_4_1_0(), "rule__AssignmentExpression__Group_4_1_0__0");
 			builder.put(grammarAccess.getAssignmentExpressionAccess().getGroup_4_1_0_0(), "rule__AssignmentExpression__Group_4_1_0_0__0");
 			builder.put(grammarAccess.getYieldExpressionAccess().getGroup(), "rule__YieldExpression__Group__0");
+			builder.put(grammarAccess.getAssignmentOperatorAccess().getGroup_5(), "rule__AssignmentOperator__Group_5__0");
 			builder.put(grammarAccess.getAssignmentOperatorAccess().getGroup_7(), "rule__AssignmentOperator__Group_7__0");
 			builder.put(grammarAccess.getAwaitExpressionAccess().getGroup(), "rule__AwaitExpression__Group__0");
 			builder.put(grammarAccess.getAwaitExpressionAccess().getGroup_0(), "rule__AwaitExpression__Group_0__0");

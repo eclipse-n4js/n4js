@@ -71,31 +71,6 @@ public class CustomN4JSParser extends N4JSParser {
 			return state;
 		}
 
-		/*
-		 * TODO temporary override: remove as soon as the applied fix is available in Xtext itself
-		 */
-		@Override
-		public void announceRewind(int marker) {
-			int useLookAhead = -1;
-			if (marker != 0 && delegate == null && strict && predictionLevel != 0 && lookAheadAddOn > 0
-					&& state.syntaxErrors == 0
-					&& input.index() == input.size()
-					&& marker + lookAheadAddOn <= input.size()
-					&& isBacktracking()) {
-				useLookAhead = lookAheadAddOn;
-				delegate = createNotErrorRecoveryStrategy();
-				wasErrorCount = state.syntaxErrors;
-			}
-			currentMarker = marker;
-			lookAheadAddOn = currentMarker - firstMarker;
-			if (useLookAhead != -1) {
-				if (useLookAhead + firstMarker >= input.index()) {
-					announceEof(useLookAhead);
-				}
-			}
-			marked--;
-		}
-
 	}
 
 	/**

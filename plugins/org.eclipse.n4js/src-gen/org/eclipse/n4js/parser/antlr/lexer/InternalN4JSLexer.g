@@ -490,8 +490,6 @@ PlusSignEqualsSign : '+=';
 
 HyphenMinusHyphenMinus : '--';
 
-HyphenMinusEqualsSign : '-=';
-
 SolidusEqualsSign : '/=';
 
 LessThanSignLessThanSign : '<<';

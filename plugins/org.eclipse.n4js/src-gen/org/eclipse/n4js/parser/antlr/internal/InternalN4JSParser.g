@@ -24392,11 +24392,18 @@ ruleAssignmentOperator returns [AntlrDatatypeRuleToken current=new AntlrDatatype
 			newLeafNode(kw, grammarAccess.getAssignmentOperatorAccess().getPlusSignEqualsSignKeyword_4());
 		}
 		    |
-		kw=HyphenMinusEqualsSign
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getAssignmentOperatorAccess().getHyphenMinusEqualsSignKeyword_5());
-		}
+		(
+			kw=HyphenMinus
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getAssignmentOperatorAccess().getHyphenMinusKeyword_5_0());
+			}
+			kw=EqualsSign
+			{
+				$current.merge(kw);
+				newLeafNode(kw, grammarAccess.getAssignmentOperatorAccess().getEqualsSignKeyword_5_1());
+			}
+		)
 		    |
 		kw=LessThanSignLessThanSignEqualsSign
 		{

@@ -114,9 +114,23 @@ class JSXWithOutFreeTextTest extends AbstractN4JSXParserTest {
 	}
 	
 	@Test
-	def void testAttributeNameWithTrailingDash() {
+	def void testAttributeNameWithTrailingDash_01() {
 		'''
 			<a attr-></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNameWithTrailingDash_02() {
+		'''
+			<a attr-="" attr-2></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNameWithTrailingDash_03() {
+		'''
+			<a attr--="" attr-2></a>
 		'''.parseSuccessfully
 	}
 	
@@ -196,21 +210,21 @@ class JSXWithOutFreeTextTest extends AbstractN4JSXParserTest {
 	def void testInvalidAttributeNames_01() {
 		'''
 			<a attr/**/-attr></a>
-		'''.parseWithError("JSX attribute names may not contain whitespace or comments.")
+		'''.parseWithError("JSX attribute names may not contain whitespace or comments. Attribute names ending with a - and directly followed by another attribute name are merged and must not contain whitespace or comments.")
 	}
 	
 	@Test
 	def void testInvalidAttributeNames_02() {
 		'''
 			<a attr -attr></a>
-		'''.parseWithError("JSX attribute names may not contain whitespace or comments.")
+		'''.parseWithError("JSX attribute names may not contain whitespace or comments. Attribute names ending with a - and directly followed by another attribute name are merged and must not contain whitespace or comments.")
 	}
 	
 	@Test
 	def void testInvalidAttributeNames_03() {
 		'''
 			<a attr-- attr></a>
-		'''.parseWithError("JSX attribute names may not contain whitespace or comments.")
+		'''.parseWithError("JSX attribute names may not contain whitespace or comments. Attribute names ending with a - and directly followed by another attribute name are merged and must not contain whitespace or comments.")
 	}
 	
 	@Test

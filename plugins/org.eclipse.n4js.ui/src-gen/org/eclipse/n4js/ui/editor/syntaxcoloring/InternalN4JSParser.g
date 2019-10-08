@@ -13624,9 +13624,14 @@ ruleAssignmentOperator
 		announce($PlusSignEqualsSignKeyword_4, grammarAccess.getAssignmentOperatorAccess().getPlusSignEqualsSignKeyword_4());
 	}
 	    |
-	HyphenMinusEqualsSignKeyword_5=HyphenMinusEqualsSign {
-		announce($HyphenMinusEqualsSignKeyword_5, grammarAccess.getAssignmentOperatorAccess().getHyphenMinusEqualsSignKeyword_5());
-	}
+	(
+		HyphenMinusKeyword_5_0=HyphenMinus {
+			announce($HyphenMinusKeyword_5_0, grammarAccess.getAssignmentOperatorAccess().getHyphenMinusKeyword_5_0());
+		}
+		EqualsSignKeyword_5_1=EqualsSign {
+			announce($EqualsSignKeyword_5_1, grammarAccess.getAssignmentOperatorAccess().getEqualsSignKeyword_5_1());
+		}
+	)
 	    |
 	LessThanSignLessThanSignEqualsSignKeyword_6=LessThanSignLessThanSignEqualsSign {
 		announce($LessThanSignLessThanSignEqualsSignKeyword_6, grammarAccess.getAssignmentOperatorAccess().getLessThanSignLessThanSignEqualsSignKeyword_6());

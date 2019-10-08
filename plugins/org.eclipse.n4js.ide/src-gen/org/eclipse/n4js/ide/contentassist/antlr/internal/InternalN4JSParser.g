@@ -72,7 +72,6 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
 		tokenNameToValue.put("PlusSignPlusSign", "'++'");
 		tokenNameToValue.put("PlusSignEqualsSign", "'+='");
 		tokenNameToValue.put("HyphenMinusHyphenMinus", "'--'");
-		tokenNameToValue.put("HyphenMinusEqualsSign", "'-='");
 		tokenNameToValue.put("SolidusEqualsSign", "'/='");
 		tokenNameToValue.put("LessThanSignLessThanSign", "'<<'");
 		tokenNameToValue.put("LessThanSignEqualsSign", "'<='");
@@ -12357,9 +12356,9 @@ rule__AssignmentOperator__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getAssignmentOperatorAccess().getHyphenMinusEqualsSignKeyword_5()); }
-		HyphenMinusEqualsSign
-		{ after(grammarAccess.getAssignmentOperatorAccess().getHyphenMinusEqualsSignKeyword_5()); }
+		{ before(grammarAccess.getAssignmentOperatorAccess().getGroup_5()); }
+		(rule__AssignmentOperator__Group_5__0)
+		{ after(grammarAccess.getAssignmentOperatorAccess().getGroup_5()); }
 	)
 	|
 	(
@@ -54719,6 +54718,60 @@ norm1_YieldExpression__Group__3__Impl
 	{ before(grammarAccess.getYieldExpressionAccess().getExpressionAssignment_3()); }
 	(norm1_YieldExpression__ExpressionAssignment_3)?
 	{ after(grammarAccess.getYieldExpressionAccess().getExpressionAssignment_3()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+rule__AssignmentOperator__Group_5__0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__AssignmentOperator__Group_5__0__Impl
+	rule__AssignmentOperator__Group_5__1
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__AssignmentOperator__Group_5__0__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getAssignmentOperatorAccess().getHyphenMinusKeyword_5_0()); }
+	HyphenMinus
+	{ after(grammarAccess.getAssignmentOperatorAccess().getHyphenMinusKeyword_5_0()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__AssignmentOperator__Group_5__1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__AssignmentOperator__Group_5__1__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__AssignmentOperator__Group_5__1__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getAssignmentOperatorAccess().getEqualsSignKeyword_5_1()); }
+	EqualsSign
+	{ after(grammarAccess.getAssignmentOperatorAccess().getEqualsSignKeyword_5_1()); }
 )
 ;
 finally {
