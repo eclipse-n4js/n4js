@@ -334,7 +334,6 @@ N4Keyword:
 	| 'out'
 ;
 
-
 terminal IDENTIFIER:
 	IDENTIFIER_START IDENTIFIER_PART*;
 
@@ -364,7 +363,6 @@ terminal fragment IDENTIFIER_START:
 	| '$'
 	| '_'
 	| UNICODE_ESCAPE_FRAGMENT;
-
 
 terminal fragment IDENTIFIER_PART:
 	  UNICODE_LETTER_FRAGMENT
