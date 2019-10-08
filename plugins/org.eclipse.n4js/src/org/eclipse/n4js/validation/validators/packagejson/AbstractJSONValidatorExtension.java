@@ -281,7 +281,9 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 		IN4JSProject project = n4jsCore.findProject(pckjsonUri).get();
 		URI expectedLocation = project.getLocation().appendSegment(IN4JSProject.PACKAGE_JSON).toURI();
 
-		return expectedLocation.equals(pckjsonUri);
+		// In test Xpect scenarios (see bundle packagejson.xpect.tests) package.json files can be named package.json.xt
+		URI pckjsonUriWithoutXpectExtension = pckjsonUri.trimSegments(1).appendSegment(fileName);
+		return expectedLocation.equals(pckjsonUriWithoutXpectExtension);
 	}
 
 	/**
