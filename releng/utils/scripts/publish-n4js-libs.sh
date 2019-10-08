@@ -31,16 +31,16 @@ echo "Current working directory: $PWD"
 
 # The first parameter can be 'local' or 'public'
 if [ -z "$1" ]; then
-	echo "The destination (local or public) must be specified as the first parameter."
-	exit -1
+    echo "The destination (local or public) must be specified as the first parameter."
+    exit -1
 else
-	export DESTINATION=$1
+    export DESTINATION=$1
 fi
 
 # The second parameter is the version.
 if [ -z "$1" ]; then
-	echo "The version must be specified as the second parameter."
-	exit -1
+    echo "The version must be specified as the second parameter."
+    exit -1
 else
     export PUBLISH_VERSION=$2
 fi
@@ -53,17 +53,17 @@ if [ -z "$3" ]; then
         export NPM_REGISTRY="http://localhost:4873"
     fi
 else
-	export NPM_REGISTRY=$3
+    export NPM_REGISTRY=$3
 fi
 
 if [ "$DESTINATION" = "public" ]; then
-	if [ -z "$NPM_TOKEN" ]; then
-		echo "Publishing to public requires the environment variable NPM_TOKEN to be set but it has not been set!"
-		exit -1
-	fi
+    if [ -z "$NPM_TOKEN" ]; then
+        echo "Publishing to public requires the environment variable NPM_TOKEN to be set but it has not been set!"
+        exit -1
+    fi
 else
     # If publishing to local, use the dist-tag 'test' otherwise 'latest'.
-	export NPM_TOKEN=dummy	
+    export NPM_TOKEN=dummy
 fi
 
 echo "==== STEP 1/8: clean up (clean yarn cache, etc.)"

@@ -42,6 +42,7 @@ N4JS_LIBS_ROOT=`pwd -P`
 echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
 
+export NPM_TOKEN=dummy
 
 echo "==== STEP 1/0: clean up (clean yarn cache, etc.)"
 yarn cache clean
