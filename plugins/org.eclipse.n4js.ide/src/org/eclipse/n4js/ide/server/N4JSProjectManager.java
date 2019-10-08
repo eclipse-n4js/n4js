@@ -11,9 +11,11 @@
 package org.eclipse.n4js.ide.server;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.lsp.ex.IProjectConfigEx;
@@ -57,12 +59,12 @@ public class N4JSProjectManager extends ProjectManager {
 
 	@Override
 	public Result doInitialBuild(CancelIndicator cancelIndicator) {
-		List<URI> uris = new LinkedList<>();
+		Set<URI> uris = new HashSet<>();
 		for (ISourceFolder srcFolder : this.projectConfig.getSourceFolders()) {
 			ISourceFolderEx srcFolderEx = (ISourceFolderEx) srcFolder;
 			uris.addAll(srcFolderEx.getAllResources());
 		}
-		return doBuild(uris, Collections.emptyList(), Collections.emptyList(), cancelIndicator);
+		return doBuild(new LinkedList<>(uris), Collections.emptyList(), Collections.emptyList(), cancelIndicator);
 	}
 
 	@Override
