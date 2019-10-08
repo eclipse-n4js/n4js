@@ -19,7 +19,7 @@ new A1.s
 A2.s
 A3.s
 new A3.s
-undefined
+A3.s
 stderr:
 ==>
 --- */
@@ -66,6 +66,6 @@ console.log(a3_1.s); // This should print 'A3.s' to the console.
 var a3_2 = new A3({s : 'new A3.s'});
 console.log(a3_2.s); // This should print 'new A3.s' to the console.
 
-// XPECT noerrors --> "re-assign s value to undefined. Should work as well."
+// XPECT noerrors --> "a property with value 'undefined' should be treated as if the property was omitted"
 var a3_3 = new A3({s: undefined});
-console.log(a3_3.s); // This should print 'undefined' to the console.
+console.log(a3_3.s); // This should print 'A3.s' to the console.

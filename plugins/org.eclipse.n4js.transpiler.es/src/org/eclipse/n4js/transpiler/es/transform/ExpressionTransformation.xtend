@@ -16,8 +16,6 @@ import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
-import org.eclipse.n4js.n4JS.RelationalExpression
-import org.eclipse.n4js.n4JS.RelationalOperator
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
@@ -28,7 +26,6 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
-import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.PromisifyHelper
@@ -95,33 +92,6 @@ class ExpressionTransformation extends Transformation {
 
 	def private dispatch void transformExpression(ParameterizedPropertyAccessExpression_IM propAccessExpr) {
 		transformTrivialUsageOfReflection(propAccessExpr);
-	}
-
-	def private dispatch void transformExpression(RelationalExpression relExpr) {
-		if(relExpr.op===RelationalOperator.INSTANCEOF) {
-			val rhs = relExpr.rhs;
-			val rhsType = if(rhs instanceof IdentifierRef_IM) {
-				rhs.originalTargetOfRewiredTarget
-			};
-
-			val replacement = if(rhsType instanceof TInterface) {
-				// case 1: direct reference to an interface on RHS -> can directly use own $implements function
-				val $implementsSTE = steFor_$implements;
-				val fqn = resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(rhsType)
-				_CallExpr(_IdentRef($implementsSTE), relExpr.lhs, _StringLiteral(fqn))
-			} else if(rhsType instanceof TClass) {
-				// case 2: direct reference to a class on RHS -> can use native Javascript 'instanceof' operator
-				null // here 'null' means: nothing to transform
-			} else {
-				// case 3: all other cases have to be decided at runtime -> use own $instanceof function
-				val $instanceofSTE = steFor_$instanceof;
-				_CallExpr(_IdentRef($instanceofSTE), relExpr.lhs, relExpr.rhs)
-			};
-
-			if(replacement!==null) {
-				replace(relExpr, replacement);
-			}
-		}
 	}
 
 	/**

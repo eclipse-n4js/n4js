@@ -24,22 +24,14 @@ class BlockAssistant extends TransformationAssistant {
 	@Inject
 	private N4JSTypeSystem ts
 
-	/**
-	 * Some assertions related to arrow functions that apply to several transformations and are
-	 * therefore factored out into this helper method.
-	 */
-	def public void assertArrowFunctionConditions() {
-		assertTrue(
-			"all arrow functions must have an original AST node "+
-			"(i.e. not allowed to add arrow functions programmatically in a transformation)",
-			state.im.eAllContents.filter(ArrowFunction).forall[
-				state.tracer.getOriginalASTNodeOfSameType(it, false)!==null
-			]);
-	}
-
 	def public final boolean needsReturnInsertionForBody(ArrowFunction arrowFuncInIM) {
 		// unfortunately, we need a properly contained AST element below (see preconditions above)
-		val origAST = state.tracer.getOriginalASTNodeOfSameType(arrowFuncInIM, true);
+		val origAST = state.tracer.getOriginalASTNodeOfSameType(arrowFuncInIM, false);
+		if (origAST === null) {
+			// this arrow function does not come from the N4JS source code but was created by some transformation
+			// -> we assume it was intended to return a value and hence a return must be inserted
+			return true;
+		}
 		if (!origAST.isSingleExprImplicitReturn) {
 			return false;
 		}

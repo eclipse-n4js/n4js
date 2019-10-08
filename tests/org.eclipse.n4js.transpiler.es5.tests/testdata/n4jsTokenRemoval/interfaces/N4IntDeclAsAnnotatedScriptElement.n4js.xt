@@ -15,9 +15,39 @@
 /* XPECT output ~~~
 <==
 stdout:
-{ '$fieldInit': [Function: I0_fieldInit], '$methods': {} }
-{ '$fieldInit': [Function: I1_fieldInit], '$methods': {} }
-{ '$fieldInit': [Function: I2_fieldInit], '$methods': {} }
+N4Interface {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'I0',
+  fqn:
+   'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedScriptElement.I0',
+  n4superType: undefined,
+  allImplementedInterfaces: [],
+  ownedMembers: [],
+  consumedMembers: [] }
+N4Interface {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'I1',
+  fqn:
+   'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedScriptElement.I1',
+  n4superType: undefined,
+  allImplementedInterfaces:
+   [ 'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedScriptElement.I0' ],
+  ownedMembers: [],
+  consumedMembers: [] }
+N4Interface {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'I2',
+  fqn:
+   'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedScriptElement.I2',
+  n4superType: undefined,
+  allImplementedInterfaces:
+   [ 'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedScriptElement.I1',
+     'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedScriptElement.I0' ],
+  ownedMembers: [],
+  consumedMembers: [] }
 stderr:
 ==>
 ~~~ */
@@ -28,6 +58,6 @@ interface I1<A extends Object,B,C> extends I0{}
 
 interface I2<P extends any,R,S> extends I1<Object, number, undefined>, I0{}
 
-console.log(I0)
-console.log(I1)
-console.log(I2)
+console.log(I0.n4type)
+console.log(I1.n4type)
+console.log(I2.n4type)
