@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.server;
 
-import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 
@@ -54,18 +53,10 @@ public class N4JSLanguageServerImpl extends LanguageServerImpl {
 	 * <p>
 	 * TODO: Fix this in Xtext
 	 */
-	@SuppressWarnings("unchecked")
 	public void joinInitialized() {
-		try {
-			Field field = LanguageServerImpl.class.getDeclaredField("initialized");
-			field.setAccessible(true);
-			Object value = field.get(this);
-
-			CompletableFuture<InitializedParams> initialized = (CompletableFuture<InitializedParams>) value;
-			initialized.join();
-		} catch (Exception e) {
-			// ignore
-		}
+		CompletableFuture<InitializedParams> initialized = ReflectionUtils.getFieldValue(LanguageServerImpl.class, this,
+				"initialized");
+		initialized.join();
 	}
 
 	@Override

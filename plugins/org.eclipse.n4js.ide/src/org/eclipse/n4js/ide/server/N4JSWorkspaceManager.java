@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.server;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
@@ -76,18 +75,7 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 	 * @return the base directory of the current workspace
 	 */
 	public URI getBaseDir() {
-		try {
-			Field field = WorkspaceManager.class.getDeclaredField("baseDir");
-			field.setAccessible(true);
-			Object value = field.get(this);
-
-			URI baseDir = (URI) value;
-			return baseDir;
-		} catch (Exception e) {
-			// ignore
-			e.printStackTrace();
-		}
-		return null;
+		return ReflectionUtils.getFieldValue(WorkspaceManager.class, this, "baseDir");
 	}
 
 	/**
