@@ -203,7 +203,7 @@ class N4JSSuperValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		if (superLiteral.eContainer instanceof IndexedAccessExpression) {
 			addIssue(messageForKEY_SUP_CALL_NO_INDEXACCESS, superLiteral.eContainer as IndexedAccessExpression,
-				N4JSPackage.eINSTANCE.indexedAccessExpression_Target, KEY_SUP_CALL_NO_INDEXACCESS);
+				N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET, KEY_SUP_CALL_NO_INDEXACCESS);
 			return false;
 		}
 		return true;

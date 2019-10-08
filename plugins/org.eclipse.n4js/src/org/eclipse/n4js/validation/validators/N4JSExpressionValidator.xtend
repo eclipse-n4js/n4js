@@ -361,7 +361,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				if (targetIdRef?.id !== prop.eContainer && !isExceptionCase) {
 					val message = IssueCodes.getMessageForCLF_INVALID_ACCESS_OF_STATIC_MEMBER_OF_INTERFACE;
 					addIssue(message, propAccessExpr,
-						N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Target,
+						N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET,
 						IssueCodes.CLF_INVALID_ACCESS_OF_STATIC_MEMBER_OF_INTERFACE);
 				}
 			}
@@ -396,7 +396,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (typeRef instanceof FunctionTypeExprOrRef) {
 			// check type arguments
 			internalCheckTypeArguments(typeRef.typeVars, callExpression.typeArgs, true, typeRef.declaredType,
-				callExpression, N4JSPackage.eINSTANCE.parameterizedCallExpression_Target);
+				callExpression, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 
 			// check Calling async functions with missing await
 			internalCheckCallingAsyncFunWithoutAwaitingForIt(typeRef, callExpression)

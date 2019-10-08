@@ -167,6 +167,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.EQUALITY_EXPRESSION: return createEqualityExpression();
 			case N4JSPackage.BINARY_BITWISE_EXPRESSION: return createBinaryBitwiseExpression();
 			case N4JSPackage.BINARY_LOGICAL_EXPRESSION: return createBinaryLogicalExpression();
+			case N4JSPackage.COALESCE_EXPRESSION: return createCoalesceExpression();
 			case N4JSPackage.CONDITIONAL_EXPRESSION: return createConditionalExpression();
 			case N4JSPackage.ASSIGNMENT_EXPRESSION: return createAssignmentExpression();
 			case N4JSPackage.COMMA_EXPRESSION: return createCommaExpression();
@@ -1394,6 +1395,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public BinaryLogicalExpression createBinaryLogicalExpression() {
 		BinaryLogicalExpressionImpl binaryLogicalExpression = new BinaryLogicalExpressionImpl();
 		return binaryLogicalExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public CoalesceExpression createCoalesceExpression() {
+		CoalesceExpressionImpl coalesceExpression = new CoalesceExpressionImpl();
+		return coalesceExpression;
 	}
 
 	/**

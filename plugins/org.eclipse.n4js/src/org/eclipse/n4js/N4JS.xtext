@@ -739,6 +739,7 @@ PropertySpread <Yield>:
 ParameterizedCallExpression <Yield>:
 	ConcreteTypeArguments
 	target=IdentifierRef<Yield>
+	optionalChaining?='?.'?
 	ArgumentsWithParentheses<Yield>
 ;
 
@@ -752,12 +753,12 @@ ImportCallExpression<Yield>:
 
 LeftHandSideExpression <Yield> returns Expression:
 	MemberExpression<Yield> (
-		{ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield>
+		{ParameterizedCallExpression.target=current} optionalChaining?='?.'? ArgumentsWithParentheses<Yield>
 		(
-			  {ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield>
+			  {ParameterizedCallExpression.target=current} optionalChaining?='?.'? ArgumentsWithParentheses<Yield>
 			| {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield>
 			| {ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield>
-			| ->({TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)
+			| ->({TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)
 		)*
 	)?
 ;
@@ -781,22 +782,22 @@ MemberExpression <Yield> returns Expression:
 			(
 				  {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield>
 				| {ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield>
-				| {TaggedTemplateString.target=current} template=TemplateLiteral<Yield>
+				| {TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>
 			)*
 		)?
 	| PrimaryExpression<Yield> (
 		  {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield>
 		| {ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield>
-		| {TaggedTemplateString.target=current} template=TemplateLiteral<Yield>
+		| {TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>
 		)*
 ;
 
 fragment IndexedAccessExpressionTail <Yield>*:
-	'[' index=Expression<In=true,Yield> ']'
+	optionalChaining?='?.'? '[' index=Expression<In=true,Yield> ']'
 ;
 
 fragment ParameterizedPropertyAccessExpressionTail <Yield>*:
-	'.' ConcreteTypeArguments? property=[types::IdentifiableElement|IdentifierName]
+	('.'|optionalChaining?='?.') ConcreteTypeArguments? property=[types::IdentifiableElement|IdentifierName]
 ;
 
 /**
@@ -868,37 +869,56 @@ EqualityExpression <In, Yield> returns Expression: RelationalExpression<In,Yield
 enum EqualityOperator: same='===' | nsame='!==' | eq='==' | neq='!=';
 
 	// Binary bitwise operators (11.10, N4JS Spec 6.1.17)
-BitwiseANDExpression <In, Yield> returns Expression: EqualityExpression<In,Yield>
+BitwiseANDExpression <In, Yield> returns Expression:
+	EqualityExpression<In,Yield>
 	(=>({BinaryBitwiseExpression.lhs=current} op=BitwiseANDOperator) rhs=EqualityExpression<In,Yield>)*;
 
 BitwiseANDOperator returns BinaryBitwiseOperator: '&';
 
-BitwiseXORExpression <In, Yield> returns Expression: BitwiseANDExpression<In,Yield>
+BitwiseXORExpression <In, Yield> returns Expression:
+	BitwiseANDExpression<In,Yield>
 	(=>({BinaryBitwiseExpression.lhs=current} op=BitwiseXOROperator) rhs=BitwiseANDExpression<In,Yield>)*;
 
 BitwiseXOROperator returns BinaryBitwiseOperator: '^';
 
-BitwiseORExpression <In, Yield> returns Expression: BitwiseXORExpression<In,Yield>
+BitwiseORExpression <In, Yield> returns Expression:
+	BitwiseXORExpression<In,Yield>
 	(=>({BinaryBitwiseExpression.lhs=current} op=BitwiseOROperator) rhs=BitwiseXORExpression<In,Yield>)*;
 
 BitwiseOROperator returns BinaryBitwiseOperator: '|';
 
 // $<Binary logical operators ([ECM11] 11.11)
-LogicalANDExpression <In, Yield> returns Expression: BitwiseORExpression<In,Yield>
-	(=> ({BinaryLogicalExpression.lhs=current} op=LogicalANDOperator) rhs=BitwiseORExpression<In,Yield>)*;
+LogicalANDExpression <In, Yield> returns Expression:
+	BitwiseORExpression<In,Yield>
+	(=> ({BinaryLogicalExpression.lhs=current} op=LogicalANDOperator) rhs=BitwiseORExpression<In,Yield>)*
+;
 
 LogicalANDOperator returns BinaryLogicalOperator: '&&';
 
-LogicalORExpression <In, Yield> returns Expression: LogicalANDExpression<In,Yield>
-	(=>({BinaryLogicalExpression.lhs=current} op=LogicalOROperator) rhs=LogicalANDExpression<In,Yield>)*;
+LogicalORExpression <In, Yield> returns Expression:
+	LogicalANDExpression<In,Yield>
+	(=>({BinaryLogicalExpression.lhs=current} op=LogicalOROperator) rhs=LogicalANDExpression<In,Yield>)*
+;
 
 LogicalOROperator returns BinaryLogicalOperator: '||';
 
 /**
+ * Coalesce Expressions as in https://tc39.es/proposal-nullish-coalescing
+ * 
+ * The structural assertions are implementes in the ASTStructureValidator
+ */
+CoalesceExpression<In, Yield> returns Expression:
+	LogicalORExpression<In,Yield>
+	(=> ({CoalesceExpression.expression=current} '??') defaultExpression=LogicalORExpression<In,Yield>)*
+;
+
+/**
  * Conditional operator ([ECM11] 11.12)
  */
-ConditionalExpression <In, Yield> returns Expression: LogicalORExpression<In,Yield>
-	(=> ({ConditionalExpression.expression=current} '?') trueExpression=AssignmentExpression<In=true,Yield> ':' falseExpression=AssignmentExpression<In,Yield>)?;
+ConditionalExpression <In, Yield> returns Expression:
+	CoalesceExpression<In,Yield>
+	(=> ({ConditionalExpression.expression=current} '?') trueExpression=AssignmentExpression<In=true,Yield> ':' falseExpression=AssignmentExpression<In,Yield>)?
+;
 
 /**
  * Assignment operators ([ECM11] 11.13)

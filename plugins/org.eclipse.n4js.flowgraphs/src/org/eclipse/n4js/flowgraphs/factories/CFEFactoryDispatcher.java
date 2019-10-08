@@ -18,6 +18,7 @@ import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.BreakStatement;
+import org.eclipse.n4js.n4JS.CoalesceExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ContinueStatement;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -25,6 +26,7 @@ import org.eclipse.n4js.n4JS.DebuggerStatement;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ExpressionWithTarget;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.IfStatement;
@@ -161,6 +163,11 @@ final public class CFEFactoryDispatcher {
 		}
 
 		@Override
+		public ComplexNode caseCoalesceExpression(CoalesceExpression feature) {
+			return CoalescExpressionFactory.buildComplexNode(astIter, feature);
+		}
+
+		@Override
 		public ComplexNode caseBinaryLogicalExpression(BinaryLogicalExpression feature) {
 			return BinaryLogicalExpressionFactory.buildComplexNode(astIter, feature);
 		}
@@ -168,6 +175,11 @@ final public class CFEFactoryDispatcher {
 		@Override
 		public ComplexNode caseExpression(Expression feature) {
 			return StandardCFEFactory.buildComplexNode(astIter, feature);
+		}
+
+		@Override
+		public ComplexNode caseExpressionWithTarget(ExpressionWithTarget feature) {
+			return ExpressionWithTargetFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override

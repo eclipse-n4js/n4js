@@ -20,7 +20,6 @@ package org.eclipse.n4js.n4JS;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.IndexedAccessExpression#getTarget <em>Target</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.IndexedAccessExpression#getIndex <em>Index</em>}</li>
  * </ul>
  *
@@ -28,29 +27,7 @@ package org.eclipse.n4js.n4JS;
  * @model
  * @generated
  */
-public interface IndexedAccessExpression extends Expression, MemberAccess {
-	/**
-	 * Returns the value of the '<em><b>Target</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Target</em>' containment reference.
-	 * @see #setTarget(Expression)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getIndexedAccessExpression_Target()
-	 * @model containment="true"
-	 * @generated
-	 */
-	Expression getTarget();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.IndexedAccessExpression#getTarget <em>Target</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Target</em>' containment reference.
-	 * @see #getTarget()
-	 * @generated
-	 */
-	void setTarget(Expression value);
-
+public interface IndexedAccessExpression extends ExpressionWithTarget, MemberAccess {
 	/**
 	 * Returns the value of the '<em><b>Index</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

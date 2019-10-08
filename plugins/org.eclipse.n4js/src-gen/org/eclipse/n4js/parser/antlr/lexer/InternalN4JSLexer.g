@@ -500,6 +500,10 @@ EqualsSignEqualsSign : '==';
 
 EqualsSignGreaterThanSign : '=>';
 
+QuestionMarkFullStop : '?.';
+
+QuestionMarkQuestionMark : '??';
+
 CommercialAtCommercialAt : '@@';
 
 CircumflexAccentEqualsSign : '^=';

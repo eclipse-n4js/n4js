@@ -702,6 +702,24 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM = 9;
 
 	/**
+	 * The feature id for the '<em><b>Target</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM__TARGET = N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Optional Chaining</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM__OPTIONAL_CHAINING = N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__OPTIONAL_CHAINING;
+
+	/**
 	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -718,15 +736,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM__TYPE_ARGS = N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TYPE_ARGS;
-
-	/**
-	 * The feature id for the '<em><b>Target</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM__TARGET = N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET;
 
 	/**
 	 * The feature id for the '<em><b>Property</b></em>' reference.
