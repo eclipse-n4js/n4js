@@ -27,6 +27,7 @@ pipeline {
                 echo 'Starting Xvnc'
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
                     echo 'Building and testing..'
+                    echo 'Using diaplay $DISPLAY'
                     // dir('n4js') {
                         script {
                             def options = [
@@ -35,8 +36,9 @@ pipeline {
                                 '--update-snapshots',
                                 '--show-version',
                                 '-Dtycho.localArtifacts=ignore',
-                                '-Dmaven.test.failure.ignore',
-                                "--fail-at-end",
+                                // for adjusting the script only, renable later on:
+                                // '-Dmaven.test.failure.ignore',
+                                // "--fail-at-end",
                                 '-DWORKSPACE=' + env.WORKSPACE,
                                 '-DexcludeJRE'
                             ].join(' ')
