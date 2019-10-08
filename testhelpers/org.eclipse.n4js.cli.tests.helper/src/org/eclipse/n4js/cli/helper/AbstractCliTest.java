@@ -52,13 +52,13 @@ abstract public class AbstractCliTest<ArgType> {
 	}
 
 	private void internalSetN4jscRedirections() {
-		// systemOutRedirecter.setRedirections();
+		systemOutRedirecter.setRedirections();
 		System.setSecurityManager(new NoExitSecurityManager());
 	}
 
 	/** Restores everything. */
 	final public void unsetN4jscRedirections() {
-		// systemOutRedirecter.unsetRedirections();
+		systemOutRedirecter.unsetRedirections();
 		System.setSecurityManager(null);
 		N4jscTestFactory.unset();
 	}
