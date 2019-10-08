@@ -28,6 +28,7 @@ import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.smith.DataCollector;
@@ -67,6 +68,8 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 	private static final String JSON_DOCUMENT = "JSON_DOCUMENT";
 
 	@Inject
+	private IN4JSCore n4jsCore;
+	@Inject
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
 	@Inject
 	private PackageJsonHelper pckjsonHelper;
@@ -79,6 +82,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 		Map<Object, Object> context = new HashMap<>();
 
 		// early exit, if this validator is not responsible for this particular document
+		// Note: this check is also done in method #validate()
 		if (!this.isResponsible(context, document)) {
 			return;
 		}
@@ -264,8 +268,20 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
-		// by default, JSON validator extensions are responsible for all elements of the JSON model
-		return eObject.eClass().getEPackage() == JSONPackage.eINSTANCE;
+		if (eObject.eClass().getEPackage() != JSONPackage.eINSTANCE) {
+			return false;
+		}
+
+		// this validator extension only applies to package.json files located in the root of a project
+		URI pckjsonUri = eObject.eResource().getURI();
+		String fileName = fileExtensionCalculator.getFilenameWithoutXpectExtension(pckjsonUri);
+		if (!fileName.equals(IN4JSProject.PACKAGE_JSON)) {
+			return false;
+		}
+		IN4JSProject project = n4jsCore.findProject(pckjsonUri).get();
+		URI expectedLocation = project.getLocation().appendSegment(IN4JSProject.PACKAGE_JSON).toURI();
+
+		return expectedLocation.equals(pckjsonUri);
 	}
 
 	/**
