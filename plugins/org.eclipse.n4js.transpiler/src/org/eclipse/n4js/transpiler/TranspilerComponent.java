@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
+import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.NamedElement;
@@ -315,6 +316,11 @@ public abstract class TranspilerComponent {
 		return TranspilerUtils.collectNodes(root, cls, searchForNestedNodes);
 	}
 
+	@SuppressWarnings("javadoc")
+	protected boolean hasNonTrivialInitExpression(N4FieldDeclaration fieldDecl) {
+		return TranspilerUtils.hasNonTrivialInitExpression(state.G, fieldDecl);
+	}
+
 	// ###############################################################################################################
 	// GENERAL HELPER METHODS
 
@@ -509,12 +515,22 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryInternal("N4Annotation", true);
 	}
 
-	//// $fieldInit
+	//// $initFieldsFromInterfaces
 
-	/** "$fieldInit" - retrieve the internal symbol table entry for the symbol "$fieldInit" */
-	public SymbolTableEntryInternal steFor_$fieldInit() {
+	/**
+	 * "$initFieldsFromInterfaces" - retrieve the internal symbol table entry for the symbol "$initFieldsFromInterfaces"
+	 */
+	public SymbolTableEntryInternal steFor_$initFieldsFromInterfaces() {
 
-		return getSymbolTableEntryInternal("$fieldInit", true);
+		return getSymbolTableEntryInternal("$initFieldsFromInterfaces", true);
+	}
+
+	//// $fieldDefaults
+
+	/** "$fieldDefaults" - retrieve the internal symbol table entry for the symbol "$fieldDefaults" */
+	public SymbolTableEntryInternal steFor_$fieldDefaults() {
+
+		return getSymbolTableEntryInternal("$fieldDefaults", true);
 	}
 
 	//// __proto__

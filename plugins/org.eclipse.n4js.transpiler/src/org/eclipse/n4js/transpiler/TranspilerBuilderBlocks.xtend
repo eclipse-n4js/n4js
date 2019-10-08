@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.ArrayPadding
+import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression
@@ -498,6 +499,25 @@ public class TranspilerBuilderBlocks
 		result.name = name;
 		result.fpars += fpars;
 		result.body = block;
+		return result;
+	}
+
+	/** Creates a {@link ArrowFunction#isSingleExprImplicitReturn() single-expression arrow function}. */
+	public static def ArrowFunction _ArrowFunc(boolean async, FormalParameter[] fpars, Expression expression) {
+		val result = N4JSFactory.eINSTANCE.createArrowFunction;
+		result.declaredAsync = async;
+		result.fpars += fpars;
+		result.body = _Block(_ExprStmnt(expression));
+		result.hasBracesAroundBody = false;
+		return result;
+	}
+
+	public static def ArrowFunction _ArrowFunc(boolean async, FormalParameter[] fpars, Statement... statements) {
+		val result = N4JSFactory.eINSTANCE.createArrowFunction;
+		result.declaredAsync = async;
+		result.fpars += fpars;
+		result.body = _Block(statements);
+		result.hasBracesAroundBody = true;
 		return result;
 	}
 

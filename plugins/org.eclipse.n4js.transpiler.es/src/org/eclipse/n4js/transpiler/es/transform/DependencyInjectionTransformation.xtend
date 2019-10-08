@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -19,7 +20,6 @@ import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TAnnotationTypeRefArgument
@@ -36,7 +36,8 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 
 /**
  * Generates DI meta information for the injector.
- * Information is attached to the compiled type in the '$di' property.
+ * Information is attached to the compiled type in the {@link N4JSLanguageConstants#DI_SYMBOL_KEY DI_SYMBOL_KEY}
+ * property.
  *
  * TODO the DI code below makes heavy use of TModule (probably) without true need; refactor this
  */
@@ -86,17 +87,19 @@ class DependencyInjectionTransformation extends Transformation {
 		if(propertiesForDI.empty) {
 			return null;
 		}
-		// Object.defineProperty(C, 'DI_PROP_NAME', {value: { ... }}
+		// Object.defineProperty(C, Symbol.for('<DI_SYMBOL_KEY>'), {value: { ... }}
 		val classSTE = findSymbolTableEntryForElement(classDecl, true);
 		val objectSTE = getSymbolTableEntryOriginal(state.G.objectType, true);
 		val definePropertySTE = getSymbolTableEntryForMember(state.G.objectType, "defineProperty", false, true, true);
+		val symbolObjectSTE = getSymbolTableEntryOriginal(state.G.symbolObjectType, true);
+		val forSTE = getSymbolTableEntryForMember(state.G.symbolObjectType, "for", false, true, true);
 		return _ExprStmnt(_CallExpr(
 			_PropertyAccessExpr(objectSTE, definePropertySTE),
 			_IdentRef(classSTE),
-			_StringLiteral(N4JSLanguageConstants.DI_PROP_NAME),
+			_CallExpr(_PropertyAccessExpr(symbolObjectSTE, forSTE), _StringLiteral(N4JSLanguageConstants.DI_SYMBOL_KEY)),
 			_ObjLit(
 				"value" -> _ObjLit(
-					createPropertiesForDI(classDecl, superClassSTE)
+					propertiesForDI
 				)
 			)
 		));
@@ -125,18 +128,18 @@ class DependencyInjectionTransformation extends Transformation {
 	 * Generate DI hooks for scopes, super type, injected ctor, injected fields
 	 */
 	def private Pair<String,Expression>[] injectionPointsMetaInfo(TClass it, SymbolTableEntry superClassSTE) {
-		return #[
-			if(isSingleton) {
-				"scope" -> _StringLiteral("Singleton")
-			},
-			if(hasSuperType) {
-				"superType" -> __NSSafe_IdentRef(superClassSTE)
-			},
-			if(ownedCtor!==null && AnnotationDefinition.INJECT.hasAnnotation(ownedCtor)) {
-				"injectCtorParams" -> ownedCtor.methodInjectedParams
-			},
-			"fieldsInjectedTypes" -> fieldInjection
-		];
+		val fieldInjectionValue = it.fieldInjection;
+		val result = <Pair<String,Expression>>newArrayList;
+		if(isSingleton) {
+			result += "scope" -> _StringLiteral("Singleton") as Expression;
+		}
+		if(ownedCtor!==null && AnnotationDefinition.INJECT.hasAnnotation(ownedCtor)) {
+			result += "injectCtorParams" -> ownedCtor.methodInjectedParams as Expression;
+		}
+		if(!fieldInjectionValue.elements.empty) {
+			result += "fieldsInjectedTypes" -> fieldInjection as Expression;
+		}
+		return result;
 	}
 
 	/**

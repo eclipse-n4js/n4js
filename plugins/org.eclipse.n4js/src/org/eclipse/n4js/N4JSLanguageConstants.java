@@ -133,9 +133,10 @@ public abstract class N4JSLanguageConstants {
 	public static final String METHOD_STACKTRACE_SUFFIX = "___n4";
 
 	/**
-	 * Property holding DI information used by N4JS dependency injection (in runtime).
+	 * Key of the symbol used for storing N4JS dependency injection information in class constructors. The actual
+	 * property name is <code>Symbol.for('org.eclipse.n4js/diInfo')</code> (must be evaluated at runtime).
 	 */
-	public static final String DI_PROP_NAME = "$di";
+	public static final String DI_SYMBOL_KEY = "org.eclipse.n4js/diInfo";
 
 	/** The default project output folder that contains the generated output files of the transpiler. */
 	public static final String DEFAULT_PROJECT_OUTPUT = "src-gen";

@@ -15,15 +15,19 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.EcoreUtil2;
-
 import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
+import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TypingStrategy;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.xtext.EcoreUtil2;
 
 /**
  */
@@ -176,5 +180,20 @@ public class TranspilerUtils {
 	public static boolean isDefSiteStructural(TN4Classifier type) {
 		final TypingStrategy ts = type.getTypingStrategy();
 		return ts != TypingStrategy.NOMINAL && ts != TypingStrategy.DEFAULT;
+	}
+
+	/**
+	 * Tells if the given field declaration has a non-trivial init expression (default value expression), i.e. if it has
+	 * an init expression other than 'undefined'.
+	 */
+	public static boolean hasNonTrivialInitExpression(RuleEnvironment G, N4FieldDeclaration fieldDecl) {
+		final Expression expr = fieldDecl != null ? fieldDecl.getExpression() : null;
+		if (expr instanceof IdentifierRef_IM) {
+			if (((IdentifierRef_IM) expr).getOriginalTargetOfRewiredTarget() == RuleEnvironmentExtensions
+					.getGlobalObjectScope(G).getFieldUndefined()) {
+				return false;
+			}
+		}
+		return expr != null && !N4JSLanguageUtils.isUndefinedLiteral(G, expr);
 	}
 }
