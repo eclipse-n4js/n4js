@@ -63,8 +63,9 @@ import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.locations.FileURI
+import org.eclipse.n4js.projectModel.names.EclipseProjectName
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
 import org.eclipse.n4js.semver.SemverHelper
 import org.eclipse.n4js.semver.SemverMatcher
@@ -97,8 +98,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
-import org.eclipse.n4js.projectModel.names.EclipseProjectName
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -158,9 +157,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	@Inject
-	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
-
-	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
@@ -184,12 +180,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	@Inject
 	protected NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
 
-
-	override boolean isResponsible(Map<Object, Object> context, EObject eObject) {
-		// this validator extension only applies to package.json files
-		return fileExtensionCalculator.getFilenameWithoutXpectExtension(eObject.eResource().getURI())
-				.equals(IN4JSProject.PACKAGE_JSON);
-	}
 
 	/**
 	 * According to IDESpec §§12.04 Polyfills at most one Polyfill can be provided for a class.
@@ -370,7 +360,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/** IDEBUG-266 issue error warning on cyclic dependencies. */
-	@Check
+	// TODO: Check if cyclic dependencies are already found in BuildManager#sortByDependencies()
+	// @Check // Commented out because there are performance issues.
 	def checkCyclicDependencies(JSONDocument document) {
 		val project = findProject(document.eResource.URI).orNull;
 		if (null !== project) {
