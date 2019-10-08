@@ -28,15 +28,12 @@ import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
-import com.google.inject.Injector;
-
 /**
  * The entry point for all cli calls with the goal 'compile'
  */
 @SuppressWarnings("restriction")
 public class N4jscCompiler {
 	private final N4jscOptions options;
-	private final Injector injector;
 	private final N4JSLanguageServerImpl languageServer;
 	private final N4jscLanguageClient callback;
 	private final N4JSWorkspaceManager workspaceManager;
@@ -48,11 +45,10 @@ public class N4jscCompiler {
 	}
 
 	private N4jscCompiler(N4jscOptions options) {
-		this.injector = N4jscFactory.createInjector();
 		this.options = options;
-		this.languageServer = N4jscFactory.getLanguageServer(injector);
-		this.callback = N4jscFactory.getLanguageClient(injector);
-		this.workspaceManager = N4jscFactory.getWorkspaceManager(injector);
+		this.languageServer = N4jscFactory.getLanguageServer();
+		this.callback = N4jscFactory.getLanguageClient();
+		this.workspaceManager = N4jscFactory.getWorkspaceManager();
 		this.languageServer.connect(callback);
 	}
 

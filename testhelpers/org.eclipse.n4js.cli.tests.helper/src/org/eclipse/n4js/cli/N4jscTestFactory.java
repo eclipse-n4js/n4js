@@ -14,8 +14,6 @@ import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.cli.helper.N4jscTestLanguageClient;
 import org.eclipse.xtext.testing.GlobalRegistries;
 
-import com.google.inject.Injector;
-
 /**
  * Overwrites some bindings of N4jscFactory
  */
@@ -23,20 +21,34 @@ public class N4jscTestFactory extends N4jscFactory {
 
 	/** Enable overwriting bindings */
 	static public void set() {
+		resetInjector();
 		N4jscFactory.INSTANCE = new N4jscTestFactory(false);
 	}
 
 	/** Enable overwriting bindings. Deactivates the cli backend. */
 	static public void setAndDeactivateBackend() {
+		resetInjector();
 		N4jscFactory.INSTANCE = new N4jscTestFactory(true);
 	}
 
 	/** Disable overwriting bindings */
 	static public void unset() {
+		resetInjector();
 		N4jscFactory.INSTANCE = new N4jscFactory();
 	}
 
-	static private Injector injector;
+	/** Forces to create new injector */
+	static public void resetInjector() {
+		if (isInjectorCreated()) {
+			GlobalRegistries.clearGlobalRegistries();
+			N4jscFactory.INSTANCE.injector = null;
+		}
+	}
+
+	/** @return true iff an injector was created already */
+	static public boolean isInjectorCreated() {
+		return N4jscFactory.INSTANCE.injector != null;
+	}
 
 	final private boolean deactivateBackend;
 
@@ -82,20 +94,8 @@ public class N4jscTestFactory extends N4jscFactory {
 	}
 
 	@Override
-	Injector internalCreateInjector() {
-		GlobalRegistries.clearGlobalRegistries();
-		injector = super.internalCreateInjector();
-		return injector;
-	}
-
-	/** @return the last {@link Injector} that was created by {@link N4jscFactory#createInjector()} */
-	static public Injector getLastCreatedInjector() {
-		return injector;
-	}
-
-	@Override
-	N4jscLanguageClient internalGetLanguageClient(Injector pInjector) {
-		N4jscLanguageClient callback = pInjector.getInstance(N4jscTestLanguageClient.class);
+	N4jscLanguageClient internalGetLanguageClient() {
+		N4jscLanguageClient callback = getOrCreateInjector().getInstance(N4jscTestLanguageClient.class);
 		return callback;
 	}
 

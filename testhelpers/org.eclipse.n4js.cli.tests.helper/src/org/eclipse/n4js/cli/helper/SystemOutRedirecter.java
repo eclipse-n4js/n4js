@@ -55,7 +55,7 @@ public class SystemOutRedirecter {
 	public String getSystemOut() {
 		try {
 			System.out.flush();
-			String output = redirectOut.toString("UTF-8");
+			String output = redirectOut == null ? "" : redirectOut.toString("UTF-8");
 			return output;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -67,7 +67,7 @@ public class SystemOutRedirecter {
 	public String getSystemErr() {
 		try {
 			System.err.flush();
-			String output = redirectErr.toString("UTF-8");
+			String output = redirectErr == null ? "" : redirectErr.toString("UTF-8");
 			return output;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
