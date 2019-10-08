@@ -37,15 +37,15 @@ pipeline {
                                 '--show-version',
                                 '-Dtycho.localArtifacts=ignore',
                                 // for adjusting the script only, renable later on:
-                                // '-Dmaven.test.failure.ignore',
-                                // "--fail-at-end",
+                                 '-Dmaven.test.failure.ignore',
+                                 "--fail-at-end",
                                 '-DWORKSPACE=' + env.WORKSPACE,
                                 '-DexcludeJRE'
                             ].join(' ')
                             def profiles = [
                                 'buildProduct',
                                 'execute-plugin-tests',
-                                'execute-plugin-ui-tests',
+                               // 'execute-plugin-ui-tests',
                                 'execute-ecma-tests',
                                 'execute-accesscontrol-tests',
                                 'execute-smoke-tests'
