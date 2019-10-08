@@ -117,7 +117,6 @@ if [ "$DESTINATION" = "public" ]; then
     export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\n"
     lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
 else
-    # Use a version that we are sure can not exist on public npm registry for testing
     echo "==== Skipping steps 4-6 (because publishing only for testing purposes)"
     DIST_TAG=test
 fi

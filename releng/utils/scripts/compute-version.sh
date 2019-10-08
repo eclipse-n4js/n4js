@@ -126,11 +126,16 @@ echo "N4JS version: ${N4JS_VERSION}"
 echo "==== STEP 5/0: Writing version to output files ..."
 
 N4JS_VERSION_PROPERTIES_FILE="${REPO_ROOT_DIR}/plugins/org.eclipse.n4js.utils/n4js-version.properties"
-echo "Writing N4JS version ${N4JS_VERSION} to file ${N4JS_VERSION_PROPERTIES_FILE} ..."
+echo "Writing N4JS version ${N4JS_VERSION} to file ${N4JS_VERSION_PROPERTIES_FILE}"
 rm -f ${N4JS_VERSION_PROPERTIES_FILE}
 echo "n4js.version = ${N4JS_VERSION}" > ${N4JS_VERSION_PROPERTIES_FILE}
 
-N4JS_LIBS_PUBLISHING_REQUEST_FILE="${REPO_ROOT_DIR}/n4js-libs-publishing-request.json"
+N4JS_PUBLISHING_REQUEST_FILE="${REPO_ROOT_DIR}/n4js-publishing-request.txt"
+echo "Writing N4JS version ${N4JS_VERSION} to file ${N4JS_PUBLISHING_REQUEST_FILE}"
+rm -f ${N4JS_PUBLISHING_REQUEST_FILE}
+echo "${N4JS_VERSION}" > ${N4JS_PUBLISHING_REQUEST_FILE}
+
+N4JS_LIBS_PUBLISHING_REQUEST_FILE="${REPO_ROOT_DIR}/n4js-libs-publishing-request.txt"
 rm -f ${N4JS_LIBS_PUBLISHING_REQUEST_FILE}
 if [ "${N4JS_LIBS_PUBLISHING_REQUIRED}" = "true" ]; then
     echo "Publishing of n4js-libs required -> writing n4js-libs version ${N4JS_LIBS_VERSION} to file ${N4JS_LIBS_PUBLISHING_REQUEST_FILE}"
