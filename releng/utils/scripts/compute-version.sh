@@ -29,6 +29,10 @@ NPM_REGISTRY="http://registry.npmjs.org"
 
 echo "==== COMPUTE VERSION (compute-version.sh)"
 
+export NPM_TOKEN=dummy
+TIMESTAMP_DATE=`date "+%Y%m%d"`
+TIMESTAMP_TIME=`date "+%H%M"`
+
 # Set working directory to root folder of repository
 # (we assume this scripts is located in folder /releng/utils/scripts)
 cd `dirname $0`
@@ -41,8 +45,6 @@ N4JS_LIBS_ROOT=`pwd -P`
 
 echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
-
-export NPM_TOKEN=dummy
 
 echo "==== STEP 1/5: clean up (clean yarn cache, etc.)"
 yarn cache clean
@@ -112,8 +114,7 @@ else
     if [ \( "$VERSION_DIST_TAG_REQUESTED" != "null" \) -a \( "$VERSION_DIST_TAG_REQUESTED" != "" \) ]; then
         echo "Npm dist-tag requested -> appending a generated pre-release segment to n4js-libs version"
         DIST_TAG="${VERSION_DIST_TAG_REQUESTED}"
-        DIST_TAG_TIMESTAMP=`date "+%Y%m%d.%H%M"`
-        PUBLISH_VERSION="${PUBLISH_VERSION}-${VERSION_DIST_TAG_REQUESTED}.${DIST_TAG_TIMESTAMP}"
+        PUBLISH_VERSION="${PUBLISH_VERSION}-${VERSION_DIST_TAG_REQUESTED}.${TIMESTAMP_DATE}.${TIMESTAMP_TIME}"
     fi
     N4JS_LIBS_VERSION="${PUBLISH_VERSION}"
     N4JS_LIBS_PUBLISHING_REQUIRED="true"
@@ -122,8 +123,7 @@ fi
 echo "This build's n4js-libs version: ${N4JS_LIBS_VERSION}"
 
 echo "==== STEP 4/5: Computing N4JS version ..."
-TIME_STAMP=`date "+%Y%m%d_%H%M"`
-N4JS_VERSION="${N4JS_LIBS_VERSION}.${TIME_STAMP}"
+N4JS_VERSION="${N4JS_LIBS_VERSION}.v${TIMESTAMP_DATE}-${TIMESTAMP_TIME}"
 echo "This build's N4JS version: ${N4JS_VERSION}"
 
 echo "==== STEP 5/5: Writing version information to output files ..."
