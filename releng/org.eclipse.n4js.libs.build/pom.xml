@@ -148,6 +148,7 @@ Contributors:
 								<argument>${project.basedir}/../../releng/utils/scripts/publish-n4js-libs.sh</argument>
 								<argument>local</argument>
 								<argument>9999.0.0</argument> <!-- Use a version for testing that we are sure can not exist on public npm registry. -->
+								<argument>test</argument>
 							</arguments>
 						</configuration>
 					</execution>

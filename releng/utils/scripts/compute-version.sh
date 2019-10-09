@@ -73,6 +73,7 @@ if [ "${N4JS_LIBS_COMMIT_ID_LOCAL}" = "${N4JS_LIBS_COMMIT_ID_PUBLIC}" ]; then
     echo "-> this build's n4js-libs version is the version of the latest n4js-libs on npmjs.org: ${N4JS_LIBS_VERSION_PUBLIC}"
     N4JS_LIBS_VERSION="${N4JS_LIBS_VERSION_PUBLIC}"
     N4JS_LIBS_PUBLISHING_REQUIRED="false"
+    N4JS_LIBS_DIST_TAG=""
 else
     echo '-> publishing of a new version of n4js-libs is required (because commit IDs are different, i.e. changes since last publication)'
     echo "-> this build's n4js-libs version is a new, incremented version ..."
@@ -107,16 +108,16 @@ else
         echo "ERROR: requested major/minor segment must not be lower than latest published major/minor segment!"
         exit -1
     fi
+    DIST_TAG=""
     if [ \( "$VERSION_DIST_TAG_REQUESTED" != "null" \) -a \( "$VERSION_DIST_TAG_REQUESTED" != "" \) ]; then
-        if [ "$VERSION_DIST_TAG_REQUESTED" != "${NPM_TAG}" ]; then
-            echo "Npm dist-tag requested -> appending a generated pre-release segment to version"
-            VERSION_DIST_TAG_TIMESTAMP=`date "+%Y%m%d.%H%M"`
-            PUBLISH_VERSION="${PUBLISH_VERSION}-${VERSION_DIST_TAG_REQUESTED}.${VERSION_DIST_TAG_TIMESTAMP}"
-            NPM_TAG="${VERSION_DIST_TAG_REQUESTED}"
-        fi
+        echo "Npm dist-tag requested -> appending a generated pre-release segment to n4js-libs version"
+        DIST_TAG="${VERSION_DIST_TAG_REQUESTED}"
+        DIST_TAG_TIMESTAMP=`date "+%Y%m%d.%H%M"`
+        PUBLISH_VERSION="${PUBLISH_VERSION}-${VERSION_DIST_TAG_REQUESTED}.${DIST_TAG_TIMESTAMP}"
     fi
     N4JS_LIBS_VERSION="${PUBLISH_VERSION}"
     N4JS_LIBS_PUBLISHING_REQUIRED="true"
+    N4JS_LIBS_DIST_TAG="${DIST_TAG}"
 fi
 echo "This build's n4js-libs version: ${N4JS_LIBS_VERSION}"
 
@@ -125,25 +126,23 @@ TIME_STAMP=`date "+%Y%m%d_%H%M"`
 N4JS_VERSION="${N4JS_LIBS_VERSION}.${TIME_STAMP}"
 echo "This build's N4JS version: ${N4JS_VERSION}"
 
-echo "==== STEP 5/5: Writing versions to output files ..."
+echo "==== STEP 5/5: Writing version information to output files ..."
+
+VERSION_INFO_FILE="${REPO_ROOT_DIR}/version-info.json"
+echo "Writing entire version information to file ${VERSION_INFO_FILE}"
+cat > ${VERSION_INFO_FILE} <<EOF
+{
+    "n4jsVersion": "${N4JS_VERSION}",
+    "n4jsLibsVersion": "${N4JS_LIBS_VERSION}",
+    "n4jsLibsPublishingRequired": "${N4JS_LIBS_PUBLISHING_REQUIRED}",
+    "n4jsLibsDistTag": "${N4JS_LIBS_DIST_TAG}"
+}
+EOF
+cat ${VERSION_INFO_FILE}
 
 N4JS_VERSION_PROPERTIES_FILE="${REPO_ROOT_DIR}/plugins/org.eclipse.n4js.utils/n4js-version.properties"
 echo "Writing N4JS version ${N4JS_VERSION} to file ${N4JS_VERSION_PROPERTIES_FILE}"
 rm -f ${N4JS_VERSION_PROPERTIES_FILE}
 echo "n4js.version = ${N4JS_VERSION}" > ${N4JS_VERSION_PROPERTIES_FILE}
-
-N4JS_PUBLISHING_REQUEST_FILE="${REPO_ROOT_DIR}/n4js-publishing-request.txt"
-echo "Writing N4JS version ${N4JS_VERSION} to file ${N4JS_PUBLISHING_REQUEST_FILE}"
-rm -f ${N4JS_PUBLISHING_REQUEST_FILE}
-echo "${N4JS_VERSION}" > ${N4JS_PUBLISHING_REQUEST_FILE}
-
-N4JS_LIBS_PUBLISHING_REQUEST_FILE="${REPO_ROOT_DIR}/n4js-libs-publishing-request.txt"
-rm -f ${N4JS_LIBS_PUBLISHING_REQUEST_FILE}
-if [ "${N4JS_LIBS_PUBLISHING_REQUIRED}" = "true" ]; then
-    echo "Publishing of n4js-libs required -> writing n4js-libs version ${N4JS_LIBS_VERSION} to file ${N4JS_LIBS_PUBLISHING_REQUEST_FILE}"
-    echo "${N4JS_LIBS_VERSION}" > ${N4JS_LIBS_PUBLISHING_REQUEST_FILE}
-else
-    echo "Publishing of n4js-libs not required -> NOT creating file ${N4JS_LIBS_PUBLISHING_REQUEST_FILE}"
-fi
 
 echo "==== COMPUTE VERSION - DONE"
