@@ -5853,19 +5853,19 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		// * predicate in order to avoid problems stemming from the parameterized function call
 		// * and from the assignment operator >>>=
 		// */ ShiftExpression <Yield Expression:
-		//	AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>)*;
+		//	AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>)*
+		//AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)*
 		public Group getGroup() { return cGroup; }
 		
 		//AdditiveExpression<Yield>
 		public RuleCall getAdditiveExpressionParserRuleCall_0() { return cAdditiveExpressionParserRuleCall_0; }
 		
-		//=> ({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>)*
+		//=> ({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)*
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>)
+		//({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
 		//{ShiftExpression.lhs=current}
@@ -5877,7 +5877,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//ShiftOperator
 		public RuleCall getOpShiftOperatorParserRuleCall_1_0_1_0() { return cOpShiftOperatorParserRuleCall_1_0_1_0; }
 		
-		//rhs=AdditiveExpression<Yield>
+		//-> rhs=AdditiveExpression<Yield>
 		public Assignment getRhsAssignment_1_0_2() { return cRhsAssignment_1_0_2; }
 		
 		//AdditiveExpression<Yield>
@@ -12062,7 +12062,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	// * predicate in order to avoid problems stemming from the parameterized function call
 	// * and from the assignment operator >>>=
 	// */ ShiftExpression <Yield Expression:
-	//	AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>)*;
+	//	AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)*;
 	public ShiftExpressionElements getShiftExpressionAccess() {
 		return pShiftExpression;
 	}

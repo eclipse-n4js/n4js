@@ -19902,9 +19902,129 @@ ruleShiftExpression returns [EObject current=null]
 					)
 				)
 				(
-					(
-						ruleAdditiveExpression
-					)
+					New
+					    |
+					This_1
+					    |
+					Super
+					    |
+					Yield
+					    |
+					Get
+					    |
+					Set
+					    |
+					Let
+					    |
+					Project
+					    |
+					External
+					    |
+					Abstract
+					    |
+					Static
+					    |
+					As
+					    |
+					From
+					    |
+					Constructor
+					    |
+					Of
+					    |
+					Target
+					    |
+					Type
+					    |
+					Union
+					    |
+					Intersection
+					    |
+					This
+					    |
+					Promisify
+					    |
+					Await
+					    |
+					Async
+					    |
+					Implements
+					    |
+					Interface
+					    |
+					Private
+					    |
+					Protected
+					    |
+					Public
+					    |
+					Out
+					    |
+					LessThanSign
+					    |
+					Import
+					    |
+					True
+					    |
+					False
+					    |
+					Null
+					    |
+					Solidus
+					    |
+					SolidusEqualsSign
+					    |
+					LeftSquareBracket
+					    |
+					LeftCurlyBracket
+					    |
+					LeftParenthesis
+					    |
+					CommercialAt
+					    |
+					Function
+					    |
+					Class
+					    |
+					Delete
+					    |
+					Void
+					    |
+					Typeof
+					    |
+					PlusSignPlusSign
+					    |
+					HyphenMinusHyphenMinus
+					    |
+					PlusSign
+					    |
+					HyphenMinus
+					    |
+					Tilde
+					    |
+					ExclamationMark
+					    |
+					RULE_IDENTIFIER
+					    |
+					RULE_DOUBLE
+					    |
+					RULE_INT
+					    |
+					RULE_BINARY_INT
+					    |
+					RULE_OCTAL_INT
+					    |
+					RULE_LEGACY_OCTAL_INT
+					    |
+					RULE_HEX_INT
+					    |
+					RULE_SCIENTIFIC_INT
+					    |
+					RULE_STRING
+					    |
+					RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL
+					    |
+					RULE_TEMPLATE_HEAD
 				)
 			)
 			)=>
@@ -19936,6 +20056,7 @@ ruleShiftExpression returns [EObject current=null]
 					)
 				)
 				(
+					(New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getShiftExpressionAccess().getRhsAdditiveExpressionParserRuleCall_1_0_2_0());
@@ -19987,9 +20108,127 @@ norm1_ShiftExpression returns [EObject current=null]
 					)
 				)
 				(
-					(
-						norm1_AdditiveExpression
-					)
+					New
+					    |
+					This_1
+					    |
+					Super
+					    |
+					Get
+					    |
+					Set
+					    |
+					Let
+					    |
+					Project
+					    |
+					External
+					    |
+					Abstract
+					    |
+					Static
+					    |
+					As
+					    |
+					From
+					    |
+					Constructor
+					    |
+					Of
+					    |
+					Target
+					    |
+					Type
+					    |
+					Union
+					    |
+					Intersection
+					    |
+					This
+					    |
+					Promisify
+					    |
+					Await
+					    |
+					Async
+					    |
+					Implements
+					    |
+					Interface
+					    |
+					Private
+					    |
+					Protected
+					    |
+					Public
+					    |
+					Out
+					    |
+					LessThanSign
+					    |
+					Import
+					    |
+					True
+					    |
+					False
+					    |
+					Null
+					    |
+					Solidus
+					    |
+					SolidusEqualsSign
+					    |
+					LeftSquareBracket
+					    |
+					LeftCurlyBracket
+					    |
+					LeftParenthesis
+					    |
+					CommercialAt
+					    |
+					Function
+					    |
+					Class
+					    |
+					Delete
+					    |
+					Void
+					    |
+					Typeof
+					    |
+					PlusSignPlusSign
+					    |
+					HyphenMinusHyphenMinus
+					    |
+					PlusSign
+					    |
+					HyphenMinus
+					    |
+					Tilde
+					    |
+					ExclamationMark
+					    |
+					RULE_IDENTIFIER
+					    |
+					RULE_DOUBLE
+					    |
+					RULE_INT
+					    |
+					RULE_BINARY_INT
+					    |
+					RULE_OCTAL_INT
+					    |
+					RULE_LEGACY_OCTAL_INT
+					    |
+					RULE_HEX_INT
+					    |
+					RULE_SCIENTIFIC_INT
+					    |
+					RULE_STRING
+					    |
+					RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL
+					    |
+					RULE_TEMPLATE_HEAD
 				)
 			)
 			)=>
@@ -20021,6 +20260,7 @@ norm1_ShiftExpression returns [EObject current=null]
 					)
 				)
 				(
+					(New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | Import | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getShiftExpressionAccess().getRhsAdditiveExpressionParserRuleCall_1_0_2_0());

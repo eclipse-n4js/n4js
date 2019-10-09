@@ -59,5 +59,22 @@ class ES_11_07_BitwiseShiftOperatorEsprimaTest extends AbstractParserTest {
 		val right = shift.rhs as IdentifierRef
 		assertEquals('y', right.text)
 	}
+	
+	@Test
+	def void testLeftShiftWithTrailingIdentifierRef() {
+		val program = '''
+			a<<b
+			c
+		'''.parseESSuccessfully
+		val statement = program.scriptElements.head as ExpressionStatement
+		val shift = statement.expression as ShiftExpression
+		val op = shift.op
+		assertEquals(ShiftOperator.SHL, op)
+
+		val left = shift.lhs as IdentifierRef
+		assertEquals('a', left.text)
+		val right = shift.rhs as IdentifierRef
+		assertEquals('b', right.text)
+	}
 
 }

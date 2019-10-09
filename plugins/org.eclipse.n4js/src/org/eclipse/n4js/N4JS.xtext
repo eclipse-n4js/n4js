@@ -839,13 +839,8 @@ enum AdditiveOperator: add='+' | sub='-';
 
 // Bitwise shift operators ([ECM11] 11.7)
 
-/**
- * Note that the whole expression, including the rhs, must be in the syntactic
- * predicate in order to avoid problems stemming from the parameterized function call
- * and from the assignment operator >>>=
- */
 ShiftExpression <Yield> returns Expression: AdditiveExpression<Yield>
-	(=>({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>))*
+	(=>({ShiftExpression.lhs=current} op=ShiftOperator ->rhs=AdditiveExpression<Yield>))*
 ;
 
 /**  solve conflict with generics, e.g., List<List<C>> */
