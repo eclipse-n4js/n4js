@@ -44,7 +44,7 @@ echo "Current working directory: $PWD"
 
 export NPM_TOKEN=dummy
 
-echo "==== STEP 1/0: clean up (clean yarn cache, etc.)"
+echo "==== STEP 1/5: clean up (clean yarn cache, etc.)"
 yarn cache clean
 rm -rf $(find . -type d -name "node_modules")
 # Since we include the commit ID in the published artifacts, we should
@@ -54,7 +54,7 @@ git checkout HEAD -- .
 # obtain commit ID of folder 'n4js-libs' in the local git working copy:
 N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" -- .`
 
-echo "==== STEP 2/0: Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
+echo "==== STEP 2/5: Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
 
 # Obtain the latest commit on npm registry, using the representative
 N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.["dist-tags"].latest'`
@@ -67,13 +67,15 @@ fi
 echo "  - commit ID of latest published n4js-libs     : $N4JS_LIBS_COMMIT_ID_PUBLIC"
 echo "  - commit ID of local n4js-libs                : $N4JS_LIBS_COMMIT_ID_LOCAL"
 
+echo "==== STEP 3/5: Compute n4js-libs version number corresponding to this build ..."
 if [ "${N4JS_LIBS_COMMIT_ID_LOCAL}" = "${N4JS_LIBS_COMMIT_ID_PUBLIC}" ]; then
     echo '-> will NOT publish a new version of n4js-libs (because commit IDs are identical, i.e. no changes since last publication)'
-    echo "-> N4JS version is the version of the latest n4js-libs on npmjs.org: ${N4JS_LIBS_VERSION_PUBLIC}"
+    echo "-> this build's n4js-libs version is the version of the latest n4js-libs on npmjs.org: ${N4JS_LIBS_VERSION_PUBLIC}"
     N4JS_LIBS_VERSION="${N4JS_LIBS_VERSION_PUBLIC}"
     N4JS_LIBS_PUBLISHING_REQUIRED="false"
 else
-    echo "==== STEP 3/0: Compute new version number for publishing ..."
+    echo '-> publishing of a new version of n4js-libs is required (because commit IDs are different, i.e. changes since last publication)'
+    echo "-> this build's n4js-libs version is a new, incremented version ..."
     VERSION_MAJOR_REQUESTED=`jq -r '.major' version.json`
     VERSION_MINOR_REQUESTED=`jq -r '.minor' version.json`
     VERSION_PRE_RELEASE_REQUESTED=`jq -r '."pre-release"' version.json`
@@ -113,17 +115,17 @@ else
             NPM_TAG="${VERSION_DIST_TAG_REQUESTED}"
         fi
     fi
-    echo "Bumped version of n4js-libs for publishing : ${PUBLISH_VERSION}"
     N4JS_LIBS_VERSION="${PUBLISH_VERSION}"
     N4JS_LIBS_PUBLISHING_REQUIRED="true"
 fi
+echo "This build's n4js-libs version: ${N4JS_LIBS_VERSION}"
 
-echo "==== STEP 4/0: Computing N4JS version ..."
+echo "==== STEP 4/5: Computing N4JS version ..."
 TIME_STAMP=`date "+%Y%m%d_%H%M"`
 N4JS_VERSION="${N4JS_LIBS_VERSION}.${TIME_STAMP}"
-echo "N4JS version: ${N4JS_VERSION}"
+echo "This build's N4JS version: ${N4JS_VERSION}"
 
-echo "==== STEP 5/0: Writing version to output files ..."
+echo "==== STEP 5/5: Writing versions to output files ..."
 
 N4JS_VERSION_PROPERTIES_FILE="${REPO_ROOT_DIR}/plugins/org.eclipse.n4js.utils/n4js-version.properties"
 echo "Writing N4JS version ${N4JS_VERSION} to file ${N4JS_VERSION_PROPERTIES_FILE}"
@@ -143,3 +145,5 @@ if [ "${N4JS_LIBS_PUBLISHING_REQUIRED}" = "true" ]; then
 else
     echo "Publishing of n4js-libs not required -> NOT creating file ${N4JS_LIBS_PUBLISHING_REQUEST_FILE}"
 fi
+
+echo "==== COMPUTE VERSION - DONE"

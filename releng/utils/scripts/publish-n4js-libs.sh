@@ -14,7 +14,7 @@ set -eo pipefail
 #set -x
 
 
-echo "==== PUBLISH n4js-libs (including n4js-cli)"
+echo "==== PUBLISH N4JS-LIBS (including n4js-cli)"
 
 # Set working directory to root folder of repository
 # (we assume this scripts is located in folder /releng/utils/scripts)
@@ -135,4 +135,4 @@ else
     echo lerna publish --loglevel warn --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --npm-tag="${DIST_TAG}"
 fi
 
-echo "==== DONE publishing n4js-libs (including n4js-cli)"
+echo "==== PUBLISH N4JS-LIBS - DONE"
