@@ -77,9 +77,13 @@
      * Setup a interface. Methods and field initializers are already merged into the interface object.
      *
      * @param tinterface - The interface object.
+     * @param extendedInterfacesFn - Optional function returning an array of interfaces extended by 'tinterface'.
+     *                               May be 'undefined' in case no interfaces are extended.
      * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
      */
-    function $makeInterface(tinterface, n4typeFn) {
+    function $makeInterface(tinterface, extendedInterfacesFn, n4typeFn) {
+        tinterface.$extends = extendedInterfacesFn || (()=>[]);
+
         if (n4typeFn) {
             defineN4TypeGetter(tinterface, n4typeFn.bind(null, tinterface.$methods, tinterface));
         }
@@ -92,9 +96,48 @@
              * @return boolean
              */
             value: function(instance) {
-                return $implements(instance, tinterface.n4type.fqn);
+                if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
+                    return false;
+                }
+                const implementedInterface = tinterface.n4type.fqn;
+                return instance.constructor.n4type.allImplementedInterfaces.indexOf(implementedInterface) !== -1;
             }
         });
+    }
+
+    /**
+     * Initialize the fields declared by the given interfaces in the target object 'target'.
+     * Takes care of defaults defined in the interfaces and values provided via the optional
+     * 'spec' object. Will never override properties that already exist in the target object
+     * or that exist in the 'mixinExclusion' object.
+     *
+     * @param target - The object to be initialized. Usually a newly created instance of
+     *                 some class implementing the given interfaces.
+     * @param interfaces - Array of zero or more interfaces.
+     * @param spec - If invoked from a @Spec-constructor, this is the spec-object; otherwise 'undefined'.
+     * @param mixinExclusion - An object with properties that must not be overridden in the target object.
+     */
+    function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
+        for(const ifc of interfaces) {
+            const defs = ifc.$fieldDefaults || {};
+            for(const fieldName of Object.getOwnPropertyNames(defs)) {
+                if(target.hasOwnProperty(fieldName) || mixinExclusion.hasOwnProperty(fieldName)) {
+                    continue;
+                }
+                let value = undefined;
+                if(spec) {
+                    value = spec[fieldName];
+                }
+                if(value === undefined) {
+                    value = defs[fieldName];
+                    if (typeof value === "function") {
+                        value = value.call(target);
+                    }
+                }
+                target[fieldName] = value;
+            }
+            $initFieldsFromInterfaces(target, ifc.$extends(), spec, mixinExclusion);
+        }
     }
 
     /**
@@ -106,7 +149,7 @@
      * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
      * @return The constructed enumeration type
      */
-    function $makeEnum(enumeration, stringBased/* TODO obsolete */, members, n4typeFn) {
+    function $makeEnum(enumeration, members, n4typeFn) {
         var length, index, member, name, value, values, literal;
 
         Object.setPrototypeOf(enumeration, global.N4Enum);
@@ -138,21 +181,6 @@
         Object.defineProperty(enumeration, 'literals', {
             value: values
         });
-    }
-
-    /**
-     * Check whether a value is instance of a class implementing an interface.
-     *
-     * @param instance - The instance which type is to be checked whether it implements the interface
-     * @param implementedInterface - The fully qualified name of the interface including the package identifier
-     * @return boolean
-     * @deprecated
-     */
-    function $implements(instance, implementedInterface) {
-        if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
-            return false;
-        }
-        return instance.constructor.n4type.allImplementedInterfaces.indexOf(implementedInterface) !== -1;
     }
 
     /**
@@ -243,12 +271,8 @@
     //expose in global scope
     global.$makeClass = $makeClass;
     global.$makeInterface = $makeInterface;
+    global.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
     global.$makeEnum = $makeEnum;
-
-    // @deprecated, remove:
-    global.$implements = $implements;    
-    // @deprecated, remove:
-    global.$instanceof = function(instance, supertype) { return instance instanceof supertype; };
 
     global.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
     global.$spawn = $spawn;

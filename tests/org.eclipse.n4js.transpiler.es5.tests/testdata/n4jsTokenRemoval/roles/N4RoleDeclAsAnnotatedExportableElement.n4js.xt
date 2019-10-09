@@ -15,7 +15,20 @@
 /* XPECT output ~~~
 <==
 stdout:
-{ '$fieldInit': [Function: R5_fieldInit], '$methods': {} }
+N4Interface {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [ N4Annotation { name: 'Observable', details: [] } ],
+  name: 'R5',
+  fqn:
+   'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedExportableElement.R5',
+  n4superType: undefined,
+  allImplementedInterfaces:
+   [ 'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedExportableElement.R1',
+     'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedExportableElement.R0',
+     'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedExportableElement.I1',
+     'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedExportableElement.I0' ],
+  ownedMembers: [],
+  consumedMembers: [] }
 stderr:
 ==>
 ~~~ */
@@ -34,4 +47,4 @@ interface R1<A extends Object,B,C> extends R0, I0{}
 			I1<Object, number, undefined>,
 			I0 {}
 
-console.log(R5)
+console.log(R5.n4type)

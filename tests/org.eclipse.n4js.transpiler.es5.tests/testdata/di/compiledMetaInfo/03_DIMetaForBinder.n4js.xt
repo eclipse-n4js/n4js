@@ -50,8 +50,7 @@ when needed DI data is there
 				}
 			]
 		}
-	],
-	"fieldsInjectedTypes": []
+	]
 }
 stderr:
 ==>
@@ -83,6 +82,6 @@ function replacer(key, value){
     }
     return value;
 }
-var diData = JSON.stringify(tB['$di'], replacer, '\t')
+var diData = JSON.stringify(tB[Symbol.for('org.eclipse.n4js/diInfo')], replacer, '\t')
 console.log('when needed DI data is there');
 console.log(diData);

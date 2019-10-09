@@ -16,10 +16,14 @@ import com.google.inject.Singleton
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
 import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
+import org.eclipse.n4js.semver.Semver.VersionNumber
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeDefs
@@ -27,8 +31,6 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 
 import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
-import org.eclipse.n4js.semver.Semver.VersionNumber
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 /**
  * Helper class for computing descriptors for compiled files. Descriptors are used for file names and paths of generated files,
@@ -144,6 +146,9 @@ public final class ResourceNameComputer {
 	 * @n4jsSourceURI URI from file resource
 	 */
 	def public String generateProjectDescriptor(URI n4jsSourceURI) {
+		if (N4Scheme.isN4Scheme(n4jsSourceURI)) {
+			return N4JSGlobals.N4JS_RUNTIME.name;
+		}
 		val project = projectResolver.resolveProject(n4jsSourceURI)
 		val unitPath = ""
 		formatDescriptor(project, unitPath, "-", ".", "", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, !MAKE_SIMPLE_DESCRIPTOR);
