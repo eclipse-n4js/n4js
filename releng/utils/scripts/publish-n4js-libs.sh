@@ -63,7 +63,6 @@ REPO_ROOT_DIR=`pwd -P`
 
 # Navigate to n4js-libs folder
 cd n4js-libs
-N4JS_LIBS_ROOT=`pwd -P`
 
 echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
@@ -108,14 +107,14 @@ N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" -- .`
 
 echo "==== STEP 3/8: install dependencies and prepare npm task scripts"
 yarn install
+export PATH=`pwd`/node_modules/.bin:${PATH}
 
 echo "==== STEP 4/8: run 'lerna run build/test' on n4js-libs"
-export PATH=`pwd`/node_modules/.bin:${PATH}
 export N4_N4JSC_JAR="${REPO_ROOT_DIR}/tools/org.eclipse.n4js.hlc/target/n4jsc.jar"
 lerna run build
 lerna run test
 
-export NPM_CONFIG_GLOBALCONFIG="$N4JS_LIBS_ROOT"
+export NPM_CONFIG_GLOBALCONFIG="$REPO_ROOT_DIR/n4js-libs"
 echo "Publishing using .npmrc configuration to ${NPM_REGISTRY}";
 
 # update repository meta-info in package.json of all n4js-libs to point to the commit ID of n4js-libs folder
@@ -138,7 +137,7 @@ lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/e
 lerna exec -- rm package.json_TEMP
 
 echo "==== STEP 8/8: Now publishing with version ${PUBLISH_VERSION} and dist-tag ${DIST_TAG}"
-if [ "${DIST_TAG}" = "test" ]; then
+if [ \( "${DIST_TAG}" = "test" \) -o \( "${NPM_REGISTRY}" = "http://n4ide1-nexus.service.cd-dev.consul/repository/npm-internal" \) ]; then
     lerna publish --loglevel warn --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --npm-tag="${DIST_TAG}"
 else
     echo "NOT PUBLISHING FROM BRANCH GH-1503"
