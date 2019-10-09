@@ -1479,15 +1479,6 @@ LiteralOrComputedPropertyName <Yield>:
 	| '[' expression=AssignmentExpression<In=true,Yield> ']'
 ;
 
-/**
- * Intentionally unused to get rid of bogus lexer errors when
- * the input contains an incomplete asyncArrow?='@=>' keyword, e.g. @=)
- * TODO remove when @=> is removed.
- */
-terminal INCOMPLETE_ASYNC_ARROW:
-	'@='
-;
-
 // ****************************************************************************************************
 // see https://facebook.github.io/jsx/
 // ****************************************************************************************************

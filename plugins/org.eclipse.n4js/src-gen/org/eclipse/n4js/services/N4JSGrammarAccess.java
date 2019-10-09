@@ -5848,11 +5848,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRhsAdditiveExpressionParserRuleCall_1_0_2_0 = (RuleCall)cRhsAssignment_1_0_2.eContents().get(0);
 		
 		//// Bitwise shift operators ([ECM11] 11.7)
-		///**
-		// * Note that the whole expression, including the rhs, must be in the syntactic
-		// * predicate in order to avoid problems stemming from the parameterized function call
-		// * and from the assignment operator >>>=
-		// */ ShiftExpression <Yield Expression:
+		//ShiftExpression <Yield Expression:
 		//	AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)*;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -10406,7 +10402,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final BindingElementImplElements pBindingElementImpl;
 	private final ElisionElements pElision;
 	private final LiteralOrComputedPropertyNameElements pLiteralOrComputedPropertyName;
-	private final TerminalRule tINCOMPLETE_ASYNC_ARROW;
 	private final JSXElementElements pJSXElement;
 	private final JSXFragmentElements pJSXFragment;
 	private final JSXChildElements pJSXChild;
@@ -10662,7 +10657,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pBindingElementImpl = new BindingElementImplElements();
 		this.pElision = new ElisionElements();
 		this.pLiteralOrComputedPropertyName = new LiteralOrComputedPropertyNameElements();
-		this.tINCOMPLETE_ASYNC_ARROW = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.INCOMPLETE_ASYNC_ARROW");
 		this.pJSXElement = new JSXElementElements();
 		this.pJSXFragment = new JSXFragmentElements();
 		this.pJSXChild = new JSXChildElements();
@@ -12057,11 +12051,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//// Bitwise shift operators ([ECM11] 11.7)
-	///**
-	// * Note that the whole expression, including the rhs, must be in the syntactic
-	// * predicate in order to avoid problems stemming from the parameterized function call
-	// * and from the assignment operator >>>=
-	// */ ShiftExpression <Yield Expression:
+	//ShiftExpression <Yield Expression:
 	//	AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)*;
 	public ShiftExpressionElements getShiftExpressionAccess() {
 		return pShiftExpression;
@@ -13322,12 +13312,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getLiteralOrComputedPropertyNameRule() {
 		return getLiteralOrComputedPropertyNameAccess().getRule();
-	}
-	
-	//terminal INCOMPLETE_ASYNC_ARROW:
-	//	'@=';
-	public TerminalRule getINCOMPLETE_ASYNC_ARROWRule() {
-		return tINCOMPLETE_ASYNC_ARROW;
 	}
 	
 	//// ****************************************************************************************************
