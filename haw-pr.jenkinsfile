@@ -26,8 +26,7 @@ pipeline {
             steps {
                 echo 'Starting Xvnc'
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
-                    echo 'Building and testing, using display:'
-                    echo DISPLAY
+                    echo 'Building and testing, using display:' + DISPLAY
                     // dir('n4js') {
                         script {
                             def options = [
@@ -40,7 +39,8 @@ pipeline {
                                  '-Dmaven.test.failure.ignore',
                                  "--fail-at-end",
                                 '-DWORKSPACE=' + env.WORKSPACE,
-                                '-DexcludeJRE'
+                                '-DexcludeJRE',
+                                '-DargLine="-DDISPLAY='+DISPLAY+'"'
                             ].join(' ')
                             def profiles = [
                                 'buildProduct',
