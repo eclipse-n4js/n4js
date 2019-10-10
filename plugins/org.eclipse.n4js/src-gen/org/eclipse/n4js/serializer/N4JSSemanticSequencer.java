@@ -636,7 +636,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_IntLiteral(context, (IntLiteral) semanticObject); 
 				return; 
 			case N4JSPackage.JSX_ELEMENT:
-				sequence_JSXAttributes_JSXElement(context, (JSXElement) semanticObject); 
+				sequence_JSXElement(context, (JSXElement) semanticObject); 
 				return; 
 			case N4JSPackage.JSX_ELEMENT_NAME:
 				sequence_JSXElementName(context, (JSXElementName) semanticObject); 
@@ -3496,13 +3496,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
+	 *             )
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -14543,6 +14543,24 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     JSXElementName returns JSXElementName
+	 *
+	 * Constraint:
+	 *     expression=JSXElementNameExpression
+	 */
+	protected void sequence_JSXElementName(ISerializationContext context, JSXElementName semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.JSX_ELEMENT_NAME__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.JSX_ELEMENT_NAME__EXPRESSION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJSXElementNameAccess().getExpressionJSXElementNameExpressionParserRuleCall_0(), semanticObject.getExpression());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     PrimaryExpression<Yield> returns JSXElement
 	 *     PrimaryExpression returns JSXElement
 	 *     LeftHandSideExpression<Yield> returns JSXElement
@@ -15109,26 +15127,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* (jsxChildren+=JSXChild* jsxClosingName=JSXElementName)?)
 	 */
-	protected void sequence_JSXAttributes_JSXElement(ISerializationContext context, JSXElement semanticObject) {
+	protected void sequence_JSXElement(ISerializationContext context, JSXElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     JSXElementName returns JSXElementName
-	 *
-	 * Constraint:
-	 *     expression=JSXElementNameExpression
-	 */
-	protected void sequence_JSXElementName(ISerializationContext context, JSXElementName semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.JSX_ELEMENT_NAME__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.JSX_ELEMENT_NAME__EXPRESSION));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getJSXElementNameAccess().getExpressionJSXElementNameExpressionParserRuleCall_0(), semanticObject.getExpression());
-		feeder.finish();
 	}
 	
 	
@@ -15730,7 +15730,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     JSXPropertyAttribute returns JSXPropertyAttribute
 	 *
 	 * Constraint:
-	 *     (property=[IdentifiableElement|IdentifierName] (jsxAttributeValue=StringLiteral | jsxAttributeValue=AssignmentExpression)?)
+	 *     (
+	 *         property=[IdentifiableElement|JSXIdentifier] 
+	 *         (jsxAttributeValue=StringLiteral | jsxAttributeValue=JSXElement | jsxAttributeValue=JSXFragment | jsxAttributeValue=AssignmentExpression)?
+	 *     )
 	 */
 	protected void sequence_JSXPropertyAttribute(ISerializationContext context, JSXPropertyAttribute semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

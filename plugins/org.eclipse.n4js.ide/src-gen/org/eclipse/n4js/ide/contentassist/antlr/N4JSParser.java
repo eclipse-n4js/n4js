@@ -13,15 +13,11 @@ package org.eclipse.n4js.ide.contentassist.antlr;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import java.util.Collection;
 import java.util.Map;
-import org.antlr.runtime.RecognitionException;
 import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.AbstractContentAssistParser;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.AbstractInternalContentAssistParser;
 
 public class N4JSParser extends AbstractContentAssistParser {
 
@@ -112,6 +108,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getJSXElementAccess().getAlternatives_3(), "rule__JSXElement__Alternatives_3");
 			builder.put(grammarAccess.getJSXChildAccess().getAlternatives(), "rule__JSXChild__Alternatives");
 			builder.put(grammarAccess.getJSXAttributeAccess().getAlternatives(), "rule__JSXAttribute__Alternatives");
+			builder.put(grammarAccess.getJSXIdentifierAccess().getAlternatives_1_0(), "rule__JSXIdentifier__Alternatives_1_0");
+			builder.put(grammarAccess.getJSXIdentifierAccess().getAlternatives_1_1_0(), "rule__JSXIdentifier__Alternatives_1_1_0");
 			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getAlternatives_1_1(), "rule__JSXPropertyAttribute__Alternatives_1_1");
 			builder.put(grammarAccess.getArrayTypeExpressionAccess().getAlternatives(), "rule__ArrayTypeExpression__Alternatives");
 			builder.put(grammarAccess.getPrimaryTypeExpressionAccess().getAlternatives(), "rule__PrimaryTypeExpression__Alternatives");
@@ -424,6 +422,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAssignmentExpressionAccess().getGroup_4_1_0(), "rule__AssignmentExpression__Group_4_1_0__0");
 			builder.put(grammarAccess.getAssignmentExpressionAccess().getGroup_4_1_0_0(), "rule__AssignmentExpression__Group_4_1_0_0__0");
 			builder.put(grammarAccess.getYieldExpressionAccess().getGroup(), "rule__YieldExpression__Group__0");
+			builder.put(grammarAccess.getAssignmentOperatorAccess().getGroup_5(), "rule__AssignmentOperator__Group_5__0");
 			builder.put(grammarAccess.getAssignmentOperatorAccess().getGroup_7(), "rule__AssignmentOperator__Group_7__0");
 			builder.put(grammarAccess.getAwaitExpressionAccess().getGroup(), "rule__AwaitExpression__Group__0");
 			builder.put(grammarAccess.getAwaitExpressionAccess().getGroup_0(), "rule__AwaitExpression__Group_0__0");
@@ -535,9 +534,12 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getJSXElementNameExpressionAccess().getGroup(), "rule__JSXElementNameExpression__Group__0");
 			builder.put(grammarAccess.getJSXElementNameExpressionAccess().getGroup_1(), "rule__JSXElementNameExpression__Group_1__0");
 			builder.put(grammarAccess.getJSXSpreadAttributeAccess().getGroup(), "rule__JSXSpreadAttribute__Group__0");
+			builder.put(grammarAccess.getJSXIdentifierAccess().getGroup(), "rule__JSXIdentifier__Group__0");
+			builder.put(grammarAccess.getJSXIdentifierAccess().getGroup_1(), "rule__JSXIdentifier__Group_1__0");
+			builder.put(grammarAccess.getJSXIdentifierAccess().getGroup_1_1(), "rule__JSXIdentifier__Group_1_1__0");
 			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup(), "rule__JSXPropertyAttribute__Group__0");
 			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1(), "rule__JSXPropertyAttribute__Group_1__0");
-			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1_1_1(), "rule__JSXPropertyAttribute__Group_1_1_1__0");
+			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1_1_3(), "rule__JSXPropertyAttribute__Group_1_1_3__0");
 			builder.put(grammarAccess.getTypeRefAccess().getGroup(), "rule__TypeRef__Group__0");
 			builder.put(grammarAccess.getTypeRefAccess().getGroup_1(), "rule__TypeRef__Group_1__0");
 			builder.put(grammarAccess.getTypeRefAccess().getGroup_1_1(), "rule__TypeRef__Group_1_1__0");
@@ -973,16 +975,18 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getLiteralOrComputedPropertyNameAccess().getLiteralNameAssignment_2(), "rule__LiteralOrComputedPropertyName__LiteralNameAssignment_2");
 			builder.put(grammarAccess.getLiteralOrComputedPropertyNameAccess().getExpressionAssignment_3_1(), "rule__LiteralOrComputedPropertyName__ExpressionAssignment_3_1");
 			builder.put(grammarAccess.getJSXElementAccess().getJsxElementNameAssignment_1(), "rule__JSXElement__JsxElementNameAssignment_1");
+			builder.put(grammarAccess.getJSXElementAccess().getJsxAttributesAssignment_2(), "rule__JSXElement__JsxAttributesAssignment_2");
 			builder.put(grammarAccess.getJSXElementAccess().getJsxChildrenAssignment_3_0_1(), "rule__JSXElement__JsxChildrenAssignment_3_0_1");
 			builder.put(grammarAccess.getJSXElementAccess().getJsxClosingNameAssignment_3_0_4(), "rule__JSXElement__JsxClosingNameAssignment_3_0_4");
 			builder.put(grammarAccess.getJSXFragmentAccess().getJsxChildrenAssignment_3(), "rule__JSXFragment__JsxChildrenAssignment_3");
 			builder.put(grammarAccess.getJSXExpressionAccess().getExpressionAssignment_1(), "rule__JSXExpression__ExpressionAssignment_1");
 			builder.put(grammarAccess.getJSXElementNameAccess().getExpressionAssignment(), "rule__JSXElementName__ExpressionAssignment");
-			builder.put(grammarAccess.getJSXAttributesAccess().getJsxAttributesAssignment(), "rule__JSXAttributes__JsxAttributesAssignment");
 			builder.put(grammarAccess.getJSXSpreadAttributeAccess().getExpressionAssignment_2(), "rule__JSXSpreadAttribute__ExpressionAssignment_2");
 			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getPropertyAssignment_0(), "rule__JSXPropertyAttribute__PropertyAssignment_0");
 			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_0(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_0");
-			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_1_1(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_1_1");
+			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_1(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_1");
+			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_2(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_2");
+			builder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_3_1(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_3_1");
 			builder.put(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment(), "rule__VersionDeclaration__DeclaredVersionAssignment");
 			builder.put(grammarAccess.getTypeRefAccess().getTypeRefsAssignment_1_1_1(), "rule__TypeRef__TypeRefsAssignment_1_1_1");
 			builder.put(grammarAccess.getIntersectionTypeExpressionAccess().getTypeRefsAssignment_1_1_1(), "rule__IntersectionTypeExpression__TypeRefsAssignment_1_1_1");
@@ -1066,17 +1070,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 	}
 
 	@Override
-	protected Collection<FollowElement> getFollowElements(AbstractInternalContentAssistParser parser) {
-		try {
-			InternalN4JSParser typedParser = (InternalN4JSParser) parser;
-			typedParser.entryRuleScript();
-			return typedParser.getFollowElements();
-		} catch(RecognitionException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-
-	@Override
 	protected String[] getInitialHiddenTokens() {
 		return new String[] { "RULE_WS", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL" };
 	}
@@ -1088,11 +1081,11 @@ public class N4JSParser extends AbstractContentAssistParser {
 	public void setGrammarAccess(N4JSGrammarAccess grammarAccess) {
 		this.grammarAccess = grammarAccess;
 	}
-
+	
 	public NameMappings getNameMappings() {
 		return nameMappings;
 	}
-
+	
 	public void setNameMappings(NameMappings nameMappings) {
 		this.nameMappings = nameMappings;
 	}

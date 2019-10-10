@@ -10760,9 +10760,129 @@ ruleShiftExpression
 				)
 			)
 			(
-				(
-					ruleAdditiveExpression
-				)
+				New
+				    |
+				This_1
+				    |
+				Super
+				    |
+				Yield
+				    |
+				Get
+				    |
+				Set
+				    |
+				Let
+				    |
+				Project
+				    |
+				External
+				    |
+				Abstract
+				    |
+				Static
+				    |
+				As
+				    |
+				From
+				    |
+				Constructor
+				    |
+				Of
+				    |
+				Target
+				    |
+				Type
+				    |
+				Union
+				    |
+				Intersection
+				    |
+				This
+				    |
+				Promisify
+				    |
+				Await
+				    |
+				Async
+				    |
+				Implements
+				    |
+				Interface
+				    |
+				Private
+				    |
+				Protected
+				    |
+				Public
+				    |
+				Out
+				    |
+				LessThanSign
+				    |
+				Import
+				    |
+				True
+				    |
+				False
+				    |
+				Null
+				    |
+				Solidus
+				    |
+				SolidusEqualsSign
+				    |
+				LeftSquareBracket
+				    |
+				LeftCurlyBracket
+				    |
+				LeftParenthesis
+				    |
+				CommercialAt
+				    |
+				Function
+				    |
+				Class
+				    |
+				Delete
+				    |
+				Void
+				    |
+				Typeof
+				    |
+				PlusSignPlusSign
+				    |
+				HyphenMinusHyphenMinus
+				    |
+				PlusSign
+				    |
+				HyphenMinus
+				    |
+				Tilde
+				    |
+				ExclamationMark
+				    |
+				RULE_IDENTIFIER
+				    |
+				RULE_DOUBLE
+				    |
+				RULE_INT
+				    |
+				RULE_BINARY_INT
+				    |
+				RULE_OCTAL_INT
+				    |
+				RULE_LEGACY_OCTAL_INT
+				    |
+				RULE_HEX_INT
+				    |
+				RULE_SCIENTIFIC_INT
+				    |
+				RULE_STRING
+				    |
+				RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL
+				    |
+				RULE_TEMPLATE_HEAD
 			)
 		)
 		)=>
@@ -10775,6 +10895,58 @@ ruleShiftExpression
 				)
 			)
 			(
+				(New | 
+				This_1 | 
+				Super | 
+				Yield | 
+				Get | 
+				Set | 
+				Let | 
+				Project | 
+				External | 
+				Abstract | 
+				Static | 
+				As | 
+				From | 
+				Constructor | 
+				Of | 
+				Target | 
+				Type | 
+				Union | 
+				Intersection | 
+				This | 
+				Promisify | 
+				Await | 
+				Async | 
+				Implements | 
+				Interface | 
+				Private | 
+				Protected | 
+				Public | 
+				Out | 
+				LessThanSign | 
+				Import | 
+				True | 
+				False | 
+				Null | 
+				Solidus | 
+				SolidusEqualsSign | 
+				LeftSquareBracket | 
+				LeftCurlyBracket | 
+				LeftParenthesis | 
+				CommercialAt | 
+				Function | 
+				Class | 
+				Delete | 
+				Void | 
+				Typeof | 
+				PlusSignPlusSign | 
+				HyphenMinusHyphenMinus | 
+				PlusSign | 
+				HyphenMinus | 
+				Tilde | 
+				ExclamationMark | 
+				RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 				(
 					RhsAdditiveExpressionParserRuleCall_1_0_2_0=ruleAdditiveExpression{
 						announce($RhsAdditiveExpressionParserRuleCall_1_0_2_0.start, $RhsAdditiveExpressionParserRuleCall_1_0_2_0.stop, grammarAccess.getShiftExpressionAccess().getRhsAssignment_1_0_2());
@@ -10801,9 +10973,127 @@ norm1_ShiftExpression
 				)
 			)
 			(
-				(
-					norm1_AdditiveExpression
-				)
+				New
+				    |
+				This_1
+				    |
+				Super
+				    |
+				Get
+				    |
+				Set
+				    |
+				Let
+				    |
+				Project
+				    |
+				External
+				    |
+				Abstract
+				    |
+				Static
+				    |
+				As
+				    |
+				From
+				    |
+				Constructor
+				    |
+				Of
+				    |
+				Target
+				    |
+				Type
+				    |
+				Union
+				    |
+				Intersection
+				    |
+				This
+				    |
+				Promisify
+				    |
+				Await
+				    |
+				Async
+				    |
+				Implements
+				    |
+				Interface
+				    |
+				Private
+				    |
+				Protected
+				    |
+				Public
+				    |
+				Out
+				    |
+				LessThanSign
+				    |
+				Import
+				    |
+				True
+				    |
+				False
+				    |
+				Null
+				    |
+				Solidus
+				    |
+				SolidusEqualsSign
+				    |
+				LeftSquareBracket
+				    |
+				LeftCurlyBracket
+				    |
+				LeftParenthesis
+				    |
+				CommercialAt
+				    |
+				Function
+				    |
+				Class
+				    |
+				Delete
+				    |
+				Void
+				    |
+				Typeof
+				    |
+				PlusSignPlusSign
+				    |
+				HyphenMinusHyphenMinus
+				    |
+				PlusSign
+				    |
+				HyphenMinus
+				    |
+				Tilde
+				    |
+				ExclamationMark
+				    |
+				RULE_IDENTIFIER
+				    |
+				RULE_DOUBLE
+				    |
+				RULE_INT
+				    |
+				RULE_BINARY_INT
+				    |
+				RULE_OCTAL_INT
+				    |
+				RULE_LEGACY_OCTAL_INT
+				    |
+				RULE_HEX_INT
+				    |
+				RULE_SCIENTIFIC_INT
+				    |
+				RULE_STRING
+				    |
+				RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL
+				    |
+				RULE_TEMPLATE_HEAD
 			)
 		)
 		)=>
@@ -10816,6 +11106,57 @@ norm1_ShiftExpression
 				)
 			)
 			(
+				(New | 
+				This_1 | 
+				Super | 
+				Get | 
+				Set | 
+				Let | 
+				Project | 
+				External | 
+				Abstract | 
+				Static | 
+				As | 
+				From | 
+				Constructor | 
+				Of | 
+				Target | 
+				Type | 
+				Union | 
+				Intersection | 
+				This | 
+				Promisify | 
+				Await | 
+				Async | 
+				Implements | 
+				Interface | 
+				Private | 
+				Protected | 
+				Public | 
+				Out | 
+				LessThanSign | 
+				Import | 
+				True | 
+				False | 
+				Null | 
+				Solidus | 
+				SolidusEqualsSign | 
+				LeftSquareBracket | 
+				LeftCurlyBracket | 
+				LeftParenthesis | 
+				CommercialAt | 
+				Function | 
+				Class | 
+				Delete | 
+				Void | 
+				Typeof | 
+				PlusSignPlusSign | 
+				HyphenMinusHyphenMinus | 
+				PlusSign | 
+				HyphenMinus | 
+				Tilde | 
+				ExclamationMark | 
+				RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 				(
 					RhsAdditiveExpressionParserRuleCall_1_0_2_0=norm1_AdditiveExpression{
 						announce($RhsAdditiveExpressionParserRuleCall_1_0_2_0.start, $RhsAdditiveExpressionParserRuleCall_1_0_2_0.stop, grammarAccess.getShiftExpressionAccess().getRhsAssignment_1_0_2());
@@ -13624,9 +13965,14 @@ ruleAssignmentOperator
 		announce($PlusSignEqualsSignKeyword_4, grammarAccess.getAssignmentOperatorAccess().getPlusSignEqualsSignKeyword_4());
 	}
 	    |
-	HyphenMinusEqualsSignKeyword_5=HyphenMinusEqualsSign {
-		announce($HyphenMinusEqualsSignKeyword_5, grammarAccess.getAssignmentOperatorAccess().getHyphenMinusEqualsSignKeyword_5());
-	}
+	(
+		HyphenMinusKeyword_5_0=HyphenMinus {
+			announce($HyphenMinusKeyword_5_0, grammarAccess.getAssignmentOperatorAccess().getHyphenMinusKeyword_5_0());
+		}
+		EqualsSignKeyword_5_1=EqualsSign {
+			announce($EqualsSignKeyword_5_1, grammarAccess.getAssignmentOperatorAccess().getEqualsSignKeyword_5_1());
+		}
+	)
 	    |
 	LessThanSignLessThanSignEqualsSignKeyword_6=LessThanSignLessThanSignEqualsSign {
 		announce($LessThanSignLessThanSignEqualsSignKeyword_6, grammarAccess.getAssignmentOperatorAccess().getLessThanSignLessThanSignEqualsSignKeyword_6());
@@ -19003,7 +19349,13 @@ ruleJSXElement
 			}
 		)
 	)
-	JSXAttributesParserRuleCall_2=ruleJSXAttributes{ announce($JSXAttributesParserRuleCall_2.start, $JSXAttributesParserRuleCall_2.stop, grammarAccess.getJSXElementAccess().getJSXAttributesParserRuleCall_2()); }
+	(
+		(
+			JsxAttributesJSXAttributeParserRuleCall_2_0=ruleJSXAttribute{
+				announce($JsxAttributesJSXAttributeParserRuleCall_2_0.start, $JsxAttributesJSXAttributeParserRuleCall_2_0.stop, grammarAccess.getJSXElementAccess().getJsxAttributesAssignment_2());
+			}
+		)
+	)*
 	(
 		(
 			GreaterThanSignKeyword_3_0_0=GreaterThanSign
@@ -19178,20 +19530,6 @@ ruleJSXElementNameExpression
 )
 ;
 
-
-// Rule JSXAttributes
-ruleJSXAttributes
-@init {
-}:
-(
-	(
-		JsxAttributesJSXAttributeParserRuleCall_0=ruleJSXAttribute{
-			announce($JsxAttributesJSXAttributeParserRuleCall_0.start, $JsxAttributesJSXAttributeParserRuleCall_0.stop, grammarAccess.getJSXAttributesAccess().getJsxAttributesAssignment());
-		}
-	)
-)*
-;
-
 // Entry rule entryRuleJSXAttribute
 entryRuleJSXAttribute
 	:
@@ -19242,6 +19580,113 @@ ruleJSXSpreadAttribute
 )
 ;
 
+// Entry rule entryRuleJSXIdentifier
+entryRuleJSXIdentifier
+	:
+	ruleJSXIdentifier
+	EOF;
+
+// Rule JSXIdentifier
+ruleJSXIdentifier
+@init {
+}
+:
+(
+	ruleIdentifierName
+	(
+		(
+			HyphenMinusKeyword_1_0_0=HyphenMinus {
+				announce($HyphenMinusKeyword_1_0_0, grammarAccess.getJSXIdentifierAccess().getHyphenMinusKeyword_1_0_0());
+			}
+			    |
+			HyphenMinusHyphenMinusKeyword_1_0_1=HyphenMinusHyphenMinus {
+				announce($HyphenMinusHyphenMinusKeyword_1_0_1, grammarAccess.getJSXIdentifierAccess().getHyphenMinusHyphenMinusKeyword_1_0_1());
+			}
+		)
+		(
+			(Break | 
+			Case | 
+			Catch | 
+			Class | 
+			Const | 
+			Continue | 
+			Debugger | 
+			Default | 
+			Delete | 
+			Do | 
+			Else | 
+			Export | 
+			Extends | 
+			Finally | 
+			For | 
+			Function | 
+			If | 
+			Import | 
+			In | 
+			Instanceof | 
+			New | 
+			Return | 
+			Super | 
+			Switch | 
+			This_1 | 
+			Throw | 
+			Try | 
+			Typeof | 
+			Var | 
+			Void | 
+			While | 
+			With | 
+			Yield | 
+			Null | 
+			True | 
+			False | 
+			Enum | 
+			Get | 
+			Set | 
+			Let | 
+			Project | 
+			External | 
+			Abstract | 
+			Static | 
+			As | 
+			From | 
+			Constructor | 
+			Of | 
+			Target | 
+			Type | 
+			Union | 
+			Intersection | 
+			This | 
+			Promisify | 
+			Await | 
+			Async | 
+			Implements | 
+			Interface | 
+			Private | 
+			Protected | 
+			Public | 
+			Out | 
+			RULE_INT | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_LEGACY_OCTAL_INT | RULE_IDENTIFIER)=>
+			(
+				RULE_INT
+				    |
+				RULE_HEX_INT
+				    |
+				RULE_BINARY_INT
+				    |
+				RULE_OCTAL_INT
+				    |
+				RULE_SCIENTIFIC_INT
+				    |
+				RULE_LEGACY_OCTAL_INT
+				    |
+				ruleIdentifierName
+			)
+		)?
+	)*
+)
+;
+
 // Entry rule entryRuleJSXPropertyAttribute
 entryRuleJSXPropertyAttribute
 	:
@@ -19255,8 +19700,8 @@ ruleJSXPropertyAttribute
 (
 	(
 		(
-			PropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1=ruleIdentifierName{
-				announce($PropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1.start, $PropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1.stop, grammarAccess.getJSXPropertyAttributeAccess().getPropertyAssignment_0());
+			PropertyIdentifiableElementJSXIdentifierParserRuleCall_0_0_1=ruleJSXIdentifier{
+				announce($PropertyIdentifiableElementJSXIdentifierParserRuleCall_0_0_1.start, $PropertyIdentifiableElementJSXIdentifierParserRuleCall_0_0_1.stop, grammarAccess.getJSXPropertyAttributeAccess().getPropertyAssignment_0());
 			}
 		)
 	)
@@ -19275,20 +19720,36 @@ ruleJSXPropertyAttribute
 			)
 			    |
 			(
-				LeftCurlyBracketKeyword_1_1_1_0=LeftCurlyBracket
+				(
+					JsxAttributeValueJSXElementParserRuleCall_1_1_1_0=ruleJSXElement{
+						announce($JsxAttributeValueJSXElementParserRuleCall_1_1_1_0.start, $JsxAttributeValueJSXElementParserRuleCall_1_1_1_0.stop, grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_1());
+					}
+				)
+			)
+			    |
+			(
+				(
+					JsxAttributeValueJSXFragmentParserRuleCall_1_1_2_0=ruleJSXFragment{
+						announce($JsxAttributeValueJSXFragmentParserRuleCall_1_1_2_0.start, $JsxAttributeValueJSXFragmentParserRuleCall_1_1_2_0.stop, grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_2());
+					}
+				)
+			)
+			    |
+			(
+				LeftCurlyBracketKeyword_1_1_3_0=LeftCurlyBracket
 				 {
-					announce($LeftCurlyBracketKeyword_1_1_1_0, grammarAccess.getJSXPropertyAttributeAccess().getLeftCurlyBracketKeyword_1_1_1_0());
+					announce($LeftCurlyBracketKeyword_1_1_3_0, grammarAccess.getJSXPropertyAttributeAccess().getLeftCurlyBracketKeyword_1_1_3_0());
 				}
 				(
 					(
-						JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0=ruleAssignmentExpression{
-							announce($JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0.start, $JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0.stop, grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_1_1());
+						JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_3_1_0=ruleAssignmentExpression{
+							announce($JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_3_1_0.start, $JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_3_1_0.stop, grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_3_1());
 						}
 					)
 				)
-				RightCurlyBracketKeyword_1_1_1_2=RightCurlyBracket
+				RightCurlyBracketKeyword_1_1_3_2=RightCurlyBracket
 				 {
-					announce($RightCurlyBracketKeyword_1_1_1_2, grammarAccess.getJSXPropertyAttributeAccess().getRightCurlyBracketKeyword_1_1_1_2());
+					announce($RightCurlyBracketKeyword_1_1_3_2, grammarAccess.getJSXPropertyAttributeAccess().getRightCurlyBracketKeyword_1_1_3_2());
 				}
 			)
 		)

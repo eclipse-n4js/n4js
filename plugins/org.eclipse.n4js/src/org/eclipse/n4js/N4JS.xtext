@@ -839,13 +839,8 @@ enum AdditiveOperator: add='+' | sub='-';
 
 // Bitwise shift operators ([ECM11] 11.7)
 
-/**
- * Note that the whole expression, including the rhs, must be in the syntactic
- * predicate in order to avoid problems stemming from the parameterized function call
- * and from the assignment operator >>>=
- */
 ShiftExpression <Yield> returns Expression: AdditiveExpression<Yield>
-	(=>({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>))*
+	(=>({ShiftExpression.lhs=current} op=ShiftOperator ->rhs=AdditiveExpression<Yield>))*
 ;
 
 /**  solve conflict with generics, e.g., List<List<C>> */
@@ -905,7 +900,7 @@ LogicalOROperator returns BinaryLogicalOperator: '||';
 ConditionalExpression <In, Yield> returns Expression: LogicalORExpression<In,Yield>
 	(=> ({ConditionalExpression.expression=current} '?') trueExpression=AssignmentExpression<In=true,Yield> ':' falseExpression=AssignmentExpression<In,Yield>)?;
 
-/*
+/**
  * Assignment operators ([ECM11] 11.13)
  */
 AssignmentExpression <In, Yield> returns Expression:
@@ -921,7 +916,9 @@ YieldExpression <In> returns Expression:
 ;
 
 AssignmentOperator returns AssignmentOperator:
-	  '=' | '*=' | '/=' | '%=' | '+=' | '-='
+	  '=' | '*=' | '/=' | '%=' | '+='
+	  /* must be split into two literals since jsx attribute names may end with a dash as in attr-="value" */ 
+	| '-' '=' 
 	| '<<='
 	| '>' '>' '>'? '='
 	| '&=' | '^=' | '|='
@@ -936,8 +933,9 @@ AwaitExpression <In, Yield> returns Expression:
 PromisifyExpression <In, Yield> returns Expression:
 	=>({PromisifyExpression} '@' 'Promisify') expression=AssignmentExpression<In,Yield>;
 
-	// $<Comma operator (11.14)
-
+/**
+ * Comma operator (11.14)
+ */ 
 Expression <In, Yield>:
 	AssignmentExpression<In,Yield> ({CommaExpression.exprs+=current} ',' exprs+=AssignmentExpression<In,Yield> (','	exprs+=AssignmentExpression<In,Yield>)*)?
 ;
@@ -1481,21 +1479,12 @@ LiteralOrComputedPropertyName <Yield>:
 	| '[' expression=AssignmentExpression<In=true,Yield> ']'
 ;
 
-/**
- * Intentionally unused to get rid of bogus lexer errors when
- * the input contains an incomplete asyncArrow?='@=>' keyword, e.g. @=)
- * TODO remove when @=> is removed.
- */
-terminal INCOMPLETE_ASYNC_ARROW:
-	'@='
-;
-
 // ****************************************************************************************************
 // see https://facebook.github.io/jsx/
 // ****************************************************************************************************
 
 JSXElement:
-	'<' jsxElementName=JSXElementName JSXAttributes
+	'<' jsxElementName=JSXElementName jsxAttributes+=JSXAttribute*
 	(
 		  '>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
 		| '/' '>'
@@ -1521,14 +1510,11 @@ JSXElementName:
 JSXElementNameExpression returns Expression:
 	IdentifierRef<false>
 	({ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<false>)*
-//	| JSXNamedspacedName not supported
+//	| JSXNamedspacedName not supported in N4JSX and not supported by React either
 ;
 
-//JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
+//JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX or even by React
 //JSXMemberExpression: JSXIdentifier '.' JSXIdentifier -- defined by means of ParameterizedPropertyAccessExpression
-
-fragment JSXAttributes *:
-	jsxAttributes+=JSXAttribute*;
 
 JSXAttribute:
 	  JSXSpreadAttribute
@@ -1537,9 +1523,23 @@ JSXAttribute:
 JSXSpreadAttribute:
 	'{' '...' expression=AssignmentExpression<In=false, Yield=false> '}';
 
+// Comments or whitespace inbetween is filtered by the value converter
+// Also we use a simplified version of the grammar. The spec would make 
+// this a valid snippet <Comp abstract- private> with two attributes whereas
+// we would consume this as a component with a single attribute that is marked
+// with an error because of the unexpected whitespace
+JSXIdentifier:
+	IdentifierName (('-'|'--') ->(INT | HEX_INT | BINARY_INT | OCTAL_INT | SCIENTIFIC_INT | LEGACY_OCTAL_INT | IdentifierName)?)*
+;
+
 JSXPropertyAttribute:
-	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | ('{'
-	jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')))?;
+	property=[types::IdentifiableElement|JSXIdentifier]
+	('='	(	jsxAttributeValue=StringLiteral
+			|	jsxAttributeValue=JSXElement
+			|	jsxAttributeValue=JSXFragment
+			|	('{' jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')
+			)
+	)?;
 
 
 /* Version (N4IDL) related rules */

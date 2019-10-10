@@ -12,7 +12,6 @@ package org.eclipse.n4js.parser;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -24,13 +23,10 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
-import org.eclipse.xtext.AbstractRule;
-import org.eclipse.xtext.Grammar;
-import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
-import org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser;
-
 import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
+import org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser;
 
 /**
  * <p>
@@ -44,22 +40,17 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
  */
 public class InternalSemicolonInjectingParser extends InternalN4JSParser implements SemicolonInjectionHelper.Callback {
 
-	private static final Field ALL_RULES_FIELD;
-
-	private static Map<String, AbstractRule> allRules;
-
-	private final Field reflectCurrentError;
+	private static final Field reflectCurrentError;
 
 	static {
 		Field f = null;
 		try {
-			f = AbstractInternalAntlrParser.class.getDeclaredField("allRules");
+			f = AbstractInternalAntlrParser.class.getDeclaredField("currentError");
 			f.setAccessible(true);
 		} catch (Exception e) {
-			// Ignore.
+			// ignore
 		}
-
-		ALL_RULES_FIELD = f;
+		reflectCurrentError = f;
 	}
 
 	/**
@@ -90,35 +81,7 @@ public class InternalSemicolonInjectingParser extends InternalN4JSParser impleme
 	 */
 	InternalSemicolonInjectingParser(TokenStream input, N4JSGrammarAccess grammarAccess) {
 		super(input, grammarAccess);
-		Field f = null;
-		try {
-			f = AbstractInternalAntlrParser.class.getDeclaredField("currentError");
-			f.setAccessible(true);
-		} catch (Exception e) {
-			// ignore
-		}
-		this.reflectCurrentError = f;
 		recoverySets = computeRecoverySets();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void registerRules(Grammar grammar) {
-		if (ALL_RULES_FIELD != null) {
-			try {
-				Map<String, AbstractRule> localAllRules = (Map<String, AbstractRule>) ALL_RULES_FIELD.get(this);
-				if (allRules == null) {
-					super.registerRules(grammar);
-					allRules = localAllRules;
-				} else {
-					localAllRules.putAll(allRules);
-				}
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		} else {
-			super.registerRules(grammar);
-		}
 	}
 
 	/**

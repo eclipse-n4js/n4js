@@ -4524,10 +4524,137 @@ ruleShiftExpression:
 	ruleAdditiveExpression
 	(
 		(ruleShiftOperator
-		ruleAdditiveExpression
+		(
+			'new'
+			    |
+			'this'
+			    |
+			'super'
+			    |
+			'yield'
+			    |
+			'get'
+			    |
+			'set'
+			    |
+			'let'
+			    |
+			'project'
+			    |
+			'external'
+			    |
+			'abstract'
+			    |
+			'static'
+			    |
+			'as'
+			    |
+			'from'
+			    |
+			'constructor'
+			    |
+			'of'
+			    |
+			'target'
+			    |
+			'type'
+			    |
+			'union'
+			    |
+			'intersection'
+			    |
+			'This'
+			    |
+			'Promisify'
+			    |
+			'await'
+			    |
+			'async'
+			    |
+			'implements'
+			    |
+			'interface'
+			    |
+			'private'
+			    |
+			'protected'
+			    |
+			'public'
+			    |
+			'out'
+			    |
+			'<'
+			    |
+			'import'
+			    |
+			'true'
+			    |
+			'false'
+			    |
+			'null'
+			    |
+			'/'
+			    |
+			'/='
+			    |
+			'['
+			    |
+			'{'
+			    |
+			'('
+			    |
+			'@'
+			    |
+			'function'
+			    |
+			'class'
+			    |
+			'delete'
+			    |
+			'void'
+			    |
+			'typeof'
+			    |
+			'++'
+			    |
+			'--'
+			    |
+			'+'
+			    |
+			'-'
+			    |
+			'~'
+			    |
+			'!'
+			    |
+			RULE_IDENTIFIER
+			    |
+			RULE_DOUBLE
+			    |
+			RULE_INT
+			    |
+			RULE_BINARY_INT
+			    |
+			RULE_OCTAL_INT
+			    |
+			RULE_LEGACY_OCTAL_INT
+			    |
+			RULE_HEX_INT
+			    |
+			RULE_SCIENTIFIC_INT
+			    |
+			RULE_STRING
+			    |
+			RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL
+			    |
+			RULE_TEMPLATE_HEAD
+		)
 		)=>
 		ruleShiftOperator
-		ruleAdditiveExpression
+		(
+			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+			ruleAdditiveExpression
+		)
 	)*
 ;
 
@@ -4536,10 +4663,135 @@ norm1_ShiftExpression:
 	norm1_AdditiveExpression
 	(
 		(ruleShiftOperator
-		norm1_AdditiveExpression
+		(
+			'new'
+			    |
+			'this'
+			    |
+			'super'
+			    |
+			'get'
+			    |
+			'set'
+			    |
+			'let'
+			    |
+			'project'
+			    |
+			'external'
+			    |
+			'abstract'
+			    |
+			'static'
+			    |
+			'as'
+			    |
+			'from'
+			    |
+			'constructor'
+			    |
+			'of'
+			    |
+			'target'
+			    |
+			'type'
+			    |
+			'union'
+			    |
+			'intersection'
+			    |
+			'This'
+			    |
+			'Promisify'
+			    |
+			'await'
+			    |
+			'async'
+			    |
+			'implements'
+			    |
+			'interface'
+			    |
+			'private'
+			    |
+			'protected'
+			    |
+			'public'
+			    |
+			'out'
+			    |
+			'<'
+			    |
+			'import'
+			    |
+			'true'
+			    |
+			'false'
+			    |
+			'null'
+			    |
+			'/'
+			    |
+			'/='
+			    |
+			'['
+			    |
+			'{'
+			    |
+			'('
+			    |
+			'@'
+			    |
+			'function'
+			    |
+			'class'
+			    |
+			'delete'
+			    |
+			'void'
+			    |
+			'typeof'
+			    |
+			'++'
+			    |
+			'--'
+			    |
+			'+'
+			    |
+			'-'
+			    |
+			'~'
+			    |
+			'!'
+			    |
+			RULE_IDENTIFIER
+			    |
+			RULE_DOUBLE
+			    |
+			RULE_INT
+			    |
+			RULE_BINARY_INT
+			    |
+			RULE_OCTAL_INT
+			    |
+			RULE_LEGACY_OCTAL_INT
+			    |
+			RULE_HEX_INT
+			    |
+			RULE_SCIENTIFIC_INT
+			    |
+			RULE_STRING
+			    |
+			RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL
+			    |
+			RULE_TEMPLATE_HEAD
+		)
 		)=>
 		ruleShiftOperator
-		norm1_AdditiveExpression
+		(
+			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+			norm1_AdditiveExpression
+		)
 	)*
 ;
 
@@ -5794,7 +6046,8 @@ ruleAssignmentOperator:
 		    |
 		'+='
 		    |
-		'-='
+		'-'
+		'='
 		    |
 		'<<='
 		    |
@@ -8136,7 +8389,8 @@ norm1_LiteralOrComputedPropertyName:
 ruleJSXElement:
 	'<'
 	ruleJSXElementName
-	ruleJSXAttributes
+	ruleJSXAttribute
+	*
 	(
 		'>'
 		ruleJSXChild
@@ -8193,12 +8447,6 @@ ruleJSXElementNameExpression:
 	)*
 ;
 
-// Rule JSXAttributes
-ruleJSXAttributes:
-	ruleJSXAttribute
-	*
-;
-
 // Rule JSXAttribute
 ruleJSXAttribute:
 	(
@@ -8216,13 +8464,47 @@ ruleJSXSpreadAttribute:
 	'}'
 ;
 
+// Rule JSXIdentifier
+ruleJSXIdentifier:
+	ruleIdentifierName
+	(
+		(
+			'-'
+			    |
+			'--'
+		)
+		(
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | RULE_INT | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_LEGACY_OCTAL_INT | RULE_IDENTIFIER)=>
+			(
+				RULE_INT
+				    |
+				RULE_HEX_INT
+				    |
+				RULE_BINARY_INT
+				    |
+				RULE_OCTAL_INT
+				    |
+				RULE_SCIENTIFIC_INT
+				    |
+				RULE_LEGACY_OCTAL_INT
+				    |
+				ruleIdentifierName
+			)
+		)?
+	)*
+;
+
 // Rule JSXPropertyAttribute
 ruleJSXPropertyAttribute:
-	ruleIdentifierName
+	ruleJSXIdentifier
 	(
 		'='
 		(
 			ruleStringLiteral
+			    |
+			ruleJSXElement
+			    |
+			ruleJSXFragment
 			    |
 			'{'
 			ruleAssignmentExpression
@@ -9115,8 +9397,6 @@ RULE_TEMPLATE_END : '//3';
 fragment RULE_TEMPLATE_CONTINUATION : '//4';
 
 RULE_NO_LINE_TERMINATOR : '//5';
-
-RULE_INCOMPLETE_ASYNC_ARROW : '@=';
 
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
 

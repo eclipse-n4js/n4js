@@ -483,8 +483,6 @@ PlusSignEqualsSign : '+=';
 
 HyphenMinusHyphenMinus : '--';
 
-HyphenMinusEqualsSign : '-=';
-
 SolidusEqualsSign : '/=';
 
 LessThanSignLessThanSign : '<<';
@@ -624,8 +622,6 @@ RULE_TEMPLATE_END : '//3';
 fragment RULE_TEMPLATE_CONTINUATION : '//4';
 
 RULE_NO_LINE_TERMINATOR : '//5';
-
-RULE_INCOMPLETE_ASYNC_ARROW : '@=';
 
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
 

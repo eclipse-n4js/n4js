@@ -19,8 +19,13 @@ var rootPath = ".."
 var runtimeProjectName = "org.eclipse.n4js"
 var runtimeProjectPath = "${rootPath}/${runtimeProjectName}"
 
-var skipUnusedRules = false
-var stripAllComments = true
+var options = org.eclipse.xtext.xtext.generator.parser.antlr.AntlrOptions {
+	keptBitSetName = "FOLLOW_ruleExpression_in_ruleExpressionStatement"
+	keptBitSetsPattern = "FOLLOW_norm1_Expression_in_ruleExpressionStatement.*"
+	skipUnusedRules = false
+	stripAllComments = true
+}
+
 Workflow {
 	component = XtextGenerator {
 		configuration = N4JSGeneratorModule {
@@ -29,8 +34,6 @@ Workflow {
 				rootPath = rootPath
 				genericIde = {
 					enabled = true
-//					name = "${runtimeProjectName}.ui"
-//					root = "${runtimeProjectPath}.ui"
 				}
 				eclipsePlugin = {
 					enabled = true
@@ -49,7 +52,6 @@ Workflow {
 		language = XtextGeneratorLanguage {
 			name = "org.eclipse.n4js.N4JS"
 			fileExtensions = "n4js,n4jsx,js,jsx,n4jsd,n4idl"
-			// grammarUri = "platform:/resource/${projectName}/src/org/eclipse/n4js/N4JS.xtext"
 
 			referencedResource = "platform:/resource/org.eclipse.emf.ecore.xcore.lib/model/XcoreLang.xcore"
 			referencedResource = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore"
@@ -68,13 +70,9 @@ Workflow {
 
 			fragment = resourceFactory.ResourceFactoryFragment2 {}
 
-			fragment = org.eclipse.n4js.antlr.N4JSAntlrGeneratorFragment2 {
+			fragment = org.eclipse.n4js.antlr.N4JSAntlrGeneratorFragment2 auto-inject {
 				combinedGrammar = false
 				debugGrammar = true
-				options = auto-inject {
-					keptBitSetName = "FOLLOW_ruleExpression_in_ruleExpressionStatement"
-					keptBitSetsPattern = "FOLLOW_norm1_Expression_in_ruleExpressionStatement.*"
-				}
 				antlrParam = "-Xconversiontimeout"
 				antlrParam = "30000"
 			}
@@ -83,15 +81,7 @@ Workflow {
 			fragment = validation.ValidatorFragment2 auto-inject {
 				inheritImplementation = false
 				generateXtendStub = true
-				//    composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"
-				//    composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
 			}
-
-			// scoping and exporting API
-			// actually not needed since the scoping is deeply customized via custom bindings
-			// fragment = scoping.ImportURIScopingFragment2 {
-			//	generateStub = false
-			// }
 
 			fragment = exporting.SimpleNamesFragment2 {}
 
@@ -145,17 +135,13 @@ Workflow {
 			fragment = org.eclipse.n4js.antlr.syntaxcoloring.N4JSHighlightingParserGeneratorFragment2 auto-inject {
 				antlrParam = "-Xconversiontimeout"
 				antlrParam = "30000"
-				options = auto-inject {
-					keptBitSetName = "FOLLOW_ruleExpression_in_ruleExpressionStatement"
-					keptBitSetsPattern = "FOLLOW_norm1_Expression_in_ruleExpressionStatement.*"
-				}
 			}
 
 			fragment = org.eclipse.n4js.antlr.compressor.ParserCompressorFragment2 auto-inject {
 				// enable this flag if you need to debug the content assist parser
 				joinLinesEagerly = false
 				grammarFile = "${runtimeProjectPath}.ui/src-gen/org/eclipse/n4js/ui/editor/syntaxcoloring/InternalN4JSParser.java"
-				grammarFile = "${runtimeProjectPath}.ui/src-gen/org/eclipse/n4js/ui/contentassist/antlr/internal/InternalN4JSParser.java"
+				grammarFile = "${runtimeProjectPath}.ide/src-gen/org/eclipse/n4js/ide/contentassist/antlr/internal/InternalN4JSParser.java"
 				grammarFile = "${runtimeProjectPath}/src-gen/org/eclipse/n4js/parser/antlr/internal/InternalN4JSParser.java"
 			}
 		}
