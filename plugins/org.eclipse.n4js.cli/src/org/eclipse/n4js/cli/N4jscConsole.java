@@ -18,6 +18,12 @@ import java.util.Stack;
  */
 public class N4jscConsole {
 	private static final Stack<String> moduleNames = new Stack<>();
+	private static boolean suppress = false;
+
+	/** Set to {@code true} to disable console print outs */
+	static public void setSuppress(boolean pSuppress) {
+		suppress = pSuppress;
+	}
 
 	/** @return the output stream for user directed output */
 	static public PrintStream getPrintStream() {
@@ -41,7 +47,9 @@ public class N4jscConsole {
 
 	/** Prints a message on the given stream */
 	static public void print(PrintStream ps, String msg) {
-		ps.print(addModuleNamePrefix(msg));
+		if (!suppress) {
+			ps.print(addModuleNamePrefix(msg));
+		}
 	}
 
 	static private String addModuleNamePrefix(String msg) {

@@ -164,6 +164,13 @@ public class N4jscOptions {
 		@GoalRequirements(goals = N4jscGoal.lsp)
 		int port = 5007;
 
+		@Option(name = "--stdio", //
+				usage = "[lsp] uses stdin/stdout for communication instead of sockets", //
+				forbids = "--port", //
+				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+		@GoalRequirements(goals = N4jscGoal.lsp)
+		boolean stdio = false;
+
 		// ARGUMENTS
 
 		@Argument(metaVar = "GOAL", multiValued = false, index = 0, required = false, //
@@ -316,6 +323,11 @@ public class N4jscOptions {
 	/** @return lsp port */
 	public int getPort() {
 		return options.port;
+	}
+
+	/** @return true iff {@code --sysio} */
+	public boolean isStdio() {
+		return options.stdio;
 	}
 
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */

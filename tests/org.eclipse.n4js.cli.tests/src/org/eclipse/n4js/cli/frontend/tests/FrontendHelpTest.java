@@ -95,6 +95,8 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				" --port (-p) N                  : [lsp] set the port of the lsp server\n" +
 				"                                  (default: 5007)\n" +
 				" --showSetup                    : prints n4jsc setup (default: false)\n" +
+				" --stdio                        : [lsp] uses stdin/stdout for communication\n" +
+				"                                  instead of sockets (default: false)\n" +
 				" --testCatalog (-tc) FILE       : [compile] generates a test catalog file to\n" +
 				"                                  the given location. The test catalog lists\n" +
 				"                                  all available tests among the compiled\n" +

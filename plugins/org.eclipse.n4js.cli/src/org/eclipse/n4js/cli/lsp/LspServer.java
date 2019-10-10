@@ -20,15 +20,15 @@ import java.nio.channels.Channels;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.eclipse.lsp4j.jsonrpc.Launcher;
+import org.eclipse.lsp4j.jsonrpc.Launcher.Builder;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
-
-import com.google.common.util.concurrent.Futures;
 
 /**
  *
@@ -51,12 +51,10 @@ public class LspServer {
 		N4jscConsole.println("Start LSP server");
 
 		final ExecutorService threadPool = Executors.newCachedThreadPool();
-		final AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open()
-				.bind(new InetSocketAddress("localhost", options.getPort()));
 
 		try {
 			while (true) {
-				run(serverSocket, threadPool);
+				setupAndRun(threadPool);
 			}
 
 		} finally {
@@ -64,27 +62,69 @@ public class LspServer {
 		}
 	}
 
-	private void run(AsynchronousServerSocketChannel serverSocket, ExecutorService threadPool)
-			throws InterruptedException, ExecutionException, IOException {
-
+	private void setupAndRun(ExecutorService threadPool) throws InterruptedException, ExecutionException, IOException {
 		N4JSLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
 
-		N4jscConsole.println("Listening for LSP clients...");
-		AsynchronousSocketChannel socketChannel = serverSocket.accept().get();
-		N4jscConsole.println("Connected to LSP client");
+		Builder<LanguageClient> lsBuilder = new Builder<LanguageClient>()
+				.setLocalService(languageServer)
+				.setRemoteInterface(LanguageClient.class)
+				.setExecutorService(threadPool)
+		// .wrapMessages(a -> a)
+		// .traceMessages(trace)
+		;
 
-		InputStream in = Channels.newInputStream(socketChannel);
-		OutputStream out = Channels.newOutputStream(socketChannel);
-		Launcher<LanguageClient> launcher = Launcher.createIoLauncher(languageServer, LanguageClient.class, in,
-				out, threadPool, a -> a);
+		if (options.isStdio()) {
+			N4jscConsole.setSuppress(true);
+			setupAndRunWithSocket(languageServer, lsBuilder);
+		} else {
+			setupAndRunWithSystemIO(languageServer, lsBuilder);
+		}
+	}
+
+	private void setupAndRunWithSocket(N4JSLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
+			throws InterruptedException, ExecutionException, IOException {
+
+		try (AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open()
+				.bind(new InetSocketAddress("localhost", options.getPort()));) {
+
+			N4jscConsole.println("Listening for LSP clients...");
+
+			try (AsynchronousSocketChannel socketChannel = serverSocket.accept().get();
+					InputStream in = Channels.newInputStream(socketChannel);
+					OutputStream out = Channels.newOutputStream(socketChannel);) {
+
+				N4jscConsole.println("Connected to LSP client");
+
+				run(languageServer, lsBuilder, in, out);
+			}
+		}
+	}
+
+	private void setupAndRunWithSystemIO(N4JSLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
+			throws InterruptedException {
+
+		run(languageServer, lsBuilder, System.in, System.out);
+	}
+
+	private void run(N4JSLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder, InputStream in,
+			OutputStream out)
+			throws InterruptedException {
+
+		Launcher<LanguageClient> launcher = lsBuilder
+				.setInput(in)
+				.setOutput(out)
+				.create();
+
 		languageServer.connect(launcher.getRemoteProxy());
-		Futures.getUnchecked(launcher.startListening());
+		Future<Void> future = launcher.startListening();
+		N4jscConsole.println("LSP Server connected");
+
+		while (!future.isDone()) {
+			Thread.sleep(10_000l);
+		}
 
 		N4jscConsole.println("Shutdown connection to LSP client");
 		languageServer.getRequestManager().shutdown();
-		in.close();
-		out.close();
-		socketChannel.close();
 	}
 
 }
