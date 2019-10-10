@@ -37,7 +37,6 @@ pipeline {
                      ':/shared/common/java/openjdk/jdk-11/bin'
         MAVEN_OPTS = '-Xmx4G'
         JAVA_HOME  = '/shared/common/java/openjdk/jdk-11'
-        TIMESTAMP  = new Date().format("yyyyMMddHHmm")
     }
 
     triggers {

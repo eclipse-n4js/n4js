@@ -93,6 +93,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
+                echo "Deploying version ${N4JS_VERSION} of N4JS IDE and headless builder ..."
+
                 echo 'START: moving old products / update sites to archive.eclipse.org (those that are older than a week):'
 //                sh """\
 //                    cd /home/data/httpd/download.eclipse.org/n4js
