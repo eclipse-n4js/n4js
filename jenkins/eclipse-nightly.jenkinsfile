@@ -40,7 +40,7 @@ pipeline {
     }
 
     triggers {
-        cron('H 23 * * *') // Nightly build every day a 11pm (23:00)
+        cron('H 22 * * *') // build every night sometime after 10pm (22:00)
     }
 
     stages {
