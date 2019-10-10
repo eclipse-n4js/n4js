@@ -149,9 +149,9 @@ cat > ${VERSION_INFO_FILE} <<EOF
 EOF
 cat ${VERSION_INFO_FILE}
 
-N4JS_VERSION_PROPERTIES_FILE="${REPO_ROOT_DIR}/plugins/org.eclipse.n4js.utils/n4js-version.properties"
-echo "Writing N4JS version ${N4JS_VERSION} to file ${N4JS_VERSION_PROPERTIES_FILE}"
-rm -f ${N4JS_VERSION_PROPERTIES_FILE}
-echo "n4js.version = ${N4JS_VERSION}" > ${N4JS_VERSION_PROPERTIES_FILE}
+LANGUAGE_VERSION_PROPERTIES_FILE="${REPO_ROOT_DIR}/plugins/org.eclipse.n4js/language-version.properties"
+echo "Writing language version ${N4JS_VERSION} to file ${LANGUAGE_VERSION_PROPERTIES_FILE}"
+rm -f ${LANGUAGE_VERSION_PROPERTIES_FILE}
+echo "language.version = ${N4JS_VERSION}" > ${LANGUAGE_VERSION_PROPERTIES_FILE}
 
 echo "==== COMPUTE VERSION - DONE"

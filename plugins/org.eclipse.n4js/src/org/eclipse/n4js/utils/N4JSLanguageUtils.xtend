@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.utils
 
+import java.io.IOException
+import java.io.InputStream
+import java.util.Properties
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
@@ -115,6 +118,33 @@ public class N4JSLanguageUtils {
 	 * See {@link ComputedPropertyNameValueConverter#SYMBOL_IDENTIFIER_PREFIX}.
 	 */
 	public static final String SYMBOL_IDENTIFIER_PREFIX = ComputedPropertyNameValueConverter.SYMBOL_IDENTIFIER_PREFIX;
+
+	private static final String LANGUAGE_VERSION_PROPERTIES_FILE_NAME = "language-version.properties";
+
+	private static String languageVersionStr = null;
+
+	/**
+	 * Returns the N4JS language version as defined in file {@value #LANGUAGE_VERSION_PROPERTIES_FILE_NAME} in
+	 * the root folder of this bundle.
+	 */
+	def public static String getLanguageVersion() {
+		if (languageVersionStr !== null) {
+			return languageVersionStr;
+		}
+		var Properties properties;
+		try (val InputStream in = N4JSLanguageUtils.getClassLoader().getResourceAsStream(LANGUAGE_VERSION_PROPERTIES_FILE_NAME)) {
+			properties = new Properties();
+			properties.load(in);
+		} catch (IOException e) {
+			throw new RuntimeException("unable to load properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME, e);
+		}
+		val versionStr =  properties.getProperty("language.version");
+		if (versionStr === null) {
+			throw new RuntimeException("properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME + " does not contain property language.version");
+		}
+		languageVersionStr = versionStr;
+		return languageVersionStr;
+	}
 
 	/**
 	 * If the given function definition is asynchronous, will wrap given return type into a Promise.
