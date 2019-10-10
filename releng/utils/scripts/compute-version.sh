@@ -143,8 +143,8 @@ cat > ${VERSION_INFO_FILE} <<EOF
 {
     "n4jsVersion": "${N4JS_VERSION}",
     "n4jsLibsVersion": "${N4JS_LIBS_VERSION}",
-    "n4jsLibsPublishingRequired": "${N4JS_LIBS_PUBLISHING_REQUIRED}",
-    "n4jsLibsDistTag": "${N4JS_LIBS_DIST_TAG}"
+    "n4jsLibsDistTag": "${N4JS_LIBS_DIST_TAG}",
+    "n4jsLibsPublishingRequired": "${N4JS_LIBS_PUBLISHING_REQUIRED}"
 }
 EOF
 cat ${VERSION_INFO_FILE}
