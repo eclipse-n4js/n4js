@@ -25,7 +25,7 @@ import org.eclipse.n4js.n4JS.ConditionalExpression;
  * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
  * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
  */
-class CoalescExpressionFactory {
+class CoalesceExpressionFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, CoalesceExpression coalesceExpr) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), coalesceExpr);

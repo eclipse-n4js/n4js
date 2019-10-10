@@ -164,7 +164,7 @@ final public class CFEFactoryDispatcher {
 
 		@Override
 		public ComplexNode caseCoalesceExpression(CoalesceExpression feature) {
-			return CoalescExpressionFactory.buildComplexNode(astIter, feature);
+			return CoalesceExpressionFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
