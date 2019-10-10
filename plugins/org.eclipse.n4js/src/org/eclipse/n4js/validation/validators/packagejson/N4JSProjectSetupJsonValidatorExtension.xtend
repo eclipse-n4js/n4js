@@ -360,7 +360,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidato
 	}
 	
 	/** IDEBUG-266 issue error warning on cyclic dependencies. */
-	// TODO: Check if cyclic dependencies are already found in BuildManager#sortByDependencies()
+	// TODO: GH-1500: Check if cyclic dependencies are already found in BuildManager#sortByDependencies()
 	// @Check // Commented out because there are performance issues.
 	def checkCyclicDependencies(JSONDocument document) {
 		val project = findProject(document.eResource.URI).orNull;
