@@ -1,3 +1,2 @@
-0=LANGUAGE_VERSION_STRING
-1=${buildTime}
-2=${gitSha1}
+0=${buildTime}
+1=${gitSha1}

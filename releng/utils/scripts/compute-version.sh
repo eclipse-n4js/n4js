@@ -161,10 +161,10 @@ echo "Writing language version ${LANGUAGE_VERSION} to file ${LANGUAGE_VERSION_PR
 rm -f ${LANGUAGE_VERSION_PROPERTIES_FILE}
 echo "language.version = ${LANGUAGE_VERSION}" > ${LANGUAGE_VERSION_PROPERTIES_FILE}
 
-echo "Replacing 'LANGUAGE_VERSION_STRING' in all 'about.mappings' files by language version ${LANGUAGE_VERSION}"
-find "${REPO_ROOT_DIR}" -name about.mappings -exec sed -i "" "s/LANGUAGE_VERSION_STRING/${LANGUAGE_VERSION}/g" {} \;
-if [ -d "${REPO_ROOT_DIR}/../n4js-n4" ]; then
-    find "${REPO_ROOT_DIR}/../n4js-n4" -name about.mappings -exec sed -i "" "s/LANGUAGE_VERSION_STRING/${LANGUAGE_VERSION}/g" {} \;
+echo "Replacing 'LANGUAGE_VERSION_STRING' in 'plugin.properties' files of product bundles by language version ${LANGUAGE_VERSION}"
+sed -i.bak "s/LANGUAGE_VERSION_STRING/${LANGUAGE_VERSION}/g" "${REPO_ROOT_DIR}/plugins/org.eclipse.n4js.product/plugin.properties"
+if [ -f "${REPO_ROOT_DIR}/../n4js-n4/plugins/com.enfore.n4js.product/plugin.properties" ]; then
+    sed -i.bak "s/LANGUAGE_VERSION_STRING/${LANGUAGE_VERSION}/g" "${REPO_ROOT_DIR}/../n4js-n4/plugins/com.enfore.n4js.product/plugin.properties"
 fi
 
 echo "==== COMPUTE VERSION - DONE"
