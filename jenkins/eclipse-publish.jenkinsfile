@@ -61,6 +61,11 @@ pipeline {
                     N4JS_LIBS_DIST_TAG = sh(returnStdout: true, script: 'jq -r ".n4jsLibsDistTag" n4js/version-info.json').trim();
                     // note: we never publish any of the n4js-libs in this build,
                     // so we can ignore the other properties in file version-info.json
+
+                    def onMaster = sh(returnStdout: true, script: 'cd n4js ; git branch master --contains HEAD').trim().length() > 0;
+                    if (!onMaster && N4JS_LIBS_DIST_TAG == 'latest') {
+                        error "not allowed to publish from non-master branch without configuring a dist-tag in file n4js-libs/version.json"
+                    }
                 }
             }
         }
