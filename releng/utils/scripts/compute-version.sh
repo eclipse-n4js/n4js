@@ -26,6 +26,14 @@ N4JS_LIBS_REPRESENTATIVE="n4js-runtime"
 # version of the n4js-libs packages)
 NPM_REGISTRY="http://registry.npmjs.org"
 
+# option -i of sed is incompatible between GNU and BSD unix, hence we provide
+# our own function for in-place modification of files:
+function sed_in_place() {
+    echo "Replacing '$1' by '$2' in $3"
+    sed -e "s/$1/$2/g" "$3" > "$3.new"
+    mv -f "$3.new" "$3"
+}
+
 
 echo "==== COMPUTE VERSION (compute-version.sh)"
 
@@ -161,10 +169,10 @@ echo "Writing language version ${LANGUAGE_VERSION} to file ${LANGUAGE_VERSION_PR
 rm -f ${LANGUAGE_VERSION_PROPERTIES_FILE}
 echo "language.version = ${LANGUAGE_VERSION}" > ${LANGUAGE_VERSION_PROPERTIES_FILE}
 
-echo "Replacing 'LANGUAGE_VERSION_STRING' in 'plugin.properties' files of product bundles by language version ${LANGUAGE_VERSION}"
-sed -i.bak "s/LANGUAGE_VERSION_STRING/${LANGUAGE_VERSION}/g" "${REPO_ROOT_DIR}/plugins/org.eclipse.n4js.product/plugin.properties"
+echo "Writing language version ${LANGUAGE_VERSION} to the 'plugin.properties' file of product bundles:"
+sed_in_place "LANGUAGE_VERSION_STRING" "${LANGUAGE_VERSION}" "${REPO_ROOT_DIR}/plugins/org.eclipse.n4js.product/plugin.properties"
 if [ -f "${REPO_ROOT_DIR}/../n4js-n4/plugins/com.enfore.n4js.product/plugin.properties" ]; then
-    sed -i.bak "s/LANGUAGE_VERSION_STRING/${LANGUAGE_VERSION}/g" "${REPO_ROOT_DIR}/../n4js-n4/plugins/com.enfore.n4js.product/plugin.properties"
+    sed_in_place "LANGUAGE_VERSION_STRING" "${LANGUAGE_VERSION}" "${REPO_ROOT_DIR}/../n4js-n4/plugins/com.enfore.n4js.product/plugin.properties"
 fi
 
 echo "==== COMPUTE VERSION - DONE"
