@@ -156,7 +156,7 @@ cat > ${VERSION_INFO_FILE} <<EOF
 EOF
 cat ${VERSION_INFO_FILE}
 
-LANGUAGE_VERSION_PROPERTIES_FILE="${REPO_ROOT_DIR}/plugins/org.eclipse.n4js/language-version.properties"
+LANGUAGE_VERSION_PROPERTIES_FILE="${REPO_ROOT_DIR}/plugins/org.eclipse.n4js/res/language-version.properties"
 echo "Writing language version ${LANGUAGE_VERSION} to file ${LANGUAGE_VERSION_PROPERTIES_FILE}"
 rm -f ${LANGUAGE_VERSION_PROPERTIES_FILE}
 echo "language.version = ${LANGUAGE_VERSION}" > ${LANGUAGE_VERSION_PROPERTIES_FILE}

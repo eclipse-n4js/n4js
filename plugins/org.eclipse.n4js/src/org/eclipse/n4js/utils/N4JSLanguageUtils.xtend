@@ -124,8 +124,7 @@ public class N4JSLanguageUtils {
 	private static String languageVersionStr = null;
 
 	/**
-	 * Returns the N4JS language version as defined in file {@value #LANGUAGE_VERSION_PROPERTIES_FILE_NAME} in
-	 * the root folder of this bundle.
+	 * Returns the N4JS language version as defined in file {@value #LANGUAGE_VERSION_PROPERTIES_FILE_NAME}.
 	 */
 	def public static String getLanguageVersion() {
 		if (languageVersionStr !== null) {
@@ -133,6 +132,9 @@ public class N4JSLanguageUtils {
 		}
 		var Properties properties;
 		try (val InputStream in = N4JSLanguageUtils.getClassLoader().getResourceAsStream(LANGUAGE_VERSION_PROPERTIES_FILE_NAME)) {
+			if (in === null) {
+				throw new RuntimeException("unable to find properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME);
+			}
 			properties = new Properties();
 			properties.load(in);
 		} catch (IOException e) {
