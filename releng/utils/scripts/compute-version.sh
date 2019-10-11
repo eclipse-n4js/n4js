@@ -75,8 +75,17 @@ if [ \( "$N4JS_LIBS_COMMIT_ID_PUBLIC" = "null" \) -o \( "$N4JS_LIBS_COMMIT_ID_PU
 fi
 echo "  - commit ID of latest published n4js-libs     : $N4JS_LIBS_COMMIT_ID_PUBLIC"
 echo "  - commit ID of local n4js-libs                : $N4JS_LIBS_COMMIT_ID_LOCAL"
+if [ "${N4JS_LIBS_COMMIT_ID_LOCAL}" = "${N4JS_LIBS_COMMIT_ID_PUBLIC}" ]; then
+    echo "-> commit IDs equal"
+    echo "-> publishing of a new version of n4js-libs *NOT* required"
+    N4JS_LIBS_PUBLISHING_REQUIRED="false"
+else
+    echo "-> commit IDs differ (i.e. changes since last publication)"
+    echo "-> publishing of a new version of n4js-libs is required"
+    N4JS_LIBS_PUBLISHING_REQUIRED="true"
+fi
 
-echo "==== STEP 4/6: Compute n4js-libs version number corresponding to this build ..."
+echo "==== STEP 4/6: Compute n4js-libs version number for this build ..."
 VERSION_MAJOR_REQUESTED=`jq -r '.major' version.json`
 VERSION_MINOR_REQUESTED=`jq -r '.minor' version.json`
 VERSION_DIST_TAG_REQUESTED=`jq -r '.tag' version.json`
@@ -84,13 +93,8 @@ echo "Requested major segment       : ${VERSION_MAJOR_REQUESTED} (from file n4js
 echo "Requested minor segment       : ${VERSION_MINOR_REQUESTED} (from file n4js-libs/version.json)"
 echo "Requested dist tag            : ${VERSION_DIST_TAG_REQUESTED} (from file n4js-libs/version.json)"
 echo "Latest published version      : ${N4JS_LIBS_VERSION_PUBLIC}"
-if [ "${N4JS_LIBS_COMMIT_ID_LOCAL}" = "${N4JS_LIBS_COMMIT_ID_PUBLIC}" ]; then
-    echo '-> will NOT publish a new version of n4js-libs (because commit IDs are identical, i.e. no changes since last publication)'
-    echo "-> this build's n4js-libs version is the version of the latest n4js-libs on npmjs.org: ${N4JS_LIBS_VERSION_PUBLIC}"
-    N4JS_LIBS_BASE_VERSION="${N4JS_LIBS_VERSION_PUBLIC}"
-    N4JS_LIBS_PUBLISHING_REQUIRED="false"
-else
-    echo '-> publishing of a new version of n4js-libs is required (because commit IDs are different, i.e. changes since last publication)'
+if [ "${N4JS_LIBS_PUBLISHING_REQUIRED}" = "true" ]; then
+    echo "-> this build will publish a new version of n4js-libs"
     echo "-> this build's n4js-libs version is a new, incremented version ..."
     MAJOR_MINOR_PATTERN="([0-9]+)\\.([0-9]+)\\..*"
     if [[ "${N4JS_LIBS_VERSION_PUBLIC}" =~ ${MAJOR_MINOR_PATTERN} ]]; then
@@ -102,21 +106,24 @@ else
     fi
     if [ "$VERSION_MAJOR_REQUESTED" -gt "$VERSION_MAJOR_PUBLIC" ]; then
         echo "New major version segment requested in file n4js-libs/version.json -> will bump major segment"
-        PUBLISH_VERSION="$VERSION_MAJOR_REQUESTED.$VERSION_MINOR_REQUESTED.0"
+        INCREMENTED_VERSION="$VERSION_MAJOR_REQUESTED.$VERSION_MINOR_REQUESTED.0"
     elif [ "$VERSION_MINOR_REQUESTED" -gt "$VERSION_MINOR_PUBLIC" ]; then
         echo "New minor version segment requested in file n4js-libs/version.json -> will bump minor segment"
         # for major segment we use the latest public version as template to make sure
         # we do not end up with a lower version than the latest public version
-        PUBLISH_VERSION="$VERSION_MAJOR_PUBLIC.$VERSION_MINOR_REQUESTED.0"
+        INCREMENTED_VERSION="$VERSION_MAJOR_PUBLIC.$VERSION_MINOR_REQUESTED.0"
     elif [ "$VERSION_MAJOR_REQUESTED" -eq "$VERSION_MAJOR_PUBLIC" ] && [ "$VERSION_MINOR_REQUESTED" -eq "$VERSION_MINOR_PUBLIC" ]; then
         echo "No new major/minor version segment requested in file n4js-libs/version.json -> will bump patch segment"
-        PUBLISH_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
+        INCREMENTED_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
     else
         echo "ERROR: requested major/minor segment must not be lower than latest published major/minor segment!"
         exit -1
     fi
-    N4JS_LIBS_BASE_VERSION="${PUBLISH_VERSION}"
-    N4JS_LIBS_PUBLISHING_REQUIRED="true"
+    N4JS_LIBS_BASE_VERSION="${INCREMENTED_VERSION}"
+else
+    echo "-> this build will NOT publish a new version of n4js-libs"
+    echo "-> this build's n4js-libs version is the version of the latest n4js-libs on npmjs.org: ${N4JS_LIBS_VERSION_PUBLIC}"
+    N4JS_LIBS_BASE_VERSION="${N4JS_LIBS_VERSION_PUBLIC}"
 fi
 N4JS_LIBS_VERSION="${N4JS_LIBS_BASE_VERSION}"
 N4JS_LIBS_DIST_TAG="latest"
@@ -127,13 +134,13 @@ if [ \( "$VERSION_DIST_TAG_REQUESTED" != "null" \) -a \( "$VERSION_DIST_TAG_REQU
 fi
 echo "This build's n4js-libs version: ${N4JS_LIBS_VERSION}"
 
-echo "==== STEP 5/6: Computing N4JS version (based on n4js-libs version) ..."
+echo "==== STEP 5/6: Computing language version (derived from n4js-libs version) ..."
 if [ "$N4JS_LIBS_DIST_TAG" != "latest" ]; then
-    N4JS_VERSION="${N4JS_LIBS_BASE_VERSION}.${N4JS_LIBS_DIST_TAG}_v${TIMESTAMP_DATE}-${TIMESTAMP_TIME}"
+    LANGUAGE_VERSION="${N4JS_LIBS_BASE_VERSION}.${N4JS_LIBS_DIST_TAG}_v${TIMESTAMP_DATE}-${TIMESTAMP_TIME}"
 else
-    N4JS_VERSION="${N4JS_LIBS_BASE_VERSION}.v${TIMESTAMP_DATE}-${TIMESTAMP_TIME}"
+    LANGUAGE_VERSION="${N4JS_LIBS_BASE_VERSION}.v${TIMESTAMP_DATE}-${TIMESTAMP_TIME}"
 fi
-echo "This build's N4JS version: ${N4JS_VERSION}"
+echo "This build's language version: ${LANGUAGE_VERSION}"
 
 echo "==== STEP 6/6: Writing version information to output files ..."
 
@@ -141,17 +148,17 @@ VERSION_INFO_FILE="${REPO_ROOT_DIR}/version-info.json"
 echo "Writing entire version information to file ${VERSION_INFO_FILE}"
 cat > ${VERSION_INFO_FILE} <<EOF
 {
-    "n4jsVersion": "${N4JS_VERSION}",
+    "languageVersion": "${LANGUAGE_VERSION}",
     "n4jsLibsVersion": "${N4JS_LIBS_VERSION}",
     "n4jsLibsDistTag": "${N4JS_LIBS_DIST_TAG}",
-    "n4jsLibsPublishingRequired": "${N4JS_LIBS_PUBLISHING_REQUIRED}"
+    "n4jsLibsPublishingRequired": ${N4JS_LIBS_PUBLISHING_REQUIRED}
 }
 EOF
 cat ${VERSION_INFO_FILE}
 
 LANGUAGE_VERSION_PROPERTIES_FILE="${REPO_ROOT_DIR}/plugins/org.eclipse.n4js/language-version.properties"
-echo "Writing language version ${N4JS_VERSION} to file ${LANGUAGE_VERSION_PROPERTIES_FILE}"
+echo "Writing language version ${LANGUAGE_VERSION} to file ${LANGUAGE_VERSION_PROPERTIES_FILE}"
 rm -f ${LANGUAGE_VERSION_PROPERTIES_FILE}
-echo "language.version = ${N4JS_VERSION}" > ${LANGUAGE_VERSION_PROPERTIES_FILE}
+echo "language.version = ${LANGUAGE_VERSION}" > ${LANGUAGE_VERSION_PROPERTIES_FILE}
 
 echo "==== COMPUTE VERSION - DONE"
