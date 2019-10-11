@@ -29,6 +29,10 @@ pipeline {
                     echo 'Building and testing, using display:' + DISPLAY
                     // dir('n4js') {
                         script {
+                        	def envvars = [ 
+                        		'-DDISPLAY=localhost'+DISPLAY+'"',
+                                '-DargLine="-DDISPLAY=localhost'+DISPLAY+'"'
+                        	].join(' ')
                             def options = [
                                 '--batch-mode',
                                 //'--quiet',
@@ -39,8 +43,7 @@ pipeline {
                                  '-Dmaven.test.failure.ignore',
                                  "--fail-at-end",
                                 '-DWORKSPACE=' + env.WORKSPACE,
-                                '-DexcludeJRE',
-                                '-DargLine="-DDISPLAY='+DISPLAY+'"'
+                                '-DexcludeJRE'                               
                             ].join(' ')
                             def profiles = [
                                 'buildProduct',
@@ -57,7 +60,7 @@ pipeline {
                                 git log -n 1
                                 npm version
                             """
-                            sh "mvn clean verify -P${profiles} ${options}"
+                            sh "mvn ${envvars} clean verify -P${profiles} ${options}"
                             // works:
                             // sh "mvn clean verify ${options}"
                             // for quick testing: 7
