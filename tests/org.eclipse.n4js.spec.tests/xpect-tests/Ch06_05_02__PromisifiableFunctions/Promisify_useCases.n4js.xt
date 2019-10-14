@@ -110,12 +110,14 @@ async function testWithMethod(allDone : {function()}) {
 
 	console.log('use case #1: with await, long syntax');
 	var res21 = await @Promisify c.mMany('some path');
-	console.log('-> res21:', res21);
+	console.log('-> res21:');
+	[...res21].forEach(o => console.log(o));
 
 	console.log('use case #2: with await, short syntax');
 	var res22 = await @Promisify c.mMany('some path');
-	console.log('-> res22:', res22);
-
+	console.log('-> res22:');
+	[...res22].forEach(o => console.log(o));
+	
 	console.log('****** method mNone:');
 
 	console.log('use case #1: with await, long syntax');
@@ -142,11 +144,13 @@ async function testWithMethod(allDone : {function()}) {
 
 	console.log('use case #1: with await, long syntax');
 	var res51 = await @Promisify c.mManyNoErr('some path');
-	console.log('-> res51:', res51);
+	console.log('-> res51:');
+	[...res51].forEach(o => console.log(o));
 
 	console.log('use case #2: with await, short syntax');
 	var res52 = await @Promisify c.mManyNoErr('some path');
-	console.log('-> res52:', res52);
+	console.log('-> res52:');
+	[...res52].forEach(o => console.log(o));
 
 	console.log('****** method mNoneNoErr:');
 
@@ -241,13 +245,15 @@ use case #2: with await, short syntax
 -> res12: hello from C#mOne! (value of field: valueOfField)
 ****** method mMany:
 use case #1: with await, long syntax
--> res21: [ 'hello from C#mMany! (value of field: valueOfField)',
-  42,
-  { prop: 'value' } ]
+-> res21:
+hello from C#mMany! (value of field: valueOfField)
+42
+{ prop: 'value' }
 use case #2: with await, short syntax
--> res22: [ 'hello from C#mMany! (value of field: valueOfField)',
-  42,
-  { prop: 'value' } ]
+-> res22:
+hello from C#mMany! (value of field: valueOfField)
+42
+{ prop: 'value' }
 ****** method mNone:
 use case #1: with await, long syntax
 -> res31: undefined
@@ -260,13 +266,15 @@ use case #2: with await, short syntax
 -> res42: hello from C#mOneNoErr! (value of field: valueOfField)
 ****** method mManyNoErr:
 use case #1: with await, long syntax
--> res51: [ 'hello from C#mManyNoErr! (value of field: valueOfField)',
-  42,
-  { prop: 'value' } ]
+-> res51:
+hello from C#mManyNoErr! (value of field: valueOfField)
+42
+{ prop: 'value' }
 use case #2: with await, short syntax
--> res52: [ 'hello from C#mManyNoErr! (value of field: valueOfField)',
-  42,
-  { prop: 'value' } ]
+-> res52:
+hello from C#mManyNoErr! (value of field: valueOfField)
+42
+{ prop: 'value' }
 ****** method mNoneNoErr:
 use case #1: with await, long syntax
 -> res61: undefined
