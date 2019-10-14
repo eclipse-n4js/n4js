@@ -75,17 +75,18 @@ public class LspServer {
 
 		if (options.isStdio()) {
 			N4jscConsole.setSuppress(true);
-			setupAndRunWithSocket(languageServer, lsBuilder);
-		} else {
 			setupAndRunWithSystemIO(languageServer, lsBuilder);
+		} else {
+			setupAndRunWithSocket(languageServer, lsBuilder);
 		}
 	}
 
 	private void setupAndRunWithSocket(N4JSLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
 			throws InterruptedException, ExecutionException, IOException {
 
-		try (AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open()
-				.bind(new InetSocketAddress("localhost", options.getPort()));) {
+		InetSocketAddress address = new InetSocketAddress("localhost", options.getPort());
+
+		try (AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open().bind(address);) {
 
 			N4jscConsole.println("Listening for LSP clients...");
 

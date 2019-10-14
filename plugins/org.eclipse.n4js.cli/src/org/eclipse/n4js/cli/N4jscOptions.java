@@ -325,7 +325,7 @@ public class N4jscOptions {
 		return options.port;
 	}
 
-	/** @return true iff {@code --sysio} */
+	/** @return true iff {@code --stdio} */
 	public boolean isStdio() {
 		return options.stdio;
 	}
