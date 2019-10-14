@@ -5,12 +5,13 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- * Based oin eclipse-nightly.jenkinsfile
+ * Based on eclipse-nightly.jenkinsfile
  */
 pipeline {
     agent any
 
     environment {
+    	// paths to tools, some common paths you may found on other machines are commented out
         NODEJS_PATH= '/usr/bin' // '/shared/common/node-v10.15.3-linux-x64/bin'
         YARN_PATH  = '/usr/bin' // '/shared/common/yarn/1.15.2/bin'
         // PATH       = "${PATH}"
@@ -27,52 +28,52 @@ pipeline {
                 echo 'Starting Xvnc'
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
                     echo 'Building and testing, using display ' + DISPLAY
-                    // dir('n4js') {
-                        script {
-                        	def envvars = [ 
-                        		'-DDISPLAY=localhost'+DISPLAY,
-                                '-DargLine="-DDISPLAY=localhost'+DISPLAY+'"'
-                        	].join(' ')
-                            def options = [
-                                '--batch-mode',
-                                //'--quiet',
-                                '--update-snapshots',
-                                '--show-version',
-                                '-Dtycho.localArtifacts=ignore',
-                                // for adjusting the script only, renable later on:
-                                 '-Dmaven.test.failure.ignore',
-                                 "--fail-at-end",
-                                '-DWORKSPACE=' + env.WORKSPACE,
-                                '-DexcludeJRE'                               
-                            ].join(' ')
-                            def profiles = [
-                                'buildProduct',
-                                'execute-plugin-tests',
-                               // 'execute-plugin-ui-tests',
-                                'execute-ecma-tests',
-                                'execute-accesscontrol-tests',
-                                'execute-smoke-tests'
-                             //'execute-hlc-integration-tests'
-                            ].join(',')
+                    script {
+                    	def envvars = [ 
+                    		'-DDISPLAY=localhost'+DISPLAY,
+                            '-DargLine="-DDISPLAY=localhost'+DISPLAY+'"'
+                    	].join(' ')
+                        def options = [
+                            '--batch-mode',
+                            //'--quiet',
+                            '--update-snapshots',
+                            '--show-version',
+                            '-Dtycho.localArtifacts=ignore',
+                            // for adjusting the script only, renable later on:
+                             '-Dmaven.test.failure.ignore',
+                             "--fail-at-end",
+                            '-DWORKSPACE=' + env.WORKSPACE,
+                            '-DexcludeJRE'                               
+                        ].join(' ')
+                        def profiles = [
+                            'buildProduct',
+                            'execute-plugin-tests',
+                            'execute-plugin-ui-tests',
+                            'execute-ecma-tests',
+                            'execute-accesscontrol-tests',
+                            'execute-smoke-tests'
+                         //'execute-hlc-integration-tests'
+                        ].join(',')
 
-                            sh """\
-                                pwd
-                                git log -n 1
-                                npm version
-                            """
-                            sh "mvn ${envvars} clean verify -P${profiles} ${options}"
-                            // works:
-                            // sh "mvn clean verify ${options}"
-                            // for quick testing: 7
-                            // sh "mvn -o clean"
+                        sh """\
+                            pwd
+                            git log -n 1
+                            npm version
+                        """
+                        sh "mvn ${envvars} clean verify -P${profiles} ${options}"
+                        
+                        // The following calls may be used for testing purposes:
+                        // sh "mvn clean verify ${options}"
+                        // for quick testing:
+                        // sh "mvn -o clean"
 
-                          // sh "ls -Ral builds/org.eclipse.n4js.product.build/target/repository/"
-                        }
-                    // } // end dir
+						// prints out the target folder, not needed here but useful in other cases
+                        // sh "ls -Ral builds/org.eclipse.n4js.product.build/target/repository/"
+                    }
                 } // end wrap
             } // end steps
         } // end stage
-        /*
+        /* commented out here, may be introduced again, left skeleton here:
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
@@ -91,17 +92,12 @@ pipeline {
             //junit '**/failsafe-reports/**/*.xml'
         }
         cleanup {
-            // excute here in case archiving fails in 'always'
-            //mail to: 'some.one@some.where.eu',
-            //     subject: "${currentBuild.result}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-            //     body:  """\
-            //            ${currentBuild.result}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':
-            //            Check console output at '${env.BUILD_URL}'
-            //            """
-
             // Execute after every other post condition has been evaluated, regardless of status
             // See https://jenkins.io/doc/book/pipeline/syntax/#post
-            echo 'Cleaning up workspace'
+            
+            // "real" cleaning will be added after some real world experience with the script
+            echo "Not cleaning yet, please check server yourself!"
+            // echo 'Cleaning up workspace'
             // Not today: deleteDir()
         }
     }

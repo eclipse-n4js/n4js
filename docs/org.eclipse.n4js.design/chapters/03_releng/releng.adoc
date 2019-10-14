@@ -37,6 +37,9 @@ The most accurate documentation for our JIPP can be found at https://wiki.eclips
 Note that many other documents do not apply to our JIPP, at the moment, as they refer to the new
 infrastructure, e.g. https://wiki.eclipse.org/CBI and https://wiki.eclipse.org/Jenkins.
 
+=== Build on other machines
+
+There is a blog post https://jevopisdeveloperblog.blogspot.com/2019/10/setup-github-triggered-build-machine.html describing how to set up a Github triggered build machine for Eclipse N4JS. This post describes in detail how to set up Jenkins and necessary tools.
 
 == Build the N4JS IDE from command line
 
