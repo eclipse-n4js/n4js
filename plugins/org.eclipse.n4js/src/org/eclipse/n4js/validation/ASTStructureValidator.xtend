@@ -720,7 +720,7 @@ class ASTStructureValidator {
 				model,
 				producer,
 				validLabels,
-				constraints.allowNestedFunctions(!constraints.isStrict).allowBreak(true)
+				constraints.allowNestedFunctions(!constraints.isStrict)
 			)
 		} finally {
 			validLabels.remove(model)

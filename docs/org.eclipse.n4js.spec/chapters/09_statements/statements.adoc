@@ -301,6 +301,28 @@ $f.varDecl \neq null \lor (f.initExpr \neq null \land isRValue(f.initExpr))$
 ++++
 --
 
+=== Break Statement
+
+[discrete]
+==== Syntax [[break-statement-syntax]]
+
+The break statement is defined as in cite:[ECMA11a].
+
+[source,xtext]
+----
+BreakStatement <Yield>:	{BreakStatement} 'break' 
+      (label=[LabelledStatement|BindingIdentifier<Yield>])? Semi;
+----
+
+==== Semantics [[break-statement-semantics]]
+
+.Break statement
+[req,id=GH-218,version=1]
+--
+1.  Break is only allowed within switch, do-while, while, or for statements as
+	defined in cite:[ECMA11a].
+--
+
 [.language-n4js]
 === Return Statement
 

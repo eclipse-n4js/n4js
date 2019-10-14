@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2019 HAW Hamburg.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   HAW Hamburg - Initial API and implementation
+ */
+
+/*  XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
+function foo() {
+    var x = 1;
+    LBL: {
+        //  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+        break;
+    }
+    LBL: try {
+        //  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+        break;
+    } catch (e) {}
+
+    LBL: if (true) {
+        //  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+        break;
+    }
+    (function functionExpression() {
+	    LBL: {
+	    	//  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+	        break;
+	    }
+	});
+    while (true) {
+        // This is correct!  XPECT noerrors  -->
+        break;
+    }
+    do{
+    	if(x == 1){
+    		// This is correct!  XPECT noerrors  -->
+    		break;
+    	}
+    }while(x<2);
+    for (; ;) {
+        // This is correct!  XPECT noerrors  -->
+        break;
+    }
+    switch(x){
+        // This is correct!  XPECT noerrors  -->
+        case 5: break;
+        // This is correct!  XPECT noerrors  -->
+        default: break;        
+    }
+    //  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+    break;
+}
