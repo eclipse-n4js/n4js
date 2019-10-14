@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +37,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
 import com.google.inject.Inject;
@@ -48,6 +52,8 @@ public class N4JSProjectManager extends ProjectManager {
 	@Inject
 	ProjectStatePersister projectStatePersister;
 
+	Map<URI, HashedFileContent> hashFileContents = new HashMap<>();
+	Map<URI, HashedFileContent> newFileContents = new HashMap<>();
 	Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
 	private IProjectConfigEx projectConfig;
 
@@ -63,43 +69,71 @@ public class N4JSProjectManager extends ProjectManager {
 		issueAcceptor = acceptor;
 		projectConfig = (IProjectConfigEx) pProjectConfig;
 
-		projectStatePersister.readProjectState(projectConfig, this::setIndexState);
+		projectStatePersister.readProjectState(projectConfig, (indexState, fingerprints) -> {
+			setIndexState(indexState);
+			fingerprints.forEach(fp -> hashFileContents.put(fp.getUri(), fp));
+		});
 	}
 
 	@Override
 	public Result doInitialBuild(CancelIndicator cancelIndicator) {
 		Set<URI> uris = new HashSet<>();
+		Source2GeneratedMapping sourceFileMappings = getIndexState().getFileMappings();
 		for (ISourceFolder srcFolder : this.projectConfig.getSourceFolders()) {
 			ISourceFolderEx srcFolderEx = (ISourceFolderEx) srcFolder;
-			uris.addAll(srcFolderEx.getAllResources());
-		}
-		Iterator<URI> iter = uris.iterator();
-		Source2GeneratedMapping fileMappings = getIndexState().getFileMappings();
-		while (iter.hasNext()) {
-			URI next = iter.next();
-			if ("js".equals(next.fileExtension()) || "n4jsd".equals(next.fileExtension())
-					|| "json".equals(next.fileExtension())) {
-				if (getIndexState().getResourceDescriptions().getResourceDescription(next) != null) {
-					iter.remove();
-				}
-			} else {
-				// TODO really check if things are in sync
-				if (!fileMappings.getGenerated(next).isEmpty()) {
-					iter.remove();
+			List<URI> allResources = srcFolderEx.getAllResources();
+			for (URI sourceURI : allResources) {
+				if (!ProjectStatePersister.FILENAME.equals(sourceURI.lastSegment())) {
+					HashedFileContent fingerprint = hashFileContents.get(sourceURI);
+					if (fingerprint != null) {
+						HashedFileContent newHash = doHash(sourceURI);
+						if (newHash == null || fingerprint.getHash() != newHash.getHash()) {
+							uris.add(sourceURI);
+						} else {
+							List<URI> prevGenerated = sourceFileMappings.getGenerated(sourceURI);
+							for (URI generated : prevGenerated) {
+								HashedFileContent genFingerprint = hashFileContents.get(generated);
+								if (genFingerprint != null) {
+									HashedFileContent generatedHash = doHash(generated);
+									if (generatedHash == null || generatedHash.getHash() != genFingerprint.getHash()) {
+										uris.add(sourceURI);
+										break;
+									}
+								}
+							}
+						}
+					} else {
+						uris.add(sourceURI);
+					}
 				}
 			}
 		}
-		System.out.println("Now building initially: " + uris);
+		System.out.println("Initializing [" + getProjectConfig().getName() + "]");
 		return doBuild(new ArrayList<>(uris), Collections.emptyList(), Collections.emptyList(), cancelIndicator);
 	}
 
 	@Override
 	public Result doBuild(List<URI> dirtyFiles, List<URI> deletedFiles, List<Delta> externalDeltas,
 			CancelIndicator cancelIndicator) {
+		System.out.println("Now building [" + getProjectConfig().getName() + "]: " + dirtyFiles);
+
+		newFileContents = new HashMap<>(hashFileContents);
+		newFileContents.keySet().removeAll(deletedFiles);
+		/*
+		 * We create build request that will alter newFileContents when a file is created / removed
+		 */
 		Result result = super.doBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
 		if (!cancelIndicator.isCanceled()) {
 			if (dirtyFiles.size() != 1 || !ProjectStatePersister.FILENAME.equals(dirtyFiles.get(0).lastSegment())) {
-				projectStatePersister.writeProjectState(projectConfig, result.getIndexState());
+				dirtyFiles.forEach(this::storeHash);
+				for (Map.Entry<URI, HashedFileContent> entry : newFileContents.entrySet()) {
+					if (entry.getValue() == null) {
+						entry.setValue(doHash(entry.getKey()));
+					}
+				}
+				projectStatePersister.writeProjectState(projectConfig, result.getIndexState(),
+						newFileContents.values());
+				hashFileContents = newFileContents;
 			}
 		}
 		return result;
@@ -117,7 +151,38 @@ public class N4JSProjectManager extends ProjectManager {
 		// .filter(uri -> !projectConfig.isInOutputFolder(uri))
 		// .collect(Collectors.toList());
 
-		return super.newBuildRequest(changedFiles, deletedFiles, externalDeltas, cancelIndicator);
+		BuildRequest result = super.newBuildRequest(changedFiles, deletedFiles, externalDeltas, cancelIndicator);
+		Procedure1<? super URI> afterDeleteFile = result.getAfterDeleteFile();
+		Procedure2<? super URI, ? super URI> afterGenerateFile = result.getAfterGenerateFile();
+		result.setAfterDeleteFile(removed -> {
+			afterDeleteFile.apply(removed);
+			newFileContents.remove(removed);
+		});
+		result.setAfterGenerateFile((source, target) -> {
+			afterGenerateFile.apply(source, target);
+			scheduleHash(target);
+		});
+		return result;
+	}
+
+	private void scheduleHash(URI uri) {
+		newFileContents.put(uri, null);
+	}
+
+	private void storeHash(URI uri) {
+		HashedFileContent generatedTargetContent = doHash(uri);
+		if (generatedTargetContent != null)
+			newFileContents.put(uri, generatedTargetContent);
+	}
+
+	private HashedFileContent doHash(URI uri) {
+		try {
+			HashedFileContent generatedTargetContent = new HashedFileContent(uri,
+					new File(new java.net.URI(uri.toString())));
+			return generatedTargetContent;
+		} catch (IOException | URISyntaxException e) {
+			return null;
+		}
 	}
 
 }
