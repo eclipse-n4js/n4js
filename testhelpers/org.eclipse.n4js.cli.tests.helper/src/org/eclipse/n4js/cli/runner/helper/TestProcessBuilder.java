@@ -12,7 +12,6 @@ package org.eclipse.n4js.cli.runner.helper;
 
 import static org.eclipse.n4js.utils.OSInfo.isWindows;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.Binary;
@@ -47,48 +45,24 @@ public class TestProcessBuilder {
 	}
 
 	/** @return a started process: {@code node -r esm fileToRun} */
-	public Process nodejsRun(Path workingDirectory, Path fileToRun) throws ExecutionException {
+	public ProcessBuilder nodejsRun(Path workingDirectory, Path fileToRun) {
 		final Map<String, String> env = new LinkedHashMap<>();
 		final String[] cmd = createCommandNodejsRun(fileToRun, env);
-		return createProcess(workingDirectory, cmd, env);
+		return createProcessBuilder(workingDirectory, cmd, env);
 	}
 
 	/** @return a started process: {@code npm install} */
-	public Process npmInstall(Path workingDirectory) throws ExecutionException {
+	public ProcessBuilder npmInstall(Path workingDirectory) {
 		final Map<String, String> env = new LinkedHashMap<>();
 		final String[] cmd = createCommandNpmInstall(env);
-		return createProcess(workingDirectory, cmd, env);
+		return createProcessBuilder(workingDirectory, cmd, env);
 	}
 
 	/** @return a started process: {@code yarn install} */
-	public Process yarnInstall(Path workingDirectory) throws ExecutionException {
+	public ProcessBuilder yarnInstall(Path workingDirectory) {
 		final Map<String, String> env = new LinkedHashMap<>();
 		final String[] cmd = createCommandYarnInstall(env);
-		return createProcess(workingDirectory, cmd, env);
-	}
-
-	private Process createProcess(Path workingDirectory, String[] cmd, Map<String, String> env)
-			throws ExecutionException {
-
-		final IStatus status = nodeJsBinary.validate();
-		if (!status.isOK()) {
-			throw new IllegalStateException(status.getMessage());
-		}
-		if (workingDirectory == null) {
-			throw new IllegalArgumentException("run configuration does not specify a working directory");
-		}
-
-		ProcessBuilder pb = new ProcessBuilder(cmd);
-		env.putAll(additionalEnvironmentVariables);
-		pb.environment().putAll(env);
-		pb.directory(workingDirectory.toFile());
-		// pb.inheritIO(); // output is captured in NodejsExecuter
-
-		try {
-			return pb.start();
-		} catch (IOException e) {
-			throw new ExecutionException(e);
-		}
+		return createProcessBuilder(workingDirectory, cmd, env);
 	}
 
 	private String[] createCommandNodejsRun(Path fileToRun, Map<String, String> output_env) {
@@ -128,6 +102,24 @@ public class TestProcessBuilder {
 		}
 
 		return cmd;
+	}
+
+	private ProcessBuilder createProcessBuilder(Path workingDirectory, String[] cmd, Map<String, String> env) {
+		final IStatus status = nodeJsBinary.validate();
+		if (!status.isOK()) {
+			throw new IllegalStateException(status.getMessage());
+		}
+		if (workingDirectory == null) {
+			throw new IllegalArgumentException("run configuration does not specify a working directory");
+		}
+
+		ProcessBuilder pb = new ProcessBuilder(cmd);
+		env.putAll(additionalEnvironmentVariables);
+		pb.environment().putAll(env);
+		pb.directory(workingDirectory.toFile());
+		// pb.inheritIO(); // output is captured in NodejsExecuter
+
+		return pb;
 	}
 
 }

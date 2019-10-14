@@ -182,9 +182,9 @@ public class CliResult {
 		s += String.join("\n    ", getErrMsgs()) + "\n";
 		s += ((cause == null) ? "" : "    exception " + cause.getMessage());
 		s += "    std out:\n";
-		s += (stdOut.isBlank() ? "" : ">>>>\n" + stdOut + "\n<<<<\n");
+		s += (stdOut == null || stdOut.isBlank() ? "" : ">>>>\n" + stdOut + "\n<<<<\n");
 		s += "    err out:\n";
-		s += (errOut.isBlank() ? "" : ">>>>\n" + errOut + "\n<<<<\n");
+		s += (errOut == null || errOut.isBlank() ? "" : ">>>>\n" + errOut + "\n<<<<\n");
 		s += "CLI Result End.\n";
 		return s;
 	}

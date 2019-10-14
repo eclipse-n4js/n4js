@@ -90,6 +90,9 @@ abstract public class AbstractCliTest<ArgType> {
 			assertEquals(exitCode, e.status);
 		} catch (Exception e) {
 			cliResult.cause = e;
+			if (cliResult.exitCode == 0) {
+				cliResult.exitCode = -1;
+			}
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {

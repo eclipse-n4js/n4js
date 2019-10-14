@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli.runner.helper;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
@@ -24,14 +25,14 @@ import com.google.inject.Injector;
  * Test for checking whether plain JS files have the proper module export.
  */
 public class TestProcessExecuter {
-	final private TestProcessBuilder processBuilder;
+	final private TestProcessBuilder testProcessBuilder;
 
 	/** Constructor */
 	public TestProcessExecuter(Injector injector) {
 		NodeJsBinary nodeJsBinary = injector.getInstance(NodeJsBinary.class);
 		NpmBinary npmBinary = injector.getInstance(NpmBinary.class);
 		YarnBinary yarnBinary = injector.getInstance(YarnBinary.class);
-		processBuilder = new TestProcessBuilder(nodeJsBinary, npmBinary, yarnBinary);
+		testProcessBuilder = new TestProcessBuilder(nodeJsBinary, npmBinary, yarnBinary);
 	}
 
 	interface ProcessSupplier {
@@ -40,29 +41,34 @@ public class TestProcessExecuter {
 
 	/** Runs node with the given {@code runFile} in the given {@code workingDir} */
 	public ProcessResult runNodejs(Path workingDir, Path runFile) {
-		return joinProcess(() -> processBuilder.nodejsRun(workingDir, runFile));
+		return joinProcess(() -> testProcessBuilder.nodejsRun(workingDir, runFile));
 	}
 
 	/** Runs npm install in the given {@code workingDir} */
 	public ProcessResult npmInstall(Path workingDir) {
-		return joinProcess(() -> processBuilder.npmInstall(workingDir));
+		return joinProcess(() -> testProcessBuilder.npmInstall(workingDir));
 	}
 
 	/** Runs yarn install in the given {@code workingDir} */
 	public ProcessResult yarnInstall(Path workingDir) {
-		return joinProcess(() -> processBuilder.yarnInstall(workingDir));
+		return joinProcess(() -> testProcessBuilder.yarnInstall(workingDir));
 	}
 
-	private ProcessResult joinProcess(ProcessSupplier ps) {
-		ProcessResult result = new ProcessResult();
+	private ProcessResult joinProcess(Supplier<ProcessBuilder> pbs) {
+		ProcessBuilder processBuilder = pbs.get();
+		ProcessResult result = new ProcessResult(String.join(" ", processBuilder.command()));
+
 		try {
-			Process process = ps.get();
+			Process process = processBuilder.start();
 			result.exitCode = process.waitFor();
 			result.stdOut = getInputAsString(process.getInputStream());
 			result.errOut = getInputAsString(process.getErrorStream());
 
 		} catch (Exception e) {
 			result.exception = e;
+			if (result.exitCode == 0) {
+				result.exitCode = -1;
+			}
 		}
 		return result;
 	}
