@@ -10,15 +10,16 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.n4js.hlc.base.BuildType;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.hlc.base.SuccessExitStatus;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -30,7 +31,7 @@ import org.junit.Test;
  * In this test, we have two external projects: nuka-carousel and react. nuka-carousel depends on react via a project
  * dependency, and file P1/src/X.n4jsx depends on both react and nuka-carousel via project dependencies.
  */
-public class N4jscDependentProjectDependenciesTest extends AbstractN4jscTest {
+public class N4jscDependentProjectDependenciesTest extends AbstractCliCompileTest {
 	File workspace;
 	File proot;
 
@@ -55,13 +56,11 @@ public class N4jscDependentProjectDependenciesTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testSuccessfulCompilationWithInterdependentProjects() throws ExitCodeException {
-		final String[] args = {
-				"--installMissingDependencies",
-				"--projectlocations", proot.toString(),
-				"--buildType", BuildType.allprojects.toString()
-		};
-		SuccessExitStatus status = new N4jscBase().doMain(args);
-		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
+		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
+		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+
+		CliResult cliResult = n4jsc(COMPILE(workspace));
+		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
 	}
 
 }

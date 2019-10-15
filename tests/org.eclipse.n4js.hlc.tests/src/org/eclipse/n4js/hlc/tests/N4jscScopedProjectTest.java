@@ -10,14 +10,17 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -26,12 +29,7 @@ import org.junit.Test;
 /**
  * Test handling of projects using an npm scope in headless case.
  */
-public class N4jscScopedProjectTest extends AbstractN4jscTest {
-
-	private static final String TEST_FILE_1 = "ClientModule1.n4js";
-	private static final String TEST_FILE_2 = "ClientModule2.n4js";
-	private static final String NL = System.lineSeparator();
-
+public class N4jscScopedProjectTest extends AbstractCliCompileTest {
 	private File workspace;
 	private File proot;
 
@@ -40,7 +38,6 @@ public class N4jscScopedProjectTest extends AbstractN4jscTest {
 	public void setupWorkspace() throws IOException {
 		workspace = setupWorkspace(TEST_DATA_SET__NPM_SCOPES, true, N4JSGlobals.N4JS_RUNTIME);
 		proot = new File(workspace, PACKAGES).getAbsoluteFile();
-		System.out.println("just for reference workspace base path is: " + workspace.getAbsolutePath().toString());
 	}
 
 	/** Delete workspace. */
@@ -53,44 +50,27 @@ public class N4jscScopedProjectTest extends AbstractN4jscTest {
 	 * Test npm scopes.
 	 */
 	@Test
-	public void testNpmScopes() throws ExitCodeException, IOException {
+	public void testNpmScopes() {
+		CliResult cliResult = n4jsc(COMPILE(workspace));
+		assertEquals(cliResult.toString(), 8, cliResult.getTranspiledFilesCount());
 
-		// (1) compile
+		String srcFolder = proot + "/XClient/src-gen/";
+		String testFile1 = srcFolder + "ClientModule1.js";
+		String testFile2 = srcFolder + "ClientModule2.js";
 
-		String[] args1 = {
-				"--projectlocations", proot.toString(),
-				"--buildType", "allprojects"
-		};
-		new N4jscBase().doMain(args1);
+		String expectedString = "";
+		expectedString += "Hello from A in @myScope/Lib!\n";
+		expectedString += "Hello from B in Lib!\n";
+		expectedString += "Hello from C in @myScope/Lib!\n";
+		expectedString += "Hello from C in Lib!\n";
+		expectedString += "Hello from D in @myScope/Lib!\n";
+		expectedString += "Hello from D in Lib!";
 
-		// (2) run and check output
+		ProcessResult nodejsResult1 = runNodejs(workspace.toPath(), Path.of(testFile1));
+		assertEquals(nodejsResult1.toString(), expectedString, nodejsResult1.getStdOut());
 
-		File sourceFolder = new File(new File(proot, "XClient"), "src");
-		File testFile1 = new File(sourceFolder, TEST_FILE_1);
-		File testFile2 = new File(sourceFolder, TEST_FILE_2);
-
-		String expectedOutput = "" +
-				"Hello from A in @myScope/Lib!" + NL +
-				"Hello from B in Lib!" + NL +
-				"Hello from C in @myScope/Lib!" + NL +
-				"Hello from C in Lib!" + NL +
-				"Hello from D in @myScope/Lib!" + NL +
-				"Hello from D in Lib!";
-
-		runAndAssertOutput(testFile1, expectedOutput);
-		runAndAssertOutput(testFile2, expectedOutput);
+		ProcessResult nodejsResult2 = runNodejs(workspace.toPath(), Path.of(testFile2));
+		assertEquals(nodejsResult2.toString(), expectedString, nodejsResult2.getStdOut());
 	}
 
-	private String runAndAssertOutput(File fileToExecute, String expectedOutput) throws ExitCodeException, IOException {
-		String[] args = {
-				"--projectlocations", proot.toString(),
-				"--buildType", "dontcompile",
-				"--runWith", "nodejs",
-				"--run", fileToExecute.getAbsolutePath()
-		};
-		String actualOutput = runAndCaptureOutput(args);
-		assertEquals("incorrect output when running test file " + TEST_FILE_1,
-				expectedOutput, actualOutput);
-		return actualOutput;
-	}
 }
