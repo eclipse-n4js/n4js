@@ -12,6 +12,7 @@ package org.eclipse.n4js.hlc.tests;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -51,7 +53,7 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompil
 	 * running it with Common JS.
 	 */
 	@Test
-	// @Ignore // remove @Ignore when GH-887 is merged
+	@Ignore // GH-1510
 	public void testCompileAndRunWithExternalDependencies() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
@@ -59,6 +61,8 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompil
 
 		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
 		assertEquals(yarnInstallResult.toString(), 1, yarnInstallResult.getExitCode());
+		assertTrue(yarnInstallResult.toString(),
+				yarnInstallResult.getErrOut().contains("could not find a copy of eslint to link in"));
 
 		N4jscOptions options = COMPILE(workspace);
 		CliResult cliResult = n4jsc(options);

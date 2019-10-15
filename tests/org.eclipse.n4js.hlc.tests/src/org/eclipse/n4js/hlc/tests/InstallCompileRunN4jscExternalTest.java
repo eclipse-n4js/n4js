@@ -12,7 +12,6 @@ package org.eclipse.n4js.hlc.tests;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +24,7 @@ import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -38,7 +38,7 @@ public class InstallCompileRunN4jscExternalTest extends AbstractCliCompileTest {
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external", Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace("external", Predicates.alwaysFalse(), true);
 	}
 
 	/** Delete workspace. */
@@ -51,6 +51,7 @@ public class InstallCompileRunN4jscExternalTest extends AbstractCliCompileTest {
 	 * Test for checking the npm support by downloading a third party package, importing and running it.
 	 */
 	@Test
+	@Ignore // GH-1510
 	public void testCompileAndRunWithExternalDependencies() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
@@ -59,9 +60,9 @@ public class InstallCompileRunN4jscExternalTest extends AbstractCliCompileTest {
 		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
 		// error An unexpected error occurred: "could not find a copy of eslint to link in:
 		// wsp/node_modules/is-promise/node_modules/listr-update-renderer/node_modules/ansi-regex/node_modules/xo/node_modules"
-		assertEquals(yarnInstallResult.toString(), 1, yarnInstallResult.getExitCode());
-		assertTrue(yarnInstallResult.toString(),
-				yarnInstallResult.getErrOut().contains("could not find a copy of eslint to link in"));
+		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+		// assertTrue(yarnInstallResult.toString(),
+		// yarnInstallResult.getErrOut().contains("could not find a copy of eslint to link in"));
 
 		N4jscOptions options = COMPILE(workspace);
 		CliResult cliResult = n4jsc(options);
