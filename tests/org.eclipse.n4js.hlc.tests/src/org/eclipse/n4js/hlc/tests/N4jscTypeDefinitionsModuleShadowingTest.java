@@ -10,15 +10,15 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
-import org.eclipse.n4js.hlc.base.ErrorExitCode;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.hlc.base.SuccessExitStatus;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -29,14 +29,7 @@ import com.google.common.base.Predicates;
 /**
  * Basic tests of type definitions shadowing in the headless case.
  */
-public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractN4jscTest {
-	private static final String DEF_PROJECT_NAME = "Def";
-	private static final String BROKEN_DEF_PROJECT_NAME = "Broken_Def";
-
-	private static final String IMPL_PROJECT_NAME = "Impl";
-
-	private static final String CLIENT_PROJECT_NAME = "Client";
-	private static final String BROKEN_CLIENT_PROJECT_NAME = "Broken_Client";
+public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractCliCompileTest {
 
 	File workspace;
 	File packages;
@@ -58,32 +51,17 @@ public class N4jscTypeDefinitionsModuleShadowingTest extends AbstractN4jscTest {
 	 * Builds 'Client', 'Def' and 'Impl' and asserts no issues.
 	 */
 	@Test
-	public void testSimpleTypeDefsShadowing() throws ExitCodeException {
+	public void testSimpleTypeDefsShadowing() {
+		CliResult cliResult = n4jsc(COMPILE(workspace));
 
-		String[] args = { "--projectlocations", packages.toPath().toAbsolutePath().toString(),
-				"--buildType", "projects", getProjectPath(DEF_PROJECT_NAME), getProjectPath(IMPL_PROJECT_NAME),
-				getProjectPath(CLIENT_PROJECT_NAME) };
+		Collection<String> fileNames = cliResult.getTranspiledFileNames();
 
-		SuccessExitStatus status = new N4jscBase().doMain(args);
-		assertEquals("Should exit with success status (no compilation issues).", SuccessExitStatus.INSTANCE.code,
-				status.code);
-	}
-
-	/**
-	 * Builds 'Broken_Client', 'Broken_Def' and 'Impl' and expects that this will cause compilation issues.
-	 */
-	@Test
-	public void testBrokenTypeDefsShadowing() {
-
-		String[] args = { "--projectlocations", packages.toPath().toAbsolutePath().toString(),
-				"--buildType", "projects", getProjectPath(BROKEN_DEF_PROJECT_NAME), getProjectPath(IMPL_PROJECT_NAME),
-				getProjectPath(BROKEN_CLIENT_PROJECT_NAME) };
-
-		expectCompilerException(args, ErrorExitCode.EXITCODE_COMPILE_ERROR);
-	}
-
-	private String getProjectPath(String projectName) {
-		return this.packages.toPath().toAbsolutePath() + "/" + projectName;
+		assertEquals(cliResult.toString(), "packages/Client/src-gen/Client.js", String.join(", ", fileNames));
+		assertEquals(cliResult.toString(), //
+				"packages/Broken_Client/package.json, "//
+						+ "packages/Broken_Client/src/Client.n4js, "//
+						+ "packages/Client/package.json",
+				String.join(", ", cliResult.getErrFiles()));
 	}
 
 }

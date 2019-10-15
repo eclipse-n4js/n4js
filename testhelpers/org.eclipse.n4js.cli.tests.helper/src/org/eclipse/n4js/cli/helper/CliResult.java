@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.eclipse.n4js.cli.N4jscMain;
 
@@ -79,14 +81,24 @@ public class CliResult {
 		return projects;
 	}
 
+	/** @return list of all files that have errors */
+	public Collection<String> getErrFiles() {
+		return new TreeSet<>(errors.keySet());
+	}
+
 	/** @return list of all error messages found in the given sources */
 	public Collection<String> getErrMsgs() {
-		return errors.values();
+		return new TreeSet<>(errors.values());
+	}
+
+	/** @return list of all files that have warnings */
+	public Collection<String> getWrnFiles() {
+		return new TreeSet<>(warnings.keySet());
 	}
 
 	/** @return list of all warning messages found in the given sources */
 	public Collection<String> getWrnMsgs() {
-		return warnings.values();
+		return new TreeSet<>(warnings.values());
 	}
 
 	/** @return duration of invoking the cli command */
@@ -97,6 +109,13 @@ public class CliResult {
 	/** @return number of all files that where transpiled to js files */
 	public int getTranspiledFilesCount() {
 		return getTranspiledFiles().size();
+	}
+
+	/** @return list of all file names that where transpiled to js files */
+	public Collection<String> getTranspiledFileNames() {
+		return getTranspiledFiles().stream()
+				.map(f -> f.toString())
+				.collect(Collectors.toList());
 	}
 
 	/** @return list of all files that where transpiled to js files */
