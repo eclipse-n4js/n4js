@@ -59,6 +59,7 @@ import org.eclipse.n4js.n4JS.PostfixExpression;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RelationalExpression;
+import org.eclipse.n4js.n4JS.RelationalOperator;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.ShiftExpression;
 import org.eclipse.n4js.n4JS.SuperLiteral;
@@ -304,6 +305,14 @@ import com.google.inject.Inject;
 				case NEG:
 					return numberTypeRef(G);
 				case INV:
+					EObject container = e.eContainer();
+					if (container instanceof RelationalExpression) {
+						RelationalExpression re = (RelationalExpression) container;
+						if (re.getOp() == RelationalOperator.INSTANCEOF) {
+							return anyTypeRef(G);
+						}
+					}
+
 					return numberTypeRef(G);
 				case NOT:
 					return anyTypeRef(G);
@@ -346,6 +355,10 @@ import com.google.inject.Inject;
 		public TypeRef caseRelationalExpression(RelationalExpression e) {
 			switch (e.getOp()) {
 			case INSTANCEOF:
+				if (e.getRhs() instanceof UnaryExpression) {
+					return anyTypeRef(G);
+				}
+
 				if (expression == e.getRhs()) {
 					return TypeUtils.createNonSimplifiedUnionType(functionTypeRef(G),
 							TypeUtils.createTypeTypeRef(objectTypeRef(G), false),
