@@ -10,13 +10,17 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.hlc.base.BuildType;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -25,7 +29,7 @@ import org.junit.Test;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
-public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends AbstractN4jscTest {
+public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends AbstractCliCompileTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -45,22 +49,22 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 	 * running it with Common JS.
 	 */
 	@Test
-	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
+	public void testCompileAndRunWithExternalDependencies() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
 		final String projectToCompile = packages + "/external.project";
-		final String fileToRun = projectToCompile + "/src/Main.n4js";
+		final String fileToRun = projectToCompile + "/src-gen/Main.js";
 
-		final String[] args = {
-				"--installMissingDependencies",
-				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--projectlocations", packages,
-				"--buildType", BuildType.projects.toString(),
-				projectToCompile
-		};
-		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput("Application was created!", out);
+		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
+		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+
+		CliResult cliResult = n4jsc(COMPILE(workspace));
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
+
+		String expectedString = "Application was created!";
+
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 
 }

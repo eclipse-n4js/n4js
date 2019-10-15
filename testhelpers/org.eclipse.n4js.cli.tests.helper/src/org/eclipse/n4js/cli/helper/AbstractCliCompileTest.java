@@ -43,8 +43,6 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	protected static final String PACKAGES = N4CliHelper.PACKAGES;
 	/** name of folder containing the test resources */
 	protected static final String FIXTURE = "probands";
-	/** name of default test data set */
-	protected static final String TEST_DATA_SET__BASIC = "basic";
 	/** name of test data set for launching testers from the command line */
 	protected static final String TEST_DATA_SET__TESTERS = "testers";
 	/** name of test data set for npm scopes */

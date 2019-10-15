@@ -10,16 +10,20 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
-import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.hlc.base.BuildType;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -29,7 +33,7 @@ import com.google.common.base.Predicates;
  * instructed to discover missing dependencies and to install them before compilation, which is done with
  * {@code --installMissingDependencies} flag.
  */
-public class InstallFromPackageJsonCompileRunN4jscExternalImportsTest extends AbstractN4jscTest {
+public class InstallFromPackageJsonCompileRunN4jscExternalImportsTest extends AbstractCliCompileTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -49,56 +53,28 @@ public class InstallFromPackageJsonCompileRunN4jscExternalImportsTest extends Ab
 	 * running it with Common JS.
 	 */
 	@Test
-	@Ignore // remove @Ignore when IDE-2988 is done
-	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
+	public void testCompileAndRunWithExternalDependencies() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/P3/src/f3.n4jsx";
+		final String fileToRun = packages + "/P3/src-gen/f3.js";
 
-		final String[] args = {
-				"--installMissingDependencies",
-				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--projectlocations", packages,
-				"--buildType", BuildType.allprojects.toString()
-		};
-		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(
-				"P1\n" +
-						"react is not undefined true\n" +
-						"react-dom is not undefined true\n" +
-						"imports from libs are different true\n" +
-						"P2\n" +
-						"React is not undefined true",
-				out);
-	}
+		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
+		assertEquals(yarnInstallResult.toString(), 1, yarnInstallResult.getExitCode());
+		assertTrue(yarnInstallResult.toString(),
+				yarnInstallResult.getErrOut().contains("could not find a copy of eslint to link in"));
 
-	/**
-	 * Similar to the {@link #testCompileAndRunWithExternalDependencies()} but instead of using
-	 * {@link BuildType#allprojects} with common root, it is using {@link BuildType#projects} with concrete list of
-	 * projects.
-	 */
-	@Test
-	@Ignore // remove @Ignore when IDE-2988 is done
-	public void testCompileAndRunWithExternalDependencies2() throws IOException, ExitCodeException {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String fileToRun = wsRoot + "/P3/src/f3.n4jsx";
+		CliResult cliResult = n4jsc(COMPILE(workspace));
+		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
 
-		final String[] args = {
-				"--installMissingDependencies",
-				"-rw", "nodejs",
-				"-r", fileToRun,
-				"-bt", BuildType.projects.toString(), wsRoot + "/P1", wsRoot + "/P2", wsRoot + "/P3"
-		};
-		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(
-				"P1\n" +
-						"react is not undefined true\n" +
-						"react-dom is not undefined true\n" +
-						"imports from libs are different true\n" +
-						"P2\n" +
-						"React is not undefined true",
-				out);
+		String expectedString = "P1\n";
+		expectedString += "react is not undefined true\n";
+		expectedString += "react-dom is not undefined true\n";
+		expectedString += "imports from libs are different true\n";
+		expectedString += "P2\n";
+		expectedString += "React is not undefined true";
+
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 
 }
