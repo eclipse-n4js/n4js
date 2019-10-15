@@ -54,8 +54,6 @@ pipeline {
                                 '--batch-mode',
                                 '--update-snapshots',
                                 '--show-version',
-// FIXME GH-1503
-'-DnoTests',
                                 '-Dtycho.localArtifacts=ignore',
                                 '-Dmaven.test.failure.ignore',
                                 '-DWORKSPACE=' + env.WORKSPACE,
@@ -75,9 +73,8 @@ pipeline {
                         }
                     }
                 }
-// FIXME GH-1503: failsafe was already commented out in eclipse build!
-////                junit 'n4js/**/failsafe-reports/**/*.xml' // required to set build status! (due to use of '-Dmaven.test.failure.ignore')
-//                junit 'n4js/**/surefire-reports/**/*.xml'
+//                junit 'n4js/**/failsafe-reports/**/*.xml' // required to set build status! (due to use of '-Dmaven.test.failure.ignore')
+                junit 'n4js/**/surefire-reports/**/*.xml'
             }
         }
 
@@ -97,7 +94,7 @@ BRANCH_OR_COMMIT: ${n4jsCommitId}
 """
 
                     build(
-                        job:        'publish_GH-1503',
+                        job:        'publish',
                         wait:       false,
                         parameters: [
                             [$class: 'StringParameterValue', name: 'BRANCH_OR_COMMIT', value: "${n4jsCommitId}"]
