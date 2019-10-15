@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xtext.ide.server.BuildManager;
 import org.eclipse.xtext.ide.server.BuildManager.Buildable;
 import org.eclipse.xtext.ide.server.WorkspaceManager;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -26,6 +27,7 @@ import org.eclipse.xtext.workspace.IWorkspaceConfig;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
 import com.google.common.base.Stopwatch;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -37,6 +39,7 @@ import com.google.inject.Singleton;
 public class N4JSWorkspaceManager extends WorkspaceManager {
 
 	private Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
+	private N4JSBuildManager accessibleBuildManager;
 
 	@Override
 	public void initialize(URI pBaseDir, Procedure2<? super URI, ? super Iterable<Issue>> pIssueAcceptor,
@@ -46,6 +49,17 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 		super.initialize(pBaseDir, pIssueAcceptor, cancelIndicator);
 		this.issueAcceptor = pIssueAcceptor;
 		System.out.println("Workspace.initialize took: " + sw);
+	}
+
+	@Override
+	@Inject
+	public void setBuildManager(BuildManager buildManager) {
+		super.setBuildManager(buildManager);
+		this.accessibleBuildManager = (N4JSBuildManager) buildManager;
+	}
+
+	N4JSBuildManager getBuildManager() {
+		return accessibleBuildManager;
 	}
 
 	/**

@@ -50,11 +50,12 @@ import com.google.inject.Provider;
 public class N4JSProjectManager extends ProjectManager {
 
 	@Inject
-	ProjectStatePersister projectStatePersister;
+	private ProjectStatePersister projectStatePersister;
+	@Inject
+	private N4JSWorkspaceManager workspaceManager;
 
-	Map<URI, HashedFileContent> hashFileContents = new HashMap<>();
-	Map<URI, HashedFileContent> newFileContents = new HashMap<>();
-	Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
+	private Map<URI, HashedFileContent> hashFileContents = new HashMap<>();
+	private Map<URI, HashedFileContent> newFileContents = new HashMap<>();
 	private IProjectConfigEx projectConfig;
 
 	@Override
@@ -66,29 +67,27 @@ public class N4JSProjectManager extends ProjectManager {
 		super.initialize(description, pProjectConfig, acceptor, openedDocumentsContentProvider, indexProvider,
 				cancelIndicator);
 
-		issueAcceptor = acceptor;
 		projectConfig = (IProjectConfigEx) pProjectConfig;
 
 		projectStatePersister.readProjectState(projectConfig, (indexState, fingerprints) -> {
 			setIndexState(indexState);
 			fingerprints.forEach(fp -> hashFileContents.put(fp.getUri(), fp));
 		});
-	}
 
-	@Override
-	public Result doInitialBuild(CancelIndicator cancelIndicator) {
-		Set<URI> uris = new HashSet<>();
+		Set<URI> newOrChanged = new HashSet<>();
+		Set<URI> allUris = new HashSet<>();
 		Source2GeneratedMapping sourceFileMappings = getIndexState().getFileMappings();
 		for (ISourceFolder srcFolder : this.projectConfig.getSourceFolders()) {
 			ISourceFolderEx srcFolderEx = (ISourceFolderEx) srcFolder;
 			List<URI> allResources = srcFolderEx.getAllResources();
+			allUris.addAll(allResources);
 			for (URI sourceURI : allResources) {
 				if (!ProjectStatePersister.FILENAME.equals(sourceURI.lastSegment())) {
 					HashedFileContent fingerprint = hashFileContents.get(sourceURI);
 					if (fingerprint != null) {
 						HashedFileContent newHash = doHash(sourceURI);
 						if (newHash == null || fingerprint.getHash() != newHash.getHash()) {
-							uris.add(sourceURI);
+							newOrChanged.add(sourceURI);
 						} else {
 							List<URI> prevGenerated = sourceFileMappings.getGenerated(sourceURI);
 							for (URI generated : prevGenerated) {
@@ -96,45 +95,63 @@ public class N4JSProjectManager extends ProjectManager {
 								if (genFingerprint != null) {
 									HashedFileContent generatedHash = doHash(generated);
 									if (generatedHash == null || generatedHash.getHash() != genFingerprint.getHash()) {
-										uris.add(sourceURI);
+										newOrChanged.add(sourceURI);
 										break;
 									}
 								}
 							}
 						}
 					} else {
-						uris.add(sourceURI);
+						newOrChanged.add(sourceURI);
 					}
 				}
 			}
 		}
-		System.out.println("Initializing [" + getProjectConfig().getName() + "]");
-		return doBuild(new ArrayList<>(uris), Collections.emptyList(), Collections.emptyList(), cancelIndicator);
+		List<URI> deleted = new ArrayList<>();
+		for (URI inIndex : getIndexState().getResourceDescriptions().getAllURIs()) {
+			if (!allUris.contains(inIndex)) {
+				deleted.add(inIndex);
+			}
+		}
+		List<URI> newOrChangedList = new ArrayList<>(newOrChanged);
+		System.out.println("Initializing [" + getProjectConfig().getName() + "] " + newOrChangedList + "/" + deleted);
+		workspaceManager.getBuildManager().enqueue(description, newOrChangedList, deleted);
+		// make sure we have a resource set assigned
+		doBuild(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), cancelIndicator);
+	}
+
+	@Override
+	public Result doInitialBuild(CancelIndicator cancelIndicator) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Result doBuild(List<URI> dirtyFiles, List<URI> deletedFiles, List<Delta> externalDeltas,
 			CancelIndicator cancelIndicator) {
-		System.out.println("Now building [" + getProjectConfig().getName() + "]: " + dirtyFiles);
+		// if (!deletedFiles.isEmpty() || !deletedFiles.isEmpty() || !externalDeltas.isEmpty()) {
+		System.out.println("Now building [" + getProjectConfig().getName() + "]: " + dirtyFiles + "/" + deletedFiles
+				+ "/" + externalDeltas);
+		// }
 
 		newFileContents = new HashMap<>(hashFileContents);
 		newFileContents.keySet().removeAll(deletedFiles);
+
 		/*
 		 * We create build request that will alter newFileContents when a file is created / removed
 		 */
 		Result result = super.doBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
-		if (!cancelIndicator.isCanceled()) {
-			if (dirtyFiles.size() != 1 || !ProjectStatePersister.FILENAME.equals(dirtyFiles.get(0).lastSegment())) {
-				dirtyFiles.forEach(this::storeHash);
-				for (Map.Entry<URI, HashedFileContent> entry : newFileContents.entrySet()) {
-					if (entry.getValue() == null) {
-						entry.setValue(doHash(entry.getKey()));
-					}
+		if (!cancelIndicator.isCanceled() && !result.getAffectedResources().isEmpty()) {
+			dirtyFiles.forEach(this::storeHash);
+			newFileContents.replaceAll((uri, hash) -> {
+				if (hash == null) {
+					hash = doHash(uri);
 				}
-				projectStatePersister.writeProjectState(projectConfig, result.getIndexState(),
-						newFileContents.values());
-				hashFileContents = newFileContents;
-			}
+				return hash;
+			});
+			projectStatePersister.writeProjectState(projectConfig, result.getIndexState(),
+					newFileContents.values());
+			hashFileContents = newFileContents;
+			newFileContents = null;
 		}
 		return result;
 	}
@@ -142,15 +159,6 @@ public class N4JSProjectManager extends ProjectManager {
 	@Override
 	public BuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
-
-		// changedFiles = changedFiles.stream()
-		// .filter(uri -> !projectConfig.isInOutputFolder(uri))
-		// .collect(Collectors.toList());
-		//
-		// deletedFiles = deletedFiles.stream()
-		// .filter(uri -> !projectConfig.isInOutputFolder(uri))
-		// .collect(Collectors.toList());
-
 		BuildRequest result = super.newBuildRequest(changedFiles, deletedFiles, externalDeltas, cancelIndicator);
 		Procedure1<? super URI> afterDeleteFile = result.getAfterDeleteFile();
 		Procedure2<? super URI, ? super URI> afterGenerateFile = result.getAfterGenerateFile();
@@ -160,6 +168,7 @@ public class N4JSProjectManager extends ProjectManager {
 		});
 		result.setAfterGenerateFile((source, target) -> {
 			afterGenerateFile.apply(source, target);
+			System.out.println("Generating: " + target + " from " + source);
 			scheduleHash(target);
 		});
 		return result;

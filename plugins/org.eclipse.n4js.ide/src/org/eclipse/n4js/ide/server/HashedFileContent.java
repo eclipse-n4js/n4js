@@ -12,12 +12,18 @@ package org.eclipse.n4js.ide.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.OutputStream;
 
 import org.eclipse.emf.common.util.URI;
 
+import com.google.common.hash.Funnels;
+import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
+import com.google.common.io.ByteSource;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 
 /**
@@ -33,7 +39,19 @@ public class HashedFileContent {
 	 */
 	public HashedFileContent(URI uri, File file) throws IOException {
 		this.uri = uri;
-		this.hash = Files.asByteSource(file).hash(Hashing.farmHashFingerprint64()).asLong();
+		if ("js".equals(uri.fileExtension())) {
+			this.hash = file.length();
+		} else {
+			// byteSource.hash uses ByteSource.copyTo which does not use a buffered stream
+			// for perf reasons we inline the better part of the code here
+			ByteSource byteSource = Files.asByteSource(file);
+			Hasher hasher = Hashing.farmHashFingerprint64().newHasher();
+			try (InputStream in = byteSource.openBufferedStream();
+					OutputStream output = Funnels.asOutputStream(hasher)) {
+				ByteStreams.copy(in, output);
+			}
+			this.hash = hasher.hash().asLong();
+		}
 	}
 
 	HashedFileContent(ObjectInput input) throws IOException {
@@ -58,6 +76,34 @@ public class HashedFileContent {
 	 */
 	public long getHash() {
 		return hash;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (hash ^ (hash >>> 32));
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HashedFileContent other = (HashedFileContent) obj;
+		if (hash != other.hash)
+			return false;
+		if (uri == null) {
+			if (other.uri != null)
+				return false;
+		} else if (!uri.equals(other.uri))
+			return false;
+		return true;
 	}
 
 	@Override
