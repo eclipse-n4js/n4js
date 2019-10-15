@@ -44,8 +44,7 @@ class CoalesceExpressionFactory {
 		cNode.addNode(defaultValueNode);
 		cNode.addNode(exitNode);
 
-		cNode.connectInternalSucc(entryNode, expressionNode, forkNode);
-		cNode.connectInternalSucc(forkNode, exitNode);
+		cNode.connectInternalSucc(entryNode, expressionNode, forkNode, exitNode);
 
 		cNode.connectInternalSucc(ControlFlowType.IfNullish, forkNode, defaultValueNode);
 		cNode.connectInternalSucc(defaultValueNode, exitNode);

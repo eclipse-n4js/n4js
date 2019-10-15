@@ -61,5 +61,56 @@ class CoalesceExpressionTest extends AbstractParserTest {
 		val message = program.eResource.errors.head.message
 		assertEquals('Nullish coalescing expressions cannot immediately contain an || operation.', message)
 	}
+	
+	@Test
+	def void testCoalesce_04() {
+		'false || (a ?? b)'.parseESSuccessfully
+	}
+	
+	@Test
+	def void testCoalesce_05() {
+		val program = 'false || a ?? b'.parseESWithError
+		val statement = program.scriptElements.head as ExpressionStatement
+		val coalesce = statement.expression as CoalesceExpression
+		assertNotNull(coalesce)
 
+		val expression = coalesce.expression as BinaryLogicalExpression
+		assertEquals('false || a', expression.text)
+		val dfltExpr = coalesce.defaultExpression as IdentifierRef
+		assertEquals('b', dfltExpr.idAsText)
+		
+		val message = program.eResource.errors.head.message
+		assertEquals('Nullish coalescing expressions cannot immediately contain an || operation.', message)
+	}
+	
+	@Test
+	def void testCoalesce_06() {
+		val program = 'false && a ?? b'.parseESWithError
+		val statement = program.scriptElements.head as ExpressionStatement
+		val coalesce = statement.expression as CoalesceExpression
+		assertNotNull(coalesce)
+
+		val expression = coalesce.expression as BinaryLogicalExpression
+		assertEquals('false && a', expression.text)
+		val dfltExpr = coalesce.defaultExpression as IdentifierRef
+		assertEquals('b', dfltExpr.idAsText)
+		
+		val message = program.eResource.errors.head.message
+		assertEquals('Nullish coalescing expressions cannot immediately contain an && operation.', message)
+	}
+
+	@Test
+	def void testCoalesce_07() {
+		'(x||y) ?? zonk'.parseESSuccessfully
+	}
+	
+	@Test
+	def void testCoalesce_08() {
+		'(false && a) ?? b'.parseESSuccessfully
+	}
+	
+	@Test
+	def void testCoalesce_09() {
+		'false ?? (a && b)'.parseESSuccessfully
+	}
 }
