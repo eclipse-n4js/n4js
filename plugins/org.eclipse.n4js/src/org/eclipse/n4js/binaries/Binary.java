@@ -14,6 +14,7 @@ import static java.util.Collections.emptyList;
 
 import java.io.File;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -37,7 +38,7 @@ abstract public class Binary {
 	/**
 	 * The {@code PATH} environment variable.
 	 */
-	String PATH = "PATH";
+	static final public String PATH = "PATH";
 
 	/**
 	 * Returns with the application specific unique ID of the binary. This ID can be used to uniquely identify the
@@ -139,17 +140,33 @@ abstract public class Binary {
 	 */
 	public Map<String, String> updateEnvironment(Map<String, String> environment) {
 		final String additionalPath = getBinaryDirectory();
-		final String actualPathPropertyName = findActualPropertyNameOrDefault(environment, PATH);
-		final String newValue = environment.containsKey(actualPathPropertyName)
-				? environment.get(actualPathPropertyName) + File.pathSeparator + additionalPath
-				: additionalPath;
+		Map<String, String> additionalEntries = new HashMap<>();
+		additionalEntries.put(PATH, additionalPath);
+		environment = mergeEnvironments(environment, environment);
 
-		environment.put(actualPathPropertyName, newValue);
 		return environment;
 	}
 
+	/**
+	 * Merges the environment variables of {@code envB} into {@code envA}.
+	 * 
+	 * @return merged environment variables {@code envA}
+	 */
+	static public Map<String, String> mergeEnvironments(Map<String, String> envA, Map<String, String> envB) {
+		for (Map.Entry<String, String> entry : envB.entrySet()) {
+			String envKey = entry.getKey();
+			String envValue = entry.getValue();
+			String actualKeyName = findActualPropertyNameOrDefault(envA, envKey);
+			String newValue = envA.containsKey(actualKeyName)
+					? envA.get(actualKeyName) + File.pathSeparator + envValue
+					: envValue;
+			envA.put(actualKeyName, newValue);
+		}
+		return envA;
+	}
+
 	/** Deals with case-insensitivity on environment variables on windows platform */
-	protected String findActualPropertyNameOrDefault(Map<String, String> environment, String defaultName) {
+	static public String findActualPropertyNameOrDefault(Map<String, String> environment, String defaultName) {
 		if (environment.containsKey(defaultName)) {
 			return defaultName;
 		}

@@ -85,7 +85,8 @@ public class TestProcessBuilder {
 	}
 
 	private List<String> getCommands(Map<String, String> output_env, Binary binary, String... options) {
-		binary.updateEnvironment(output_env);
+		String additionalPath = binary.getBinaryDirectory();
+		output_env.put(Binary.PATH, additionalPath);
 
 		ArrayList<String> cmd = new ArrayList<>();
 
@@ -113,9 +114,12 @@ public class TestProcessBuilder {
 			throw new IllegalArgumentException("run configuration does not specify a working directory");
 		}
 
-		ProcessBuilder pb = new ProcessBuilder(cmd);
 		env.putAll(additionalEnvironmentVariables);
-		pb.environment().putAll(env);
+
+		ProcessBuilder pb = new ProcessBuilder(cmd);
+		Map<String, String> environment = pb.environment();
+		Binary.mergeEnvironments(environment, env);
+
 		pb.directory(workingDirectory.toFile());
 		// pb.inheritIO(); // output is captured in NodejsExecuter
 
