@@ -142,14 +142,14 @@ abstract public class Binary {
 		final String additionalPath = getBinaryDirectory();
 		Map<String, String> additionalEntries = new HashMap<>();
 		additionalEntries.put(PATH, additionalPath);
-		environment = mergeEnvironments(environment, environment);
+		environment = mergeEnvironments(environment, additionalEntries);
 
 		return environment;
 	}
 
 	/**
 	 * Merges the environment variables of {@code envB} into {@code envA}.
-	 * 
+	 *
 	 * @return merged environment variables {@code envA}
 	 */
 	static public Map<String, String> mergeEnvironments(Map<String, String> envA, Map<String, String> envB) {
