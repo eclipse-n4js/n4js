@@ -26,6 +26,7 @@ import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.io.Files;
@@ -33,6 +34,7 @@ import com.google.common.io.Files;
 /**
  * Tests for launching N4JS tests via the command line.
  */
+@Ignore // GH-1511
 public class N4jscTestersTest extends AbstractN4jscTest {
 	File workspace;
 
