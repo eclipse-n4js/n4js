@@ -73,7 +73,7 @@ pipeline {
         stage('Build (no tests)') {
             steps {
                 dir('n4js') {
-                    sh "mvn $MAVEN_OPTIONS -PbuildProduct -DexcludeJRE -DnoTests clean verify"
+                    sh "mvn $MAVEN_OPTIONS -PbuildProduct -DlanguageVersion=${LANGUAGE_VERSION} -DexcludeJRE -DnoTests clean verify"
                 }
             }
         }

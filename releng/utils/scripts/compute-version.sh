@@ -169,10 +169,4 @@ echo "Writing language version ${LANGUAGE_VERSION} to file ${LANGUAGE_VERSION_PR
 rm -f ${LANGUAGE_VERSION_PROPERTIES_FILE}
 echo "language.version = ${LANGUAGE_VERSION}" > ${LANGUAGE_VERSION_PROPERTIES_FILE}
 
-echo "Writing language version ${LANGUAGE_VERSION} to the 'plugin.properties' file of product bundles:"
-sed_in_place "LANGUAGE_VERSION_STRING" "${LANGUAGE_VERSION}" "${REPO_ROOT_DIR}/plugins/org.eclipse.n4js.product/plugin.properties"
-if [ -f "${REPO_ROOT_DIR}/../n4js-n4/plugins/com.enfore.n4js.product/plugin.properties" ]; then
-    sed_in_place "LANGUAGE_VERSION_STRING" "${LANGUAGE_VERSION}" "${REPO_ROOT_DIR}/../n4js-n4/plugins/com.enfore.n4js.product/plugin.properties"
-fi
-
 echo "==== COMPUTE VERSION - DONE"
