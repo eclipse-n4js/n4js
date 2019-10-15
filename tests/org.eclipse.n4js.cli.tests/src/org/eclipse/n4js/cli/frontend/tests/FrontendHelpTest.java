@@ -22,7 +22,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testGoalVersion() {
 		String args[] = { "version" };
-		CliResult result = main(args, 2, false);
+		CliResult result = main(args, 0, false);
 		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
@@ -30,7 +30,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testOptionVersion() {
 		String args[] = { "--version" };
-		CliResult result = main(args, 2, false);
+		CliResult result = main(args, 0, false);
 		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
@@ -38,7 +38,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testAnotherGoalWithOptionVersion() {
 		String args[] = { "lsp", "--version" };
-		CliResult result = main(args, 2, false);
+		CliResult result = main(args, 0, false);
 		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
@@ -67,7 +67,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	}
 
 	private String getVersionExpectation() {
-		return "ERROR-2 (Feature is not implemented)";
+		return "0.0.1.20130726_0941";
 	}
 
 	private String getUsageExpectation() {

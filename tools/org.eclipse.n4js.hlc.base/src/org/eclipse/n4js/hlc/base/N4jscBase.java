@@ -71,6 +71,7 @@ import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.TesterActivator;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.StatusUtils;
 import org.eclipse.xtext.ISetup;
@@ -119,6 +120,10 @@ public class N4jscBase implements IApplication {
 	@Option(name = "--help", aliases = "-h", usage = "print help & exit")
 	// , help=true // TODO new versions(>3.5.2014) of args4j, support help-flag
 	boolean help = false;
+
+	/** Print language version and exit */
+	@Option(name = "--version", usage = "print version & exit")
+	boolean version = false;
 
 	/** Debug print of all read-in arguments */
 	@Option(name = "--debug", usage = "print information about the current setup of the compiler")
@@ -394,6 +399,13 @@ public class N4jscBase implements IApplication {
 			if (help) {
 				// print and exit:
 				printExtendedUsage(parser, System.out);
+				return SuccessExitStatus.INSTANCE;
+			}
+
+			// Check version option:
+			if (version) {
+				// print and exit:
+				System.out.println(N4JSLanguageUtils.getLanguageVersion());
 				return SuccessExitStatus.INSTANCE;
 			}
 
@@ -1017,8 +1029,10 @@ public class N4jscBase implements IApplication {
 	 * Dumping all options to screen.
 	 */
 	private void printDebugLines() {
+		final String versionStr = N4JSLanguageUtils.getLanguageVersion();
 		final char NL = '\n';
 		StringBuffer sb = new StringBuffer();
+		sb.append("language.version=").append(versionStr).append(NL);
 		sb.append("N4jsc.options=").append(NL) //
 				.append("debug=").append(debug).append(NL) //
 				.append("runner=").append(runner).append(NL) //
