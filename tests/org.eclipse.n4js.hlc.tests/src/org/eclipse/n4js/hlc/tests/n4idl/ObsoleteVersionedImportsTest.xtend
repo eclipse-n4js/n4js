@@ -13,21 +13,23 @@ package org.eclipse.n4js.hlc.tests.n4idl
 import com.google.common.base.Predicates
 import java.io.File
 import java.io.IOException
-import org.eclipse.n4js.cli.helper.N4CliHelper
-import org.eclipse.n4js.hlc.base.BuildType
+import java.nio.file.Path
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest
 import org.eclipse.n4js.hlc.base.ExitCodeException
-import org.eclipse.n4js.hlc.tests.AbstractN4jscTest
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE
+import static org.junit.Assert.assertEquals
 
 /**
  * Compiles and runs a basic N4IDL project.
  *
  * Asserts that all used versions are imported correctly and that no obsolete versions are imported.
  */
-public class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
+public class ObsoleteVersionedImportsTest extends AbstractCliCompileTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -43,41 +45,19 @@ public class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 	}
 
 	/**
-	 * Compiles the project and runs the given file.
-	 *
-	 * @param projectName
-	 *            The project to run. This must be an existing project in the configure workspace (see
-	 *            {@link #setupWorkspace()})
-	 * @param fileToRunFQN
-	 *            The fully qualified name of the file to run. Note that this file is assumed to be contained in the
-	 *            source folder 'src/' of the project.
-	 * @return The output of the runner
-	 */
-	private def String compileAndRun(String projectName, String fileToRunFQN) throws ExitCodeException, IOException {
-		val wsRoot = workspace.getAbsolutePath().toString();
-		val packages = wsRoot + "/packages";
-
-		val fileToRun = packages + "/" + projectName + "/src-ext/" + fileToRunFQN;
-		val projectToCompile = packages + "/" + projectName;
-
-		val String[] args = #[
-				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--buildType", BuildType.projects.toString(),
-				projectToCompile];
-		
-		return runAndCaptureOutput(args);
-	}
-
-	/**
 	 * Compiles and runs the test project.
 	 *
 	 * Asserts the output to be equal to 'ObsoleteVersionedImports/expectations.log'.
 	 */
 	@Test
 	public def void testNoObsoleteVersionsImported() throws IOException, ExitCodeException {
-		val out = compileAndRun("ObsoleteVersionedImports", "run.js");
-		val expectations = '''
+		val cliResult = n4jsc(COMPILE(workspace));
+		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
+		
+		val wsRoot = workspace.getAbsolutePath().toString();
+		val fileToRun = wsRoot + "/packages/ObsoleteVersionedImports/src-ext/run.js";
+		
+		val expectedString = '''
 		R#1: function R$1() {}
 		R#2: undefined
 		R#3: function R$3() {}
@@ -90,6 +70,7 @@ public class ObsoleteVersionedImportsTest extends AbstractN4jscTest {
 		T#2: undefined
 		Q#1: undefined''';
 
-		N4CliHelper.assertExpectedOutput(expectations, out);
+		val nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 }
