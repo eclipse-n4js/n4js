@@ -39,7 +39,7 @@ public class HashedFileContent {
 	 */
 	public HashedFileContent(URI uri, File file) throws IOException {
 		this.uri = uri;
-		if ("js".equals(uri.fileExtension())) {
+		if ("js".equals(uri.fileExtension()) || "map".equals(uri.fileExtension())) {
 			this.hash = file.length();
 		} else {
 			// byteSource.hash uses ByteSource.copyTo which does not use a buffered stream

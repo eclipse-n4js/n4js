@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +69,8 @@ public class ProjectStatePersister {
 			File file = getDataFile(project);
 			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
 				nativeOut.write(VERSION);
-				try (ObjectOutputStream output = new ObjectOutputStream(new GZIPOutputStream(nativeOut, 8192))) {
+				try (ObjectOutputStream output = new ObjectOutputStream(
+						new BufferedOutputStream(new GZIPOutputStream(nativeOut, 8192)))) {
 					output.writeInt(state.getResourceDescriptions().getAllURIs().size());
 					for (IResourceDescription description : state.getResourceDescriptions()
 							.getAllResourceDescriptions()) {
@@ -106,7 +109,8 @@ public class ProjectStatePersister {
 				try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
 					int version = nativeIn.read();
 					if (version == VERSION) {
-						try (ObjectInputStream input = new ObjectInputStream(new GZIPInputStream(nativeIn, 8192))) {
+						try (ObjectInputStream input = new ObjectInputStream(
+								new BufferedInputStream(new GZIPInputStream(nativeIn, 8192)))) {
 							List<IResourceDescription> descriptions = new ArrayList<>();
 							int size = input.readInt();
 							while (size > 0) {

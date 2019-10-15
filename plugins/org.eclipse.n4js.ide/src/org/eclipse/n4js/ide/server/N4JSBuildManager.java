@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -113,16 +112,7 @@ public class N4JSBuildManager extends BuildManager {
 						this.myUnreportedDeltas, cancelIndicator);
 				myDirtyFiles.get(it).removeAll(projectDirty);
 				myDeletedFiles.get(it).removeAll(projectDeleted);
-				List<IResourceDescription.Delta> unreportedDeltas = new ArrayList<>();
-				List<URI> unreportedDeltaUris = new ArrayList<>();
-				for (IResourceDescription.Delta affected : partialResult.getAffectedResources()) {
-					unreportedDeltas.add(affected);
-					if (!projectDirty.contains(affected.getUri()) && !projectDeleted.contains(affected.getUri())) {
-						unreportedDeltaUris.add(affected.getUri());
-					}
-				}
-				submit(unreportedDeltaUris, Collections.emptyList());
-				this.mergeWithUnreportedDeltas(unreportedDeltas);
+				this.mergeWithUnreportedDeltas(partialResult.getAffectedResources());
 			}
 		}
 		final List<IResourceDescription.Delta> result = this.myUnreportedDeltas;
