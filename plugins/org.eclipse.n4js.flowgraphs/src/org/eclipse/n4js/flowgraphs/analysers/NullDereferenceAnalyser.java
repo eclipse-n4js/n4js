@@ -60,8 +60,10 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		EObject parent = cfe.eContainer();
 		if (parent instanceof ParameterizedPropertyAccessExpression) {
 			ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) parent;
-			Expression target = ppae.getTarget();
-			return cfe == target;
+			if (!ppae.isOptionalChaining()) {
+				Expression target = ppae.getTarget();
+				return cfe == target;
+			}
 		}
 		return false;
 	}
@@ -97,10 +99,10 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		public PartialResult holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue) {
 			if (rSymbol != null) {
 				if (rSymbol.isNullLiteral() && !guardsThatNeverHold.containsKey(GuardType.IsNull)) {
-					return new NullDerefernceFailed(GuardType.IsNull, lhs);
+					return new NullDereferenceFailed(GuardType.IsNull, lhs);
 				}
 				if (rSymbol.isUndefinedLiteral() && !guardsThatNeverHold.containsKey(GuardType.IsUndefined)) {
-					return new NullDerefernceFailed(GuardType.IsUndefined, lhs);
+					return new NullDereferenceFailed(GuardType.IsUndefined, lhs);
 				}
 			} else if (rValue != null) {
 				return PartialResult.Passed;
@@ -119,10 +121,10 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 				return PartialResult.Passed;
 			}
 			if (alwaysHolding.containsKey(GuardType.IsNull)) {
-				return new NullDerefernceFailed(GuardType.IsNull);
+				return new NullDereferenceFailed(GuardType.IsNull);
 			}
 			if (alwaysHolding.containsKey(GuardType.IsUndefined)) {
-				return new NullDerefernceFailed(GuardType.IsUndefined);
+				return new NullDereferenceFailed(GuardType.IsUndefined);
 			}
 
 			return PartialResult.Unclear;

@@ -38,13 +38,12 @@ import org.eclipse.n4js.ts.types.ComposedMemberCache;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.IndexedAccessExpressionImpl#getComposedMemberCache <em>Composed Member Cache</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.IndexedAccessExpressionImpl#getTarget <em>Target</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.IndexedAccessExpressionImpl#getIndex <em>Index</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class IndexedAccessExpressionImpl extends ExpressionImpl implements IndexedAccessExpression {
+public class IndexedAccessExpressionImpl extends ExpressionWithTargetImpl implements IndexedAccessExpression {
 	/**
 	 * The cached value of the '{@link #getComposedMemberCache() <em>Composed Member Cache</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -54,16 +53,6 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	 * @ordered
 	 */
 	protected ComposedMemberCache composedMemberCache;
-
-	/**
-	 * The cached value of the '{@link #getTarget() <em>Target</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTarget()
-	 * @generated
-	 * @ordered
-	 */
-	protected Expression target;
 
 	/**
 	 * The cached value of the '{@link #getIndex() <em>Index</em>}' containment reference.
@@ -140,51 +129,6 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	 * @generated
 	 */
 	@Override
-	public Expression getTarget() {
-		return target;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetTarget(Expression newTarget, NotificationChain msgs) {
-		Expression oldTarget = target;
-		target = newTarget;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET, oldTarget, newTarget);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setTarget(Expression newTarget) {
-		if (newTarget != target) {
-			NotificationChain msgs = null;
-			if (target != null)
-				msgs = ((InternalEObject)target).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET, null, msgs);
-			if (newTarget != null)
-				msgs = ((InternalEObject)newTarget).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET, null, msgs);
-			msgs = basicSetTarget(newTarget, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET, newTarget, newTarget));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Expression getIndex() {
 		return index;
 	}
@@ -242,8 +186,6 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET:
-				return basicSetTarget(null, msgs);
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__INDEX:
 				return basicSetIndex(null, msgs);
 		}
@@ -261,8 +203,6 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE:
 				if (resolve) return getComposedMemberCache();
 				return basicGetComposedMemberCache();
-			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET:
-				return getTarget();
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__INDEX:
 				return getIndex();
 		}
@@ -279,9 +219,6 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 		switch (featureID) {
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE:
 				setComposedMemberCache((ComposedMemberCache)newValue);
-				return;
-			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET:
-				setTarget((Expression)newValue);
 				return;
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__INDEX:
 				setIndex((Expression)newValue);
@@ -301,9 +238,6 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE:
 				setComposedMemberCache((ComposedMemberCache)null);
 				return;
-			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET:
-				setTarget((Expression)null);
-				return;
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__INDEX:
 				setIndex((Expression)null);
 				return;
@@ -321,8 +255,6 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 		switch (featureID) {
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE:
 				return composedMemberCache != null;
-			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET:
-				return target != null;
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__INDEX:
 				return index != null;
 		}

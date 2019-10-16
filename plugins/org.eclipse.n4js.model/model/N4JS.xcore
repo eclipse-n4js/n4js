@@ -1433,14 +1433,30 @@ abstract class ParameterizedAccess {
 	}
 }
 
-class ParameterizedCallExpression extends Expression, ParameterizedAccess {
-	/*
-	 * The callee or target of the call, e.g. the name of the called function. This is not the receiver (which may be null).
+/**
+ * Abstract base class for expressions that do have a target and are potentially null safe.
+ */
+abstract class ExpressionWithTarget extends Expression {
+	/**
+	 * The target of this dereferencing expression (aka receiver).
 	 */
 	contains Expression target
+	boolean optionalChaining
+}
+
+class ParameterizedCallExpression extends ExpressionWithTarget, ParameterizedAccess {
+	/*
+	 * About the target property:
+	 * It is the callee or target of the call, e.g. the name of the called function. This is not the receiver (which may be null).
+	 */
+	// inherits contains Expression target
+	
 	contains Argument[] arguments
 	/*
 	 * Convenience method returning the receiver expression or null, if call has no receiver.
+	 * 
+	 * The semantics of receiver and target are best understood by example:
+	 * <code> receiver.target(arguments) </code>
 	 */
 	op Expression getReceiver() {
 		if (target instanceof ParameterizedPropertyAccessExpression) {
@@ -1469,8 +1485,7 @@ class Argument extends TypableElement {
 	contains Expression expression
 }
 
-class IndexedAccessExpression extends Expression, MemberAccess {
-	contains Expression target
+class IndexedAccessExpression extends ExpressionWithTarget, MemberAccess {
 	contains Expression index
 	/**
 	 * Returns true.
@@ -1484,8 +1499,7 @@ class IndexedAccessExpression extends Expression, MemberAccess {
  * An invocation of the form
  * {@code method `template`}
  */
-class TaggedTemplateString extends Expression {
-	contains Expression target
+class TaggedTemplateString extends ExpressionWithTarget {
 	contains TemplateLiteral template
 }
 
@@ -1504,11 +1518,7 @@ abstract class MemberAccess {
 	refers transient ComposedMemberCache composedMemberCache
 }
 
-class ParameterizedPropertyAccessExpression extends Expression, MemberAccess, ParameterizedAccess {
-	/**
-	 * Target (aka receiver)
-	 */
-	contains Expression target
+class ParameterizedPropertyAccessExpression extends ExpressionWithTarget, MemberAccess, ParameterizedAccess {
 	refers IdentifiableElement property
 	transient String propertyAsText
 	/**
@@ -1783,6 +1793,11 @@ class BinaryLogicalExpression extends Expression {
 	contains Expression lhs
 	BinaryLogicalOperator ^op
 	contains Expression rhs
+}
+
+class CoalesceExpression extends Expression {
+	contains Expression expression
+	contains Expression defaultExpression
 }
 
 class ConditionalExpression extends Expression {

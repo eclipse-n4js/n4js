@@ -1041,11 +1041,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.EXPRESSION_WITH_TARGET: {
+				ExpressionWithTarget expressionWithTarget = (ExpressionWithTarget)theEObject;
+				T result = caseExpressionWithTarget(expressionWithTarget);
+				if (result == null) result = caseExpression(expressionWithTarget);
+				if (result == null) result = caseTypableElement(expressionWithTarget);
+				if (result == null) result = caseControlFlowElement(expressionWithTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION: {
 				ParameterizedCallExpression parameterizedCallExpression = (ParameterizedCallExpression)theEObject;
 				T result = caseParameterizedCallExpression(parameterizedCallExpression);
-				if (result == null) result = caseExpression(parameterizedCallExpression);
+				if (result == null) result = caseExpressionWithTarget(parameterizedCallExpression);
 				if (result == null) result = caseParameterizedAccess(parameterizedCallExpression);
+				if (result == null) result = caseExpression(parameterizedCallExpression);
 				if (result == null) result = caseTypableElement(parameterizedCallExpression);
 				if (result == null) result = caseControlFlowElement(parameterizedCallExpression);
 				if (result == null) result = defaultCase(theEObject);
@@ -1070,8 +1080,9 @@ public class N4JSSwitch<T> extends Switch<T> {
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION: {
 				IndexedAccessExpression indexedAccessExpression = (IndexedAccessExpression)theEObject;
 				T result = caseIndexedAccessExpression(indexedAccessExpression);
-				if (result == null) result = caseExpression(indexedAccessExpression);
+				if (result == null) result = caseExpressionWithTarget(indexedAccessExpression);
 				if (result == null) result = caseMemberAccess(indexedAccessExpression);
+				if (result == null) result = caseExpression(indexedAccessExpression);
 				if (result == null) result = caseTypableElement(indexedAccessExpression);
 				if (result == null) result = caseControlFlowElement(indexedAccessExpression);
 				if (result == null) result = defaultCase(theEObject);
@@ -1080,6 +1091,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			case N4JSPackage.TAGGED_TEMPLATE_STRING: {
 				TaggedTemplateString taggedTemplateString = (TaggedTemplateString)theEObject;
 				T result = caseTaggedTemplateString(taggedTemplateString);
+				if (result == null) result = caseExpressionWithTarget(taggedTemplateString);
 				if (result == null) result = caseExpression(taggedTemplateString);
 				if (result == null) result = caseTypableElement(taggedTemplateString);
 				if (result == null) result = caseControlFlowElement(taggedTemplateString);
@@ -1095,9 +1107,10 @@ public class N4JSSwitch<T> extends Switch<T> {
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION: {
 				ParameterizedPropertyAccessExpression parameterizedPropertyAccessExpression = (ParameterizedPropertyAccessExpression)theEObject;
 				T result = caseParameterizedPropertyAccessExpression(parameterizedPropertyAccessExpression);
-				if (result == null) result = caseExpression(parameterizedPropertyAccessExpression);
+				if (result == null) result = caseExpressionWithTarget(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseMemberAccess(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseParameterizedAccess(parameterizedPropertyAccessExpression);
+				if (result == null) result = caseExpression(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseTypableElement(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseControlFlowElement(parameterizedPropertyAccessExpression);
 				if (result == null) result = defaultCase(theEObject);
@@ -1405,6 +1418,15 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseExpression(binaryLogicalExpression);
 				if (result == null) result = caseTypableElement(binaryLogicalExpression);
 				if (result == null) result = caseControlFlowElement(binaryLogicalExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.COALESCE_EXPRESSION: {
+				CoalesceExpression coalesceExpression = (CoalesceExpression)theEObject;
+				T result = caseCoalesceExpression(coalesceExpression);
+				if (result == null) result = caseExpression(coalesceExpression);
+				if (result == null) result = caseTypableElement(coalesceExpression);
+				if (result == null) result = caseControlFlowElement(coalesceExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -3374,6 +3396,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Expression With Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Expression With Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExpressionWithTarget(ExpressionWithTarget object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Parameterized Call Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -3910,6 +3947,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseBinaryLogicalExpression(BinaryLogicalExpression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Coalesce Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Coalesce Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCoalesceExpression(CoalesceExpression object) {
 		return null;
 	}
 
