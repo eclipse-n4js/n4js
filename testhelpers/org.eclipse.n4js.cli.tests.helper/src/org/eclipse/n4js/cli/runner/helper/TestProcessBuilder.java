@@ -16,7 +16,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.Binary;
+import org.eclipse.n4js.binaries.nodejs.JavaBinary;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
@@ -39,12 +39,16 @@ public class TestProcessBuilder {
 	final private NodeJsBinary nodeJsBinary;
 	final private NpmBinary npmBinary;
 	final private YarnBinary yarnBinary;
+	final private JavaBinary javaBinary;
 
 	/** Constructor */
-	public TestProcessBuilder(NodeJsBinary nodeJsBinary, NpmBinary npmBinary, YarnBinary yarnBinary) {
+	public TestProcessBuilder(NodeJsBinary nodeJsBinary, NpmBinary npmBinary, YarnBinary yarnBinary,
+			JavaBinary javaBinary) {
+
 		this.nodeJsBinary = nodeJsBinary;
 		this.npmBinary = npmBinary;
 		this.yarnBinary = yarnBinary;
+		this.javaBinary = javaBinary;
 	}
 
 	/** @return a started process: {@code node -r esm fileToRun} */
@@ -101,12 +105,13 @@ public class TestProcessBuilder {
 		File n4jscAbsoluteFile = new File("target/n4jsc.jar").getAbsoluteFile();
 		String n4jscFileName = n4jscAbsoluteFile.toString();
 
-		ArrayList<String> args2 = new ArrayList<>();
-		Collections.addAll(args2, "java", "-jar", n4jscFileName);
-		args2.addAll(options.toArgs());
-		String[] cmdOptions = args2.toArray(new String[args2.size()]);
+		List<String> optionList = new ArrayList<>();
+		optionList.add("-jar");
+		optionList.add(n4jscFileName);
+		optionList.addAll(options.toArgs());
+		String[] cmdOptions = optionList.toArray(new String[optionList.size()]);
 
-		List<String> cmd = getCommands(output_env, n4jscFileName, cmdOptions);
+		List<String> cmd = getCommands(output_env, javaBinary.getBinaryAbsolutePath(), cmdOptions);
 		return cmd.toArray(new String[0]);
 	}
 

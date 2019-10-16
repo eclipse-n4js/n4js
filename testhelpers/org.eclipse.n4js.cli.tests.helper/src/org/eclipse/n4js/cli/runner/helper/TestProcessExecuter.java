@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
+import org.eclipse.n4js.binaries.nodejs.JavaBinary;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
@@ -33,7 +34,8 @@ public class TestProcessExecuter {
 		NodeJsBinary nodeJsBinary = injector.getInstance(NodeJsBinary.class);
 		NpmBinary npmBinary = injector.getInstance(NpmBinary.class);
 		YarnBinary yarnBinary = injector.getInstance(YarnBinary.class);
-		testProcessBuilder = new TestProcessBuilder(nodeJsBinary, npmBinary, yarnBinary);
+		JavaBinary javaBinary = injector.getInstance(JavaBinary.class);
+		testProcessBuilder = new TestProcessBuilder(nodeJsBinary, npmBinary, yarnBinary, javaBinary);
 	}
 
 	interface ProcessSupplier {

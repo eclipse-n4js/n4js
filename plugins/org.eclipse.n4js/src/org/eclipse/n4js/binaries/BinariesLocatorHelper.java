@@ -123,7 +123,7 @@ public class BinariesLocatorHelper {
 					+ ".' based on the '" + BinariesConstants.DEFAULT_YARN_PATH_VM_ARG + "' VM argument.");
 			return yarnPathCandidate;
 		}
-		debug("Could not resolve node path from '" + BinariesConstants.DEFAULT_NODE_PATH_VM_ARG
+		debug("Could not resolve yarn path from '" + BinariesConstants.DEFAULT_YARN_PATH_VM_ARG
 				+ "' VM argument.");
 
 		// 2. lookup by YARN_PATH_ENV
@@ -162,6 +162,63 @@ public class BinariesLocatorHelper {
 		yarnPathCandidate = new File(BinariesConstants.BUILT_IN_DEFAULT_YARN_PATH).toPath();
 
 		return yarnPathCandidate;
+	}
+
+	/**
+	 * Like {@link #findNodePath()}, but for the java binary.
+	 *
+	 * @return string with absolute path to the binary
+	 */
+	public Path findJavaPath() {
+		Path javaPathCandidate = null;
+
+		// 1. lookup by DEFAULT_JAVA_PATH_VM_ARG
+		javaPathCandidate = resolveFolderContaingBinary(
+				tryGetEnvOrSystemVariable(BinariesConstants.DEFAULT_JAVA_PATH_VM_ARG));
+		if (javaPathCandidate != null) {
+			info("User specified default java path will be used: '" + javaPathCandidate
+					+ ".' based on the '" + BinariesConstants.DEFAULT_JAVA_PATH_VM_ARG + "' VM argument.");
+			return javaPathCandidate;
+		}
+		debug("Could not resolve java path from '" + BinariesConstants.DEFAULT_JAVA_PATH_VM_ARG
+				+ "' VM argument.");
+
+		// 2. lookup by JAVA_PATH_ENV
+		javaPathCandidate = resolveFolderContaingBinary(
+				tryGetEnvOrSystemVariable(BinariesConstants.JAVA_PATH_ENV));
+		if (javaPathCandidate != null) {
+			info("User specified default java path will be used: '" + javaPathCandidate
+					+ ".' based on the '" + BinariesConstants.JAVA_PATH_ENV + "' environment argument.");
+			return javaPathCandidate;
+		}
+		debug("Could not resolve java path from '" + BinariesConstants.JAVA_PATH_ENV);
+
+		// 3. lookup by PATH
+		javaPathCandidate = resolveFolderContaingBinary(
+				ExecutableLookupUtil.findInPath(BinariesConstants.JAVA_BINARY_NAME));
+		if (javaPathCandidate != null) {
+			info("Obtained java path will be used: '" + javaPathCandidate
+					+ ".' based on the OS PATH.");
+			return javaPathCandidate;
+		}
+		debug("Could not resolve java path from OS PATH variable.");
+
+		// 4. lookup by OS query
+		javaPathCandidate = resolveFolderContaingBinary(
+				lookForBinary(BinariesConstants.JAVA_BINARY_NAME));
+		if (javaPathCandidate != null) {
+			info("Obtained java path will be used: '" + javaPathCandidate
+					+ ".' based on the OS dynamic lookup.");
+			return javaPathCandidate;
+
+		}
+		debug("Could not resolve java path from OS dynamic lookup.");
+
+		// 5. use default, whether it is correct or not.
+		info("Could not resolve java path. Falling back to default path: " + javaPathCandidate);
+		javaPathCandidate = new File(BinariesConstants.BUILT_IN_DEFAULT_JAVA_PATH).toPath();
+
+		return javaPathCandidate;
 	}
 
 	private String lookForBinary(String binaryName) {

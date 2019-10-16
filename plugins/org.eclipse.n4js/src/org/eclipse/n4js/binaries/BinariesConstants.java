@@ -58,6 +58,11 @@ public final class BinariesConstants {
 	public static final String DEFAULT_YARN_PATH_VM_ARG = "org.eclipse.n4js.defaultYarnPath";
 
 	/**
+	 * Default java path, similar to {@code DEFAULT_NODE_PATH_VM_ARG}
+	 */
+	public static final String DEFAULT_JAVA_PATH_VM_ARG = "org.eclipse.n4js.defaultJavaPath";
+
+	/**
 	 * Jenkins environment variable for the {@code Node.js} binary path. Points to the actual binary (with an absolute
 	 * path) instead of pointing to the folder containing the binary.
 	 *
@@ -76,6 +81,16 @@ public final class BinariesConstants {
 	 * argument might override this configuration.
 	 */
 	public static final String YARN_PATH_ENV = "YARN_PATH";
+
+	/**
+	 * Jenkins environment variable for the {@code java} binary path. Points to the actual binary (with an absolute
+	 * path) instead of pointing to the folder containing the binary.
+	 *
+	 * <p>
+	 * Even if it is available the {@link #DEFAULT_JAVA_PATH_VM_ARG <code>org.eclipse.n4js.defaultJavaPath</code>} VM
+	 * argument might override this configuration.
+	 */
+	public static final String JAVA_PATH_ENV = "JAVA_HOME";
 
 	/**
 	 * The (fallback) built-in default {@code Node.js} path if the above VM or ENV property is not specified.
@@ -100,6 +115,18 @@ public final class BinariesConstants {
 	public static final String BUILT_IN_DEFAULT_YARN_PATH = isWindows()
 			? new File("C:" + separator + "Program Files" + separator + "yarn").getAbsolutePath()
 			: new File(separator + "usr" + File.separator + "local" + separator + "bin").getAbsolutePath();
+
+	/**
+	 * The (fallback) built-in default {@code java} path if the above VM or ENV property is not specified.
+	 *
+	 * <ul>
+	 * <li>On Windows systems: {@code C:\Program Files\Java}</li>
+	 * <li>On Unix systems: {@code /usr/bin/java}</li>
+	 * </ul>
+	 */
+	public static final String BUILT_IN_DEFAULT_JAVA_PATH = isWindows()
+			? new File("C:" + separator + "Program Files" + separator + "Java").getAbsolutePath()
+			: new File(separator + "usr" + File.separator + "bin" + separator + "java").getAbsolutePath();
 
 	/** The minimum {@code Node.js} version. */
 	public static final VersionNumber NODE_MIN_VERSION = SemverUtils.createVersionNumber(10, 13, 0);
@@ -129,6 +156,15 @@ public final class BinariesConstants {
 	public static final VersionNumber YARN_MIN_VERSION = SemverUtils.createVersionNumber(1, 13, 0);
 	/** The argument for yarn to print out the version number */
 	public static final String YARN_VERSION_ARGUMENT = "-v";
+
+	/** The label for {@code java}. */
+	public static final String JAVA_LABEL = "Java";
+	/** The {@code java} binary name without file extension. */
+	public static final String JAVA_BINARY_NAME = "java";
+	/** The minimum {@code java} version. */
+	public static final VersionNumber JAVA_MIN_VERSION = SemverUtils.createVersionNumber(11, 0, 3);
+	/** The argument for java to print out the version number */
+	public static final String JAVA_VERSION_ARGUMENT = "-version";
 
 	/** File extensions for executable files on windows platform */
 	public static final String[] EXECS_WINDOWS = { ".bat", ".cmd", ".exe" };
