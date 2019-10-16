@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli.frontend.tests;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
@@ -67,7 +68,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	}
 
 	private String getVersionExpectation() {
-		return "0.0.1.20130726_0941";
+		return N4JSLanguageUtils.DEFAULT_LANGUAGE_VERSION;
 	}
 
 	private String getUsageExpectation() {
