@@ -94,12 +94,12 @@ else
 fi
 
 echo "==== STEP 4/6: Compute n4js-libs version number for this build ..."
-VERSION_MAJOR_REQUESTED=`jq -r '.major' version.json`
-VERSION_MINOR_REQUESTED=`jq -r '.minor' version.json`
-VERSION_DIST_TAG_REQUESTED=`jq -r '.tag' version.json`
-echo "Requested major segment       : ${VERSION_MAJOR_REQUESTED} (from file n4js-libs/version.json)"
-echo "Requested minor segment       : ${VERSION_MINOR_REQUESTED} (from file n4js-libs/version.json)"
-echo "Requested dist tag            : ${VERSION_DIST_TAG_REQUESTED} (from file n4js-libs/version.json)"
+VERSION_MAJOR_REQUESTED=`jq -r '.major' ${REPO_ROOT_DIR}/version.json`
+VERSION_MINOR_REQUESTED=`jq -r '.minor' ${REPO_ROOT_DIR}/version.json`
+VERSION_DIST_TAG_REQUESTED=`jq -r '.tag' ${REPO_ROOT_DIR}/version.json`
+echo "Requested major segment       : ${VERSION_MAJOR_REQUESTED} (from file version.json)"
+echo "Requested minor segment       : ${VERSION_MINOR_REQUESTED} (from file version.json)"
+echo "Requested dist tag            : ${VERSION_DIST_TAG_REQUESTED} (from file version.json)"
 echo "Latest published version      : ${N4JS_LIBS_VERSION_PUBLIC}"
 if [ "${N4JS_LIBS_PUBLISHING_REQUIRED}" = "true" ]; then
     echo "-> this build will publish a new version of n4js-libs"
@@ -113,15 +113,15 @@ if [ "${N4JS_LIBS_PUBLISHING_REQUIRED}" = "true" ]; then
         exit -1
     fi
     if [ "$VERSION_MAJOR_REQUESTED" -gt "$VERSION_MAJOR_PUBLIC" ]; then
-        echo "New major version segment requested in file n4js-libs/version.json -> will bump major segment"
+        echo "New major version segment requested in file version.json -> will bump major segment"
         INCREMENTED_VERSION="$VERSION_MAJOR_REQUESTED.$VERSION_MINOR_REQUESTED.0"
     elif [ "$VERSION_MINOR_REQUESTED" -gt "$VERSION_MINOR_PUBLIC" ]; then
-        echo "New minor version segment requested in file n4js-libs/version.json -> will bump minor segment"
+        echo "New minor version segment requested in file version.json -> will bump minor segment"
         # for major segment we use the latest public version as template to make sure
         # we do not end up with a lower version than the latest public version
         INCREMENTED_VERSION="$VERSION_MAJOR_PUBLIC.$VERSION_MINOR_REQUESTED.0"
     elif [ "$VERSION_MAJOR_REQUESTED" -eq "$VERSION_MAJOR_PUBLIC" ] && [ "$VERSION_MINOR_REQUESTED" -eq "$VERSION_MINOR_PUBLIC" ]; then
-        echo "No new major/minor version segment requested in file n4js-libs/version.json -> will bump patch segment"
+        echo "No new major/minor version segment requested in file version.json -> will bump patch segment"
         INCREMENTED_VERSION=`semver -i patch ${N4JS_LIBS_VERSION_PUBLIC}`
     else
         echo "ERROR: requested major/minor segment must not be lower than latest published major/minor segment!"
