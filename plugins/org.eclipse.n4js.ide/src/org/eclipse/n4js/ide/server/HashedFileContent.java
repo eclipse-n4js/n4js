@@ -11,11 +11,11 @@
 package org.eclipse.n4js.ide.server;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.io.OutputStream;
 
 import org.eclipse.emf.common.util.URI;
 
@@ -23,9 +23,6 @@ import com.google.common.hash.Funnels;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-import com.google.common.io.ByteSource;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Files;
 
 /**
  * A naive mapping of URIs to content hashes.
@@ -49,15 +46,11 @@ public class HashedFileContent {
 				|| "json".equals(ext) && !"package.json".equals(uri.lastSegment())) {
 			this.hash = file.length();
 		} else {
-			// byteSource.hash uses ByteSource.copyTo which does not use a buffered stream
-			// for perf reasons we inline the better part of the code here
-			ByteSource byteSource = Files.asByteSource(file);
-			Hasher hasher = hashFunction.newHasher();
-			try (InputStream in = byteSource.openBufferedStream();
-					OutputStream output = Funnels.asOutputStream(hasher)) {
-				ByteStreams.copy(in, output);
+			try (InputStream s = new FileInputStream(file)) {
+				Hasher hasher = hashFunction.newHasher();
+				s.transferTo(Funnels.asOutputStream(hasher));
+				this.hash = hasher.hash().asLong();
 			}
-			this.hash = hasher.hash().asLong();
 		}
 	}
 
