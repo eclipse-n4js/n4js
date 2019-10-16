@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.N4CliHelper;
 import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -81,7 +81,7 @@ public class InstallCompileRunN4jscExternalShadowNestedNodeModulesTest extends A
 		final String fileToRun = packages + "/P/src-gen/Main.js";
 
 		N4jscOptions options = COMPILE(workspace);
-		CliResult cliResult = n4jsc(options);
+		CliCompileResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "Main.n4js in P\n";

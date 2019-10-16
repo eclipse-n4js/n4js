@@ -19,7 +19,7 @@ import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.N4CliHelper;
 import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -50,7 +50,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 	/** Basic compile test. */
 	@Test
 	public void testMainArgsCompileAllKeepCompiling() {
-		CliResult cliResult = n4jsc(COMPILE(workspace));
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 19, cliResult.getTranspiledFilesCount());
 	}
 
@@ -61,7 +61,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
 				N4JSGlobals.N4JS_RUNTIME);
 
-		CliResult cliResult = n4jsc(COMPILE(workspace));
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 19, cliResult.getTranspiledFilesCount());
 
 		Path fileA = proot.toPath().resolve("/P1/src-gen/A.js");

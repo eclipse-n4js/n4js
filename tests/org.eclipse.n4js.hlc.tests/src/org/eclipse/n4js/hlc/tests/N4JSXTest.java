@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -48,7 +48,7 @@ public class N4JSXTest extends AbstractCliCompileTest {
 	/** Compile an n4jsx workspace. */
 	@Test
 	public void testN4JSX() {
-		CliResult cliResult = n4jsc(COMPILE(workspace));
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 
 		Collection<String> fileNames = cliResult.getTranspiledFileNames();
 

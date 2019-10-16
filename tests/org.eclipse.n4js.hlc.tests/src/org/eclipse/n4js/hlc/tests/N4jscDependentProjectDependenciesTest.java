@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -59,7 +59,7 @@ public class N4jscDependentProjectDependenciesTest extends AbstractCliCompileTes
 		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
 		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
 
-		CliResult cliResult = n4jsc(COMPILE(workspace));
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
 	}
 

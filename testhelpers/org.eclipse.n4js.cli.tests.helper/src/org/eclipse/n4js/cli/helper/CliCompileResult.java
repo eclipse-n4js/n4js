@@ -28,6 +28,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.cli.N4jscMain;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest.N4jscVariant;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -35,7 +36,8 @@ import com.google.common.collect.Multimap;
 /**
  * Data class that holds all information after {@link N4jscMain} was executed
  */
-public class CliResult {
+public class CliCompileResult {
+	N4jscVariant n4jscVariant;
 	String stdOut;
 	String errOut;
 	int exitCode;
@@ -45,6 +47,11 @@ public class CliResult {
 	Multimap<String, String> warnings = HashMultimap.create();
 	long duration;
 	TreeMap<Path, HashSet<File>> transpiledFiles = new TreeMap<>();
+
+	/** @return variant of execution (see {@link N4jscVariant}) */
+	public N4jscVariant getN4jscVariant() {
+		return n4jscVariant;
+	}
 
 	/** @return all outputs on the standard output stream */
 	public String getStdOut() {
@@ -188,6 +195,7 @@ public class CliResult {
 				.collect(toList());
 
 		String s = "CLI Result:\n";
+		s += "    variant:   " + n4jscVariant + "\n";
 		s += "    duration:  " + duration + "ms\n";
 		s += "    exit code: " + exitCode + "\n";
 		s += "    projects (" + getProjects().size() + "):\n";

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
@@ -65,7 +65,7 @@ public class InstallFromPackageJsonCompileRunN4jscExternalImportsTest extends Ab
 		assertTrue(yarnInstallResult.toString(),
 				yarnInstallResult.getErrOut().contains("could not find a copy of eslint to link in"));
 
-		CliResult cliResult = n4jsc(COMPILE(workspace));
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "P1\n";

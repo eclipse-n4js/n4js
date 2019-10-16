@@ -19,7 +19,7 @@ import java.nio.file.Path;
 
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
@@ -65,7 +65,7 @@ public class InstallCompileRunN4jscExternalTest extends AbstractCliCompileTest {
 		// yarnInstallResult.getErrOut().contains("could not find a copy of eslint to link in"));
 
 		N4jscOptions options = COMPILE(workspace);
-		CliResult cliResult = n4jsc(options);
+		CliCompileResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "express properties: Route, Router, application, bodyParser, compress, ";

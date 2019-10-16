@@ -19,7 +19,7 @@ import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
@@ -58,7 +58,7 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
 		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
 
-		CliResult cliResult = n4jsc(COMPILE(workspace));
+		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "Application was created!";
