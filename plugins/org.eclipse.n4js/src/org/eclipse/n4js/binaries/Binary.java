@@ -39,6 +39,15 @@ abstract public class Binary {
 	 * The {@code PATH} environment variable.
 	 */
 	static final public String PATH = "PATH";
+	/**
+	 * Jenkins environment variable for the {@code Node.js} binary path. Points to the actual binary (with an absolute
+	 * path) instead of pointing to the folder containing the binary.
+	 *
+	 * <p>
+	 * Even if it is available the {@Code org.eclipse.n4js.defaultNodePath} VM argument might override this
+	 * configuration.
+	 */
+	private static final String NODEJS_PATH_ENV = "NODEJS_PATH";
 
 	/**
 	 * Returns with the application specific unique ID of the binary. This ID can be used to uniquely identify the
@@ -182,6 +191,19 @@ abstract public class Binary {
 			}
 		}
 		return defaultName;
+	}
+
+	/** Adds the current nodejs environment variable to the environment variables of the process builder argument */
+	static public Map<String, String> inheritNodeJsPathEnvVariable(Map<String, String> environment) {
+		if (environment != null) {
+			final String nodeJsPath = System.getenv(NODEJS_PATH_ENV);
+			if (nodeJsPath != null && nodeJsPath.trim().length() > 0) {
+				if (!environment.containsKey(NODEJS_PATH_ENV)) {
+					environment.put(NODEJS_PATH_ENV, nodeJsPath);
+				}
+			}
+		}
+		return environment;
 	}
 
 	/**
