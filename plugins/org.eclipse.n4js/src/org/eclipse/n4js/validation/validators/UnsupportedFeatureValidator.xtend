@@ -91,13 +91,13 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def void checkOptionalChaining(ExpressionWithTarget expr) {
 		if (expr.isOptionalChaining) {
-			unsupported("optional chaining", expr, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__OPTIONAL_CHAINING);	
+			unsupported("optional chaining", expr, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__OPTIONAL_CHAINING);
 		}
 	}
 	
 	@Check
 	def void checkNullishCoalescing(CoalesceExpression expr) {
-		unsupported("nullish coalescing", expr, null);	
+		unsupported("nullish coalescing", expr, null);
 	}
 
 	// TODO when removing this method, remove flag 'classExpressionsAreAllowed' as well!
