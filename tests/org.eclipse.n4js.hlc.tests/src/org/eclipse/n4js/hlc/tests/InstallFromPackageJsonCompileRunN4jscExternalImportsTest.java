@@ -24,6 +24,7 @@ import org.eclipse.n4js.cli.runner.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
@@ -53,6 +54,7 @@ public class InstallFromPackageJsonCompileRunN4jscExternalImportsTest extends Ab
 	 * running it with Common JS.
 	 */
 	@Test
+	@Ignore // GH-1510
 	public void testCompileAndRunWithExternalDependencies() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
