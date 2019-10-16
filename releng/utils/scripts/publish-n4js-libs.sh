@@ -137,6 +137,11 @@ lerna exec -- 'jq -r ".repository |= {type: \"git\", url: \"https://github.com/e
 lerna exec -- rm package.json_TEMP
 
 echo "==== STEP 8/8: Now publishing with version ${PUBLISH_VERSION} and dist-tag ${DIST_TAG}"
-lerna publish --loglevel warn --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --npm-tag="${DIST_TAG}"
+if [ "${DIST_TAG}" = "test" ]; then
+    lerna publish --loglevel warn --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --npm-tag="${DIST_TAG}"
+else
+    echo "NOT PUBLISHING FROM BRANCH GH-1503-b"
+    echo lerna publish --loglevel warn --skip-git --registry="${NPM_REGISTRY}" --repo-version="${PUBLISH_VERSION}" --exact --yes --npm-tag="${DIST_TAG}"
+fi
 
 echo "==== PUBLISH N4JS-LIBS - DONE"
