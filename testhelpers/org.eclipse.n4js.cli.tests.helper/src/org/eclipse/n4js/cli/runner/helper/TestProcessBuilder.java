@@ -12,9 +12,11 @@ package org.eclipse.n4js.cli.runner.helper;
 
 import static org.eclipse.n4js.utils.OSInfo.isWindows;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,7 @@ import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
+import org.eclipse.n4js.cli.N4jscOptions;
 
 /**
  * Concrete runner, i.e. runner implementation for node.js engine.
@@ -65,33 +68,58 @@ public class TestProcessBuilder {
 		return createProcessBuilder(workingDirectory, cmd, env);
 	}
 
+	/** @return a started java Process {@code java -jar n4jsc.jar OPTIONS} */
+	public ProcessBuilder n4jscRun(Path workingDirectory, N4jscOptions options) {
+		final Map<String, String> env = new LinkedHashMap<>();
+		Binary.inheritNodeJsPathEnvVariable(env); // necessary?
+		final String[] cmd = createCommandN4jscRun(env, options);
+		return createProcessBuilder(workingDirectory, cmd, env);
+	}
+
 	private String[] createCommandNodejsRun(Path fileToRun, Map<String, String> output_env) {
 		if (fileToRun == null) {
 			throw new IllegalArgumentException("run configuration does not specify a file to run");
 		}
 
-		List<String> cmd = getCommands(output_env, nodeJsBinary, "-r", "esm", fileToRun.toString());
+		List<String> cmd = getCommands(output_env, nodeJsBinary.getBinaryAbsolutePath(), //
+				"-r", "esm", fileToRun.toString());
+
 		return cmd.toArray(new String[0]);
 	}
 
 	private String[] createCommandNpmInstall(Map<String, String> output_env) {
-		List<String> cmd = getCommands(output_env, npmBinary, "install");
+		List<String> cmd = getCommands(output_env, npmBinary.getBinaryAbsolutePath(), "install");
 		return cmd.toArray(new String[0]);
 	}
 
 	private String[] createCommandYarnInstall(Map<String, String> output_env) {
-		List<String> cmd = getCommands(output_env, yarnBinary, "install");
+		List<String> cmd = getCommands(output_env, yarnBinary.getBinaryAbsolutePath(), "install");
 		return cmd.toArray(new String[0]);
 	}
 
-	private List<String> getCommands(Map<String, String> output_env, Binary binary, String... options) {
-		String additionalPath = binary.getBinaryDirectory();
+	private String[] createCommandN4jscRun(Map<String, String> output_env, N4jscOptions options) {
+		File n4jscAbsoluteFile = new File("target/n4jsc.jar").getAbsoluteFile();
+		String n4jscFileName = n4jscAbsoluteFile.toString();
+
+		ArrayList<String> args2 = new ArrayList<>();
+		Collections.addAll(args2, "java", "-jar", n4jscFileName);
+		args2.addAll(options.toArgs());
+		String[] cmdOptions = args2.toArray(new String[args2.size()]);
+
+		List<String> cmd = getCommands(output_env, n4jscFileName, cmdOptions);
+		return cmd.toArray(new String[0]);
+	}
+
+	private List<String> getCommands(Map<String, String> output_env, String binaryFileName, String... options) {
+		File binaryFile = new File(binaryFileName);
+
+		String additionalPath = binaryFile.getParent();
 		output_env.put(Binary.PATH, additionalPath);
 
 		ArrayList<String> cmd = new ArrayList<>();
 
-		// start command line with absolute path to node binary
-		String npmPath = "\"" + binary.getBinaryAbsolutePath() + "\"";
+		// start command line with absolute path to binary
+		String npmPath = "\"" + binaryFileName + "\"";
 
 		if (isWindows()) {
 			cmd.addAll(Arrays.asList(NodeYarnProcessBuilder.WIN_SHELL_COMAMNDS));

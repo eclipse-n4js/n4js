@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
+import org.eclipse.n4js.cli.N4jscOptions;
 
 import com.google.inject.Injector;
 
@@ -52,6 +53,11 @@ public class TestProcessExecuter {
 	/** Runs yarn install in the given {@code workingDir} */
 	public ProcessResult yarnInstall(Path workingDir) {
 		return joinProcess(() -> testProcessBuilder.yarnInstall(workingDir));
+	}
+
+	/** Runs n4jsc.jar in the given {@code workingDir} with the given options */
+	public ProcessResult n4jscRun(Path workingDir, N4jscOptions options) {
+		return joinProcess(() -> testProcessBuilder.n4jscRun(workingDir, options));
 	}
 
 	private ProcessResult joinProcess(Supplier<ProcessBuilder> pbs) {
