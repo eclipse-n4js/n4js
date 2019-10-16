@@ -16,6 +16,8 @@ def MAVEN_OPTIONS = '-U -V -B -e '                                +
                     '-Dmaven.test.redirectTestOutputToFile=true ' +
                     '-Dtycho.localArtifacts=ignore'
 
+def DEBUG_DEPLOY_SUFFIX = '_GH-1503-b'; // should be empty string by default; use something like '_GH-1234' for debugging the publishing build itself
+
 // the following will be set below in stage 'Compute Version':
 def String LANGUAGE_VERSION;
 def String N4JS_LIBS_DIST_TAG;
@@ -108,26 +110,26 @@ pipeline {
 
                     echo 'START: copying new products / update site to download.eclipse.org:'
                     sh """\
-                        mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
-                        cp     n4js/target/products/*.zip  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
-                        cp     n4js/target/products/*.dmg  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
-                        cp     n4js/target/n4jsc.jar       /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
+                        mkdir -p /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
+                        cp       n4js/target/products/*.zip  /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
+                        cp       n4js/target/products/*.dmg  /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
+                        cp       n4js/target/n4jsc.jar       /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
 
-                        mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$LANGUAGE_VERSION
-                        cp -R  n4js/builds/org.eclipse.n4js.product.build/target/repository/*  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$LANGUAGE_VERSION
+                        mkdir -p /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
+                        cp -R    n4js/builds/org.eclipse.n4js.product.build/target/repository/*  /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
                     """
                     echo 'END: copying new products / update site to download.eclipse.org'
 
                     echo 'START: updating folder LATEST on download.eclipse.org:'
                     if (N4JS_LIBS_DIST_TAG == 'latest') {
                         sh """\
-                            rm -rf /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
-                            mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
-                            cp -R  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION/* /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
+                            rm -rf   /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
+                            mkdir -p /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
+                            cp -R    /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION/* /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
 
-                            rm -rf /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
-                            mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
-                            cp -R  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$LANGUAGE_VERSION/*  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
+                            rm -rf   /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
+                            mkdir -p /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
+                            cp -R    /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION/*  /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
                         """
                     } else {
                         echo 'SKIPPED! (because publishing with a dist-tag other than "latest")'
@@ -137,9 +139,9 @@ pipeline {
                     // show a summary
                     def output = sh returnStdout: true, script: """\
                         echo ******************** Products on download server:
-                        ls -l /home/data/httpd/download.eclipse.org/n4js/products/nightly
+                        ls -l /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly
                         echo ******************** Update sites on download server:
-                        ls -l /home/data/httpd/download.eclipse.org/n4js/updates/nightly
+                        ls -l /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly
                         echo ******************** Products on archive server:
                         ls -l /home/data/httpd/archive.eclipse.org/n4js/products/nightly
                         echo ******************** Update sites on archive server:
