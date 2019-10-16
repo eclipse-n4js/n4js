@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import org.eclipse.emf.common.util.URI;
 
 import com.google.common.hash.Funnels;
+import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
@@ -31,6 +32,8 @@ import com.google.common.io.Files;
  */
 public class HashedFileContent {
 
+	private static final HashFunction hashFunction = Hashing.murmur3_128();
+
 	private final URI uri;
 	private final long hash;
 
@@ -39,13 +42,17 @@ public class HashedFileContent {
 	 */
 	public HashedFileContent(URI uri, File file) throws IOException {
 		this.uri = uri;
-		if ("js".equals(uri.fileExtension()) || "map".equals(uri.fileExtension())) {
+		String ext = uri.fileExtension();
+		if (ext == null || "ts".equals(ext) || "js".equals(ext) || "jsx".equals(ext) || "map".equals(ext)
+				|| "md".equals(ext)
+				|| "hbs".equals(ext)
+				|| "json".equals(ext) && !"package.json".equals(uri.lastSegment())) {
 			this.hash = file.length();
 		} else {
 			// byteSource.hash uses ByteSource.copyTo which does not use a buffered stream
 			// for perf reasons we inline the better part of the code here
 			ByteSource byteSource = Files.asByteSource(file);
-			Hasher hasher = Hashing.farmHashFingerprint64().newHasher();
+			Hasher hasher = hashFunction.newHasher();
 			try (InputStream in = byteSource.openBufferedStream();
 					OutputStream output = Funnels.asOutputStream(hasher)) {
 				ByteStreams.copy(in, output);

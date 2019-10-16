@@ -120,9 +120,6 @@ public class N4JSBuildManager extends BuildManager {
 		return result;
 	}
 
-	/**
-	 * @since 2.18
-	 */
 	@Override
 	protected Boolean mergeWithUnreportedDeltas(final List<IResourceDescription.Delta> newDeltas) {
 		if (this.myUnreportedDeltas.isEmpty()) {

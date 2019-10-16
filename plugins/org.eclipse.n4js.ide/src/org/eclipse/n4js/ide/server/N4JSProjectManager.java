@@ -89,9 +89,8 @@ public class N4JSProjectManager extends ProjectManager {
 			ISourceFolderEx srcFolderEx = (ISourceFolderEx) srcFolder;
 			List<URI> allResources = srcFolderEx.getAllResources();
 			// System.out.println(" getAllResources from " + srcFolderEx.getName() + ": " + sw);
-			allUris.addAll(allResources);
 			for (URI sourceURI : allResources) {
-				if (!ProjectStatePersister.FILENAME.equals(sourceURI.lastSegment())) {
+				if (!ProjectStatePersister.FILENAME.equals(sourceURI.lastSegment()) && allUris.add(sourceURI)) {
 					HashedFileContent fingerprint = hashFileContents.get(sourceURI);
 					if (fingerprint != null) {
 						HashedFileContent newHash = doHash(sourceURI);

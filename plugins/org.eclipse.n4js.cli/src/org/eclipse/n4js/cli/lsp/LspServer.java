@@ -28,6 +28,7 @@ import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.Futures;
 import com.google.inject.Injector;
 
@@ -50,7 +51,6 @@ public class LspServer {
 	/** Starts the LSP server in a blocking fashion */
 	public void start() throws Exception {
 		N4jscConsole.println("Start LSP server");
-
 		final ExecutorService threadPool = Executors.newCachedThreadPool();
 		final AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open()
 				.bind(new InetSocketAddress("localhost", options.getPort()));
@@ -68,9 +68,10 @@ public class LspServer {
 	private void run(AsynchronousServerSocketChannel serverSocket, ExecutorService threadPool)
 			throws InterruptedException, ExecutionException, IOException {
 
+		Stopwatch sw = Stopwatch.createStarted();
 		Injector injector = N4jscFactory.createInjector();
+		N4jscConsole.println("Initialized injector [" + sw + "]");
 		N4JSLanguageServerImpl languageServer = N4jscFactory.getLanguageServer(injector);
-
 		N4jscConsole.println("Listening for LSP clients...");
 		AsynchronousSocketChannel socketChannel = serverSocket.accept().get();
 		N4jscConsole.println("Connected to LSP client");
