@@ -53,21 +53,22 @@ cd n4js-libs
 echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
 
-echo "==== STEP 1/6: clean up (clean yarn cache, etc.)"
+echo "==== STEP 1/7: clean up (clean yarn cache, etc.)"
 yarn cache clean
 rm -rf $(find . -type d -name "node_modules")
 # Since we include the commit ID in the published artifacts, we should
 # make sure to not publish any dirty state in the working copy.
 # Thus, we reset the working copy here:
 git checkout HEAD -- .
-# obtain commit ID of folder 'n4js-libs' in the local git working copy:
+# obtain commit IDs of root folder and folder 'n4js-libs' in the local git working copy:
+N4JS_COMMIT_ID_LOCAL=`git log -1 --format="%H"`
 N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" -- .`
 
-echo "==== STEP 2/6: install dependencies (to have tool 'semver' available)"
+echo "==== STEP 2/7: install dependencies (to have tool 'semver' available)"
 yarn install
 export PATH="${REPO_ROOT_DIR}/n4js-libs/node_modules/.bin:${PATH}"
 
-echo "==== STEP 3/6: Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
+echo "==== STEP 3/7: Checking whether publication of n4js-libs is required (using ${N4JS_LIBS_REPRESENTATIVE} as representative) ..."
 
 # Obtain the latest commit on npm registry, using the representative
 N4JS_LIBS_VERSION_PUBLIC=`curl -s ${NPM_REGISTRY}/${N4JS_LIBS_REPRESENTATIVE} | jq -r '.["dist-tags"].latest'`
@@ -93,7 +94,7 @@ else
     N4JS_LIBS_PUBLISHING_REQUIRED="true"
 fi
 
-echo "==== STEP 4/6: Compute n4js-libs version number for this build ..."
+echo "==== STEP 4/7: Compute n4js-libs version number for this build ..."
 VERSION_MAJOR_REQUESTED=`jq -r '.major' ${REPO_ROOT_DIR}/version.json`
 VERSION_MINOR_REQUESTED=`jq -r '.minor' ${REPO_ROOT_DIR}/version.json`
 VERSION_DIST_TAG_REQUESTED=`jq -r '.tag' ${REPO_ROOT_DIR}/version.json`
@@ -142,7 +143,7 @@ if [ \( "$VERSION_DIST_TAG_REQUESTED" != "null" \) -a \( "$VERSION_DIST_TAG_REQU
 fi
 echo "This build's n4js-libs version: ${N4JS_LIBS_VERSION}"
 
-echo "==== STEP 5/6: Computing language version (derived from n4js-libs version) ..."
+echo "==== STEP 5/7: Computing language version (derived from n4js-libs version) ..."
 if [ "$N4JS_LIBS_DIST_TAG" != "latest" ]; then
     LANGUAGE_VERSION="${N4JS_LIBS_BASE_VERSION}.${N4JS_LIBS_DIST_TAG}_v${TIMESTAMP_DATE}-${TIMESTAMP_TIME}"
 else
@@ -150,7 +151,18 @@ else
 fi
 echo "This build's language version: ${LANGUAGE_VERSION}"
 
-echo "==== STEP 6/6: Writing version information to output files ..."
+echo "==== STEP 6/7: Check validity ..."
+HISTORY_OF_MASTER=`git log -n 50 --pretty=format:\"%H\" origin/master | grep $N4JS_COMMIT_ID_LOCAL || true`
+if [ "$HISTORY_OF_MASTER" == "" ]; then
+    # we are not on master (i.e. the HEAD commit N4JS_COMMIT_ID_LOCAL is not in the history of origin/master)
+    if [ "$N4JS_LIBS_DIST_TAG" == "latest" ]; then
+        echo "ERROR: not allowed to publish with dist-tag 'latest' when not on master (i.e. when HEAD is not in the history of origin/master)"
+        exit -1
+    fi
+fi
+echo "Ok."
+
+echo "==== STEP 7/7: Writing version information to output files ..."
 
 VERSION_INFO_FILE="${REPO_ROOT_DIR}/version-info.json"
 echo "Writing entire version information to file ${VERSION_INFO_FILE}"
