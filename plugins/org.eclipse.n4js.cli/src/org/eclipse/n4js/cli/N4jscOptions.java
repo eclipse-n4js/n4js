@@ -355,17 +355,27 @@ public class N4jscOptions {
 		return s;
 	}
 
-	/** @return the synthesized command line call string */
-	public String toCallString() {
-		String s = "java -jar n4jsc.jar";
-		s += " " + getGoal().name();
+	/** @return array of the goal followed by all options followed by all file arguments */
+	public List<String> toArgs() {
+		List<String> args = new ArrayList<>();
+		args.add(getGoal().name());
 		for (N4JSCmdLineParser.ParsedOption po : getDefinedOptions()) {
 			NamedOptionDef od = po.optionDef;
 			String value = po.givenValue;
-			s += " " + od.name();
-			s += value == null ? "" : " " + value;
+			args.add(od.name());
+			if (value != null) {
+				args.add(value);
+			}
 		}
-		s += " " + String.join(", ", getSrcFiles().stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList()));
+		args.addAll(getSrcFiles().stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList()));
+
+		return args;
+	}
+
+	/** @return the synthesized command line call string */
+	public String toCallString() {
+		String s = "java -jar n4jsc.jar";
+		s += " " + String.join(" ", toArgs());
 		return s;
 	}
 
