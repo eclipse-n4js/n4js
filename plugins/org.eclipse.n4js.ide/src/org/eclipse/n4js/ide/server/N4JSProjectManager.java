@@ -41,7 +41,6 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
-import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -66,13 +65,13 @@ public class N4JSProjectManager extends ProjectManager {
 			IExternalContentProvider openedDocumentsContentProvider,
 			Provider<Map<String, ResourceDescriptionsData>> indexProvider, CancelIndicator cancelIndicator) {
 
-//		Stopwatch sw = Stopwatch.createStarted();
+		// Stopwatch sw = Stopwatch.createStarted();
 
-//		System.out.println("Initializing [" + pProjectConfig.getName() + "]");
+		// System.out.println("Initializing [" + pProjectConfig.getName() + "]");
 		super.initialize(description, pProjectConfig, acceptor, openedDocumentsContentProvider, indexProvider,
 				cancelIndicator);
 
-//		System.out.println("  super.initialize " + sw);
+		// System.out.println(" super.initialize " + sw);
 
 		projectConfig = (IProjectConfigEx) pProjectConfig;
 
@@ -81,7 +80,7 @@ public class N4JSProjectManager extends ProjectManager {
 			fingerprints.forEach(fp -> hashFileContents.put(fp.getUri(), fp));
 		});
 
-//		System.out.println("  readProjectState " + sw);
+		// System.out.println(" readProjectState " + sw);
 
 		Set<URI> newOrChanged = new HashSet<>();
 		Set<URI> allUris = new HashSet<>();
@@ -89,7 +88,7 @@ public class N4JSProjectManager extends ProjectManager {
 		for (ISourceFolder srcFolder : this.projectConfig.getSourceFolders()) {
 			ISourceFolderEx srcFolderEx = (ISourceFolderEx) srcFolder;
 			List<URI> allResources = srcFolderEx.getAllResources();
-//			System.out.println("  getAllResources from " + srcFolderEx.getName() + ": " + sw);
+			// System.out.println(" getAllResources from " + srcFolderEx.getName() + ": " + sw);
 			allUris.addAll(allResources);
 			for (URI sourceURI : allResources) {
 				if (!ProjectStatePersister.FILENAME.equals(sourceURI.lastSegment())) {
@@ -117,21 +116,22 @@ public class N4JSProjectManager extends ProjectManager {
 				}
 			}
 		}
-//		System.out.println("  getAllResources: " + sw);
+		// System.out.println(" getAllResources: " + sw);
 		List<URI> deleted = new ArrayList<>();
 		for (URI inIndex : getIndexState().getResourceDescriptions().getAllURIs()) {
 			if (!allUris.contains(inIndex)) {
 				deleted.add(inIndex);
 			}
 		}
-//		System.out.println("  processDeleted: " + sw);
+		// System.out.println(" processDeleted: " + sw);
 		List<URI> newOrChangedList = new ArrayList<>(newOrChanged);
-//		System.out.println("Initializing [" + getProjectConfig().getName() + "] " + newOrChangedList + "/" + deleted);
+		// System.out.println("Initializing [" + getProjectConfig().getName() + "] " + newOrChangedList + "/" +
+		// deleted);
 		workspaceManager.getBuildManager().enqueue(description, newOrChangedList, deleted);
 		// make sure we have a resource set assigned
 		doBuild(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), cancelIndicator);
 
-//		System.out.println("    took " + sw);
+		// System.out.println(" took " + sw);
 	}
 
 	@Override
@@ -143,9 +143,10 @@ public class N4JSProjectManager extends ProjectManager {
 	public Result doBuild(List<URI> dirtyFiles, List<URI> deletedFiles, List<Delta> externalDeltas,
 			CancelIndicator cancelIndicator) {
 
-//		Stopwatch sw = Stopwatch.createStarted();
+		// Stopwatch sw = Stopwatch.createStarted();
 
-//		System.out.println("Now building [" + getProjectConfig().getName() + "]: " + dirtyFiles + "/" + deletedFiles);
+		// System.out.println("Now building [" + getProjectConfig().getName() + "]: " + dirtyFiles + "/" +
+		// deletedFiles);
 		// }
 
 		newFileContents = new HashMap<>(hashFileContents);
@@ -169,7 +170,7 @@ public class N4JSProjectManager extends ProjectManager {
 			newFileContents = null;
 		}
 
-//		System.out.println("  took " + sw);
+		// System.out.println(" took " + sw);
 
 		return result;
 	}
@@ -186,7 +187,7 @@ public class N4JSProjectManager extends ProjectManager {
 		});
 		result.setAfterGenerateFile((source, target) -> {
 			afterGenerateFile.apply(source, target);
-//			System.out.println("Generating: " + target + " from " + source);
+			// System.out.println("Generating: " + target + " from " + source);
 			scheduleHash(target);
 		});
 		if (projectConfig.getPath().segmentsList().contains(N4JSGlobals.NODE_MODULES)) {

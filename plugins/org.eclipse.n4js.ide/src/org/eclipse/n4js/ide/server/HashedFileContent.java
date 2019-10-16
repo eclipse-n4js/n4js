@@ -54,6 +54,14 @@ public class HashedFileContent {
 		}
 	}
 
+	/**
+	 * Assign the given hash to the given uri
+	 */
+	public HashedFileContent(URI uri, long hash) {
+		this.uri = uri;
+		this.hash = hash;
+	}
+
 	HashedFileContent(ObjectInput input) throws IOException {
 		this.uri = URI.createURI(input.readUTF());
 		this.hash = input.readLong();
