@@ -28,10 +28,12 @@ import com.google.common.base.Stopwatch;
  * Abstract test class to be used when testing N4JS CLI related things.
  */
 abstract public class AbstractCliTest<ArgType> {
+	private static final String RELATIVE_PATH = "...";
+
 	final private SystemOutRedirecter systemOutRedirecter = new SystemOutRedirecter();
 
 	/** Invokes the starting method of this test class */
-	abstract public void doN4jsc(ArgType arg, CliResult cliResult) throws Exception;
+	abstract public void doN4jsc(ArgType arg, CliCompileResult cliResult) throws Exception;
 
 	/** Reset the injector setup */
 	@Before
@@ -64,12 +66,12 @@ abstract public class AbstractCliTest<ArgType> {
 	}
 
 	/** Convenience version of {@link #n4jsc(Object, int)} with exist code == 0 */
-	protected CliResult n4jsc(ArgType args) {
+	protected CliCompileResult n4jsc(ArgType args) {
 		return n4jsc(args, 0);
 	}
 
 	/** Convenience version of {@link #n4jsc(Object, int, boolean)} with exist code == 0 and removeUsage == true */
-	protected CliResult n4jsc(ArgType args, int exitCode) {
+	protected CliCompileResult n4jsc(ArgType args, int exitCode) {
 		return n4jsc(args, exitCode, true);
 	}
 
@@ -77,8 +79,8 @@ abstract public class AbstractCliTest<ArgType> {
 	 * Calls main entry point of N4jsc with the given args. Checks that the given exit code equals the actual exit code
 	 * of the invocation. Removes {@link N4jscOptions#USAGE} text if desired.
 	 */
-	protected CliResult n4jsc(ArgType args, int exitCode, boolean removeUsage) {
-		CliResult cliResult = new CliResult();
+	protected CliCompileResult n4jsc(ArgType args, int exitCode, boolean removeUsage) {
+		CliCompileResult cliResult = new CliCompileResult();
 		Stopwatch sw = Stopwatch.createStarted();
 
 		try {
@@ -98,8 +100,12 @@ abstract public class AbstractCliTest<ArgType> {
 		} finally {
 			cliResult.duration = sw.stop().elapsed(TimeUnit.MILLISECONDS);
 
-			cliResult.stdOut = systemOutRedirecter.getSystemOut();
-			cliResult.errOut = systemOutRedirecter.getSystemErr();
+			if (cliResult.stdOut == null) {
+				cliResult.stdOut = systemOutRedirecter.getSystemOut();
+			}
+			if (cliResult.errOut == null) {
+				cliResult.errOut = systemOutRedirecter.getSystemErr();
+			}
 
 			if (N4jscTestFactory.isInjectorCreated()) {
 				N4jscTestLanguageClient callback = (N4jscTestLanguageClient) N4jscFactory.getLanguageClient();
@@ -111,12 +117,12 @@ abstract public class AbstractCliTest<ArgType> {
 		}
 		String curDirPath = new File("").getAbsolutePath();
 
-		cliResult.stdOut = cliResult.stdOut.replace(curDirPath, "");
-		cliResult.errOut = cliResult.errOut.replace(curDirPath, "");
+		cliResult.stdOut = cliResult.stdOut.replace(curDirPath, RELATIVE_PATH);
+		cliResult.errOut = cliResult.errOut.replace(curDirPath, RELATIVE_PATH);
 
 		if (removeUsage) {
-			cliResult.stdOut = cliResult.stdOut.replace(N4jscOptions.USAGE, "");
-			cliResult.errOut = cliResult.errOut.replace(N4jscOptions.USAGE, "");
+			cliResult.stdOut = cliResult.stdOut.replace(N4jscOptions.USAGE, RELATIVE_PATH);
+			cliResult.errOut = cliResult.errOut.replace(N4jscOptions.USAGE, RELATIVE_PATH);
 		}
 
 		cliResult.stdOut = cliResult.stdOut.trim();

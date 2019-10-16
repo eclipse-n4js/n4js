@@ -16,17 +16,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.eclipse.n4js.cli.N4jscFactory;
-import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.cli.runner.helper.ProcessResult;
-import org.eclipse.n4js.cli.runner.helper.TestProcessExecuter;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.Before;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.inject.Injector;
 
 /**
  * IMPORTANT: All the tests in the classes inheriting from this class require that <code>n4jsc.jar</code> exists in
@@ -34,15 +29,15 @@ import com.google.inject.Injector;
  * get an up-to-date <code>n4jsc.jar</code> from somewhere (e.g. download from Jenkins) and manually place it in the
  * folder mentioned above.
  */
-public abstract class AbstractCliJarTest extends AbstractCliTest<N4jscOptions> {
+public abstract class AbstractCliJarTest extends AbstractCliCompileTest {
 	/** Standard Name of the executable jar. */
-	static final String N4JSC_JAR = "n4jsc.jar";
+	static protected final String N4JSC_JAR = "n4jsc.jar";
 	/** Standard target folder-name, the base of maven-compile results. */
-	static final String TARGET = "target";
+	static protected final String TARGET = "target";
 	/** Standard target folder (name+"/"), the base of maven-compile results. */
-	static final String TARGET_FOLDER = TARGET + "/";
+	static protected final String TARGET_FOLDER = TARGET + "/";
 	/** Sub folder in target folder. */
-	static final String WORKSPACE_FOLDER = "wsp";
+	static protected final String WORKSPACE_FOLDER = "wsp";
 
 	/** source of test data, will be copied to TARGET/WSP */
 	protected final Path fixture;
@@ -67,6 +62,7 @@ public abstract class AbstractCliJarTest extends AbstractCliTest<N4jscOptions> {
 	 *            Specified whether the n4js libraries should be copied to the temporary testing workspace location.
 	 */
 	protected AbstractCliJarTest(String fixturePath, boolean includeN4jsLibraries) {
+		super(N4jscVariant.exprocess);
 		this.fixture = Paths.get(fixturePath);
 		this.n4jsLibsPredicate = includeN4jsLibraries ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
 	}
@@ -89,19 +85,6 @@ public abstract class AbstractCliJarTest extends AbstractCliTest<N4jscOptions> {
 		File wsp = new File(TARGET, WORKSPACE_FOLDER);
 		File project = new File(wsp, projectName);
 		FileDeleter.delete(project.toPath());
-	}
-
-	@Override
-	public void doN4jsc(N4jscOptions options, CliResult cliResult) throws Exception {
-		Injector injector = N4jscFactory.getOrCreateInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
-		File fileArg = options.getSrcFiles().get(0);
-		ProcessResult n4jscResult = tpExecuter.n4jscRun(fileArg.toPath(), options);
-
-		cliResult.cause = n4jscResult.getException();
-		cliResult.exitCode = n4jscResult.getExitCode();
-		cliResult.stdOut = n4jscResult.getStdOut();
-		cliResult.errOut = n4jscResult.getErrOut();
 	}
 
 }
