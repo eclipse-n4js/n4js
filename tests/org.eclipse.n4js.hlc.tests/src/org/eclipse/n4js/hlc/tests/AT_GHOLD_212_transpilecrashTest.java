@@ -18,7 +18,7 @@ import java.io.IOException;
 
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -54,7 +54,7 @@ public class AT_GHOLD_212_transpilecrashTest extends AbstractCliCompileTest {
 
 		N4jscOptions options = COMPILE(proot);
 
-		CliResult cliResult = n4jsc(options);
+		CliCompileResult cliResult = n4jsc(options);
 
 		// Make sure, we get here and have exactly one file compiled:
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());

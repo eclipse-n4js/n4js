@@ -12,7 +12,7 @@ package org.eclipse.n4js.cli.frontend.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
@@ -22,7 +22,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testGoalVersion() {
 		String args[] = { "version" };
-		CliResult result = n4jsc(args, 2, false);
+		CliCompileResult result = n4jsc(args, 2, false);
 		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
@@ -30,7 +30,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testOptionVersion() {
 		String args[] = { "--version" };
-		CliResult result = n4jsc(args, 2, false);
+		CliCompileResult result = n4jsc(args, 2, false);
 		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
@@ -38,7 +38,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testAnotherGoalWithOptionVersion() {
 		String args[] = { "lsp", "--version" };
-		CliResult result = n4jsc(args, 2, false);
+		CliCompileResult result = n4jsc(args, 2, false);
 		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
@@ -46,7 +46,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testGoalHelp() {
 		String args[] = { "help" };
-		CliResult result = n4jsc(args, 0, false);
+		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(), getUsageExpectation(), result.getStdOut());
 	}
 
@@ -54,7 +54,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testOptionHelp() {
 		String args[] = { "--help" };
-		CliResult result = n4jsc(args, 0, false);
+		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(), getUsageExpectation(), result.getStdOut());
 	}
 
@@ -62,7 +62,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testAnotherGoalWithOptionHelp() {
 		String args[] = { "lsp", "--help" };
-		CliResult result = n4jsc(args, 0, false);
+		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(), getUsageExpectation(), result.getStdOut());
 	}
 
@@ -112,7 +112,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testShowSetup() {
 		String args[] = { "lsp", "--showSetup" };
-		CliResult result = n4jsc(args, 0, false);
+		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(),
 				"N4jsc.options=\n" +
 						"  goal=lsp\n" +
