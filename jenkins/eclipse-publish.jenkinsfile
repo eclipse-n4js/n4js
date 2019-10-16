@@ -75,19 +75,19 @@ pipeline {
 
         stage('Sign macOS product') {
             steps {
-                dir('n4js/builds/org.eclipse.n4js.product.build/target/products') {
+                dir('n4js/target/products') {
                     sh "pwd"
 
                     // sign the macOS product
                     sh """\
-                        mv      n4jside-macosx.cocoa.x86_64.zip          unsigned_n4jside-macosx.cocoa.x86_64.zip
-                        curl -o n4jside-macosx.cocoa.x86_64.zip -F file=@unsigned_n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/macsign.php
-                        rm unsigned_n4jside-macosx.cocoa.x86_64.zip
+                        mv      n4js-ide_macos.zip          unsigned_n4js-ide_macos.zip
+                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip http://build.eclipse.org:31338/macsign.php
+                        rm unsigned_n4js-ide_macos.zip
                     """
 
                     // bundle macOS product into a signed .dmg image
                     sh """\
-                        curl -o n4jside-macosx.cocoa.x86_64.dmg -F sign=true -F source=@n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/dmg-packager
+                        curl -o n4js-ide_macos.dmg -F sign=true -F source=@n4js-ide_macos.zip http://build.eclipse.org:31338/dmg-packager
                     """
                 }
             }
@@ -109,12 +109,12 @@ pipeline {
                     echo 'START: copying new products / update site to download.eclipse.org:'
                     sh """\
                         mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
-                        cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip              /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
-                        cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.dmg              /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
-                        cp     n4js/tools/org.eclipse.n4js.hlc/target/n4jsc.jar                              /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
+                        cp     n4js/target/products/*.zip  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
+                        cp     n4js/target/products/*.dmg  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
+                        cp     n4js/target/n4jsc.jar       /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
 
                         mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$LANGUAGE_VERSION
-                        cp -R  n4js/builds/org.eclipse.n4js.product.build/target/repository/*                /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$LANGUAGE_VERSION
+                        cp -R  n4js/builds/org.eclipse.n4js.product.build/target/repository/*  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$LANGUAGE_VERSION
                     """
                     echo 'END: copying new products / update site to download.eclipse.org'
 

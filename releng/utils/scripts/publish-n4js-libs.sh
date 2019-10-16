@@ -110,7 +110,7 @@ yarn install
 export PATH=`pwd`/node_modules/.bin:${PATH}
 
 echo "==== STEP 4/8: run 'lerna run build/test' on n4js-libs"
-export N4_N4JSC_JAR="${REPO_ROOT_DIR}/tools/org.eclipse.n4js.hlc/target/n4jsc.jar"
+export N4_N4JSC_JAR="${REPO_ROOT_DIR}/target/n4jsc.jar"
 lerna run build
 lerna run test
 

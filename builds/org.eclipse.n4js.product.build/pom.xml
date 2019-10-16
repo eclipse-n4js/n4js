@@ -115,10 +115,42 @@ Contributors:
 										<linux>n4jside</linux>
 										<win32>n4jside</win32>
 									</rootFolders>
-									<archiveFileName>n4jside</archiveFileName>
+									<archiveFileName>n4js-ide</archiveFileName>
 								</product>
 							</products>
 						</configuration>
+					</plugin>
+					<!-- Copy products to folder target/products below the repository root folder and rename them to have more succinct names. -->
+					<plugin>
+						<groupId>com.coderplus.maven.plugins</groupId>
+						<artifactId>copy-rename-maven-plugin</artifactId>
+						<version>${codehaus-copy-rename-maven-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>copy-file</id>
+								<phase>package</phase>
+								<goals>
+									<goal>copy</goal>
+								</goals>
+								<configuration>
+									<overWrite>true</overWrite>
+									<fileSets>
+										<fileSet>
+											<sourceFile>${project.build.directory}/products/n4js-ide-win32.win32.x86_64.zip</sourceFile>
+											<destinationFile>${project.basedir}/../../target/products/n4js-ide_win.zip</destinationFile>
+										</fileSet>
+										<fileSet>
+											<sourceFile>${project.build.directory}/products/n4js-ide-macosx.cocoa.x86_64.zip</sourceFile>
+											<destinationFile>${project.basedir}/../../target/products/n4js-ide_macos.zip</destinationFile>
+										</fileSet>
+										<fileSet>
+											<sourceFile>${project.build.directory}/products/n4js-ide-linux.gtk.x86_64.zip</sourceFile>
+											<destinationFile>${project.basedir}/../../target/products/n4js-ide_linux-gtk.zip</destinationFile>
+										</fileSet>
+									</fileSets>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
