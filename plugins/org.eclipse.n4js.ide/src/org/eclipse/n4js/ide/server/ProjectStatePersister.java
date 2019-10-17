@@ -69,7 +69,6 @@ public class ProjectStatePersister {
 	 * The simple name of the file with the project state.
 	 */
 	public static final String FILENAME = ".n4js.projectstate";
-	// TODO inject version helper to also write the compiler version to disk
 
 	/**
 	 * Write the index state and a hash of the project state to disk in order to allow loading it again.
