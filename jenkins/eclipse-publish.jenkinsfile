@@ -16,7 +16,7 @@ def MAVEN_OPTIONS = '-U -V -B -e '                                +
                     '-Dmaven.test.redirectTestOutputToFile=true ' +
                     '-Dtycho.localArtifacts=ignore'
 
-def DEBUG_DEPLOY_SUFFIX = '_GH-1503-b'; // should be empty string by default; use something like '_GH-1234' for debugging the publishing build itself
+def DEBUG_DEPLOY_SUFFIX = ''; // should be empty string by default; use something like '_GH-1234' for debugging the publishing build itself
 
 // the following will be set below in stage 'Compute Version':
 def String LANGUAGE_VERSION;
