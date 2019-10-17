@@ -71,7 +71,7 @@ public abstract class AbstractCliJarTest extends AbstractCliCompileTest {
 	@Before
 	public void setupWorkspace() throws IOException {
 		Path wsp = Paths.get(TARGET, WORKSPACE_FOLDER);
-		Files.createDirectories(wsp); // why?
+		Files.createDirectories(wsp);
 
 		N4CliHelper.setupWorkspace(fixture, wsp, n4jsLibsPredicate);
 	}

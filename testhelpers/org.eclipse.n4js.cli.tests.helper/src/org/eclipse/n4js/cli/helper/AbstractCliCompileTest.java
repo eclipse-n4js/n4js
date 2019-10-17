@@ -83,14 +83,11 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 			throw new IllegalStateException();
 		}
 
-		result.n4jscVariant = this.variant;
 		return result;
 	}
 
 	@Override
 	public void doN4jsc(N4jscOptions options, CliCompileResult result) throws Exception {
-		result.n4jscVariant = this.variant;
-
 		switch (variant) {
 		case inprocess:
 			callN4jscInprocess(options, result);
@@ -98,6 +95,8 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		case exprocess:
 			callN4jscExprocess(options, result);
 			return;
+		default:
+			throw new IllegalStateException();
 		}
 	}
 
@@ -128,10 +127,15 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		File fileArg = srcFiles.isEmpty() ? new File(".") : srcFiles.get(0);
 		ProcessResult n4jscResult = tpExecuter.n4jscRun(fileArg.toPath(), options);
 
+		cliResult.command = n4jscResult.getCommand();
 		cliResult.exception = n4jscResult.getException();
 		cliResult.exitCode = n4jscResult.getExitCode();
 		cliResult.stdOut = n4jscResult.getStdOut();
 		cliResult.errOut = n4jscResult.getErrOut();
+
+		// save transpiled files
+		File workspaceRoot = options.getSrcFiles().get(0);
+		cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
 	}
 
 	/** {@link TestProcessExecuter#runNodejs(Path, Path)} */

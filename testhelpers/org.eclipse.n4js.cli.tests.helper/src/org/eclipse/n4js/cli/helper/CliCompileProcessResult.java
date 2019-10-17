@@ -11,15 +11,18 @@
 package org.eclipse.n4js.cli.helper;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
-import org.eclipse.xtext.util.Pair;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest.N4jscVariant;
 
 /**
  * Data class used when n4jsc.jar is executed in a separate process
  */
 public class CliCompileProcessResult extends CliCompileResult {
+
+	CliCompileProcessResult() {
+		super(N4jscVariant.exprocess);
+	}
 
 	@Override
 	public int getErrs() {
@@ -56,8 +59,4 @@ public class CliCompileProcessResult extends CliCompileResult {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	List<Pair<String, String>> getProperties() {
-		return ((ProcessResult) this).getProperties();
-	}
 }

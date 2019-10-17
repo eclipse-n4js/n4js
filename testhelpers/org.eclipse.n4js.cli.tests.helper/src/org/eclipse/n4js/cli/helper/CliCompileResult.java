@@ -39,18 +39,19 @@ import com.google.common.collect.Multimap;
  * Data class that holds all information after {@link N4jscMain} was executed
  */
 public class CliCompileResult extends ProcessResult {
-	N4jscVariant n4jscVariant = N4jscVariant.inprocess;
+	final N4jscVariant n4jscVariant;
 	Map<String, String> projects = new LinkedHashMap<>();
 	Multimap<String, String> errors = HashMultimap.create();
 	Multimap<String, String> warnings = HashMultimap.create();
 	TreeMap<Path, HashSet<File>> transpiledFiles = new TreeMap<>();
 
 	CliCompileResult() {
-		super("[inprocess]");
+		this(N4jscVariant.inprocess);
 	}
 
-	CliCompileResult(ProcessResult processResult) {
-		super(processResult);
+	CliCompileResult(N4jscVariant n4jscVariant) {
+		super(String.format("[%s]", n4jscVariant.toString()));
+		this.n4jscVariant = n4jscVariant;
 	}
 
 	/** @return variant of execution (see {@link N4jscVariant}) */
@@ -170,28 +171,34 @@ public class CliCompileResult extends ProcessResult {
 
 	@Override
 	List<Pair<String, String>> getProperties() {
+		List<Pair<String, String>> props = super.getProperties();
+
 		List<String> fileNameList = getTranspiledFiles().stream().map(f -> f.toString()).collect(toList());
+		props.add(Tuples.pair("transpiled (" + getTranspiledFilesCount() + ")", ""));
+		if (getTranspiledFilesCount() > 0) {
+			props.add(Tuples.pair(null, "      + " + String.join("\n      + ", fileNameList) + "\n"));
+		}
+
+		if (n4jscVariant == N4jscVariant.exprocess) {
+			return props;
+		}
+
 		List<String> projectNameList = getProjects().entrySet().stream().map(e -> e.getKey() + " at " + e.getValue())
 				.collect(toList());
 
-		List<Pair<String, String>> props = super.getProperties();
 		props.add(Tuples.pair("variant", n4jscVariant.toString()));
 		props.add(Tuples.pair("projects (" + getProjects().size() + ")", ""));
 		if (getProjects().size() > 0) {
-			props.add(Tuples.pair(null, String.join("\n    ", projectNameList)));
-		}
-		props.add(Tuples.pair("transpiled (" + getTranspiledFilesCount() + ")", ""));
-		if (getTranspiledFilesCount() > 0) {
-			props.add(Tuples.pair(null, String.join("\n    ", fileNameList) + "\n"));
+			props.add(Tuples.pair(null, "      + " + String.join("\n      + ", projectNameList)));
 		}
 
 		props.add(Tuples.pair("warnings (" + getWrns() + ")", ""));
 		if (getWrns() > 0) {
-			props.add(Tuples.pair(null, String.join("\n    ", getWrnMsgs()) + "\n"));
+			props.add(Tuples.pair(null, "      + " + String.join("\n      + ", getWrnMsgs()) + "\n"));
 		}
 		props.add(Tuples.pair("errors (" + getErrs() + ")", ""));
 		if (getErrs() > 0) {
-			props.add(Tuples.pair(null, String.join("\n    ", getErrMsgs()) + "\n"));
+			props.add(Tuples.pair(null, "      + " + String.join("\n      + ", getErrMsgs()) + "\n"));
 		}
 
 		return props;
