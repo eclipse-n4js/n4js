@@ -111,9 +111,9 @@ Contributors:
 									<rootFolders>
 										<!-- for MacOSX, make sure you use a folder ending with .app , see bug
 											463670 -->
-										<macosx>N4jside.app</macosx>
-										<linux>n4jside</linux>
-										<win32>n4jside</win32>
+										<macosx>n4jsIDE.app</macosx>
+										<linux>n4jsIDE</linux>
+										<win32>n4jsIDE</win32>
 									</rootFolders>
 									<archiveFileName>n4js-ide</archiveFileName>
 								</product>
