@@ -27,6 +27,7 @@ the latter is published to the official public npm registry at https://www.npmjs
 Other published artifacts include various documentation and the N4JS web site.
 
 
+[[sec:versioning]]
 == Versioning
 
 === Example
@@ -81,7 +82,7 @@ we do not yet increment any versions except updating time stamps, so file `versi
 to be changed in this case.
 
 
-=== Details
+=== Details of Version Computation
 
 The versioning of all the main published artifacts (see <<sec:overview_of_published_artifacts>>)
 is controlled by shell script `compute-version.sh`. This script will compute the correct, incremented
