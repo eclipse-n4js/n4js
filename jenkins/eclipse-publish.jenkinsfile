@@ -98,6 +98,17 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    // append language version to file names of products
+                    sh """
+                        cd n4js/target
+                        mv n4jsc.jar                n4jsc_${LANGUAGE_VERSION}.jar
+                        cd products
+                        mv n4js-ide_win.zip         n4js-ide_win_${LANGUAGE_VERSION}.zip
+                        mv n4js-ide_macos.zip       n4js-ide_macos_${LANGUAGE_VERSION}.zip
+                        mv n4js-ide_macos.dmg       n4js-ide_macos_${LANGUAGE_VERSION}.dmg
+                        mv n4js-ide_linux-gtk.zip   n4js-ide_linux-gtk_${LANGUAGE_VERSION}.zip
+                    """
+
                     echo "Deploying version ${LANGUAGE_VERSION} of N4JS IDE and headless builder ..."
 
                     echo 'START: moving old products / update sites to archive.eclipse.org (those that are older than a week):'
@@ -109,27 +120,39 @@ pipeline {
                     echo 'END: moving old products / update sites to archive.eclipse.org'
 
                     echo 'START: copying new products / update site to download.eclipse.org:'
+                    def pathProductsVersion = "/home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION";
+                    def pathUpdatesVersion  = "/home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION";
                     sh """\
-                        mkdir -p /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
-                        cp       n4js/target/products/*.zip  /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
-                        cp       n4js/target/products/*.dmg  /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
-                        cp       n4js/target/n4jsc.jar       /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
+                        mkdir -p ${pathProductsVersion}
+                        cp       n4js/target/products/*.zip  ${pathProductsVersion}
+                        cp       n4js/target/products/*.dmg  ${pathProductsVersion}
+                        cp       n4js/target/*.jar           ${pathProductsVersion}
 
-                        mkdir -p /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
-                        cp -R    n4js/builds/org.eclipse.n4js.product.build/target/repository/*  /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION
+                        mkdir -p ${pathUpdatesVersion}
+                        cp -R    n4js/builds/org.eclipse.n4js.product.build/target/repository/*  ${pathUpdatesVersion}
                     """
                     echo 'END: copying new products / update site to download.eclipse.org'
 
                     echo 'START: updating folder LATEST on download.eclipse.org:'
                     if (N4JS_LIBS_DIST_TAG == 'latest') {
+                        def pathProductsLatest = "/home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/LATEST";
+                        def pathUpdatesLatest  = "/home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/LATEST";
                         sh """\
-                            rm -rf   /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
-                            mkdir -p /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
-                            cp -R    /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION/* /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
+                            rm -rf   ${pathProductsLatest}
+                            mkdir -p ${pathProductsLatest}
+                            cp -R    ${pathProductsVersion}/* ${pathProductsLatest}
 
-                            rm -rf   /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
-                            mkdir -p /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
-                            cp -R    /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION/*  /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/LATEST
+                            rm -rf   ${pathUpdatesLatest}
+                            mkdir -p ${pathUpdatesLatest}
+                            cp -R    ${pathUpdatesVersion}/*  ${pathUpdatesLatest}
+                        """
+
+                        // create copies of products without version suffix
+                        sh """\
+                            cp ${pathProductsLatest}/n4jsc_${LANGUAGE_VERSION}.jar               ${pathProductsLatest}/n4jsc.jar
+                            cp ${pathProductsLatest}/n4js-ide_win_${LANGUAGE_VERSION}.zip        ${pathProductsLatest}/n4js-ide_win.zip
+                            cp ${pathProductsLatest}/n4js-ide_macos_${LANGUAGE_VERSION}.zip      ${pathProductsLatest}/n4js-ide_macos.zip
+                            cp ${pathProductsLatest}/n4js-ide_linux-gtk_${LANGUAGE_VERSION}.zip  ${pathProductsLatest}/n4js-ide_linux-gtk.zip
                         """
                     } else {
                         echo 'SKIPPED! (because publishing with a dist-tag other than "latest")'
