@@ -10,153 +10,95 @@
  */
 package org.eclipse.n4js.hlc.integrationtests;
 
-import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.TARGET;
-import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPACE_FOLDER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.Collections;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.binaries.BinariesCommandFactory;
-import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
-import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.utils.io.FileCopier;
-import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.utils.process.ProcessResult;
-import org.eclipse.xtext.testing.InjectWith;
-import org.eclipse.xtext.testing.XtextRunner;
+import org.eclipse.n4js.cli.helper.AbstractCliJarTest;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.google.inject.Inject;
 
 /**
  * The tests in this class test n4js-cli npm.
  */
-@RunWith(XtextRunner.class)
-@InjectWith(N4JSInjectorProvider.class)
-public class N4jsCliTest {
-
+public class N4jsCliTest extends AbstractCliJarTest {
 	private static final int PORT = 4873;
-
 	private static final String LOCALHOST = "localhost";
-
 	private static final String PROJECT_NAME = "PSingleTestNpm";
+	private static final String LOCAL_NPM_ADDRESS = "http://" + LOCALHOST + ":" + PORT;
 
-	@Inject
-	private NodeJsBinary nodeJsBinary;
+	private static final Path PROJECT = Path.of(TARGET, WORKSPACE_FOLDER, PACKAGES, PROJECT_NAME);
 
-	@Inject
-	private BinariesCommandFactory commandFactory;
-
-	private final String localNpmRegstry = "http://" + LOCALHOST + ":" + PORT;
-
-	private static boolean checkHostAvailability() {
-		try (Socket s = new Socket(LOCALHOST, PORT)) {
-			return true;
-		} catch (IOException ex) {
-			// Do nothing
-		}
-		return false;
+	/***/
+	public N4jsCliTest() {
+		super("fixture");
 	}
 
-	/**
-	 * Set up the workspace for testing.
-	 */
+	/** Checks that verdaccio is running. Creates .npmrc file. */
 	@Before
-	public void setupWorkspace() throws IOException {
+	public void setupNpmRegstry() throws IOException {
 		// Before we make the effort to test anything, check if the npm local registry is available!
-		assertTrue("Local npm registry is not found at " + localNpmRegstry, checkHostAvailability());
-
-		// set up workspace folder
-		File wsp = new File(TARGET, WORKSPACE_FOLDER);
-		File fixtureFile = new File("fixture");
-		FileDeleter.delete(wsp.toPath());
-		wsp.mkdirs();
-		FileCopier.copy(fixtureFile.toPath(), wsp.toPath());
-
-		// Create a fresh node_modules folder in WSP
-		File nodeModulesFolder = new File(
-				pathToProject(PROJECT_NAME).toString() + File.separatorChar + N4JSGlobals.NODE_MODULES);
-		if (nodeModulesFolder.exists()) {
-			nodeModulesFolder.delete();
-		}
-		nodeModulesFolder.mkdirs();
+		assertTrue("Local npm registry is not found at " + LOCAL_NPM_ADDRESS, checkVerdaccio());
 
 		// Create .npmrc file in the PSingleTestNpm folder
-		File npmrcFile = new File(pathToProject(PROJECT_NAME).toString() + File.separatorChar + ".npmrc");
+		File npmrcFile = new File(PROJECT.toString(), ".npmrc");
 		if (npmrcFile.exists()) {
 			npmrcFile.delete();
 		}
 		npmrcFile.createNewFile();
-
 		PrintWriter out = new PrintWriter(npmrcFile);
-		out.println("registry=" + localNpmRegstry);
+		out.println("registry=" + LOCAL_NPM_ADDRESS);
 		out.close();
 	}
 
-	/**
-	 * Test n4js-cli --help
-	 */
-	@Test
-	public void testN4JSCliHelp() throws Exception {
-		// Step 1: Call npm install in PSingleTestNpm folder
-		final ProcessResult result1 = commandFactory
-				.createInstallPackageCommand(pathToProject(PROJECT_NAME).toFile(), "", false).execute();
-		assertEquals("Calling npm install failed", 0, result1.getExitCode());
-
-		// Step 2: Call npm install n4js-cli in the project 'PSingleTestNpm'
-		final ProcessResult result2 = commandFactory
-				.createInstallPackageCommand(pathToProject(PROJECT_NAME).toFile(), "n4js-cli@test", false)
-				.execute();
-		assertEquals("Calling npm install n4js-cli@test failed", 0, result2.getExitCode());
-
-		// Step 3: Test that calling n4js-cli is OK
-		File outputLogFile = new File(TARGET, N4jsCliTest.class.getName() + ".testN4JSCliHelp.log");
-		String fullCmd = pathToProject(PROJECT_NAME).toString() + File.separatorChar + N4JSGlobals.NODE_MODULES
-				+ File.separatorChar
-				+ "n4js-cli/bin/n4jsc.js";
-		Process p = N4CliHelper.createAndStartProcessIntern(outputLogFile,
-				pathToProject(PROJECT_NAME).toString(), Collections.emptyMap(),
-				nodeJsBinary.getBinaryAbsolutePath(), fullCmd, "--help");
-		int exitCode = p.waitFor();
-		assertEquals("Calling n4js-cli.js --help failed", 0, exitCode);
-
-		// Step 4: ensure correct output
-		String output = N4CliHelper.readLogfile(outputLogFile);
-		if (!output.contains(N4jscBase.USAGE)) {
-			fail("Incorrect output from n4js-cli: expected substring \"" + N4jscBase.USAGE + "\", "
-					+ "but output was:\n" + output);
-		}
-	}
-
-	private Path pathToProject(String projectName) {
-		return FileSystems.getDefault()
-				.getPath(TARGET + File.separatorChar + WORKSPACE_FOLDER + File.separatorChar + projectName)
-				.normalize().toAbsolutePath();
-	}
-
-	/**
-	 * Remove .npmrc file after test execution
-	 */
+	/** Removes .npmrc file */
 	@After
 	public void tearDown() {
 		// Remove .npmrc file in the PSingleTestNpm folder
-		File npmrcFile = new File(pathToProject(PROJECT_NAME).toString() + File.separatorChar + ".npmrc");
+		File npmrcFile = new File(PROJECT.toString() + File.separatorChar + ".npmrc");
 		if (npmrcFile.exists()) {
 			npmrcFile.delete();
 		}
 	}
+
+	/** Test that n4js-cli@test is installed from local verdaccio and then call n4js-cli --help */
+	@Test
+	public void testN4JSCliHelp() {
+
+		// Step 1: Call npm install in PSingleTestNpm folder
+		ProcessResult npmInstallResult = npmInstall(PROJECT);
+		assertEquals(npmInstallResult.toString(), 0, npmInstallResult.getExitCode());
+
+		// Step 2: List all installed packages and check version of n4js-runtime
+		ProcessResult npmListResult = npmList(PROJECT);
+		assertEquals(npmListResult.toString(), 0, npmListResult.getExitCode());
+		assertTrue(npmListResult.toString(), npmListResult.getStdOut().contains("n4js-runtime@test"));
+
+		// Step 3: Install n4js-cli@test in the project 'PSingleTestNpm'
+		ProcessResult npmInstallResult2 = npmInstall(PROJECT, "n4js-cli@test");
+		assertEquals(npmInstallResult2.toString(), 0, npmInstallResult2.getExitCode());
+
+		// Step 4: Test that calling n4js-cli is OK
+		Path runFile = Path.of(PROJECT.toString(), N4JSGlobals.NODE_MODULES, "n4js-cli", "bin", "n4jsc.js");
+		ProcessResult nodeResult = runNodejs(PROJECT, runFile, "--help");
+		assertEquals(nodeResult.toString(), 0, nodeResult.getExitCode());
+		assertTrue(nodeResult.toString(), nodeResult.getStdOut().contains("USAGE"));
+	}
+
+	private static boolean checkVerdaccio() {
+		try (Socket s = new Socket(LOCALHOST, PORT)) {
+			return true;
+		} catch (IOException ex) {
+			return false;
+		}
+	}
+
 }
