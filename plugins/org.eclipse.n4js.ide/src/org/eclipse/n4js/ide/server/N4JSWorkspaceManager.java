@@ -26,7 +26,6 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
-import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -45,10 +44,10 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 	public void initialize(URI pBaseDir, Procedure2<? super URI, ? super Iterable<Issue>> pIssueAcceptor,
 			CancelIndicator cancelIndicator) {
 
-		Stopwatch sw = Stopwatch.createStarted();
+		// Stopwatch sw = Stopwatch.createStarted();
 		super.initialize(pBaseDir, pIssueAcceptor, cancelIndicator);
 		this.issueAcceptor = pIssueAcceptor;
-		System.out.println("Workspace.initialize took: " + sw);
+		// System.out.println("Workspace.initialize took: " + sw);
 	}
 
 	@Override

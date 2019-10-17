@@ -32,7 +32,8 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- * Customized to sport a fully incremenal build on restart of a language server
+ * Customized to implement a fully incremenal build on restart of a language server instead of a clean build as it is
+ * done by the base class.
  */
 @SuppressWarnings("restriction")
 public class N4JSBuildManager extends BuildManager {
