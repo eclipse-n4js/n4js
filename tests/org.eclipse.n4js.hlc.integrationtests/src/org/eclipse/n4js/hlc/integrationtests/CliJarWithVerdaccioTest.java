@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * The tests in this class test n4js-cli npm.
  */
-public class N4jsCliTest extends AbstractCliJarTest {
+public class CliJarWithVerdaccioTest extends AbstractCliJarTest {
 	private static final int PORT = 4873;
 	private static final String LOCALHOST = "localhost";
 	private static final String PROJECT_NAME = "PSingleTestNpm";
@@ -38,7 +38,7 @@ public class N4jsCliTest extends AbstractCliJarTest {
 	private static final Path PROJECT = Path.of(TARGET, WORKSPACE_FOLDER, PACKAGES, PROJECT_NAME);
 
 	/***/
-	public N4jsCliTest() {
+	public CliJarWithVerdaccioTest() {
 		super("fixture");
 	}
 
