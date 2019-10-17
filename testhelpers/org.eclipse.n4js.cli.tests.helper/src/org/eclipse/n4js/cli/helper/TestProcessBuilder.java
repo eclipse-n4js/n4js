@@ -52,52 +52,57 @@ public class TestProcessBuilder {
 	}
 
 	/** @return a started process: {@code node -r esm fileToRun} */
-	public ProcessBuilder nodejsRun(Path workingDirectory, Path fileToRun) {
+	public ProcessBuilder nodejsRun(Path workingDirectory, Path fileToRun, String[] options) {
 		final Map<String, String> env = new LinkedHashMap<>();
-		final String[] cmd = createCommandNodejsRun(fileToRun, env);
+		final String[] cmd = createCommandNodejsRun(fileToRun, env, options);
 		return createProcessBuilder(workingDirectory, cmd, env);
 	}
 
 	/** @return a started process: {@code npm install} */
-	public ProcessBuilder npmInstall(Path workingDirectory) {
+	public ProcessBuilder npmRun(Path workingDirectory, String[] options) {
 		final Map<String, String> env = new LinkedHashMap<>();
-		final String[] cmd = createCommandNpmInstall(env);
+		final String[] cmd = createCommandNpmRun(env, options);
 		return createProcessBuilder(workingDirectory, cmd, env);
 	}
 
 	/** @return a started process: {@code yarn install} */
-	public ProcessBuilder yarnInstall(Path workingDirectory) {
+	public ProcessBuilder yarnRun(Path workingDirectory, String[] options) {
 		final Map<String, String> env = new LinkedHashMap<>();
-		final String[] cmd = createCommandYarnInstall(env);
+		final String[] cmd = createCommandYarnRun(env, options);
 		return createProcessBuilder(workingDirectory, cmd, env);
 	}
 
 	/** @return a started java Process {@code java -jar n4jsc.jar OPTIONS} */
-	public ProcessBuilder n4jscRun(Path workingDirectory, N4jscOptions options) {
-		final Map<String, String> env = new LinkedHashMap<>();
-		Binary.inheritNodeJsPathEnvVariable(env); // necessary?
-		final String[] cmd = createCommandN4jscRun(env, options);
-		return createProcessBuilder(workingDirectory, cmd, env);
+	public ProcessBuilder n4jscRun(Path workingDirectory, Map<String, String> environment, N4jscOptions options) {
+		Binary.inheritNodeJsPathEnvVariable(environment); // necessary?
+		final String[] cmd = createCommandN4jscRun(environment, options);
+		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
-	private String[] createCommandNodejsRun(Path fileToRun, Map<String, String> output_env) {
+	private String[] createCommandNodejsRun(Path fileToRun, Map<String, String> output_env, String[] options) {
 		if (fileToRun == null) {
 			throw new IllegalArgumentException("run configuration does not specify a file to run");
 		}
 
-		List<String> cmd = getCommands(output_env, nodeJsBinary.getBinaryAbsolutePath(), //
-				"-r", "esm", fileToRun.toString());
+		List<String> optionList = new ArrayList<>();
+		optionList.add("-r");
+		optionList.add("esm");
+		optionList.add(fileToRun.toString());
+		optionList.addAll(Arrays.asList(options));
+		String[] cmdOptions = optionList.toArray(String[]::new);
+
+		List<String> cmd = getCommands(output_env, nodeJsBinary.getBinaryAbsolutePath(), cmdOptions);
 
 		return cmd.toArray(new String[0]);
 	}
 
-	private String[] createCommandNpmInstall(Map<String, String> output_env) {
-		List<String> cmd = getCommands(output_env, npmBinary.getBinaryAbsolutePath(), "install");
+	private String[] createCommandNpmRun(Map<String, String> output_env, String[] options) {
+		List<String> cmd = getCommands(output_env, npmBinary.getBinaryAbsolutePath(), options);
 		return cmd.toArray(new String[0]);
 	}
 
-	private String[] createCommandYarnInstall(Map<String, String> output_env) {
-		List<String> cmd = getCommands(output_env, yarnBinary.getBinaryAbsolutePath(), "install");
+	private String[] createCommandYarnRun(Map<String, String> output_env, String[] options) {
+		List<String> cmd = getCommands(output_env, yarnBinary.getBinaryAbsolutePath(), options);
 		return cmd.toArray(new String[0]);
 	}
 
@@ -109,7 +114,7 @@ public class TestProcessBuilder {
 		optionList.add("-jar");
 		optionList.add(n4jscFileName);
 		optionList.addAll(options.toArgs());
-		String[] cmdOptions = optionList.toArray(new String[optionList.size()]);
+		String[] cmdOptions = optionList.toArray(String[]::new);
 
 		List<String> cmd = getCommands(output_env, javaBinary.getBinaryAbsolutePath(), cmdOptions);
 		return cmd.toArray(new String[0]);

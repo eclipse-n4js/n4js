@@ -42,7 +42,7 @@ abstract public class AbstractCliTest<ArgType> {
 
 	/** Reset the injector setup */
 	@Before
-	public void before() {
+	final public void before() {
 		N4jscTestFactory.resetInjector();
 	}
 

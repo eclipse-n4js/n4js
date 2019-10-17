@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli.helper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +27,11 @@ import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
-import org.eclipse.xtext.util.Arrays;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
 /**
@@ -127,7 +128,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
 		List<File> srcFiles = options.getSrcFiles();
 		File fileArg = srcFiles.isEmpty() ? new File(".") : srcFiles.get(0);
-		ProcessResult n4jscResult = tpExecuter.n4jscRun(fileArg.toPath(), options);
+		ProcessResult n4jscResult = tpExecuter.n4jscRun(fileArg.toPath(), environment, options);
 
 		cliResult.command = n4jscResult.getCommand();
 		cliResult.exception = n4jscResult.getException();
@@ -148,25 +149,35 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		this.environment.put(name, value);
 	}
 
-	/** {@link TestProcessExecuter#runNodejs(Path, Path)} */
-	public ProcessResult runNodejs(Path workingDir, Path runFile) {
+	/** see {@link TestProcessExecuter#runNodejs(Path, Path, String[])} */
+	public ProcessResult runNodejs(Path workingDir, Path runFile, String... options) {
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
-		return tpExecuter.runNodejs(workingDir, runFile);
+		return tpExecuter.runNodejs(workingDir, runFile, options);
 	}
 
-	/** {@link TestProcessExecuter#npmInstall(Path)} */
-	public ProcessResult npmInstall(Path workingDir) {
+	/** see {@link TestProcessExecuter#npmRun(Path, String[])} */
+	public ProcessResult npmInstall(Path workingDir, String... options) {
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
-		return tpExecuter.npmInstall(workingDir);
+		String[] installOptions = Lists.asList("install", options).toArray(String[]::new);
+		return tpExecuter.npmRun(workingDir, installOptions);
 	}
 
-	/** {@link TestProcessExecuter#yarnInstall(Path)} */
-	public ProcessResult yarnInstall(Path workingDir) {
+	/** see {@link TestProcessExecuter#npmRun(Path, String[])} */
+	public ProcessResult npmList(Path workingDir, String... options) {
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
-		return tpExecuter.yarnInstall(workingDir);
+		String[] listOptions = Lists.asList("list", options).toArray(String[]::new);
+		return tpExecuter.npmRun(workingDir, listOptions);
+	}
+
+	/** see {@link TestProcessExecuter#yarnRun(Path, String[])} */
+	public ProcessResult yarnInstall(Path workingDir, String... options) {
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
+		String[] installOptions = Lists.asList("install", options).toArray(String[]::new);
+		return tpExecuter.yarnRun(workingDir, installOptions);
 	}
 
 	/**
@@ -200,7 +211,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	 */
 	protected static File setupWorkspace(String testDataSet, boolean createYarnWorkspace, N4JSProjectName... libNames)
 			throws IOException {
-		return setupWorkspace(testDataSet, libName -> Arrays.contains(libNames, libName), createYarnWorkspace);
+		return setupWorkspace(testDataSet, libName -> Arrays.asList(libNames).contains(libName), createYarnWorkspace);
 	}
 
 	/**

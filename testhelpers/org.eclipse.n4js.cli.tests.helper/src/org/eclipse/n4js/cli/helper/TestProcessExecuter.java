@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli.helper;
 
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
@@ -43,23 +44,23 @@ public class TestProcessExecuter {
 	}
 
 	/** Runs node with the given {@code runFile} in the given {@code workingDir} */
-	public ProcessResult runNodejs(Path workingDir, Path runFile) {
-		return joinProcess(() -> testProcessBuilder.nodejsRun(workingDir, runFile));
+	public ProcessResult runNodejs(Path workingDir, Path runFile, String... options) {
+		return joinProcess(() -> testProcessBuilder.nodejsRun(workingDir, runFile, options));
 	}
 
-	/** Runs npm install in the given {@code workingDir} */
-	public ProcessResult npmInstall(Path workingDir) {
-		return joinProcess(() -> testProcessBuilder.npmInstall(workingDir));
+	/** Runs npm OPTIONS in the given {@code workingDir} */
+	public ProcessResult npmRun(Path workingDir, String... options) {
+		return joinProcess(() -> testProcessBuilder.npmRun(workingDir, options));
 	}
 
-	/** Runs yarn install in the given {@code workingDir} */
-	public ProcessResult yarnInstall(Path workingDir) {
-		return joinProcess(() -> testProcessBuilder.yarnInstall(workingDir));
+	/** Runs yarn OPTIONS in the given {@code workingDir} */
+	public ProcessResult yarnRun(Path workingDir, String... options) {
+		return joinProcess(() -> testProcessBuilder.yarnRun(workingDir, options));
 	}
 
-	/** Runs n4jsc.jar in the given {@code workingDir} with the given options */
-	public ProcessResult n4jscRun(Path workingDir, N4jscOptions options) {
-		return joinProcess(() -> testProcessBuilder.n4jscRun(workingDir, options));
+	/** Runs n4jsc.jar in the given {@code workingDir} with the given environment additions and options */
+	public ProcessResult n4jscRun(Path workingDir, Map<String, String> environment, N4jscOptions options) {
+		return joinProcess(() -> testProcessBuilder.n4jscRun(workingDir, environment, options));
 	}
 
 	private ProcessResult joinProcess(Supplier<ProcessBuilder> pbs) {

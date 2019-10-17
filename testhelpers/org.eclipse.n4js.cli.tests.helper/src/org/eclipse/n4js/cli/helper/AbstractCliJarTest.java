@@ -31,13 +31,13 @@ import com.google.common.base.Predicates;
  */
 public abstract class AbstractCliJarTest extends AbstractCliCompileTest {
 	/** Standard Name of the executable jar. */
-	static protected final String N4JSC_JAR = "n4jsc.jar";
+	static public final String N4JSC_JAR = "n4jsc.jar";
 	/** Standard target folder-name, the base of maven-compile results. */
-	static protected final String TARGET = "target";
+	static public final String TARGET = "target";
 	/** Standard target folder (name+"/"), the base of maven-compile results. */
-	static protected final String TARGET_FOLDER = TARGET + "/";
+	static public final String TARGET_FOLDER = TARGET + "/";
 	/** Sub folder in target folder. */
-	static protected final String WORKSPACE_FOLDER = "wsp";
+	static public final String WORKSPACE_FOLDER = "wsp";
 
 	/** source of test data, will be copied to TARGET/WSP */
 	protected final Path fixture;
@@ -69,7 +69,7 @@ public abstract class AbstractCliJarTest extends AbstractCliCompileTest {
 
 	/** Copy a fresh fixture to the workspace area. */
 	@Before
-	public void setupWorkspace() throws IOException {
+	final public void setupWorkspace() throws IOException {
 		Path wsp = Paths.get(TARGET, WORKSPACE_FOLDER);
 		Files.createDirectories(wsp);
 
