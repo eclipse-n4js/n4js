@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.build.IncrementalBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.TopologicalSorter;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -176,7 +176,7 @@ public class XBuildManager {
 		List<ProjectDescription> sortedDescriptions = sortByDependencies(projects);
 		ArrayList<IResourceDescription.Delta> result = CollectionLiterals.<IResourceDescription.Delta> newArrayList();
 		for (ProjectDescription description : sortedDescriptions) {
-			IncrementalBuilder.Result partialresult = workspaceManager.getProjectManager(description.getName())
+			XIncrementalBuilder.XResult partialresult = workspaceManager.getProjectManager(description.getName())
 					.doInitialBuild(indicator);
 			result.addAll(partialresult.getAffectedResources());
 		}
@@ -204,7 +204,7 @@ public class XBuildManager {
 			XProjectManager projectManager = workspaceManager.getProjectManager(it.getName());
 			List<URI> projectDirty = new ArrayList<>(project2dirty.get(it));
 			List<URI> projectDeleted = new ArrayList<>(project2deleted.get(it));
-			IncrementalBuilder.Result partialResult = projectManager.doBuild(projectDirty, projectDeleted,
+			XIncrementalBuilder.XResult partialResult = projectManager.doBuild(projectDirty, projectDeleted,
 					unreportedDeltas, cancelIndicator);
 			allDirty.addAll(
 					ListExtensions.map(partialResult.getAffectedResources(), IResourceDescription.Delta::getUri));

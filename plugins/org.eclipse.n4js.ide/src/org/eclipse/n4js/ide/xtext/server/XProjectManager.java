@@ -12,9 +12,9 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.build.BuildRequest;
-import org.eclipse.xtext.build.IncrementalBuilder;
-import org.eclipse.xtext.build.IndexState;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
+import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -46,7 +46,7 @@ public class XProjectManager {
 	 * The builder.
 	 */
 	@Inject
-	protected IncrementalBuilder incrementalBuilder;
+	protected XIncrementalBuilder incrementalBuilder;
 
 	/**
 	 * Creates a new resource set.
@@ -72,7 +72,7 @@ public class XProjectManager {
 	@Inject
 	protected IExternalContentSupport externalContentSupport;
 
-	private IndexState indexState = new IndexState();
+	private XIndexState indexState = new XIndexState();
 
 	private URI baseDir;
 
@@ -108,7 +108,7 @@ public class XProjectManager {
 	/**
 	 * Initial build of this project.
 	 */
-	public IncrementalBuilder.Result doInitialBuild(CancelIndicator cancelIndicator) {
+	public XIncrementalBuilder.XResult doInitialBuild(CancelIndicator cancelIndicator) {
 		List<URI> allUris = CollectionLiterals.<URI> newArrayList();
 		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
 			allUris.addAll(srcFolder.getAllResources(fileSystemScanner));
@@ -119,10 +119,10 @@ public class XProjectManager {
 	/**
 	 * Build this project.
 	 */
-	public IncrementalBuilder.Result doBuild(List<URI> dirtyFiles, List<URI> deletedFiles,
+	public XIncrementalBuilder.XResult doBuild(List<URI> dirtyFiles, List<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
-		BuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
-		IncrementalBuilder.Result result = incrementalBuilder.build(request,
+		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
+		XIncrementalBuilder.XResult result = incrementalBuilder.build(request,
 				languagesRegistry::getResourceServiceProvider);
 		indexState = result.getIndexState();
 		resourceSet = request.getResourceSet();
@@ -133,11 +133,11 @@ public class XProjectManager {
 	/**
 	 * Creates a new build request for this project.
 	 */
-	protected BuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
+	protected XBuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
-		BuildRequest result = new BuildRequest();
+		XBuildRequest result = new XBuildRequest();
 		result.setBaseDir(baseDir);
-		result.setState(new IndexState(indexState.getResourceDescriptions().copy(),
+		result.setState(new XIndexState(indexState.getResourceDescriptions().copy(),
 				indexState.getFileMappings().copy()));
 		result.setResourceSet(createFreshResourceSet(result.getState().getResourceDescriptions()));
 		result.setDirtyFiles(changedFiles);
@@ -204,14 +204,14 @@ public class XProjectManager {
 	/**
 	 * Getter
 	 */
-	public IndexState getIndexState() {
+	public XIndexState getIndexState() {
 		return indexState;
 	}
 
 	/**
 	 * Setter
 	 */
-	protected void setIndexState(IndexState indexState) {
+	protected void setIndexState(XIndexState indexState) {
 		this.indexState = indexState;
 	}
 
