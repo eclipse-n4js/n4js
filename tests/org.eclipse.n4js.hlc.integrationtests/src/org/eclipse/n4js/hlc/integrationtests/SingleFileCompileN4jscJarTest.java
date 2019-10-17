@@ -27,7 +27,7 @@ import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.junit.Test;
 
 /**
- * IMPORTANT: for info on how to run this test locally, see {@link AbstractN4jscJarTest}!
+ * IMPORTANT: for info on how to run this test locally, see {@link AbstractCliJarTest}!
  */
 public class SingleFileCompileN4jscJarTest extends AbstractCliJarTest {
 

@@ -28,7 +28,7 @@ import org.junit.Test;
 import com.google.common.io.CharStreams;
 
 /**
- * IMPORTANT: for info on how to run this test locally, see {@link AbstractN4jscJarTest}!
+ * IMPORTANT: for info on how to run this test locally, see {@link AbstractCliJarTest}!
  */
 public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	/** Initializes test workspace data. */

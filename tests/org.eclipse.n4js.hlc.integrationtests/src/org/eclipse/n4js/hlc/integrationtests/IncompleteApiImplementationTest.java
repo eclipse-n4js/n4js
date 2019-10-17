@@ -26,7 +26,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * IMPORTANT: for info on how to run this test locally, see {@link AbstractN4jscJarTest}!
+ * IMPORTANT: for info on how to run this test locally, see {@link AbstractCliJarTest}!
  */
 public class IncompleteApiImplementationTest extends AbstractCliJarTest {
 
