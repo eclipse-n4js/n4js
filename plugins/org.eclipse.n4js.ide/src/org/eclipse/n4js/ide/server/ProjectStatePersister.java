@@ -94,7 +94,7 @@ public class ProjectStatePersister {
 	 * @param stream
 	 *            the output stream. Will not be closed.
 	 * @param languageVersion
-	 *            TODO
+	 *            the language version
 	 * @param state
 	 *            the state to be written
 	 * @param files
@@ -153,7 +153,7 @@ public class ProjectStatePersister {
 	 * @param stream
 	 *            the stream to read from.
 	 * @param expectedLanguageVersion
-	 *            TODO
+	 *            the language version as it is expected to be present in the stream
 	 * @param result
 	 *            announce the results here.
 	 * @throws IOException
