@@ -125,7 +125,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 						"  noTests=false\n" +
 						"  port=5007\n" +
 						"  srcFiles=Optional.empty\n" +
-						"  Current execution directory=/.",
+						"  Current execution directory=.../.",
 				result.getStdOut());
 	}
 

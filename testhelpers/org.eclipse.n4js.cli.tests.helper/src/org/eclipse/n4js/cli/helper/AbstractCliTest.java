@@ -35,6 +35,11 @@ abstract public class AbstractCliTest<ArgType> {
 	/** Invokes the starting method of this test class */
 	abstract public void doN4jsc(ArgType arg, CliCompileResult cliResult) throws Exception;
 
+	/** @return instance of {@link CliCompileResult} which is filled with values later on */
+	protected CliCompileResult createResult() {
+		return new CliCompileResult();
+	}
+
 	/** Reset the injector setup */
 	@Before
 	public void before() {
@@ -80,7 +85,7 @@ abstract public class AbstractCliTest<ArgType> {
 	 * of the invocation. Removes {@link N4jscOptions#USAGE} text if desired.
 	 */
 	protected CliCompileResult n4jsc(ArgType args, int exitCode, boolean removeUsage) {
-		CliCompileResult cliResult = new CliCompileResult();
+		CliCompileResult cliResult = createResult();
 		Stopwatch sw = Stopwatch.createStarted();
 
 		try {
@@ -91,7 +96,7 @@ abstract public class AbstractCliTest<ArgType> {
 			cliResult.exitCode = e.status;
 			assertEquals(exitCode, e.status);
 		} catch (Exception e) {
-			cliResult.cause = e;
+			cliResult.exception = e;
 			if (cliResult.exitCode == 0) {
 				cliResult.exitCode = -1;
 			}
@@ -121,8 +126,8 @@ abstract public class AbstractCliTest<ArgType> {
 		cliResult.errOut = cliResult.errOut.replace(curDirPath, RELATIVE_PATH);
 
 		if (removeUsage) {
-			cliResult.stdOut = cliResult.stdOut.replace(N4jscOptions.USAGE, RELATIVE_PATH);
-			cliResult.errOut = cliResult.errOut.replace(N4jscOptions.USAGE, RELATIVE_PATH);
+			cliResult.stdOut = cliResult.stdOut.replace(N4jscOptions.USAGE, "");
+			cliResult.errOut = cliResult.errOut.replace(N4jscOptions.USAGE, "");
 		}
 
 		cliResult.stdOut = cliResult.stdOut.trim();

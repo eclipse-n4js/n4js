@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest.N4jscVariant;
+import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -36,41 +38,24 @@ import com.google.common.collect.Multimap;
 /**
  * Data class that holds all information after {@link N4jscMain} was executed
  */
-public class CliCompileResult {
-	N4jscVariant n4jscVariant;
-	String stdOut;
-	String errOut;
-	int exitCode;
+public class CliCompileResult extends ProcessResult {
+	N4jscVariant n4jscVariant = N4jscVariant.inprocess;
 	Map<String, String> projects = new LinkedHashMap<>();
-	Exception cause;
 	Multimap<String, String> errors = HashMultimap.create();
 	Multimap<String, String> warnings = HashMultimap.create();
-	long duration;
 	TreeMap<Path, HashSet<File>> transpiledFiles = new TreeMap<>();
+
+	CliCompileResult() {
+		super("[inprocess]");
+	}
+
+	CliCompileResult(ProcessResult processResult) {
+		super(processResult);
+	}
 
 	/** @return variant of execution (see {@link N4jscVariant}) */
 	public N4jscVariant getN4jscVariant() {
 		return n4jscVariant;
-	}
-
-	/** @return all outputs on the standard output stream */
-	public String getStdOut() {
-		return stdOut;
-	}
-
-	/** @return all outputs on the error stream */
-	public String getErrOut() {
-		return errOut;
-	}
-
-	/** @return exit code of the cli command */
-	public int getExitCode() {
-		return exitCode;
-	}
-
-	/** @return exception in case the cli command was ended non-successful */
-	public Exception getCause() {
-		return cause;
 	}
 
 	/** @return number of all errors */
@@ -106,11 +91,6 @@ public class CliCompileResult {
 	/** @return list of all warning messages found in the given sources */
 	public Collection<String> getWrnMsgs() {
 		return new TreeSet<>(warnings.values());
-	}
-
-	/** @return duration of invoking the cli command */
-	public long getDuration() {
-		return duration;
 	}
 
 	/** @return number of all files that where transpiled to js files */
@@ -189,30 +169,32 @@ public class CliCompileResult {
 	}
 
 	@Override
-	public String toString() {
+	List<Pair<String, String>> getProperties() {
 		List<String> fileNameList = getTranspiledFiles().stream().map(f -> f.toString()).collect(toList());
 		List<String> projectNameList = getProjects().entrySet().stream().map(e -> e.getKey() + " at " + e.getValue())
 				.collect(toList());
 
-		String s = "CLI Result:\n";
-		s += "    variant:   " + n4jscVariant + "\n";
-		s += "    duration:  " + duration + "ms\n";
-		s += "    exit code: " + exitCode + "\n";
-		s += "    projects (" + getProjects().size() + "):\n";
-		s += "       " + String.join("\n       ", projectNameList) + "\n";
-		s += "    transpiled (" + getTranspiledFilesCount() + "):\n";
-		s += (getTranspiledFilesCount() > 0 ? "       " : "");
-		s += String.join("\n       ", fileNameList) + "\n";
-		s += "    warnings (" + getWrns() + "):\n" + (getWrns() > 0 ? "    " : "");
-		s += String.join("\n    ", getWrnMsgs()) + "\n";
-		s += "    errors (" + getErrs() + "):\n" + (getErrs() > 0 ? "    " : "");
-		s += String.join("\n    ", getErrMsgs()) + "\n";
-		s += ((cause == null) ? "" : "    exception " + cause.getMessage());
-		s += "    std out:\n";
-		s += (stdOut == null || stdOut.isBlank() ? "" : ">>>>\n" + stdOut + "\n<<<<\n");
-		s += "    err out:\n";
-		s += (errOut == null || errOut.isBlank() ? "" : ">>>>\n" + errOut + "\n<<<<\n");
-		s += "CLI Result End.\n";
-		return s;
+		List<Pair<String, String>> props = super.getProperties();
+		props.add(Tuples.pair("variant", n4jscVariant.toString()));
+		props.add(Tuples.pair("projects (" + getProjects().size() + ")", ""));
+		if (getProjects().size() > 0) {
+			props.add(Tuples.pair(null, String.join("\n    ", projectNameList)));
+		}
+		props.add(Tuples.pair("transpiled (" + getTranspiledFilesCount() + ")", ""));
+		if (getTranspiledFilesCount() > 0) {
+			props.add(Tuples.pair(null, String.join("\n    ", fileNameList) + "\n"));
+		}
+
+		props.add(Tuples.pair("warnings (" + getWrns() + ")", ""));
+		if (getWrns() > 0) {
+			props.add(Tuples.pair(null, String.join("\n    ", getWrnMsgs()) + "\n"));
+		}
+		props.add(Tuples.pair("errors (" + getErrs() + ")", ""));
+		if (getErrs() > 0) {
+			props.add(Tuples.pair(null, String.join("\n    ", getErrMsgs()) + "\n"));
+		}
+
+		return props;
 	}
+
 }

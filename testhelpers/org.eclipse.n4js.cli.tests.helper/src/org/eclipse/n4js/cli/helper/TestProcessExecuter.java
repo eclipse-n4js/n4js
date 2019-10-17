@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.cli.runner.helper;
+package org.eclipse.n4js.cli.helper;
 
 import java.io.InputStream;
 import java.nio.file.Path;

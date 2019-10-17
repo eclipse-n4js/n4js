@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.cli.runner.helper;
+package org.eclipse.n4js.cli.helper;
 
 import static org.eclipse.n4js.utils.OSInfo.isWindows;
 

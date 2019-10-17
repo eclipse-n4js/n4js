@@ -23,7 +23,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.AbstractCliJarTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.cli.runner.helper.ProcessResult;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.junit.Test;
 
 /**

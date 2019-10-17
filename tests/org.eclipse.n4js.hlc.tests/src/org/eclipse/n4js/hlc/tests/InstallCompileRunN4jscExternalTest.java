@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
-import org.eclipse.n4js.cli.runner.helper.ProcessResult;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;

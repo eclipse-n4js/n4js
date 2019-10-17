@@ -22,8 +22,6 @@ import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
-import org.eclipse.n4js.cli.runner.helper.ProcessResult;
-import org.eclipse.n4js.cli.runner.helper.TestProcessExecuter;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -71,6 +69,25 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	}
 
 	@Override
+	public CliCompileResult createResult() {
+		CliCompileResult result = null;
+
+		switch (variant) {
+		case inprocess:
+			result = new CliCompileResult();
+			break;
+		case exprocess:
+			result = new CliCompileProcessResult();
+			break;
+		default:
+			throw new IllegalStateException();
+		}
+
+		result.n4jscVariant = this.variant;
+		return result;
+	}
+
+	@Override
 	public void doN4jsc(N4jscOptions options, CliCompileResult result) throws Exception {
 		result.n4jscVariant = this.variant;
 
@@ -111,7 +128,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		File fileArg = srcFiles.isEmpty() ? new File(".") : srcFiles.get(0);
 		ProcessResult n4jscResult = tpExecuter.n4jscRun(fileArg.toPath(), options);
 
-		cliResult.cause = n4jscResult.getException();
+		cliResult.exception = n4jscResult.getException();
 		cliResult.exitCode = n4jscResult.getExitCode();
 		cliResult.stdOut = n4jscResult.getStdOut();
 		cliResult.errOut = n4jscResult.getErrOut();
