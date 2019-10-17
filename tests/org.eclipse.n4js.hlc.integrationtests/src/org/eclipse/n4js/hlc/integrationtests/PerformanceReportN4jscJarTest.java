@@ -10,18 +10,19 @@
  */
 package org.eclipse.n4js.hlc.integrationtests;
 
-import static org.eclipse.n4js.hlc.integrationtests.HlcTestingConstants.WORKSPACE_FOLDER;
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
-import org.eclipse.n4js.hlc.base.BuildType;
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliJarTest;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.junit.Test;
 
 import com.google.common.io.CharStreams;
@@ -29,40 +30,23 @@ import com.google.common.io.CharStreams;
 /**
  * IMPORTANT: for info on how to run this test locally, see {@link AbstractN4jscJarTest}!
  */
-public class PerformanceReportN4jscJarTest extends AbstractN4jscJarTest {
+public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	/** Initializes test workspace data. */
 	public PerformanceReportN4jscJarTest() {
 		super("probands/GH-1062", false);
 	}
 
 	/**
-	 * Enables performance data logging in the headless compiler via the system environment variable
-	 * {@code N4JSC_PERFORMANCE_REPORT} and asserts the output format of the performance report.
+	 * Enables performance data logging in the headless compiler via the parameter
+	 * {@link N4jscOptions#getPerformanceReport()} and asserts the output format of the performance report.
 	 */
 	@Test
-	public void testPerformanceReportViaParameter() throws FileNotFoundException, IOException, InterruptedException {
-		logFile();
+	public void testPerformanceReportViaParameter() throws IOException {
+		File project = Path.of(TARGET, WORKSPACE_FOLDER, "performance-report").toAbsolutePath().toFile();
+		File performanceReportLocation = new File(WORKSPACE_FOLDER, "report.csv");
 
-		final String performanceReportLocation = WORKSPACE_FOLDER + "/report.csv";
-
-		final String[] args = {
-				"--projectlocations", WORKSPACE_FOLDER,
-				"--performanceReport", performanceReportLocation,
-				"--buildType", BuildType.allprojects.toString()
-		};
-
-		// run n4jsc.jar in process
-		Process p = createAndStartProcess(args);
-		int exitCode = p.waitFor();
-		assertEquals("Could not successfully execute N4JSC with performance report option.", 0, exitCode);
-
-		// check performance report
-		try (FileReader reader = new FileReader(HlcTestingConstants.TARGET_FOLDER + performanceReportLocation)) {
-			final List<String> rows = CharStreams.readLines(reader);
-			assertEquals("Performance report contains 2 rows", 2, rows.size());
-			assertNotEquals("Performance report has measurement different from 0 in first column of second row",
-					rows.get(1).substring(0, 1), "0");
-		}
+		CliCompileResult cliResult = n4jsc(COMPILE(project).performanceReport(performanceReportLocation));
+		makeAssertions(performanceReportLocation, cliResult);
 	}
 
 	/**
@@ -70,28 +54,22 @@ public class PerformanceReportN4jscJarTest extends AbstractN4jscJarTest {
 	 * {@code N4JSC_PERFORMANCE_REPORT} and asserts the output format of the performance report.
 	 */
 	@Test
-	public void testPerformanceReportViaEnvironmemtVariable()
-			throws FileNotFoundException, IOException, InterruptedException {
-		logFile();
-
-		final String performanceReportLocation = WORKSPACE_FOLDER + "/report.csv";
-
-		final String[] args = {
-				"--projectlocations", WORKSPACE_FOLDER,
-				"--buildType", BuildType.allprojects.toString()
-		};
+	public void testPerformanceReportViaEnvironmemtVariable() throws IOException {
+		File project = Path.of(TARGET, WORKSPACE_FOLDER, "performance-report").toAbsolutePath().toFile();
+		File performanceReportLocation = new File(WORKSPACE_FOLDER, "report.csv");
 
 		// setup system environment variables
-		Map<String, String> env = new HashMap<>();
-		env.put("N4JSC_PERFORMANCE_REPORT", performanceReportLocation);
+		setEnvironmentVariable("N4JSC_PERFORMANCE_REPORT", performanceReportLocation.toString());
 
-		// run n4jsc.jar in process
-		Process p = createAndStartProcess(env, args);
-		int exitCode = p.waitFor();
-		assertEquals("Could not successfully execute N4JSC with performance report option.", 0, exitCode);
+		CliCompileResult cliResult = n4jsc(COMPILE(project));
+		makeAssertions(performanceReportLocation, cliResult);
+	}
+
+	private void makeAssertions(File performanceReportLocation, CliCompileResult cliResult) throws IOException {
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
 		// check performance report
-		try (FileReader reader = new FileReader(HlcTestingConstants.TARGET_FOLDER + performanceReportLocation)) {
+		try (FileReader reader = new FileReader(new File(TARGET_FOLDER, performanceReportLocation.toString()))) {
 			final List<String> rows = CharStreams.readLines(reader);
 			assertEquals("Performance report contains 2 rows", 2, rows.size());
 			assertNotEquals("Performance report has measurement different from 0 in first column of second row",

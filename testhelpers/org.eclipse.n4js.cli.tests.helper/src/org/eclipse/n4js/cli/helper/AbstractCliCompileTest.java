@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli.helper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,6 +58,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	}
 
 	final private N4jscVariant variant;
+	final private Map<String, String> environment = new HashMap<>();
 
 	/** Constructor */
 	public AbstractCliCompileTest() {
@@ -136,6 +138,15 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		// save transpiled files
 		File workspaceRoot = options.getSrcFiles().get(0);
 		cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
+	}
+
+	/**
+	 * Sets the given name and value pair to the environment.
+	 * <p>
+	 * <b>Note:</b> Only active when used in {@link N4jscVariant#exprocess }
+	 */
+	public void setEnvironmentVariable(String name, String value) {
+		this.environment.put(name, value);
 	}
 
 	/** {@link TestProcessExecuter#runNodejs(Path, Path)} */
