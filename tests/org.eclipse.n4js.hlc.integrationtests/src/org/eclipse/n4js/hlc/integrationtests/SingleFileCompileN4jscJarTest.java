@@ -62,7 +62,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractCliJarTest {
 		N4CliHelper.copyN4jsLibsToLocation(nodeModulesPath, N4JSGlobals.N4JS_RUNTIME);
 
 		CliCompileResult cliResult = n4jsc(COMPILE(project.toFile()));
-		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
+		assertEquals(cliResult.toString(), 4, cliResult.getTranspiledFilesCount());
 
 		Path fileA = project.resolve("src-gen/A.js");
 

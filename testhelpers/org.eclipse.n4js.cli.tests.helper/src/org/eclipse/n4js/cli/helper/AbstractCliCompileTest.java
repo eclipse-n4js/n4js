@@ -136,8 +136,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		cliResult.errOut = n4jscResult.getErrOut();
 
 		// save transpiled files
-		File workspaceRoot = options.getSrcFiles().get(0);
-		cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
+		cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(fileArg.toPath());
 	}
 
 	/**
