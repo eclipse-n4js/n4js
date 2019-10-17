@@ -160,6 +160,7 @@ pipeline {
                             cp ${pathProductsLatest}/n4jsc_${LANGUAGE_VERSION}.jar               ${pathProductsLatest}/n4jsc.jar
                             cp ${pathProductsLatest}/n4js-ide_win_${LANGUAGE_VERSION}.zip        ${pathProductsLatest}/n4js-ide_win.zip
                             cp ${pathProductsLatest}/n4js-ide_macos_${LANGUAGE_VERSION}.zip      ${pathProductsLatest}/n4js-ide_macos.zip
+                            cp ${pathProductsLatest}/n4js-ide_macos_${LANGUAGE_VERSION}.dmg      ${pathProductsLatest}/n4js-ide_macos.dmg
                             cp ${pathProductsLatest}/n4js-ide_linux-gtk_${LANGUAGE_VERSION}.zip  ${pathProductsLatest}/n4js-ide_linux-gtk.zip
                         """
                     } else {

@@ -18,7 +18,13 @@
 
    <splash
       location="org.eclipse.n4js.product" />
-   <launcher name="n4jside">
+   <!--
+      The launcher name defined in the next line is the name of the IDE executable.
+      Under macOS, this executable will be contained in the app-bundle and will not be visible to the user, normally.
+
+      WARNING: if this name is equalsIgnoreCase to the root folder names defined in the pom.xml, it will produce an inconsitent app-bundle under macOS!
+   -->
+   <launcher name="n4js_ide">
       <linux icon="/icons/n4jside.xpm"/>
       <macosx icon="/icons/n4jside.icns"/>
       <win useIco="true">
