@@ -72,6 +72,14 @@ pipeline {
                 dir('n4js') {
                     sh "mvn $MAVEN_OPTIONS -PbuildProduct -DlanguageVersion=${LANGUAGE_VERSION} -DexcludeJRE -DnoTests clean verify"
                 }
+
+                // assert that the headless builder reports the correct version
+                script {
+                    def versionOfHeadlessBuilder = sh(returnStdout: true, script: 'java -jar n4js/plugins/org.eclipse.n4js.cli/target/new_n4jsc.jar --version').trim();
+                    if (versionOfHeadlessBuilder != LANGUAGE_VERSION) {
+                        error "headless builder reported an incorrect version: ${versionOfHeadlessBuilder}"
+                    }
+                }
             }
         }
 
