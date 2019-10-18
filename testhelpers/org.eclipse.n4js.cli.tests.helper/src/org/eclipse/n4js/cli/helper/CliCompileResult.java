@@ -177,7 +177,7 @@ public class CliCompileResult extends ProcessResult {
 		List<String> fileNameList = getTranspiledFiles().stream().map(f -> f.toString()).collect(toList());
 		props.add(Tuples.pair("transpiled (" + getTranspiledFilesCount() + ")", ""));
 		if (getTranspiledFilesCount() > 0) {
-			props.add(Tuples.pair(null, "      + " + String.join("\n      + ", fileNameList) + "\n"));
+			props.add(Tuples.pair(null, IDENT2 + String.join("\n" + IDENT2, fileNameList) + "\n"));
 		}
 
 		if (n4jscVariant == N4jscVariant.exprocess) {
@@ -190,16 +190,16 @@ public class CliCompileResult extends ProcessResult {
 		props.add(Tuples.pair("variant", n4jscVariant.toString()));
 		props.add(Tuples.pair("projects (" + getProjects().size() + ")", ""));
 		if (getProjects().size() > 0) {
-			props.add(Tuples.pair(null, "      + " + String.join("\n      + ", projectNameList)));
+			props.add(Tuples.pair(null, IDENT2 + String.join("\n" + IDENT2, projectNameList)));
 		}
 
 		props.add(Tuples.pair("warnings (" + getWrns() + ")", ""));
 		if (getWrns() > 0) {
-			props.add(Tuples.pair(null, "      + " + String.join("\n      + ", getWrnMsgs()) + "\n"));
+			props.add(Tuples.pair(null, IDENT1 + String.join("\n" + IDENT1, getWrnMsgs())));
 		}
 		props.add(Tuples.pair("errors (" + getErrs() + ")", ""));
 		if (getErrs() > 0) {
-			props.add(Tuples.pair(null, "      + " + String.join("\n      + ", getErrMsgs()) + "\n"));
+			props.add(Tuples.pair(null, IDENT1 + String.join("\n" + IDENT1, getErrMsgs())));
 		}
 
 		return props;

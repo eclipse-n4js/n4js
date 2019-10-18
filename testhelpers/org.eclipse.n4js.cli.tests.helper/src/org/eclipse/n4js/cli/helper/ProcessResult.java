@@ -20,13 +20,19 @@ import org.eclipse.xtext.util.Tuples;
  * Data class that holds all information after {@code node.js} was executed
  */
 public class ProcessResult {
-	long duration = Long.MIN_VALUE;
+	static final int NO_EXIT_CODE = Integer.MIN_VALUE;
+	static final long NO_DURATION = Long.MIN_VALUE;
+
+	static final String IDENT1 = "   ";
+	static final String IDENT2 = "      ";
+
+	long duration = NO_DURATION;
 	String workingDir = "";
 	String command = "";
 	String stdOut = "";
 	String errOut = "";
 	Exception exception;
-	int exitCode = Integer.MIN_VALUE;
+	int exitCode = NO_EXIT_CODE;
 
 	/** Constructor */
 	public ProcessResult() {
@@ -83,8 +89,8 @@ public class ProcessResult {
 		List<Pair<String, String>> props = new ArrayList<>();
 		props.add(Tuples.pair("workingDir", workingDir));
 		props.add(Tuples.pair("command", command));
-		props.add(Tuples.pair("exit code", String.valueOf(exitCode)));
-		props.add(Tuples.pair("duration", duration + "ms"));
+		props.add(Tuples.pair("exit code", (exitCode == NO_EXIT_CODE ? "-" : String.valueOf(exitCode))));
+		props.add(Tuples.pair("duration", (duration == NO_DURATION ? "-" : duration + "ms")));
 		props.add(Tuples.pair("exception", exception == null ? "" : exception.getMessage()));
 
 		props.add(Tuples.pair("std out", ""));
@@ -103,10 +109,12 @@ public class ProcessResult {
 	public String toString() {
 		String s = "Result:\n";
 		for (Pair<String, String> prop : getProperties()) {
-			if (prop.getFirst() == null) {
-				s += prop.getSecond() + "\n";
+			String first = prop.getFirst();
+			String second = prop.getSecond();
+			if (first == null) {
+				s += second + "\n";
 			} else {
-				s += String.format("\t%-12s:   %s\n", prop.getFirst(), prop.getSecond());
+				s += String.format("%s%-12s:   %s\n", IDENT1, first, second);
 			}
 		}
 		s += "Result End.\n";

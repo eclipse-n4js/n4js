@@ -79,11 +79,11 @@ public class CliTools {
 
 	/** Runs n4jsc.jar in a separate process and updates the {@code cliResult}. Respects given environment variables. */
 	public void callN4jscExprocess(N4jscOptions options, boolean removeUsage, CliCompileProcessResult cliResult) {
-
 		List<File> srcFiles = options.getSrcFiles();
-		File fileArg = srcFiles.isEmpty() ? new File(".") : srcFiles.get(0);
+		File fileArg = srcFiles.isEmpty() ? new File("").getAbsoluteFile() : srcFiles.get(0);
 		ProcessResult n4jscResult = getExProcessExecuter().n4jscRun(fileArg.toPath(), environment, options);
 
+		cliResult.workingDir = n4jscResult.getWorkingDir();
 		cliResult.command = n4jscResult.getCommand();
 		cliResult.exception = n4jscResult.getException();
 		cliResult.exitCode = n4jscResult.getExitCode();

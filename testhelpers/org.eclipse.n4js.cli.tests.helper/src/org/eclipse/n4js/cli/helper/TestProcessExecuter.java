@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import org.eclipse.n4js.binaries.nodejs.JavaBinary;
@@ -23,6 +24,7 @@ import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.cli.N4jscOptions;
 
+import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
 
 /**
@@ -72,6 +74,7 @@ public class TestProcessExecuter {
 		result.command = String.join(" ", processBuilder.command());
 		result.workingDir = workingDir.toString();
 
+		Stopwatch sw = Stopwatch.createStarted();
 		try {
 			Process process = processBuilder.start();
 			result.exitCode = process.waitFor();
@@ -80,11 +83,13 @@ public class TestProcessExecuter {
 
 		} catch (Exception e) {
 			result.exception = e;
-			if (result.exitCode == 0) {
+			if (result.exitCode == ProcessResult.NO_EXIT_CODE) {
 				result.exitCode = -1;
 			}
 
 		} finally {
+			result.duration = sw.stop().elapsed(TimeUnit.MILLISECONDS);
+
 			CliTools.trimOutputs(result, false);
 		}
 

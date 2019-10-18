@@ -51,26 +51,23 @@ public class InProcessExecuter<ArgType> {
 			setRedirections();
 			cliResult.workingDir = new File("").getAbsolutePath().toString();
 			process.doN4jsc(args, cliResult);
+			cliResult.exitCode = 0;
 
 		} catch (SystemExitException e) {
 			cliResult.exitCode = e.status;
 
 		} catch (Exception e) {
 			cliResult.exception = e;
-			if (cliResult.exitCode == 0) {
+			if (cliResult.exitCode == ProcessResult.NO_EXIT_CODE) {
 				cliResult.exitCode = -1;
 			}
 			e.printStackTrace();
 			fail(e.getMessage());
+
 		} finally {
 			cliResult.duration = sw.stop().elapsed(TimeUnit.MILLISECONDS);
-
-			if (cliResult.stdOut == null) {
-				cliResult.stdOut = systemOutRedirecter.getSystemOut();
-			}
-			if (cliResult.errOut == null) {
-				cliResult.errOut = systemOutRedirecter.getSystemErr();
-			}
+			cliResult.stdOut = systemOutRedirecter.getSystemOut();
+			cliResult.errOut = systemOutRedirecter.getSystemErr();
 
 			if (N4jscTestFactory.isInjectorCreated()) {
 				N4jscTestLanguageClient callback = (N4jscTestLanguageClient) N4jscFactory.getLanguageClient();
