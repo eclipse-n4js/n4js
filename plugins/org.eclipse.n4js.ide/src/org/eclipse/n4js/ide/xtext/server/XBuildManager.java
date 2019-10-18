@@ -28,7 +28,6 @@ import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -161,8 +160,8 @@ public class XBuildManager {
 	 * Update the contents of the given set.
 	 */
 	protected void queue(Set<URI> files, Collection<URI> toRemove, Collection<URI> toAdd) {
-		Iterables.removeAll(files, toRemove);
-		Iterables.<URI> addAll(files, toAdd);
+		files.removeAll(toRemove);
+		files.addAll(toAdd);
 	}
 
 	/**
@@ -186,7 +185,7 @@ public class XBuildManager {
 	 * Run the build on all projects.
 	 */
 	protected List<IResourceDescription.Delta> internalBuild(CancelIndicator cancelIndicator) {
-		ArrayList<URI> allDirty = new ArrayList<>(dirtyFiles);
+		List<URI> allDirty = new ArrayList<>(dirtyFiles);
 		HashMultimap<ProjectDescription, URI> project2dirty = HashMultimap.create();
 		for (URI dirty : allDirty) {
 			project2dirty.put(workspaceManager.getProjectManager(dirty).getProjectDescription(), dirty);
