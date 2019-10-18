@@ -565,7 +565,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
 		return requestManager.runRead(cancelIndicator -> {
 			URI uri = getURI(params);
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
+			IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
 			DocumentSymbolService documentSymbolService = resourceServiceProvider != null
 					? resourceServiceProvider.get(DocumentSymbolService.class)
 					: null;
@@ -640,7 +640,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<Hover> hover(TextDocumentPositionParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
 			URI uri = getURI(params);
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
+			IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
 			IHoverService hoverService = resourceServiceProvider != null
 					? resourceServiceProvider.get(IHoverService.class)
 					: null;
@@ -661,7 +661,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams params) {
 		return requestManager.runRead((cancelIndicator) -> {
 			URI uri = getURI(params);
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
+			IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
 			ISignatureHelpService helper = resourceServiceProvider != null
 					? resourceServiceProvider.get(ISignatureHelpService.class)
 					: null;
@@ -678,7 +678,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			TextDocumentPositionParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
 			URI uri = getURI(params);
-			IResourceServiceProvider serviceProvider = languagesRegistry.getResourceServiceProvider(uri);
+			IResourceServiceProvider serviceProvider = getResourceServiceProvider(uri);
 			IDocumentHighlightService service = serviceProvider != null
 					? serviceProvider.get(IDocumentHighlightService.class)
 					: null;
@@ -694,7 +694,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
 			URI uri = getURI(params.getTextDocument());
-			IResourceServiceProvider serviceProvider = languagesRegistry.getResourceServiceProvider(uri);
+			IResourceServiceProvider serviceProvider = getResourceServiceProvider(uri);
 			ICodeActionService service = serviceProvider != null ? serviceProvider.get(ICodeActionService.class) : null;
 			ICodeActionService2 service2 = serviceProvider != null ? serviceProvider.get(ICodeActionService2.class)
 					: null;
@@ -758,7 +758,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
 		return requestManager.runRead((cancelIndicator) -> {
 			URI uri = getURI(params.getTextDocument());
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
+			IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
 			ICodeLensService codeLensService = resourceServiceProvider != null
 					? resourceServiceProvider.get(ICodeLensService.class)
 					: null;
@@ -797,7 +797,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
 			URI uri = getURI(params.getTextDocument());
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
+			IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
 			FormattingService formatterService = resourceServiceProvider != null
 					? resourceServiceProvider.get(FormattingService.class)
 					: null;
@@ -813,7 +813,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
 			URI uri = getURI(params.getTextDocument());
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
+			IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
 			FormattingService formatterService = resourceServiceProvider != null
 					? resourceServiceProvider.get(FormattingService.class)
 					: null;
@@ -840,8 +840,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<WorkspaceEdit> rename(RenameParams renameParams) {
 		return requestManager.runRead(cancelIndicator -> {
 			URI uri = getURI(renameParams.getTextDocument());
-			IResourceServiceProvider resourceServiceProvider = this.languagesRegistry
-					.getResourceServiceProvider(uri);
+			IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
 			XIRenameService renameServiceOld = resourceServiceProvider != null
 					? resourceServiceProvider.get(XIRenameService.class)
 					: null;
@@ -863,6 +862,15 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	/**
+	 * @param uri
+	 *            the current URI
+	 * @return the resource service provider or null.
+	 */
+	protected IResourceServiceProvider getResourceServiceProvider(URI uri) {
+		return languagesRegistry.getResourceServiceProvider(uri);
+	}
+
+	/**
 	 * @since 2.18
 	 */
 	@Override
@@ -870,8 +878,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			TextDocumentPositionParams params) {
 		return requestManager.runRead(cancelIndicator -> {
 			URI uri = getURI(params);
-			IResourceServiceProvider resourceServiceProvider = this.languagesRegistry
-					.getResourceServiceProvider(uri);
+			IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
 			IRenameService2 renameService = resourceServiceProvider != null
 					? resourceServiceProvider.get(IRenameService2.class)
 					: null;
