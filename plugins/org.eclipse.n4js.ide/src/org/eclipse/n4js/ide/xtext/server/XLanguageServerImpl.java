@@ -374,25 +374,42 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
-		runBuildable(() -> {
-			TextDocumentItem textDocument = params.getTextDocument();
-			return workspaceManager.didOpen(getURI(textDocument),
-					textDocument.getVersion(), textDocument.getText());
-		});
+		runBuildable(() -> toBuildable(params));
+	}
+
+	/**
+	 * Evaluate the params and deduce the respective build command.
+	 */
+	protected XBuildable toBuildable(DidOpenTextDocumentParams params) {
+		TextDocumentItem textDocument = params.getTextDocument();
+		return workspaceManager.didOpen(getURI(textDocument),
+				textDocument.getVersion(), textDocument.getText());
 	}
 
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
-		runBuildable(() -> {
-			VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
-			return workspaceManager.didChangeTextDocumentContent(getURI(textDocument),
-					textDocument.getVersion(), params.getContentChanges());
-		});
+		runBuildable(() -> toBuildable(params));
+	}
+
+	/**
+	 * Evaluate the params and deduce the respective build command.
+	 */
+	protected XBuildable toBuildable(DidChangeTextDocumentParams params) {
+		VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
+		return workspaceManager.didChangeTextDocumentContent(getURI(textDocument),
+				textDocument.getVersion(), params.getContentChanges());
 	}
 
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
-		runBuildable(() -> workspaceManager.didClose(getURI(params.getTextDocument())));
+		runBuildable(() -> toBuildable(params));
+	}
+
+	/**
+	 * Evaluate the params and deduce the respective build command.
+	 */
+	protected XBuildable toBuildable(DidCloseTextDocumentParams params) {
+		return workspaceManager.didClose(getURI(params.getTextDocument()));
 	}
 
 	@Override
@@ -402,21 +419,26 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		runBuildable(() -> {
-			List<URI> dirtyFiles = new ArrayList<>();
-			List<URI> deletedFiles = new ArrayList<>();
-			params.getChanges().stream()
-					.map((fileEvent) -> Pair.of(uriExtensions.toUri(fileEvent.getUri()), fileEvent.getType()))
-					.filter(pair -> !workspaceManager.isDocumentOpen(pair.getKey()))
-					.forEach(pair -> {
-						if (pair.getValue() == FileChangeType.Deleted) {
-							deletedFiles.add(pair.getKey());
-						} else {
-							dirtyFiles.add(pair.getKey());
-						}
-					});
-			return workspaceManager.didChangeFiles(dirtyFiles, deletedFiles);
-		});
+		runBuildable(() -> toBuildable(params));
+	}
+
+	/**
+	 * Evaluate the params and deduce the respective build command.
+	 */
+	protected XBuildable toBuildable(DidChangeWatchedFilesParams params) {
+		List<URI> dirtyFiles = new ArrayList<>();
+		List<URI> deletedFiles = new ArrayList<>();
+		params.getChanges().stream()
+				.map((fileEvent) -> Pair.of(uriExtensions.toUri(fileEvent.getUri()), fileEvent.getType()))
+				.filter(pair -> !workspaceManager.isDocumentOpen(pair.getKey()))
+				.forEach(pair -> {
+					if (pair.getValue() == FileChangeType.Deleted) {
+						deletedFiles.add(pair.getKey());
+					} else {
+						dirtyFiles.add(pair.getKey());
+					}
+				});
+		return workspaceManager.didChangeFiles(dirtyFiles, deletedFiles);
 	}
 
 	/**
@@ -539,7 +561,15 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
 			TextDocumentPositionParams params) {
-		return requestManager.runRead(cancelIndicator -> Either.forLeft(definition(cancelIndicator, params)));
+		return requestManager.runRead(cancelIndicator -> definition(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the definition. Executed in a read request.
+	 */
+	protected Either<List<? extends Location>, List<? extends LocationLink>> definition(
+			TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
+		return Either.forLeft(definition(cancelIndicator, params));
 	}
 
 	/**
@@ -558,31 +588,42 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
-		return requestManager.runRead(cancelIndicator -> {
-			URI uri = getURI(params);
-			DocumentSymbolService documentSymbolService = getService(uri, DocumentSymbolService.class);
-			if ((documentSymbolService == null)) {
-				return Collections.emptyList();
-			}
-			return workspaceManager.doRead(uri,
-					(document, resource) -> documentSymbolService.getReferences(document, resource, params,
-							resourceAccess,
-							workspaceManager.getIndex(), cancelIndicator));
-		});
+		return requestManager.runRead(cancelIndicator -> references(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the references. Executed in read request.
+	 */
+	protected List<? extends Location> references(ReferenceParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params);
+		DocumentSymbolService documentSymbolService = getService(uri, DocumentSymbolService.class);
+		if ((documentSymbolService == null)) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri,
+				(document, resource) -> documentSymbolService.getReferences(document, resource, params,
+						resourceAccess,
+						workspaceManager.getIndex(), cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(
 			DocumentSymbolParams params) {
-		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = getURI(params.getTextDocument());
-			IDocumentSymbolService documentSymbolService = getIDocumentSymbolService(getResourceServiceProvider(uri));
-			if ((documentSymbolService == null)) {
-				return Collections.emptyList();
-			}
-			return workspaceManager.doRead(uri, (document, resource) -> documentSymbolService.getSymbols(document,
-					resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> documentSymbol(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the symbol information. Executed in a read request.
+	 */
+	protected List<Either<SymbolInformation, DocumentSymbol>> documentSymbol(DocumentSymbolParams params,
+			CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		IDocumentSymbolService documentSymbolService = getIDocumentSymbolService(getResourceServiceProvider(uri));
+		if ((documentSymbolService == null)) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri, (document, resource) -> documentSymbolService.getSymbols(document,
+				resource, params, cancelIndicator));
 	}
 
 	/**
@@ -622,22 +663,34 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
-		return requestManager.runRead((cancelIndicator) -> workspaceSymbolService.getSymbols(params.getQuery(),
+		return requestManager.runRead((cancelIndicator) -> symbol(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the symbol information. Executed in a read request.
+	 */
+	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
+		return workspaceSymbolService.getSymbols(params.getQuery(),
 				resourceAccess, workspaceManager.getIndex(),
-				cancelIndicator));
+				cancelIndicator);
 	}
 
 	@Override
 	public CompletableFuture<Hover> hover(TextDocumentPositionParams params) {
-		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = getURI(params);
-			IHoverService hoverService = getService(uri, IHoverService.class);
-			if (hoverService == null) {
-				return IHoverService.EMPTY_HOVER;
-			}
-			return workspaceManager.<Hover> doRead(uri,
-					(document, resource) -> hoverService.hover(document, resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> hover(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the hover. Executed in a read request.
+	 */
+	protected Hover hover(TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params);
+		IHoverService hoverService = getService(uri, IHoverService.class);
+		if (hoverService == null) {
+			return IHoverService.EMPTY_HOVER;
+		}
+		return workspaceManager.<Hover> doRead(uri,
+				(document, resource) -> hoverService.hover(document, resource, params, cancelIndicator));
 	}
 
 	@Override
@@ -647,68 +700,87 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams params) {
-		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = getURI(params);
-			ISignatureHelpService helper = getService(uri, ISignatureHelpService.class);
-			if (helper == null) {
-				return ISignatureHelpService.EMPTY;
-			}
-			return workspaceManager.doRead(uri,
-					(doc, resource) -> helper.getSignatureHelp(doc, resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> signatureHelp(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the signature help. Executed in a read request.
+	 */
+	protected SignatureHelp signatureHelp(TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params);
+		ISignatureHelpService helper = getService(uri, ISignatureHelpService.class);
+		if (helper == null) {
+			return ISignatureHelpService.EMPTY;
+		}
+		return workspaceManager.doRead(uri,
+				(doc, resource) -> helper.getSignatureHelp(doc, resource, params, cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(
 			TextDocumentPositionParams params) {
-		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = getURI(params);
-			IDocumentHighlightService service = getService(uri, IDocumentHighlightService.class);
-			if (service == null) {
-				return Collections.emptyList();
-			}
-			return workspaceManager.doRead(uri, (doc,
-					resource) -> service.getDocumentHighlights(doc, resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> documentHighlight(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the document highlights. Executed in a read request.
+	 */
+	protected List<? extends DocumentHighlight> documentHighlight(TextDocumentPositionParams params,
+			CancelIndicator cancelIndicator) {
+		URI uri = getURI(params);
+		IDocumentHighlightService service = getService(uri, IDocumentHighlightService.class);
+		if (service == null) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri, (doc,
+				resource) -> service.getDocumentHighlights(doc, resource, params, cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
-		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = getURI(params.getTextDocument());
-			IResourceServiceProvider serviceProvider = getResourceServiceProvider(uri);
-			ICodeActionService service = getService(serviceProvider, ICodeActionService.class);
-			ICodeActionService2 service2 = getService(serviceProvider, ICodeActionService2.class);
-			if (service == null && service2 == null) {
-				return Collections.emptyList();
+		return requestManager.runRead((cancelIndicator) -> codeAction(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the code action commands. Executed in a read request.
+	 */
+	protected List<Either<Command, CodeAction>> codeAction(CodeActionParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		IResourceServiceProvider serviceProvider = getResourceServiceProvider(uri);
+		ICodeActionService service = getService(serviceProvider, ICodeActionService.class);
+		ICodeActionService2 service2 = getService(serviceProvider, ICodeActionService2.class);
+		if (service == null && service2 == null) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri, (doc, resource) -> {
+			List<Either<Command, CodeAction>> result = new ArrayList<>();
+			if (service != null) {
+				List<Either<Command, CodeAction>> actions = service.getCodeActions(doc, resource, params,
+						cancelIndicator);
+				if (actions != null) {
+					result.addAll(actions);
+				}
 			}
-			return workspaceManager.doRead(uri, (doc, resource) -> {
-				List<Either<Command, CodeAction>> result = new ArrayList<>();
-				if (service != null) {
-					List<Either<Command, CodeAction>> actions = service.getCodeActions(doc, resource, params,
-							cancelIndicator);
-					if (actions != null) {
-						result.addAll(actions);
-					}
+			if (service2 != null) {
+				ICodeActionService2.Options options = new ICodeActionService2.Options();
+				options.setDocument(doc);
+				options.setResource(resource);
+				options.setLanguageServerAccess(access);
+				options.setCodeActionParams(params);
+				options.setCancelIndicator(cancelIndicator);
+				List<Either<Command, CodeAction>> actions = service2.getCodeActions(options);
+				if (actions != null) {
+					result.addAll(actions);
 				}
-				if (service2 != null) {
-					ICodeActionService2.Options options = new ICodeActionService2.Options();
-					options.setDocument(doc);
-					options.setResource(resource);
-					options.setLanguageServerAccess(access);
-					options.setCodeActionParams(params);
-					options.setCancelIndicator(cancelIndicator);
-					List<Either<Command, CodeAction>> actions = service2.getCodeActions(options);
-					if (actions != null) {
-						result.addAll(actions);
-					}
-				}
-				return result;
-			});
+			}
+			return result;
 		});
 	}
 
-	private void installURI(List<? extends CodeLens> codeLenses, String uri) {
+	/**
+	 * Put the document uri into the data of the given code lenses.
+	 */
+	protected void installURI(List<? extends CodeLens> codeLenses, String uri) {
 		for (CodeLens lens : codeLenses) {
 			Object data = lens.getData();
 			if (data != null) {
@@ -719,7 +791,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 	}
 
-	private URI uninstallURI(CodeLens lens) {
+	/**
+	 * Remove the document uri from the data of the given code lense.
+	 */
+	protected URI uninstallURI(CodeLens lens) {
 		URI result = null;
 		Object data = lens.getData();
 		if (data instanceof String) {
@@ -737,18 +812,23 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
-		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = getURI(params.getTextDocument());
-			ICodeLensService codeLensService = getService(uri, ICodeLensService.class);
-			if ((codeLensService == null)) {
-				return Collections.emptyList();
-			}
-			return workspaceManager.doRead(uri, (document, resource) -> {
-				List<? extends CodeLens> result = codeLensService.computeCodeLenses(document, resource, params,
-						cancelIndicator);
-				installURI(result, uri.toString());
-				return result;
-			});
+		return requestManager.runRead((cancelIndicator) -> codeLens(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the code lenses. Executed in a read request.
+	 */
+	protected List<? extends CodeLens> codeLens(CodeLensParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		ICodeLensService codeLensService = getService(uri, ICodeLensService.class);
+		if ((codeLensService == null)) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri, (document, resource) -> {
+			List<? extends CodeLens> result = codeLensService.computeCodeLenses(document, resource, params,
+					cancelIndicator);
+			installURI(result, uri.toString());
+			return result;
 		});
 	}
 
@@ -758,40 +838,56 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if ((uri == null)) {
 			return CompletableFuture.completedFuture(unresolved);
 		}
-		return requestManager.runRead((cancelIndicator) -> {
-			ICodeLensResolver resolver = getService(uri, ICodeLensResolver.class);
-			if (resolver == null) {
-				return unresolved;
-			}
-			return workspaceManager.doRead(uri,
-					(document, resource) -> resolver.resolveCodeLens(document, resource, unresolved, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> resolveCodeLens(uri, unresolved, cancelIndicator));
+	}
+
+	/**
+	 * Resolve the given code lens. Executed in a read request.
+	 */
+	protected CodeLens resolveCodeLens(URI uri, CodeLens unresolved, CancelIndicator cancelIndicator) {
+		ICodeLensResolver resolver = getService(uri, ICodeLensResolver.class);
+		if (resolver == null) {
+			return unresolved;
+		}
+		return workspaceManager.doRead(uri,
+				(document, resource) -> resolver.resolveCodeLens(document, resource, unresolved, cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
-		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = getURI(params.getTextDocument());
-			FormattingService formatterService = getService(uri, FormattingService.class);
-			if ((formatterService == null)) {
-				return Collections.emptyList();
-			}
-			return workspaceManager.doRead(uri, (document,
-					resource) -> formatterService.format(document, resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> formatting(params, cancelIndicator));
+	}
+
+	/**
+	 * Create the text edits for the formatter. Executed in a read request.
+	 */
+	protected List<? extends TextEdit> formatting(DocumentFormattingParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		FormattingService formatterService = getService(uri, FormattingService.class);
+		if ((formatterService == null)) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri, (document,
+				resource) -> formatterService.format(document, resource, params, cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
-		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = getURI(params.getTextDocument());
-			FormattingService formatterService = getService(uri, FormattingService.class);
-			if ((formatterService == null)) {
-				return Collections.emptyList();
-			}
-			return workspaceManager.doRead(uri,
-					(document, resource) -> formatterService.format(document, resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> rangeFormatting(params, cancelIndicator));
+	}
+
+	/**
+	 * Create the text edits for the formatter. Executed in a read request.
+	 */
+	protected List<? extends TextEdit> rangeFormatting(DocumentRangeFormattingParams params,
+			CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		FormattingService formatterService = getService(uri, FormattingService.class);
+		if ((formatterService == null)) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri,
+				(document, resource) -> formatterService.format(document, resource, params, cancelIndicator));
 	}
 
 	/**
@@ -823,8 +919,14 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
-		return requestManager
-				.runRead((cancelIndicator) -> commandRegistry.executeCommand(params, access, cancelIndicator));
+		return requestManager.runRead((cancelIndicator) -> executeCommand(params, cancelIndicator));
+	}
+
+	/**
+	 * Execute the command. Runs in a read request.
+	 */
+	protected Object executeCommand(ExecuteCommandParams params, CancelIndicator cancelIndicator) {
+		return commandRegistry.executeCommand(params, access, cancelIndicator);
 	}
 
 	@Override
@@ -834,24 +936,29 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<WorkspaceEdit> rename(RenameParams renameParams) {
-		return requestManager.runRead(cancelIndicator -> {
-			URI uri = getURI(renameParams.getTextDocument());
+		return requestManager.runRead(cancelIndicator -> rename(renameParams, cancelIndicator));
+	}
 
-			IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
-			XIRenameService renameServiceOld = getService(resourceServiceProvider, XIRenameService.class);
-			if (renameServiceOld != null) {
-				return renameServiceOld.rename(workspaceManager, renameParams, cancelIndicator);
-			}
-			IRenameService2 renameService2 = getService(resourceServiceProvider, IRenameService2.class);
-			if ((renameService2 != null)) {
-				IRenameService2.Options options = new IRenameService2.Options();
-				options.setLanguageServerAccess(access);
-				options.setRenameParams(renameParams);
-				options.setCancelIndicator(cancelIndicator);
-				return renameService2.rename(options);
-			}
-			return new WorkspaceEdit();
-		});
+	/**
+	 * Compute the rename edits. Executed in a read request.
+	 */
+	protected WorkspaceEdit rename(RenameParams renameParams, CancelIndicator cancelIndicator) {
+		URI uri = getURI(renameParams.getTextDocument());
+
+		IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
+		XIRenameService renameServiceOld = getService(resourceServiceProvider, XIRenameService.class);
+		if (renameServiceOld != null) {
+			return renameServiceOld.rename(workspaceManager, renameParams, cancelIndicator);
+		}
+		IRenameService2 renameService2 = getService(resourceServiceProvider, IRenameService2.class);
+		if ((renameService2 != null)) {
+			IRenameService2.Options options = new IRenameService2.Options();
+			options.setLanguageServerAccess(access);
+			options.setRenameParams(renameParams);
+			options.setCancelIndicator(cancelIndicator);
+			return renameService2.rename(options);
+		}
+		return new WorkspaceEdit();
 	}
 
 	/**
@@ -869,18 +976,24 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(
 			TextDocumentPositionParams params) {
-		return requestManager.runRead(cancelIndicator -> {
-			URI uri = getURI(params);
-			IRenameService2 renameService = getService(uri, IRenameService2.class);
-			if (renameService == null) {
-				throw new UnsupportedOperationException();
-			}
-			IRenameService2.PrepareRenameOptions options = new IRenameService2.PrepareRenameOptions();
-			options.setLanguageServerAccess(access);
-			options.setParams(params);
-			options.setCancelIndicator(cancelIndicator);
-			return renameService.prepareRename(options);
-		});
+		return requestManager.runRead(cancelIndicator -> prepareRename(params, cancelIndicator));
+	}
+
+	/**
+	 * Prepare the rename operation. Executed in a read request.
+	 */
+	protected Either<Range, PrepareRenameResult> prepareRename(TextDocumentPositionParams params,
+			CancelIndicator cancelIndicator) {
+		URI uri = getURI(params);
+		IRenameService2 renameService = getService(uri, IRenameService2.class);
+		if (renameService == null) {
+			throw new UnsupportedOperationException();
+		}
+		IRenameService2.PrepareRenameOptions options = new IRenameService2.PrepareRenameOptions();
+		options.setLanguageServerAccess(access);
+		options.setParams(params);
+		options.setCancelIndicator(cancelIndicator);
+		return renameService.prepareRename(options);
 	}
 
 	@Override
