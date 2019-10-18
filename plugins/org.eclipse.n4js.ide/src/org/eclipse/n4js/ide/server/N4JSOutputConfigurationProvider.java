@@ -18,9 +18,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
+import org.eclipse.xtext.resource.impl.ProjectDescription;
 
 import com.google.inject.Inject;
 
@@ -35,13 +37,23 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(ResourceSet context) {
 		EList<Resource> resources = context.getResources();
+		if (resources.isEmpty()) {
+			ProjectDescription description = ProjectDescription.findInEmfObject(context);
+			IN4JSProject project = n4jsCore.findProject(new N4JSProjectName(description.getName())).orNull();
+			return getOutputConfigurations(project);
+		}
 		return getOutputConfigurations(resources.get(0));
 	}
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(Resource context) {
-		String outputPath = null;
+
 		IN4JSProject project = n4jsCore.findProject(context.getURI()).orNull();
+		return getOutputConfigurations(project);
+	}
+
+	private Set<OutputConfiguration> getOutputConfigurations(IN4JSProject project) {
+		String outputPath = null;
 		if (project != null) {
 			outputPath = project.getOutputPath();
 		}
