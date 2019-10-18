@@ -71,6 +71,7 @@ import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpOptions;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
@@ -361,7 +362,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void didOpen(DidOpenTextDocumentParams params) {
 		requestManager.runWrite(() -> {
 			TextDocumentItem textDocument = params.getTextDocument();
-			return workspaceManager.didOpen(uriExtensions.toUri(textDocument.getUri()),
+			return workspaceManager.didOpen(getURI(textDocument),
 					textDocument.getVersion(), textDocument.getText());
 		}, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
 	}
@@ -370,14 +371,14 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public void didChange(DidChangeTextDocumentParams params) {
 		requestManager.runWrite(() -> {
 			VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
-			return workspaceManager.didChangeTextDocumentContent(uriExtensions.toUri(textDocument.getUri()),
+			return workspaceManager.didChangeTextDocumentContent(getURI(textDocument),
 					textDocument.getVersion(), params.getContentChanges());
 		}, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
 	}
 
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
-		requestManager.runWrite(() -> workspaceManager.didClose(uriExtensions.toUri(params.getTextDocument().getUri())),
+		requestManager.runWrite(() -> workspaceManager.didClose(getURI(params.getTextDocument())),
 				(cancelIndicator, buildable) -> buildable.build(cancelIndicator));
 	}
 
@@ -481,7 +482,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	protected Either<List<CompletionItem>, CompletionList> completion(CancelIndicator originalCancelIndicator,
 			CompletionParams params) {
-		URI uri = this.uriExtensions.toUri(params.getTextDocument().getUri());
+		URI uri = getURI(params);
 		IResourceServiceProvider resourceServiceProvider = this.languagesRegistry.getResourceServiceProvider(uri);
 		ContentAssistService contentAssistService = resourceServiceProvider != null
 				? resourceServiceProvider.get(ContentAssistService.class)
@@ -492,6 +493,27 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		BufferedCancelIndicator cancelIndicator = new BufferedCancelIndicator(originalCancelIndicator);
 		return Either.forRight(this.workspaceManager.doRead(uri,
 				(doc, res) -> contentAssistService.createCompletionList(doc, res, params, cancelIndicator)));
+	}
+
+	/**
+	 * Obtain the URI from the given parameters.
+	 */
+	protected URI getURI(TextDocumentPositionParams params) {
+		return getURI(params.getTextDocument());
+	}
+
+	/**
+	 * Obtain the URI from the given identifier.
+	 */
+	protected URI getURI(TextDocumentIdentifier documentIdentifier) {
+		return uriExtensions.toUri(documentIdentifier.getUri());
+	}
+
+	/**
+	 * Obtain the URI from the given document item.
+	 */
+	protected URI getURI(TextDocumentItem documentItem) {
+		return uriExtensions.toUri(documentItem.getUri());
 	}
 
 	@Override
@@ -505,7 +527,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	protected List<? extends Location> definition(CancelIndicator cancelIndicator,
 			TextDocumentPositionParams params) {
-		URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+		URI uri = getURI(params);
 		IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
 		DocumentSymbolService documentSymbolService = resourceServiceProvider != null
 				? resourceServiceProvider.get(DocumentSymbolService.class)
@@ -520,7 +542,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
 		return requestManager.runRead(cancelIndicator -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+			URI uri = getURI(params);
 			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
 			DocumentSymbolService documentSymbolService = resourceServiceProvider != null
 					? resourceServiceProvider.get(DocumentSymbolService.class)
@@ -539,7 +561,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(
 			DocumentSymbolParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+			URI uri = getURI(params.getTextDocument());
 			IDocumentSymbolService documentSymbolService = getIDocumentSymbolService(
 					languagesRegistry.getResourceServiceProvider(uri));
 			if ((documentSymbolService == null)) {
@@ -595,7 +617,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<Hover> hover(TextDocumentPositionParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+			URI uri = getURI(params);
 			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
 			IHoverService hoverService = resourceServiceProvider != null
 					? resourceServiceProvider.get(IHoverService.class)
@@ -616,7 +638,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams params) {
 		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+			URI uri = getURI(params);
 			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
 			ISignatureHelpService helper = resourceServiceProvider != null
 					? resourceServiceProvider.get(ISignatureHelpService.class)
@@ -633,7 +655,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(
 			TextDocumentPositionParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+			URI uri = getURI(params);
 			IResourceServiceProvider serviceProvider = languagesRegistry.getResourceServiceProvider(uri);
 			IDocumentHighlightService service = serviceProvider != null
 					? serviceProvider.get(IDocumentHighlightService.class)
@@ -649,7 +671,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+			URI uri = getURI(params.getTextDocument());
 			IResourceServiceProvider serviceProvider = languagesRegistry.getResourceServiceProvider(uri);
 			ICodeActionService service = serviceProvider != null ? serviceProvider.get(ICodeActionService.class) : null;
 			ICodeActionService2 service2 = serviceProvider != null ? serviceProvider.get(ICodeActionService2.class)
@@ -713,7 +735,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
 		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+			URI uri = getURI(params.getTextDocument());
 			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
 			ICodeLensService codeLensService = resourceServiceProvider != null
 					? resourceServiceProvider.get(ICodeLensService.class)
@@ -752,7 +774,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+			URI uri = getURI(params.getTextDocument());
 			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
 			FormattingService formatterService = resourceServiceProvider != null
 					? resourceServiceProvider.get(FormattingService.class)
@@ -768,7 +790,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
 		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+			URI uri = getURI(params.getTextDocument());
 			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
 			FormattingService formatterService = resourceServiceProvider != null
 					? resourceServiceProvider.get(FormattingService.class)
@@ -795,7 +817,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<WorkspaceEdit> rename(RenameParams renameParams) {
 		return requestManager.runRead(cancelIndicator -> {
-			URI uri = uriExtensions.toUri(renameParams.getTextDocument().getUri());
+			URI uri = getURI(renameParams.getTextDocument());
 			IResourceServiceProvider resourceServiceProvider = this.languagesRegistry
 					.getResourceServiceProvider(uri);
 			XIRenameService renameServiceOld = resourceServiceProvider != null
@@ -825,7 +847,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(
 			TextDocumentPositionParams params) {
 		return requestManager.runRead(cancelIndicator -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
+			URI uri = getURI(params);
 			IResourceServiceProvider resourceServiceProvider = this.languagesRegistry
 					.getResourceServiceProvider(uri);
 			IRenameService2 renameService = resourceServiceProvider != null
@@ -917,7 +939,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private final ILanguageServerAccess access = new ILanguageServerAccess() {
 		@Override
-		public <T extends Object> CompletableFuture<T> doRead(String uri,
+		public <T> CompletableFuture<T> doRead(String uri,
 				Function<ILanguageServerAccess.Context, T> function) {
 			return requestManager.runRead(cancelIndicator -> workspaceManager
 					.doRead(uriExtensions.toUri(uri), (document,
