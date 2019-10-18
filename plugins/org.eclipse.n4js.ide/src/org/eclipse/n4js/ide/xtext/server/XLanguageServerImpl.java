@@ -416,42 +416,59 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private void publishDiagnostics(URI uri, Iterable<? extends Issue> issues) {
 		this.initialized.thenAccept((initParams) -> {
 			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
-			publishDiagnosticsParams.setUri(this.uriExtensions.toUriString(uri));
+			publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
 			publishDiagnosticsParams.setDiagnostics(workspaceManager.doRead(uri,
-					(document, resource) -> FluentIterable.from(issues)
-							.filter(issue -> issue.getSeverity() != Severity.IGNORE)
-							.transform(issue -> toDiagnostic(document, issue)).toList()));
+					(document, resource) -> toDiagnostics(issues, document)));
 			this.client.publishDiagnostics(publishDiagnosticsParams);
 		});
 	}
 
-	private Diagnostic toDiagnostic(Document document, Issue issue) {
+	/**
+	 * Convert the given issues to diagnostics. Does not return any issue with severity {@link Severity#IGNORE ignore}
+	 * by default.
+	 */
+	protected List<Diagnostic> toDiagnostics(Iterable<? extends Issue> issues, Document document) {
+		List<Diagnostic> result = new ArrayList<>();
+		for (Issue issue : issues) {
+			if (issue.getSeverity() != Severity.IGNORE) {
+				result.add(toDiagnostic(issue, document));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Convert the given issue to a diagnostic.
+	 */
+	protected Diagnostic toDiagnostic(Issue issue, Document document) {
 		Diagnostic result = new Diagnostic();
 		result.setCode(issue.getCode());
-		Severity severity = issue.getSeverity();
-		if (severity != null) {
-			switch (severity) {
-			case ERROR:
-				result.setSeverity(DiagnosticSeverity.Error);
-				break;
-			case WARNING:
-				result.setSeverity(DiagnosticSeverity.Warning);
-				break;
-			case INFO:
-				result.setSeverity(DiagnosticSeverity.Information);
-				break;
-			default:
-				result.setSeverity(DiagnosticSeverity.Hint);
-				break;
-			}
-		} else {
-			result.setSeverity(DiagnosticSeverity.Hint);
-		}
 		result.setMessage(issue.getMessage());
+		result.setSeverity(toDiagnosticSeverity(issue.getSeverity()));
 		Position start = document.getPosition(issue.getOffset());
 		Position end = document.getPosition(issue.getOffset() + issue.getLength());
 		result.setRange(new Range(start, end));
 		return result;
+	}
+
+	/**
+	 * Convert the serverity to a lsp {@link DiagnosticSeverity}.
+	 *
+	 * Defaults to severity {@link DiagnosticSeverity#Hint hint}.
+	 */
+	protected DiagnosticSeverity toDiagnosticSeverity(Severity severity) {
+		switch (severity) {
+		case ERROR:
+			return DiagnosticSeverity.Error;
+		case IGNORE:
+			return DiagnosticSeverity.Hint;
+		case INFO:
+			return DiagnosticSeverity.Information;
+		case WARNING:
+			return DiagnosticSeverity.Warning;
+		default:
+			return DiagnosticSeverity.Hint;
+		}
 	}
 
 	@Override
