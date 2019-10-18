@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli.frontend.tests;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
@@ -22,7 +23,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testGoalVersion() {
 		String args[] = { "version" };
-		CliCompileResult result = n4jsc(args, 2, false);
+		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
@@ -30,7 +31,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testOptionVersion() {
 		String args[] = { "--version" };
-		CliCompileResult result = n4jsc(args, 2, false);
+		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
@@ -38,7 +39,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testAnotherGoalWithOptionVersion() {
 		String args[] = { "lsp", "--version" };
-		CliCompileResult result = n4jsc(args, 2, false);
+		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
 	}
 
@@ -67,7 +68,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	}
 
 	private String getVersionExpectation() {
-		return "ERROR-2 (Feature is not implemented)";
+		return N4JSLanguageUtils.DEFAULT_LANGUAGE_VERSION;
 	}
 
 	private String getUsageExpectation() {

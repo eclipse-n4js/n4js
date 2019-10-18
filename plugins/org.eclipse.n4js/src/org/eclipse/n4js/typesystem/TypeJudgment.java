@@ -70,6 +70,7 @@ import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.BooleanLiteral;
 import org.eclipse.n4js.n4JS.CastExpression;
 import org.eclipse.n4js.n4JS.CatchVariable;
+import org.eclipse.n4js.n4JS.CoalesceExpression;
 import org.eclipse.n4js.n4JS.CommaExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.EqualityExpression;
@@ -613,7 +614,7 @@ import com.google.inject.Inject;
 
 			if (T != null
 					&& idref.eContainer() instanceof ParameterizedCallExpression
-					&& idref.eContainmentFeature() == N4JSPackage.eINSTANCE.getParameterizedCallExpression_Target()) {
+					&& idref.eContainmentFeature() == N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET) {
 				final TMethod callableCtorFunction = typeSystemHelper.getCallableClassConstructorFunction(G, T);
 				if (callableCtorFunction != null) {
 					T = ref(callableCtorFunction);
@@ -1199,6 +1200,13 @@ import com.google.inject.Inject;
 			final TypeRef left = ts.type(G, expr.getTrueExpression());
 			final TypeRef right = ts.type(G, expr.getFalseExpression());
 			return typeSystemHelper.createUnionType(G, left, right);
+		}
+
+		@Override
+		public TypeRef caseCoalesceExpression(CoalesceExpression expr) {
+			final TypeRef value = ts.type(G, expr.getExpression());
+			final TypeRef dflt = ts.type(G, expr.getDefaultExpression());
+			return typeSystemHelper.createUnionType(G, value, dflt);
 		}
 
 		@Override

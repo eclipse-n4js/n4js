@@ -31,6 +31,8 @@ import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
+import org.eclipse.n4js.n4JS.ExpressionWithTarget
+import org.eclipse.n4js.n4JS.CoalesceExpression
 
 /**
  * Validations to show an error for unsupported language features, mostly ECMAScript6 features.
@@ -83,9 +85,20 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkTaggedTemplateLiteral(TaggedTemplateString tts) {
-		unsupported("tagged template literals", tts, N4JSPackage.eINSTANCE.taggedTemplateString_Target);
+		unsupported("tagged template literals", tts, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 	}
-
+	
+	@Check
+	def void checkOptionalChaining(ExpressionWithTarget expr) {
+		if (expr.isOptionalChaining) {
+			unsupported("optional chaining", expr, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__OPTIONAL_CHAINING);
+		}
+	}
+	
+	@Check
+	def void checkNullishCoalescing(CoalesceExpression expr) {
+		unsupported("nullish coalescing", expr, null);
+	}
 
 	// TODO when removing this method, remove flag 'classExpressionsAreAllowed' as well!
 	@Check

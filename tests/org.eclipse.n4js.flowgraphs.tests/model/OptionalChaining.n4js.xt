@@ -1,0 +1,159 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+function ParameterizedPropertyAccessExpression() {
+	// ParameterizedPropertyAccessExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* ParameterizedPropertyAccessExpression XPECT allEdges ---
+		"start" --> Object,
+		Object --> Object?.call,
+		Object?.call --> "end",
+		Object -IfNullishTarget-> "end"
+	--- */
+	/* ParameterizedPropertyAccessExpression XPECT allBranches ---
+	    B0: "start" -> Object[B1|B2],
+	    B1: [B0] -> Object?.call -> [B3],
+	    B2: [B0] -> [B3],
+	    B3: [B1|B2]"end"
+	--- */
+	/* ParameterizedPropertyAccessExpression XPECT allPaths ---
+	    "start" -> Object -> "end",
+	    "start" -> Object -> Object?.call -> "end"
+	--- */
+	/* ParameterizedPropertyAccessExpression backward XPECT allPaths direction 'Backward' ---
+	    "end" -> Object -> "start",
+	    "end" -> Object?.call -> Object -> "start"
+	--- */
+	// ParameterizedPropertyAccessExpression XPECT path from '"start"' to '"end"' -->
+	// ParameterizedPropertyAccessExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// ParameterizedPropertyAccessExpression XPECT succs at '"start"' --> Object
+	// ParameterizedPropertyAccessExpression XPECT succs at 'Object' --> Object?.call, "end"
+	// ParameterizedPropertyAccessExpression XPECT succs at 'Object?.call' --> "end"
+	"start";
+	// ParameterizedPropertyAccessExpression XPECT errors --> "Unsupported feature: optional chaining." at "?."
+	Object?.call;
+	"end";
+}
+
+
+function ParameterizedCallExpression() {
+	// ParameterizedCallExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* ParameterizedCallExpression XPECT allEdges ---
+		"start" --> Object,
+		Object --> 1,
+		1 --> Object?.(1),
+		Object?.(1) --> "end",
+		Object -IfNullishTarget-> "end"
+	--- */
+	/* ParameterizedCallExpression XPECT allBranches ---
+	    B0: "start" -> Object[B1|B2],
+	    B1: [B0] -> 1 -> Object?.(1) -> [B3],
+	    B2: [B0] -> [B3],
+	    B3: [B1|B2]"end"
+	--- */
+	/* ParameterizedCallExpression XPECT allPaths ---
+	    "start" -> Object -> "end",
+	    "start" -> Object -> 1 -> Object?.(1) -> "end"
+	--- */
+	/* ParameterizedCallExpression backward XPECT allPaths direction 'Backward' ---
+	    "end" -> Object -> "start",
+	    "end" -> Object?.(1) -> 1 -> Object -> "start"
+	--- */
+	// ParameterizedCallExpression XPECT path from '"start"' to '"end"' -->
+	// ParameterizedCallExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// ParameterizedCallExpression XPECT succs at '"start"' --> Object
+	// ParameterizedCallExpression XPECT succs at 'Object' --> 1, "end"
+	// ParameterizedCallExpression XPECT succs at '1' --> Object?.(1)
+	// ParameterizedCallExpression XPECT succs at 'Object?.(1)' --> "end"
+	"start";
+	// ParameterizedCallExpression XPECT errors --> "Unsupported feature: optional chaining." at "?."
+	Object?.(1);
+	"end";
+}
+
+function ParameterizedIndexAccessExpression() {
+	// ParameterizedIndexAccessExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* ParameterizedIndexAccessExpression XPECT allEdges ---
+		"start" --> Object,
+		Object --> 1,
+		1 --> Object?.[1],
+		Object?.[1] --> "end",
+		Object -IfNullishTarget-> "end"
+	--- */
+	/* ParameterizedIndexAccessExpression XPECT allBranches ---
+	    B0: "start" -> Object[B1|B2],
+	    B1: [B0] -> 1 -> Object?.[1] -> [B3],
+	    B2: [B0] -> [B3],
+	    B3: [B1|B2]"end"
+	--- */
+	/* ParameterizedIndexAccessExpression XPECT allPaths ---
+	    "start" -> Object -> "end",
+	    "start" -> Object -> 1 -> Object?.[1] -> "end"
+	--- */
+	/* ParameterizedIndexAccessExpression backward XPECT allPaths direction 'Backward' ---
+	    "end" -> Object -> "start",
+	    "end" -> Object?.[1] -> 1 -> Object -> "start"
+	--- */
+	// ParameterizedIndexAccessExpression XPECT path from '"start"' to '"end"' -->
+	// ParameterizedIndexAccessExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// ParameterizedIndexAccessExpression XPECT succs at '"start"' --> Object
+	// ParameterizedIndexAccessExpression XPECT succs at 'Object' --> 1, "end"
+	// ParameterizedIndexAccessExpression XPECT succs at '1' --> Object?.[1]
+	// ParameterizedIndexAccessExpression XPECT succs at 'Object?.[1]' --> "end"
+	"start";
+	/* ParameterizedIndexAccessExpression XPECT errors ---
+	    "Indexed access is only allowed for strings, arrays and iterables and for immediate(!) instances of Object." at "Object?.[1]" 
+	    "Unsupported feature: optional chaining." at "?."
+	--- */ 
+	Object?.[1];
+	"end";
+}
+
+function LongShortCircuit() {
+	// LongShortCircuit XPECT cfContainer --> FunctionDeclaration::Block
+	/* LongShortCircuit XPECT allEdges ---
+		"start" --> Object,
+		Object --> Object?.xxx,
+		Object -IfNullishTarget-> (Object?.xxx.yyy),
+		Object?.xxx --> Object?.xxx.yyy,
+		Object?.xxx.yyy --> (Object?.xxx.yyy),
+		(Object?.xxx.yyy) --> (Object?.xxx.yyy).zzz,
+		(Object?.xxx.yyy).zzz --> "end"
+	--- */
+	/* LongShortCircuit XPECT allBranches ---
+	    B0: "start" -> Object[B1|B2],
+	    B1: [B0] -> Object?.xxx -> Object?.xxx.yyy -> [B3],
+	    B2: [B0] -> [B3],
+	    B3: [B1|B2](Object?.xxx.yyy) -> (Object?.xxx.yyy).zzz -> "end"
+	--- */
+	/* LongShortCircuit XPECT allPaths ---
+	    "start" -> Object -> (Object?.xxx.yyy) -> (Object?.xxx.yyy).zzz -> "end",
+	    "start" -> Object -> Object?.xxx -> Object?.xxx.yyy -> (Object?.xxx.yyy) -> (Object?.xxx.yyy).zzz -> "end"
+	--- */
+	/* LongShortCircuit backward XPECT allPaths direction 'Backward' ---
+	    "end" -> (Object?.xxx.yyy).zzz -> (Object?.xxx.yyy) -> Object -> "start",
+	    "end" -> (Object?.xxx.yyy).zzz -> (Object?.xxx.yyy) -> Object?.xxx.yyy -> Object?.xxx -> Object -> "start"
+	--- */
+	// LongShortCircuit XPECT path from '"start"' to '"end"' -->
+	// LongShortCircuit XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// LongShortCircuit XPECT succs at '"start"' --> Object
+	// LongShortCircuit XPECT succs at 'Object' --> Object?.xxx, (Object?.xxx.yyy)
+	// LongShortCircuit XPECT succs at '(Object?.xxx.yyy)' --> (Object?.xxx.yyy).zzz
+	"start";
+	/* LongShortCircuit XPECT errors ---
+		"Couldn't resolve reference to IdentifiableElement 'xxx'." at "xxx" 
+		"Unsupported feature: optional chaining." at "?."
+	--- */	
+	(Object?.xxx.yyy).zzz;
+	"end";
+}

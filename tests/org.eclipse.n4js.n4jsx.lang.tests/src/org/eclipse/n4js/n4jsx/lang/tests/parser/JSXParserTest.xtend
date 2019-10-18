@@ -21,7 +21,7 @@ import org.eclipse.n4js.n4JS.TemplateLiteral
 import org.eclipse.n4js.n4JS.TemplateSegment
 import org.junit.Test
 
-class JSXWithOutFreeTextTest extends AbstractN4JSXParserTest {
+class JSXParserTest extends AbstractN4JSXParserTest {
 
 	@Test
 	def void testSelfClosingTag() {
@@ -105,6 +105,70 @@ class JSXWithOutFreeTextTest extends AbstractN4JSXParserTest {
 		val attr = jsxElement.jsxAttributes.head as JSXPropertyAttribute
 		assertEquals("Test", (attr.jsxAttributeValue as StringLiteral).value)
 	}
+	
+	@Test
+	def void testAttributeNameWithDash() {
+		'''
+			<a attr-1="true"></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNameWithTrailingDash_01() {
+		'''
+			<a attr-></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNameWithTrailingDash_02() {
+		'''
+			<a attr-="" attr-2></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNameWithTrailingDash_03() {
+		'''
+			<a attr--="" attr-2></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNameWithTrailingDashes() {
+		'''
+			<a attr-1--000---></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNumberKinds() {
+		'''
+			<a attr-1-0x0-0b0-0o0-00a-0e='false'></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeNameKeyword() {
+		'''
+			<a true="undefined"></a>
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeValueJsxElement() {
+		'''
+			(<a attr=<b></b>></a>)
+			(<a attr=<b/>></a>)
+		'''.parseSuccessfully
+	}
+	
+	@Test
+	def void testAttributeValueJsxFragment() {
+		'''
+			<a attr=<></>></a>
+		'''.parseSuccessfully
+	}
 
 	/**
 	 * The example produces the same error when using the babel transpiler.
@@ -117,18 +181,67 @@ class JSXWithOutFreeTextTest extends AbstractN4JSXParserTest {
 			<div></div>
 		'''.parseWithError
 	}
-
+	
 	/**
-	 * The example produces the same error when using the babel transpiler.
+	 * The example can be parsed successfully with babel, too.
 	 */
 	@Test
-	def void testRegExAmbiguityContra() {
+	def void testRegExAmbiguityContra_01() {
+		'''
+			"Hello"
+
+			(<div></div>)
+		'''.parseSuccessfully
+	}
+
+	/**
+	 * The example can be parsed successfully with babel, too.
+	 */
+	@Test
+	def void testRegExAmbiguityContra_02() {
 		'''
 			<div></div>
 
 			"Hello"
 		'''.parseSuccessfully
 	}
-
+	
+	@Test
+	def void testInvalidAttributeNames_01() {
+		'''
+			<a attr/**/-attr></a>
+		'''.parseWithError("JSX attribute names may not contain whitespace or comments. Attribute names ending with a - and directly followed by another attribute name are merged and must not contain whitespace or comments.")
+	}
+	
+	@Test
+	def void testInvalidAttributeNames_02() {
+		'''
+			<a attr -attr></a>
+		'''.parseWithError("JSX attribute names may not contain whitespace or comments. Attribute names ending with a - and directly followed by another attribute name are merged and must not contain whitespace or comments.")
+	}
+	
+	@Test
+	def void testInvalidAttributeNames_03() {
+		'''
+			<a attr-- attr></a>
+		'''.parseWithError("JSX attribute names may not contain whitespace or comments. Attribute names ending with a - and directly followed by another attribute name are merged and must not contain whitespace or comments.")
+	}
+	
+	@Test
+	def void testInvalidAttributeNames_04() {
+		'''
+			<a abcd\u0065="true"></a>
+		'''.parseWithError("Illegal character in identifier 'abcd\\u0065' (\\) at position 4.")
+	}
+	
+	protected def parseWithError(CharSequence js, String message) {
+		val script = js.parseN4JSX
+		val errors = script.eResource.errors
+		assertFalse(errors.toString, errors.empty)
+		if (!errors.map[it.message].contains(message)) {
+			assertEquals(errors.toString, "")
+		}
+		return script
+	}
 
 }

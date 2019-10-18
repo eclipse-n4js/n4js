@@ -17,7 +17,7 @@ var sortedV1 = (... elems : number) => elems.sort;
 
 
 /* Make sure the old syntax is invalid XPECT errors ---
-"Couldn't resolve reference to IdentifiableElement 'elems'." at "elems"
+"Couldn't resolve reference to IdentifiableElement 'sort'." at "sort"
 "no viable alternative at input '...'" at "number"
 "no viable alternative at input 'elems'" at "elems"
 "no viable alternative at input 'elems'" at "elems"

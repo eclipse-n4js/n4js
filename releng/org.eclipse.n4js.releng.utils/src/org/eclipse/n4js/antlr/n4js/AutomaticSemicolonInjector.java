@@ -66,7 +66,6 @@ public class AutomaticSemicolonInjector implements CodeIntoGrammarInjector {
 						"protected void promoteEOL() {} // overridden in subtype\n" +
 						"protected void addASIMessage() {} // overridden in subtype\n" +
 						"protected boolean hasDisallowedEOL() { return false; } // overridden in subtype\n" +
-						// "protected boolean isTypeRefNoTrailingLineBreak() { return true; } // overridden in subtype"
 						"// end of injection");
 	}
 }

@@ -231,7 +231,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//AnnotationList
 		public RuleCall getAnnotationListParserRuleCall_0() { return cAnnotationListParserRuleCall_0; }
 		
-		//{ExportDeclaration.annotationList=current} ExportDeclarationImpl | {ImportDeclaration.annotationList=current}
+		//({ExportDeclaration.annotationList=current} ExportDeclarationImpl | {ImportDeclaration.annotationList=current}
 		//ImportDeclarationImpl | {FunctionDeclaration.annotationList=current} => (declaredModifiers+=N4Modifier*
 		//AsyncNoTrailingLineBreak -> FunctionImpl <Yield=false,YieldIfGenerator=false,Expression=false>) |
 		//({N4ClassDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'class'
@@ -240,7 +240,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield=false> VersionDeclaration?
 		//TypeVariables? InterfaceExtendsList?) Members<Yield=false> | {N4EnumDeclaration.annotationList=current}
 		//declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield=false> VersionDeclaration? '{'
-		//literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)* '}'
+		//literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)* '}')
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//{ExportDeclaration.annotationList=current} ExportDeclarationImpl
@@ -272,8 +272,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//<Yield=false,YieldIfGenerator=false,Expression=false>)
 		public Group getGroup_1_2_1() { return cGroup_1_2_1; }
 		
-		//declaredModifiers+=N4Modifier* AsyncNoTrailingLineBreak -> FunctionImpl
-		//<Yield=false,YieldIfGenerator=false,Expression=false>
+		//(declaredModifiers+=N4Modifier* AsyncNoTrailingLineBreak -> FunctionImpl
+		//<Yield=false,YieldIfGenerator=false,Expression=false>)
 		public Group getGroup_1_2_1_0() { return cGroup_1_2_1_0; }
 		
 		//declaredModifiers+=N4Modifier*
@@ -295,11 +295,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//TypeVariables? InterfaceExtendsList?) Members<Yield=false>
 		public Group getGroup_1_3() { return cGroup_1_3; }
 		
-		//{N4ClassDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'class'
+		//({N4ClassDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'class'
 		//typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield=false> VersionDeclaration? TypeVariables?
 		//ClassExtendsImplements<Yield=false>? | {N4InterfaceDeclaration.annotationList=current} declaredModifiers+=N4Modifier*
 		//'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield=false> VersionDeclaration?
-		//TypeVariables? InterfaceExtendsList?
+		//TypeVariables? InterfaceExtendsList?)
 		public Alternatives getAlternatives_1_3_0() { return cAlternatives_1_3_0; }
 		
 		//{N4ClassDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'class'
@@ -492,9 +492,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'export'
 		public Keyword getExportKeyword_0() { return cExportKeyword_0; }
 		
-		//wildcardExport?='*' ExportFromClause Semi | ExportClause -> ExportFromClause? Semi | exportedElement=ExportableElement |
-		//defaultExport?='default' (-> exportedElement=ExportableElement |
-		//defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
+		//(wildcardExport?='*' ExportFromClause Semi | ExportClause -> ExportFromClause? Semi | exportedElement=ExportableElement
+		//| defaultExport?='default' (-> exportedElement=ExportableElement |
+		//defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi))
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//wildcardExport?='*' ExportFromClause Semi
@@ -540,7 +540,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'default'
 		public Keyword getDefaultExportDefaultKeyword_1_3_0_0() { return cDefaultExportDefaultKeyword_1_3_0_0; }
 		
-		//-> exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi
+		//(-> exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
 		public Alternatives getAlternatives_1_3_1() { return cAlternatives_1_3_1; }
 		
 		//-> exportedElement=ExportableElement
@@ -819,7 +819,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//AnnotationList
 		public RuleCall getAnnotationListParserRuleCall_0() { return cAnnotationListParserRuleCall_0; }
 		
-		//{FunctionDeclaration.annotationList=current} declaredModifiers+=N4Modifier* AsyncNoTrailingLineBreak
+		//({FunctionDeclaration.annotationList=current} declaredModifiers+=N4Modifier* AsyncNoTrailingLineBreak
 		//FunctionImpl<Yield,Yield,Expression=false> | {ExportedVariableStatement.annotationList=current}
 		//declaredModifiers+=N4Modifier* varStmtKeyword=VariableStatementKeyword
 		//varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> (','
@@ -829,7 +829,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredModifiers+=N4Modifier* 'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>
 		//TypeVariables? InterfaceExtendsList?) Members<Yield> | {N4EnumDeclaration.annotationList=current}
 		//declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield> '{' literals+=N4EnumLiteral (','
-		//literals+=N4EnumLiteral)* '}'
+		//literals+=N4EnumLiteral)* '}')
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//{FunctionDeclaration.annotationList=current} declaredModifiers+=N4Modifier* AsyncNoTrailingLineBreak
@@ -899,11 +899,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//InterfaceExtendsList?) Members<Yield>
 		public Group getGroup_1_2() { return cGroup_1_2; }
 		
-		//{N4ClassDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'class'
+		//({N4ClassDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'class'
 		//typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield> TypeVariables?
 		//ClassExtendsImplements<Yield>? | {N4InterfaceDeclaration.annotationList=current} declaredModifiers+=N4Modifier*
 		//'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield> TypeVariables?
-		//InterfaceExtendsList?
+		//InterfaceExtendsList?)
 		public Alternatives getAlternatives_1_2_0() { return cAlternatives_1_2_0; }
 		
 		//{N4ClassDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'class'
@@ -1346,8 +1346,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//<Yield,Yield,Expression=false>)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{FunctionDeclaration} declaredModifiers+=N4Modifier* AsyncNoTrailingLineBreak -> FunctionImpl
-		//<Yield,Yield,Expression=false>
+		//({FunctionDeclaration} declaredModifiers+=N4Modifier* AsyncNoTrailingLineBreak -> FunctionImpl
+		//<Yield,Yield,Expression=false>)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{FunctionDeclaration}
@@ -1417,8 +1417,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'function'
 		public Keyword getFunctionKeyword_0() { return cFunctionKeyword_0; }
 		
-		//generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression> |
-		//FunctionHeader<Yield,Generator=false> FunctionBody<Yield=false,Expression>
+		//(generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression> |
+		//FunctionHeader<Yield,Generator=false> FunctionBody<Yield=false,Expression>)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//generator?='*' FunctionHeader<YieldIfGenerator,Generator=true> FunctionBody<Yield=true,Expression>
@@ -1605,7 +1605,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> (declaredAsync?='async' NoLineTerminator 'function')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//declaredAsync?='async' NoLineTerminator 'function'
+		//(declaredAsync?='async' NoLineTerminator 'function')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//declaredAsync?='async'
@@ -1675,13 +1675,13 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		///* no line terminator here, guaranteed implicitly */ '=>')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//(StrictFormalParameters<Yield> ColonSepReturnTypeRef? | => (declaredAsync?='async' NoLineTerminator ->
+		//((StrictFormalParameters<Yield> ColonSepReturnTypeRef? | => (declaredAsync?='async' NoLineTerminator ->
 		//StrictFormalParameters <Yield>) ColonSepReturnTypeRef? | fpars+=BindingIdentifierAsFormalParameter<Yield>)
-		///* no line terminator here, guaranteed implicitly */ '=>'
+		///* no line terminator here, guaranteed implicitly */ '=>')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
-		//StrictFormalParameters<Yield> ColonSepReturnTypeRef? | => (declaredAsync?='async' NoLineTerminator ->
-		//StrictFormalParameters <Yield>) ColonSepReturnTypeRef? | fpars+=BindingIdentifierAsFormalParameter<Yield>
+		//(StrictFormalParameters<Yield> ColonSepReturnTypeRef? | => (declaredAsync?='async' NoLineTerminator ->
+		//StrictFormalParameters <Yield>) ColonSepReturnTypeRef? | fpars+=BindingIdentifierAsFormalParameter<Yield>)
 		public Alternatives getAlternatives_0_0_0() { return cAlternatives_0_0_0; }
 		
 		//// we cannot use fragments here since we have to combine the terminals into a syntactic predicate
@@ -1703,7 +1703,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> (declaredAsync?='async' NoLineTerminator -> StrictFormalParameters <Yield>)
 		public Group getGroup_0_0_0_1_0() { return cGroup_0_0_0_1_0; }
 		
-		//declaredAsync?='async' NoLineTerminator -> StrictFormalParameters <Yield>
+		//(declaredAsync?='async' NoLineTerminator -> StrictFormalParameters <Yield>)
 		public Group getGroup_0_0_0_1_0_0() { return cGroup_0_0_0_1_0_0; }
 		
 		//declaredAsync?='async'
@@ -1730,7 +1730,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		///* no line terminator here, guaranteed implicitly */ '=>'
 		public Keyword getEqualsSignGreaterThanSignKeyword_0_0_1() { return cEqualsSignGreaterThanSignKeyword_0_0_1; }
 		
-		//-> hasBracesAroundBody?='{' body=BlockMinusBraces<Yield> '}' | body=ExpressionDisguisedAsBlock<In>
+		//(-> hasBracesAroundBody?='{' body=BlockMinusBraces<Yield> '}' | body=ExpressionDisguisedAsBlock<In>)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//-> hasBracesAroundBody?='{' body=BlockMinusBraces<Yield> '}'
@@ -1919,9 +1919,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//ExpressionAnnotationList
 		public RuleCall getExpressionAnnotationListParserRuleCall_0() { return cExpressionAnnotationListParserRuleCall_0; }
 		
-		//{N4ClassExpression.annotationList=current} 'class' name=BindingIdentifier<Yield>? ClassExtendsImplements<Yield>?
+		//({N4ClassExpression.annotationList=current} 'class' name=BindingIdentifier<Yield>? ClassExtendsImplements<Yield>?
 		//Members<Yield> | {FunctionExpression.annotationList=current} AsyncNoTrailingLineBreak
-		//FunctionImpl<Yield=false,YieldIfGenerator=true,Expression=true>
+		//FunctionImpl<Yield=false,YieldIfGenerator=true,Expression=true>)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//{N4ClassExpression.annotationList=current} 'class' name=BindingIdentifier<Yield>? ClassExtendsImplements<Yield>?
@@ -2067,8 +2067,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//initializer=AssignmentExpression<In=true,Yield>?)?
 		public Group getGroup() { return cGroup; }
 		
-		//=> bindingPattern=BindingPattern<Yield> | annotations+=Annotation* BogusTypeRefFragment? variadic?='...'?
-		//name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
+		//(=> bindingPattern=BindingPattern<Yield> | annotations+=Annotation* BogusTypeRefFragment? variadic?='...'?
+		//name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?)
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
 		//=> bindingPattern=BindingPattern<Yield>
@@ -2155,7 +2155,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({Block} '{')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{Block} '{'
+		//({Block} '{')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{Block}
@@ -2306,7 +2306,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({VariableStatement} varStmtKeyword=VariableStatementKeyword)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{VariableStatement} varStmtKeyword=VariableStatementKeyword
+		//({VariableStatement} varStmtKeyword=VariableStatementKeyword)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{VariableStatement}
@@ -2453,8 +2453,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BindingPattern<Yield>
 		public RuleCall getPatternBindingPatternParserRuleCall_0_0() { return cPatternBindingPatternParserRuleCall_0_0; }
 		
-		//<OptionalInit> ('=' expression=AssignmentExpression<In,Yield>)? | <!OptionalInit> '='
-		//expression=AssignmentExpression<In,Yield>
+		//(<OptionalInit> ('=' expression=AssignmentExpression<In,Yield>)? | <!OptionalInit> '='
+		//expression=AssignmentExpression<In,Yield>)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//<OptionalInit> ('=' expression=AssignmentExpression<In,Yield>)?
@@ -2551,8 +2551,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//Annotation
 		public RuleCall getAnnotationsAnnotationParserRuleCall_0_0() { return cAnnotationsAnnotationParserRuleCall_0_0; }
 		
-		//<AllowType> => (name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?) ('=' expression=AssignmentExpression<In,Yield>)?
-		//| <!AllowType> => (name=BindingIdentifier<Yield>) ('=' expression=AssignmentExpression<In,Yield>)?
+		//(<AllowType> => (name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?) ('='
+		//expression=AssignmentExpression<In,Yield>)? | <!AllowType> => (name=BindingIdentifier<Yield>) ('='
+		//expression=AssignmentExpression<In,Yield>)?)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//<AllowType> => (name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?) ('=' expression=AssignmentExpression<In,Yield>)?
@@ -2561,7 +2562,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> (name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
-		//name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
+		//(name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?)
 		public Group getGroup_1_0_0_0() { return cGroup_1_0_0_0; }
 		
 		//name=BindingIdentifier<Yield>
@@ -3019,6 +3020,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'('
 		public Keyword getLeftParenthesisKeyword_2() { return cLeftParenthesisKeyword_2; }
 		
+		//( // this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
 		//=> (initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')') | (->
 		//varStmtKeyword=VariableStatementKeyword (=> (varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield>
 		//(forIn?='in' | forOf?='of') -> expression=AssignmentExpression<In=true,Yield>?) |
@@ -3028,14 +3030,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//expression=AssignmentExpression<In=true,Yield>?)) | initExpr=Expression<In=false,Yield> (';'
 		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>? | forIn?='in'
 		//expression=Expression<In=true,Yield>? | forOf?='of' expression=AssignmentExpression<In=true,Yield>?) | ';'
-		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?) ')'
+		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?) ')')
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 		
 		//// this is not in the spec as far as I can tell, but there are tests that rely on this to be valid JS
 		//=> (initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')')
 		public Group getGroup_3_0() { return cGroup_3_0; }
 		
-		//initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')'
+		//(initExpr=LetIdentifierRef forIn?='in' expression=Expression<In=true,Yield> ')')
 		public Group getGroup_3_0_0() { return cGroup_3_0_0; }
 		
 		//initExpr=LetIdentifierRef
@@ -3071,7 +3073,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?) ')'
 		public Group getGroup_3_1() { return cGroup_3_1; }
 		
-		//-> varStmtKeyword=VariableStatementKeyword (=>
+		//(-> varStmtKeyword=VariableStatementKeyword (=>
 		//(varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
 		//expression=AssignmentExpression<In=true,Yield>?) |
 		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,OptionalInit=true> ((','
@@ -3080,7 +3082,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//expression=AssignmentExpression<In=true,Yield>?)) | initExpr=Expression<In=false,Yield> (';'
 		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>? | forIn?='in'
 		//expression=Expression<In=true,Yield>? | forOf?='of' expression=AssignmentExpression<In=true,Yield>?) | ';'
-		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?
+		//expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?)
 		public Alternatives getAlternatives_3_1_0() { return cAlternatives_3_1_0; }
 		
 		//-> varStmtKeyword=VariableStatementKeyword (=>
@@ -3098,20 +3100,20 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//VariableStatementKeyword
 		public RuleCall getVarStmtKeywordVariableStatementKeywordEnumRuleCall_3_1_0_0_0_0() { return cVarStmtKeywordVariableStatementKeywordEnumRuleCall_3_1_0_0_0_0; }
 		
-		//=> (varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
+		//(=> (varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
 		//expression=AssignmentExpression<In=true,Yield>?) |
 		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,OptionalInit=true> ((','
 		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)* ';' expression=Expression<In=true,Yield>? ';'
 		//updateExpr=Expression<In=true,Yield>? | forIn?='in' expression=Expression<In=true,Yield>? | forOf?='of'
-		//expression=AssignmentExpression<In=true,Yield>?)
+		//expression=AssignmentExpression<In=true,Yield>?))
 		public Alternatives getAlternatives_3_1_0_0_1() { return cAlternatives_3_1_0_0_1; }
 		
 		//=> (varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
 		//expression=AssignmentExpression<In=true,Yield>?)
 		public Group getGroup_3_1_0_0_1_0() { return cGroup_3_1_0_0_1_0; }
 		
-		//varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
-		//expression=AssignmentExpression<In=true,Yield>?
+		//(varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield> (forIn?='in' | forOf?='of') ->
+		//expression=AssignmentExpression<In=true,Yield>?)
 		public Group getGroup_3_1_0_0_1_0_0() { return cGroup_3_1_0_0_1_0_0; }
 		
 		//varDeclsOrBindings+=BindingIdentifierAsVariableDeclaration<In=false,Yield>
@@ -3120,7 +3122,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BindingIdentifierAsVariableDeclaration<In=false,Yield>
 		public RuleCall getVarDeclsOrBindingsBindingIdentifierAsVariableDeclarationParserRuleCall_3_1_0_0_1_0_0_0_0() { return cVarDeclsOrBindingsBindingIdentifierAsVariableDeclarationParserRuleCall_3_1_0_0_1_0_0_0_0; }
 		
-		//forIn?='in' | forOf?='of'
+		//(forIn?='in' | forOf?='of')
 		public Alternatives getAlternatives_3_1_0_0_1_0_0_1() { return cAlternatives_3_1_0_0_1_0_0_1; }
 		
 		//forIn?='in'
@@ -3153,9 +3155,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//VariableDeclarationOrBinding<In=false,Yield,OptionalInit=true>
 		public RuleCall getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_1_0_0_1_1_0_0() { return cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_1_0_0_1_1_0_0; }
 		
-		//(',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)* ';' expression=Expression<In=true,Yield>?
+		//((',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)* ';' expression=Expression<In=true,Yield>?
 		//';' updateExpr=Expression<In=true,Yield>? | forIn?='in' expression=Expression<In=true,Yield>? | forOf?='of'
-		//expression=AssignmentExpression<In=true,Yield>?
+		//expression=AssignmentExpression<In=true,Yield>?)
 		public Alternatives getAlternatives_3_1_0_0_1_1_1() { return cAlternatives_3_1_0_0_1_1_1; }
 		
 		//(',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=false,Yield,false>)* ';' expression=Expression<In=true,Yield>?
@@ -3232,8 +3234,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//Expression<In=false,Yield>
 		public RuleCall getInitExprExpressionParserRuleCall_3_1_0_1_0_0() { return cInitExprExpressionParserRuleCall_3_1_0_1_0_0; }
 		
-		//';' expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>? | forIn?='in'
-		//expression=Expression<In=true,Yield>? | forOf?='of' expression=AssignmentExpression<In=true,Yield>?
+		//(';' expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>? | forIn?='in'
+		//expression=Expression<In=true,Yield>? | forOf?='of' expression=AssignmentExpression<In=true,Yield>?)
 		public Alternatives getAlternatives_3_1_0_1_1() { return cAlternatives_3_1_0_1_1; }
 		
 		//';' expression=Expression<In=true,Yield>? ';' updateExpr=Expression<In=true,Yield>?
@@ -3670,7 +3672,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> (name=BindingIdentifier<Yield> ':')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//name=BindingIdentifier<Yield> ':'
+		//(name=BindingIdentifier<Yield> ':')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//name=BindingIdentifier<Yield>
@@ -3747,7 +3749,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//Block<Yield>
 		public RuleCall getBlockBlockParserRuleCall_1_0() { return cBlockBlockParserRuleCall_1_0; }
 		
-		//catch=CatchBlock<Yield> finally=FinallyBlock<Yield>? | finally=FinallyBlock<Yield>
+		//(catch=CatchBlock<Yield> finally=FinallyBlock<Yield>? | finally=FinallyBlock<Yield>)
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 		
 		//catch=CatchBlock<Yield> finally=FinallyBlock<Yield>?
@@ -3849,7 +3851,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> (name=BindingIdentifier<Yield> -> ColonSepDeclaredTypeRef)
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//name=BindingIdentifier<Yield> -> ColonSepDeclaredTypeRef
+		//(name=BindingIdentifier<Yield> -> ColonSepDeclaredTypeRef)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
 		//name=BindingIdentifier<Yield>
@@ -4499,6 +4501,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//PropertyAssignmentAnnotationList
 		public RuleCall getPropertyAssignmentAnnotationListParserRuleCall_0() { return cPropertyAssignmentAnnotationListParserRuleCall_0; }
 		
+		//( // TODO extract property header into an own instance to defer the object instantiation
 		//=> ({PropertyNameValuePair.annotationList=current} declaredTypeRef=TypeRefWithModifiers?
 		//declaredName=LiteralOrComputedPropertyName<Yield> ':') expression=AssignmentExpression<In=true,Yield> | =>
 		//({PropertyGetterDeclaration.annotationList=current} GetterHeader<Yield>) body=Block<Yield=false> | =>
@@ -4509,7 +4512,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>)) ';'? |
 		//{PropertyNameValuePairSingleName.annotationList=current} declaredTypeRef=TypeRef? identifierRef=IdentifierRef<Yield>
 		//('=' expression=AssignmentExpression<In=true,Yield>)? | {PropertySpread.annotationList=current} '...'
-		//expression=AssignmentExpression<In=true,Yield>
+		//expression=AssignmentExpression<In=true,Yield>)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//// TODO extract property header into an own instance to defer the object instantiation
@@ -4522,8 +4525,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredName=LiteralOrComputedPropertyName<Yield> ':')
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
-		//{PropertyNameValuePair.annotationList=current} declaredTypeRef=TypeRefWithModifiers?
-		//declaredName=LiteralOrComputedPropertyName<Yield> ':'
+		//({PropertyNameValuePair.annotationList=current} declaredTypeRef=TypeRefWithModifiers?
+		//declaredName=LiteralOrComputedPropertyName<Yield> ':')
 		public Group getGroup_1_0_0_0() { return cGroup_1_0_0_0; }
 		
 		//{PropertyNameValuePair.annotationList=current}
@@ -4556,7 +4559,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({PropertyGetterDeclaration.annotationList=current} GetterHeader<Yield>)
 		public Group getGroup_1_1_0() { return cGroup_1_1_0; }
 		
-		//{PropertyGetterDeclaration.annotationList=current} GetterHeader<Yield>
+		//({PropertyGetterDeclaration.annotationList=current} GetterHeader<Yield>)
 		public Group getGroup_1_1_0_0() { return cGroup_1_1_0_0; }
 		
 		//{PropertyGetterDeclaration.annotationList=current}
@@ -4578,7 +4581,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({PropertySetterDeclaration.annotationList=current} 'set' -> declaredName=LiteralOrComputedPropertyName<Yield>)
 		public Group getGroup_1_2_0() { return cGroup_1_2_0; }
 		
-		//{PropertySetterDeclaration.annotationList=current} 'set' -> declaredName=LiteralOrComputedPropertyName<Yield>
+		//({PropertySetterDeclaration.annotationList=current} 'set' -> declaredName=LiteralOrComputedPropertyName<Yield>)
 		public Group getGroup_1_2_0_0() { return cGroup_1_2_0_0; }
 		
 		//{PropertySetterDeclaration.annotationList=current}
@@ -4627,9 +4630,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>))
 		public Group getGroup_1_3_0() { return cGroup_1_3_0; }
 		
-		//{PropertyMethodDeclaration.annotationList=current} TypeVariables? returnTypeRef=TypeRefWithModifiers? (generator?='*'
+		//({PropertyMethodDeclaration.annotationList=current} TypeVariables? returnTypeRef=TypeRefWithModifiers? (generator?='*'
 		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=true> |
-		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>)
+		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>))
 		public Group getGroup_1_3_0_0() { return cGroup_1_3_0_0; }
 		
 		//{PropertyMethodDeclaration.annotationList=current}
@@ -4644,8 +4647,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//TypeRefWithModifiers
 		public RuleCall getReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0() { return cReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0; }
 		
-		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=true> |
-		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>
+		//(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=true> |
+		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>)
 		public Alternatives getAlternatives_1_3_0_0_3() { return cAlternatives_1_3_0_0_3; }
 		
 		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=true>
@@ -4766,9 +4769,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>))
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{PropertyMethodDeclaration} TypeVariables? returnTypeRef=TypeRefWithModifiers? (generator?='*'
+		//({PropertyMethodDeclaration} TypeVariables? returnTypeRef=TypeRefWithModifiers? (generator?='*'
 		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=true> |
-		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>)
+		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>))
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{PropertyMethodDeclaration}
@@ -4783,8 +4786,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//TypeRefWithModifiers
 		public RuleCall getReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0() { return cReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0; }
 		
-		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=true> |
-		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>
+		//(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=true> |
+		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>)
 		public Alternatives getAlternatives_0_0_3() { return cAlternatives_0_0_3; }
 		
 		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=true>
@@ -4850,8 +4853,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredOptional?='?'? ':')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{PropertyNameValuePair} declaredTypeRef=TypeRefWithModifiers? declaredName=LiteralOrComputedPropertyName<Yield>
-		//declaredOptional?='?'? ':'
+		//({PropertyNameValuePair} declaredTypeRef=TypeRefWithModifiers? declaredName=LiteralOrComputedPropertyName<Yield>
+		//declaredOptional?='?'? ':')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{PropertyNameValuePair}
@@ -4951,7 +4954,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({PropertyGetterDeclaration} GetterHeader<Yield>)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{PropertyGetterDeclaration} GetterHeader<Yield>
+		//({PropertyGetterDeclaration} GetterHeader<Yield>)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{PropertyGetterDeclaration}
@@ -4998,7 +5001,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({PropertySetterDeclaration} 'set' -> declaredName=LiteralOrComputedPropertyName<Yield>)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{PropertySetterDeclaration} 'set' -> declaredName=LiteralOrComputedPropertyName<Yield>
+		//({PropertySetterDeclaration} 'set' -> declaredName=LiteralOrComputedPropertyName<Yield>)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{PropertySetterDeclaration}
@@ -5066,16 +5069,19 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cConcreteTypeArgumentsParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Assignment cTargetAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cTargetIdentifierRefParserRuleCall_1_0 = (RuleCall)cTargetAssignment_1.eContents().get(0);
-		private final RuleCall cArgumentsWithParenthesesParserRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		private final Assignment cOptionalChainingAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final Keyword cOptionalChainingQuestionMarkFullStopKeyword_2_0 = (Keyword)cOptionalChainingAssignment_2.eContents().get(0);
+		private final RuleCall cArgumentsWithParenthesesParserRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
 		
 		///* Left-hand-side expressions (11.2) [ECM11]
 		// * Heavily refactored to make them LL(*) compliant.
 		// */ ParameterizedCallExpression <Yield>:
 		//	ConcreteTypeArguments
-		//	target=IdentifierRef<Yield> ArgumentsWithParentheses<Yield>;
+		//	target=IdentifierRef<Yield> optionalChaining?='?.'?
+		//	ArgumentsWithParentheses<Yield>;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//ConcreteTypeArguments target=IdentifierRef<Yield> ArgumentsWithParentheses<Yield>
+		//ConcreteTypeArguments target=IdentifierRef<Yield> optionalChaining?='?.'? ArgumentsWithParentheses<Yield>
 		public Group getGroup() { return cGroup; }
 		
 		//ConcreteTypeArguments
@@ -5087,8 +5093,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//IdentifierRef<Yield>
 		public RuleCall getTargetIdentifierRefParserRuleCall_1_0() { return cTargetIdentifierRefParserRuleCall_1_0; }
 		
+		//optionalChaining?='?.'?
+		public Assignment getOptionalChainingAssignment_2() { return cOptionalChainingAssignment_2; }
+		
+		//'?.'
+		public Keyword getOptionalChainingQuestionMarkFullStopKeyword_2_0() { return cOptionalChainingQuestionMarkFullStopKeyword_2_0; }
+		
 		//ArgumentsWithParentheses<Yield>
-		public RuleCall getArgumentsWithParenthesesParserRuleCall_2() { return cArgumentsWithParenthesesParserRuleCall_2; }
+		public RuleCall getArgumentsWithParenthesesParserRuleCall_3() { return cArgumentsWithParenthesesParserRuleCall_3; }
 	}
 	public class ConcreteTypeArgumentsElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ConcreteTypeArguments");
@@ -5158,101 +5170,125 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cMemberExpressionParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Action cParameterizedCallExpressionTargetAction_1_0 = (Action)cGroup_1.eContents().get(0);
-		private final RuleCall cArgumentsWithParenthesesParserRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
-		private final Alternatives cAlternatives_1_2 = (Alternatives)cGroup_1.eContents().get(2);
-		private final Group cGroup_1_2_0 = (Group)cAlternatives_1_2.eContents().get(0);
-		private final Action cParameterizedCallExpressionTargetAction_1_2_0_0 = (Action)cGroup_1_2_0.eContents().get(0);
-		private final RuleCall cArgumentsWithParenthesesParserRuleCall_1_2_0_1 = (RuleCall)cGroup_1_2_0.eContents().get(1);
-		private final Group cGroup_1_2_1 = (Group)cAlternatives_1_2.eContents().get(1);
-		private final Action cIndexedAccessExpressionTargetAction_1_2_1_0 = (Action)cGroup_1_2_1.eContents().get(0);
-		private final RuleCall cIndexedAccessExpressionTailParserRuleCall_1_2_1_1 = (RuleCall)cGroup_1_2_1.eContents().get(1);
-		private final Group cGroup_1_2_2 = (Group)cAlternatives_1_2.eContents().get(2);
-		private final Action cParameterizedPropertyAccessExpressionTargetAction_1_2_2_0 = (Action)cGroup_1_2_2.eContents().get(0);
-		private final RuleCall cParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1 = (RuleCall)cGroup_1_2_2.eContents().get(1);
-		private final Group cGroup_1_2_3 = (Group)cAlternatives_1_2.eContents().get(3);
-		private final Group cGroup_1_2_3_0 = (Group)cGroup_1_2_3.eContents().get(0);
-		private final Action cTaggedTemplateStringTargetAction_1_2_3_0_0 = (Action)cGroup_1_2_3_0.eContents().get(0);
-		private final Assignment cTemplateAssignment_1_2_3_0_1 = (Assignment)cGroup_1_2_3_0.eContents().get(1);
-		private final RuleCall cTemplateTemplateLiteralParserRuleCall_1_2_3_0_1_0 = (RuleCall)cTemplateAssignment_1_2_3_0_1.eContents().get(0);
+		private final Assignment cOptionalChainingAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final Keyword cOptionalChainingQuestionMarkFullStopKeyword_1_1_0 = (Keyword)cOptionalChainingAssignment_1_1.eContents().get(0);
+		private final RuleCall cArgumentsWithParenthesesParserRuleCall_1_2 = (RuleCall)cGroup_1.eContents().get(2);
+		private final Alternatives cAlternatives_1_3 = (Alternatives)cGroup_1.eContents().get(3);
+		private final Group cGroup_1_3_0 = (Group)cAlternatives_1_3.eContents().get(0);
+		private final Action cParameterizedCallExpressionTargetAction_1_3_0_0 = (Action)cGroup_1_3_0.eContents().get(0);
+		private final Assignment cOptionalChainingAssignment_1_3_0_1 = (Assignment)cGroup_1_3_0.eContents().get(1);
+		private final Keyword cOptionalChainingQuestionMarkFullStopKeyword_1_3_0_1_0 = (Keyword)cOptionalChainingAssignment_1_3_0_1.eContents().get(0);
+		private final RuleCall cArgumentsWithParenthesesParserRuleCall_1_3_0_2 = (RuleCall)cGroup_1_3_0.eContents().get(2);
+		private final Group cGroup_1_3_1 = (Group)cAlternatives_1_3.eContents().get(1);
+		private final Action cIndexedAccessExpressionTargetAction_1_3_1_0 = (Action)cGroup_1_3_1.eContents().get(0);
+		private final RuleCall cIndexedAccessExpressionTailParserRuleCall_1_3_1_1 = (RuleCall)cGroup_1_3_1.eContents().get(1);
+		private final Group cGroup_1_3_2 = (Group)cAlternatives_1_3.eContents().get(2);
+		private final Action cParameterizedPropertyAccessExpressionTargetAction_1_3_2_0 = (Action)cGroup_1_3_2.eContents().get(0);
+		private final RuleCall cParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1 = (RuleCall)cGroup_1_3_2.eContents().get(1);
+		private final Group cGroup_1_3_3 = (Group)cAlternatives_1_3.eContents().get(3);
+		private final Group cGroup_1_3_3_0 = (Group)cGroup_1_3_3.eContents().get(0);
+		private final Action cTaggedTemplateStringTargetAction_1_3_3_0_0 = (Action)cGroup_1_3_3_0.eContents().get(0);
+		private final Assignment cOptionalChainingAssignment_1_3_3_0_1 = (Assignment)cGroup_1_3_3_0.eContents().get(1);
+		private final Keyword cOptionalChainingQuestionMarkFullStopKeyword_1_3_3_0_1_0 = (Keyword)cOptionalChainingAssignment_1_3_3_0_1.eContents().get(0);
+		private final Assignment cTemplateAssignment_1_3_3_0_2 = (Assignment)cGroup_1_3_3_0.eContents().get(2);
+		private final RuleCall cTemplateTemplateLiteralParserRuleCall_1_3_3_0_2_0 = (RuleCall)cTemplateAssignment_1_3_3_0_2.eContents().get(0);
 		
 		//LeftHandSideExpression <Yield Expression:
-		//	MemberExpression<Yield> ({ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield>
-		//	({ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield> |
-		//	{IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
+		//	MemberExpression<Yield> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
+		//	ArgumentsWithParentheses<Yield> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
+		//	ArgumentsWithParentheses<Yield> | {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 		//	{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> | ->
-		//	({TaggedTemplateString.target=current} template=TemplateLiteral<Yield>))*)?;
+		//	({TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>))*)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//MemberExpression<Yield> ({ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield>
-		//({ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield> |
-		//{IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
+		//MemberExpression<Yield> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
+		//ArgumentsWithParentheses<Yield> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
+		//ArgumentsWithParentheses<Yield> | {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 		//{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> | ->
-		//({TaggedTemplateString.target=current} template=TemplateLiteral<Yield>))*)?
+		//({TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>))*)?
 		public Group getGroup() { return cGroup; }
 		
 		//MemberExpression<Yield>
 		public RuleCall getMemberExpressionParserRuleCall_0() { return cMemberExpressionParserRuleCall_0; }
 		
-		//({ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield>
-		//({ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield> |
+		//({ParameterizedCallExpression.target=current} optionalChaining?='?.'? ArgumentsWithParentheses<Yield>
+		//({ParameterizedCallExpression.target=current} optionalChaining?='?.'? ArgumentsWithParentheses<Yield> |
 		//{IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 		//{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> | ->
-		//({TaggedTemplateString.target=current} template=TemplateLiteral<Yield>))*)?
+		//({TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>))*)?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//{ParameterizedCallExpression.target=current}
 		public Action getParameterizedCallExpressionTargetAction_1_0() { return cParameterizedCallExpressionTargetAction_1_0; }
 		
+		//optionalChaining?='?.'?
+		public Assignment getOptionalChainingAssignment_1_1() { return cOptionalChainingAssignment_1_1; }
+		
+		//'?.'
+		public Keyword getOptionalChainingQuestionMarkFullStopKeyword_1_1_0() { return cOptionalChainingQuestionMarkFullStopKeyword_1_1_0; }
+		
 		//ArgumentsWithParentheses<Yield>
-		public RuleCall getArgumentsWithParenthesesParserRuleCall_1_1() { return cArgumentsWithParenthesesParserRuleCall_1_1; }
+		public RuleCall getArgumentsWithParenthesesParserRuleCall_1_2() { return cArgumentsWithParenthesesParserRuleCall_1_2; }
 		
-		//({ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield> | {IndexedAccessExpression.target=current}
-		//IndexedAccessExpressionTail<Yield> | {ParameterizedPropertyAccessExpression.target=current}
-		//ParameterizedPropertyAccessExpressionTail<Yield> | -> ({TaggedTemplateString.target=current}
-		//template=TemplateLiteral<Yield>))*
-		public Alternatives getAlternatives_1_2() { return cAlternatives_1_2; }
+		//({ParameterizedCallExpression.target=current} optionalChaining?='?.'? ArgumentsWithParentheses<Yield> |
+		//{IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
+		//{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> | ->
+		//({TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>))*
+		public Alternatives getAlternatives_1_3() { return cAlternatives_1_3; }
 		
-		//{ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield>
-		public Group getGroup_1_2_0() { return cGroup_1_2_0; }
+		//{ParameterizedCallExpression.target=current} optionalChaining?='?.'? ArgumentsWithParentheses<Yield>
+		public Group getGroup_1_3_0() { return cGroup_1_3_0; }
 		
 		//{ParameterizedCallExpression.target=current}
-		public Action getParameterizedCallExpressionTargetAction_1_2_0_0() { return cParameterizedCallExpressionTargetAction_1_2_0_0; }
+		public Action getParameterizedCallExpressionTargetAction_1_3_0_0() { return cParameterizedCallExpressionTargetAction_1_3_0_0; }
+		
+		//optionalChaining?='?.'?
+		public Assignment getOptionalChainingAssignment_1_3_0_1() { return cOptionalChainingAssignment_1_3_0_1; }
+		
+		//'?.'
+		public Keyword getOptionalChainingQuestionMarkFullStopKeyword_1_3_0_1_0() { return cOptionalChainingQuestionMarkFullStopKeyword_1_3_0_1_0; }
 		
 		//ArgumentsWithParentheses<Yield>
-		public RuleCall getArgumentsWithParenthesesParserRuleCall_1_2_0_1() { return cArgumentsWithParenthesesParserRuleCall_1_2_0_1; }
+		public RuleCall getArgumentsWithParenthesesParserRuleCall_1_3_0_2() { return cArgumentsWithParenthesesParserRuleCall_1_3_0_2; }
 		
 		//{IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield>
-		public Group getGroup_1_2_1() { return cGroup_1_2_1; }
+		public Group getGroup_1_3_1() { return cGroup_1_3_1; }
 		
 		//{IndexedAccessExpression.target=current}
-		public Action getIndexedAccessExpressionTargetAction_1_2_1_0() { return cIndexedAccessExpressionTargetAction_1_2_1_0; }
+		public Action getIndexedAccessExpressionTargetAction_1_3_1_0() { return cIndexedAccessExpressionTargetAction_1_3_1_0; }
 		
 		//IndexedAccessExpressionTail<Yield>
-		public RuleCall getIndexedAccessExpressionTailParserRuleCall_1_2_1_1() { return cIndexedAccessExpressionTailParserRuleCall_1_2_1_1; }
+		public RuleCall getIndexedAccessExpressionTailParserRuleCall_1_3_1_1() { return cIndexedAccessExpressionTailParserRuleCall_1_3_1_1; }
 		
 		//{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield>
-		public Group getGroup_1_2_2() { return cGroup_1_2_2; }
+		public Group getGroup_1_3_2() { return cGroup_1_3_2; }
 		
 		//{ParameterizedPropertyAccessExpression.target=current}
-		public Action getParameterizedPropertyAccessExpressionTargetAction_1_2_2_0() { return cParameterizedPropertyAccessExpressionTargetAction_1_2_2_0; }
+		public Action getParameterizedPropertyAccessExpressionTargetAction_1_3_2_0() { return cParameterizedPropertyAccessExpressionTargetAction_1_3_2_0; }
 		
 		//ParameterizedPropertyAccessExpressionTail<Yield>
-		public RuleCall getParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1() { return cParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1; }
+		public RuleCall getParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1() { return cParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1; }
 		
-		//-> ({TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)
-		public Group getGroup_1_2_3() { return cGroup_1_2_3; }
+		//-> ({TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)
+		public Group getGroup_1_3_3() { return cGroup_1_3_3; }
 		
-		//{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>
-		public Group getGroup_1_2_3_0() { return cGroup_1_2_3_0; }
+		//({TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)
+		public Group getGroup_1_3_3_0() { return cGroup_1_3_3_0; }
 		
 		//{TaggedTemplateString.target=current}
-		public Action getTaggedTemplateStringTargetAction_1_2_3_0_0() { return cTaggedTemplateStringTargetAction_1_2_3_0_0; }
+		public Action getTaggedTemplateStringTargetAction_1_3_3_0_0() { return cTaggedTemplateStringTargetAction_1_3_3_0_0; }
+		
+		//optionalChaining?='?.'?
+		public Assignment getOptionalChainingAssignment_1_3_3_0_1() { return cOptionalChainingAssignment_1_3_3_0_1; }
+		
+		//'?.'
+		public Keyword getOptionalChainingQuestionMarkFullStopKeyword_1_3_3_0_1_0() { return cOptionalChainingQuestionMarkFullStopKeyword_1_3_3_0_1_0; }
 		
 		//template=TemplateLiteral<Yield>
-		public Assignment getTemplateAssignment_1_2_3_0_1() { return cTemplateAssignment_1_2_3_0_1; }
+		public Assignment getTemplateAssignment_1_3_3_0_2() { return cTemplateAssignment_1_3_3_0_2; }
 		
 		//TemplateLiteral<Yield>
-		public RuleCall getTemplateTemplateLiteralParserRuleCall_1_2_3_0_1_0() { return cTemplateTemplateLiteralParserRuleCall_1_2_3_0_1_0; }
+		public RuleCall getTemplateTemplateLiteralParserRuleCall_1_3_3_0_2_0() { return cTemplateTemplateLiteralParserRuleCall_1_3_3_0_2_0; }
 	}
 	public class ArgumentsWithParenthesesElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ArgumentsWithParentheses");
@@ -5371,8 +5407,10 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_3_1_1 = (RuleCall)cGroup_1_3_3_1.eContents().get(1);
 		private final Group cGroup_1_3_3_2 = (Group)cAlternatives_1_3_3.eContents().get(2);
 		private final Action cTaggedTemplateStringTargetAction_1_3_3_2_0 = (Action)cGroup_1_3_3_2.eContents().get(0);
-		private final Assignment cTemplateAssignment_1_3_3_2_1 = (Assignment)cGroup_1_3_3_2.eContents().get(1);
-		private final RuleCall cTemplateTemplateLiteralParserRuleCall_1_3_3_2_1_0 = (RuleCall)cTemplateAssignment_1_3_3_2_1.eContents().get(0);
+		private final Assignment cOptionalChainingAssignment_1_3_3_2_1 = (Assignment)cGroup_1_3_3_2.eContents().get(1);
+		private final Keyword cOptionalChainingQuestionMarkFullStopKeyword_1_3_3_2_1_0 = (Keyword)cOptionalChainingAssignment_1_3_3_2_1.eContents().get(0);
+		private final Assignment cTemplateAssignment_1_3_3_2_2 = (Assignment)cGroup_1_3_3_2.eContents().get(2);
+		private final RuleCall cTemplateTemplateLiteralParserRuleCall_1_3_3_2_2_0 = (RuleCall)cTemplateAssignment_1_3_3_2_2.eContents().get(0);
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
 		private final RuleCall cPrimaryExpressionParserRuleCall_2_0 = (RuleCall)cGroup_2.eContents().get(0);
 		private final Alternatives cAlternatives_2_1 = (Alternatives)cGroup_2.eContents().get(1);
@@ -5384,27 +5422,29 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cParameterizedPropertyAccessExpressionTailParserRuleCall_2_1_1_1 = (RuleCall)cGroup_2_1_1.eContents().get(1);
 		private final Group cGroup_2_1_2 = (Group)cAlternatives_2_1.eContents().get(2);
 		private final Action cTaggedTemplateStringTargetAction_2_1_2_0 = (Action)cGroup_2_1_2.eContents().get(0);
-		private final Assignment cTemplateAssignment_2_1_2_1 = (Assignment)cGroup_2_1_2.eContents().get(1);
-		private final RuleCall cTemplateTemplateLiteralParserRuleCall_2_1_2_1_0 = (RuleCall)cTemplateAssignment_2_1_2_1.eContents().get(0);
+		private final Assignment cOptionalChainingAssignment_2_1_2_1 = (Assignment)cGroup_2_1_2.eContents().get(1);
+		private final Keyword cOptionalChainingQuestionMarkFullStopKeyword_2_1_2_1_0 = (Keyword)cOptionalChainingAssignment_2_1_2_1.eContents().get(0);
+		private final Assignment cTemplateAssignment_2_1_2_2 = (Assignment)cGroup_2_1_2.eContents().get(2);
+		private final RuleCall cTemplateTemplateLiteralParserRuleCall_2_1_2_2_0 = (RuleCall)cTemplateAssignment_2_1_2_2.eContents().get(0);
 		
 		//MemberExpression <Yield Expression:
 		//	=> ({NewTarget} 'new' '.') 'target'
 		//	| => ({NewExpression} 'new') callee=MemberExpression<Yield> -> ConcreteTypeArguments? (=> withArgs?='('
 		//	Arguments<Yield>? ')' ({IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 		//	{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> |
-		//	{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)*)?
+		//	{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)*)?
 		//	| PrimaryExpression<Yield> ({IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 		//	{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> |
-		//	{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)*;
+		//	{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=> ({NewTarget} 'new' '.') 'target' | => ({NewExpression} 'new') callee=MemberExpression<Yield> ->
 		//ConcreteTypeArguments? (=> withArgs?='(' Arguments<Yield>? ')' ({IndexedAccessExpression.target=current}
 		//IndexedAccessExpressionTail<Yield> | {ParameterizedPropertyAccessExpression.target=current}
-		//ParameterizedPropertyAccessExpressionTail<Yield> | {TaggedTemplateString.target=current}
+		//ParameterizedPropertyAccessExpressionTail<Yield> | {TaggedTemplateString.target=current} optionalChaining?='?.'?
 		//template=TemplateLiteral<Yield>)*)? | PrimaryExpression<Yield> ({IndexedAccessExpression.target=current}
 		//IndexedAccessExpressionTail<Yield> | {ParameterizedPropertyAccessExpression.target=current}
-		//ParameterizedPropertyAccessExpressionTail<Yield> | {TaggedTemplateString.target=current}
+		//ParameterizedPropertyAccessExpressionTail<Yield> | {TaggedTemplateString.target=current} optionalChaining?='?.'?
 		//template=TemplateLiteral<Yield>)*
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
@@ -5414,7 +5454,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({NewTarget} 'new' '.')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
-		//{NewTarget} 'new' '.'
+		//({NewTarget} 'new' '.')
 		public Group getGroup_0_0_0() { return cGroup_0_0_0; }
 		
 		//{NewTarget}
@@ -5432,13 +5472,13 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({NewExpression} 'new') callee=MemberExpression<Yield> -> ConcreteTypeArguments? (=> withArgs?='(' Arguments<Yield>?
 		//')' ({IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 		//{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> |
-		//{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)*)?
+		//{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)*)?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//=> ({NewExpression} 'new')
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{NewExpression} 'new'
+		//({NewExpression} 'new')
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{NewExpression}
@@ -5458,7 +5498,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//(=> withArgs?='(' Arguments<Yield>? ')' ({IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 		//{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> |
-		//{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)*)?
+		//{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)*)?
 		public Group getGroup_1_3() { return cGroup_1_3; }
 		
 		//=> withArgs?='('
@@ -5475,7 +5515,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//({IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 		//{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> |
-		//{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)*
+		//{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)*
 		public Alternatives getAlternatives_1_3_3() { return cAlternatives_1_3_3; }
 		
 		//{IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield>
@@ -5496,21 +5536,27 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//ParameterizedPropertyAccessExpressionTail<Yield>
 		public RuleCall getParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_3_1_1() { return cParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_3_1_1; }
 		
-		//{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>
+		//{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>
 		public Group getGroup_1_3_3_2() { return cGroup_1_3_3_2; }
 		
 		//{TaggedTemplateString.target=current}
 		public Action getTaggedTemplateStringTargetAction_1_3_3_2_0() { return cTaggedTemplateStringTargetAction_1_3_3_2_0; }
 		
+		//optionalChaining?='?.'?
+		public Assignment getOptionalChainingAssignment_1_3_3_2_1() { return cOptionalChainingAssignment_1_3_3_2_1; }
+		
+		//'?.'
+		public Keyword getOptionalChainingQuestionMarkFullStopKeyword_1_3_3_2_1_0() { return cOptionalChainingQuestionMarkFullStopKeyword_1_3_3_2_1_0; }
+		
 		//template=TemplateLiteral<Yield>
-		public Assignment getTemplateAssignment_1_3_3_2_1() { return cTemplateAssignment_1_3_3_2_1; }
+		public Assignment getTemplateAssignment_1_3_3_2_2() { return cTemplateAssignment_1_3_3_2_2; }
 		
 		//TemplateLiteral<Yield>
-		public RuleCall getTemplateTemplateLiteralParserRuleCall_1_3_3_2_1_0() { return cTemplateTemplateLiteralParserRuleCall_1_3_3_2_1_0; }
+		public RuleCall getTemplateTemplateLiteralParserRuleCall_1_3_3_2_2_0() { return cTemplateTemplateLiteralParserRuleCall_1_3_3_2_2_0; }
 		
 		//PrimaryExpression<Yield> ({IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 		//{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> |
-		//{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)*
+		//{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)*
 		public Group getGroup_2() { return cGroup_2; }
 		
 		//PrimaryExpression<Yield>
@@ -5518,7 +5564,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//({IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 		//{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> |
-		//{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)*
+		//{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)*
 		public Alternatives getAlternatives_2_1() { return cAlternatives_2_1; }
 		
 		//{IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield>
@@ -5539,63 +5585,89 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//ParameterizedPropertyAccessExpressionTail<Yield>
 		public RuleCall getParameterizedPropertyAccessExpressionTailParserRuleCall_2_1_1_1() { return cParameterizedPropertyAccessExpressionTailParserRuleCall_2_1_1_1; }
 		
-		//{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>
+		//{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>
 		public Group getGroup_2_1_2() { return cGroup_2_1_2; }
 		
 		//{TaggedTemplateString.target=current}
 		public Action getTaggedTemplateStringTargetAction_2_1_2_0() { return cTaggedTemplateStringTargetAction_2_1_2_0; }
 		
+		//optionalChaining?='?.'?
+		public Assignment getOptionalChainingAssignment_2_1_2_1() { return cOptionalChainingAssignment_2_1_2_1; }
+		
+		//'?.'
+		public Keyword getOptionalChainingQuestionMarkFullStopKeyword_2_1_2_1_0() { return cOptionalChainingQuestionMarkFullStopKeyword_2_1_2_1_0; }
+		
 		//template=TemplateLiteral<Yield>
-		public Assignment getTemplateAssignment_2_1_2_1() { return cTemplateAssignment_2_1_2_1; }
+		public Assignment getTemplateAssignment_2_1_2_2() { return cTemplateAssignment_2_1_2_2; }
 		
 		//TemplateLiteral<Yield>
-		public RuleCall getTemplateTemplateLiteralParserRuleCall_2_1_2_1_0() { return cTemplateTemplateLiteralParserRuleCall_2_1_2_1_0; }
+		public RuleCall getTemplateTemplateLiteralParserRuleCall_2_1_2_2_0() { return cTemplateTemplateLiteralParserRuleCall_2_1_2_2_0; }
 	}
 	public class IndexedAccessExpressionTailElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.IndexedAccessExpressionTail");
 		private final Group cGroup = (Group)rule.eContents().get(0);
-		private final Keyword cLeftSquareBracketKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cIndexAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cIndexExpressionParserRuleCall_1_0 = (RuleCall)cIndexAssignment_1.eContents().get(0);
-		private final Keyword cRightSquareBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cOptionalChainingAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final Keyword cOptionalChainingQuestionMarkFullStopKeyword_0_0 = (Keyword)cOptionalChainingAssignment_0.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cIndexAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cIndexExpressionParserRuleCall_2_0 = (RuleCall)cIndexAssignment_2.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
 		//fragment IndexedAccessExpressionTail <Yield> *:
-		//	'[' index=Expression<In=true,Yield> ']';
+		//	optionalChaining?='?.'? '[' index=Expression<In=true,Yield> ']';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'[' index=Expression<In=true,Yield> ']'
+		//optionalChaining?='?.'? '[' index=Expression<In=true,Yield> ']'
 		public Group getGroup() { return cGroup; }
 		
+		//optionalChaining?='?.'?
+		public Assignment getOptionalChainingAssignment_0() { return cOptionalChainingAssignment_0; }
+		
+		//'?.'
+		public Keyword getOptionalChainingQuestionMarkFullStopKeyword_0_0() { return cOptionalChainingQuestionMarkFullStopKeyword_0_0; }
+		
 		//'['
-		public Keyword getLeftSquareBracketKeyword_0() { return cLeftSquareBracketKeyword_0; }
+		public Keyword getLeftSquareBracketKeyword_1() { return cLeftSquareBracketKeyword_1; }
 		
 		//index=Expression<In=true,Yield>
-		public Assignment getIndexAssignment_1() { return cIndexAssignment_1; }
+		public Assignment getIndexAssignment_2() { return cIndexAssignment_2; }
 		
 		//Expression<In=true,Yield>
-		public RuleCall getIndexExpressionParserRuleCall_1_0() { return cIndexExpressionParserRuleCall_1_0; }
+		public RuleCall getIndexExpressionParserRuleCall_2_0() { return cIndexExpressionParserRuleCall_2_0; }
 		
 		//']'
-		public Keyword getRightSquareBracketKeyword_2() { return cRightSquareBracketKeyword_2; }
+		public Keyword getRightSquareBracketKeyword_3() { return cRightSquareBracketKeyword_3; }
 	}
 	public class ParameterizedPropertyAccessExpressionTailElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ParameterizedPropertyAccessExpressionTail");
 		private final Group cGroup = (Group)rule.eContents().get(0);
-		private final Keyword cFullStopKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
+		private final Keyword cFullStopKeyword_0_0 = (Keyword)cAlternatives_0.eContents().get(0);
+		private final Assignment cOptionalChainingAssignment_0_1 = (Assignment)cAlternatives_0.eContents().get(1);
+		private final Keyword cOptionalChainingQuestionMarkFullStopKeyword_0_1_0 = (Keyword)cOptionalChainingAssignment_0_1.eContents().get(0);
 		private final RuleCall cConcreteTypeArgumentsParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		private final Assignment cPropertyAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final CrossReference cPropertyIdentifiableElementCrossReference_2_0 = (CrossReference)cPropertyAssignment_2.eContents().get(0);
 		private final RuleCall cPropertyIdentifiableElementIdentifierNameParserRuleCall_2_0_1 = (RuleCall)cPropertyIdentifiableElementCrossReference_2_0.eContents().get(1);
 		
 		//fragment ParameterizedPropertyAccessExpressionTail <Yield> *:
-		//	'.' ConcreteTypeArguments? property=[types::IdentifiableElement|IdentifierName];
+		//	('.' | optionalChaining?='?.') ConcreteTypeArguments? property=[types::IdentifiableElement|IdentifierName];
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'.' ConcreteTypeArguments? property=[types::IdentifiableElement|IdentifierName]
+		//('.' | optionalChaining?='?.') ConcreteTypeArguments? property=[types::IdentifiableElement|IdentifierName]
 		public Group getGroup() { return cGroup; }
 		
+		//('.' | optionalChaining?='?.')
+		public Alternatives getAlternatives_0() { return cAlternatives_0; }
+		
 		//'.'
-		public Keyword getFullStopKeyword_0() { return cFullStopKeyword_0; }
+		public Keyword getFullStopKeyword_0_0() { return cFullStopKeyword_0_0; }
+		
+		//optionalChaining?='?.'
+		public Assignment getOptionalChainingAssignment_0_1() { return cOptionalChainingAssignment_0_1; }
+		
+		//'?.'
+		public Keyword getOptionalChainingQuestionMarkFullStopKeyword_0_1_0() { return cOptionalChainingQuestionMarkFullStopKeyword_0_1_0; }
 		
 		//ConcreteTypeArguments?
 		public RuleCall getConcreteTypeArgumentsParserRuleCall_1() { return cConcreteTypeArgumentsParserRuleCall_1; }
@@ -5640,7 +5712,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({PostfixExpression.expression=current} op=PostfixOperator)?
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//{PostfixExpression.expression=current} op=PostfixOperator
+		//({PostfixExpression.expression=current} op=PostfixOperator)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
 		//{PostfixExpression.expression=current}
@@ -5680,7 +5752,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({CastExpression.expression=current} 'as')
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{CastExpression.expression=current} 'as'
+		//({CastExpression.expression=current} 'as')
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{CastExpression.expression=current}
@@ -5765,7 +5837,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({MultiplicativeExpression.lhs=current} op=MultiplicativeOperator)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{MultiplicativeExpression.lhs=current} op=MultiplicativeOperator
+		//({MultiplicativeExpression.lhs=current} op=MultiplicativeOperator)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{MultiplicativeExpression.lhs=current}
@@ -5814,7 +5886,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({AdditiveExpression.lhs=current} op=AdditiveOperator)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{AdditiveExpression.lhs=current} op=AdditiveOperator
+		//({AdditiveExpression.lhs=current} op=AdditiveOperator)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{AdditiveExpression.lhs=current}
@@ -5845,24 +5917,20 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRhsAdditiveExpressionParserRuleCall_1_0_2_0 = (RuleCall)cRhsAssignment_1_0_2.eContents().get(0);
 		
 		//// Bitwise shift operators ([ECM11] 11.7)
-		///**
-		// * Note that the whole expression, including the rhs, must be in the syntactic
-		// * predicate in order to avoid problems stemming from the parameterized function call
-		// * and from the assignment operator >>>=
-		// */ ShiftExpression <Yield Expression:
-		//	AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>)*;
+		//ShiftExpression <Yield Expression:
+		//	AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>)*
+		//AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)*
 		public Group getGroup() { return cGroup; }
 		
 		//AdditiveExpression<Yield>
 		public RuleCall getAdditiveExpressionParserRuleCall_0() { return cAdditiveExpressionParserRuleCall_0; }
 		
-		//=> ({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>)*
+		//=> ({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)*
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//{ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>
+		//({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
 		//{ShiftExpression.lhs=current}
@@ -5874,7 +5942,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//ShiftOperator
 		public RuleCall getOpShiftOperatorParserRuleCall_1_0_1_0() { return cOpShiftOperatorParserRuleCall_1_0_1_0; }
 		
-		//rhs=AdditiveExpression<Yield>
+		//-> rhs=AdditiveExpression<Yield>
 		public Assignment getRhsAssignment_1_0_2() { return cRhsAssignment_1_0_2; }
 		
 		//AdditiveExpression<Yield>
@@ -5943,7 +6011,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({RelationalExpression.lhs=current} op=RelationalOperator<In> -> rhs=ShiftExpression<Yield>)*
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//{RelationalExpression.lhs=current} op=RelationalOperator<In> -> rhs=ShiftExpression<Yield>
+		//({RelationalExpression.lhs=current} op=RelationalOperator<In> -> rhs=ShiftExpression<Yield>)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
 		//{RelationalExpression.lhs=current}
@@ -6036,7 +6104,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({EqualityExpression.lhs=current} op=EqualityOperator)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{EqualityExpression.lhs=current} op=EqualityOperator
+		//({EqualityExpression.lhs=current} op=EqualityOperator)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{EqualityExpression.lhs=current}
@@ -6086,7 +6154,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryBitwiseExpression.lhs=current} op=BitwiseANDOperator)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{BinaryBitwiseExpression.lhs=current} op=BitwiseANDOperator
+		//({BinaryBitwiseExpression.lhs=current} op=BitwiseANDOperator)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{BinaryBitwiseExpression.lhs=current}
@@ -6146,7 +6214,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryBitwiseExpression.lhs=current} op=BitwiseXOROperator)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{BinaryBitwiseExpression.lhs=current} op=BitwiseXOROperator
+		//({BinaryBitwiseExpression.lhs=current} op=BitwiseXOROperator)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{BinaryBitwiseExpression.lhs=current}
@@ -6206,7 +6274,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryBitwiseExpression.lhs=current} op=BitwiseOROperator)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{BinaryBitwiseExpression.lhs=current} op=BitwiseOROperator
+		//({BinaryBitwiseExpression.lhs=current} op=BitwiseOROperator)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{BinaryBitwiseExpression.lhs=current}
@@ -6267,7 +6335,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryLogicalExpression.lhs=current} op=LogicalANDOperator)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{BinaryLogicalExpression.lhs=current} op=LogicalANDOperator
+		//({BinaryLogicalExpression.lhs=current} op=LogicalANDOperator)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{BinaryLogicalExpression.lhs=current}
@@ -6327,7 +6395,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryLogicalExpression.lhs=current} op=LogicalOROperator)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{BinaryLogicalExpression.lhs=current} op=LogicalOROperator
+		//({BinaryLogicalExpression.lhs=current} op=LogicalOROperator)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{BinaryLogicalExpression.lhs=current}
@@ -6356,10 +6424,55 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'||'
 		public Keyword getVerticalLineVerticalLineKeyword() { return cVerticalLineVerticalLineKeyword; }
 	}
+	public class CoalesceExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.CoalesceExpression");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cLogicalORExpressionParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
+		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
+		private final Action cCoalesceExpressionExpressionAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
+		private final Keyword cQuestionMarkQuestionMarkKeyword_1_0_0_1 = (Keyword)cGroup_1_0_0.eContents().get(1);
+		private final Assignment cDefaultExpressionAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cDefaultExpressionLogicalORExpressionParserRuleCall_1_1_0 = (RuleCall)cDefaultExpressionAssignment_1_1.eContents().get(0);
+		
+		//CoalesceExpression <In, Yield Expression:
+		//	LogicalORExpression<In,Yield> (=> ({CoalesceExpression.expression=current} '??')
+		//	defaultExpression=LogicalORExpression<In,Yield>)*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//LogicalORExpression<In,Yield> (=> ({CoalesceExpression.expression=current} '??')
+		//defaultExpression=LogicalORExpression<In,Yield>)*
+		public Group getGroup() { return cGroup; }
+		
+		//LogicalORExpression<In,Yield>
+		public RuleCall getLogicalORExpressionParserRuleCall_0() { return cLogicalORExpressionParserRuleCall_0; }
+		
+		//(=> ({CoalesceExpression.expression=current} '??') defaultExpression=LogicalORExpression<In,Yield>)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//=> ({CoalesceExpression.expression=current} '??')
+		public Group getGroup_1_0() { return cGroup_1_0; }
+		
+		//({CoalesceExpression.expression=current} '??')
+		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
+		
+		//{CoalesceExpression.expression=current}
+		public Action getCoalesceExpressionExpressionAction_1_0_0_0() { return cCoalesceExpressionExpressionAction_1_0_0_0; }
+		
+		//'??'
+		public Keyword getQuestionMarkQuestionMarkKeyword_1_0_0_1() { return cQuestionMarkQuestionMarkKeyword_1_0_0_1; }
+		
+		//defaultExpression=LogicalORExpression<In,Yield>
+		public Assignment getDefaultExpressionAssignment_1_1() { return cDefaultExpressionAssignment_1_1; }
+		
+		//LogicalORExpression<In,Yield>
+		public RuleCall getDefaultExpressionLogicalORExpressionParserRuleCall_1_1_0() { return cDefaultExpressionLogicalORExpressionParserRuleCall_1_1_0; }
+	}
 	public class ConditionalExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ConditionalExpression");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cLogicalORExpressionParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cCoalesceExpressionParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
@@ -6374,16 +6487,16 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		///**
 		// * Conditional operator ([ECM11] 11.12)
 		// */ ConditionalExpression <In, Yield Expression:
-		//	LogicalORExpression<In,Yield> (=> ({ConditionalExpression.expression=current} '?')
+		//	CoalesceExpression<In,Yield> (=> ({ConditionalExpression.expression=current} '?')
 		//	trueExpression=AssignmentExpression<In=true,Yield> ':' falseExpression=AssignmentExpression<In,Yield>)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//LogicalORExpression<In,Yield> (=> ({ConditionalExpression.expression=current} '?')
+		//CoalesceExpression<In,Yield> (=> ({ConditionalExpression.expression=current} '?')
 		//trueExpression=AssignmentExpression<In=true,Yield> ':' falseExpression=AssignmentExpression<In,Yield>)?
 		public Group getGroup() { return cGroup; }
 		
-		//LogicalORExpression<In,Yield>
-		public RuleCall getLogicalORExpressionParserRuleCall_0() { return cLogicalORExpressionParserRuleCall_0; }
+		//CoalesceExpression<In,Yield>
+		public RuleCall getCoalesceExpressionParserRuleCall_0() { return cCoalesceExpressionParserRuleCall_0; }
 		
 		//(=> ({ConditionalExpression.expression=current} '?') trueExpression=AssignmentExpression<In=true,Yield> ':'
 		//falseExpression=AssignmentExpression<In,Yield>)?
@@ -6392,7 +6505,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({ConditionalExpression.expression=current} '?')
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//{ConditionalExpression.expression=current} '?'
+		//({ConditionalExpression.expression=current} '?')
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//{ConditionalExpression.expression=current}
@@ -6435,7 +6548,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cRhsAssignment_4_1_1 = (Assignment)cGroup_4_1.eContents().get(1);
 		private final RuleCall cRhsAssignmentExpressionParserRuleCall_4_1_1_0 = (RuleCall)cRhsAssignment_4_1_1.eContents().get(0);
 		
-		///*
+		///**
 		// * Assignment operators ([ECM11] 11.13)
 		// */ AssignmentExpression <In, Yield Expression:
 		//	AwaitExpression<In,Yield> | PromisifyExpression<In,Yield> | ArrowExpression<In,Yield> | <Yield> YieldExpression<In> |
@@ -6476,7 +6589,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({AssignmentExpression.lhs=current} op=AssignmentOperator)
 		public Group getGroup_4_1_0() { return cGroup_4_1_0; }
 		
-		//{AssignmentExpression.lhs=current} op=AssignmentOperator
+		//({AssignmentExpression.lhs=current} op=AssignmentOperator)
 		public Group getGroup_4_1_0_0() { return cGroup_4_1_0_0; }
 		
 		//{AssignmentExpression.lhs=current}
@@ -6537,7 +6650,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSolidusEqualsSignKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
 		private final Keyword cPercentSignEqualsSignKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
 		private final Keyword cPlusSignEqualsSignKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
-		private final Keyword cHyphenMinusEqualsSignKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final Group cGroup_5 = (Group)cAlternatives.eContents().get(5);
+		private final Keyword cHyphenMinusKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_5_1 = (Keyword)cGroup_5.eContents().get(1);
 		private final Keyword cLessThanSignLessThanSignEqualsSignKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
 		private final Group cGroup_7 = (Group)cAlternatives.eContents().get(7);
 		private final Keyword cGreaterThanSignKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
@@ -6549,13 +6664,17 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cVerticalLineEqualsSignKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
 		
 		//AssignmentOperator AssignmentOperator:
-		//	'=' | '*=' | '/=' | '%=' | '+=' | '-='
+		//	'=' | '*=' | '/=' | '%=' | '+='
+		//	/* must be split into two literals since jsx attribute names may end with a dash as in attr-="value" */
+		//	| '-' '='
 		//	| '<<='
 		//	| '>' '>' '>'? '='
 		//	| '&=' | '^=' | '|=';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>' '>' '>'? '=' | '&=' | '^=' | '|='
+		//'=' | '*=' | '/=' | '%=' | '+='
+		///* must be split into two literals since jsx attribute names may end with a dash as in attr-="value" */ | '-' '=' |
+		//'<<=' | '>' '>' '>'? '=' | '&=' | '^=' | '|='
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'='
@@ -6573,8 +6692,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'+='
 		public Keyword getPlusSignEqualsSignKeyword_4() { return cPlusSignEqualsSignKeyword_4; }
 		
-		//'-='
-		public Keyword getHyphenMinusEqualsSignKeyword_5() { return cHyphenMinusEqualsSignKeyword_5; }
+		//'-' '='
+		public Group getGroup_5() { return cGroup_5; }
+		
+		//'-'
+		public Keyword getHyphenMinusKeyword_5_0() { return cHyphenMinusKeyword_5_0; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_5_1() { return cEqualsSignKeyword_5_1; }
 		
 		//'<<='
 		public Keyword getLessThanSignLessThanSignEqualsSignKeyword_6() { return cLessThanSignLessThanSignEqualsSignKeyword_6; }
@@ -6625,7 +6750,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({AwaitExpression} 'await')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{AwaitExpression} 'await'
+		//({AwaitExpression} 'await')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{AwaitExpression}
@@ -6661,7 +6786,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({PromisifyExpression} '@' 'Promisify')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{PromisifyExpression} '@' 'Promisify'
+		//({PromisifyExpression} '@' 'Promisify')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{PromisifyExpression}
@@ -6693,8 +6818,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cExprsAssignment_1_3_1 = (Assignment)cGroup_1_3.eContents().get(1);
 		private final RuleCall cExprsAssignmentExpressionParserRuleCall_1_3_1_0 = (RuleCall)cExprsAssignment_1_3_1.eContents().get(0);
 		
-		//// $<Comma operator (11.14)
-		//Expression <In, Yield>:
+		///**
+		// * Comma operator (11.14)
+		// */ Expression <In, Yield>:
 		//	AssignmentExpression<In,Yield> ({CommaExpression.exprs+=current} ',' exprs+=AssignmentExpression<In,Yield> (','
 		//	exprs+=AssignmentExpression<In,Yield>)*)?;
 		@Override public ParserRule getRule() { return rule; }
@@ -6771,8 +6897,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//{TemplateLiteral}
 		public Action getTemplateLiteralAction_0() { return cTemplateLiteralAction_0; }
 		
-		//segments+=NoSubstitutionTemplate | segments+=TemplateHead segments+=Expression<In=true,Yield>? TemplateExpressionEnd
-		//(segments+=TemplateMiddle segments+=Expression<In=true,Yield>? TemplateExpressionEnd)* segments+=TemplateTail
+		//(segments+=NoSubstitutionTemplate | segments+=TemplateHead segments+=Expression<In=true,Yield>? TemplateExpressionEnd
+		//(segments+=TemplateMiddle segments+=Expression<In=true,Yield>? TemplateExpressionEnd)* segments+=TemplateTail)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//segments+=NoSubstitutionTemplate
@@ -7000,7 +7126,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//{BooleanLiteral}
 		public Action getBooleanLiteralAction_0() { return cBooleanLiteralAction_0; }
 		
-		//true?='true' | 'false'
+		//(true?='true' | 'false')
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//true?='true'
@@ -7294,7 +7420,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//('/' | '/=') REGEX_TAIL?
 		public Group getGroup() { return cGroup; }
 		
-		//'/' | '/='
+		//('/' | '/=')
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
 		//'/'
@@ -7534,7 +7660,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({AnnotationList} '@' -> annotations+=AnnotationNoAtSign)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{AnnotationList} '@' -> annotations+=AnnotationNoAtSign
+		//({AnnotationList} '@' -> annotations+=AnnotationNoAtSign)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{AnnotationList}
@@ -7751,8 +7877,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//VersionDeclaration?)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//declaredModifiers+=N4Modifier* 'class' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
-		//VersionDeclaration?
+		//(declaredModifiers+=N4Modifier* 'class' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
+		//VersionDeclaration?)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//declaredModifiers+=N4Modifier*
@@ -7874,7 +8000,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'extends'
 		public Keyword getExtendsKeyword_0() { return cExtendsKeyword_0; }
 		
-		//=> superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression<Yield>
+		//(=> superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression<Yield>)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//=> superClassRef=ParameterizedTypeRefNominal
@@ -8003,8 +8129,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//name=BindingIdentifier<Yield>? VersionDeclaration?)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//declaredModifiers+=N4Modifier* 'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
-		//VersionDeclaration?
+		//(declaredModifiers+=N4Modifier* 'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
+		//VersionDeclaration?)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//declaredModifiers+=N4Modifier*
@@ -8063,7 +8189,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//superInterfaceRefs+=ParameterizedTypeRefNominal)*
 		public Group getGroup() { return cGroup; }
 		
-		//'extends' | 'implements'
+		//('extends' | 'implements')
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
 		//'extends'
@@ -8128,7 +8254,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({N4EnumDeclaration} declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield>? VersionDeclaration?)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{N4EnumDeclaration} declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield>? VersionDeclaration?
+		//({N4EnumDeclaration} declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield>? VersionDeclaration?)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{N4EnumDeclaration}
@@ -8345,14 +8471,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//N4MemberAnnotationList
 		public RuleCall getN4MemberAnnotationListParserRuleCall_0() { return cN4MemberAnnotationListParserRuleCall_0; }
 		
-		//=> ({N4GetterDeclaration.annotationList=current} declaredModifiers+=N4Modifier* GetterHeader<Yield>) body=Block<Yield>?
+		//(=> ({N4GetterDeclaration.annotationList=current} declaredModifiers+=N4Modifier* GetterHeader<Yield>) body=Block<Yield>?
 		//';'? | => ({N4SetterDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'set' ->
 		//declaredName=LiteralOrComputedPropertyName<Yield>) declaredOptional?='?'? '(' fpar=FormalParameter<Yield> ')'
 		//body=Block<Yield>? ';'? | => ({N4MethodDeclaration.annotationList=current} declaredModifiers+=N4Modifier*
 		//TypeVariables? BogusTypeRefFragment? (generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->
 		//MethodParamsReturnAndBody <Generator=true> | AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield>
 		//-> MethodParamsReturnAndBody <Generator=false>)) ';'? | {N4FieldDeclaration.annotationList=current}
-		//FieldDeclarationImpl<Yield>
+		//FieldDeclarationImpl<Yield>)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//=> ({N4GetterDeclaration.annotationList=current} declaredModifiers+=N4Modifier* GetterHeader<Yield>) body=Block<Yield>?
@@ -8362,7 +8488,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({N4GetterDeclaration.annotationList=current} declaredModifiers+=N4Modifier* GetterHeader<Yield>)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
-		//{N4GetterDeclaration.annotationList=current} declaredModifiers+=N4Modifier* GetterHeader<Yield>
+		//({N4GetterDeclaration.annotationList=current} declaredModifiers+=N4Modifier* GetterHeader<Yield>)
 		public Group getGroup_1_0_0_0() { return cGroup_1_0_0_0; }
 		
 		//{N4GetterDeclaration.annotationList=current}
@@ -8395,8 +8521,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredName=LiteralOrComputedPropertyName<Yield>)
 		public Group getGroup_1_1_0() { return cGroup_1_1_0; }
 		
-		//{N4SetterDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'set' ->
-		//declaredName=LiteralOrComputedPropertyName<Yield>
+		//({N4SetterDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'set' ->
+		//declaredName=LiteralOrComputedPropertyName<Yield>)
 		public Group getGroup_1_1_0_0() { return cGroup_1_1_0_0; }
 		
 		//{N4SetterDeclaration.annotationList=current}
@@ -8456,10 +8582,10 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//<Generator=false>))
 		public Group getGroup_1_2_0() { return cGroup_1_2_0; }
 		
-		//{N4MethodDeclaration.annotationList=current} declaredModifiers+=N4Modifier* TypeVariables? BogusTypeRefFragment?
+		//({N4MethodDeclaration.annotationList=current} declaredModifiers+=N4Modifier* TypeVariables? BogusTypeRefFragment?
 		//(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true> |
 		//AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody
-		//<Generator=false>)
+		//<Generator=false>))
 		public Group getGroup_1_2_0_0() { return cGroup_1_2_0_0; }
 		
 		//{N4MethodDeclaration.annotationList=current}
@@ -8477,9 +8603,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BogusTypeRefFragment?
 		public RuleCall getBogusTypeRefFragmentParserRuleCall_1_2_0_0_3() { return cBogusTypeRefFragmentParserRuleCall_1_2_0_0_3; }
 		
-		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true> |
+		//(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true> |
 		//AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody
-		//<Generator=false>
+		//<Generator=false>)
 		public Alternatives getAlternatives_1_2_0_0_4() { return cAlternatives_1_2_0_0_4; }
 		
 		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
@@ -8657,10 +8783,10 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//<Generator=false>))
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{N4MethodDeclaration} declaredModifiers+=N4Modifier* TypeVariables? BogusTypeRefFragment? (generator?='*'
+		//({N4MethodDeclaration} declaredModifiers+=N4Modifier* TypeVariables? BogusTypeRefFragment? (generator?='*'
 		//declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true> |
 		//AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody
-		//<Generator=false>)
+		//<Generator=false>))
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{N4MethodDeclaration}
@@ -8678,9 +8804,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BogusTypeRefFragment?
 		public RuleCall getBogusTypeRefFragmentParserRuleCall_0_0_3() { return cBogusTypeRefFragmentParserRuleCall_0_0_3; }
 		
-		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true> |
+		//(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true> |
 		//AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody
-		//<Generator=false>
+		//<Generator=false>)
 		public Alternatives getAlternatives_0_0_4() { return cAlternatives_0_0_4; }
 		
 		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
@@ -8816,7 +8942,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({N4GetterDeclaration} declaredModifiers+=N4Modifier* GetterHeader<Yield>)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{N4GetterDeclaration} declaredModifiers+=N4Modifier* GetterHeader<Yield>
+		//({N4GetterDeclaration} declaredModifiers+=N4Modifier* GetterHeader<Yield>)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{N4GetterDeclaration}
@@ -8924,7 +9050,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({N4SetterDeclaration} declaredModifiers+=N4Modifier* 'set' -> declaredName=LiteralOrComputedPropertyName<Yield>)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{N4SetterDeclaration} declaredModifiers+=N4Modifier* 'set' -> declaredName=LiteralOrComputedPropertyName<Yield>
+		//({N4SetterDeclaration} declaredModifiers+=N4Modifier* 'set' -> declaredName=LiteralOrComputedPropertyName<Yield>)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{N4SetterDeclaration}
@@ -9168,7 +9294,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//=> (declaredName=LiteralOrComputedPropertyName<Yield> ':')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
-		//declaredName=LiteralOrComputedPropertyName<Yield> ':'
+		//(declaredName=LiteralOrComputedPropertyName<Yield> ':')
 		public Group getGroup_0_0_0() { return cGroup_0_0_0; }
 		
 		//declaredName=LiteralOrComputedPropertyName<Yield>
@@ -9379,7 +9505,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cLessThanSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cJsxElementNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cJsxElementNameJSXElementNameParserRuleCall_1_0 = (RuleCall)cJsxElementNameAssignment_1.eContents().get(0);
-		private final RuleCall cJSXAttributesParserRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		private final Assignment cJsxAttributesAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cJsxAttributesJSXAttributeParserRuleCall_2_0 = (RuleCall)cJsxAttributesAssignment_2.eContents().get(0);
 		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
 		private final Group cGroup_3_0 = (Group)cAlternatives_3.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_3_0_0 = (Keyword)cGroup_3_0.eContents().get(0);
@@ -9398,12 +9525,13 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//// see https://facebook.github.io/jsx/
 		//// ****************************************************************************************************
 		//JSXElement:
-		//	'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
+		//	'<' jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* ('>' jsxChildren+=JSXChild* '<' '/'
+		//	jsxClosingName=JSXElementName '>'
 		//	| '/' '>');
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>' |
-		//'/' '>')
+		//'<' jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* ('>' jsxChildren+=JSXChild* '<' '/'
+		//jsxClosingName=JSXElementName '>' | '/' '>')
 		public Group getGroup() { return cGroup; }
 		
 		//'<'
@@ -9415,10 +9543,13 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//JSXElementName
 		public RuleCall getJsxElementNameJSXElementNameParserRuleCall_1_0() { return cJsxElementNameJSXElementNameParserRuleCall_1_0; }
 		
-		//JSXAttributes
-		public RuleCall getJSXAttributesParserRuleCall_2() { return cJSXAttributesParserRuleCall_2; }
+		//jsxAttributes+=JSXAttribute*
+		public Assignment getJsxAttributesAssignment_2() { return cJsxAttributesAssignment_2; }
 		
-		//'>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>' | '/' '>'
+		//JSXAttribute
+		public RuleCall getJsxAttributesJSXAttributeParserRuleCall_2_0() { return cJsxAttributesJSXAttributeParserRuleCall_2_0; }
+		
+		//('>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>' | '/' '>')
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 		
 		//'>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
@@ -9581,7 +9712,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//JSXElementNameExpression Expression:
 		//	IdentifierRef<false> ({ParameterizedPropertyAccessExpression.target=current}
 		//	ParameterizedPropertyAccessExpressionTail<false>)*
-		//	//	| JSXNamedspacedName not supported
+		//	//	| JSXNamedspacedName not supported in N4JSX and not supported by React either
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -9601,29 +9732,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//ParameterizedPropertyAccessExpressionTail<false>
 		public RuleCall getParameterizedPropertyAccessExpressionTailParserRuleCall_1_1() { return cParameterizedPropertyAccessExpressionTailParserRuleCall_1_1; }
 	}
-	public class JSXAttributesElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXAttributes");
-		private final Assignment cJsxAttributesAssignment = (Assignment)rule.eContents().get(0);
-		private final RuleCall cJsxAttributesJSXAttributeParserRuleCall_0 = (RuleCall)cJsxAttributesAssignment.eContents().get(0);
-		
-		////JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
-		////JSXMemberExpression: JSXIdentifier '.' JSXIdentifier -- defined by means of ParameterizedPropertyAccessExpression
-		//fragment JSXAttributes *:
-		//	jsxAttributes+=JSXAttribute*;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//jsxAttributes+=JSXAttribute*
-		public Assignment getJsxAttributesAssignment() { return cJsxAttributesAssignment; }
-		
-		//JSXAttribute
-		public RuleCall getJsxAttributesJSXAttributeParserRuleCall_0() { return cJsxAttributesJSXAttributeParserRuleCall_0; }
-	}
 	public class JSXAttributeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXAttribute");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cJSXSpreadAttributeParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cJSXPropertyAttributeParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
+		////JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX or even by React
+		////JSXMemberExpression: JSXIdentifier '.' JSXIdentifier -- defined by means of ParameterizedPropertyAccessExpression
 		//JSXAttribute:
 		//	JSXSpreadAttribute
 		//	| JSXPropertyAttribute;
@@ -9669,48 +9785,130 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_3() { return cRightCurlyBracketKeyword_3; }
 	}
+	public class JSXIdentifierElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXIdentifier");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cIdentifierNameParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Alternatives cAlternatives_1_0 = (Alternatives)cGroup_1.eContents().get(0);
+		private final Keyword cHyphenMinusKeyword_1_0_0 = (Keyword)cAlternatives_1_0.eContents().get(0);
+		private final Keyword cHyphenMinusHyphenMinusKeyword_1_0_1 = (Keyword)cAlternatives_1_0.eContents().get(1);
+		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
+		private final Alternatives cAlternatives_1_1_0 = (Alternatives)cGroup_1_1.eContents().get(0);
+		private final RuleCall cINTTerminalRuleCall_1_1_0_0 = (RuleCall)cAlternatives_1_1_0.eContents().get(0);
+		private final RuleCall cHEX_INTTerminalRuleCall_1_1_0_1 = (RuleCall)cAlternatives_1_1_0.eContents().get(1);
+		private final RuleCall cBINARY_INTTerminalRuleCall_1_1_0_2 = (RuleCall)cAlternatives_1_1_0.eContents().get(2);
+		private final RuleCall cOCTAL_INTTerminalRuleCall_1_1_0_3 = (RuleCall)cAlternatives_1_1_0.eContents().get(3);
+		private final RuleCall cSCIENTIFIC_INTTerminalRuleCall_1_1_0_4 = (RuleCall)cAlternatives_1_1_0.eContents().get(4);
+		private final RuleCall cLEGACY_OCTAL_INTTerminalRuleCall_1_1_0_5 = (RuleCall)cAlternatives_1_1_0.eContents().get(5);
+		private final RuleCall cIdentifierNameParserRuleCall_1_1_0_6 = (RuleCall)cAlternatives_1_1_0.eContents().get(6);
+		
+		//// Comments or whitespace inbetween is filtered by the value converter
+		//// Also we use a simplified version of the grammar. The spec would make 
+		//// this a valid snippet <Comp abstract- private> with two attributes whereas
+		//// we would consume this as a component with a single attribute that is marked
+		//// with an error because of the unexpected whitespace
+		//JSXIdentifier:
+		//	IdentifierName (('-' | '--') -> (INT | HEX_INT | BINARY_INT | OCTAL_INT | SCIENTIFIC_INT | LEGACY_OCTAL_INT |
+		//	IdentifierName)?)*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//IdentifierName (('-' | '--') -> (INT | HEX_INT | BINARY_INT | OCTAL_INT | SCIENTIFIC_INT | LEGACY_OCTAL_INT |
+		//IdentifierName)?)*
+		public Group getGroup() { return cGroup; }
+		
+		//IdentifierName
+		public RuleCall getIdentifierNameParserRuleCall_0() { return cIdentifierNameParserRuleCall_0; }
+		
+		//(('-' | '--') -> (INT | HEX_INT | BINARY_INT | OCTAL_INT | SCIENTIFIC_INT | LEGACY_OCTAL_INT | IdentifierName)?)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//('-' | '--')
+		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
+		
+		//'-'
+		public Keyword getHyphenMinusKeyword_1_0_0() { return cHyphenMinusKeyword_1_0_0; }
+		
+		//'--'
+		public Keyword getHyphenMinusHyphenMinusKeyword_1_0_1() { return cHyphenMinusHyphenMinusKeyword_1_0_1; }
+		
+		//-> (INT | HEX_INT | BINARY_INT | OCTAL_INT | SCIENTIFIC_INT | LEGACY_OCTAL_INT | IdentifierName)?
+		public Group getGroup_1_1() { return cGroup_1_1; }
+		
+		//(INT | HEX_INT | BINARY_INT | OCTAL_INT | SCIENTIFIC_INT | LEGACY_OCTAL_INT | IdentifierName)
+		public Alternatives getAlternatives_1_1_0() { return cAlternatives_1_1_0; }
+		
+		//INT
+		public RuleCall getINTTerminalRuleCall_1_1_0_0() { return cINTTerminalRuleCall_1_1_0_0; }
+		
+		//HEX_INT
+		public RuleCall getHEX_INTTerminalRuleCall_1_1_0_1() { return cHEX_INTTerminalRuleCall_1_1_0_1; }
+		
+		//BINARY_INT
+		public RuleCall getBINARY_INTTerminalRuleCall_1_1_0_2() { return cBINARY_INTTerminalRuleCall_1_1_0_2; }
+		
+		//OCTAL_INT
+		public RuleCall getOCTAL_INTTerminalRuleCall_1_1_0_3() { return cOCTAL_INTTerminalRuleCall_1_1_0_3; }
+		
+		//SCIENTIFIC_INT
+		public RuleCall getSCIENTIFIC_INTTerminalRuleCall_1_1_0_4() { return cSCIENTIFIC_INTTerminalRuleCall_1_1_0_4; }
+		
+		//LEGACY_OCTAL_INT
+		public RuleCall getLEGACY_OCTAL_INTTerminalRuleCall_1_1_0_5() { return cLEGACY_OCTAL_INTTerminalRuleCall_1_1_0_5; }
+		
+		//IdentifierName
+		public RuleCall getIdentifierNameParserRuleCall_1_1_0_6() { return cIdentifierNameParserRuleCall_1_1_0_6; }
+	}
 	public class JSXPropertyAttributeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXPropertyAttribute");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cPropertyAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final CrossReference cPropertyIdentifiableElementCrossReference_0_0 = (CrossReference)cPropertyAssignment_0.eContents().get(0);
-		private final RuleCall cPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1 = (RuleCall)cPropertyIdentifiableElementCrossReference_0_0.eContents().get(1);
+		private final RuleCall cPropertyIdentifiableElementJSXIdentifierParserRuleCall_0_0_1 = (RuleCall)cPropertyIdentifiableElementCrossReference_0_0.eContents().get(1);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cEqualsSignKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
 		private final Alternatives cAlternatives_1_1 = (Alternatives)cGroup_1.eContents().get(1);
 		private final Assignment cJsxAttributeValueAssignment_1_1_0 = (Assignment)cAlternatives_1_1.eContents().get(0);
 		private final RuleCall cJsxAttributeValueStringLiteralParserRuleCall_1_1_0_0 = (RuleCall)cJsxAttributeValueAssignment_1_1_0.eContents().get(0);
-		private final Group cGroup_1_1_1 = (Group)cAlternatives_1_1.eContents().get(1);
-		private final Keyword cLeftCurlyBracketKeyword_1_1_1_0 = (Keyword)cGroup_1_1_1.eContents().get(0);
-		private final Assignment cJsxAttributeValueAssignment_1_1_1_1 = (Assignment)cGroup_1_1_1.eContents().get(1);
-		private final RuleCall cJsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0 = (RuleCall)cJsxAttributeValueAssignment_1_1_1_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_1_1_1_2 = (Keyword)cGroup_1_1_1.eContents().get(2);
+		private final Assignment cJsxAttributeValueAssignment_1_1_1 = (Assignment)cAlternatives_1_1.eContents().get(1);
+		private final RuleCall cJsxAttributeValueJSXElementParserRuleCall_1_1_1_0 = (RuleCall)cJsxAttributeValueAssignment_1_1_1.eContents().get(0);
+		private final Assignment cJsxAttributeValueAssignment_1_1_2 = (Assignment)cAlternatives_1_1.eContents().get(2);
+		private final RuleCall cJsxAttributeValueJSXFragmentParserRuleCall_1_1_2_0 = (RuleCall)cJsxAttributeValueAssignment_1_1_2.eContents().get(0);
+		private final Group cGroup_1_1_3 = (Group)cAlternatives_1_1.eContents().get(3);
+		private final Keyword cLeftCurlyBracketKeyword_1_1_3_0 = (Keyword)cGroup_1_1_3.eContents().get(0);
+		private final Assignment cJsxAttributeValueAssignment_1_1_3_1 = (Assignment)cGroup_1_1_3.eContents().get(1);
+		private final RuleCall cJsxAttributeValueAssignmentExpressionParserRuleCall_1_1_3_1_0 = (RuleCall)cJsxAttributeValueAssignment_1_1_3_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_1_1_3_2 = (Keyword)cGroup_1_1_3.eContents().get(2);
 		
 		//JSXPropertyAttribute:
-		//	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | '{'
-		//	jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?;
+		//	property=[types::IdentifiableElement|JSXIdentifier] ('=' (jsxAttributeValue=StringLiteral
+		//	| jsxAttributeValue=JSXElement
+		//	| jsxAttributeValue=JSXFragment
+		//	| '{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | '{'
-		//jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?
+		//property=[types::IdentifiableElement|JSXIdentifier] ('=' (jsxAttributeValue=StringLiteral | jsxAttributeValue=JSXElement
+		//| jsxAttributeValue=JSXFragment | '{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?
 		public Group getGroup() { return cGroup; }
 		
-		//property=[types::IdentifiableElement|IdentifierName]
+		//property=[types::IdentifiableElement|JSXIdentifier]
 		public Assignment getPropertyAssignment_0() { return cPropertyAssignment_0; }
 		
-		//[types::IdentifiableElement|IdentifierName]
+		//[types::IdentifiableElement|JSXIdentifier]
 		public CrossReference getPropertyIdentifiableElementCrossReference_0_0() { return cPropertyIdentifiableElementCrossReference_0_0; }
 		
-		//IdentifierName
-		public RuleCall getPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1() { return cPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1; }
+		//JSXIdentifier
+		public RuleCall getPropertyIdentifiableElementJSXIdentifierParserRuleCall_0_0_1() { return cPropertyIdentifiableElementJSXIdentifierParserRuleCall_0_0_1; }
 		
-		//('=' (jsxAttributeValue=StringLiteral | '{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?
+		//('=' (jsxAttributeValue=StringLiteral | jsxAttributeValue=JSXElement | jsxAttributeValue=JSXFragment | '{'
+		//jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//'='
 		public Keyword getEqualsSignKeyword_1_0() { return cEqualsSignKeyword_1_0; }
 		
-		//jsxAttributeValue=StringLiteral | '{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'
+		//(jsxAttributeValue=StringLiteral | jsxAttributeValue=JSXElement | jsxAttributeValue=JSXFragment | '{'
+		//jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}')
 		public Alternatives getAlternatives_1_1() { return cAlternatives_1_1; }
 		
 		//jsxAttributeValue=StringLiteral
@@ -9719,20 +9917,32 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//StringLiteral
 		public RuleCall getJsxAttributeValueStringLiteralParserRuleCall_1_1_0_0() { return cJsxAttributeValueStringLiteralParserRuleCall_1_1_0_0; }
 		
+		//jsxAttributeValue=JSXElement
+		public Assignment getJsxAttributeValueAssignment_1_1_1() { return cJsxAttributeValueAssignment_1_1_1; }
+		
+		//JSXElement
+		public RuleCall getJsxAttributeValueJSXElementParserRuleCall_1_1_1_0() { return cJsxAttributeValueJSXElementParserRuleCall_1_1_1_0; }
+		
+		//jsxAttributeValue=JSXFragment
+		public Assignment getJsxAttributeValueAssignment_1_1_2() { return cJsxAttributeValueAssignment_1_1_2; }
+		
+		//JSXFragment
+		public RuleCall getJsxAttributeValueJSXFragmentParserRuleCall_1_1_2_0() { return cJsxAttributeValueJSXFragmentParserRuleCall_1_1_2_0; }
+		
 		//'{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'
-		public Group getGroup_1_1_1() { return cGroup_1_1_1; }
+		public Group getGroup_1_1_3() { return cGroup_1_1_3; }
 		
 		//'{'
-		public Keyword getLeftCurlyBracketKeyword_1_1_1_0() { return cLeftCurlyBracketKeyword_1_1_1_0; }
+		public Keyword getLeftCurlyBracketKeyword_1_1_3_0() { return cLeftCurlyBracketKeyword_1_1_3_0; }
 		
 		//jsxAttributeValue=AssignmentExpression<In=false,Yield=false>
-		public Assignment getJsxAttributeValueAssignment_1_1_1_1() { return cJsxAttributeValueAssignment_1_1_1_1; }
+		public Assignment getJsxAttributeValueAssignment_1_1_3_1() { return cJsxAttributeValueAssignment_1_1_3_1; }
 		
 		//AssignmentExpression<In=false,Yield=false>
-		public RuleCall getJsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0() { return cJsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0; }
+		public RuleCall getJsxAttributeValueAssignmentExpressionParserRuleCall_1_1_3_1_0() { return cJsxAttributeValueAssignmentExpressionParserRuleCall_1_1_3_1_0; }
 		
 		//'}'
-		public Keyword getRightCurlyBracketKeyword_1_1_1_2() { return cRightCurlyBracketKeyword_1_1_1_2; }
+		public Keyword getRightCurlyBracketKeyword_1_1_3_2() { return cRightCurlyBracketKeyword_1_1_3_2; }
 	}
 	public class VersionDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VersionDeclaration");
@@ -10202,6 +10412,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final LogicalANDOperatorElements pLogicalANDOperator;
 	private final LogicalORExpressionElements pLogicalORExpression;
 	private final LogicalOROperatorElements pLogicalOROperator;
+	private final CoalesceExpressionElements pCoalesceExpression;
 	private final ConditionalExpressionElements pConditionalExpression;
 	private final AssignmentExpressionElements pAssignmentExpression;
 	private final YieldExpressionElements pYieldExpression;
@@ -10306,16 +10517,15 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final BindingElementImplElements pBindingElementImpl;
 	private final ElisionElements pElision;
 	private final LiteralOrComputedPropertyNameElements pLiteralOrComputedPropertyName;
-	private final TerminalRule tINCOMPLETE_ASYNC_ARROW;
 	private final JSXElementElements pJSXElement;
 	private final JSXFragmentElements pJSXFragment;
 	private final JSXChildElements pJSXChild;
 	private final JSXExpressionElements pJSXExpression;
 	private final JSXElementNameElements pJSXElementName;
 	private final JSXElementNameExpressionElements pJSXElementNameExpression;
-	private final JSXAttributesElements pJSXAttributes;
 	private final JSXAttributeElements pJSXAttribute;
 	private final JSXSpreadAttributeElements pJSXSpreadAttribute;
+	private final JSXIdentifierElements pJSXIdentifier;
 	private final JSXPropertyAttributeElements pJSXPropertyAttribute;
 	private final VersionDeclarationElements pVersionDeclaration;
 	
@@ -10458,6 +10668,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pLogicalANDOperator = new LogicalANDOperatorElements();
 		this.pLogicalORExpression = new LogicalORExpressionElements();
 		this.pLogicalOROperator = new LogicalOROperatorElements();
+		this.pCoalesceExpression = new CoalesceExpressionElements();
 		this.pConditionalExpression = new ConditionalExpressionElements();
 		this.pAssignmentExpression = new AssignmentExpressionElements();
 		this.pYieldExpression = new YieldExpressionElements();
@@ -10562,16 +10773,15 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pBindingElementImpl = new BindingElementImplElements();
 		this.pElision = new ElisionElements();
 		this.pLiteralOrComputedPropertyName = new LiteralOrComputedPropertyNameElements();
-		this.tINCOMPLETE_ASYNC_ARROW = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.INCOMPLETE_ASYNC_ARROW");
 		this.pJSXElement = new JSXElementElements();
 		this.pJSXFragment = new JSXFragmentElements();
 		this.pJSXChild = new JSXChildElements();
 		this.pJSXExpression = new JSXExpressionElements();
 		this.pJSXElementName = new JSXElementNameElements();
 		this.pJSXElementNameExpression = new JSXElementNameExpressionElements();
-		this.pJSXAttributes = new JSXAttributesElements();
 		this.pJSXAttribute = new JSXAttributeElements();
 		this.pJSXSpreadAttribute = new JSXSpreadAttributeElements();
+		this.pJSXIdentifier = new JSXIdentifierElements();
 		this.pJSXPropertyAttribute = new JSXPropertyAttributeElements();
 		this.pVersionDeclaration = new VersionDeclarationElements();
 	}
@@ -11746,7 +11956,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	// * Heavily refactored to make them LL(*) compliant.
 	// */ ParameterizedCallExpression <Yield>:
 	//	ConcreteTypeArguments
-	//	target=IdentifierRef<Yield> ArgumentsWithParentheses<Yield>;
+	//	target=IdentifierRef<Yield> optionalChaining?='?.'?
+	//	ArgumentsWithParentheses<Yield>;
 	public ParameterizedCallExpressionElements getParameterizedCallExpressionAccess() {
 		return pParameterizedCallExpression;
 	}
@@ -11776,11 +11987,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//LeftHandSideExpression <Yield Expression:
-	//	MemberExpression<Yield> ({ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield>
-	//	({ParameterizedCallExpression.target=current} ArgumentsWithParentheses<Yield> |
-	//	{IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
+	//	MemberExpression<Yield> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
+	//	ArgumentsWithParentheses<Yield> ({ParameterizedCallExpression.target=current} optionalChaining?='?.'?
+	//	ArgumentsWithParentheses<Yield> | {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 	//	{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> | ->
-	//	({TaggedTemplateString.target=current} template=TemplateLiteral<Yield>))*)?;
+	//	({TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>))*)?;
 	public LeftHandSideExpressionElements getLeftHandSideExpressionAccess() {
 		return pLeftHandSideExpression;
 	}
@@ -11824,10 +12035,10 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	| => ({NewExpression} 'new') callee=MemberExpression<Yield> -> ConcreteTypeArguments? (=> withArgs?='('
 	//	Arguments<Yield>? ')' ({IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 	//	{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> |
-	//	{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)*)?
+	//	{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)*)?
 	//	| PrimaryExpression<Yield> ({IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield> |
 	//	{ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<Yield> |
-	//	{TaggedTemplateString.target=current} template=TemplateLiteral<Yield>)*;
+	//	{TaggedTemplateString.target=current} optionalChaining?='?.'? template=TemplateLiteral<Yield>)*;
 	public MemberExpressionElements getMemberExpressionAccess() {
 		return pMemberExpression;
 	}
@@ -11837,7 +12048,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment IndexedAccessExpressionTail <Yield> *:
-	//	'[' index=Expression<In=true,Yield> ']';
+	//	optionalChaining?='?.'? '[' index=Expression<In=true,Yield> ']';
 	public IndexedAccessExpressionTailElements getIndexedAccessExpressionTailAccess() {
 		return pIndexedAccessExpressionTail;
 	}
@@ -11847,7 +12058,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment ParameterizedPropertyAccessExpressionTail <Yield> *:
-	//	'.' ConcreteTypeArguments? property=[types::IdentifiableElement|IdentifierName];
+	//	('.' | optionalChaining?='?.') ConcreteTypeArguments? property=[types::IdentifiableElement|IdentifierName];
 	public ParameterizedPropertyAccessExpressionTailElements getParameterizedPropertyAccessExpressionTailAccess() {
 		return pParameterizedPropertyAccessExpressionTail;
 	}
@@ -11957,12 +12168,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//// Bitwise shift operators ([ECM11] 11.7)
-	///**
-	// * Note that the whole expression, including the rhs, must be in the syntactic
-	// * predicate in order to avoid problems stemming from the parameterized function call
-	// * and from the assignment operator >>>=
-	// */ ShiftExpression <Yield Expression:
-	//	AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator rhs=AdditiveExpression<Yield>)*;
+	//ShiftExpression <Yield Expression:
+	//	AdditiveExpression<Yield> => ({ShiftExpression.lhs=current} op=ShiftOperator -> rhs=AdditiveExpression<Yield>)*;
 	public ShiftExpressionElements getShiftExpressionAccess() {
 		return pShiftExpression;
 	}
@@ -12137,10 +12344,21 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getLogicalOROperatorAccess().getRule();
 	}
 	
+	//CoalesceExpression <In, Yield Expression:
+	//	LogicalORExpression<In,Yield> (=> ({CoalesceExpression.expression=current} '??')
+	//	defaultExpression=LogicalORExpression<In,Yield>)*;
+	public CoalesceExpressionElements getCoalesceExpressionAccess() {
+		return pCoalesceExpression;
+	}
+	
+	public ParserRule getCoalesceExpressionRule() {
+		return getCoalesceExpressionAccess().getRule();
+	}
+	
 	///**
 	// * Conditional operator ([ECM11] 11.12)
 	// */ ConditionalExpression <In, Yield Expression:
-	//	LogicalORExpression<In,Yield> (=> ({ConditionalExpression.expression=current} '?')
+	//	CoalesceExpression<In,Yield> (=> ({ConditionalExpression.expression=current} '?')
 	//	trueExpression=AssignmentExpression<In=true,Yield> ':' falseExpression=AssignmentExpression<In,Yield>)?;
 	public ConditionalExpressionElements getConditionalExpressionAccess() {
 		return pConditionalExpression;
@@ -12150,7 +12368,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getConditionalExpressionAccess().getRule();
 	}
 	
-	///*
+	///**
 	// * Assignment operators ([ECM11] 11.13)
 	// */ AssignmentExpression <In, Yield Expression:
 	//	AwaitExpression<In,Yield> | PromisifyExpression<In,Yield> | ArrowExpression<In,Yield> | <Yield> YieldExpression<In> |
@@ -12175,7 +12393,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//AssignmentOperator AssignmentOperator:
-	//	'=' | '*=' | '/=' | '%=' | '+=' | '-='
+	//	'=' | '*=' | '/=' | '%=' | '+='
+	//	/* must be split into two literals since jsx attribute names may end with a dash as in attr-="value" */
+	//	| '-' '='
 	//	| '<<='
 	//	| '>' '>' '>'? '='
 	//	| '&=' | '^=' | '|=';
@@ -12209,8 +12429,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getPromisifyExpressionAccess().getRule();
 	}
 	
-	//// $<Comma operator (11.14)
-	//Expression <In, Yield>:
+	///**
+	// * Comma operator (11.14)
+	// */ Expression <In, Yield>:
 	//	AssignmentExpression<In,Yield> ({CommaExpression.exprs+=current} ',' exprs+=AssignmentExpression<In,Yield> (','
 	//	exprs+=AssignmentExpression<In,Yield>)*)?;
 	public ExpressionElements getExpressionAccess() {
@@ -13221,17 +13442,12 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getLiteralOrComputedPropertyNameAccess().getRule();
 	}
 	
-	//terminal INCOMPLETE_ASYNC_ARROW:
-	//	'@=';
-	public TerminalRule getINCOMPLETE_ASYNC_ARROWRule() {
-		return tINCOMPLETE_ASYNC_ARROW;
-	}
-	
 	//// ****************************************************************************************************
 	//// see https://facebook.github.io/jsx/
 	//// ****************************************************************************************************
 	//JSXElement:
-	//	'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* '<' '/' jsxClosingName=JSXElementName '>'
+	//	'<' jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* ('>' jsxChildren+=JSXChild* '<' '/'
+	//	jsxClosingName=JSXElementName '>'
 	//	| '/' '>');
 	public JSXElementElements getJSXElementAccess() {
 		return pJSXElement;
@@ -13289,7 +13505,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//JSXElementNameExpression Expression:
 	//	IdentifierRef<false> ({ParameterizedPropertyAccessExpression.target=current}
 	//	ParameterizedPropertyAccessExpressionTail<false>)*
-	//	//	| JSXNamedspacedName not supported
+	//	//	| JSXNamedspacedName not supported in N4JSX and not supported by React either
 	//;
 	public JSXElementNameExpressionElements getJSXElementNameExpressionAccess() {
 		return pJSXElementNameExpression;
@@ -13299,18 +13515,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getJSXElementNameExpressionAccess().getRule();
 	}
 	
-	////JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
+	////JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX or even by React
 	////JSXMemberExpression: JSXIdentifier '.' JSXIdentifier -- defined by means of ParameterizedPropertyAccessExpression
-	//fragment JSXAttributes *:
-	//	jsxAttributes+=JSXAttribute*;
-	public JSXAttributesElements getJSXAttributesAccess() {
-		return pJSXAttributes;
-	}
-	
-	public ParserRule getJSXAttributesRule() {
-		return getJSXAttributesAccess().getRule();
-	}
-	
 	//JSXAttribute:
 	//	JSXSpreadAttribute
 	//	| JSXPropertyAttribute;
@@ -13332,9 +13538,27 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getJSXSpreadAttributeAccess().getRule();
 	}
 	
+	//// Comments or whitespace inbetween is filtered by the value converter
+	//// Also we use a simplified version of the grammar. The spec would make 
+	//// this a valid snippet <Comp abstract- private> with two attributes whereas
+	//// we would consume this as a component with a single attribute that is marked
+	//// with an error because of the unexpected whitespace
+	//JSXIdentifier:
+	//	IdentifierName (('-' | '--') -> (INT | HEX_INT | BINARY_INT | OCTAL_INT | SCIENTIFIC_INT | LEGACY_OCTAL_INT |
+	//	IdentifierName)?)*;
+	public JSXIdentifierElements getJSXIdentifierAccess() {
+		return pJSXIdentifier;
+	}
+	
+	public ParserRule getJSXIdentifierRule() {
+		return getJSXIdentifierAccess().getRule();
+	}
+	
 	//JSXPropertyAttribute:
-	//	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | '{'
-	//	jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?;
+	//	property=[types::IdentifiableElement|JSXIdentifier] ('=' (jsxAttributeValue=StringLiteral
+	//	| jsxAttributeValue=JSXElement
+	//	| jsxAttributeValue=JSXFragment
+	//	| '{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?;
 	public JSXPropertyAttributeElements getJSXPropertyAttributeAccess() {
 		return pJSXPropertyAttribute;
 	}

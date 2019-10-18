@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 /**
  * Entry point of n4jsc compiler
@@ -89,7 +90,8 @@ public class N4jscMain {
 			return;
 
 		case version:
-			throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
+			N4jscConsole.println(N4JSLanguageUtils.getLanguageVersion());
+			return;
 
 		case lsp:
 			backend.goalLsp(options);

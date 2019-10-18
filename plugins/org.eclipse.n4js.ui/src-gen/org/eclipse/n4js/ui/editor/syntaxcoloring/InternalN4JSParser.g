@@ -9724,7 +9724,15 @@ ruleParameterizedCallExpression
 			}
 		)
 	)
-	ArgumentsWithParenthesesParserRuleCall_2=ruleArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_2.start, $ArgumentsWithParenthesesParserRuleCall_2.stop, grammarAccess.getParameterizedCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_2()); }
+	(
+		(
+			OptionalChainingQuestionMarkFullStopKeyword_2_0=QuestionMarkFullStop
+			 {
+				announce($OptionalChainingQuestionMarkFullStopKeyword_2_0, grammarAccess.getParameterizedCallExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_2_0());
+			}
+		)
+	)?
+	ArgumentsWithParenthesesParserRuleCall_3=ruleArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_3.start, $ArgumentsWithParenthesesParserRuleCall_3.stop, grammarAccess.getParameterizedCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_3()); }
 )
 ;
 
@@ -9742,7 +9750,15 @@ norm1_ParameterizedCallExpression
 			}
 		)
 	)
-	ArgumentsWithParenthesesParserRuleCall_2=norm1_ArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_2.start, $ArgumentsWithParenthesesParserRuleCall_2.stop, grammarAccess.getParameterizedCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_2()); }
+	(
+		(
+			OptionalChainingQuestionMarkFullStopKeyword_2_0=QuestionMarkFullStop
+			 {
+				announce($OptionalChainingQuestionMarkFullStopKeyword_2_0, grammarAccess.getParameterizedCallExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_2_0());
+			}
+		)
+	)?
+	ArgumentsWithParenthesesParserRuleCall_3=norm1_ArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_3.start, $ArgumentsWithParenthesesParserRuleCall_3.stop, grammarAccess.getParameterizedCallExpressionAccess().getArgumentsWithParenthesesParserRuleCall_3()); }
 )
 ;
 
@@ -9829,27 +9845,52 @@ ruleLeftHandSideExpression
 (
 	MemberExpressionParserRuleCall_0=ruleMemberExpression{ announce($MemberExpressionParserRuleCall_0.start, $MemberExpressionParserRuleCall_0.stop, grammarAccess.getLeftHandSideExpressionAccess().getMemberExpressionParserRuleCall_0()); }
 	(
-		ArgumentsWithParenthesesParserRuleCall_1_1=ruleArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1_1.start, $ArgumentsWithParenthesesParserRuleCall_1_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_1()); }
 		(
 			(
-				ArgumentsWithParenthesesParserRuleCall_1_2_0_1=ruleArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1_2_0_1.start, $ArgumentsWithParenthesesParserRuleCall_1_2_0_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_2_0_1()); }
+				OptionalChainingQuestionMarkFullStopKeyword_1_1_0=QuestionMarkFullStop
+				 {
+					announce($OptionalChainingQuestionMarkFullStopKeyword_1_1_0, grammarAccess.getLeftHandSideExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_1_0());
+				}
+			)
+		)?
+		ArgumentsWithParenthesesParserRuleCall_1_2=ruleArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1_2.start, $ArgumentsWithParenthesesParserRuleCall_1_2.stop, grammarAccess.getLeftHandSideExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_2()); }
+		(
+			(
+				(
+					(
+						OptionalChainingQuestionMarkFullStopKeyword_1_3_0_1_0=QuestionMarkFullStop
+						 {
+							announce($OptionalChainingQuestionMarkFullStopKeyword_1_3_0_1_0, grammarAccess.getLeftHandSideExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_3_0_1_0());
+						}
+					)
+				)?
+				ArgumentsWithParenthesesParserRuleCall_1_3_0_2=ruleArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1_3_0_2.start, $ArgumentsWithParenthesesParserRuleCall_1_3_0_2.stop, grammarAccess.getLeftHandSideExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_3_0_2()); }
 			)
 			    |
 			(
-				IndexedAccessExpressionTailParserRuleCall_1_2_1_1=ruleIndexedAccessExpressionTail{ announce($IndexedAccessExpressionTailParserRuleCall_1_2_1_1.start, $IndexedAccessExpressionTailParserRuleCall_1_2_1_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTailParserRuleCall_1_2_1_1()); }
+				IndexedAccessExpressionTailParserRuleCall_1_3_1_1=ruleIndexedAccessExpressionTail{ announce($IndexedAccessExpressionTailParserRuleCall_1_3_1_1.start, $IndexedAccessExpressionTailParserRuleCall_1_3_1_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTailParserRuleCall_1_3_1_1()); }
 			)
 			    |
 			(
-				ParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1=ruleParameterizedPropertyAccessExpressionTail{ announce($ParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1.start, $ParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1()); }
+				ParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1=ruleParameterizedPropertyAccessExpressionTail{ announce($ParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1.start, $ParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1()); }
 			)
 			    |
 			(
-				(RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+				(QuestionMarkFullStop | 
+				RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 				(
 					(
 						(
-							TemplateTemplateLiteralParserRuleCall_1_2_3_0_1_0=ruleTemplateLiteral{
-								announce($TemplateTemplateLiteralParserRuleCall_1_2_3_0_1_0.start, $TemplateTemplateLiteralParserRuleCall_1_2_3_0_1_0.stop, grammarAccess.getLeftHandSideExpressionAccess().getTemplateAssignment_1_2_3_0_1());
+							OptionalChainingQuestionMarkFullStopKeyword_1_3_3_0_1_0=QuestionMarkFullStop
+							 {
+								announce($OptionalChainingQuestionMarkFullStopKeyword_1_3_3_0_1_0, grammarAccess.getLeftHandSideExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_3_3_0_1_0());
+							}
+						)
+					)?
+					(
+						(
+							TemplateTemplateLiteralParserRuleCall_1_3_3_0_2_0=ruleTemplateLiteral{
+								announce($TemplateTemplateLiteralParserRuleCall_1_3_3_0_2_0.start, $TemplateTemplateLiteralParserRuleCall_1_3_3_0_2_0.stop, grammarAccess.getLeftHandSideExpressionAccess().getTemplateAssignment_1_3_3_0_2());
 							}
 						)
 					)
@@ -9868,27 +9909,52 @@ norm1_LeftHandSideExpression
 (
 	MemberExpressionParserRuleCall_0=norm1_MemberExpression{ announce($MemberExpressionParserRuleCall_0.start, $MemberExpressionParserRuleCall_0.stop, grammarAccess.getLeftHandSideExpressionAccess().getMemberExpressionParserRuleCall_0()); }
 	(
-		ArgumentsWithParenthesesParserRuleCall_1_1=norm1_ArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1_1.start, $ArgumentsWithParenthesesParserRuleCall_1_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_1()); }
 		(
 			(
-				ArgumentsWithParenthesesParserRuleCall_1_2_0_1=norm1_ArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1_2_0_1.start, $ArgumentsWithParenthesesParserRuleCall_1_2_0_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_2_0_1()); }
+				OptionalChainingQuestionMarkFullStopKeyword_1_1_0=QuestionMarkFullStop
+				 {
+					announce($OptionalChainingQuestionMarkFullStopKeyword_1_1_0, grammarAccess.getLeftHandSideExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_1_0());
+				}
+			)
+		)?
+		ArgumentsWithParenthesesParserRuleCall_1_2=norm1_ArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1_2.start, $ArgumentsWithParenthesesParserRuleCall_1_2.stop, grammarAccess.getLeftHandSideExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_2()); }
+		(
+			(
+				(
+					(
+						OptionalChainingQuestionMarkFullStopKeyword_1_3_0_1_0=QuestionMarkFullStop
+						 {
+							announce($OptionalChainingQuestionMarkFullStopKeyword_1_3_0_1_0, grammarAccess.getLeftHandSideExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_3_0_1_0());
+						}
+					)
+				)?
+				ArgumentsWithParenthesesParserRuleCall_1_3_0_2=norm1_ArgumentsWithParentheses{ announce($ArgumentsWithParenthesesParserRuleCall_1_3_0_2.start, $ArgumentsWithParenthesesParserRuleCall_1_3_0_2.stop, grammarAccess.getLeftHandSideExpressionAccess().getArgumentsWithParenthesesParserRuleCall_1_3_0_2()); }
 			)
 			    |
 			(
-				IndexedAccessExpressionTailParserRuleCall_1_2_1_1=norm1_IndexedAccessExpressionTail{ announce($IndexedAccessExpressionTailParserRuleCall_1_2_1_1.start, $IndexedAccessExpressionTailParserRuleCall_1_2_1_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTailParserRuleCall_1_2_1_1()); }
+				IndexedAccessExpressionTailParserRuleCall_1_3_1_1=norm1_IndexedAccessExpressionTail{ announce($IndexedAccessExpressionTailParserRuleCall_1_3_1_1.start, $IndexedAccessExpressionTailParserRuleCall_1_3_1_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTailParserRuleCall_1_3_1_1()); }
 			)
 			    |
 			(
-				ParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1=norm1_ParameterizedPropertyAccessExpressionTail{ announce($ParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1.start, $ParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTailParserRuleCall_1_2_2_1()); }
+				ParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1=norm1_ParameterizedPropertyAccessExpressionTail{ announce($ParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1.start, $ParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1.stop, grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTailParserRuleCall_1_3_2_1()); }
 			)
 			    |
 			(
-				(RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+				(QuestionMarkFullStop | 
+				RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 				(
 					(
 						(
-							TemplateTemplateLiteralParserRuleCall_1_2_3_0_1_0=norm1_TemplateLiteral{
-								announce($TemplateTemplateLiteralParserRuleCall_1_2_3_0_1_0.start, $TemplateTemplateLiteralParserRuleCall_1_2_3_0_1_0.stop, grammarAccess.getLeftHandSideExpressionAccess().getTemplateAssignment_1_2_3_0_1());
+							OptionalChainingQuestionMarkFullStopKeyword_1_3_3_0_1_0=QuestionMarkFullStop
+							 {
+								announce($OptionalChainingQuestionMarkFullStopKeyword_1_3_3_0_1_0, grammarAccess.getLeftHandSideExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_3_3_0_1_0());
+							}
+						)
+					)?
+					(
+						(
+							TemplateTemplateLiteralParserRuleCall_1_3_3_0_2_0=norm1_TemplateLiteral{
+								announce($TemplateTemplateLiteralParserRuleCall_1_3_3_0_2_0.start, $TemplateTemplateLiteralParserRuleCall_1_3_3_0_2_0.stop, grammarAccess.getLeftHandSideExpressionAccess().getTemplateAssignment_1_3_3_0_2());
 							}
 						)
 					)
@@ -10142,8 +10208,16 @@ ruleMemberExpression
 				(
 					(
 						(
-							TemplateTemplateLiteralParserRuleCall_1_3_3_2_1_0=ruleTemplateLiteral{
-								announce($TemplateTemplateLiteralParserRuleCall_1_3_3_2_1_0.start, $TemplateTemplateLiteralParserRuleCall_1_3_3_2_1_0.stop, grammarAccess.getMemberExpressionAccess().getTemplateAssignment_1_3_3_2_1());
+							OptionalChainingQuestionMarkFullStopKeyword_1_3_3_2_1_0=QuestionMarkFullStop
+							 {
+								announce($OptionalChainingQuestionMarkFullStopKeyword_1_3_3_2_1_0, grammarAccess.getMemberExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_3_3_2_1_0());
+							}
+						)
+					)?
+					(
+						(
+							TemplateTemplateLiteralParserRuleCall_1_3_3_2_2_0=ruleTemplateLiteral{
+								announce($TemplateTemplateLiteralParserRuleCall_1_3_3_2_2_0.start, $TemplateTemplateLiteralParserRuleCall_1_3_3_2_2_0.stop, grammarAccess.getMemberExpressionAccess().getTemplateAssignment_1_3_3_2_2());
 							}
 						)
 					)
@@ -10166,8 +10240,16 @@ ruleMemberExpression
 			(
 				(
 					(
-						TemplateTemplateLiteralParserRuleCall_2_1_2_1_0=ruleTemplateLiteral{
-							announce($TemplateTemplateLiteralParserRuleCall_2_1_2_1_0.start, $TemplateTemplateLiteralParserRuleCall_2_1_2_1_0.stop, grammarAccess.getMemberExpressionAccess().getTemplateAssignment_2_1_2_1());
+						OptionalChainingQuestionMarkFullStopKeyword_2_1_2_1_0=QuestionMarkFullStop
+						 {
+							announce($OptionalChainingQuestionMarkFullStopKeyword_2_1_2_1_0, grammarAccess.getMemberExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_2_1_2_1_0());
+						}
+					)
+				)?
+				(
+					(
+						TemplateTemplateLiteralParserRuleCall_2_1_2_2_0=ruleTemplateLiteral{
+							announce($TemplateTemplateLiteralParserRuleCall_2_1_2_2_0.start, $TemplateTemplateLiteralParserRuleCall_2_1_2_2_0.stop, grammarAccess.getMemberExpressionAccess().getTemplateAssignment_2_1_2_2());
 						}
 					)
 				)
@@ -10264,8 +10346,16 @@ norm1_MemberExpression
 				(
 					(
 						(
-							TemplateTemplateLiteralParserRuleCall_1_3_3_2_1_0=norm1_TemplateLiteral{
-								announce($TemplateTemplateLiteralParserRuleCall_1_3_3_2_1_0.start, $TemplateTemplateLiteralParserRuleCall_1_3_3_2_1_0.stop, grammarAccess.getMemberExpressionAccess().getTemplateAssignment_1_3_3_2_1());
+							OptionalChainingQuestionMarkFullStopKeyword_1_3_3_2_1_0=QuestionMarkFullStop
+							 {
+								announce($OptionalChainingQuestionMarkFullStopKeyword_1_3_3_2_1_0, grammarAccess.getMemberExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_1_3_3_2_1_0());
+							}
+						)
+					)?
+					(
+						(
+							TemplateTemplateLiteralParserRuleCall_1_3_3_2_2_0=norm1_TemplateLiteral{
+								announce($TemplateTemplateLiteralParserRuleCall_1_3_3_2_2_0.start, $TemplateTemplateLiteralParserRuleCall_1_3_3_2_2_0.stop, grammarAccess.getMemberExpressionAccess().getTemplateAssignment_1_3_3_2_2());
 							}
 						)
 					)
@@ -10288,8 +10378,16 @@ norm1_MemberExpression
 			(
 				(
 					(
-						TemplateTemplateLiteralParserRuleCall_2_1_2_1_0=norm1_TemplateLiteral{
-							announce($TemplateTemplateLiteralParserRuleCall_2_1_2_1_0.start, $TemplateTemplateLiteralParserRuleCall_2_1_2_1_0.stop, grammarAccess.getMemberExpressionAccess().getTemplateAssignment_2_1_2_1());
+						OptionalChainingQuestionMarkFullStopKeyword_2_1_2_1_0=QuestionMarkFullStop
+						 {
+							announce($OptionalChainingQuestionMarkFullStopKeyword_2_1_2_1_0, grammarAccess.getMemberExpressionAccess().getOptionalChainingQuestionMarkFullStopKeyword_2_1_2_1_0());
+						}
+					)
+				)?
+				(
+					(
+						TemplateTemplateLiteralParserRuleCall_2_1_2_2_0=norm1_TemplateLiteral{
+							announce($TemplateTemplateLiteralParserRuleCall_2_1_2_2_0.start, $TemplateTemplateLiteralParserRuleCall_2_1_2_2_0.stop, grammarAccess.getMemberExpressionAccess().getTemplateAssignment_2_1_2_2());
 						}
 					)
 				)
@@ -10305,20 +10403,28 @@ ruleIndexedAccessExpressionTail
 @init {
 }:
 (
-	LeftSquareBracketKeyword_0=LeftSquareBracket
+	(
+		(
+			OptionalChainingQuestionMarkFullStopKeyword_0_0=QuestionMarkFullStop
+			 {
+				announce($OptionalChainingQuestionMarkFullStopKeyword_0_0, grammarAccess.getIndexedAccessExpressionTailAccess().getOptionalChainingQuestionMarkFullStopKeyword_0_0());
+			}
+		)
+	)?
+	LeftSquareBracketKeyword_1=LeftSquareBracket
 	 {
-		announce($LeftSquareBracketKeyword_0, grammarAccess.getIndexedAccessExpressionTailAccess().getLeftSquareBracketKeyword_0());
+		announce($LeftSquareBracketKeyword_1, grammarAccess.getIndexedAccessExpressionTailAccess().getLeftSquareBracketKeyword_1());
 	}
 	(
 		(
-			IndexExpressionParserRuleCall_1_0=norm1_Expression{
-				announce($IndexExpressionParserRuleCall_1_0.start, $IndexExpressionParserRuleCall_1_0.stop, grammarAccess.getIndexedAccessExpressionTailAccess().getIndexAssignment_1());
+			IndexExpressionParserRuleCall_2_0=norm1_Expression{
+				announce($IndexExpressionParserRuleCall_2_0.start, $IndexExpressionParserRuleCall_2_0.stop, grammarAccess.getIndexedAccessExpressionTailAccess().getIndexAssignment_2());
 			}
 		)
 	)
-	RightSquareBracketKeyword_2=RightSquareBracket
+	RightSquareBracketKeyword_3=RightSquareBracket
 	 {
-		announce($RightSquareBracketKeyword_2, grammarAccess.getIndexedAccessExpressionTailAccess().getRightSquareBracketKeyword_2());
+		announce($RightSquareBracketKeyword_3, grammarAccess.getIndexedAccessExpressionTailAccess().getRightSquareBracketKeyword_3());
 	}
 )
 ;
@@ -10329,20 +10435,28 @@ norm1_IndexedAccessExpressionTail
 @init {
 }:
 (
-	LeftSquareBracketKeyword_0=LeftSquareBracket
+	(
+		(
+			OptionalChainingQuestionMarkFullStopKeyword_0_0=QuestionMarkFullStop
+			 {
+				announce($OptionalChainingQuestionMarkFullStopKeyword_0_0, grammarAccess.getIndexedAccessExpressionTailAccess().getOptionalChainingQuestionMarkFullStopKeyword_0_0());
+			}
+		)
+	)?
+	LeftSquareBracketKeyword_1=LeftSquareBracket
 	 {
-		announce($LeftSquareBracketKeyword_0, grammarAccess.getIndexedAccessExpressionTailAccess().getLeftSquareBracketKeyword_0());
+		announce($LeftSquareBracketKeyword_1, grammarAccess.getIndexedAccessExpressionTailAccess().getLeftSquareBracketKeyword_1());
 	}
 	(
 		(
-			IndexExpressionParserRuleCall_1_0=norm3_Expression{
-				announce($IndexExpressionParserRuleCall_1_0.start, $IndexExpressionParserRuleCall_1_0.stop, grammarAccess.getIndexedAccessExpressionTailAccess().getIndexAssignment_1());
+			IndexExpressionParserRuleCall_2_0=norm3_Expression{
+				announce($IndexExpressionParserRuleCall_2_0.start, $IndexExpressionParserRuleCall_2_0.stop, grammarAccess.getIndexedAccessExpressionTailAccess().getIndexAssignment_2());
 			}
 		)
 	)
-	RightSquareBracketKeyword_2=RightSquareBracket
+	RightSquareBracketKeyword_3=RightSquareBracket
 	 {
-		announce($RightSquareBracketKeyword_2, grammarAccess.getIndexedAccessExpressionTailAccess().getRightSquareBracketKeyword_2());
+		announce($RightSquareBracketKeyword_3, grammarAccess.getIndexedAccessExpressionTailAccess().getRightSquareBracketKeyword_3());
 	}
 )
 ;
@@ -10353,10 +10467,21 @@ ruleParameterizedPropertyAccessExpressionTail
 @init {
 }:
 (
-	FullStopKeyword_0=FullStop
-	 {
-		announce($FullStopKeyword_0, grammarAccess.getParameterizedPropertyAccessExpressionTailAccess().getFullStopKeyword_0());
-	}
+	(
+		FullStopKeyword_0_0=FullStop
+		 {
+			announce($FullStopKeyword_0_0, grammarAccess.getParameterizedPropertyAccessExpressionTailAccess().getFullStopKeyword_0_0());
+		}
+		    |
+		(
+			(
+				OptionalChainingQuestionMarkFullStopKeyword_0_1_0=QuestionMarkFullStop
+				 {
+					announce($OptionalChainingQuestionMarkFullStopKeyword_0_1_0, grammarAccess.getParameterizedPropertyAccessExpressionTailAccess().getOptionalChainingQuestionMarkFullStopKeyword_0_1_0());
+				}
+			)
+		)
+	)
 	(
 		ConcreteTypeArgumentsParserRuleCall_1=ruleConcreteTypeArguments{ announce($ConcreteTypeArgumentsParserRuleCall_1.start, $ConcreteTypeArgumentsParserRuleCall_1.stop, grammarAccess.getParameterizedPropertyAccessExpressionTailAccess().getConcreteTypeArgumentsParserRuleCall_1()); }
 	)?
@@ -10376,10 +10501,21 @@ norm1_ParameterizedPropertyAccessExpressionTail
 @init {
 }:
 (
-	FullStopKeyword_0=FullStop
-	 {
-		announce($FullStopKeyword_0, grammarAccess.getParameterizedPropertyAccessExpressionTailAccess().getFullStopKeyword_0());
-	}
+	(
+		FullStopKeyword_0_0=FullStop
+		 {
+			announce($FullStopKeyword_0_0, grammarAccess.getParameterizedPropertyAccessExpressionTailAccess().getFullStopKeyword_0_0());
+		}
+		    |
+		(
+			(
+				OptionalChainingQuestionMarkFullStopKeyword_0_1_0=QuestionMarkFullStop
+				 {
+					announce($OptionalChainingQuestionMarkFullStopKeyword_0_1_0, grammarAccess.getParameterizedPropertyAccessExpressionTailAccess().getOptionalChainingQuestionMarkFullStopKeyword_0_1_0());
+				}
+			)
+		)
+	)
 	(
 		ConcreteTypeArgumentsParserRuleCall_1=ruleConcreteTypeArguments{ announce($ConcreteTypeArgumentsParserRuleCall_1.start, $ConcreteTypeArgumentsParserRuleCall_1.stop, grammarAccess.getParameterizedPropertyAccessExpressionTailAccess().getConcreteTypeArgumentsParserRuleCall_1()); }
 	)?
@@ -10760,9 +10896,129 @@ ruleShiftExpression
 				)
 			)
 			(
-				(
-					ruleAdditiveExpression
-				)
+				New
+				    |
+				This_1
+				    |
+				Super
+				    |
+				Yield
+				    |
+				Get
+				    |
+				Set
+				    |
+				Let
+				    |
+				Project
+				    |
+				External
+				    |
+				Abstract
+				    |
+				Static
+				    |
+				As
+				    |
+				From
+				    |
+				Constructor
+				    |
+				Of
+				    |
+				Target
+				    |
+				Type
+				    |
+				Union
+				    |
+				Intersection
+				    |
+				This
+				    |
+				Promisify
+				    |
+				Await
+				    |
+				Async
+				    |
+				Implements
+				    |
+				Interface
+				    |
+				Private
+				    |
+				Protected
+				    |
+				Public
+				    |
+				Out
+				    |
+				LessThanSign
+				    |
+				Import
+				    |
+				True
+				    |
+				False
+				    |
+				Null
+				    |
+				Solidus
+				    |
+				SolidusEqualsSign
+				    |
+				LeftSquareBracket
+				    |
+				LeftCurlyBracket
+				    |
+				LeftParenthesis
+				    |
+				CommercialAt
+				    |
+				Function
+				    |
+				Class
+				    |
+				Delete
+				    |
+				Void
+				    |
+				Typeof
+				    |
+				PlusSignPlusSign
+				    |
+				HyphenMinusHyphenMinus
+				    |
+				PlusSign
+				    |
+				HyphenMinus
+				    |
+				Tilde
+				    |
+				ExclamationMark
+				    |
+				RULE_IDENTIFIER
+				    |
+				RULE_DOUBLE
+				    |
+				RULE_INT
+				    |
+				RULE_BINARY_INT
+				    |
+				RULE_OCTAL_INT
+				    |
+				RULE_LEGACY_OCTAL_INT
+				    |
+				RULE_HEX_INT
+				    |
+				RULE_SCIENTIFIC_INT
+				    |
+				RULE_STRING
+				    |
+				RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL
+				    |
+				RULE_TEMPLATE_HEAD
 			)
 		)
 		)=>
@@ -10775,6 +11031,58 @@ ruleShiftExpression
 				)
 			)
 			(
+				(New | 
+				This_1 | 
+				Super | 
+				Yield | 
+				Get | 
+				Set | 
+				Let | 
+				Project | 
+				External | 
+				Abstract | 
+				Static | 
+				As | 
+				From | 
+				Constructor | 
+				Of | 
+				Target | 
+				Type | 
+				Union | 
+				Intersection | 
+				This | 
+				Promisify | 
+				Await | 
+				Async | 
+				Implements | 
+				Interface | 
+				Private | 
+				Protected | 
+				Public | 
+				Out | 
+				LessThanSign | 
+				Import | 
+				True | 
+				False | 
+				Null | 
+				Solidus | 
+				SolidusEqualsSign | 
+				LeftSquareBracket | 
+				LeftCurlyBracket | 
+				LeftParenthesis | 
+				CommercialAt | 
+				Function | 
+				Class | 
+				Delete | 
+				Void | 
+				Typeof | 
+				PlusSignPlusSign | 
+				HyphenMinusHyphenMinus | 
+				PlusSign | 
+				HyphenMinus | 
+				Tilde | 
+				ExclamationMark | 
+				RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 				(
 					RhsAdditiveExpressionParserRuleCall_1_0_2_0=ruleAdditiveExpression{
 						announce($RhsAdditiveExpressionParserRuleCall_1_0_2_0.start, $RhsAdditiveExpressionParserRuleCall_1_0_2_0.stop, grammarAccess.getShiftExpressionAccess().getRhsAssignment_1_0_2());
@@ -10801,9 +11109,127 @@ norm1_ShiftExpression
 				)
 			)
 			(
-				(
-					norm1_AdditiveExpression
-				)
+				New
+				    |
+				This_1
+				    |
+				Super
+				    |
+				Get
+				    |
+				Set
+				    |
+				Let
+				    |
+				Project
+				    |
+				External
+				    |
+				Abstract
+				    |
+				Static
+				    |
+				As
+				    |
+				From
+				    |
+				Constructor
+				    |
+				Of
+				    |
+				Target
+				    |
+				Type
+				    |
+				Union
+				    |
+				Intersection
+				    |
+				This
+				    |
+				Promisify
+				    |
+				Await
+				    |
+				Async
+				    |
+				Implements
+				    |
+				Interface
+				    |
+				Private
+				    |
+				Protected
+				    |
+				Public
+				    |
+				Out
+				    |
+				LessThanSign
+				    |
+				Import
+				    |
+				True
+				    |
+				False
+				    |
+				Null
+				    |
+				Solidus
+				    |
+				SolidusEqualsSign
+				    |
+				LeftSquareBracket
+				    |
+				LeftCurlyBracket
+				    |
+				LeftParenthesis
+				    |
+				CommercialAt
+				    |
+				Function
+				    |
+				Class
+				    |
+				Delete
+				    |
+				Void
+				    |
+				Typeof
+				    |
+				PlusSignPlusSign
+				    |
+				HyphenMinusHyphenMinus
+				    |
+				PlusSign
+				    |
+				HyphenMinus
+				    |
+				Tilde
+				    |
+				ExclamationMark
+				    |
+				RULE_IDENTIFIER
+				    |
+				RULE_DOUBLE
+				    |
+				RULE_INT
+				    |
+				RULE_BINARY_INT
+				    |
+				RULE_OCTAL_INT
+				    |
+				RULE_LEGACY_OCTAL_INT
+				    |
+				RULE_HEX_INT
+				    |
+				RULE_SCIENTIFIC_INT
+				    |
+				RULE_STRING
+				    |
+				RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL
+				    |
+				RULE_TEMPLATE_HEAD
 			)
 		)
 		)=>
@@ -10816,6 +11242,57 @@ norm1_ShiftExpression
 				)
 			)
 			(
+				(New | 
+				This_1 | 
+				Super | 
+				Get | 
+				Set | 
+				Let | 
+				Project | 
+				External | 
+				Abstract | 
+				Static | 
+				As | 
+				From | 
+				Constructor | 
+				Of | 
+				Target | 
+				Type | 
+				Union | 
+				Intersection | 
+				This | 
+				Promisify | 
+				Await | 
+				Async | 
+				Implements | 
+				Interface | 
+				Private | 
+				Protected | 
+				Public | 
+				Out | 
+				LessThanSign | 
+				Import | 
+				True | 
+				False | 
+				Null | 
+				Solidus | 
+				SolidusEqualsSign | 
+				LeftSquareBracket | 
+				LeftCurlyBracket | 
+				LeftParenthesis | 
+				CommercialAt | 
+				Function | 
+				Class | 
+				Delete | 
+				Void | 
+				Typeof | 
+				PlusSignPlusSign | 
+				HyphenMinusHyphenMinus | 
+				PlusSign | 
+				HyphenMinus | 
+				Tilde | 
+				ExclamationMark | 
+				RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 				(
 					RhsAdditiveExpressionParserRuleCall_1_0_2_0=norm1_AdditiveExpression{
 						announce($RhsAdditiveExpressionParserRuleCall_1_0_2_0.start, $RhsAdditiveExpressionParserRuleCall_1_0_2_0.stop, grammarAccess.getShiftExpressionAccess().getRhsAssignment_1_0_2());
@@ -12797,6 +13274,135 @@ VerticalLineVerticalLineKeyword=VerticalLineVerticalLine {
 }
 ;
 
+// Entry rule entryRuleCoalesceExpression
+entryRuleCoalesceExpression
+	:
+	ruleCoalesceExpression
+	EOF;
+
+// Rule CoalesceExpression
+ruleCoalesceExpression
+@init {
+}:
+(
+	LogicalORExpressionParserRuleCall_0=ruleLogicalORExpression{ announce($LogicalORExpressionParserRuleCall_0.start, $LogicalORExpressionParserRuleCall_0.stop, grammarAccess.getCoalesceExpressionAccess().getLogicalORExpressionParserRuleCall_0()); }
+	(
+		(
+			((
+				QuestionMarkQuestionMark
+			)
+			)=>
+			(
+				QuestionMarkQuestionMarkKeyword_1_0_0_1=QuestionMarkQuestionMark
+				 {
+					announce($QuestionMarkQuestionMarkKeyword_1_0_0_1, grammarAccess.getCoalesceExpressionAccess().getQuestionMarkQuestionMarkKeyword_1_0_0_1());
+				}
+			)
+		)
+		(
+			(
+				DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0=ruleLogicalORExpression{
+					announce($DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0.start, $DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0.stop, grammarAccess.getCoalesceExpressionAccess().getDefaultExpressionAssignment_1_1());
+				}
+			)
+		)
+	)*
+)
+;
+
+
+// Rule CoalesceExpression
+norm1_CoalesceExpression
+@init {
+}:
+(
+	LogicalORExpressionParserRuleCall_0=norm1_LogicalORExpression{ announce($LogicalORExpressionParserRuleCall_0.start, $LogicalORExpressionParserRuleCall_0.stop, grammarAccess.getCoalesceExpressionAccess().getLogicalORExpressionParserRuleCall_0()); }
+	(
+		(
+			((
+				QuestionMarkQuestionMark
+			)
+			)=>
+			(
+				QuestionMarkQuestionMarkKeyword_1_0_0_1=QuestionMarkQuestionMark
+				 {
+					announce($QuestionMarkQuestionMarkKeyword_1_0_0_1, grammarAccess.getCoalesceExpressionAccess().getQuestionMarkQuestionMarkKeyword_1_0_0_1());
+				}
+			)
+		)
+		(
+			(
+				DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0=norm1_LogicalORExpression{
+					announce($DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0.start, $DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0.stop, grammarAccess.getCoalesceExpressionAccess().getDefaultExpressionAssignment_1_1());
+				}
+			)
+		)
+	)*
+)
+;
+
+
+// Rule CoalesceExpression
+norm2_CoalesceExpression
+@init {
+}:
+(
+	LogicalORExpressionParserRuleCall_0=norm2_LogicalORExpression{ announce($LogicalORExpressionParserRuleCall_0.start, $LogicalORExpressionParserRuleCall_0.stop, grammarAccess.getCoalesceExpressionAccess().getLogicalORExpressionParserRuleCall_0()); }
+	(
+		(
+			((
+				QuestionMarkQuestionMark
+			)
+			)=>
+			(
+				QuestionMarkQuestionMarkKeyword_1_0_0_1=QuestionMarkQuestionMark
+				 {
+					announce($QuestionMarkQuestionMarkKeyword_1_0_0_1, grammarAccess.getCoalesceExpressionAccess().getQuestionMarkQuestionMarkKeyword_1_0_0_1());
+				}
+			)
+		)
+		(
+			(
+				DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0=norm2_LogicalORExpression{
+					announce($DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0.start, $DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0.stop, grammarAccess.getCoalesceExpressionAccess().getDefaultExpressionAssignment_1_1());
+				}
+			)
+		)
+	)*
+)
+;
+
+
+// Rule CoalesceExpression
+norm3_CoalesceExpression
+@init {
+}:
+(
+	LogicalORExpressionParserRuleCall_0=norm3_LogicalORExpression{ announce($LogicalORExpressionParserRuleCall_0.start, $LogicalORExpressionParserRuleCall_0.stop, grammarAccess.getCoalesceExpressionAccess().getLogicalORExpressionParserRuleCall_0()); }
+	(
+		(
+			((
+				QuestionMarkQuestionMark
+			)
+			)=>
+			(
+				QuestionMarkQuestionMarkKeyword_1_0_0_1=QuestionMarkQuestionMark
+				 {
+					announce($QuestionMarkQuestionMarkKeyword_1_0_0_1, grammarAccess.getCoalesceExpressionAccess().getQuestionMarkQuestionMarkKeyword_1_0_0_1());
+				}
+			)
+		)
+		(
+			(
+				DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0=norm3_LogicalORExpression{
+					announce($DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0.start, $DefaultExpressionLogicalORExpressionParserRuleCall_1_1_0.stop, grammarAccess.getCoalesceExpressionAccess().getDefaultExpressionAssignment_1_1());
+				}
+			)
+		)
+	)*
+)
+;
+
 // Entry rule entryRuleConditionalExpression
 entryRuleConditionalExpression
 	:
@@ -12808,7 +13414,7 @@ ruleConditionalExpression
 @init {
 }:
 (
-	LogicalORExpressionParserRuleCall_0=ruleLogicalORExpression{ announce($LogicalORExpressionParserRuleCall_0.start, $LogicalORExpressionParserRuleCall_0.stop, grammarAccess.getConditionalExpressionAccess().getLogicalORExpressionParserRuleCall_0()); }
+	CoalesceExpressionParserRuleCall_0=ruleCoalesceExpression{ announce($CoalesceExpressionParserRuleCall_0.start, $CoalesceExpressionParserRuleCall_0.stop, grammarAccess.getConditionalExpressionAccess().getCoalesceExpressionParserRuleCall_0()); }
 	(
 		(
 			((
@@ -12850,7 +13456,7 @@ norm1_ConditionalExpression
 @init {
 }:
 (
-	LogicalORExpressionParserRuleCall_0=norm1_LogicalORExpression{ announce($LogicalORExpressionParserRuleCall_0.start, $LogicalORExpressionParserRuleCall_0.stop, grammarAccess.getConditionalExpressionAccess().getLogicalORExpressionParserRuleCall_0()); }
+	CoalesceExpressionParserRuleCall_0=norm1_CoalesceExpression{ announce($CoalesceExpressionParserRuleCall_0.start, $CoalesceExpressionParserRuleCall_0.stop, grammarAccess.getConditionalExpressionAccess().getCoalesceExpressionParserRuleCall_0()); }
 	(
 		(
 			((
@@ -12892,7 +13498,7 @@ norm2_ConditionalExpression
 @init {
 }:
 (
-	LogicalORExpressionParserRuleCall_0=norm2_LogicalORExpression{ announce($LogicalORExpressionParserRuleCall_0.start, $LogicalORExpressionParserRuleCall_0.stop, grammarAccess.getConditionalExpressionAccess().getLogicalORExpressionParserRuleCall_0()); }
+	CoalesceExpressionParserRuleCall_0=norm2_CoalesceExpression{ announce($CoalesceExpressionParserRuleCall_0.start, $CoalesceExpressionParserRuleCall_0.stop, grammarAccess.getConditionalExpressionAccess().getCoalesceExpressionParserRuleCall_0()); }
 	(
 		(
 			((
@@ -12934,7 +13540,7 @@ norm3_ConditionalExpression
 @init {
 }:
 (
-	LogicalORExpressionParserRuleCall_0=norm3_LogicalORExpression{ announce($LogicalORExpressionParserRuleCall_0.start, $LogicalORExpressionParserRuleCall_0.stop, grammarAccess.getConditionalExpressionAccess().getLogicalORExpressionParserRuleCall_0()); }
+	CoalesceExpressionParserRuleCall_0=norm3_CoalesceExpression{ announce($CoalesceExpressionParserRuleCall_0.start, $CoalesceExpressionParserRuleCall_0.stop, grammarAccess.getConditionalExpressionAccess().getCoalesceExpressionParserRuleCall_0()); }
 	(
 		(
 			((
@@ -13624,9 +14230,14 @@ ruleAssignmentOperator
 		announce($PlusSignEqualsSignKeyword_4, grammarAccess.getAssignmentOperatorAccess().getPlusSignEqualsSignKeyword_4());
 	}
 	    |
-	HyphenMinusEqualsSignKeyword_5=HyphenMinusEqualsSign {
-		announce($HyphenMinusEqualsSignKeyword_5, grammarAccess.getAssignmentOperatorAccess().getHyphenMinusEqualsSignKeyword_5());
-	}
+	(
+		HyphenMinusKeyword_5_0=HyphenMinus {
+			announce($HyphenMinusKeyword_5_0, grammarAccess.getAssignmentOperatorAccess().getHyphenMinusKeyword_5_0());
+		}
+		EqualsSignKeyword_5_1=EqualsSign {
+			announce($EqualsSignKeyword_5_1, grammarAccess.getAssignmentOperatorAccess().getEqualsSignKeyword_5_1());
+		}
+	)
 	    |
 	LessThanSignLessThanSignEqualsSignKeyword_6=LessThanSignLessThanSignEqualsSign {
 		announce($LessThanSignLessThanSignEqualsSignKeyword_6, grammarAccess.getAssignmentOperatorAccess().getLessThanSignLessThanSignEqualsSignKeyword_6());
@@ -19003,7 +19614,13 @@ ruleJSXElement
 			}
 		)
 	)
-	JSXAttributesParserRuleCall_2=ruleJSXAttributes{ announce($JSXAttributesParserRuleCall_2.start, $JSXAttributesParserRuleCall_2.stop, grammarAccess.getJSXElementAccess().getJSXAttributesParserRuleCall_2()); }
+	(
+		(
+			JsxAttributesJSXAttributeParserRuleCall_2_0=ruleJSXAttribute{
+				announce($JsxAttributesJSXAttributeParserRuleCall_2_0.start, $JsxAttributesJSXAttributeParserRuleCall_2_0.stop, grammarAccess.getJSXElementAccess().getJsxAttributesAssignment_2());
+			}
+		)
+	)*
 	(
 		(
 			GreaterThanSignKeyword_3_0_0=GreaterThanSign
@@ -19178,20 +19795,6 @@ ruleJSXElementNameExpression
 )
 ;
 
-
-// Rule JSXAttributes
-ruleJSXAttributes
-@init {
-}:
-(
-	(
-		JsxAttributesJSXAttributeParserRuleCall_0=ruleJSXAttribute{
-			announce($JsxAttributesJSXAttributeParserRuleCall_0.start, $JsxAttributesJSXAttributeParserRuleCall_0.stop, grammarAccess.getJSXAttributesAccess().getJsxAttributesAssignment());
-		}
-	)
-)*
-;
-
 // Entry rule entryRuleJSXAttribute
 entryRuleJSXAttribute
 	:
@@ -19242,6 +19845,113 @@ ruleJSXSpreadAttribute
 )
 ;
 
+// Entry rule entryRuleJSXIdentifier
+entryRuleJSXIdentifier
+	:
+	ruleJSXIdentifier
+	EOF;
+
+// Rule JSXIdentifier
+ruleJSXIdentifier
+@init {
+}
+:
+(
+	ruleIdentifierName
+	(
+		(
+			HyphenMinusKeyword_1_0_0=HyphenMinus {
+				announce($HyphenMinusKeyword_1_0_0, grammarAccess.getJSXIdentifierAccess().getHyphenMinusKeyword_1_0_0());
+			}
+			    |
+			HyphenMinusHyphenMinusKeyword_1_0_1=HyphenMinusHyphenMinus {
+				announce($HyphenMinusHyphenMinusKeyword_1_0_1, grammarAccess.getJSXIdentifierAccess().getHyphenMinusHyphenMinusKeyword_1_0_1());
+			}
+		)
+		(
+			(Break | 
+			Case | 
+			Catch | 
+			Class | 
+			Const | 
+			Continue | 
+			Debugger | 
+			Default | 
+			Delete | 
+			Do | 
+			Else | 
+			Export | 
+			Extends | 
+			Finally | 
+			For | 
+			Function | 
+			If | 
+			Import | 
+			In | 
+			Instanceof | 
+			New | 
+			Return | 
+			Super | 
+			Switch | 
+			This_1 | 
+			Throw | 
+			Try | 
+			Typeof | 
+			Var | 
+			Void | 
+			While | 
+			With | 
+			Yield | 
+			Null | 
+			True | 
+			False | 
+			Enum | 
+			Get | 
+			Set | 
+			Let | 
+			Project | 
+			External | 
+			Abstract | 
+			Static | 
+			As | 
+			From | 
+			Constructor | 
+			Of | 
+			Target | 
+			Type | 
+			Union | 
+			Intersection | 
+			This | 
+			Promisify | 
+			Await | 
+			Async | 
+			Implements | 
+			Interface | 
+			Private | 
+			Protected | 
+			Public | 
+			Out | 
+			RULE_INT | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_LEGACY_OCTAL_INT | RULE_IDENTIFIER)=>
+			(
+				RULE_INT
+				    |
+				RULE_HEX_INT
+				    |
+				RULE_BINARY_INT
+				    |
+				RULE_OCTAL_INT
+				    |
+				RULE_SCIENTIFIC_INT
+				    |
+				RULE_LEGACY_OCTAL_INT
+				    |
+				ruleIdentifierName
+			)
+		)?
+	)*
+)
+;
+
 // Entry rule entryRuleJSXPropertyAttribute
 entryRuleJSXPropertyAttribute
 	:
@@ -19255,8 +19965,8 @@ ruleJSXPropertyAttribute
 (
 	(
 		(
-			PropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1=ruleIdentifierName{
-				announce($PropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1.start, $PropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1.stop, grammarAccess.getJSXPropertyAttributeAccess().getPropertyAssignment_0());
+			PropertyIdentifiableElementJSXIdentifierParserRuleCall_0_0_1=ruleJSXIdentifier{
+				announce($PropertyIdentifiableElementJSXIdentifierParserRuleCall_0_0_1.start, $PropertyIdentifiableElementJSXIdentifierParserRuleCall_0_0_1.stop, grammarAccess.getJSXPropertyAttributeAccess().getPropertyAssignment_0());
 			}
 		)
 	)
@@ -19275,20 +19985,36 @@ ruleJSXPropertyAttribute
 			)
 			    |
 			(
-				LeftCurlyBracketKeyword_1_1_1_0=LeftCurlyBracket
+				(
+					JsxAttributeValueJSXElementParserRuleCall_1_1_1_0=ruleJSXElement{
+						announce($JsxAttributeValueJSXElementParserRuleCall_1_1_1_0.start, $JsxAttributeValueJSXElementParserRuleCall_1_1_1_0.stop, grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_1());
+					}
+				)
+			)
+			    |
+			(
+				(
+					JsxAttributeValueJSXFragmentParserRuleCall_1_1_2_0=ruleJSXFragment{
+						announce($JsxAttributeValueJSXFragmentParserRuleCall_1_1_2_0.start, $JsxAttributeValueJSXFragmentParserRuleCall_1_1_2_0.stop, grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_2());
+					}
+				)
+			)
+			    |
+			(
+				LeftCurlyBracketKeyword_1_1_3_0=LeftCurlyBracket
 				 {
-					announce($LeftCurlyBracketKeyword_1_1_1_0, grammarAccess.getJSXPropertyAttributeAccess().getLeftCurlyBracketKeyword_1_1_1_0());
+					announce($LeftCurlyBracketKeyword_1_1_3_0, grammarAccess.getJSXPropertyAttributeAccess().getLeftCurlyBracketKeyword_1_1_3_0());
 				}
 				(
 					(
-						JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0=ruleAssignmentExpression{
-							announce($JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0.start, $JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0.stop, grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_1_1());
+						JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_3_1_0=ruleAssignmentExpression{
+							announce($JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_3_1_0.start, $JsxAttributeValueAssignmentExpressionParserRuleCall_1_1_3_1_0.stop, grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_3_1());
 						}
 					)
 				)
-				RightCurlyBracketKeyword_1_1_1_2=RightCurlyBracket
+				RightCurlyBracketKeyword_1_1_3_2=RightCurlyBracket
 				 {
-					announce($RightCurlyBracketKeyword_1_1_1_2, grammarAccess.getJSXPropertyAttributeAccess().getRightCurlyBracketKeyword_1_1_1_2());
+					announce($RightCurlyBracketKeyword_1_1_3_2, grammarAccess.getJSXPropertyAttributeAccess().getRightCurlyBracketKeyword_1_1_3_2());
 				}
 			)
 		)

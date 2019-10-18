@@ -18,19 +18,19 @@ import org.eclipse.n4js.flowgraphs.dataflow.symbols.Symbol;
  * This class augments {@link org.eclipse.n4js.flowgraphs.dataflow.PartialResult.Failed} with additional information
  * about the reason for failing.
  */
-public class NullDerefernceFailed extends PartialResult.Failed {
+public class NullDereferenceFailed extends PartialResult.Failed {
 	/** Expectation that was not fulfilled */
 	public final GuardType expectation;
 	/** Symbol that did not fulfill the expectation. */
 	public final Symbol symbol;
 
-	NullDerefernceFailed(GuardType expectation, Symbol symbol) {
+	NullDereferenceFailed(GuardType expectation, Symbol symbol) {
 		this.expectation = expectation;
 		this.symbol = symbol;
 	}
 
 	/** Constructor. */
-	public NullDerefernceFailed(GuardType expectation) {
+	public NullDereferenceFailed(GuardType expectation) {
 		this(expectation, null);
 	}
 

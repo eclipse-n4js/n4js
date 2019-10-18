@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.utils
 
+import java.io.IOException
+import java.io.InputStream
+import java.util.Properties
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
@@ -115,6 +118,47 @@ public class N4JSLanguageUtils {
 	 * See {@link ComputedPropertyNameValueConverter#SYMBOL_IDENTIFIER_PREFIX}.
 	 */
 	public static final String SYMBOL_IDENTIFIER_PREFIX = ComputedPropertyNameValueConverter.SYMBOL_IDENTIFIER_PREFIX;
+
+	/**
+	 * The default language version returned by method {@link #getLanguageVersion()} in case no actual
+	 * language version was set during the build . See {@link #getLanguageVersion()} for details.
+	 */
+	public static final String DEFAULT_LANGUAGE_VERSION = "0.0.0.v19990101_0000";
+
+	private static final String LANGUAGE_VERSION_PROPERTIES_FILE_NAME = "language-version.properties";
+
+	private static String languageVersionStr = null;
+
+	/**
+	 * Returns the N4JS language version as defined in file {@value #LANGUAGE_VERSION_PROPERTIES_FILE_NAME}.
+	 * <p>
+	 * An actual, meaningful version is only returned if it was set during the build by script
+	 * <code>compute-version.sh</code>; otherwise the default version {@link #DEFAULT_LANGUAGE_VERSION} is
+	 * returned. Since only publishing builds set the version, this default version will be returned in all
+	 * non-production cases, e.g. during debugging, local testing, testing during maven builds (both in CI
+	 * builds and the nightly builds).
+	 */
+	def public static String getLanguageVersion() {
+		if (languageVersionStr !== null) {
+			return languageVersionStr;
+		}
+		var Properties properties;
+		try (val InputStream in = N4JSLanguageUtils.getClassLoader().getResourceAsStream(LANGUAGE_VERSION_PROPERTIES_FILE_NAME)) {
+			if (in === null) {
+				throw new RuntimeException("unable to find properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME);
+			}
+			properties = new Properties();
+			properties.load(in);
+		} catch (IOException e) {
+			throw new RuntimeException("unable to load properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME, e);
+		}
+		val versionStr =  properties.getProperty("language.version");
+		if (versionStr === null) {
+			throw new RuntimeException("properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME + " does not contain property language.version");
+		}
+		languageVersionStr = versionStr;
+		return languageVersionStr;
+	}
 
 	/**
 	 * If the given function definition is asynchronous, will wrap given return type into a Promise.
