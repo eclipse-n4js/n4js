@@ -222,6 +222,23 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		InitializeResult result = new InitializeResult();
 
+		result.setCapabilities(createServerCapabilities(params));
+		access.addBuildListener(this);
+		return requestManager.runWrite(
+				() -> {
+					workspaceManager.initialize(baseDir, this::publishDiagnostics, CancelIndicator.NullImpl);
+					return result;
+				}, (cancelIndicator, it) -> it).thenApply(it -> initializeResult = it);
+	}
+
+	/**
+	 * Configure the server capabilities for this instance.
+	 *
+	 * @param params
+	 *            the initialization parametrs
+	 * @return the server capabilities
+	 */
+	protected ServerCapabilities createServerCapabilities(InitializeParams params) {
 		ServerCapabilities serverCapabilities = new ServerCapabilities();
 		serverCapabilities.setHoverProvider(true);
 		serverCapabilities.setDefinitionProvider(true);
@@ -299,13 +316,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				capabilitiesContributor.contribute(serverCapabilities, params);
 			}
 		}
-		result.setCapabilities(serverCapabilities);
-		access.addBuildListener(this);
-		return requestManager.runWrite(
-				() -> {
-					workspaceManager.initialize(baseDir, this::publishDiagnostics, CancelIndicator.NullImpl);
-					return result;
-				}, (cancelIndicator, it) -> it).thenApply(it -> initializeResult = it);
+		return serverCapabilities;
 	}
 
 	@Override
