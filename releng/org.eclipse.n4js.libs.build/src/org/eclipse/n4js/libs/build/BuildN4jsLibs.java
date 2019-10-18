@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.libs.build;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,12 +24,16 @@ import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowComponent;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.CliTools;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 
 /**
@@ -138,6 +144,42 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 			throw new RuntimeException(e);
 		} finally {
 			NodeYarnProcessBuilder.additionalEnvironmentVariables.clear();
+		}
+	}
+
+	@SuppressWarnings("unused") // used when new n4jsc is ready
+	private static void new_compile(File foldersContainingProjectFolders) {
+		final Path n4jsRootPath = UtilN4.findN4jsRepoRootPath();
+		final Path n4jsLibsRootPath = n4jsRootPath.resolve(N4JSGlobals.N4JS_LIBS_FOLDER_NAME);
+
+		CliCompileResult compileResult = new CliCompileResult();
+		try {
+			CliTools cliTools = new CliTools();
+			cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
+
+			ProcessResult installResult = cliTools.yarnInstall(n4jsLibsRootPath);
+			Preconditions.checkState(installResult.getExitCode() == 0, installResult);
+
+			cliTools.callN4jscCompilerInprocess(COMPILE(n4jsLibsRootPath.toFile()), false, compileResult);
+			println(compileResult.toString());
+			Preconditions.checkState(compileResult.getExitCode() == 0, "Error during n4jsc call");
+			Preconditions.checkState(compileResult.getErrs() == 0, "Errors in compiled sources");
+
+		} catch (IllegalStateException e) {
+			// comes from Preconditions.checkState()
+			println(e.toString());
+
+		} catch (Exception e) {
+			println("ERROR during building libs");
+			println(e.toString());
+			e.printStackTrace();
+
+			Throwable root = Throwables.getRootCause(e);
+			if (root != e) {
+				println("Root cause:");
+				root.printStackTrace();
+			}
+			throw new RuntimeException(e);
 		}
 	}
 
