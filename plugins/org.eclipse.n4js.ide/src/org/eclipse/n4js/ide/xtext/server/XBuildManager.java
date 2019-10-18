@@ -22,7 +22,6 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
@@ -120,19 +119,19 @@ public class XBuildManager {
 	/**
 	 * Issue key for cyclic dependencies
 	 */
-	public static final String CYCLIC_PROJECT_DEPENDENCIES = (XBuildManager.class.getCanonicalName()
-			+ ".cyclicProjectDependencies");
+	public static final String CYCLIC_PROJECT_DEPENDENCIES = XBuildManager.class.getName()
+			+ ".cyclicProjectDependencies";
 
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
 	private Provider<TopologicalSorter> sorterProvider;
 
-	private final LinkedHashSet<URI> dirtyFiles = CollectionLiterals.<URI> newLinkedHashSet();
+	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 
-	private final LinkedHashSet<URI> deletedFiles = CollectionLiterals.<URI> newLinkedHashSet();
+	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
 
-	private List<IResourceDescription.Delta> unreportedDeltas = CollectionLiterals.<IResourceDescription.Delta> newArrayList();
+	private List<IResourceDescription.Delta> unreportedDeltas = new ArrayList<>();
 
 	/**
 	 * Enqueue the given file collections.
@@ -172,7 +171,7 @@ public class XBuildManager {
 	public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 		List<ProjectDescription> sortedDescriptions = sortByDependencies(projects);
-		ArrayList<IResourceDescription.Delta> result = CollectionLiterals.<IResourceDescription.Delta> newArrayList();
+		List<IResourceDescription.Delta> result = new ArrayList<>();
 		for (ProjectDescription description : sortedDescriptions) {
 			XIncrementalBuilder.XResult partialresult = workspaceManager.getProjectManager(description.getName())
 					.doInitialBuild(indicator);
