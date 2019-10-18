@@ -279,7 +279,7 @@ public class XIncrementalBuilder {
 						operationCanceledManager.checkCanceled(cancelIndicator);
 						// trigger init
 						resource.getContents();
-						EcoreUtil2.resolveLazyCrossReferences(resource, cancelIndicator);
+						EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
 						operationCanceledManager.checkCanceled(cancelIndicator);
 						IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
 						IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
@@ -290,7 +290,7 @@ public class XIncrementalBuilder {
 						operationCanceledManager.checkCanceled(cancelIndicator);
 						if ((!request.isIndexOnly() && validate(resource)
 								&& serviceProvider.get(IShouldGenerate.class).shouldGenerate(resource,
-										cancelIndicator))) {
+										CancelIndicator.NullImpl))) {
 							operationCanceledManager.checkCanceled(cancelIndicator);
 							generate(resource, request, newSource2GeneratedMapping);
 						}
