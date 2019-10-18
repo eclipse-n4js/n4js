@@ -219,7 +219,7 @@ public class XBuildManager {
 	/**
 	 * @since 2.18
 	 */
-	protected Boolean mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
+	protected void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
 		if (this.unreportedDeltas.isEmpty()) {
 			unreportedDeltas.addAll(newDeltas);
 		} else {
@@ -237,7 +237,6 @@ public class XBuildManager {
 				}
 			});
 		}
-		return null;
 	}
 
 	/**
