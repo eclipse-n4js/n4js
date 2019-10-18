@@ -48,6 +48,8 @@ public enum N4jscExitCode {
 
 	/** Error when assembling the test catalog */
 	TEST_CATALOG_ASSEMBLATION_ERROR(110, "Error when assembling the test catalog"),
+	/** Error when assembling the test catalog */
+	PERFORMANCE_REPORT_ERROR(120, "Error creating performance report"),
 
 	;
 

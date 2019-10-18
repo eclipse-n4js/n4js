@@ -45,13 +45,13 @@ public class N4jscOptions {
 	 * If this environment variable is set, the headless compiler will always enable performance data collection,
 	 * regardless of the parameter {@link Options#performanceReport}.
 	 */
-	private static String N4JSC_PERFORMANCE_REPORT_ENV = "N4JSC_PERFORMANCE_REPORT";
+	public static final String N4JSC_PERFORMANCE_REPORT_ENV = "N4JSC_PERFORMANCE_REPORT";
 
 	/** Marker used to distinguish between compile-messages and runner output. */
-	public static String MARKER_RUNNER_OUPTUT = "======= =======";
+	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
 	/** Usage information. */
-	public static String USAGE = "Usage: java -jar n4jsc.jar [GOAL] [FILE(s)] [OPTION(s)]";
+	public static final String USAGE = "Usage: java -jar n4jsc.jar [GOAL] [FILE(s)] [OPTION(s)]";
 
 	/** Use to specify the required goal for an option. */
 	@Retention(RUNTIME)
@@ -142,6 +142,7 @@ public class N4jscOptions {
 
 		@Option(name = "--performanceReport", aliases = "-pR", //
 				hidden = true, //
+				depends = "--performanceKey", //
 				usage = "[compile] enables performance data collection and specifies the location of the performance report.", //
 				handler = N4JSCmdLineParser.N4JSFileOptionHandler.class)
 		@GoalRequirements(goals = N4jscGoal.compile)
@@ -149,7 +150,6 @@ public class N4jscOptions {
 
 		@Option(name = "--performanceKey", aliases = "-pK", //
 				hidden = true, //
-				depends = "--performanceReport", //
 				usage = "[compile] specifies the data collector key of the collector whose performance data is saved in the "
 						+ "performance report.", //
 				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)

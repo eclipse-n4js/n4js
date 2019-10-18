@@ -20,13 +20,14 @@ import java.util.stream.Collectors;
 
 import org.eclipse.n4js.cli.N4jscOptions.GoalRequirements;
 
+import com.google.common.base.Strings;
+
 /**
- *
+ * Validates the given n4jsc.jar options
  */
 public class N4jscOptionsValidater {
 
-	/**
-	 */
+	/** Entry function for validator */
 	static public N4jscExitCode validate(N4jscOptions options) throws N4jscException {
 
 		validateGoalDefinitions(options);
@@ -78,6 +79,10 @@ public class N4jscOptionsValidater {
 
 		if (options.getTestCatalog() != null) {
 			validateTestCatalogFile(options);
+		}
+
+		if (options.getPerformanceKey() != null || options.getPerformanceReport() != null) {
+			validatePerformanceReport(options);
 		}
 	}
 
@@ -160,4 +165,10 @@ public class N4jscOptionsValidater {
 		}
 	}
 
+	private static void validatePerformanceReport(N4jscOptions options) throws N4jscException {
+		if (options.getPerformanceReport() != null && Strings.isNullOrEmpty(options.getPerformanceKey())) {
+			String msg = "Missing performance key.";
+			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
+		}
+	}
 }

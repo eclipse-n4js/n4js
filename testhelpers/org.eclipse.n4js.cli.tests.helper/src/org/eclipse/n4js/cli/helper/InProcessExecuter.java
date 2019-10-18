@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.cli.helper;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
@@ -61,8 +59,6 @@ public class InProcessExecuter<ArgType> {
 			if (cliResult.exitCode == ProcessResult.NO_EXIT_CODE) {
 				cliResult.exitCode = -1;
 			}
-			e.printStackTrace();
-			fail(e.getMessage());
 
 		} finally {
 			cliResult.duration = sw.stop().elapsed(TimeUnit.MILLISECONDS);

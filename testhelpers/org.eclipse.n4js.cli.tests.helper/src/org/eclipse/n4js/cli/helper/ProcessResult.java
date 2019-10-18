@@ -91,7 +91,7 @@ public class ProcessResult {
 		props.add(Tuples.pair("command", command));
 		props.add(Tuples.pair("exit code", (exitCode == NO_EXIT_CODE ? "-" : String.valueOf(exitCode))));
 		props.add(Tuples.pair("duration", (duration == NO_DURATION ? "-" : duration + "ms")));
-		props.add(Tuples.pair("exception", exception == null ? "" : exception.getMessage()));
+		props.add(Tuples.pair("exception", exception == null ? "" : exception.toString()));
 
 		props.add(Tuples.pair("std out", ""));
 		if (stdOut != null && !stdOut.isBlank()) {

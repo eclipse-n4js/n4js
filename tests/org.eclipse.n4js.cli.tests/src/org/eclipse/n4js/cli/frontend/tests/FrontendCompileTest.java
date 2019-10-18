@@ -80,6 +80,60 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 
 	/**  */
 	@Test
+	public void checkPerformanceReportGiven() {
+		String args[] = { "compile", "--performanceReport", "report.csv" };
+		CliCompileResult result = n4jsc(args, 10);
+		assertEquals(result.toString(),
+				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pR)\" requires the option(s) [--performanceKey]",
+				result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceReportGivenPerformanceKeyGiven() {
+		String args[] = { "compile", ".", "--performanceReport", "report.csv", "--performanceKey", "MyKey" };
+		CliCompileResult result = n4jsc(args, 0);
+		assertEquals(result.toString(), "Performance Data Collection is enabled.", result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceReportGivenPerformanceKeyMissing() {
+		String args[] = { "compile", ".", "--performanceReport", "report.csv", "--performanceKey", "" };
+		CliCompileResult result = n4jsc(args, 13);
+		assertEquals(result.toString(),
+				"ERROR-13 (Invalid option):  Missing performance key.",
+				result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceReportMissing() {
+		String args[] = { "compile", "--performanceReport", " " };
+		CliCompileResult result = n4jsc(args, 10);
+		assertEquals(result.toString(),
+				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pR)\" requires the option(s) [--performanceKey]",
+				result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceKeyGiven() {
+		String args[] = { "compile", ".", "--performanceKey", "" };
+		CliCompileResult result = n4jsc(args, 0);
+		assertEquals(result.toString(), "", result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceKeyMissing() {
+		String args[] = { "compile", ".", "--performanceKey", "" };
+		CliCompileResult result = n4jsc(args, 0);
+		assertEquals(result.toString(), "", result.getStdOut());
+	}
+
+	/**  */
+	@Test
 	public void checkNoTestsOk() {
 		String args[] = { ".", "--noTests" };
 		CliCompileResult result = n4jsc(args);
