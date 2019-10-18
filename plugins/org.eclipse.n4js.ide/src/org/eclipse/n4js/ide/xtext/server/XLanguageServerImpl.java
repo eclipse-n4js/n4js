@@ -409,7 +409,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	/**
 	 * Compute a buildable and run the build in a write action
-	 * 
+	 *
 	 * @param newBuildable
 	 *            the factory for the buildable.
 	 */
