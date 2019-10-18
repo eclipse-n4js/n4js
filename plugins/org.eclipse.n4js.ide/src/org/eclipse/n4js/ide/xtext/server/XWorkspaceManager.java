@@ -70,7 +70,7 @@ public class XWorkspaceManager {
 
 	private Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
 
-	private IWorkspaceConfig _workspaceConfig;
+	private IWorkspaceConfig workspaceConfig;
 
 	private final List<ILanguageServerAccess.IBuildListener> buildListeners = new ArrayList<>();
 
@@ -181,12 +181,12 @@ public class XWorkspaceManager {
 	 *             if the workspace is not yet initialized
 	 */
 	protected IWorkspaceConfig getWorkspaceConfig() throws ResponseErrorException {
-		if ((_workspaceConfig == null)) {
+		if (workspaceConfig == null) {
 			ResponseError error = new ResponseError(ResponseErrorCode.serverNotInitialized,
 					"Workspace has not been initialized yet.", null);
 			throw new ResponseErrorException(error);
 		}
-		return _workspaceConfig;
+		return workspaceConfig;
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class XWorkspaceManager {
 	 *            the new workspace configuration.
 	 */
 	protected void setWorkspaceConfig(IWorkspaceConfig workspaceConfig) {
-		_workspaceConfig = workspaceConfig;
+		this.workspaceConfig = workspaceConfig;
 	}
 
 	/**
