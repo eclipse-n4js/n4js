@@ -8,6 +8,8 @@
 package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,7 +131,6 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -555,7 +556,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				? resourceServiceProvider.get(DocumentSymbolService.class)
 				: null;
 		if ((documentSymbolService == null)) {
-			return CollectionLiterals.emptyList();
+			return Collections.emptyList();
 		}
 		return this.workspaceManager.doRead(uri,
 				(doc, res) -> documentSymbolService.getDefinitions(doc, res, params, resourceAccess, cancelIndicator));
@@ -570,7 +571,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 					? resourceServiceProvider.get(DocumentSymbolService.class)
 					: null;
 			if ((documentSymbolService == null)) {
-				return CollectionLiterals.emptyList();
+				return Collections.emptyList();
 			}
 			return this.workspaceManager.doRead(uri,
 					(document, resource) -> documentSymbolService.getReferences(document, resource, params,
@@ -587,7 +588,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			IDocumentSymbolService documentSymbolService = getIDocumentSymbolService(
 					languagesRegistry.getResourceServiceProvider(uri));
 			if ((documentSymbolService == null)) {
-				return CollectionLiterals.emptyList();
+				return Collections.emptyList();
 			}
 			return this.workspaceManager.doRead(uri, (document, resource) -> documentSymbolService.getSymbols(document,
 					resource, params, cancelIndicator));
@@ -683,7 +684,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 					? serviceProvider.get(IDocumentHighlightService.class)
 					: null;
 			if (service == null) {
-				return CollectionLiterals.emptyList();
+				return Collections.emptyList();
 			}
 			return this.workspaceManager.doRead(uri, (doc,
 					resource) -> service.getDocumentHighlights(doc, resource, params, cancelIndicator));
@@ -699,7 +700,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			ICodeActionService2 service2 = serviceProvider != null ? serviceProvider.get(ICodeActionService2.class)
 					: null;
 			if (service == null && service2 == null) {
-				return CollectionLiterals.emptyList();
+				return Collections.emptyList();
 			}
 			return workspaceManager.doRead(uri, (doc, resource) -> {
 				List<Either<Command, CodeAction>> result = new ArrayList<>();
@@ -731,7 +732,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		for (CodeLens lens : codeLenses) {
 			Object data = lens.getData();
 			if (data != null) {
-				lens.setData(CollectionLiterals.newArrayList(uri, lens.getData()));
+				lens.setData(Arrays.asList(uri, lens.getData()));
 			} else {
 				lens.setData(uri);
 			}
@@ -763,7 +764,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 					? resourceServiceProvider.get(ICodeLensService.class)
 					: null;
 			if ((codeLensService == null)) {
-				return CollectionLiterals.emptyList();
+				return Collections.emptyList();
 			}
 			return workspaceManager.doRead(uri, (document, resource) -> {
 				List<? extends CodeLens> result = codeLensService.computeCodeLenses(document, resource, params,
@@ -802,7 +803,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 					? resourceServiceProvider.get(FormattingService.class)
 					: null;
 			if ((formatterService == null)) {
-				return CollectionLiterals.emptyList();
+				return Collections.emptyList();
 			}
 			return workspaceManager.doRead(uri, (document,
 					resource) -> formatterService.format(document, resource, params, cancelIndicator));
@@ -818,7 +819,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 					? resourceServiceProvider.get(FormattingService.class)
 					: null;
 			if ((formatterService == null)) {
-				return CollectionLiterals.emptyList();
+				return Collections.emptyList();
 			}
 			return workspaceManager.doRead(uri,
 					(document, resource) -> formatterService.format(document, resource, params, cancelIndicator));
@@ -930,7 +931,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return supportedMethods;
 		}
 		synchronized (this.extensionProviders) {
-			LinkedHashMap<String, JsonRpcMethod> supportedMethods = new LinkedHashMap<>();
+			Map<String, JsonRpcMethod> supportedMethods = new LinkedHashMap<>();
 			supportedMethods.putAll(ServiceEndpoints.getSupportedMethods(getClass()));
 
 			Map<String, JsonRpcMethod> extensions = new LinkedHashMap<>();
