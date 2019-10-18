@@ -16,6 +16,8 @@ def MAVEN_OPTIONS = '-U -V -B -e '                                +
                     '-Dmaven.test.redirectTestOutputToFile=true ' +
                     '-Dtycho.localArtifacts=ignore'
 
+def DEBUG_DEPLOY_SUFFIX = ''; // should be empty string by default; use something like '_GH-1234' for debugging the publishing build itself
+
 // the following will be set below in stage 'Compute Version':
 def String LANGUAGE_VERSION;
 def String N4JS_LIBS_DIST_TAG;
@@ -70,24 +72,32 @@ pipeline {
                 dir('n4js') {
                     sh "mvn $MAVEN_OPTIONS -PbuildProduct -DlanguageVersion=${LANGUAGE_VERSION} -DexcludeJRE -DnoTests clean verify"
                 }
+
+                // assert that the headless builder reports the correct version
+                script {
+                    def versionOfHeadlessBuilder = sh(returnStdout: true, script: 'java -jar n4js/plugins/org.eclipse.n4js.cli/target/new_n4jsc.jar --version').trim();
+                    if (versionOfHeadlessBuilder != LANGUAGE_VERSION) {
+                        error "headless builder reported an incorrect version: ${versionOfHeadlessBuilder}"
+                    }
+                }
             }
         }
 
         stage('Sign macOS product') {
             steps {
-                dir('n4js/builds/org.eclipse.n4js.product.build/target/products') {
+                dir('n4js/target/products') {
                     sh "pwd"
 
                     // sign the macOS product
                     sh """\
-                        mv      n4jside-macosx.cocoa.x86_64.zip          unsigned_n4jside-macosx.cocoa.x86_64.zip
-                        curl -o n4jside-macosx.cocoa.x86_64.zip -F file=@unsigned_n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/macsign.php
-                        rm unsigned_n4jside-macosx.cocoa.x86_64.zip
+                        mv      n4js-ide_macos.zip          unsigned_n4js-ide_macos.zip
+                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip http://build.eclipse.org:31338/macsign.php
+                        rm unsigned_n4js-ide_macos.zip
                     """
 
                     // bundle macOS product into a signed .dmg image
                     sh """\
-                        curl -o n4jside-macosx.cocoa.x86_64.dmg -F sign=true -F source=@n4jside-macosx.cocoa.x86_64.zip http://build.eclipse.org:31338/dmg-packager
+                        curl -o n4js-ide_macos.dmg -F sign=true -F source=@n4js-ide_macos.zip http://build.eclipse.org:31338/dmg-packager
                     """
                 }
             }
@@ -96,6 +106,17 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    // append language version to file names of products
+                    sh """
+                        cd n4js/target
+                        mv n4jsc.jar                n4jsc_${LANGUAGE_VERSION}.jar
+                        cd products
+                        mv n4js-ide_win.zip         n4js-ide_win_${LANGUAGE_VERSION}.zip
+                        mv n4js-ide_macos.zip       n4js-ide_macos_${LANGUAGE_VERSION}.zip
+                        mv n4js-ide_macos.dmg       n4js-ide_macos_${LANGUAGE_VERSION}.dmg
+                        mv n4js-ide_linux-gtk.zip   n4js-ide_linux-gtk_${LANGUAGE_VERSION}.zip
+                    """
+
                     echo "Deploying version ${LANGUAGE_VERSION} of N4JS IDE and headless builder ..."
 
                     echo 'START: moving old products / update sites to archive.eclipse.org (those that are older than a week):'
@@ -107,27 +128,40 @@ pipeline {
                     echo 'END: moving old products / update sites to archive.eclipse.org'
 
                     echo 'START: copying new products / update site to download.eclipse.org:'
+                    def pathProductsVersion = "/home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION";
+                    def pathUpdatesVersion  = "/home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION";
                     sh """\
-                        mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
-                        cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.zip              /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
-                        cp     n4js/builds/org.eclipse.n4js.product.build/target/products/*.dmg              /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
-                        cp     n4js/tools/org.eclipse.n4js.hlc/target/n4jsc.jar                              /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION
+                        mkdir -p ${pathProductsVersion}
+                        cp       n4js/target/products/*.zip  ${pathProductsVersion}
+                        cp       n4js/target/products/*.dmg  ${pathProductsVersion}
+                        cp       n4js/target/*.jar           ${pathProductsVersion}
 
-                        mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$LANGUAGE_VERSION
-                        cp -R  n4js/builds/org.eclipse.n4js.product.build/target/repository/*                /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$LANGUAGE_VERSION
+                        mkdir -p ${pathUpdatesVersion}
+                        cp -R    n4js/builds/org.eclipse.n4js.product.build/target/repository/*  ${pathUpdatesVersion}
                     """
                     echo 'END: copying new products / update site to download.eclipse.org'
 
                     echo 'START: updating folder LATEST on download.eclipse.org:'
                     if (N4JS_LIBS_DIST_TAG == 'latest') {
+                        def pathProductsLatest = "/home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/LATEST";
+                        def pathUpdatesLatest  = "/home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/LATEST";
                         sh """\
-                            rm -rf /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
-                            mkdir  /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
-                            cp -R  /home/data/httpd/download.eclipse.org/n4js/products/nightly/$LANGUAGE_VERSION/* /home/data/httpd/download.eclipse.org/n4js/products/nightly/LATEST
+                            rm -rf   ${pathProductsLatest}
+                            mkdir -p ${pathProductsLatest}
+                            cp -R    ${pathProductsVersion}/* ${pathProductsLatest}
 
-                            rm -rf /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
-                            mkdir  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
-                            cp -R  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/$LANGUAGE_VERSION/*  /home/data/httpd/download.eclipse.org/n4js/updates/nightly/LATEST
+                            rm -rf   ${pathUpdatesLatest}
+                            mkdir -p ${pathUpdatesLatest}
+                            cp -R    ${pathUpdatesVersion}/*  ${pathUpdatesLatest}
+                        """
+
+                        // create copies of products without version suffix
+                        sh """\
+                            cp ${pathProductsLatest}/n4jsc_${LANGUAGE_VERSION}.jar               ${pathProductsLatest}/n4jsc.jar
+                            cp ${pathProductsLatest}/n4js-ide_win_${LANGUAGE_VERSION}.zip        ${pathProductsLatest}/n4js-ide_win.zip
+                            cp ${pathProductsLatest}/n4js-ide_macos_${LANGUAGE_VERSION}.zip      ${pathProductsLatest}/n4js-ide_macos.zip
+                            cp ${pathProductsLatest}/n4js-ide_macos_${LANGUAGE_VERSION}.dmg      ${pathProductsLatest}/n4js-ide_macos.dmg
+                            cp ${pathProductsLatest}/n4js-ide_linux-gtk_${LANGUAGE_VERSION}.zip  ${pathProductsLatest}/n4js-ide_linux-gtk.zip
                         """
                     } else {
                         echo 'SKIPPED! (because publishing with a dist-tag other than "latest")'
@@ -137,9 +171,9 @@ pipeline {
                     // show a summary
                     def output = sh returnStdout: true, script: """\
                         echo ******************** Products on download server:
-                        ls -l /home/data/httpd/download.eclipse.org/n4js/products/nightly
+                        ls -l /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly
                         echo ******************** Update sites on download server:
-                        ls -l /home/data/httpd/download.eclipse.org/n4js/updates/nightly
+                        ls -l /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly
                         echo ******************** Products on archive server:
                         ls -l /home/data/httpd/archive.eclipse.org/n4js/products/nightly
                         echo ******************** Update sites on archive server:

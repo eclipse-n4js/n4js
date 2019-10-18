@@ -19,6 +19,23 @@ This chapter is only about coding; add information on things like Eclipse setup 
 chapters. Similarly, this chapter is intended to provide just a quick overview, check-list and reminder; add detailed
 information and diagrams to one of the succeeding chapters.
 
+
+== Versioning
+
+The rule of thumb for configuring the version increments through file `version.json` is as follows:
+
+* when introducing non-breaking changes in the n4js-libs, nothing has to be changed in `version.json`;
+  (version increments will be computed automatically by incrementing the patch segment).
+* when introducing breaking changes in the n4js-libs, edit file `version.json` to request an
+  increment of the major/minor segment.
+* in case of breaking changes ONLY in the core language (IDE or headless builder), we do not yet
+  increment any versions (except updating time stamps which is done automatically), so file
+  `version.json` does not have to be changed in this case.
+
+For details, including how to configure a pre-release tag / dist-tag for publishing for testing
+purposes, see <<sec:versioning>>.
+
+
 == Naming
 
 * The internal handling of N4JS project names is non-trivial (due to the support for npm scopes), see

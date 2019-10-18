@@ -119,12 +119,24 @@ public class N4JSLanguageUtils {
 	 */
 	public static final String SYMBOL_IDENTIFIER_PREFIX = ComputedPropertyNameValueConverter.SYMBOL_IDENTIFIER_PREFIX;
 
+	/**
+	 * The default language version returned by method {@link #getLanguageVersion()} in case no actual
+	 * language version was set during the build . See {@link #getLanguageVersion()} for details.
+	 */
+	public static final String DEFAULT_LANGUAGE_VERSION = "0.0.0.v19990101_0000";
+
 	private static final String LANGUAGE_VERSION_PROPERTIES_FILE_NAME = "language-version.properties";
 
 	private static String languageVersionStr = null;
 
 	/**
 	 * Returns the N4JS language version as defined in file {@value #LANGUAGE_VERSION_PROPERTIES_FILE_NAME}.
+	 * <p>
+	 * An actual, meaningful version is only returned if it was set during the build by script
+	 * <code>compute-version.sh</code>; otherwise the default version {@link #DEFAULT_LANGUAGE_VERSION} is
+	 * returned. Since only publishing builds set the version, this default version will be returned in all
+	 * non-production cases, e.g. during debugging, local testing, testing during maven builds (both in CI
+	 * builds and the nightly builds).
 	 */
 	def public static String getLanguageVersion() {
 		if (languageVersionStr !== null) {
