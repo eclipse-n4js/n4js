@@ -9,6 +9,7 @@ package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +116,11 @@ public class XBuildManager {
 		 * Run the build
 		 */
 		List<IResourceDescription.Delta> build(CancelIndicator cancelIndicator);
+
+		/**
+		 * No build is going to happen.
+		 */
+		XBuildable NO_BUILD = (cancelIndicator) -> Collections.emptyList();
 	}
 
 	/**

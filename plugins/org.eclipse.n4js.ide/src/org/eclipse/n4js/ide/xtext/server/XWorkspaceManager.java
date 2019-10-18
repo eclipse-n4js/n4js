@@ -114,7 +114,7 @@ public class XWorkspaceManager {
 
 		@Override
 		public boolean hasContent(URI uri) {
-			return openDocuments.containsKey(uri);
+			return isDocumentOpen(uri);
 		}
 	};
 
@@ -156,7 +156,7 @@ public class XWorkspaceManager {
 		List<ProjectDescription> newProjects = new ArrayList<>();
 		Set<String> projectNames = projectName2ProjectManager.keySet();
 		Set<String> remainingProjectNames = new HashSet<>(projectNames);
-		getWorkspaceConfig().getProjects().forEach((projectConfig) -> {
+		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
 			if (projectName2ProjectManager.containsKey(projectConfig.getName())) {
 				remainingProjectNames.remove(projectConfig.getName());
 			} else {
@@ -167,7 +167,7 @@ public class XWorkspaceManager {
 				projectName2ProjectManager.put(projectDescription.getName(), projectManager);
 				newProjects.add(projectDescription);
 			}
-		});
+		}
 		for (String deletedProject : remainingProjectNames) {
 			projectName2ProjectManager.remove(deletedProject);
 			fullIndex.remove(deletedProject);
@@ -255,7 +255,7 @@ public class XWorkspaceManager {
 	 * @return the project base uri.
 	 */
 	public URI getProjectBaseDir(URI uri) {
-		IProjectConfig projectConfig = getWorkspaceConfig().findProjectContaining(uri);
+		IProjectConfig projectConfig = getProjectConfig(uri);
 		if (projectConfig != null) {
 			return projectConfig.getPath();
 		}
@@ -268,12 +268,19 @@ public class XWorkspaceManager {
 	 * @return the project manager.
 	 */
 	public XProjectManager getProjectManager(URI uri) {
-		IProjectConfig projectConfig = getWorkspaceConfig().findProjectContaining(uri);
+		IProjectConfig projectConfig = getProjectConfig(uri);
 		String name = null;
 		if (projectConfig != null) {
 			name = projectConfig.getName();
 		}
 		return getProjectManager(name);
+	}
+
+	/**
+	 * Find the project that contains the uri.
+	 */
+	protected IProjectConfig getProjectConfig(URI uri) {
+		return getWorkspaceConfig().findProjectContaining(uri);
 	}
 
 	/**
@@ -314,13 +321,13 @@ public class XWorkspaceManager {
 	 */
 	@Deprecated
 	public XBuildManager.XBuildable didChange(URI uri, Integer version, Iterable<TextEdit> changes) {
-		if (!openDocuments.containsKey(uri)) {
-			XWorkspaceManager.LOG.error("The document " + uri + " has not been opened.");
-			return (cancelIndicator) -> Collections.emptyList();
-		}
 		Document contents = openDocuments.get(uri);
+		if (contents == null) {
+			XWorkspaceManager.LOG.error("The document " + uri + " has not been opened.");
+			return XBuildable.NO_BUILD;
+		}
 		openDocuments.put(uri, contents.applyChanges(changes));
-		return didChangeFiles(ImmutableList.of(uri), new ArrayList<>());
+		return didChangeFiles(ImmutableList.of(uri), Collections.emptyList());
 	}
 
 	/**
@@ -338,13 +345,13 @@ public class XWorkspaceManager {
 	 */
 	public XBuildManager.XBuildable didChangeTextDocumentContent(URI uri, Integer version,
 			Iterable<TextDocumentContentChangeEvent> changes) {
-		if (!openDocuments.containsKey(uri)) {
-			XWorkspaceManager.LOG.error("The document " + uri + " has not been opened.");
-			return (cancelIndicator) -> Collections.emptyList();
-		}
 		Document contents = openDocuments.get(uri);
+		if (contents == null) {
+			XWorkspaceManager.LOG.error("The document " + uri + " has not been opened.");
+			return XBuildable.NO_BUILD;
+		}
 		openDocuments.put(uri, contents.applyTextDocumentChanges(changes));
-		return didChangeFiles(ImmutableList.of(uri), new ArrayList<>());
+		return didChangeFiles(ImmutableList.of(uri), Collections.emptyList());
 	}
 
 	/**
@@ -360,7 +367,7 @@ public class XWorkspaceManager {
 	 */
 	public XBuildManager.XBuildable didOpen(URI uri, Integer version, String contents) {
 		openDocuments.put(uri, new Document(version, contents));
-		return didChangeFiles(ImmutableList.of(uri), new ArrayList<>());
+		return didChangeFiles(ImmutableList.of(uri), Collections.emptyList());
 	}
 
 	/**
@@ -377,9 +384,9 @@ public class XWorkspaceManager {
 	public XBuildManager.XBuildable didClose(URI uri) {
 		openDocuments.remove(uri);
 		if (exists(uri)) {
-			return didChangeFiles(ImmutableList.of(uri), new ArrayList<>());
+			return didChangeFiles(ImmutableList.of(uri), Collections.emptyList());
 		}
-		return didChangeFiles(new ArrayList<>(), ImmutableList.of(uri));
+		return didChangeFiles(Collections.emptyList(), ImmutableList.of(uri));
 	}
 
 	/**
