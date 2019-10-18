@@ -419,7 +419,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			List<URI> deletedFiles = new ArrayList<>();
 			params.getChanges().stream()
 					.map((fileEvent) -> Pair.of(uriExtensions.toUri(fileEvent.getUri()), fileEvent.getType()))
-					.filter(pair -> workspaceManager.isDocumentOpen(pair.getKey()))
+					.filter(pair -> !workspaceManager.isDocumentOpen(pair.getKey()))
 					.forEach(pair -> {
 						if (pair.getValue() == FileChangeType.Deleted) {
 							deletedFiles.add(pair.getKey());
@@ -760,7 +760,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
-		return this.requestManager.<List<? extends TextEdit>> runRead((cancelIndicator) -> {
+		return this.requestManager.runRead((cancelIndicator) -> {
 			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
 			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
 			FormattingService formatterService = resourceServiceProvider != null
