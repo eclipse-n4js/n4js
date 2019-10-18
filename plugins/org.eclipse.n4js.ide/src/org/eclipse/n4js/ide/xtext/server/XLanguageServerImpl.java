@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -91,6 +92,7 @@ import org.eclipse.lsp4j.services.LanguageClientExtensions;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
+import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -360,26 +362,25 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
-		requestManager.runWrite(() -> {
+		runBuildable(() -> {
 			TextDocumentItem textDocument = params.getTextDocument();
 			return workspaceManager.didOpen(getURI(textDocument),
 					textDocument.getVersion(), textDocument.getText());
-		}, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+		});
 	}
 
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
-		requestManager.runWrite(() -> {
+		runBuildable(() -> {
 			VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
 			return workspaceManager.didChangeTextDocumentContent(getURI(textDocument),
 					textDocument.getVersion(), params.getContentChanges());
-		}, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+		});
 	}
 
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
-		requestManager.runWrite(() -> workspaceManager.didClose(getURI(params.getTextDocument())),
-				(cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+		runBuildable(() -> workspaceManager.didClose(getURI(params.getTextDocument())));
 	}
 
 	@Override
@@ -389,7 +390,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		requestManager.runWrite(() -> {
+		runBuildable(() -> {
 			List<URI> dirtyFiles = new ArrayList<>();
 			List<URI> deletedFiles = new ArrayList<>();
 			params.getChanges().stream()
@@ -403,7 +404,17 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 						}
 					});
 			return workspaceManager.didChangeFiles(dirtyFiles, deletedFiles);
-		}, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+		});
+	}
+
+	/**
+	 * Compute a buildable and run the build in a write action
+	 * 
+	 * @param newBuildable
+	 *            the factory for the buildable.
+	 */
+	protected void runBuildable(Supplier<? extends XBuildable> newBuildable) {
+		requestManager.runWrite(newBuildable::get, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
 	}
 
 	@Override
