@@ -37,7 +37,6 @@ import com.google.inject.Provider;
  * @author Jan Koehnlein - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings("restriction")
 public class XBuildManager {
 	/**
 	 * The resources that are about to be build.

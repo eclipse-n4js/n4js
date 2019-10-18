@@ -144,7 +144,7 @@ import com.google.inject.Inject;
  * @author Sven Efftinge - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class XLanguageServerImpl implements LanguageServer, WorkspaceService, TextDocumentService, LanguageClientAware,
 		Endpoint, JsonRpcMethodProvider, ILanguageServerAccess.IBuildListener {
 
@@ -231,7 +231,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		return ImmutableSet.copyOf(sorted.values());
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
 		if (this.initializeParams != null) {
@@ -337,7 +336,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		initialized.complete(params);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Deprecated
 	private URI deprecatedToBaseDir(InitializeParams params) {
 		String rootPath = params.getRootPath();
