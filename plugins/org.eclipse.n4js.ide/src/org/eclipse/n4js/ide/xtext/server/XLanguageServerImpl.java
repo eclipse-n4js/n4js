@@ -150,32 +150,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
-	/**
-	 * A cancel indicator that will not cancel immediately but only after a second delay to allow short running tasks to
-	 * complete despite an attempt to cancel.
-	 */
-	public static class BufferedCancelIndicator implements CancelIndicator {
-		private final CancelIndicator delegate;
-
-		private long canceledSince;
-
-		/**
-		 * Constructor
-		 */
-		public BufferedCancelIndicator(CancelIndicator delegate) {
-			this.delegate = delegate;
-		}
-
-		@Override
-		public boolean isCanceled() {
-			if (this.canceledSince == 0 && this.delegate.isCanceled()) {
-				this.canceledSince = System.currentTimeMillis();
-				return false;
-			}
-			return this.canceledSince != 0 && System.currentTimeMillis() > this.canceledSince + 1000;
-		}
-	}
-
 	@Inject
 	private RequestManager requestManager;
 

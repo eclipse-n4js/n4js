@@ -23,10 +23,11 @@ import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -185,11 +186,11 @@ public class XBuildManager {
 	 */
 	protected List<IResourceDescription.Delta> internalBuild(CancelIndicator cancelIndicator) {
 		List<URI> allDirty = new ArrayList<>(dirtyFiles);
-		HashMultimap<ProjectDescription, URI> project2dirty = HashMultimap.create();
+		Multimap<ProjectDescription, URI> project2dirty = HashMultimap.create();
 		for (URI dirty : allDirty) {
 			project2dirty.put(workspaceManager.getProjectManager(dirty).getProjectDescription(), dirty);
 		}
-		HashMultimap<ProjectDescription, URI> project2deleted = HashMultimap.create();
+		Multimap<ProjectDescription, URI> project2deleted = HashMultimap.create();
 		for (URI deleted : deletedFiles) {
 			ProjectDescription projectManager = workspaceManager.getProjectManager(deleted)
 					.getProjectDescription();
@@ -203,8 +204,8 @@ public class XBuildManager {
 			List<URI> projectDeleted = new ArrayList<>(project2deleted.get(it));
 			XIncrementalBuilder.XResult partialResult = projectManager.doBuild(projectDirty, projectDeleted,
 					unreportedDeltas, cancelIndicator);
-			allDirty.addAll(
-					ListExtensions.map(partialResult.getAffectedResources(), IResourceDescription.Delta::getUri));
+			FluentIterable.from(partialResult.getAffectedResources()).transform(IResourceDescription.Delta::getUri)
+					.copyInto(allDirty);
 			dirtyFiles.removeAll(projectDirty);
 			deletedFiles.removeAll(projectDeleted);
 			mergeWithUnreportedDeltas(partialResult.getAffectedResources());
