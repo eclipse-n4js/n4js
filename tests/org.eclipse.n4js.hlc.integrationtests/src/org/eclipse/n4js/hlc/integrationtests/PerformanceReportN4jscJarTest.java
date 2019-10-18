@@ -11,6 +11,7 @@
 package org.eclipse.n4js.hlc.integrationtests;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.eclipse.n4js.smith.N4JSDataCollectors.HEADLESS_N4JS_COMPILER_COLLECTOR_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
@@ -22,6 +23,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.N4jscTestOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliJarTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.junit.Test;
@@ -32,6 +34,10 @@ import com.google.common.io.CharStreams;
  * IMPORTANT: for info on how to run this test locally, see {@link AbstractCliJarTest}!
  */
 public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
+	static final Path WORKSPACE = Path.of(TARGET, WORKSPACE_FOLDER);
+	static final File PROJECT = WORKSPACE.resolve("performance-report").toAbsolutePath().toFile();
+	static final File PERFORMANCE_REPORT_FILE = WORKSPACE.resolve("report.csv").toAbsolutePath().toFile();
+
 	/** Initializes test workspace data. */
 	public PerformanceReportN4jscJarTest() {
 		super("probands/GH-1062", false);
@@ -43,11 +49,13 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	 */
 	@Test
 	public void testPerformanceReportViaParameter() throws IOException {
-		File project = Path.of(TARGET, WORKSPACE_FOLDER, "performance-report").toAbsolutePath().toFile();
-		File performanceReportLocation = new File(WORKSPACE_FOLDER, "report.csv");
+		N4jscTestOptions options = COMPILE(PROJECT)
+				.performanceReport(PERFORMANCE_REPORT_FILE)
+				.performanceKey(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
 
-		CliCompileResult cliResult = n4jsc(COMPILE(project).performanceReport(performanceReportLocation));
-		makeAssertions(performanceReportLocation, cliResult);
+		CliCompileResult cliResult = n4jsc(options);
+		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
+		makeAssertions(cliResult);
 	}
 
 	/**
@@ -56,28 +64,27 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	 */
 	@Test
 	public void testPerformanceReportViaEnvironmemtVariable() throws IOException {
-		File project = Path.of(TARGET, WORKSPACE_FOLDER, "performance-report").toAbsolutePath().toFile();
-		File performanceReportLocation = new File(WORKSPACE_FOLDER, "report.csv");
-
 		// setup system environment variables
-		setEnvironmentVariable("N4JSC_PERFORMANCE_REPORT", performanceReportLocation.toString());
+		setEnvironmentVariable(N4jscOptions.N4JSC_PERFORMANCE_REPORT_ENV, PERFORMANCE_REPORT_FILE.toString());
 
-		CliCompileResult cliResult = n4jsc(COMPILE(project));
-		makeAssertions(performanceReportLocation, cliResult);
+		N4jscTestOptions options = COMPILE(PROJECT).performanceKey("\"" + HEADLESS_N4JS_COMPILER_COLLECTOR_NAME + "\"");
+		CliCompileResult cliResult = n4jsc(options);
+		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
+		makeAssertions(cliResult);
 	}
 
-	private void makeAssertions(File performanceReportLocation, CliCompileResult cliResult) throws IOException {
+	private void makeAssertions(CliCompileResult cliResult) throws IOException {
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
 		// check performance report
-		File reportFile = new File(TARGET_FOLDER, performanceReportLocation.toString());
-		assertTrue("Report file is missing", reportFile.exists());
+		assertTrue("Report file is missing", PERFORMANCE_REPORT_FILE.exists());
 
-		try (FileReader reader = new FileReader(reportFile)) {
+		try (FileReader reader = new FileReader(PERFORMANCE_REPORT_FILE)) {
 			final List<String> rows = CharStreams.readLines(reader);
 			assertEquals("Performance report contains 2 rows", 2, rows.size());
-			assertNotEquals("Performance report has measurement different from 0 in first column of second row",
-					rows.get(1).substring(0, 1), "0");
+			String substring = rows.get(1).substring(0, 1);
+			assertNotEquals("Performance report has measurement different from 0 in first column of second row", "0",
+					substring);
 		}
 	}
 }

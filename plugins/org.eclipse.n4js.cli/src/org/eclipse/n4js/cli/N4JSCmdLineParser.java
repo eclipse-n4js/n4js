@@ -54,7 +54,8 @@ public class N4JSCmdLineParser extends CmdLineParser {
 		/** User given value for that option */
 		public final String givenValue;
 
-		private ParsedOption(NamedOptionDef optionDef, String defaultValue, String givenValue) {
+		/** Constructor */
+		public ParsedOption(NamedOptionDef optionDef, String defaultValue, String givenValue) {
 			this.optionDef = optionDef;
 			this.defaultValue = defaultValue;
 			this.givenValue = givenValue;
