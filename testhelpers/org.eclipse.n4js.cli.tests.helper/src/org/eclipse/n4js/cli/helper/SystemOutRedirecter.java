@@ -26,7 +26,7 @@ public class SystemOutRedirecter {
 	private ByteArrayOutputStream redirectErr;
 
 	/** Sets up the System outputs and Security Manager */
-	final public void setRedirections() {
+	final public void set() {
 		oldSystemOut = System.out;
 		oldSystemErr = System.err;
 
@@ -44,7 +44,7 @@ public class SystemOutRedirecter {
 	}
 
 	/** Restores everything. */
-	final public void unsetRedirections() {
+	final public void unset() {
 		System.out.flush();
 		System.err.flush();
 		System.setOut(oldSystemOut);

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.cli.helper;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Map;
@@ -44,18 +45,18 @@ public class TestProcessExecuter {
 	}
 
 	/** Runs node with the given {@code runFile} in the given {@code workingDir} */
-	public ProcessResult runNodejs(Path workingDir, Path runFile, String... options) {
-		return joinProcess(() -> testProcessBuilder.nodejsRun(workingDir, runFile, options));
+	public ProcessResult runNodejs(Path workingDir, Map<String, String> environment, Path runFile, String... options) {
+		return joinProcess(() -> testProcessBuilder.nodejsRun(workingDir, environment, runFile, options));
 	}
 
 	/** Runs npm OPTIONS in the given {@code workingDir} */
-	public ProcessResult npmRun(Path workingDir, String... options) {
-		return joinProcess(() -> testProcessBuilder.npmRun(workingDir, options));
+	public ProcessResult npmRun(Path workingDir, Map<String, String> environment, String... options) {
+		return joinProcess(() -> testProcessBuilder.npmRun(workingDir, environment, options));
 	}
 
 	/** Runs yarn OPTIONS in the given {@code workingDir} */
-	public ProcessResult yarnRun(Path workingDir, String... options) {
-		return joinProcess(() -> testProcessBuilder.yarnRun(workingDir, options));
+	public ProcessResult yarnRun(Path workingDir, Map<String, String> environment, String... options) {
+		return joinProcess(() -> testProcessBuilder.yarnRun(workingDir, environment, options));
 	}
 
 	/** Runs n4jsc.jar in the given {@code workingDir} with the given environment additions and options */
@@ -65,7 +66,11 @@ public class TestProcessExecuter {
 
 	private ProcessResult joinProcess(Supplier<ProcessBuilder> pbs) {
 		ProcessBuilder processBuilder = pbs.get();
-		ProcessResult result = new ProcessResult(String.join(" ", processBuilder.command()));
+		File workingDir = processBuilder.directory();
+
+		ProcessResult result = new ProcessResult();
+		result.command = String.join(" ", processBuilder.command());
+		result.workingDir = workingDir.toString();
 
 		try {
 			Process process = processBuilder.start();
@@ -78,7 +83,11 @@ public class TestProcessExecuter {
 			if (result.exitCode == 0) {
 				result.exitCode = -1;
 			}
+
+		} finally {
+			CliTools.trimOutputs(result, false);
 		}
+
 		return result;
 	}
 

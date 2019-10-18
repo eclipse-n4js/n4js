@@ -13,6 +13,7 @@ package org.eclipse.n4js.hlc.integrationtests;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileReader;
@@ -69,7 +70,10 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
 		// check performance report
-		try (FileReader reader = new FileReader(new File(TARGET_FOLDER, performanceReportLocation.toString()))) {
+		File reportFile = new File(TARGET_FOLDER, performanceReportLocation.toString());
+		assertTrue("Report file is missing", reportFile.exists());
+
+		try (FileReader reader = new FileReader(reportFile)) {
 			final List<String> rows = CharStreams.readLines(reader);
 			assertEquals("Performance report contains 2 rows", 2, rows.size());
 			assertNotEquals("Performance report has measurement different from 0 in first column of second row",

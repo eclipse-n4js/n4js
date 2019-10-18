@@ -20,26 +20,32 @@ import org.eclipse.xtext.util.Tuples;
  * Data class that holds all information after {@code node.js} was executed
  */
 public class ProcessResult {
-	long duration;
-	String command;
-	String stdOut;
-	String errOut;
+	long duration = Long.MIN_VALUE;
+	String workingDir = "";
+	String command = "";
+	String stdOut = "";
+	String errOut = "";
 	Exception exception;
-	int exitCode;
+	int exitCode = Integer.MIN_VALUE;
 
 	/** Constructor */
-	public ProcessResult(String command) {
-		this.command = command;
+	public ProcessResult() {
 	}
 
 	/** Constructor */
 	public ProcessResult(ProcessResult processResult) {
+		workingDir = processResult.getWorkingDir();
 		command = processResult.getCommand();
 		duration = processResult.getDuration();
 		exception = processResult.getException();
 		exitCode = processResult.getExitCode();
 		stdOut = processResult.getStdOut();
 		errOut = processResult.getErrOut();
+	}
+
+	/** @return working directory where the process was executed */
+	public String getWorkingDir() {
+		return workingDir;
 	}
 
 	/** @return command that started the process */
@@ -75,6 +81,7 @@ public class ProcessResult {
 	/** @return a list of pairs where the first entry is a name and the second is a property. */
 	List<Pair<String, String>> getProperties() {
 		List<Pair<String, String>> props = new ArrayList<>();
+		props.add(Tuples.pair("workingDir", workingDir));
 		props.add(Tuples.pair("command", command));
 		props.add(Tuples.pair("exit code", String.valueOf(exitCode)));
 		props.add(Tuples.pair("duration", duration + "ms"));

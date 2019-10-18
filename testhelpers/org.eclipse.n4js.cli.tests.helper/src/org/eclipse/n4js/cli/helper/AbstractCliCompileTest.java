@@ -14,30 +14,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
-import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.cli.compiler.N4jscCompiler;
-import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
-import org.eclipse.xtext.workspace.IProjectConfig;
+import org.junit.Before;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Lists;
-import com.google.inject.Injector;
 
 /**
  * Subclass this class for test cases that compile n4js code and run js code
  */
-@SuppressWarnings("restriction")
 public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	/** name of workspace sub-folder (inside target folder) */
 	private static final String WSP = "wsp";
@@ -59,7 +49,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	}
 
 	final private N4jscVariant variant;
-	final private Map<String, String> environment = new HashMap<>();
+	private CliTools cliTools;
 
 	/** Constructor */
 	public AbstractCliCompileTest() {
@@ -69,6 +59,12 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	/** Constructor */
 	public AbstractCliCompileTest(N4jscVariant variant) {
 		this.variant = variant;
+	}
+
+	/** Initializes {@link #cliTools} */
+	@Before
+	final public void setupTestProcessExecuter() {
+		cliTools = new CliTools();
 	}
 
 	@Override
@@ -90,54 +86,17 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	}
 
 	@Override
-	public void doN4jsc(N4jscOptions options, CliCompileResult result) throws Exception {
+	public void doN4jsc(N4jscOptions options, boolean removeUsage, CliCompileResult result) {
 		switch (variant) {
 		case inprocess:
-			callN4jscInprocess(options, result);
+			cliTools.callN4jscCompilerInprocess(options, removeUsage, result);
 			return;
 		case exprocess:
-			callN4jscExprocess(options, result);
+			cliTools.callN4jscExprocess(options, removeUsage, (CliCompileProcessResult) result);
 			return;
 		default:
 			throw new IllegalStateException();
 		}
-	}
-
-	private void callN4jscInprocess(N4jscOptions options, CliCompileResult result) throws Exception {
-		N4jscCompiler.start(options);
-
-		// save transpiled files
-		File workspaceRoot = options.getSrcFiles().get(0);
-		result.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
-
-		// save projects
-		Injector injector = N4jscFactory.getOrCreateInjector();
-		N4JSWorkspaceManager workspaceManager = injector.getInstance(N4JSWorkspaceManager.class);
-		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
-		Map<String, String> projectMap = new TreeMap<>();
-		for (IProjectConfig pConfig : projects) {
-			Path projectPath = Path.of(pConfig.getPath().toFileString());
-			Path relativeProjectPath = workspaceRoot.toPath().relativize(projectPath);
-			projectMap.put(pConfig.getName(), relativeProjectPath.toString());
-		}
-		result.projects = projectMap;
-	}
-
-	private void callN4jscExprocess(N4jscOptions options, CliCompileResult cliResult) throws Exception {
-		Injector injector = N4jscFactory.getOrCreateInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
-		List<File> srcFiles = options.getSrcFiles();
-		File fileArg = srcFiles.isEmpty() ? new File(".") : srcFiles.get(0);
-		ProcessResult n4jscResult = tpExecuter.n4jscRun(fileArg.toPath(), environment, options);
-
-		cliResult.command = n4jscResult.getCommand();
-		cliResult.exception = n4jscResult.getException();
-		cliResult.exitCode = n4jscResult.getExitCode();
-		cliResult.stdOut = n4jscResult.getStdOut();
-		cliResult.errOut = n4jscResult.getErrOut();
-
-		// save transpiled files
-		cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(fileArg.toPath());
 	}
 
 	/**
@@ -146,38 +105,27 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	 * <b>Note:</b> Only active when used in {@link N4jscVariant#exprocess }
 	 */
 	public void setEnvironmentVariable(String name, String value) {
-		this.environment.put(name, value);
+		cliTools.setEnvironmentVariable(name, value);
 	}
 
-	/** see {@link TestProcessExecuter#runNodejs(Path, Path, String[])} */
+	/** see {@link TestProcessExecuter#runNodejs(Path, Map, Path, String[])} */
 	public ProcessResult runNodejs(Path workingDir, Path runFile, String... options) {
-		Injector injector = N4jscFactory.getOrCreateInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
-		return tpExecuter.runNodejs(workingDir, runFile, options);
+		return cliTools.runNodejs(workingDir, runFile, options);
 	}
 
-	/** see {@link TestProcessExecuter#npmRun(Path, String[])} */
+	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
 	public ProcessResult npmInstall(Path workingDir, String... options) {
-		Injector injector = N4jscFactory.getOrCreateInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
-		String[] installOptions = Lists.asList("install", options).toArray(String[]::new);
-		return tpExecuter.npmRun(workingDir, installOptions);
+		return cliTools.npmInstall(workingDir, options);
 	}
 
-	/** see {@link TestProcessExecuter#npmRun(Path, String[])} */
+	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
 	public ProcessResult npmList(Path workingDir, String... options) {
-		Injector injector = N4jscFactory.getOrCreateInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
-		String[] listOptions = Lists.asList("list", options).toArray(String[]::new);
-		return tpExecuter.npmRun(workingDir, listOptions);
+		return cliTools.npmList(workingDir, options);
 	}
 
-	/** see {@link TestProcessExecuter#yarnRun(Path, String[])} */
+	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
 	public ProcessResult yarnInstall(Path workingDir, String... options) {
-		Injector injector = N4jscFactory.getOrCreateInjector();
-		TestProcessExecuter tpExecuter = new TestProcessExecuter(injector);
-		String[] installOptions = Lists.asList("install", options).toArray(String[]::new);
-		return tpExecuter.yarnRun(workingDir, installOptions);
+		return cliTools.yarnInstall(workingDir, options);
 	}
 
 	/**

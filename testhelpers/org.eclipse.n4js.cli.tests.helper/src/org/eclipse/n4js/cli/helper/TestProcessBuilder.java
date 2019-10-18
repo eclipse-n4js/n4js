@@ -16,7 +16,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -52,24 +51,23 @@ public class TestProcessBuilder {
 	}
 
 	/** @return a started process: {@code node -r esm fileToRun} */
-	public ProcessBuilder nodejsRun(Path workingDirectory, Path fileToRun, String[] options) {
-		final Map<String, String> env = new LinkedHashMap<>();
-		final String[] cmd = createCommandNodejsRun(fileToRun, env, options);
-		return createProcessBuilder(workingDirectory, cmd, env);
+	public ProcessBuilder nodejsRun(Path workingDirectory, Map<String, String> environment, Path fileToRun,
+			String[] options) {
+
+		final String[] cmd = createCommandNodejsRun(fileToRun, environment, options);
+		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
 	/** @return a started process: {@code npm install} */
-	public ProcessBuilder npmRun(Path workingDirectory, String[] options) {
-		final Map<String, String> env = new LinkedHashMap<>();
-		final String[] cmd = createCommandNpmRun(env, options);
-		return createProcessBuilder(workingDirectory, cmd, env);
+	public ProcessBuilder npmRun(Path workingDirectory, Map<String, String> environment, String[] options) {
+		final String[] cmd = createCommandNpmRun(environment, options);
+		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
 	/** @return a started process: {@code yarn install} */
-	public ProcessBuilder yarnRun(Path workingDirectory, String[] options) {
-		final Map<String, String> env = new LinkedHashMap<>();
-		final String[] cmd = createCommandYarnRun(env, options);
-		return createProcessBuilder(workingDirectory, cmd, env);
+	public ProcessBuilder yarnRun(Path workingDirectory, Map<String, String> environment, String[] options) {
+		final String[] cmd = createCommandYarnRun(environment, options);
+		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
 	/** @return a started java Process {@code java -jar n4jsc.jar OPTIONS} */

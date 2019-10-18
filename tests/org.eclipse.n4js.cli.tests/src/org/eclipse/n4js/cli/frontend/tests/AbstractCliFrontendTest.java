@@ -10,20 +10,17 @@
  */
 package org.eclipse.n4js.cli.frontend.tests;
 
-import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.helper.AbstractCliTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.CliTools;
 
 /**  */
 public class AbstractCliFrontendTest extends AbstractCliTest<String[]> {
 
 	@Override
-	public void doN4jsc(String[] args, CliCompileResult result) {
-		try {
-			setN4jscRedirectionsDeactivateBackend();
-			N4jscMain.main(args);
-		} finally {
-			unsetN4jscRedirections();
-		}
+	public void doN4jsc(String[] args, boolean removeUsage, CliCompileResult result) {
+		CliTools cliTools = new CliTools();
+		cliTools.callN4jscFrontendInprocess(args, removeUsage, result);
 	}
+
 }

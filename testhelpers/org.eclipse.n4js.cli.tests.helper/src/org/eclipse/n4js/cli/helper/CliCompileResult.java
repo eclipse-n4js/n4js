@@ -45,12 +45,13 @@ public class CliCompileResult extends ProcessResult {
 	Multimap<String, String> warnings = HashMultimap.create();
 	TreeMap<Path, HashSet<File>> transpiledFiles = new TreeMap<>();
 
-	CliCompileResult() {
+	/** Constructor: Result for in-process execution */
+	public CliCompileResult() {
 		this(N4jscVariant.inprocess);
 	}
 
-	CliCompileResult(N4jscVariant n4jscVariant) {
-		super(String.format("[%s]", n4jscVariant.toString()));
+	/** Constructor */
+	public CliCompileResult(N4jscVariant n4jscVariant) {
 		this.n4jscVariant = n4jscVariant;
 	}
 

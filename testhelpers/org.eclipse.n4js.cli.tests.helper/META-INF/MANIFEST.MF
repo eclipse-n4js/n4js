@@ -13,7 +13,6 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.xtext.testing,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.json.model,
- org.eclipse.n4js.libs.build,
  org.eclipse.n4js.json.tests.helper,
  org.eclipse.n4js.runner,
  org.eclipse.n4js.ide
