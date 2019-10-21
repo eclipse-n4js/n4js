@@ -413,7 +413,9 @@ public class ProjectTestsUtils {
 		return false;
 	}
 
-	/***/
+	/**
+	 * Creates a new N4JS project with src-folder "src".
+	 */
 	public static IProject createJSProject(String projectName)
 			throws CoreException {
 		return createJSProject(projectName, "src", "src-gen", null);

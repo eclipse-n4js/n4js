@@ -44,6 +44,13 @@ import static org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider.composeFirstLin
 import static org.eclipse.n4js.utils.UtilN4.sanitizeForHTML
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.getCorrespondingTypeModelElement
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.AccessibleTypeElement
+import org.eclipse.n4js.ts.types.TObjectPrototype
+import org.eclipse.n4js.ts.types.TField
+import org.eclipse.n4js.n4JS.N4FieldDeclaration
+import org.eclipse.n4js.ts.types.TMethod
 
 /**
  */
@@ -64,6 +71,10 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	@Inject
 	private N4JSDocletParser docletParser;
 	
+	private static final String MDNSTRING = "@see <a href=\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
+	
+	private static final String MDNSTRINGEND = "\">MDN Documentation</a>";
+	
 
 
 	override protected getFirstLine(EObject o) {
@@ -82,6 +93,7 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 			IdentifierRef: o.id
 			ParameterizedPropertyAccessExpression: o.property
 			LiteralOrComputedPropertyName: o.eContainer
+			ParameterizedTypeRef: o.declaredType
 			default: o
 		}
 		return result;
@@ -94,8 +106,39 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 
 	override protected getDocumentation(EObject o) {
 		try {
+			var String jsdocString;
 			val id = getIdentifiableElement(o);
-			var String jsdocString = super.getDocumentation(id);
+
+			jsdocString = super.getDocumentation(id);
+			
+			//Build-In-Type
+			if(id instanceof TObjectPrototype) {
+				if(id.isDeclaredProvidedByRuntime) {
+					jsdocString = createJsdocString(id.name, jsdocString);
+				}	
+			}
+			
+			//Property
+			else if(id instanceof TField) {
+				if(id.typeRef.declaredType instanceof TObjectPrototype) {
+					jsdocString = createJsdocString(id.typeRef.declaredType.name, jsdocString);
+				}
+			}
+			
+			//Declaration
+			else if(id instanceof N4FieldDeclaration) {
+				if(id.declaredTypeRef.declaredType instanceof TObjectPrototype) {
+					jsdocString = createJsdocString(id.declaredTypeRef.declaredType.name, jsdocString);
+				}
+			}
+			
+			//Method
+			else if(id instanceof TMethod) {
+				if(id.eContainer instanceof TObjectPrototype) {
+					jsdocString = createJsdocString((id.eContainer as TObjectPrototype).name + "/" + id.name, jsdocString);
+				}
+			}
+			
 			if (jsdocString === null) {
 				return null;
 			}
@@ -107,6 +150,14 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 			return "Error generating documentation:  " + ex;
 		}
 	}
+	
+	def private String createJsdocString(String name, String jsdocString) {
+		if(jsdocString === null) {
+			return MDNSTRING + name + MDNSTRINGEND;
+		} else {
+			return jsdocString + "\n\n" + MDNSTRING + name + MDNSTRINGEND;
+		}	
+	}	
 
 
 
@@ -149,6 +200,10 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 
 	def private dispatch doHasHover(LiteralOrComputedPropertyName name) {
 		return name.eContainer instanceof N4MemberDeclaration
+	}
+	
+	def private dispatch doHasHover(ParameterizedTypeRef ptr) {
+		return true;
 	}
 
 	override protected getHoverInfo(EObject element, IRegion hoverRegion,
