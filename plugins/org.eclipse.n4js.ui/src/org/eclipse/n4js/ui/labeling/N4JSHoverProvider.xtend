@@ -106,37 +106,36 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 
 	override protected getDocumentation(EObject o) {
 		try {
-			var String jsdocString;
 			val id = getIdentifiableElement(o);
-
-			jsdocString = super.getDocumentation(id);
+			var String jsdocString = super.getDocumentation(id);
 			
-			//Build-In-Type
-			if(id instanceof TObjectPrototype) {
-				if(id.isDeclaredProvidedByRuntime) {
-					jsdocString = createJsdocString(id.name, jsdocString);
+			switch (id) {
+				//Build-In-Type
+				TObjectPrototype: 
+					if(id.isDeclaredProvidedByRuntime) {
+						jsdocString = createJsdocString(id.name, jsdocString);	
+					} 
+				//Property
+				TField: {
+					val type = id.typeRef.declaredType;
+					if(type instanceof TObjectPrototype) {
+						jsdocString = createJsdocString(type.name, jsdocString);
+					}
+				}
+				//Declaration
+				N4FieldDeclaration: {
+					val type = id.declaredTypeRef.declaredType;
+					if(type instanceof TObjectPrototype) {
+						jsdocString = createJsdocString(type.name, jsdocString);
+					}	
 				}	
-			}
-			
-			//Property
-			else if(id instanceof TField) {
-				if(id.typeRef.declaredType instanceof TObjectPrototype) {
-					jsdocString = createJsdocString(id.typeRef.declaredType.name, jsdocString);
-				}
-			}
-			
-			//Declaration
-			else if(id instanceof N4FieldDeclaration) {
-				if(id.declaredTypeRef.declaredType instanceof TObjectPrototype) {
-					jsdocString = createJsdocString(id.declaredTypeRef.declaredType.name, jsdocString);
-				}
-			}
-			
-			//Method
-			else if(id instanceof TMethod) {
-				if(id.eContainer instanceof TObjectPrototype) {
-					jsdocString = createJsdocString((id.eContainer as TObjectPrototype).name + "/" + id.name, jsdocString);
-				}
+				//Method
+				TMethod: {
+					val type = id.eContainer;
+					if(type instanceof TObjectPrototype) {
+						jsdocString = createJsdocString(type.name + "/" + id.name, jsdocString);
+					}
+				}	
 			}
 			
 			if (jsdocString === null) {

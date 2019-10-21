@@ -28,6 +28,9 @@ import org.junit.runner.RunWith
 @InjectWith(N4JSUiInjectorProvider)
 class HoverTest extends AbstractHoverTest {
 	
+	private static final String MDN_STRING_START = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
+	private static final String MDN_STRING_REGEX_END = "MDN Documentation(?s).*";
+	
 	@Before def void setup() {
 		ProjectTestsUtils.createJSProject(projectName);
 	}
@@ -60,9 +63,10 @@ class HoverTest extends AbstractHoverTest {
 		'''.getInfo("Date");
 		
 		info.assertRegexInHover("(?s).*classifier(?s).+" +
-								"Date(?s).+" +
-								"https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Date.+" +
-								"MDN Documentation(?s).*");	
+		"Date(?s).+" +
+		MDN_STRING_START +
+		"Date.+" +
+		MDN_STRING_REGEX_END);	
 	}
 		
 		@Test def testHoverOverBuildInTypeString() {
@@ -73,9 +77,10 @@ class HoverTest extends AbstractHoverTest {
 		'''.getInfo("String");
 		
 		info.assertRegexInHover("(?s).*classifier(?s).+" +
-								"String(?s).+" +
-								"https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String.+" +
-								"MDN Documentation(?s).*");	
+		"String(?s).+" +
+		MDN_STRING_START + 
+		"String.+" +
+		MDN_STRING_REGEX_END);	
 	}
 	
 		@Test def testHoverOverDeclaration() {
@@ -86,9 +91,10 @@ class HoverTest extends AbstractHoverTest {
 		'''.getInfo("date");
 		
 		info.assertRegexInHover("(?s).*date:(?s).+" +
-								"Date(?s).+" +
-								"https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Date.+" +
-								"MDN Documentation(?s).*");	
+		"Date(?s).+" +
+		MDN_STRING_START +
+		"Date.+" +
+		MDN_STRING_REGEX_END);	
 	}
 	
 		@Test def testHoverOverProperty() {
@@ -103,9 +109,10 @@ class HoverTest extends AbstractHoverTest {
 		'''.getInfo(".date");
 		
 		info.assertRegexInHover("(?s).*date:(?s).+" +
-								"Date(?s).+" +
-								"https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Date.+" +
-								"MDN Documentation(?s).*");	
+		"Date(?s).+" +
+		MDN_STRING_START +
+		"Date.+" +
+		MDN_STRING_REGEX_END);	
 	}
 	
 		@Test def testHoverOverMethodgetDate() {
@@ -120,9 +127,10 @@ class HoverTest extends AbstractHoverTest {
 		'''.getInfo("getDate");
 		
 		info.assertRegexInHover("(?s).*getDate\\(\\):(?s).+" +
-								"number(?s).+" +
-								"https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Date/getDate.+" +
-								"MDN Documentation(?s).*");	
+		"number(?s).+" +
+		MDN_STRING_START + 
+		"Date/getDate.+" +
+		MDN_STRING_REGEX_END);	
 	}
 	
 	@Test def testHoverOverMethodgetMinutes() {
@@ -137,10 +145,9 @@ class HoverTest extends AbstractHoverTest {
 		'''.getInfo("getMinutes");
 		
 		info.assertRegexInHover("(?s).*getMinutes\\(\\):(?s).+" +
-								"number(?s).+" +
-								"https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Date/getMinutes.+" +
-								"MDN Documentation(?s).*");	
+		"number(?s).+" +
+		MDN_STRING_START + 
+		"Date/getMinutes.+" +
+		"MDN Documentation(?s).*");	
 	}
-   
-	
 }
