@@ -64,7 +64,7 @@ public class N4jscCompiler {
 	/** Starts the compiler in a blocking fashion */
 	public void start() throws Exception {
 		InitializeParams params = new InitializeParams();
-		List<File> srcs = options.getSrcFiles();
+		List<File> srcs = options.getDirs();
 		File firstDir = null;
 		for (File src : srcs) {
 			if (src.isDirectory()) {
@@ -92,7 +92,7 @@ public class N4jscCompiler {
 	private void warnIfNoProjectsFound() {
 		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
 		if (projects.isEmpty()) {
-			N4jscConsole.println("No projects found at the given location: " + options.getSrcFiles().get(0));
+			N4jscConsole.println("No projects found at the given location: " + options.getDirs().get(0));
 		}
 	}
 
@@ -100,7 +100,7 @@ public class N4jscCompiler {
 		if (options.isVerbose()) {
 			Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
 			if (!projects.isEmpty()) {
-				Path workspace = options.getSrcFiles().get(0).toPath();
+				Path workspace = options.getDirs().get(0).toPath();
 				List<String> projectNameList = projects.stream()
 						.map(p -> p.getName() + " at " + Path.of(p.getPath().toFileString()).relativize(workspace))
 						.collect(toList());

@@ -72,18 +72,17 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	}
 
 	private String getUsageExpectation() {
-		return "Usage: java -jar n4jsc.jar [GOAL] [FILE(s)] [OPTION(s)]\n" +
+		return "Usage: java -jar n4jsc.jar [GOAL] [DIR(s)] [OPTION(s)]\n" +
 				" GOAL                           : Goals are:\n" +
 				"                                  	 compile  Compiles with given options\n" +
 				"                                  	 clean    Cleans with given options\n" +
 				"                                  	 lsp      Starts LSP server\n" +
 				"                                  	 watch    Starts compiler daemon that\n" +
-				"                                  watches the given folder(s)\n" +
+				"                                  watches the given directory(s)\n" +
 				"                                  	 api      Generates API documentation from\n" +
 				"                                  n4js files\n" +
 				"                                  	 (default: compile)\n" +
-				" FILE(s)                        : names of either n4js files or n4js project\n" +
-				"                                  directories\n" +
+				" DIR(s)                         : names of either n4js project directory(s)\n" +
 				" --clean (-c)                   : [compile] output folders are cleaned before\n" +
 				"                                  compilation. (default: false)\n" +
 				" --help (-h)                    : prints help and exits (default: false)\n" +

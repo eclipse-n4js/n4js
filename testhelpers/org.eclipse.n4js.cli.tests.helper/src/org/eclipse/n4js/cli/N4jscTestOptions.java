@@ -107,7 +107,7 @@ public class N4jscTestOptions extends N4jscOptions {
 			}
 		}).filter(f -> f != null).collect(Collectors.toList());
 
-		options.srcFiles = files;
+		options.dirs = files;
 		return this;
 	}
 

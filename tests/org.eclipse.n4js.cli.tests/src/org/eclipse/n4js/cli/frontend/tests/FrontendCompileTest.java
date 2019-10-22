@@ -28,7 +28,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		String args[] = {};
 		CliCompileResult result = n4jsc(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid file(s)):  n4js file(s) or project(s) missing",
+				"ERROR-12 (Invalid dir(s)):  n4js directory(s) missing",
 				result.getStdOut());
 	}
 
@@ -38,27 +38,27 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		String args[] = { "compile" };
 		CliCompileResult result = n4jsc(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid file(s)):  n4js file(s) or project(s) missing",
+				"ERROR-12 (Invalid dir(s)):  n4js directory(s) missing",
 				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testArgsFileImplicitGoal() {
-		String args[] = { "compile", "test.n4js" };
+		String args[] = { "compile", "test" };
 		CliCompileResult result = n4jsc(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid file(s)):  file(s) do not exist: .../test.n4js",
+				"ERROR-12 (Invalid dir(s)):  directory(s) do not exist: .../test",
 				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testArgsFile() {
-		String args[] = { "test.n4js" };
+		String args[] = { "test" };
 		CliCompileResult result = n4jsc(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid file(s)):  file(s) do not exist: .../test.n4js",
+				"ERROR-12 (Invalid dir(s)):  directory(s) do not exist: .../test",
 				result.getStdOut());
 	}
 

@@ -40,7 +40,7 @@ public enum N4jscExitCode {
 	/** Invalid goal */
 	ARGUMENT_GOAL_INVALID(11, "Invalid goal"),
 	/** Invalid file(s) */
-	ARGUMENT_FILES_INVALID(12, "Invalid file(s)"),
+	ARGUMENT_DIRS_INVALID(12, "Invalid dir(s)"),
 	/** Invalid option */
 	OPTION_INVALID(13, "Invalid option"),
 

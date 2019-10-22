@@ -61,7 +61,7 @@ public class CliTools {
 		N4jscCompiler.start(options);
 
 		// save transpiled files
-		File workspaceRoot = options.getSrcFiles().get(0);
+		File workspaceRoot = options.getDirs().get(0);
 		result.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
 
 		// save projects
@@ -79,7 +79,7 @@ public class CliTools {
 
 	/** Runs n4jsc.jar in a separate process and updates the {@code cliResult}. Respects given environment variables. */
 	public void callN4jscExprocess(N4jscOptions options, boolean removeUsage, CliCompileProcessResult cliResult) {
-		List<File> srcFiles = options.getSrcFiles();
+		List<File> srcFiles = options.getDirs();
 		File fileArg = srcFiles.isEmpty() ? new File("").getAbsoluteFile() : srcFiles.get(0);
 		ProcessResult n4jscResult = getExProcessExecuter().n4jscRun(fileArg.toPath(), environment, options);
 

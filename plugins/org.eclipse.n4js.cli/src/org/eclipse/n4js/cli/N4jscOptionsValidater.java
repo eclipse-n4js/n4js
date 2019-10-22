@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions.GoalRequirements;
 
 import com.google.common.base.Strings;
@@ -107,31 +108,35 @@ public class N4jscOptionsValidater {
 
 	/** Make sure the srcFiles are valid */
 	private static void validateFilesAndDirectories(N4jscOptions options) throws N4jscException {
-		if (options.getSrcFiles().isEmpty()) {
-			String msg = "n4js file(s) or project(s) missing";
-			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
+		if (options.getDirs().isEmpty()) {
+			String msg = "n4js directory(s) missing";
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
-		if (options.getSrcFiles().size() > 1) {
-			String msg = "Multiple project root directories not supported yet.";
-			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
+		if (options.getDirs().size() > 1) {
+			String msg = "Multiple project directories not supported yet.";
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
 
 		StringJoiner notExisting = new StringJoiner(",");
 		StringJoiner neitherFileNorDir = new StringJoiner(",");
-		for (File srcFile : options.getSrcFiles()) {
-			if (!srcFile.exists()) {
-				notExisting.add(srcFile.toString());
-			} else if (!srcFile.isFile() && !srcFile.isDirectory()) {
-				neitherFileNorDir.add(srcFile.toString());
+		for (File dir : options.getDirs()) {
+			if (!dir.exists()) {
+				notExisting.add(dir.toString());
+			} else if (dir.isDirectory()) {
+				continue;
+			} else if (dir.isFile() && N4JSGlobals.PACKAGE_JSON.equals(dir.getName())) {
+				continue;
+			} else {
+				neitherFileNorDir.add(dir.toString());
 			}
 		}
 		if (!notExisting.toString().isEmpty()) {
-			String msg = "file(s) do not exist: " + notExisting.toString();
-			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
+			String msg = "directory(s) do not exist: " + notExisting.toString();
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
 		if (!neitherFileNorDir.toString().isEmpty()) {
-			String msg = "file(s) are neither a file nor a directory: " + neitherFileNorDir.toString();
-			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
+			String msg = "directory(s) are neither directory nor a package.json file: " + neitherFileNorDir.toString();
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
 	}
 

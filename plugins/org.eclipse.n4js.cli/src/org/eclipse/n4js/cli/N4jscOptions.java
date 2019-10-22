@@ -51,7 +51,7 @@ public class N4jscOptions {
 	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
 	/** Usage information. */
-	public static final String USAGE = "Usage: java -jar n4jsc.jar [GOAL] [FILE(s)] [OPTION(s)]";
+	public static final String USAGE = "Usage: java -jar n4jsc.jar [GOAL] [DIR(s)] [OPTION(s)]";
 
 	/** Use to specify the required goal for an option. */
 	@Retention(RUNTIME)
@@ -178,15 +178,15 @@ public class N4jscOptions {
 						+ "\n\t compile  Compiles with given options"
 						+ "\n\t clean    Cleans with given options"
 						+ "\n\t lsp      Starts LSP server"
-						+ "\n\t watch    Starts compiler daemon that watches the given folder(s)"
+						+ "\n\t watch    Starts compiler daemon that watches the given directory(s)"
 						+ "\n\t api      Generates API documentation from n4js files"
 						+ "\n\t", //
 				handler = N4jscGoalOptionHandler.class)
 		N4jscGoal goal = N4jscGoal.compile;
 
-		@Argument(metaVar = "FILE(s)", multiValued = true, index = 1, required = false, //
-				usage = "names of either n4js files or n4js project directories")
-		List<File> srcFiles = new ArrayList<>();
+		@Argument(metaVar = "DIR(s)", multiValued = true, index = 1, required = false, //
+				usage = "names of either n4js project directory(s)")
+		List<File> dirs = new ArrayList<>();
 	}
 
 	/** Internal data store of options */
@@ -236,7 +236,7 @@ public class N4jscOptions {
 			options.version = false;
 		}
 
-		options.srcFiles = options.srcFiles.stream().map(f -> {
+		options.dirs = options.dirs.stream().map(f -> {
 			try {
 				return f.getCanonicalFile();
 			} catch (IOException e) {
@@ -255,9 +255,9 @@ public class N4jscOptions {
 		return options.goal;
 	}
 
-	/** @return given source file(s) or project(s) */
-	public List<File> getSrcFiles() {
-		return options.srcFiles;
+	/** @return given project directory(s) */
+	public List<File> getDirs() {
+		return options.dirs;
 	}
 
 	/** @return true iff {@code --showSetup} */
@@ -350,12 +350,12 @@ public class N4jscOptions {
 		s += "\n  testOnly=" + options.testOnly;
 		s += "\n  noTests=" + options.noTests;
 		s += "\n  port=" + options.port;
-		s += "\n  srcFiles=" + options.srcFiles.stream().map(f -> f.getAbsolutePath()).reduce((a, b) -> a + ", " + b);
+		s += "\n  srcFiles=" + options.dirs.stream().map(f -> f.getAbsolutePath()).reduce((a, b) -> a + ", " + b);
 		s += "\n  Current execution directory=" + new File(".").getAbsolutePath();
 		return s;
 	}
 
-	/** @return array of the goal followed by all options followed by all file arguments */
+	/** @return array of the goal followed by all options followed by all directory arguments */
 	public List<String> toArgs() {
 		List<String> args = new ArrayList<>();
 		args.add(getGoal().name());
@@ -367,7 +367,7 @@ public class N4jscOptions {
 				args.add(value);
 			}
 		}
-		args.addAll(getSrcFiles().stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList()));
+		args.addAll(getDirs().stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList()));
 
 		return args;
 	}
