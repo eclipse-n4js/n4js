@@ -14,7 +14,7 @@ Contributors:
 
 [[sec:Headless_Compiler]]
 [.language-bash]
-== Headless Compiler
+== Command Line Call
 
 The headless compiler `n4jsc.jar` is invoked via
 
@@ -22,6 +22,10 @@ The headless compiler `n4jsc.jar` is invoked via
 ----
 java -jar n4jsc.jar [GOAL] [DIR(s)] [OPTION(s)]
 ----
+
+Calling `java -jar n4jsc.jar --help` will print out all available goals and options.
+
+
 
 === Argument GOAL
 

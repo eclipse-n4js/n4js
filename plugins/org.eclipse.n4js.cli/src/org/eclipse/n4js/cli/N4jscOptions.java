@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscGoal.N4jscGoalOptionHandler;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.kohsuke.args4j.Argument;
@@ -238,7 +239,12 @@ public class N4jscOptions {
 
 		options.dirs = options.dirs.stream().map(f -> {
 			try {
-				return f.getCanonicalFile();
+				File canonicalFile = f.getCanonicalFile();
+				if (N4JSGlobals.PACKAGE_JSON.equals(canonicalFile.getName())) {
+					return canonicalFile.getParentFile();
+				} else {
+					return canonicalFile;
+				}
 			} catch (IOException e) {
 				return null;
 			}
