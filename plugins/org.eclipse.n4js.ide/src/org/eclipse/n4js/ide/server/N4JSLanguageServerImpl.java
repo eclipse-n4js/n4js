@@ -24,7 +24,6 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.projectModel.lsp.ex.IProjectConfigEx;
-import org.eclipse.xtext.ide.server.LanguageServerImpl;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.inject.Inject;
@@ -59,8 +58,8 @@ public class N4JSLanguageServerImpl extends XLanguageServerImpl {
 	 * TODO: Fix this in Xtext
 	 */
 	public void joinInitialized() {
-		CompletableFuture<InitializedParams> initialized = ReflectionUtils.getFieldValue(LanguageServerImpl.class, this,
-				"initialized");
+		CompletableFuture<InitializedParams> initialized = ReflectionUtils.getFieldValue(XLanguageServerImpl.class,
+				this, "initialized");
 		initialized.join();
 	}
 
