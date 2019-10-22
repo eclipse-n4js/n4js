@@ -28,6 +28,8 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 /**
@@ -45,7 +47,10 @@ public class N4jscCompiler {
 	/** Starts the compiler in a blocking fashion */
 	static public void start(N4jscOptions options) throws Exception {
 		N4jscCompiler compiler = new N4jscCompiler(options);
-		compiler.start();
+
+		try (Measurement m = N4JSDataCollectors.dcCliCompile.getMeasurement(options.toString())) {
+			compiler.start();
+		}
 	}
 
 	private N4jscCompiler(N4jscOptions options) {

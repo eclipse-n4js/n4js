@@ -11,7 +11,7 @@
 package org.eclipse.n4js.hlc.integrationtests;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
-import static org.eclipse.n4js.smith.N4JSDataCollectors.HEADLESS_N4JS_COMPILER_COLLECTOR_NAME;
+import static org.eclipse.n4js.smith.N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
@@ -51,7 +51,7 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	public void testPerformanceReportViaParameter() throws IOException {
 		N4jscTestOptions options = COMPILE(PROJECT)
 				.performanceReport(PERFORMANCE_REPORT_FILE)
-				.performanceKey(HEADLESS_N4JS_COMPILER_COLLECTOR_NAME);
+				.performanceKey(N4JS_CLI_COLLECTOR_NAME);
 
 		CliCompileResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
@@ -67,7 +67,7 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 		// setup system environment variables
 		setEnvironmentVariable(N4jscOptions.N4JSC_PERFORMANCE_REPORT_ENV, PERFORMANCE_REPORT_FILE.toString());
 
-		N4jscTestOptions options = COMPILE(PROJECT).performanceKey("\"" + HEADLESS_N4JS_COMPILER_COLLECTOR_NAME + "\"");
+		N4jscTestOptions options = COMPILE(PROJECT).performanceKey(N4JS_CLI_COLLECTOR_NAME);
 		CliCompileResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
 		makeAssertions(cliResult);

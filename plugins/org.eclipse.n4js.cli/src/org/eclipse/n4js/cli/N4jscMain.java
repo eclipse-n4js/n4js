@@ -12,6 +12,8 @@ package org.eclipse.n4js.cli;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 /**
@@ -40,7 +42,8 @@ public class N4jscMain {
 		}
 
 		try {
-			try {
+			try (Measurement m = N4JSDataCollectors.dcCli.getMeasurement(N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME)) {
+
 				performGoal(options);
 
 			} catch (N4jscException e) {

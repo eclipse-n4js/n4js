@@ -63,6 +63,11 @@ public final class N4JSDataCollectors {
 	public static final DataCollector dcHeadlessCompilation = create("Compilation", dcHeadless);
 	public static final DataCollector dcHeadlessRunnerTester = create("Execute runner/tester", dcHeadless);
 
+	public static final String N4JS_CLI_COLLECTOR_NAME = "n4jsc goal";
+	public static final String N4JS_CLI_COMPILER_COLLECTOR_NAME = "n4jsc compile";
+	public static final DataCollector dcCli = create(N4JS_CLI_COLLECTOR_NAME);
+	public static final DataCollector dcCliCompile = create(N4JS_CLI_COMPILER_COLLECTOR_NAME, dcCli);
+
 	public static DataCollector createDataCollectorForCheckMethod(String methodName) {
 		final DataCollector parent;
 		if (N4JSDataCollectors.dcValidationsPackageJson.hasActiveMeasurement()) {
