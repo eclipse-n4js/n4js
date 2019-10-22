@@ -29,8 +29,9 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
+import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
-import org.eclipse.xtext.build.IndexState;
 import org.eclipse.xtext.build.Source2GeneratedMapping;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
@@ -78,7 +79,7 @@ public class ProjectStatePersister {
 	 * @param state
 	 *            the state to be written
 	 */
-	public void writeProjectState(IProjectConfig project, IndexState state,
+	public void writeProjectState(IProjectConfig project, XIndexState state,
 			Collection<? extends HashedFileContent> files) {
 		try {
 			File file = getDataFile(project);
@@ -102,7 +103,7 @@ public class ProjectStatePersister {
 	 * @throws IOException
 	 *             if things go bananas.
 	 */
-	public void writeProjectState(OutputStream stream, String languageVersion, IndexState state,
+	public void writeProjectState(OutputStream stream, String languageVersion, XIndexState state,
 			Collection<? extends HashedFileContent> files)
 			throws IOException {
 		stream.write(CURRENT_VERSION);
@@ -118,7 +119,7 @@ public class ProjectStatePersister {
 					throw new IOException("Unexpected type: " + description.getClass().getName());
 				}
 			}
-			Source2GeneratedMapping fileMappings = state.getFileMappings();
+			XSource2GeneratedMapping fileMappings = state.getFileMappings();
 			fileMappings.writeExternal(output);
 			output.writeInt(files.size());
 			for (HashedFileContent fingerprint : files) {
@@ -136,7 +137,7 @@ public class ProjectStatePersister {
 	 *            the acceptor for the result.
 	 */
 	public void readProjectState(IProjectConfig project,
-			BiConsumer<? super IndexState, ? super Collection<? extends HashedFileContent>> result) {
+			BiConsumer<? super XIndexState, ? super Collection<? extends HashedFileContent>> result) {
 		try {
 			File file = getDataFile(project);
 			if (file.isFile()) {
@@ -163,7 +164,7 @@ public class ProjectStatePersister {
 	 */
 	public void readProjectState(InputStream stream,
 			String expectedLanguageVersion,
-			BiConsumer<? super IndexState, ? super Collection<? extends HashedFileContent>> result)
+			BiConsumer<? super XIndexState, ? super Collection<? extends HashedFileContent>> result)
 			throws IOException, ClassNotFoundException {
 		int version = stream.read();
 		if (version == CURRENT_VERSION) {
@@ -181,7 +182,7 @@ public class ProjectStatePersister {
 					}
 					ResourceDescriptionsData resourceDescriptionsData = new ResourceDescriptionsData(
 							descriptions);
-					Source2GeneratedMapping fileMappings = new Source2GeneratedMapping();
+					XSource2GeneratedMapping fileMappings = new XSource2GeneratedMapping();
 					fileMappings.readExternal(input);
 					Set<HashedFileContent> fingerprints = new HashSet<>();
 					size = input.readInt();
@@ -189,7 +190,7 @@ public class ProjectStatePersister {
 						size--;
 						fingerprints.add(new HashedFileContent(input));
 					}
-					result.accept(new IndexState(resourceDescriptionsData, fileMappings), fingerprints);
+					result.accept(new XIndexState(resourceDescriptionsData, fileMappings), fingerprints);
 				}
 			}
 		}
