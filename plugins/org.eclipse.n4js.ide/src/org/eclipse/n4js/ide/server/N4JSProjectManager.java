@@ -23,12 +23,12 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.ide.xtext.server.XProjectManager;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
+import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder.XResult;
+import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.projectModel.lsp.ex.IProjectConfigEx;
 import org.eclipse.n4js.projectModel.lsp.ex.ISourceFolderEx;
-import org.eclipse.xtext.build.BuildRequest;
-import org.eclipse.xtext.build.IncrementalBuilder.Result;
-import org.eclipse.xtext.build.Source2GeneratedMapping;
-import org.eclipse.xtext.ide.server.ProjectManager;
 import org.eclipse.xtext.resource.IExternalContentSupport.IExternalContentProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -48,7 +48,7 @@ import com.google.inject.Provider;
  *
  */
 @SuppressWarnings("restriction")
-public class N4JSProjectManager extends ProjectManager {
+public class N4JSProjectManager extends XProjectManager {
 
 	@Inject
 	private ProjectStatePersister projectStatePersister;
@@ -84,7 +84,7 @@ public class N4JSProjectManager extends ProjectManager {
 
 		Set<URI> newOrChanged = new HashSet<>();
 		Set<URI> allUris = new HashSet<>();
-		Source2GeneratedMapping sourceFileMappings = getIndexState().getFileMappings();
+		XSource2GeneratedMapping sourceFileMappings = getIndexState().getFileMappings();
 		for (ISourceFolder srcFolder : this.projectConfig.getSourceFolders()) {
 			ISourceFolderEx srcFolderEx = (ISourceFolderEx) srcFolder;
 			List<URI> allResources = srcFolderEx.getAllResources();
@@ -134,12 +134,12 @@ public class N4JSProjectManager extends ProjectManager {
 	}
 
 	@Override
-	public Result doInitialBuild(CancelIndicator cancelIndicator) {
+	public XResult doInitialBuild(CancelIndicator cancelIndicator) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Result doBuild(List<URI> dirtyFiles, List<URI> deletedFiles, List<Delta> externalDeltas,
+	public XResult doBuild(List<URI> dirtyFiles, List<URI> deletedFiles, List<Delta> externalDeltas,
 			CancelIndicator cancelIndicator) {
 
 		// Stopwatch sw = Stopwatch.createStarted();
@@ -155,7 +155,7 @@ public class N4JSProjectManager extends ProjectManager {
 		 * We create build request that will alter newFileContents when a file is created / removed
 		 */
 		// TODO: check that dirtyFiles has no duplicates!
-		Result result = super.doBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
+		XResult result = super.doBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
 		if (!cancelIndicator.isCanceled() && !result.getAffectedResources().isEmpty()) {
 			dirtyFiles.forEach(this::storeHash);
 			newFileContents.replaceAll((uri, hash) -> {
@@ -176,9 +176,9 @@ public class N4JSProjectManager extends ProjectManager {
 	}
 
 	@Override
-	public BuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
+	public XBuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
-		BuildRequest result = super.newBuildRequest(changedFiles, deletedFiles, externalDeltas, cancelIndicator);
+		XBuildRequest result = super.newBuildRequest(changedFiles, deletedFiles, externalDeltas, cancelIndicator);
 		Procedure1<? super URI> afterDeleteFile = result.getAfterDeleteFile();
 		Procedure2<? super URI, ? super URI> afterGenerateFile = result.getAfterGenerateFile();
 		result.setAfterDeleteFile(removed -> {

@@ -20,8 +20,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
-import org.eclipse.xtext.build.IndexState;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
@@ -40,7 +40,7 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
-		testMe.writeProjectState(output, languageVersion, new IndexState(), Collections.emptyList());
+		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
 		AtomicBoolean didCall = new AtomicBoolean();
 		testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()), languageVersion,
 				(indexState, files) -> {
@@ -58,7 +58,7 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
-		testMe.writeProjectState(output, languageVersion, new IndexState(), Collections.emptyList());
+		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
 		byte[] bytes = output.toByteArray();
 		bytes[12]++;
 		testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion,
@@ -73,7 +73,7 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
-		testMe.writeProjectState(output, languageVersion, new IndexState(), Collections.emptyList());
+		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
 		byte[] bytes = output.toByteArray();
 		bytes[0]++;
 		testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion,
@@ -88,7 +88,7 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
-		testMe.writeProjectState(output, languageVersion, new IndexState(), Collections.emptyList());
+		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
 		languageVersion += "XXX";
 		testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()), languageVersion,
 				(indexState, files) -> {
@@ -103,7 +103,7 @@ public class ProjectStatePersisterTest {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 
-		IndexState index = new IndexState();
+		XIndexState index = new XIndexState();
 		ResourceDescriptionImpl resourceDescription = (ResourceDescriptionImpl) BuilderStateFactory.eINSTANCE
 				.createResourceDescription();
 		resourceDescription.setURI(URI.createURI("some:/uri"));

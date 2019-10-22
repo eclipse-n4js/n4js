@@ -14,8 +14,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.ide.server.BuildManager;
-import org.eclipse.xtext.ide.server.BuildManager.Buildable;
+import org.eclipse.n4js.ide.xtext.server.XBuildManager;
+import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.xtext.ide.server.WorkspaceManager;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -34,7 +35,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 // TODO: Xtext - make WorkspaceManager a @Singleton?
 @Singleton
-public class N4JSWorkspaceManager extends WorkspaceManager {
+public class N4JSWorkspaceManager extends XWorkspaceManager {
 
 	private Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
 	private N4JSBuildManager accessibleBuildManager;
@@ -51,7 +52,7 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 
 	@Override
 	@Inject
-	public void setBuildManager(BuildManager buildManager) {
+	public void setBuildManager(XBuildManager buildManager) {
 		super.setBuildManager(buildManager);
 		this.accessibleBuildManager = (N4JSBuildManager) buildManager;
 	}
@@ -66,11 +67,11 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 	 * This method will clear those issues that relate to a non-source resource.
 	 */
 	@Override
-	public Buildable didClose(URI uri) {
+	public XBuildable didClose(URI uri) {
 		IProjectConfig projectConfig = getWorkspaceConfig().findProjectContaining(uri);
-		final Buildable closedBuildable = super.didClose(uri);
+		final XBuildable closedBuildable = super.didClose(uri);
 
-		Buildable cleaningBuildable = new Buildable() {
+		XBuildable cleaningBuildable = new XBuildable() {
 			@Override
 			public List<Delta> build(CancelIndicator cancelIndicator) {
 				List<Delta> build = closedBuildable.build(cancelIndicator);

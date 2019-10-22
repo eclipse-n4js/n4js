@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.build.IncrementalBuilder;
-import org.eclipse.xtext.ide.server.BuildManager;
-import org.eclipse.xtext.ide.server.ProjectManager;
-import org.eclipse.xtext.ide.server.WorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.XBuildManager;
+import org.eclipse.n4js.ide.xtext.server.XProjectManager;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
@@ -35,13 +35,12 @@ import com.google.common.collect.Multimap;
  * Customized to implement a fully incremenal build on restart of a language server instead of a clean build as it is
  * done by the base class.
  */
-@SuppressWarnings("restriction")
-public class N4JSBuildManager extends BuildManager {
+public class N4JSBuildManager extends XBuildManager {
 
-	private WorkspaceManager accessibleWorkspaceManager;
+	private XWorkspaceManager accessibleWorkspaceManager;
 
 	@Override
-	public void setWorkspaceManager(WorkspaceManager workspaceManager) {
+	public void setWorkspaceManager(XWorkspaceManager workspaceManager) {
 		super.setWorkspaceManager(workspaceManager);
 		accessibleWorkspaceManager = workspaceManager;
 	}
@@ -53,11 +52,11 @@ public class N4JSBuildManager extends BuildManager {
 	private List<IResourceDescription.Delta> myUnreportedDeltas = new ArrayList<>();
 
 	@Override
-	public Buildable submit(List<URI> dirtyFiles, List<URI> deletedFiles) {
+	public XBuildable submit(List<URI> dirtyFiles, List<URI> deletedFiles) {
 		for (URI dirtyFile : dirtyFiles) {
 			// TODO hack
 			if (!ProjectStatePersister.FILENAME.equals(dirtyFile.lastSegment())) {
-				ProjectManager projectManager = accessibleWorkspaceManager.getProjectManager(dirtyFile);
+				XProjectManager projectManager = accessibleWorkspaceManager.getProjectManager(dirtyFile);
 				ProjectDescription description = projectManager.getProjectDescription();
 				myDeletedFiles.remove(description, dirtyFile);
 				myDirtyFiles.put(description, dirtyFile);
@@ -106,10 +105,10 @@ public class N4JSBuildManager extends BuildManager {
 				.sortByDependencies(FluentIterable.concat(dirtyProjects, deletedProjects));
 		for (final ProjectDescription it : sortedDescriptions) {
 			{
-				final ProjectManager projectManager = accessibleWorkspaceManager.getProjectManager(it.getName());
+				final XProjectManager projectManager = accessibleWorkspaceManager.getProjectManager(it.getName());
 				final List<URI> projectDirty = new ArrayList<>(project2dirty.get(it));
 				final List<URI> projectDeleted = new ArrayList<>(project2deleted.get(it));
-				final IncrementalBuilder.Result partialResult = projectManager.doBuild(projectDirty, projectDeleted,
+				final XIncrementalBuilder.XResult partialResult = projectManager.doBuild(projectDirty, projectDeleted,
 						this.myUnreportedDeltas, cancelIndicator);
 				myDirtyFiles.get(it).removeAll(projectDirty);
 				myDeletedFiles.get(it).removeAll(projectDeleted);
