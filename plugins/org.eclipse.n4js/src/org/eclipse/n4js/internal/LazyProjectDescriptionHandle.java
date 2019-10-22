@@ -31,6 +31,14 @@ public class LazyProjectDescriptionHandle {
 		this.descriptionLoader = descriptionLoader;
 	}
 
+	/** */
+	protected LazyProjectDescriptionHandle(FileURI location,
+			ProjectDescription description) {
+		this.projectLocation = location;
+		this.descriptionLoader = null;
+		this.resolved = description;
+	}
+
 	/**
 	 * Resolves the lazy handle and returns the actually underlying {@link ProjectDescription}
 	 */

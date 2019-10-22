@@ -49,7 +49,6 @@ public class LspServer {
 	/** Starts the LSP server in a blocking fashion */
 	public void start() throws Exception {
 		N4jscConsole.println("Start LSP server");
-
 		final ExecutorService threadPool = Executors.newCachedThreadPool();
 
 		try {
