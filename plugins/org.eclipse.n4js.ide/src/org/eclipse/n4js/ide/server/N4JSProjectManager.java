@@ -151,10 +151,17 @@ public class N4JSProjectManager extends XProjectManager {
 		newFileContents = new HashMap<>(hashFileContents);
 		newFileContents.keySet().removeAll(deletedFiles);
 
+		Set<URI> uris = new HashSet<>(dirtyFiles);
+		int size1 = dirtyFiles.size();
+		int size2 = uris.size();
+		if (size1 != size2) {
+			// TODO: check that dirtyFiles has no duplicates!
+			System.out.println("Fix this");
+		}
+
 		/*
 		 * We create build request that will alter newFileContents when a file is created / removed
 		 */
-		// TODO: check that dirtyFiles has no duplicates!
 		XResult result = super.doBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
 		if (!cancelIndicator.isCanceled() && !result.getAffectedResources().isEmpty()) {
 			dirtyFiles.forEach(this::storeHash);
