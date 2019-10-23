@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.N4JSCmdLineParser.ParsedOption;
 import org.eclipse.n4js.cli.N4jscGoal.N4jscGoalOptionHandler;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.kohsuke.args4j.Argument;
@@ -147,7 +148,7 @@ public class N4jscOptions {
 				usage = "[compile] enables performance data collection and specifies the location of the performance report.", //
 				handler = N4JSCmdLineParser.N4JSFileOptionHandler.class)
 		@GoalRequirements(goals = N4jscGoal.compile)
-		File performanceReport = null;
+		File performanceReport = new File("performance-report.csv");
 
 		@Option(name = "--performanceKey", aliases = "-pK", //
 				hidden = true, //
@@ -334,6 +335,17 @@ public class N4jscOptions {
 	/** @return true iff {@code --stdio} */
 	public boolean isStdio() {
 		return options.stdio;
+	}
+
+	/** @return true iff either option {@code performanceKey} or {@code performanceReport} was given */
+	public boolean isDefinedPerformanceOption() {
+		for (ParsedOption po : parser.definedOptions) {
+			String name = po.optionDef.name();
+			if ("performanceKey".equals(name) || "performanceReport".equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */

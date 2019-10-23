@@ -37,8 +37,6 @@ import org.eclipse.xtext.workspace.IProjectConfig;
  */
 @SuppressWarnings("restriction")
 public class N4jscCompiler {
-	static final String PERFORMANCE_REPORT_FILE_NAME = "performance.csv";
-
 	private final N4jscOptions options;
 	private final N4JSLanguageServerImpl languageServer;
 	private final N4jscLanguageClient callback;
@@ -79,7 +77,7 @@ public class N4jscCompiler {
 			verbosePrintAllProjects();
 
 			languageServer.initialized(new InitializedParams());
-			languageServer.joinInitialized();
+
 			languageServer.shutdown();
 			languageServer.exit();
 			writePerformanceReportIfRequested();
@@ -112,12 +110,10 @@ public class N4jscCompiler {
 	}
 
 	private void writePerformanceReportIfRequested() throws N4jscException {
-		String performanceKey = options.getPerformanceKey();
-		if (performanceKey != null) {
+		if (options.isDefinedPerformanceOption()) {
+			String performanceKey = options.getPerformanceKey();
 			File performanceReportFile = options.getPerformanceReport();
-			if (performanceReportFile == null) {
-				performanceReportFile = new File(PERFORMANCE_REPORT_FILE_NAME);
-			}
+
 			String absFileString = performanceReportFile.toPath().toAbsolutePath().toString();
 
 			String verb = performanceReportFile.exists() ? "Replacing " : "Writing ";
