@@ -13,9 +13,13 @@ package org.eclipse.n4js.transpiler.es.transform
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.AwaitExpression
 import org.eclipse.n4js.n4JS.CastExpression
+import org.eclipse.n4js.n4JS.CoalesceExpression
+import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.ExpressionWithTarget
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
+import org.eclipse.n4js.n4JS.TaggedTemplateString
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
@@ -48,6 +52,11 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 @ExcludesBefore(AsyncAwaitTransformation)
 class ExpressionTransformation extends Transformation {
 
+	/**
+	 * NOTE: we can use same temporary variable for optional chaining and the coalescing operator.
+	 */
+	private static final String CHAINING_COALESCING_TEMP_VAR_NAME = "$opt";
+
 	@Inject private ResourceNameComputer resourceNameComputer;
 	@Inject private PromisifyHelper promisifyHelper;
 
@@ -69,7 +78,6 @@ class ExpressionTransformation extends Transformation {
 		n4NamedElement_name = state.G.n4NamedElementType.findOwnedMember("name", false, false) as TGetter;
 		n4Element_origin = state.G.n4ElementType.findOwnedMember("origin", false, false) as TGetter;
 		n4Type_fqn = state.G.n4TypeType.findOwnedMember("fqn", false, false) as TGetter;
-
 		if (n4Object_n4type === null
 			|| n4NamedElement_name === null
 			|| n4Element_origin === null
@@ -82,7 +90,7 @@ class ExpressionTransformation extends Transformation {
 		collectNodes(state.im, Expression, true).forEach[transformExpression];
 	}
 
-	def private dispatch void transformExpression(Expression relExpr) {
+	def private dispatch void transformExpression(Expression expr) {
 		// default case -> do nothing
 	}
 
@@ -90,8 +98,17 @@ class ExpressionTransformation extends Transformation {
 		replace(castExpr, castExpr.expression); // simply remove the cast
 	}
 
-	def private dispatch void transformExpression(ParameterizedPropertyAccessExpression_IM propAccessExpr) {
-		transformTrivialUsageOfReflection(propAccessExpr);
+	def private dispatch void transformExpression(CoalesceExpression coalExpr) {
+		transformCoalesceExpression(coalExpr);
+	}
+
+	def private dispatch void transformExpression(ExpressionWithTarget exprWithTarget) {
+		if (exprWithTarget instanceof ParameterizedPropertyAccessExpression_IM) {
+			if (transformTrivialUsageOfReflection(exprWithTarget)) {
+				return;
+			}
+		}
+		transformOptionalChaining(exprWithTarget);
 	}
 
 	/**
@@ -190,7 +207,7 @@ class ExpressionTransformation extends Transformation {
 	 * </pre>
 	 * Thus, reflection will not actually be used in the output code in the above cases.
 	 */
-	def private void transformTrivialUsageOfReflection(ParameterizedPropertyAccessExpression_IM propAccessExpr) {
+	def private boolean transformTrivialUsageOfReflection(ParameterizedPropertyAccessExpression_IM propAccessExpr) {
 		val property = propAccessExpr.originalTargetOfRewiredTarget;
 		if (property === n4NamedElement_name
 			|| property === n4Element_origin
@@ -219,11 +236,95 @@ class ExpressionTransformation extends Transformation {
 							}
 							if (value !== null) {
 								replace(propAccessExpr, _StringLiteral(value));
+								return true;
 							}
 						}
 					}
 				}
 			}
 		}
+		return false;
+	}
+
+	/**
+	 * Converts
+	 * <pre>a ?? b</pre>
+	 * to
+	 * <pre>($temp = a) != null ? $temp : b</pre>
+	 */
+	def private void transformCoalesceExpression(CoalesceExpression coalExpr) {
+		// convert
+		val tempVarSTE = addOrGetTemporaryVariable(CHAINING_COALESCING_TEMP_VAR_NAME, coalExpr);
+		val replacement = _ConditionalExpr(
+			_EqualityExpr(
+				_Parenthesis(
+					_AssignmentExpr(
+						_IdentRef(tempVarSTE),
+						coalExpr.expression
+					)
+				),
+				EqualityOperator.NEQ,
+				_NULL
+			),
+			_IdentRef(tempVarSTE),
+			coalExpr.defaultExpression
+		);
+		if (coalExpr.eContainer instanceof Expression) {
+			replace(coalExpr, _Parenthesis(replacement));
+		} else {
+			replace(coalExpr, replacement);
+		}
+	}
+
+	/**
+	 * Converts
+	 * <pre>a?.b.c</pre>
+	 * to
+	 * <pre>($temp = a) == null ? void 0 : $temp.b.c</pre>
+	 */
+	def private boolean transformOptionalChaining(ExpressionWithTarget exprWithTarget) {
+		if (!exprWithTarget.optionalChaining) {
+			return false;
+		}
+		if (exprWithTarget instanceof TaggedTemplateString) {
+			// We should never get here, because use of tagged templates will create a validation error
+			// ("unsupported feature") and thus transpiler won't be invoked for such code; this exception
+			// is intended only to help the person who will implement tagged template strings in the future.
+			throw new UnsupportedOperationException("optional chaining for tagged templates is not supported yet");
+		}
+		val target = exprWithTarget.target;
+		val tempVarSTE = addOrGetTemporaryVariable(CHAINING_COALESCING_TEMP_VAR_NAME, exprWithTarget);
+		replace(target, _IdentRef(tempVarSTE));
+		val replacement = _ConditionalExpr(
+			_EqualityExpr(
+				_Parenthesis(
+					_AssignmentExpr(
+						_IdentRef(tempVarSTE),
+						target
+					)
+				),
+				EqualityOperator.EQ,
+				_NULL
+			),
+			_Void0,
+			null // will be set below
+		);
+		val toBeReplaced = getLongShortCircuitingDesitnation(exprWithTarget);
+		if (toBeReplaced.eContainer instanceof Expression) {
+			replace(toBeReplaced, _Parenthesis(replacement));
+		} else {
+			replace(toBeReplaced, replacement);
+		}
+		exprWithTarget.optionalChaining = false;
+		replacement.falseExpression = toBeReplaced;
+		return true;
+	}
+
+	def private ExpressionWithTarget getLongShortCircuitingDesitnation(ExpressionWithTarget expr) {
+		var dest = expr;
+		while (dest.eContainer instanceof ExpressionWithTarget) {
+			dest = dest.eContainer as ExpressionWithTarget;
+		}
+		return dest;
 	}
 }

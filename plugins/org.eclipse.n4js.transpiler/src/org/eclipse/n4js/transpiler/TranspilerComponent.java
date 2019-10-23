@@ -44,8 +44,6 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
-import org.eclipse.n4js.transpiler.operations.SymbolTableManagement;
-import org.eclipse.n4js.transpiler.operations.TranspilerStateOperations;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -114,6 +112,11 @@ public abstract class TranspilerComponent {
 	/** See {@link TranspilerStateOperations#addEmptyImport(TranspilerState, String)}. */
 	public void addEmptyImport(String moduleSpecifier) {
 		TranspilerStateOperations.addEmptyImport(state, moduleSpecifier);
+	}
+
+	/** See {@link TranspilerStateOperations#addOrGetTemporaryVariable(TranspilerState, String, EObject)}. */
+	public SymbolTableEntryIMOnly addOrGetTemporaryVariable(String name, EObject nodeInIM) {
+		return TranspilerStateOperations.addOrGetTemporaryVariable(state, name, nodeInIM);
 	}
 
 	@SuppressWarnings("javadoc")
