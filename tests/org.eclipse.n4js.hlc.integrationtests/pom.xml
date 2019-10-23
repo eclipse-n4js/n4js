@@ -51,7 +51,7 @@ Contributors:
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.eclipse.n4js</groupId>
-									<artifactId>org.eclipse.n4js.hlc</artifactId>
+									<artifactId>org.eclipse.n4js.cli</artifactId>
 									<classifier>jar-with-dependencies</classifier>
 									<type>jar</type>
 									<overWrite>true</overWrite>
