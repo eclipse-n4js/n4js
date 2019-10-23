@@ -341,7 +341,7 @@ public class N4jscOptions {
 	public boolean isDefinedPerformanceOption() {
 		for (ParsedOption po : parser.definedOptions) {
 			String name = po.optionDef.name();
-			if ("performanceKey".equals(name) || "performanceReport".equals(name)) {
+			if ("--performanceKey".equals(name) || "--performanceReport".equals(name)) {
 				return true;
 			}
 		}

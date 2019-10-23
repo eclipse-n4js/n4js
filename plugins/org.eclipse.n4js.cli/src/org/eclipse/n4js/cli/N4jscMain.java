@@ -27,7 +27,7 @@ public class N4jscMain {
 		final N4jscOptions options = getOptions(args);
 
 		// inform user about data collection
-		if (options.getPerformanceReport() != null) {
+		if (options.isDefinedPerformanceOption()) {
 			N4jscConsole.println("Performance Data Collection is enabled.");
 		}
 

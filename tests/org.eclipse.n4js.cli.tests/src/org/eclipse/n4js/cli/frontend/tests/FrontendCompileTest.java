@@ -119,17 +119,17 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	/**  */
 	@Test
 	public void checkPerformanceKeyGiven() {
-		String args[] = { "compile", ".", "--performanceKey", "" };
+		String args[] = { "compile", ".", "--performanceKey", "MyKey" };
 		CliCompileResult result = n4jsc(args, 0);
-		assertEquals(result.toString(), "", result.getStdOut());
+		assertEquals(result.toString(), "Performance Data Collection is enabled.", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkPerformanceKeyMissing() {
 		String args[] = { "compile", ".", "--performanceKey", "" };
-		CliCompileResult result = n4jsc(args, 0);
-		assertEquals(result.toString(), "", result.getStdOut());
+		CliCompileResult result = n4jsc(args, 13);
+		assertEquals(result.toString(), "ERROR-13 (Invalid option):  Missing performance key.", result.getStdOut());
 	}
 
 	/**  */
