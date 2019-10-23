@@ -20,6 +20,8 @@ import org.eclipse.n4js.n4JS.ExpressionWithTarget
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
 import org.eclipse.n4js.n4JS.TaggedTemplateString
+import org.eclipse.n4js.n4JS.UnaryExpression
+import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
@@ -292,9 +294,12 @@ class ExpressionTransformation extends Transformation {
 			// is intended only to help the person who will implement tagged template strings in the future.
 			throw new UnsupportedOperationException("optional chaining for tagged templates is not supported yet");
 		}
+
 		val target = exprWithTarget.target;
 		val tempVarSTE = addOrGetTemporaryVariable(CHAINING_COALESCING_TEMP_VAR_NAME, exprWithTarget);
 		replace(target, _IdentRef(tempVarSTE));
+
+		val toBeReplaced = getLongShortCircuitingDesitnation(exprWithTarget);
 		val replacement = _ConditionalExpr(
 			_EqualityExpr(
 				_Parenthesis(
@@ -306,10 +311,9 @@ class ExpressionTransformation extends Transformation {
 				EqualityOperator.EQ,
 				_NULL
 			),
-			_Void0,
+			if (toBeReplaced instanceof UnaryExpression) _TRUE else _Void0,
 			null // will be set below
 		);
-		val toBeReplaced = getLongShortCircuitingDesitnation(exprWithTarget);
 		if (toBeReplaced.eContainer instanceof Expression) {
 			replace(toBeReplaced, _Parenthesis(replacement));
 		} else {
@@ -320,10 +324,19 @@ class ExpressionTransformation extends Transformation {
 		return true;
 	}
 
-	def private ExpressionWithTarget getLongShortCircuitingDesitnation(ExpressionWithTarget expr) {
-		var dest = expr;
-		while (dest.eContainer instanceof ExpressionWithTarget) {
-			dest = dest.eContainer as ExpressionWithTarget;
+	def private Expression getLongShortCircuitingDesitnation(ExpressionWithTarget expr) {
+		var dest = expr as Expression;
+		var destParent = dest.eContainer;
+		while (destParent instanceof ExpressionWithTarget) {
+			dest = destParent;
+			destParent = dest.eContainer;
+		}
+		if (destParent instanceof UnaryExpression) {
+			if (destParent.op === UnaryOperator.DELETE && destParent.expression === dest) {
+				// go up one more level to turn "delete a?.b"
+				// into "($temp = a) == null ? true : delete a.b"
+				dest = destParent;
+			}
 		}
 		return dest;
 	}

@@ -228,12 +228,16 @@ class TranspilerStateOperations {
 		if (context instanceof FunctionOrFieldAccessor) {
 			// add to body of function/accessor
 			if (context instanceof ArrowFunction) {
-				if (context.isSingleExprImplicitReturn) {
+				if (!context.hasBracesAroundBody) {
 					// to allow for declarations inside the body, we have to turn single-expression arrow functions into ordinary arrow functions
-					context.hasBracesAroundBody = false;
+					if (context.isSingleExprImplicitReturn) {
+						val singleExprStmnt = context.body.statements.head as ExpressionStatement; // we know this, because #isSingleExprImplicitReturn() returned true
+						state.replace(singleExprStmnt, _ReturnStmnt(singleExprStmnt.expression));
+					}
+					context.hasBracesAroundBody = true;
 				}
 			}
-			context.body.statements.add(0, tempVarStmnt);
+			context.body.statements.add(0, tempVarStmntNew);
 		} else if (context instanceof Script) {
 			// add on top level before the first non-empty, non-import statement
 			val iter = context.scriptElements.iterator;
