@@ -36,7 +36,6 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		if (issueList.isEmpty()) {
 			return;
 		}
-		sortDiagnostics(issueList);
 
 		String uriString = issueSerializer.uri(diagnostics.getUri());
 		for (Diagnostic diag : issueList) {

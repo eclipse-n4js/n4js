@@ -8,6 +8,7 @@
 package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,10 +128,12 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.Functions.Function2;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -334,6 +337,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void initialized(InitializedParams params) {
 		initialized.complete(params);
+		initialized.join();
 	}
 
 	@Deprecated
@@ -440,14 +444,38 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	private void publishDiagnostics(URI uri, Iterable<? extends Issue> issues) {
+
+		// Sort issues according to line and position
+		final Comparator<Diagnostic> comparator = new Comparator<>() {
+			@Override
+			public int compare(Diagnostic d1, Diagnostic d2) {
+				Position p1 = d1.getRange().getStart();
+				Position p2 = d2.getRange().getStart();
+				int result = ComparisonChain.start()
+						.compare(p1.getLine(), p2.getLine())
+						.compare(p2.getCharacter(), p2.getCharacter())
+						.result();
+				return result;
+			}
+		};
+
 		this.initialized.thenAccept((initParams) -> {
+
+			Function2<? super Document, ? super XtextResource, ? extends ImmutableList<Diagnostic>> work = (document,
+					resource) -> FluentIterable.from(issues)
+							.filter(issue -> issue.getSeverity() != Severity.IGNORE)
+							.transform(issue -> toDiagnostic(document, issue))
+							.toSortedList(comparator);
+
+			ImmutableList<Diagnostic> diagnostics = workspaceManager.doRead(uri, work);
 			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
 			publishDiagnosticsParams.setUri(this.uriExtensions.toUriString(uri));
-			publishDiagnosticsParams.setDiagnostics(workspaceManager.doRead(uri,
-					(document, resource) -> FluentIterable.from(issues)
-							.filter(issue -> issue.getSeverity() != Severity.IGNORE)
-							.transform(issue -> toDiagnostic(document, issue)).toList()));
+			publishDiagnosticsParams.setDiagnostics(diagnostics);
 			this.client.publishDiagnostics(publishDiagnosticsParams);
+
+		}).exceptionally(th -> {
+			th.printStackTrace();
+			return null;
 		});
 	}
 
