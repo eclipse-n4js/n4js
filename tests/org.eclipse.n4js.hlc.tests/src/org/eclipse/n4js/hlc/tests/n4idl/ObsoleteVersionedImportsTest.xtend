@@ -44,6 +44,7 @@ public class ObsoleteVersionedImportsTest extends AbstractCliCompileTest {
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
+	// FIXME: GH-1392
 	/**
 	 * Compiles and runs the test project.
 	 *
