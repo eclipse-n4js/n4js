@@ -1214,5 +1214,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	public RequestManager getRequestManager() {
 		return requestManager;
+
 	}
 }

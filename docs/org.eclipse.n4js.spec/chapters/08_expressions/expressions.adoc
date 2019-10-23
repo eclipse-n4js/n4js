@@ -2480,11 +2480,9 @@ B.bar();
 
 === Await Expression
 
-
 In N4JS, `await` is implemented as a unary operator with the same precedence as `yield` in ECMAScript 6.
 
 Constraints governing the use of `await` are given together with those for `async` in <<_asynchronous-functions>>.
-
 
 
 
@@ -2499,7 +2497,7 @@ and the proposal can be found https://tc39.es/proposal-nullish-coalescing[here].
 
 
 [discrete]
-==== Syntax [[assignment-expression-syntax]]
+==== Syntax
 
 The coalescing operator `??` is part of a `CoalesceExpression` and is used in the syntax as described below.
 
@@ -2519,8 +2517,6 @@ The semantics are equivalent to ECMAScript (see https://github.com/tc39/proposal
 * The right argument is selected and evaluated iff the left argument is null or undefined (i.e. _short circuiting_ is the default).
 
 
-
-
 === Optional Chaining
 
 This feature will be introduced in a future edition of ECMAScript.
@@ -2528,7 +2524,7 @@ It is documented at https://github.com/tc39/proposal-optional-chaining[tc39]
 and the proposal can be found https://tc39.es/proposal-optional-chaining/[here].
 
 [discrete]
-==== Syntax [[assignment-expression-syntax]]
+==== Syntax
 
 The syntax for optional chaining is introduced at places where `ExpressionWithTarget`s are used.
 This either results in the _optional chaining punctuator_ with the trailing dot (i.e. `?.`) being an alternative to the dot only,
@@ -2546,16 +2542,9 @@ fragment IndexedAccessExpressionTail <Yield>*:
 ;
 ----
 
-
 ==== Semantics
 
 The semantics are equivalent to ECMAScript (see https://tc39.es/proposal-optional-chaining[tc39]).
-
-
-
-
-
-
 
 
 
