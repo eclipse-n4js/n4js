@@ -40,7 +40,6 @@ function ParameterizedPropertyAccessExpression() {
 	// ParameterizedPropertyAccessExpression XPECT succs at 'Object' --> Object?.call, "end"
 	// ParameterizedPropertyAccessExpression XPECT succs at 'Object?.call' --> "end"
 	"start";
-	// ParameterizedPropertyAccessExpression XPECT errors --> "Unsupported feature: optional chaining." at "?."
 	Object?.call;
 	"end";
 }
@@ -76,7 +75,6 @@ function ParameterizedCallExpression() {
 	// ParameterizedCallExpression XPECT succs at '1' --> Object?.(1)
 	// ParameterizedCallExpression XPECT succs at 'Object?.(1)' --> "end"
 	"start";
-	// ParameterizedCallExpression XPECT errors --> "Unsupported feature: optional chaining." at "?."
 	Object?.(1);
 	"end";
 }
@@ -111,10 +109,7 @@ function ParameterizedIndexAccessExpression() {
 	// ParameterizedIndexAccessExpression XPECT succs at '1' --> Object?.[1]
 	// ParameterizedIndexAccessExpression XPECT succs at 'Object?.[1]' --> "end"
 	"start";
-	/* ParameterizedIndexAccessExpression XPECT errors ---
-	    "Indexed access is only allowed for strings, arrays and iterables and for immediate(!) instances of Object." at "Object?.[1]" 
-	    "Unsupported feature: optional chaining." at "?."
-	--- */ 
+	// ParameterizedIndexAccessExpression XPECT errors --> "Indexed access is only allowed for strings, arrays and iterables and for immediate(!) instances of Object." at "Object?.[1]"
 	Object?.[1];
 	"end";
 }
@@ -150,10 +145,7 @@ function LongShortCircuit() {
 	// LongShortCircuit XPECT succs at 'Object' --> Object?.xxx, (Object?.xxx.yyy)
 	// LongShortCircuit XPECT succs at '(Object?.xxx.yyy)' --> (Object?.xxx.yyy).zzz
 	"start";
-	/* LongShortCircuit XPECT errors ---
-		"Couldn't resolve reference to IdentifiableElement 'xxx'." at "xxx" 
-		"Unsupported feature: optional chaining." at "?."
-	--- */	
+	// LongShortCircuit XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'xxx'." at "xxx" 
 	(Object?.xxx.yyy).zzz;
 	"end";
 }
