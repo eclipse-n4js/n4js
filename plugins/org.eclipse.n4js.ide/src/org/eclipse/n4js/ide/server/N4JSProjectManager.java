@@ -40,6 +40,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -153,10 +154,7 @@ public class N4JSProjectManager extends XProjectManager {
 		Set<URI> uris = new HashSet<>(dirtyFiles);
 		int size1 = dirtyFiles.size();
 		int size2 = uris.size();
-		if (size1 != size2) {
-			// TODO: check that dirtyFiles has no duplicates!
-			System.out.println("Fix this");
-		}
+		Preconditions.checkState(size1 == size2, "Duplicate resoruces");
 
 		/*
 		 * We create build request that will alter newFileContents when a file is created / removed
@@ -196,9 +194,7 @@ public class N4JSProjectManager extends XProjectManager {
 			// System.out.println("Generating: " + target + " from " + source);
 			scheduleHash(target);
 		});
-		// if (projectConfig.getPath().segmentsList().contains(N4JSGlobals.NODE_MODULES)) {
-		// result.setAfterValidate((uri, issues) -> false);
-		// }
+
 		return result;
 	}
 

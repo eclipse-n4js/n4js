@@ -31,7 +31,7 @@
 // Testing cycle-detection IDEBUG-266
 
 {
-	// TODO: GH-1500 XPECT FIXME errors --> "The project configuration contains a dependency cycle of projects [A] -> C -> B -> [A]." at ""A""
+	// TODO: GH-1525 XPECT FIXME errors --> "The project configuration contains a dependency cycle of projects [A] -> C -> B -> [A]." at ""A""
 	"name": "A",
 	"version": "0.0.1",
 	"dependencies": {
