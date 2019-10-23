@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.xtext.server.XProjectManager;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder.XResult;
@@ -197,9 +196,9 @@ public class N4JSProjectManager extends XProjectManager {
 			// System.out.println("Generating: " + target + " from " + source);
 			scheduleHash(target);
 		});
-		if (projectConfig.getPath().segmentsList().contains(N4JSGlobals.NODE_MODULES)) {
-			result.setAfterValidate((uri, issues) -> false);
-		}
+		// if (projectConfig.getPath().segmentsList().contains(N4JSGlobals.NODE_MODULES)) {
+		// result.setAfterValidate((uri, issues) -> false);
+		// }
 		return result;
 	}
 
