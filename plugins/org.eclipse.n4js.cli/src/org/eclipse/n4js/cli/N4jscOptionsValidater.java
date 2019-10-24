@@ -90,8 +90,7 @@ public class N4jscOptionsValidater {
 	private static void validateGoalDefinitions(N4jscOptions options) throws N4jscException {
 		Map<String, GoalRequirements> nameFieldMap = options.getOptionNameToGoalRequirementMap();
 
-		for (N4JSCmdLineParser.ParsedOption po : options.getDefinedOptions()) {
-			String name = po.optionDef.name();
+		for (String name : options.getDefinedOptions().keySet()) {
 			if (nameFieldMap.containsKey(name)) {
 				GoalRequirements goalRequirements = nameFieldMap.get(name);
 				List<N4jscGoal> goals = Arrays.asList(goalRequirements.goals());

@@ -13,7 +13,6 @@ package org.eclipse.n4js.cli;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -90,7 +89,7 @@ public class N4jscTestOptions extends N4jscOptions {
 		return instance;
 	}
 
-	private final List<N4JSCmdLineParser.ParsedOption> definedOptions = new ArrayList<>();
+	private final Map<String, N4JSCmdLineParser.ParsedOption> definedOptions = new LinkedHashMap<>();
 
 	/** Set goal to compile */
 	public N4jscTestOptions f(File... files) {
@@ -190,7 +189,7 @@ public class N4jscTestOptions extends N4jscOptions {
 	}
 
 	@Override
-	public List<N4JSCmdLineParser.ParsedOption> getDefinedOptions() {
+	public Map<String, N4JSCmdLineParser.ParsedOption> getDefinedOptions() {
 		return definedOptions;
 	}
 
@@ -230,9 +229,10 @@ public class N4jscTestOptions extends N4jscOptions {
 							String lastValueStr = lastValue == null ? "" : String.valueOf(lastValue);
 							String currentValueStr = String.valueOf(currentValue);
 
-							N4JSCmdLineParser.ParsedOption pOption = new N4JSCmdLineParser.ParsedOption(nod,
-									lastValueStr, currentValueStr);
-							definedOptions.add(pOption);
+							N4JSCmdLineParser.ParsedOption pOption = new N4JSCmdLineParser.ParsedOption(
+									nod, lastValueStr, currentValueStr);
+
+							definedOptions.put(nod.name(), pOption);
 						}
 					}
 				}

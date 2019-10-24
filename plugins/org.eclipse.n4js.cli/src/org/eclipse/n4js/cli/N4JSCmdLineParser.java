@@ -11,8 +11,8 @@
 package org.eclipse.n4js.cli;
 
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -36,12 +36,13 @@ public class N4JSCmdLineParser extends CmdLineParser {
 	}
 
 	/** All user given options */
-	final List<ParsedOption> definedOptions = new LinkedList<>();
+	final Map<String, ParsedOption> definedOptions = new LinkedHashMap<>();
 
 	private void addDefinedOption(OptionDef optionDef, String defaultValue, String givenValue) {
 		if (optionDef instanceof NamedOptionDef) {
-			ParsedOption parsedOption = new ParsedOption((NamedOptionDef) optionDef, defaultValue, givenValue);
-			definedOptions.add(parsedOption);
+			NamedOptionDef nod = (NamedOptionDef) optionDef;
+			ParsedOption parsedOption = new ParsedOption(nod, defaultValue, givenValue);
+			definedOptions.put(nod.name(), parsedOption);
 		}
 	}
 

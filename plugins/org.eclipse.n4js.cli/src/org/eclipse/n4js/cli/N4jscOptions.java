@@ -221,7 +221,8 @@ public class N4jscOptions {
 
 	private void integrateEnvironment() {
 		// check for performance data collection system environment variable
-		if (options.performanceReport == null && System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null) {
+		Map<String, ParsedOption> opts = getDefinedOptions();
+		if (!opts.containsKey("--performanceReport") && System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null) {
 			String rawPath = System.getenv(N4JSC_PERFORMANCE_REPORT_ENV);
 			File performanceReportFile = new File(rawPath);
 			options.performanceReport = performanceReportFile;
@@ -253,7 +254,7 @@ public class N4jscOptions {
 	}
 
 	/** @return list of all user defined options */
-	public List<N4JSCmdLineParser.ParsedOption> getDefinedOptions() {
+	public Map<String, N4JSCmdLineParser.ParsedOption> getDefinedOptions() {
 		return parser.definedOptions;
 	}
 
@@ -339,11 +340,9 @@ public class N4jscOptions {
 
 	/** @return true iff either option {@code performanceKey} or {@code performanceReport} was given */
 	public boolean isDefinedPerformanceOption() {
-		for (ParsedOption po : parser.definedOptions) {
-			String name = po.optionDef.name();
-			if ("--performanceKey".equals(name) || "--performanceReport".equals(name)) {
-				return true;
-			}
+		Map<String, ParsedOption> opts = getDefinedOptions();
+		if (opts.containsKey("--performanceKey") || opts.containsKey("--performanceReport")) {
+			return true;
 		}
 		return false;
 	}
@@ -377,11 +376,14 @@ public class N4jscOptions {
 	public List<String> toArgs() {
 		List<String> args = new ArrayList<>();
 		args.add(getGoal().name());
-		for (N4JSCmdLineParser.ParsedOption po : getDefinedOptions()) {
+		for (N4JSCmdLineParser.ParsedOption po : getDefinedOptions().values()) {
 			NamedOptionDef od = po.optionDef;
 			String value = po.givenValue;
 			args.add(od.name());
 			if (value != null) {
+				if (value.contains(" ")) {
+					value = "\"" + value + "\"";
+				}
 				args.add(value);
 			}
 		}
