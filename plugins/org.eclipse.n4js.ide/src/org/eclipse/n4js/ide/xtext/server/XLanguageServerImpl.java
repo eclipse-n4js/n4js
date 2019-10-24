@@ -8,6 +8,8 @@
 package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -71,6 +74,7 @@ import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpOptions;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
@@ -90,6 +94,7 @@ import org.eclipse.lsp4j.services.LanguageClientExtensions;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
+import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -126,7 +131,6 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -149,32 +153,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		Endpoint, JsonRpcMethodProvider, ILanguageServerAccess.IBuildListener {
 
 	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
-
-	/**
-	 * A cancel indicator that will not cancel immediately but only after a second delay to allow short running tasks to
-	 * complete despite an attempt to cancel.
-	 */
-	public static class BufferedCancelIndicator implements CancelIndicator {
-		private final CancelIndicator delegate;
-
-		private long canceledSince;
-
-		/**
-		 * Constructor
-		 */
-		public BufferedCancelIndicator(CancelIndicator delegate) {
-			this.delegate = delegate;
-		}
-
-		@Override
-		public boolean isCanceled() {
-			if (this.canceledSince == 0 && this.delegate.isCanceled()) {
-				this.canceledSince = System.currentTimeMillis();
-				return false;
-			}
-			return this.canceledSince != 0 && System.currentTimeMillis() > this.canceledSince + 1000;
-		}
-	}
 
 	@Inject
 	private RequestManager requestManager;
@@ -233,7 +211,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
-		if (this.initializeParams != null) {
+		if (initializeParams != null) {
 			throw new IllegalStateException("This language server has already been initialized.");
 		}
 		URI baseDir = getBaseDir(params);
@@ -245,6 +223,23 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		InitializeResult result = new InitializeResult();
 
+		result.setCapabilities(createServerCapabilities(params));
+		access.addBuildListener(this);
+		return requestManager.runWrite(
+				() -> {
+					workspaceManager.initialize(baseDir, this::publishDiagnostics, CancelIndicator.NullImpl);
+					return result;
+				}, (cancelIndicator, it) -> it).thenApply(it -> initializeResult = it);
+	}
+
+	/**
+	 * Configure the server capabilities for this instance.
+	 *
+	 * @param params
+	 *            the initialization parametrs
+	 * @return the server capabilities
+	 */
+	protected ServerCapabilities createServerCapabilities(InitializeParams params) {
 		ServerCapabilities serverCapabilities = new ServerCapabilities();
 		serverCapabilities.setHoverProvider(true);
 		serverCapabilities.setDefinitionProvider(true);
@@ -322,13 +317,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				capabilitiesContributor.contribute(serverCapabilities, params);
 			}
 		}
-		result.setCapabilities(serverCapabilities);
-		access.addBuildListener(this);
-		return requestManager.runWrite(
-				() -> {
-					workspaceManager.initialize(baseDir, this::publishDiagnostics, CancelIndicator.NullImpl);
-					return result;
-				}, (cancelIndicator, it) -> it).thenApply(it -> initializeResult = it);
+		return serverCapabilities;
 	}
 
 	@Override
@@ -351,9 +340,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	protected URI getBaseDir(InitializeParams params) {
 		String rootUri = params.getRootUri();
 		if (rootUri != null) {
-			return this.uriExtensions.toUri(rootUri);
+			return uriExtensions.toUri(rootUri);
 		}
-		return this.deprecatedToBaseDir(params);
+		return deprecatedToBaseDir(params);
 	}
 
 	@SuppressWarnings("hiding")
@@ -364,12 +353,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void exit() {
-		this.shutdownAndExitHandler.exit();
+		shutdownAndExitHandler.exit();
 	}
 
 	@Override
 	public CompletableFuture<Object> shutdown() {
-		this.shutdownAndExitHandler.shutdown();
+		shutdownAndExitHandler.shutdown();
 		return CompletableFuture.completedFuture(new Object());
 	}
 
@@ -385,26 +374,42 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
-		requestManager.runWrite(() -> {
-			TextDocumentItem textDocument = params.getTextDocument();
-			return workspaceManager.didOpen(uriExtensions.toUri(textDocument.getUri()),
-					textDocument.getVersion(), textDocument.getText());
-		}, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+		runBuildable(() -> toBuildable(params));
+	}
+
+	/**
+	 * Evaluate the params and deduce the respective build command.
+	 */
+	protected XBuildable toBuildable(DidOpenTextDocumentParams params) {
+		TextDocumentItem textDocument = params.getTextDocument();
+		return workspaceManager.didOpen(getURI(textDocument),
+				textDocument.getVersion(), textDocument.getText());
 	}
 
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
-		requestManager.runWrite(() -> {
-			VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
-			return workspaceManager.didChangeTextDocumentContent(uriExtensions.toUri(textDocument.getUri()),
-					textDocument.getVersion(), params.getContentChanges());
-		}, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+		runBuildable(() -> toBuildable(params));
+	}
+
+	/**
+	 * Evaluate the params and deduce the respective build command.
+	 */
+	protected XBuildable toBuildable(DidChangeTextDocumentParams params) {
+		VersionedTextDocumentIdentifier textDocument = params.getTextDocument();
+		return workspaceManager.didChangeTextDocumentContent(getURI(textDocument),
+				textDocument.getVersion(), params.getContentChanges());
 	}
 
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
-		requestManager.runWrite(() -> workspaceManager.didClose(uriExtensions.toUri(params.getTextDocument().getUri())),
-				(cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+		runBuildable(() -> toBuildable(params));
+	}
+
+	/**
+	 * Evaluate the params and deduce the respective build command.
+	 */
+	protected XBuildable toBuildable(DidCloseTextDocumentParams params) {
+		return workspaceManager.didClose(getURI(params.getTextDocument()));
 	}
 
 	@Override
@@ -414,21 +419,36 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		requestManager.runWrite(() -> {
-			List<URI> dirtyFiles = new ArrayList<>();
-			List<URI> deletedFiles = new ArrayList<>();
-			params.getChanges().stream()
-					.map((fileEvent) -> Pair.of(uriExtensions.toUri(fileEvent.getUri()), fileEvent.getType()))
-					.filter(pair -> !workspaceManager.isDocumentOpen(pair.getKey()))
-					.forEach(pair -> {
-						if (pair.getValue() == FileChangeType.Deleted) {
-							deletedFiles.add(pair.getKey());
-						} else {
-							dirtyFiles.add(pair.getKey());
-						}
-					});
-			return workspaceManager.didChangeFiles(dirtyFiles, deletedFiles);
-		}, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+		runBuildable(() -> toBuildable(params));
+	}
+
+	/**
+	 * Evaluate the params and deduce the respective build command.
+	 */
+	protected XBuildable toBuildable(DidChangeWatchedFilesParams params) {
+		List<URI> dirtyFiles = new ArrayList<>();
+		List<URI> deletedFiles = new ArrayList<>();
+		params.getChanges().stream()
+				.map((fileEvent) -> Pair.of(uriExtensions.toUri(fileEvent.getUri()), fileEvent.getType()))
+				.filter(pair -> !workspaceManager.isDocumentOpen(pair.getKey()))
+				.forEach(pair -> {
+					if (pair.getValue() == FileChangeType.Deleted) {
+						deletedFiles.add(pair.getKey());
+					} else {
+						dirtyFiles.add(pair.getKey());
+					}
+				});
+		return workspaceManager.didChangeFiles(dirtyFiles, deletedFiles);
+	}
+
+	/**
+	 * Compute a buildable and run the build in a write action
+	 *
+	 * @param newBuildable
+	 *            the factory for the buildable.
+	 */
+	protected void runBuildable(Supplier<? extends XBuildable> newBuildable) {
+		requestManager.runWrite(newBuildable::get, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
 	}
 
 	@Override
@@ -440,49 +460,66 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	private void publishDiagnostics(URI uri, Iterable<? extends Issue> issues) {
-		this.initialized.thenAccept((initParams) -> {
+		initialized.thenAccept((initParams) -> {
 			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
-			publishDiagnosticsParams.setUri(this.uriExtensions.toUriString(uri));
+			publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
 			publishDiagnosticsParams.setDiagnostics(workspaceManager.doRead(uri,
-					(document, resource) -> FluentIterable.from(issues)
-							.filter(issue -> issue.getSeverity() != Severity.IGNORE)
-							.transform(issue -> toDiagnostic(document, issue)).toList()));
-			this.client.publishDiagnostics(publishDiagnosticsParams);
+					(document, resource) -> toDiagnostics(issues, document)));
+			client.publishDiagnostics(publishDiagnosticsParams);
 		});
 	}
 
-	private Diagnostic toDiagnostic(Document document, Issue issue) {
+	/**
+	 * Convert the given issues to diagnostics. Does not return any issue with severity {@link Severity#IGNORE ignore}
+	 * by default.
+	 */
+	protected List<Diagnostic> toDiagnostics(Iterable<? extends Issue> issues, Document document) {
+		List<Diagnostic> result = new ArrayList<>();
+		for (Issue issue : issues) {
+			if (issue.getSeverity() != Severity.IGNORE) {
+				result.add(toDiagnostic(issue, document));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Convert the given issue to a diagnostic.
+	 */
+	protected Diagnostic toDiagnostic(Issue issue, Document document) {
 		Diagnostic result = new Diagnostic();
 		result.setCode(issue.getCode());
-		Severity severity = issue.getSeverity();
-		if (severity != null) {
-			switch (severity) {
-			case ERROR:
-				result.setSeverity(DiagnosticSeverity.Error);
-				break;
-			case WARNING:
-				result.setSeverity(DiagnosticSeverity.Warning);
-				break;
-			case INFO:
-				result.setSeverity(DiagnosticSeverity.Information);
-				break;
-			default:
-				result.setSeverity(DiagnosticSeverity.Hint);
-				break;
-			}
-		} else {
-			result.setSeverity(DiagnosticSeverity.Hint);
-		}
 		result.setMessage(issue.getMessage());
+		result.setSeverity(toDiagnosticSeverity(issue.getSeverity()));
 		Position start = document.getPosition(issue.getOffset());
 		Position end = document.getPosition(issue.getOffset() + issue.getLength());
 		result.setRange(new Range(start, end));
 		return result;
 	}
 
+	/**
+	 * Convert the serverity to a lsp {@link DiagnosticSeverity}.
+	 *
+	 * Defaults to severity {@link DiagnosticSeverity#Hint hint}.
+	 */
+	protected DiagnosticSeverity toDiagnosticSeverity(Severity severity) {
+		switch (severity) {
+		case ERROR:
+			return DiagnosticSeverity.Error;
+		case IGNORE:
+			return DiagnosticSeverity.Hint;
+		case INFO:
+			return DiagnosticSeverity.Information;
+		case WARNING:
+			return DiagnosticSeverity.Warning;
+		default:
+			return DiagnosticSeverity.Hint;
+		}
+	}
+
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
-		return this.requestManager.runRead((cancelIndicator) -> completion(cancelIndicator, params));
+		return requestManager.runRead((cancelIndicator) -> completion(cancelIndicator, params));
 	}
 
 	/**
@@ -490,23 +527,49 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	protected Either<List<CompletionItem>, CompletionList> completion(CancelIndicator originalCancelIndicator,
 			CompletionParams params) {
-		URI uri = this.uriExtensions.toUri(params.getTextDocument().getUri());
-		IResourceServiceProvider resourceServiceProvider = this.languagesRegistry.getResourceServiceProvider(uri);
-		ContentAssistService contentAssistService = resourceServiceProvider != null
-				? resourceServiceProvider.get(ContentAssistService.class)
-				: null;
+		URI uri = getURI(params);
+		ContentAssistService contentAssistService = getService(uri, ContentAssistService.class);
 		if (contentAssistService == null) {
 			return Either.forRight(new CompletionList());
 		}
 		BufferedCancelIndicator cancelIndicator = new BufferedCancelIndicator(originalCancelIndicator);
-		return Either.forRight(this.workspaceManager.doRead(uri,
+		return Either.forRight(workspaceManager.doRead(uri,
 				(doc, res) -> contentAssistService.createCompletionList(doc, res, params, cancelIndicator)));
+	}
+
+	/**
+	 * Obtain the URI from the given parameters.
+	 */
+	protected URI getURI(TextDocumentPositionParams params) {
+		return getURI(params.getTextDocument());
+	}
+
+	/**
+	 * Obtain the URI from the given identifier.
+	 */
+	protected URI getURI(TextDocumentIdentifier documentIdentifier) {
+		return uriExtensions.toUri(documentIdentifier.getUri());
+	}
+
+	/**
+	 * Obtain the URI from the given document item.
+	 */
+	protected URI getURI(TextDocumentItem documentItem) {
+		return uriExtensions.toUri(documentItem.getUri());
 	}
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
 			TextDocumentPositionParams params) {
-		return requestManager.runRead(cancelIndicator -> Either.forLeft(definition(cancelIndicator, params)));
+		return requestManager.runRead(cancelIndicator -> definition(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the definition. Executed in a read request.
+	 */
+	protected Either<List<? extends Location>, List<? extends LocationLink>> definition(
+			TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
+		return Either.forLeft(definition(cancelIndicator, params));
 	}
 
 	/**
@@ -514,49 +577,53 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 */
 	protected List<? extends Location> definition(CancelIndicator cancelIndicator,
 			TextDocumentPositionParams params) {
-		URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-		IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
-		DocumentSymbolService documentSymbolService = resourceServiceProvider != null
-				? resourceServiceProvider.get(DocumentSymbolService.class)
-				: null;
+		URI uri = getURI(params);
+		DocumentSymbolService documentSymbolService = getService(uri, DocumentSymbolService.class);
 		if ((documentSymbolService == null)) {
-			return CollectionLiterals.emptyList();
+			return Collections.emptyList();
 		}
-		return this.workspaceManager.doRead(uri,
+		return workspaceManager.doRead(uri,
 				(doc, res) -> documentSymbolService.getDefinitions(doc, res, params, resourceAccess, cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
-		return requestManager.runRead(cancelIndicator -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
-			DocumentSymbolService documentSymbolService = resourceServiceProvider != null
-					? resourceServiceProvider.get(DocumentSymbolService.class)
-					: null;
-			if ((documentSymbolService == null)) {
-				return CollectionLiterals.emptyList();
-			}
-			return this.workspaceManager.doRead(uri,
-					(document, resource) -> documentSymbolService.getReferences(document, resource, params,
-							resourceAccess,
-							workspaceManager.getIndex(), cancelIndicator));
-		});
+		return requestManager.runRead(cancelIndicator -> references(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the references. Executed in read request.
+	 */
+	protected List<? extends Location> references(ReferenceParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params);
+		DocumentSymbolService documentSymbolService = getService(uri, DocumentSymbolService.class);
+		if ((documentSymbolService == null)) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri,
+				(document, resource) -> documentSymbolService.getReferences(document, resource, params,
+						resourceAccess,
+						workspaceManager.getIndex(), cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(
 			DocumentSymbolParams params) {
-		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-			IDocumentSymbolService documentSymbolService = getIDocumentSymbolService(
-					languagesRegistry.getResourceServiceProvider(uri));
-			if ((documentSymbolService == null)) {
-				return CollectionLiterals.emptyList();
-			}
-			return this.workspaceManager.doRead(uri, (document, resource) -> documentSymbolService.getSymbols(document,
-					resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> documentSymbol(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the symbol information. Executed in a read request.
+	 */
+	protected List<Either<SymbolInformation, DocumentSymbol>> documentSymbol(DocumentSymbolParams params,
+			CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		IDocumentSymbolService documentSymbolService = getIDocumentSymbolService(getResourceServiceProvider(uri));
+		if ((documentSymbolService == null)) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri, (document, resource) -> documentSymbolService.getSymbols(document,
+				resource, params, cancelIndicator));
 	}
 
 	/**
@@ -596,25 +663,34 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
-		return requestManager.runRead((cancelIndicator) -> workspaceSymbolService.getSymbols(params.getQuery(),
+		return requestManager.runRead((cancelIndicator) -> symbol(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the symbol information. Executed in a read request.
+	 */
+	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
+		return workspaceSymbolService.getSymbols(params.getQuery(),
 				resourceAccess, workspaceManager.getIndex(),
-				cancelIndicator));
+				cancelIndicator);
 	}
 
 	@Override
 	public CompletableFuture<Hover> hover(TextDocumentPositionParams params) {
-		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
-			IHoverService hoverService = resourceServiceProvider != null
-					? resourceServiceProvider.get(IHoverService.class)
-					: null;
-			if (hoverService == null) {
-				return IHoverService.EMPTY_HOVER;
-			}
-			return this.workspaceManager.<Hover> doRead(uri,
-					(document, resource) -> hoverService.hover(document, resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> hover(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the hover. Executed in a read request.
+	 */
+	protected Hover hover(TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params);
+		IHoverService hoverService = getService(uri, IHoverService.class);
+		if (hoverService == null) {
+			return IHoverService.EMPTY_HOVER;
+		}
+		return workspaceManager.<Hover> doRead(uri,
+				(document, resource) -> hoverService.hover(document, resource, params, cancelIndicator));
 	}
 
 	@Override
@@ -624,86 +700,101 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams params) {
-		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
-			ISignatureHelpService helper = resourceServiceProvider != null
-					? resourceServiceProvider.get(ISignatureHelpService.class)
-					: null;
-			if (helper == null) {
-				return ISignatureHelpService.EMPTY;
-			}
-			return workspaceManager.doRead(uri,
-					(doc, resource) -> helper.getSignatureHelp(doc, resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> signatureHelp(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the signature help. Executed in a read request.
+	 */
+	protected SignatureHelp signatureHelp(TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params);
+		ISignatureHelpService helper = getService(uri, ISignatureHelpService.class);
+		if (helper == null) {
+			return ISignatureHelpService.EMPTY;
+		}
+		return workspaceManager.doRead(uri,
+				(doc, resource) -> helper.getSignatureHelp(doc, resource, params, cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(
 			TextDocumentPositionParams params) {
-		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-			IResourceServiceProvider serviceProvider = languagesRegistry.getResourceServiceProvider(uri);
-			IDocumentHighlightService service = serviceProvider != null
-					? serviceProvider.get(IDocumentHighlightService.class)
-					: null;
-			if (service == null) {
-				return CollectionLiterals.emptyList();
-			}
-			return this.workspaceManager.doRead(uri, (doc,
-					resource) -> service.getDocumentHighlights(doc, resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> documentHighlight(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the document highlights. Executed in a read request.
+	 */
+	protected List<? extends DocumentHighlight> documentHighlight(TextDocumentPositionParams params,
+			CancelIndicator cancelIndicator) {
+		URI uri = getURI(params);
+		IDocumentHighlightService service = getService(uri, IDocumentHighlightService.class);
+		if (service == null) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri, (doc,
+				resource) -> service.getDocumentHighlights(doc, resource, params, cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
-		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-			IResourceServiceProvider serviceProvider = languagesRegistry.getResourceServiceProvider(uri);
-			ICodeActionService service = serviceProvider != null ? serviceProvider.get(ICodeActionService.class) : null;
-			ICodeActionService2 service2 = serviceProvider != null ? serviceProvider.get(ICodeActionService2.class)
-					: null;
-			if (service == null && service2 == null) {
-				return CollectionLiterals.emptyList();
+		return requestManager.runRead((cancelIndicator) -> codeAction(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the code action commands. Executed in a read request.
+	 */
+	protected List<Either<Command, CodeAction>> codeAction(CodeActionParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		IResourceServiceProvider serviceProvider = getResourceServiceProvider(uri);
+		ICodeActionService service = getService(serviceProvider, ICodeActionService.class);
+		ICodeActionService2 service2 = getService(serviceProvider, ICodeActionService2.class);
+		if (service == null && service2 == null) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri, (doc, resource) -> {
+			List<Either<Command, CodeAction>> result = new ArrayList<>();
+			if (service != null) {
+				List<Either<Command, CodeAction>> actions = service.getCodeActions(doc, resource, params,
+						cancelIndicator);
+				if (actions != null) {
+					result.addAll(actions);
+				}
 			}
-			return workspaceManager.doRead(uri, (doc, resource) -> {
-				List<Either<Command, CodeAction>> result = new ArrayList<>();
-				if (service != null) {
-					List<Either<Command, CodeAction>> actions = service.getCodeActions(doc, resource, params,
-							cancelIndicator);
-					if (actions != null) {
-						result.addAll(actions);
-					}
+			if (service2 != null) {
+				ICodeActionService2.Options options = new ICodeActionService2.Options();
+				options.setDocument(doc);
+				options.setResource(resource);
+				options.setLanguageServerAccess(access);
+				options.setCodeActionParams(params);
+				options.setCancelIndicator(cancelIndicator);
+				List<Either<Command, CodeAction>> actions = service2.getCodeActions(options);
+				if (actions != null) {
+					result.addAll(actions);
 				}
-				if (service2 != null) {
-					ICodeActionService2.Options options = new ICodeActionService2.Options();
-					options.setDocument(doc);
-					options.setResource(resource);
-					options.setLanguageServerAccess(this.access);
-					options.setCodeActionParams(params);
-					options.setCancelIndicator(cancelIndicator);
-					List<Either<Command, CodeAction>> actions = service2.getCodeActions(options);
-					if (actions != null) {
-						result.addAll(actions);
-					}
-				}
-				return result;
-			});
+			}
+			return result;
 		});
 	}
 
-	private void installURI(List<? extends CodeLens> codeLenses, String uri) {
+	/**
+	 * Put the document uri into the data of the given code lenses.
+	 */
+	protected void installURI(List<? extends CodeLens> codeLenses, String uri) {
 		for (CodeLens lens : codeLenses) {
 			Object data = lens.getData();
 			if (data != null) {
-				lens.setData(CollectionLiterals.newArrayList(uri, lens.getData()));
+				lens.setData(Arrays.asList(uri, lens.getData()));
 			} else {
 				lens.setData(uri);
 			}
 		}
 	}
 
-	private URI uninstallURI(CodeLens lens) {
+	/**
+	 * Remove the document uri from the data of the given code lense.
+	 */
+	protected URI uninstallURI(CodeLens lens) {
 		URI result = null;
 		Object data = lens.getData();
 		if (data instanceof String) {
@@ -721,21 +812,23 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
-		return requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
-			ICodeLensService codeLensService = resourceServiceProvider != null
-					? resourceServiceProvider.get(ICodeLensService.class)
-					: null;
-			if ((codeLensService == null)) {
-				return CollectionLiterals.emptyList();
-			}
-			return workspaceManager.doRead(uri, (document, resource) -> {
-				List<? extends CodeLens> result = codeLensService.computeCodeLenses(document, resource, params,
-						cancelIndicator);
-				installURI(result, uri.toString());
-				return result;
-			});
+		return requestManager.runRead((cancelIndicator) -> codeLens(params, cancelIndicator));
+	}
+
+	/**
+	 * Compute the code lenses. Executed in a read request.
+	 */
+	protected List<? extends CodeLens> codeLens(CodeLensParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		ICodeLensService codeLensService = getService(uri, ICodeLensService.class);
+		if ((codeLensService == null)) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri, (document, resource) -> {
+			List<? extends CodeLens> result = codeLensService.computeCodeLenses(document, resource, params,
+					cancelIndicator);
+			installURI(result, uri.toString());
+			return result;
 		});
 	}
 
@@ -745,55 +838,95 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if ((uri == null)) {
 			return CompletableFuture.completedFuture(unresolved);
 		}
-		return requestManager.runRead((cancelIndicator) -> {
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
-			ICodeLensResolver resolver = resourceServiceProvider != null
-					? resourceServiceProvider.get(ICodeLensResolver.class)
-					: null;
-			if ((resolver == null)) {
-				return unresolved;
-			}
-			return this.workspaceManager.doRead(uri,
-					(document, resource) -> resolver.resolveCodeLens(document, resource, unresolved, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> resolveCodeLens(uri, unresolved, cancelIndicator));
+	}
+
+	/**
+	 * Resolve the given code lens. Executed in a read request.
+	 */
+	protected CodeLens resolveCodeLens(URI uri, CodeLens unresolved, CancelIndicator cancelIndicator) {
+		ICodeLensResolver resolver = getService(uri, ICodeLensResolver.class);
+		if (resolver == null) {
+			return unresolved;
+		}
+		return workspaceManager.doRead(uri,
+				(document, resource) -> resolver.resolveCodeLens(document, resource, unresolved, cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
-		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
-			FormattingService formatterService = resourceServiceProvider != null
-					? resourceServiceProvider.get(FormattingService.class)
-					: null;
-			if ((formatterService == null)) {
-				return CollectionLiterals.emptyList();
-			}
-			return workspaceManager.doRead(uri, (document,
-					resource) -> formatterService.format(document, resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> formatting(params, cancelIndicator));
+	}
+
+	/**
+	 * Create the text edits for the formatter. Executed in a read request.
+	 */
+	protected List<? extends TextEdit> formatting(DocumentFormattingParams params, CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		FormattingService formatterService = getService(uri, FormattingService.class);
+		if ((formatterService == null)) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri, (document,
+				resource) -> formatterService.format(document, resource, params, cancelIndicator));
 	}
 
 	@Override
 	public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
-		return this.requestManager.runRead((cancelIndicator) -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-			IResourceServiceProvider resourceServiceProvider = languagesRegistry.getResourceServiceProvider(uri);
-			FormattingService formatterService = resourceServiceProvider != null
-					? resourceServiceProvider.get(FormattingService.class)
-					: null;
-			if ((formatterService == null)) {
-				return CollectionLiterals.emptyList();
-			}
-			return workspaceManager.doRead(uri,
-					(document, resource) -> formatterService.format(document, resource, params, cancelIndicator));
-		});
+		return requestManager.runRead((cancelIndicator) -> rangeFormatting(params, cancelIndicator));
+	}
+
+	/**
+	 * Create the text edits for the formatter. Executed in a read request.
+	 */
+	protected List<? extends TextEdit> rangeFormatting(DocumentRangeFormattingParams params,
+			CancelIndicator cancelIndicator) {
+		URI uri = getURI(params.getTextDocument());
+		FormattingService formatterService = getService(uri, FormattingService.class);
+		if ((formatterService == null)) {
+			return Collections.emptyList();
+		}
+		return workspaceManager.doRead(uri,
+				(document, resource) -> formatterService.format(document, resource, params, cancelIndicator));
+	}
+
+	/**
+	 * @param uri
+	 *            the current URI
+	 * @param type
+	 *            the type of the service
+	 * @return the service instance or null if the language does not exist or if it does not expose the service.
+	 */
+	protected <Service> Service getService(URI uri, Class<Service> type) {
+		return getService(getResourceServiceProvider(uri), type);
+	}
+
+	/**
+	 * @param <Service>
+	 *            the type of the service
+	 * @param resourceServiceProvider
+	 *            the resource service provider. May be null
+	 * @param type
+	 *            the type of the service
+	 * @return the service instance or null if not available.
+	 */
+	protected <Service> Service getService(IResourceServiceProvider resourceServiceProvider, Class<Service> type) {
+		if (resourceServiceProvider == null) {
+			return null;
+		}
+		return resourceServiceProvider.get(type);
 	}
 
 	@Override
 	public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
-		return this.requestManager
-				.runRead((cancelIndicator) -> commandRegistry.executeCommand(params, this.access, cancelIndicator));
+		return requestManager.runRead((cancelIndicator) -> executeCommand(params, cancelIndicator));
+	}
+
+	/**
+	 * Execute the command. Runs in a read request.
+	 */
+	protected Object executeCommand(ExecuteCommandParams params, CancelIndicator cancelIndicator) {
+		return commandRegistry.executeCommand(params, access, cancelIndicator);
 	}
 
 	@Override
@@ -803,28 +936,38 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<WorkspaceEdit> rename(RenameParams renameParams) {
-		return requestManager.runRead(cancelIndicator -> {
-			URI uri = uriExtensions.toUri(renameParams.getTextDocument().getUri());
-			IResourceServiceProvider resourceServiceProvider = this.languagesRegistry
-					.getResourceServiceProvider(uri);
-			XIRenameService renameServiceOld = resourceServiceProvider != null
-					? resourceServiceProvider.get(XIRenameService.class)
-					: null;
-			if ((renameServiceOld != null)) {
-				return renameServiceOld.rename(this.workspaceManager, renameParams, cancelIndicator);
-			}
-			IRenameService2 renameService2 = resourceServiceProvider != null
-					? resourceServiceProvider.get(IRenameService2.class)
-					: null;
-			if ((renameService2 != null)) {
-				IRenameService2.Options options = new IRenameService2.Options();
-				options.setLanguageServerAccess(this.access);
-				options.setRenameParams(renameParams);
-				options.setCancelIndicator(cancelIndicator);
-				return renameService2.rename(options);
-			}
-			return new WorkspaceEdit();
-		});
+		return requestManager.runRead(cancelIndicator -> rename(renameParams, cancelIndicator));
+	}
+
+	/**
+	 * Compute the rename edits. Executed in a read request.
+	 */
+	protected WorkspaceEdit rename(RenameParams renameParams, CancelIndicator cancelIndicator) {
+		URI uri = getURI(renameParams.getTextDocument());
+
+		IResourceServiceProvider resourceServiceProvider = getResourceServiceProvider(uri);
+		XIRenameService renameServiceOld = getService(resourceServiceProvider, XIRenameService.class);
+		if (renameServiceOld != null) {
+			return renameServiceOld.rename(workspaceManager, renameParams, cancelIndicator);
+		}
+		IRenameService2 renameService2 = getService(resourceServiceProvider, IRenameService2.class);
+		if ((renameService2 != null)) {
+			IRenameService2.Options options = new IRenameService2.Options();
+			options.setLanguageServerAccess(access);
+			options.setRenameParams(renameParams);
+			options.setCancelIndicator(cancelIndicator);
+			return renameService2.rename(options);
+		}
+		return new WorkspaceEdit();
+	}
+
+	/**
+	 * @param uri
+	 *            the current URI
+	 * @return the resource service provider or null.
+	 */
+	protected IResourceServiceProvider getResourceServiceProvider(URI uri) {
+		return languagesRegistry.getResourceServiceProvider(uri);
 	}
 
 	/**
@@ -833,27 +976,29 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(
 			TextDocumentPositionParams params) {
-		return requestManager.runRead(cancelIndicator -> {
-			URI uri = uriExtensions.toUri(params.getTextDocument().getUri());
-			IResourceServiceProvider resourceServiceProvider = this.languagesRegistry
-					.getResourceServiceProvider(uri);
-			IRenameService2 renameService = resourceServiceProvider != null
-					? resourceServiceProvider.get(IRenameService2.class)
-					: null;
-			if (renameService == null) {
-				throw new UnsupportedOperationException();
-			}
-			IRenameService2.PrepareRenameOptions options = new IRenameService2.PrepareRenameOptions();
-			options.setLanguageServerAccess(access);
-			options.setParams(params);
-			options.setCancelIndicator(cancelIndicator);
-			return renameService.prepareRename(options);
-		});
+		return requestManager.runRead(cancelIndicator -> prepareRename(params, cancelIndicator));
+	}
+
+	/**
+	 * Prepare the rename operation. Executed in a read request.
+	 */
+	protected Either<Range, PrepareRenameResult> prepareRename(TextDocumentPositionParams params,
+			CancelIndicator cancelIndicator) {
+		URI uri = getURI(params);
+		IRenameService2 renameService = getService(uri, IRenameService2.class);
+		if (renameService == null) {
+			throw new UnsupportedOperationException();
+		}
+		IRenameService2.PrepareRenameOptions options = new IRenameService2.PrepareRenameOptions();
+		options.setLanguageServerAccess(access);
+		options.setParams(params);
+		options.setCancelIndicator(cancelIndicator);
+		return renameService.prepareRename(options);
 	}
 
 	@Override
 	public void notify(String method, Object parameter) {
-		for (Endpoint endpoint : this.extensionProviders.get(method)) {
+		for (Endpoint endpoint : extensionProviders.get(method)) {
 			try {
 				endpoint.notify(method, parameter);
 			} catch (UnsupportedOperationException e) {
@@ -866,10 +1011,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<?> request(String method, Object parameter) {
-		if (!this.extensionProviders.containsKey(method)) {
+		if (!extensionProviders.containsKey(method)) {
 			throw new UnsupportedOperationException("The json request \'" + method + "\' is unknown.");
 		}
-		for (Endpoint endpoint : this.extensionProviders.get(method)) {
+		for (Endpoint endpoint : extensionProviders.get(method)) {
 			try {
 				return endpoint.request(method, parameter);
 			} catch (UnsupportedOperationException e) {
@@ -887,15 +1032,15 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if (supportedMethods != null) {
 			return supportedMethods;
 		}
-		synchronized (this.extensionProviders) {
-			LinkedHashMap<String, JsonRpcMethod> supportedMethods = new LinkedHashMap<>();
+		synchronized (extensionProviders) {
+			Map<String, JsonRpcMethod> supportedMethods = new LinkedHashMap<>();
 			supportedMethods.putAll(ServiceEndpoints.getSupportedMethods(getClass()));
 
 			Map<String, JsonRpcMethod> extensions = new LinkedHashMap<>();
 			for (IResourceServiceProvider resourceServiceProvider : getAllLanguages()) {
 				ILanguageServerExtension ext = resourceServiceProvider.get(ILanguageServerExtension.class);
 				if (ext != null) {
-					ext.initialize(this.access);
+					ext.initialize(access);
 					Map<String, JsonRpcMethod> supportedExtensions = (ext instanceof JsonRpcMethodProvider)
 							? ((JsonRpcMethodProvider) ext).supportedMethods()
 							: ServiceEndpoints.getSupportedMethods(ext.getClass());
@@ -912,7 +1057,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 								extensions.put(entry.getKey(), existing);
 							} else {
 								Endpoint endpoint = ServiceEndpoints.toEndpoint(ext);
-								this.extensionProviders.put(entry.getKey(), endpoint);
+								extensionProviders.put(entry.getKey(), endpoint);
 								supportedMethods.put(entry.getKey(), entry.getValue());
 							}
 						}
@@ -926,7 +1071,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private final ILanguageServerAccess access = new ILanguageServerAccess() {
 		@Override
-		public <T extends Object> CompletableFuture<T> doRead(String uri,
+		public <T> CompletableFuture<T> doRead(String uri,
 				Function<ILanguageServerAccess.Context, T> function) {
 			return requestManager.runRead(cancelIndicator -> workspaceManager
 					.doRead(uriExtensions.toUri(uri), (document,
@@ -975,32 +1120,27 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void afterBuild(List<IResourceDescription.Delta> deltas) {
-		FluentIterable.from(deltas).filter((it) -> it.getNew() != null).transform(it -> it.getUri().toString()).forEach(
+		FluentIterable.from(deltas).filter(it -> it.getNew() != null).transform(it -> it.getUri().toString()).forEach(
 				it -> {
 					access.doRead(it, ctx -> {
 						if (ctx.isDocumentOpen()) {
 							if (ctx.getResource() instanceof XtextResource) {
 								XtextResource resource = ((XtextResource) ctx.getResource());
-								IResourceServiceProvider serviceProvider = this.languagesRegistry
-										.getResourceServiceProvider(resource.getURI());
-								IColoringService coloringService = serviceProvider != null
-										? serviceProvider.get(IColoringService.class)
-										: null;
-								if (coloringService != null) {
-									if ((client instanceof LanguageClientExtensions)) {
-										Document doc = ctx.getDocument();
-										List<? extends ColoringInformation> coloringInfos = coloringService
-												.getColoring(resource, doc);
-										if ((!IterableExtensions.isNullOrEmpty(coloringInfos))) {
-											String uri = resource.getURI().toString();
-											((LanguageClientExtensions) this.client)
-													.updateColoring(new ColoringParams(uri, coloringInfos));
-										}
+								IColoringService coloringService = resource.getResourceServiceProvider()
+										.get(IColoringService.class);
+								if (coloringService != null && client instanceof LanguageClientExtensions) {
+									Document doc = ctx.getDocument();
+									List<? extends ColoringInformation> coloringInfos = coloringService
+											.getColoring(resource, doc);
+									if (!IterableExtensions.isNullOrEmpty(coloringInfos)) {
+										String uri = resource.getURI().toString();
+										((LanguageClientExtensions) client)
+												.updateColoring(new ColoringParams(uri, coloringInfos));
 									}
 								}
 							}
 						}
-						this.semanticHighlightingRegistry.update(ctx);
+						semanticHighlightingRegistry.update(ctx);
 						return null;
 					});
 				});
@@ -1010,69 +1150,70 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 * @since 2.16
 	 */
 	protected ILanguageServerAccess getLanguageServerAccess() {
-		return this.access;
+		return access;
 	}
 
 	/**
 	 * @since 2.16
 	 */
 	protected LanguageClient getLanguageClient() {
-		return this.client;
+		return client;
 	}
 
 	/**
 	 * @since 2.16
 	 */
 	protected ExecutableCommandRegistry getCommandRegistry() {
-		return this.commandRegistry;
+		return commandRegistry;
 	}
 
 	/**
 	 * @since 2.16
 	 */
 	protected Multimap<String, Endpoint> getExtensionProviders() {
-		return ImmutableMultimap.copyOf(this.extensionProviders);
+		return ImmutableMultimap.copyOf(extensionProviders);
 	}
 
 	/**
 	 * @since 2.16
 	 */
 	protected Map<String, JsonRpcMethod> getSupportedMethods() {
-		return ImmutableMap.copyOf(this.supportedMethods);
+		return ImmutableMap.copyOf(supportedMethods);
 	}
 
 	/**
 	 * @since 2.16
 	 */
 	protected IResourceServiceProvider.Registry getLanguagesRegistry() {
-		return this.languagesRegistry;
+		return languagesRegistry;
 	}
 
 	/**
 	 * @since 2.16
 	 */
 	protected IReferenceFinder.IResourceAccess getWorkspaceResourceAccess() {
-		return this.resourceAccess;
+		return resourceAccess;
 	}
 
 	/**
 	 * @since 2.16
 	 */
 	protected XWorkspaceManager getWorkspaceManager() {
-		return this.workspaceManager;
+		return workspaceManager;
 	}
 
 	/**
 	 * @since 2.16
 	 */
 	protected WorkspaceSymbolService getWorkspaceSymbolService() {
-		return this.workspaceSymbolService;
+		return workspaceSymbolService;
 	}
 
 	/**
 	 * Getter
 	 */
 	public RequestManager getRequestManager() {
-		return this.requestManager;
+		return requestManager;
+
 	}
 }
