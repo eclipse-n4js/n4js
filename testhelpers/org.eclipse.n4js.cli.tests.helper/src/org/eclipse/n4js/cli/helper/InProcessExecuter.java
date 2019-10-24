@@ -11,19 +11,28 @@
 package org.eclipse.n4js.cli.helper;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.n4js.cli.N4jscFactory;
+import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemExitRedirecter.SystemExitException;
+import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.base.Stopwatch;
+import com.google.inject.Injector;
 
 /**
  * Abstract test class to be used when testing N4JS CLI related things.
  */
-public class InProcessExecuter<ArgType> {
+@SuppressWarnings("restriction")
+public class InProcessExecuter {
 	final private SystemOutRedirecter systemOutRedirecter = new SystemOutRedirecter();
 	final private SystemExitRedirecter systemExitRedirecter = new SystemExitRedirecter();
 
@@ -42,13 +51,14 @@ public class InProcessExecuter<ArgType> {
 	 * Calls main entry point of N4jsc with the given args. Checks that the given exit code equals the actual exit code
 	 * of the invocation. Removes {@link N4jscOptions#USAGE} text if desired.
 	 */
-	protected CliCompileResult n4jsc(ArgType args, CliCompileResult cliResult, N4jscProcess<ArgType> process) {
+	protected CliCompileResult n4jsc(File workspaceRoot, String[] args, CliCompileResult cliResult) {
 		Stopwatch sw = Stopwatch.createStarted();
 
 		try {
 			setRedirections();
-			cliResult.workingDir = new File("").getAbsolutePath().toString();
-			process.doN4jsc(args, cliResult);
+			cliResult.workingDir = workspaceRoot.toString();
+			N4jscMain.main(args);
+
 			cliResult.exitCode = 0;
 
 		} catch (SystemExitException e) {
@@ -65,10 +75,25 @@ public class InProcessExecuter<ArgType> {
 			cliResult.stdOut = systemOutRedirecter.getSystemOut();
 			cliResult.errOut = systemOutRedirecter.getSystemErr();
 
-			if (N4jscTestFactory.isInjectorCreated()) {
+			if (isBackendEnabled) {
 				N4jscTestLanguageClient callback = (N4jscTestLanguageClient) N4jscFactory.getLanguageClient();
 				cliResult.errors = callback.errors;
 				cliResult.warnings = callback.warnings;
+
+				// save transpiled files
+				cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
+
+				// save projects
+				Injector injector = N4jscFactory.getOrCreateInjector();
+				N4JSWorkspaceManager workspaceManager = injector.getInstance(N4JSWorkspaceManager.class);
+				Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
+				Map<String, String> projectMap = new TreeMap<>();
+				for (IProjectConfig pConfig : projects) {
+					Path projectPath = Path.of(pConfig.getPath().toFileString());
+					Path relativeProjectPath = workspaceRoot.toPath().relativize(projectPath);
+					projectMap.put(pConfig.getName(), relativeProjectPath.toString());
+				}
+				cliResult.projects = projectMap;
 			}
 
 			unsetRedirections();
