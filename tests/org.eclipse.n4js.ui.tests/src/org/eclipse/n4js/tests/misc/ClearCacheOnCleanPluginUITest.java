@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
@@ -93,7 +94,7 @@ public class ClearCacheOnCleanPluginUITest extends AbstractBuilderParticipantTes
 	public void testClearOnModifyPackageJson() throws CoreException {
 		File prjDir = new File(PROBANDS);
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
-		IResource packagejson = project.findMember("package.json");
+		IResource packagejson = project.findMember(N4JSGlobals.PACKAGE_JSON);
 		IFile filePJ = ResourcesPlugin.getWorkspace().getRoot().getFile(packagejson.getFullPath());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
