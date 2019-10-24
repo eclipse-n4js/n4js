@@ -1491,7 +1491,11 @@ class IndexedAccessExpression extends ExpressionWithTarget, MemberAccess {
 	 * Returns true.
 	 */
 	op boolean isValidSimpleAssignmentTarget() {
-		return true
+		val _target = target;
+		if (_target instanceof ExpressionWithTarget && !_target.isValidSimpleAssignmentTarget()) {
+			return false;
+		}
+		return !isOptionalChaining;
 	}
 }
 
@@ -1525,7 +1529,11 @@ class ParameterizedPropertyAccessExpression extends ExpressionWithTarget, Member
 	 * Returns true.
 	 */
 	op boolean isValidSimpleAssignmentTarget() {
-		return true
+		val _target = target;
+		if (_target instanceof ExpressionWithTarget && !_target.isValidSimpleAssignmentTarget()) {
+			return false;
+		}
+		return !isOptionalChaining
 	}
 }
 
