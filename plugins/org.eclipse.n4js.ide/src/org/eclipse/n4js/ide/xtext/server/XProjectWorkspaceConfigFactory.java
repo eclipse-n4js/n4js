@@ -26,7 +26,7 @@ public class XProjectWorkspaceConfigFactory implements XIWorkspaceConfigFactory 
 	@Override
 	public IWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI) {
 		WorkspaceConfig workspaceConfig = new WorkspaceConfig();
-		this.findProjects(workspaceConfig, workspaceBaseURI);
+		findProjects(workspaceConfig, workspaceBaseURI);
 		return workspaceConfig;
 	}
 

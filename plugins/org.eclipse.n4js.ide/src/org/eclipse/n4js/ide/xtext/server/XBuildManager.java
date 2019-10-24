@@ -9,6 +9,7 @@ package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +23,12 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -116,24 +116,29 @@ public class XBuildManager {
 		 * Run the build
 		 */
 		List<IResourceDescription.Delta> build(CancelIndicator cancelIndicator);
+
+		/**
+		 * No build is going to happen.
+		 */
+		XBuildable NO_BUILD = (cancelIndicator) -> Collections.emptyList();
 	}
 
 	/**
 	 * Issue key for cyclic dependencies
 	 */
-	public static final String CYCLIC_PROJECT_DEPENDENCIES = (XBuildManager.class.getCanonicalName()
-			+ ".cyclicProjectDependencies");
+	public static final String CYCLIC_PROJECT_DEPENDENCIES = XBuildManager.class.getName()
+			+ ".cyclicProjectDependencies";
 
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
 	private Provider<TopologicalSorter> sorterProvider;
 
-	private final LinkedHashSet<URI> dirtyFiles = CollectionLiterals.<URI> newLinkedHashSet();
+	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 
-	private final LinkedHashSet<URI> deletedFiles = CollectionLiterals.<URI> newLinkedHashSet();
+	private final LinkedHashSet<URI> deletedFiles = new LinkedHashSet<>();
 
-	private List<IResourceDescription.Delta> unreportedDeltas = CollectionLiterals.<IResourceDescription.Delta> newArrayList();
+	private List<IResourceDescription.Delta> unreportedDeltas = new ArrayList<>();
 
 	/**
 	 * Enqueue the given file collections.
@@ -161,8 +166,8 @@ public class XBuildManager {
 	 * Update the contents of the given set.
 	 */
 	protected void queue(Set<URI> files, Collection<URI> toRemove, Collection<URI> toAdd) {
-		Iterables.removeAll(files, toRemove);
-		Iterables.<URI> addAll(files, toAdd);
+		files.removeAll(toRemove);
+		files.addAll(toAdd);
 	}
 
 	/**
@@ -173,7 +178,7 @@ public class XBuildManager {
 	public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 		List<ProjectDescription> sortedDescriptions = sortByDependencies(projects);
-		ArrayList<IResourceDescription.Delta> result = CollectionLiterals.<IResourceDescription.Delta> newArrayList();
+		List<IResourceDescription.Delta> result = new ArrayList<>();
 		for (ProjectDescription description : sortedDescriptions) {
 			XIncrementalBuilder.XResult partialresult = workspaceManager.getProjectManager(description.getName())
 					.doInitialBuild(indicator);
@@ -186,12 +191,12 @@ public class XBuildManager {
 	 * Run the build on all projects.
 	 */
 	protected List<IResourceDescription.Delta> internalBuild(CancelIndicator cancelIndicator) {
-		ArrayList<URI> allDirty = new ArrayList<>(dirtyFiles);
-		HashMultimap<ProjectDescription, URI> project2dirty = HashMultimap.create();
+		List<URI> allDirty = new ArrayList<>(dirtyFiles);
+		Multimap<ProjectDescription, URI> project2dirty = HashMultimap.create();
 		for (URI dirty : allDirty) {
 			project2dirty.put(workspaceManager.getProjectManager(dirty).getProjectDescription(), dirty);
 		}
-		HashMultimap<ProjectDescription, URI> project2deleted = HashMultimap.create();
+		Multimap<ProjectDescription, URI> project2deleted = HashMultimap.create();
 		for (URI deleted : deletedFiles) {
 			ProjectDescription projectManager = workspaceManager.getProjectManager(deleted)
 					.getProjectDescription();
@@ -205,8 +210,8 @@ public class XBuildManager {
 			List<URI> projectDeleted = new ArrayList<>(project2deleted.get(it));
 			XIncrementalBuilder.XResult partialResult = projectManager.doBuild(projectDirty, projectDeleted,
 					unreportedDeltas, cancelIndicator);
-			allDirty.addAll(
-					ListExtensions.map(partialResult.getAffectedResources(), IResourceDescription.Delta::getUri));
+			FluentIterable.from(partialResult.getAffectedResources()).transform(IResourceDescription.Delta::getUri)
+					.copyInto(allDirty);
 			dirtyFiles.removeAll(projectDirty);
 			deletedFiles.removeAll(projectDeleted);
 			mergeWithUnreportedDeltas(partialResult.getAffectedResources());
@@ -219,7 +224,7 @@ public class XBuildManager {
 	/**
 	 * @since 2.18
 	 */
-	protected Boolean mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
+	protected void mergeWithUnreportedDeltas(List<IResourceDescription.Delta> newDeltas) {
 		if (this.unreportedDeltas.isEmpty()) {
 			unreportedDeltas.addAll(newDeltas);
 		} else {
@@ -237,7 +242,6 @@ public class XBuildManager {
 				}
 			});
 		}
-		return null;
 	}
 
 	/**

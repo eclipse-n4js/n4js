@@ -121,7 +121,7 @@ public class N4JSBuildManager extends XBuildManager {
 	}
 
 	@Override
-	protected Boolean mergeWithUnreportedDeltas(final List<IResourceDescription.Delta> newDeltas) {
+	protected void mergeWithUnreportedDeltas(final List<IResourceDescription.Delta> newDeltas) {
 		if (this.myUnreportedDeltas.isEmpty()) {
 			this.myUnreportedDeltas.addAll(newDeltas);
 		} else {
@@ -143,7 +143,6 @@ public class N4JSBuildManager extends XBuildManager {
 			}
 			this.myUnreportedDeltas = new ArrayList<>(unreportedByUri.values());
 		}
-		return null;
 	}
 
 }

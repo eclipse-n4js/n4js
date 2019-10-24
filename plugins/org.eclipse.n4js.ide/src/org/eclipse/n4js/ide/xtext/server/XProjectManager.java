@@ -168,7 +168,7 @@ public class XProjectManager {
 	 * Create an empty resource set.
 	 */
 	protected XtextResourceSet createFreshResourceSet(ResourceDescriptionsData newIndex) {
-		if ((resourceSet == null)) {
+		if (resourceSet == null) {
 			resourceSet = createNewResourceSet(newIndex);
 		} else {
 			ChunkedResourceDescriptions resDescs = ChunkedResourceDescriptions.findInEmfObject(resourceSet);
