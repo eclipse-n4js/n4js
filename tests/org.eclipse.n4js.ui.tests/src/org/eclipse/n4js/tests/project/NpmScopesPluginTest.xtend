@@ -216,14 +216,14 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	def void testURIUtils_convert() {
-		val f = scopedProject.getFile("package.json");
+		val f = scopedProject.getFile(N4JSGlobals.PACKAGE_JSON);
 		assertTrue(f.exists);
 		val uri = URIUtils.convert(f);
 		assertTrue(uri.isPlatformResource);
 		val expectedSegments = #[
 			"resource",
 			"@myScope" + ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR_ECLIPSE + "Lib",
-			"package.json"
+			N4JSGlobals.PACKAGE_JSON
 		];
 		assertArrayEquals(expectedSegments, uri.segments);
 	}

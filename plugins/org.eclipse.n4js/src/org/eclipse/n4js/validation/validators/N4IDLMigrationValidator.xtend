@@ -206,7 +206,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	/** 
 	 * Checks that the source and target types all are exclusively of one version (one source version, one target version).
 	 * 
-	 * Does nothing for migrations with {@TMigration#hasDeclaredSourceAndTargetVersion}.
+	 * Does nothing for migrations with {@link TMigration#isHasDeclaredSourceAndTargetVersion()}.
 	 */
 	private def boolean holdsMigrationHasVersionExclusiveSourceAndTargetVersion(TMigration migration) {
 		// do not validate explicitly declared source and target version
@@ -309,7 +309,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	}
 	
 	/** 
-	 * Returns {@code true} iff all type references in left are equaltype (cf. {@link N4JSTypeSystem#equalType}) of 
+	 * Returns {@code true} iff all type references in left are equaltype (cf. {@link N4JSTypeSystem#equaltype}) of 
 	 * the corresponding type references in right. 
 	 * 
 	 * Always returns {@code false} if left holds a different number of type reference than right.
@@ -370,12 +370,12 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	}
 	
 	/**
-	 * Returns a list of switch-recognizable {@link TypeRef}s based on the source type refs of the given {@code migration}.
+	 * Returns a list of switch-recognizable {@link TypeRef type references} based on the source type refs of the given {@code migration}.
 	 * 
-	 * Returns an empty list if any of the given {@link TypeRef} cannot be handled by a {@link SwitchCondition} 
-	 * (cf. {@link MigrationSwitchComputer#UnhandledTypeRefException}).
+	 * Returns an empty list if any of the given {@link TypeRef references} cannot be handled by a {@link SwitchCondition} 
+	 * (cf. {@link org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer.UnhandledTypeRefException}).
 	 * 
-	 * Adds issues for unsupported type refs using {@link #addUnhandledParameterTypeRefIssue}.
+	 * Adds issues for unsupported type refs using {@link #addUnsupportedParameterTypeRefIssue}.
 	 */
 	private def List<TypeRef> getSwitchRecognizableSourceTypeRefs(TMigration migration) {
 		val refs = migration.sourceTypeRefs.map[s | 
@@ -482,7 +482,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		
 		if (typeRef.eContainer instanceof TFormalParameter) {
-			val parameterIndex = migration.fpars.indexOf(typeRef.eContainer);
+			val parameterIndex = migration.fpars.indexOf(typeRef.eContainer as TFormalParameter);
 			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, parameterIndex, issueCode);
 		} else if (typeRef.eContainer instanceof TMigration) {
 			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__RETURN_TYPE_REF, issueCode);

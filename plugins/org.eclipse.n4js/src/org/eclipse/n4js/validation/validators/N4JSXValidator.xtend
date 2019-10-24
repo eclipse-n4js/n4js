@@ -73,14 +73,11 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def public void checkJSXinN4JS(JSXElement jsxElem) {
 		val resType = ResourceType.getResourceType(jsxElem);
-		switch (resType) {
-			case N4JSX: return
-			case JSX: return
-			default: {
-				val message = getMessageForJSX_JSXELEMENT_IN_NON_JSX_RESOURCE(resType.name)
-				addIssue(message,jsxElem, JSX_JSXELEMENT_IN_NON_JSX_RESOURCE);
-			}
+		if (resType == ResourceType.N4JSX || resType == ResourceType.JSX) {
+			return;
 		}
+		val message = getMessageForJSX_JSXELEMENT_IN_NON_JSX_RESOURCE(resType.name)
+		addIssue(message,jsxElem, JSX_JSXELEMENT_IN_NON_JSX_RESOURCE);
 	}
 
 
