@@ -71,6 +71,9 @@ include::{find}chapters/a02_jsobjects/jsobjects.adoc[]
 
 include::{find}chapters/a03_n4jsobjects/n4jsobjects.adoc[]
 
+include::{find}chapters/a04_cli/cli.adoc[]
+
+
 [appendix]
 include::{find}acronyms.adoc[]
 
