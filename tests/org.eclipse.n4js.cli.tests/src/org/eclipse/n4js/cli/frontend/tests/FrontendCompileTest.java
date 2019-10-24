@@ -126,6 +126,14 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 
 	/**  */
 	@Test
+	public void checkPerformanceKeyGivenWithSpace() {
+		String args[] = { "compile", ".", "--performanceKey", "MyKey with space" };
+		CliCompileResult result = n4jsc(args, 0);
+		assertEquals(result.toString(), "Performance Data Collection is enabled.", result.getStdOut());
+	}
+
+	/**  */
+	@Test
 	public void checkPerformanceKeyMissing() {
 		String args[] = { "compile", ".", "--performanceKey", "" };
 		CliCompileResult result = n4jsc(args, 13);

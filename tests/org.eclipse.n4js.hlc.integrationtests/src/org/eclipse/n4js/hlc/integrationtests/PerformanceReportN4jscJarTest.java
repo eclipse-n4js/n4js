@@ -26,12 +26,13 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliJarTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.junit.After;
 import org.junit.Test;
 
 import com.google.common.io.CharStreams;
 
 /**
- * IMPORTANT: for info on how to run this test locally, see {@link AbstractCliJarTest}!
+ * Tests to verify performance report files.
  */
 public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	static final Path WORKSPACE = Path.of(TARGET, WORKSPACE_FOLDER);
@@ -41,6 +42,14 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 	/** Initializes test workspace data. */
 	public PerformanceReportN4jscJarTest() {
 		super("probands/GH-1062", false);
+	}
+
+	/** Clean report file */
+	@After
+	public void deleteReport() {
+		if (PERFORMANCE_REPORT_FILE.exists()) {
+			PERFORMANCE_REPORT_FILE.delete();
+		}
 	}
 
 	/**
