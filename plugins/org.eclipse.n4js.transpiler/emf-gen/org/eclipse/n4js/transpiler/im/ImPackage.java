@@ -1000,6 +1000,15 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_IM___IS_UNKNOWN = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_UNKNOWN;
+
+	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1404,6 +1413,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_UNKNOWN = PARAMETERIZED_TYPE_REF_IM___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -3195,6 +3213,15 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_UNKNOWN = PARAMETERIZED_TYPE_REF_IM___IS_UNKNOWN;
+
+	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3626,6 +3653,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_UNKNOWN = PARAMETERIZED_TYPE_REF_IM___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.

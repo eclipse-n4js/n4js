@@ -213,9 +213,10 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Property 'unboundTypeVars' refers to type variables contained somewhere else. During type variable substitution,
-	 * we would have to substitute type variable in their upper bounds, but we cannot, of course, directly change them.
+	 * we would have to substitute type variables in these upper bounds, but we cannot, of course, directly change them.
 	 * Thus, for the type variables in unboundTypeVars, rule 'substTypeVariablesInFunctionType[ExprOr]Ref' will store
-	 * the upper bounds here, but only if they are different from the type variables original upper bounds.
+	 * the upper bounds here, but only if they are different from the type variables original upper bounds. If they are
+	 * not different, then an UnknownTypeRef will be used in this list for padding.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Unbound Type Vars Upper Bounds</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression_UnboundTypeVarsUpperBounds()
@@ -318,7 +319,7 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * substitution).
 	 * <p>
 	 * See property {@link FunctionTypeExpression#getUnboundTypeVarsUpperBounds() unboundTypeVarsUpperBounds} and
-	 * method {@link DerivationComputer#performSubstitutionOnUpperBounds()}.
+	 * method {@link SubstTypeVariablesJudgment#performSubstitutionOnUpperBounds()}.
 	 * <!-- end-model-doc -->
 	 * @model unique="false" typeVarUnique="false"
 	 * @generated
