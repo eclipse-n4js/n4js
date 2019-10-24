@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.N4JSExternalProject;
 import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
@@ -135,7 +136,7 @@ public class IndexSynchronizerPluginTest extends AbstractBuilderParticipantTest 
 		File prjDir = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		IProject project = ProjectTestsUtils.importProject(prjDir, PROJECT_NAME);
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		IResource packagejson = project.findMember("package.json");
+		IResource packagejson = project.findMember(N4JSGlobals.PACKAGE_JSON);
 		IResource abc = project.findMember("src/ABC.n4js");
 		build.accept(project);
 
