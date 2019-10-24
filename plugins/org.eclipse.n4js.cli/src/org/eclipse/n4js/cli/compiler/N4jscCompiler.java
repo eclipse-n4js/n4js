@@ -13,7 +13,6 @@ package org.eclipse.n4js.cli.compiler;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +26,6 @@ import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
-import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -80,7 +78,6 @@ public class N4jscCompiler {
 
 			languageServer.shutdown();
 			languageServer.exit();
-			writePerformanceReportIfRequested();
 
 		} else {
 			throw new N4jscException(N4jscExitCode.ERROR_UNEXPECTED, "No root directory");
@@ -109,21 +106,4 @@ public class N4jscCompiler {
 		}
 	}
 
-	private void writePerformanceReportIfRequested() throws N4jscException {
-		if (options.isDefinedPerformanceOption()) {
-			String performanceKey = options.getPerformanceKey();
-			File performanceReportFile = options.getPerformanceReport();
-
-			String absFileString = performanceReportFile.toPath().toAbsolutePath().toString();
-
-			String verb = performanceReportFile.exists() ? "Replacing " : "Writing ";
-			N4jscConsole.println(verb + "performance report: " + absFileString);
-
-			try {
-				DataCollectorCSVExporter.toFile(performanceReportFile, performanceKey);
-			} catch (IOException e) {
-				throw new N4jscException(N4jscExitCode.PERFORMANCE_REPORT_ERROR);
-			}
-		}
-	}
 }
