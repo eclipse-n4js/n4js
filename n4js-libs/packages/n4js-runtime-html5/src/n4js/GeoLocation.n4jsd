@@ -8,7 +8,6 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-@@Global @@ProvidedByRuntime
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Coordinates
