@@ -89,7 +89,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	public void doN4jsc(N4jscOptions options, boolean removeUsage, CliCompileResult result) {
 		switch (variant) {
 		case inprocess:
-			cliTools.callN4jscCompilerInprocess(options, removeUsage, result);
+			cliTools.callN4jscInprocess(options, removeUsage, result);
 			return;
 		case exprocess:
 			cliTools.callN4jscExprocess(options, removeUsage, (CliCompileProcessResult) result);

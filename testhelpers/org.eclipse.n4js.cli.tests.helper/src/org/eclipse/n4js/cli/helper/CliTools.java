@@ -21,7 +21,6 @@ import java.util.TreeMap;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
@@ -50,15 +49,16 @@ public class CliTools {
 		N4jscMain.main(args);
 	}
 
-	/** Calls n4jsc backend directly (bypasses frontend) and updates the {@code cliResult}. */
-	public void callN4jscCompilerInprocess(N4jscOptions options, boolean removeUsage, CliCompileResult result) {
+	/** Calls {@link N4jscMain#main(String[])} and updates the {@code cliResult}. */
+	public void callN4jscInprocess(N4jscOptions options, boolean removeUsage, CliCompileResult result) {
 		InProcessExecuter<N4jscOptions> inProcessExecuter = new InProcessExecuter<>(true);
-		inProcessExecuter.n4jsc(options, result, this::internalCallN4jscCompilerInprocess);
+		inProcessExecuter.n4jsc(options, result, this::internalCallN4jscInprocess);
 		trimOutputs(result, removeUsage);
 	}
 
-	private void internalCallN4jscCompilerInprocess(N4jscOptions options, CliCompileResult result) throws Exception {
-		N4jscCompiler.start(options);
+	private void internalCallN4jscInprocess(N4jscOptions options, CliCompileResult result) throws Exception {
+		String[] args = options.toArgs().toArray(String[]::new);
+		N4jscMain.main(args);
 
 		// save transpiled files
 		File workspaceRoot = options.getDirs().get(0);
