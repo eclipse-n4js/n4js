@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.cli.frontend.tests;
 
+import static org.eclipse.n4js.smith.N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -21,6 +22,8 @@ import org.junit.Test;
 /** Front end tests for the CLI interface */
 public class FrontendCompileTest extends AbstractCliFrontendTest {
 	private static final String FILE_TC = "file.tc";
+	private static final String REPORT_FILE_NAME = "report.csv";
+	private static final File REPORT_FILE = new File(REPORT_FILE_NAME);
 
 	/**  */
 	@Test
@@ -81,7 +84,11 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	/**  */
 	@Test
 	public void checkPerformanceReportGiven() {
-		String args[] = { "compile", "--performanceReport", "report.csv" };
+		if (REPORT_FILE.exists()) {
+			REPORT_FILE.delete();
+		}
+
+		String args[] = { "compile", "--performanceReport", REPORT_FILE_NAME };
 		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
 				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pR)\" requires the option(s) [--performanceKey]",
@@ -91,15 +98,27 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	/**  */
 	@Test
 	public void checkPerformanceReportGivenPerformanceKeyGiven() {
-		String args[] = { "compile", ".", "--performanceReport", "report.csv", "--performanceKey", "MyKey" };
+		if (REPORT_FILE.exists()) {
+			REPORT_FILE.delete();
+		}
+
+		String args[] = { "compile", ".", "--performanceReport", REPORT_FILE_NAME, "--performanceKey",
+				N4JS_CLI_COLLECTOR_NAME };
+
 		CliCompileResult result = n4jsc(args, 0);
-		assertEquals(result.toString(), "Performance Data Collection is enabled.", result.getStdOut());
+		assertEquals(result.toString(),
+				"Performance Data Collection is enabled.\nWriting performance report: .../report.csv",
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkPerformanceReportGivenPerformanceKeyMissing() {
-		String args[] = { "compile", ".", "--performanceReport", "report.csv", "--performanceKey", "" };
+		if (REPORT_FILE.exists()) {
+			REPORT_FILE.delete();
+		}
+
+		String args[] = { "compile", ".", "--performanceReport", REPORT_FILE_NAME, "--performanceKey", "" };
 		CliCompileResult result = n4jsc(args, 13);
 		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Missing performance key.",
@@ -119,17 +138,16 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	/**  */
 	@Test
 	public void checkPerformanceKeyGiven() {
-		String args[] = { "compile", ".", "--performanceKey", "MyKey" };
-		CliCompileResult result = n4jsc(args, 0);
-		assertEquals(result.toString(), "Performance Data Collection is enabled.", result.getStdOut());
-	}
+		File reportFile = new File("performance-report.csv");
+		if (reportFile.exists()) {
+			reportFile.delete();
+		}
 
-	/**  */
-	@Test
-	public void checkPerformanceKeyGivenWithSpace() {
-		String args[] = { "compile", ".", "--performanceKey", "MyKey with space" };
+		String args[] = { "compile", ".", "--performanceKey", N4JS_CLI_COLLECTOR_NAME };
 		CliCompileResult result = n4jsc(args, 0);
-		assertEquals(result.toString(), "Performance Data Collection is enabled.", result.getStdOut());
+		assertEquals(result.toString(),
+				"Performance Data Collection is enabled.\nWriting performance report: .../performance-report.csv",
+				result.getStdOut());
 	}
 
 	/**  */
