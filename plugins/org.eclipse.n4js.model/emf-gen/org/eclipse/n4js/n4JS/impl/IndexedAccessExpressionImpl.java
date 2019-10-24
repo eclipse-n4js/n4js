@@ -175,7 +175,8 @@ public class IndexedAccessExpressionImpl extends ExpressionWithTargetImpl implem
 	 */
 	@Override
 	public boolean isValidSimpleAssignmentTarget() {
-		return true;
+		boolean _isOrHasTargetWithOptionalChaining = this.isOrHasTargetWithOptionalChaining();
+		return (!_isOrHasTargetWithOptionalChaining);
 	}
 
 	/**

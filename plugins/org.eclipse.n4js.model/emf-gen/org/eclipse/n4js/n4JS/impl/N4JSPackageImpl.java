@@ -4703,6 +4703,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getExpressionWithTarget__IsOrHasTargetWithOptionalChaining() {
+		return expressionWithTargetEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getParameterizedCallExpression() {
 		return parameterizedCallExpressionEClass;
 	}
@@ -7796,6 +7806,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		expressionWithTargetEClass = createEClass(EXPRESSION_WITH_TARGET);
 		createEReference(expressionWithTargetEClass, EXPRESSION_WITH_TARGET__TARGET);
 		createEAttribute(expressionWithTargetEClass, EXPRESSION_WITH_TARGET__OPTIONAL_CHAINING);
+		createEOperation(expressionWithTargetEClass, EXPRESSION_WITH_TARGET___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING);
 
 		parameterizedCallExpressionEClass = createEClass(PARAMETERIZED_CALL_EXPRESSION);
 		createEReference(parameterizedCallExpressionEClass, PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS);
@@ -8934,6 +8945,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(expressionWithTargetEClass, ExpressionWithTarget.class, "ExpressionWithTarget", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getExpressionWithTarget_Target(), this.getExpression(), null, "target", null, 0, 1, ExpressionWithTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExpressionWithTarget_OptionalChaining(), theEcorePackage.getEBoolean(), "optionalChaining", null, 0, 1, ExpressionWithTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getExpressionWithTarget__IsOrHasTargetWithOptionalChaining(), theEcorePackage.getEBoolean(), "isOrHasTargetWithOptionalChaining", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(parameterizedCallExpressionEClass, ParameterizedCallExpression.class, "ParameterizedCallExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getParameterizedCallExpression_Arguments(), this.getArgument(), null, "arguments", null, 0, -1, ParameterizedCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

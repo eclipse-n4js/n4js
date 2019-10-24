@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.transpiler.operations
+package org.eclipse.n4js.transpiler
 
 import java.util.Collection
 import java.util.stream.Collectors
@@ -19,8 +19,6 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.transpiler.PreparationStep
-import org.eclipse.n4js.transpiler.TranspilerState
 import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.ImPackage
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM

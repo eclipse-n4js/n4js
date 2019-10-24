@@ -792,6 +792,15 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM_FEATURE_COUNT = N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_FEATURE_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Is Or Has Target With Optional Chaining</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING = N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING;
+
+	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
