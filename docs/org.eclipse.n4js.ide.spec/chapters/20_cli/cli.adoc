@@ -12,6 +12,15 @@ Contributors:
 = CLI
 :find:
 
+
+The headless tool provides goals for a variety of use cases.
+Compiling a given project is the most obvious use case.
+Other use cases are cleaning a given project or generating the api documentation.
+Moreover, the headless tool provides LSP-Server functionality and can be used as an
+incremental builder daemon that listens to file system events. 
+
+
+
 [[sec:Headless_Compiler]]
 [.language-bash]
 == Command Line Call
