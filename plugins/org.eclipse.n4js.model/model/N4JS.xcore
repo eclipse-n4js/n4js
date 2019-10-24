@@ -1442,6 +1442,18 @@ abstract class ExpressionWithTarget extends Expression {
 	 */
 	contains Expression target
 	boolean optionalChaining
+
+	/** Tells if this expression lies within a long short-circuiting range of an optional chaining operator. */	
+	op boolean isOrHasTargetWithOptionalChaining() {
+		if (optionalChaining) {
+			return true;
+		}
+		val _target = target;
+		if (_target instanceof ExpressionWithTarget) {
+			return _target.isOrHasTargetWithOptionalChaining();
+		}
+		return false;
+	}
 }
 
 class ParameterizedCallExpression extends ExpressionWithTarget, ParameterizedAccess {
@@ -1488,14 +1500,10 @@ class Argument extends TypableElement {
 class IndexedAccessExpression extends ExpressionWithTarget, MemberAccess {
 	contains Expression index
 	/**
-	 * Returns true.
+	 * Returns iff this expression is allowed to appear on the LHS of an expression.
 	 */
 	op boolean isValidSimpleAssignmentTarget() {
-		val _target = target;
-		if (_target instanceof ExpressionWithTarget && !_target.isValidSimpleAssignmentTarget()) {
-			return false;
-		}
-		return !isOptionalChaining;
+		return !isOrHasTargetWithOptionalChaining();
 	}
 }
 
@@ -1526,14 +1534,10 @@ class ParameterizedPropertyAccessExpression extends ExpressionWithTarget, Member
 	refers IdentifiableElement property
 	transient String propertyAsText
 	/**
-	 * Returns true.
+	 * Returns iff this expression is allowed to appear on the LHS of an expression.
 	 */
 	op boolean isValidSimpleAssignmentTarget() {
-		val _target = target;
-		if (_target instanceof ExpressionWithTarget && !_target.isValidSimpleAssignmentTarget()) {
-			return false;
-		}
-		return !isOptionalChaining
+		return !isOrHasTargetWithOptionalChaining();
 	}
 }
 

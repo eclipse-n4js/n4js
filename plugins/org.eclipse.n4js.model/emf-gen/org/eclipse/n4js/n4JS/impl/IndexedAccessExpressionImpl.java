@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.ExpressionWithTarget;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -176,12 +175,8 @@ public class IndexedAccessExpressionImpl extends ExpressionWithTargetImpl implem
 	 */
 	@Override
 	public boolean isValidSimpleAssignmentTarget() {
-		final Expression _target = this.getTarget();
-		if (((_target instanceof ExpressionWithTarget) && (!_target.isValidSimpleAssignmentTarget()))) {
-			return false;
-		}
-		boolean _isOptionalChaining = this.isOptionalChaining();
-		return (!_isOptionalChaining);
+		boolean _isOrHasTargetWithOptionalChaining = this.isOrHasTargetWithOptionalChaining();
+		return (!_isOrHasTargetWithOptionalChaining);
 	}
 
 	/**

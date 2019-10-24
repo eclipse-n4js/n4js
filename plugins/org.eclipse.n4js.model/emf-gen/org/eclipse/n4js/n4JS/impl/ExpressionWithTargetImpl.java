@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -160,6 +164,24 @@ public abstract class ExpressionWithTargetImpl extends ExpressionImpl implements
 	 * @generated
 	 */
 	@Override
+	public boolean isOrHasTargetWithOptionalChaining() {
+		boolean _isOptionalChaining = this.isOptionalChaining();
+		if (_isOptionalChaining) {
+			return true;
+		}
+		final Expression _target = this.getTarget();
+		if ((_target instanceof ExpressionWithTarget)) {
+			return ((ExpressionWithTarget)_target).isOrHasTargetWithOptionalChaining();
+		}
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.EXPRESSION_WITH_TARGET__TARGET:
@@ -234,6 +256,20 @@ public abstract class ExpressionWithTargetImpl extends ExpressionImpl implements
 				return optionalChaining != OPTIONAL_CHAINING_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.EXPRESSION_WITH_TARGET___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING:
+				return isOrHasTargetWithOptionalChaining();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

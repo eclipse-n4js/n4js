@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.ExpressionWithTarget;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedAccess;
@@ -248,12 +247,8 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionWithTar
 	 */
 	@Override
 	public boolean isValidSimpleAssignmentTarget() {
-		final Expression _target = this.getTarget();
-		if (((_target instanceof ExpressionWithTarget) && (!_target.isValidSimpleAssignmentTarget()))) {
-			return false;
-		}
-		boolean _isOptionalChaining = this.isOptionalChaining();
-		return (!_isOptionalChaining);
+		boolean _isOrHasTargetWithOptionalChaining = this.isOrHasTargetWithOptionalChaining();
+		return (!_isOrHasTargetWithOptionalChaining);
 	}
 
 	/**

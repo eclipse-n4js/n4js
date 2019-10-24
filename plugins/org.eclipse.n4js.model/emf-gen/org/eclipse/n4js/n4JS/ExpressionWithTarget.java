@@ -82,4 +82,15 @@ public interface ExpressionWithTarget extends Expression {
 	 */
 	void setOptionalChaining(boolean value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Tells if this expression lies within a long short-circuiting range of an optional chaining operator.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isOrHasTargetWithOptionalChaining();
+
 } // ExpressionWithTarget
