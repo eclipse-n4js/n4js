@@ -31,20 +31,6 @@ class MyClass {
 
 	public def: MyClass;
 	public undef: MyClass;
-
-	public get getter(): MyClass {
-		return def;
-	}
-
-	public set setter(value: any) {}
-
-	public method(...args: any): MyClass {
-		return def;
-	}
-
-	public propMethod(...args: any): string {
-		return this.prop;
-	}
 }
 
 let def: MyClass = new MyClass();
@@ -70,16 +56,6 @@ log(undef?.['prop']);
 
 log(defFn?.());
 log(undefFn?.());
-
-
-console.log('======== Evaluated Only Once');
-
-let i = 0;
-log(def.method(++i).def.def?.prop);
-console.log("eval count:", i);
-i = 0;
-log(def.method(++i).def.undef?.prop);
-console.log("eval count:", i);
 
 
 console.log('======== Short-Circuiting');
@@ -131,11 +107,6 @@ property value
 undefined
 return value of defFn
 undefined
-======== Evaluated Only Once
-property value
-eval count: 1
-undefined
-eval count: 1
 ======== Short-Circuiting
 undefined
 undefined
