@@ -11,23 +11,29 @@
 package org.eclipse.n4js.transpiler;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.NamedElement;
+import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
+import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
-import org.eclipse.n4js.transpiler.operations.SymbolTableManagement;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * Data class for all information that is required during transpilation of a resource. This will be passed to all
@@ -87,6 +93,20 @@ public class TranspilerState {
 	 * Managing instance for the symbol tables.
 	 */
 	public final STECache steCache;
+
+	/**
+	 * Cache for temporary variable statements. Never use directly; use method
+	 * {@link TranspilerStateOperations#addOrGetTemporaryVariable(TranspilerState, String, EObject)
+	 * #addOrGetTemporaryVariable()} instead.
+	 */
+	/* package */ final Map<VariableEnvironmentElement, VariableStatement> temporaryVariableStatements = new LinkedHashMap<>();
+
+	/**
+	 * Cache for symbol table entries of temporary variable declarations. Never use directly; use method
+	 * {@link TranspilerStateOperations#addOrGetTemporaryVariable(TranspilerState, String, EObject)
+	 * #addOrGetTemporaryVariable()} instead.
+	 */
+	/* package */ final Map<Pair<VariableEnvironmentElement, String>, SymbolTableEntryIMOnly> temporaryVariables = new LinkedHashMap<>();
 
 	/**
 	 * Creates a new transpiler state.

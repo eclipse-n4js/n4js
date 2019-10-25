@@ -247,7 +247,8 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionWithTar
 	 */
 	@Override
 	public boolean isValidSimpleAssignmentTarget() {
-		return true;
+		boolean _isOrHasTargetWithOptionalChaining = this.isOrHasTargetWithOptionalChaining();
+		return (!_isOrHasTargetWithOptionalChaining);
 	}
 
 	/**

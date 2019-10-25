@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.tests.parser
 
-import org.junit.Test
-import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.ConditionalExpression
+import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
+import org.junit.Test
 
 /**
  *
@@ -148,5 +148,50 @@ class ExpressionWithTargetParserTest extends AbstractParserTest {
 		'''.parseJSWithError
 		val expressionStmt = parsed.scriptElements.head as ExpressionStatement
 		assertTrue(expressionStmt.expression instanceof ParameterizedCallExpression)
+	}
+
+	@Test
+	def void testDisallowOnLHSOfAssignment_01() {
+		val script = '''
+			c?.field = ""
+		'''.parse
+		val errors = script.eResource.errors.map[message].join('\n');
+		assertEquals("Invalid assignment left-hand side.", errors);
+	}
+
+	@Test
+	def void testDisallowOnLHSOfAssignment_02() {
+		val script = '''
+			c?.c.field = ""
+		'''.parse
+		val errors = script.eResource.errors.map[message].join('\n');
+		assertEquals("Invalid assignment left-hand side.", errors);
+	}
+
+	@Test
+	def void testDisallowOnLHSOfAssignment_03() {
+		val script = '''
+			c?.['field'] = ""
+		'''.parse
+		val errors = script.eResource.errors.map[message].join('\n');
+		assertEquals("Invalid assignment left-hand side.", errors);
+	}
+
+	@Test
+	def void testDisallowOnLHSOfAssignment_04() {
+		val script = '''
+			c?.['c']['field'] = ""
+		'''.parse
+		val errors = script.eResource.errors.map[message].join('\n');
+		assertEquals("Invalid assignment left-hand side.", errors);
+	}
+
+	@Test
+	def void testDisallowOnLHSOfAssignment_05() {
+		// not really useful, but allowed according to the rules of
+		// breaking long short-circuiting with parentheses:
+		'''
+			(c?.c).field = "okay"
+		'''.parseJSSuccessfully
 	}
 }

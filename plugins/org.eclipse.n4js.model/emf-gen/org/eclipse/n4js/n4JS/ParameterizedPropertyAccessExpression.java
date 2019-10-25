@@ -79,7 +79,7 @@ public interface ParameterizedPropertyAccessExpression extends ExpressionWithTar
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns true.
+	 * Returns iff this expression is allowed to appear on the LHS of an expression.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

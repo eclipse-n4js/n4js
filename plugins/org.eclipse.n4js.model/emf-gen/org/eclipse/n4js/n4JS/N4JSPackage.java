@@ -8206,13 +8206,22 @@ public interface N4JSPackage extends EPackage {
 	int EXPRESSION_WITH_TARGET___IS_VALID_SIMPLE_ASSIGNMENT_TARGET = EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET;
 
 	/**
+	 * The operation id for the '<em>Is Or Has Target With Optional Chaining</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPRESSION_WITH_TARGET___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING = EXPRESSION_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>Expression With Target</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPRESSION_WITH_TARGET_OPERATION_COUNT = EXPRESSION_OPERATION_COUNT + 0;
+	int EXPRESSION_WITH_TARGET_OPERATION_COUNT = EXPRESSION_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ParameterizedCallExpressionImpl <em>Parameterized Call Expression</em>}' class.
@@ -8277,6 +8286,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_CALL_EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET = EXPRESSION_WITH_TARGET___IS_VALID_SIMPLE_ASSIGNMENT_TARGET;
+
+	/**
+	 * The operation id for the '<em>Is Or Has Target With Optional Chaining</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_CALL_EXPRESSION___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING = EXPRESSION_WITH_TARGET___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -8462,6 +8480,15 @@ public interface N4JSPackage extends EPackage {
 	int INDEXED_ACCESS_EXPRESSION_FEATURE_COUNT = EXPRESSION_WITH_TARGET_FEATURE_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is Or Has Target With Optional Chaining</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEXED_ACCESS_EXPRESSION___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING = EXPRESSION_WITH_TARGET___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING;
+
+	/**
 	 * The operation id for the '<em>Is Valid Simple Assignment Target</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8533,6 +8560,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int TAGGED_TEMPLATE_STRING___IS_VALID_SIMPLE_ASSIGNMENT_TARGET = EXPRESSION_WITH_TARGET___IS_VALID_SIMPLE_ASSIGNMENT_TARGET;
+
+	/**
+	 * The operation id for the '<em>Is Or Has Target With Optional Chaining</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAGGED_TEMPLATE_STRING___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING = EXPRESSION_WITH_TARGET___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING;
 
 	/**
 	 * The number of operations of the '<em>Tagged Template String</em>' class.
@@ -8652,6 +8688,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_FEATURE_COUNT = EXPRESSION_WITH_TARGET_FEATURE_COUNT + 4;
+
+	/**
+	 * The operation id for the '<em>Is Or Has Target With Optional Chaining</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING = EXPRESSION_WITH_TARGET___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -19244,6 +19289,16 @@ public interface N4JSPackage extends EPackage {
 	EAttribute getExpressionWithTarget_OptionalChaining();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExpressionWithTarget#isOrHasTargetWithOptionalChaining() <em>Is Or Has Target With Optional Chaining</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Or Has Target With Optional Chaining</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ExpressionWithTarget#isOrHasTargetWithOptionalChaining()
+	 * @generated
+	 */
+	EOperation getExpressionWithTarget__IsOrHasTargetWithOptionalChaining();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ParameterizedCallExpression <em>Parameterized Call Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -24654,6 +24709,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute EXPRESSION_WITH_TARGET__OPTIONAL_CHAINING = eINSTANCE.getExpressionWithTarget_OptionalChaining();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Or Has Target With Optional Chaining</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPRESSION_WITH_TARGET___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING = eINSTANCE.getExpressionWithTarget__IsOrHasTargetWithOptionalChaining();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ParameterizedCallExpressionImpl <em>Parameterized Call Expression</em>}' class.

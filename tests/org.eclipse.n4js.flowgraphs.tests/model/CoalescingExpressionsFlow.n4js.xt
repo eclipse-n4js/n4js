@@ -43,7 +43,6 @@ function CoalescingExpression() {
 	// CoalescingExpression XPECT succs at 'expression' --> 'default', 'expression' ?? 'default'
 	// CoalescingExpression XPECT succs at 'default' --> 'expression' ?? 'default'
 	"start";
-	// ParameterizedPropertyAccessExpression XPECT errors --> "Unsupported feature: nullish coalescing." at "'expression' ?? 'default'"
 	'expression' ?? 'default';
 	"end";
 }

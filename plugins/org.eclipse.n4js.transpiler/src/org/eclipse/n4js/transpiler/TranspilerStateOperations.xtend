@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.transpiler.operations
+package org.eclipse.n4js.transpiler
 
 import java.util.List
 import org.eclipse.emf.common.util.EList
@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
+import org.eclipse.n4js.n4JS.EmptyStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.Expression
@@ -25,33 +26,38 @@ import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
+import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.ScriptElement
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.transpiler.TranspilerBuilderBlocks
-import org.eclipse.n4js.transpiler.TranspilerState
+import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.transpiler.im.ImPackage
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.transpiler.operations.SymbolTableManagement.*
+import static extension org.eclipse.n4js.transpiler.SymbolTableManagement.*
 
 /**
  * Methods of this class provide elementary operations on a transpiler state, mainly on the intermediate model. The
@@ -175,6 +181,77 @@ class TranspilerStateOperations {
 		} else {
 			insertBefore(state, scriptElements.get(0), importDecl);
 		}
+	}
+
+	/**
+	 * Returns the symbol table entry to a temporary variable with the given name, intended for use at the location
+	 * of 'nodeInIM' in the intermediate model. If no such variable exists yet, a new variable statement and declaration
+	 * will be created.
+	 * <p>
+	 * When newly created, the temporary declarations will be added to the body of the closest ancestor function/accessor
+	 * (or on the top level if no such ancestor exists), even if a temporary variable of the same name already exists in
+	 * an outer variable environment (i.e. an outer function/accessor or on top level if inside a function/accessor).
+	 */
+	def public static SymbolTableEntryIMOnly addOrGetTemporaryVariable(TranspilerState state, String name, EObject nodeInIM) {
+		val containingFunction = if (nodeInIM instanceof FunctionOrFieldAccessor) {
+			nodeInIM
+		} else {
+			EcoreUtil2.getContainerOfType(nodeInIM, FunctionOrFieldAccessor)
+		};
+		val context = if (containingFunction !== null) {
+			containingFunction
+		} else {
+			state.im
+		};
+		val tempVarSTE = state.temporaryVariables.get(context -> name);
+		if (tempVarSTE !== null) {
+			return tempVarSTE;
+		}
+		// need to create a new temporary variable below context
+		val tempVarStmnt = state.addOrGetTemporaryVariableStatement(context);
+		val tempVarDecl = _VariableDeclaration(name);
+		tempVarStmnt.varDeclsOrBindings += tempVarDecl;
+		val tempVarSTENew = state.findSymbolTableEntryForElement(tempVarDecl, true) as SymbolTableEntryIMOnly;
+		state.temporaryVariables.put(context -> name, tempVarSTENew);
+		return tempVarSTENew;
+	}
+
+	/** If context is absent, then the temporary variable statement will be created on the top level. */
+	def private static VariableStatement addOrGetTemporaryVariableStatement(TranspilerState state, VariableEnvironmentElement context) {
+		val tempVarStmnt = state.temporaryVariableStatements.get(context);
+		if (tempVarStmnt !== null) {
+			return tempVarStmnt;
+		}
+		// need to create a new temporary variable statement
+		val tempVarStmntNew = _VariableStatement(false, VariableStatementKeyword.LET);
+		state.temporaryVariableStatements.put(context, tempVarStmntNew);
+		if (context instanceof FunctionOrFieldAccessor) {
+			// add to body of function/accessor
+			if (context instanceof ArrowFunction) {
+				if (!context.hasBracesAroundBody) {
+					// to allow for declarations inside the body, we have to turn single-expression arrow functions into ordinary arrow functions
+					if (context.isSingleExprImplicitReturn) {
+						val singleExprStmnt = context.body.statements.head as ExpressionStatement; // we know this, because #isSingleExprImplicitReturn() returned true
+						state.replace(singleExprStmnt, _ReturnStmnt(singleExprStmnt.expression));
+					}
+					context.hasBracesAroundBody = true;
+				}
+			}
+			context.body.statements.add(0, tempVarStmntNew);
+		} else if (context instanceof Script) {
+			// add on top level before the first non-empty, non-import statement
+			val iter = context.scriptElements.iterator;
+			var ScriptElement elem;
+			do {
+				elem = if (iter.hasNext()) iter.next() else null;
+			} while(elem instanceof EmptyStatement || elem instanceof ImportDeclaration);
+			if (elem !== null) {
+				state.insertBefore(elem, tempVarStmntNew);
+			} else {
+				context.scriptElements += tempVarStmntNew;
+			}
+		}
+		return tempVarStmntNew;
 	}
 
 	def public static void setTarget(TranspilerState state, ParameterizedCallExpression callExpr, Expression newTarget) {
