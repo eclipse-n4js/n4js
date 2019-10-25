@@ -59,10 +59,10 @@ import com.google.inject.Inject;
  * Subclasses may further customize their scope by overriding {@link #isResponsible(Map, EObject)} so that they only
  * apply to certain resources.
  */
-public abstract class AbstractJSONValidatorExtension extends AbstractDeclarativeValidator
+public abstract class AbstractPackageJSONValidatorExtension extends AbstractDeclarativeValidator
 		implements IJSONValidatorExtension {
 
-	private static final Logger LOGGER = Logger.getLogger(AbstractJSONValidatorExtension.class);
+	private static final Logger LOGGER = Logger.getLogger(AbstractPackageJSONValidatorExtension.class);
 
 	private static final String JSON_DOCUMENT_VALUES = "JSON_DOCUMENT_VALUES";
 	private static final String JSON_DOCUMENT = "JSON_DOCUMENT";
@@ -101,7 +101,7 @@ public abstract class AbstractJSONValidatorExtension extends AbstractDeclarative
 
 	@Override
 	public MethodWrapper createMethodWrapper(AbstractDeclarativeValidator instanceToUse, Method method) {
-		boolean isCheckMethodInsideThisClass = method.getDeclaringClass() == AbstractJSONValidatorExtension.class;
+		boolean isCheckMethodInsideThisClass = method.getDeclaringClass() == AbstractPackageJSONValidatorExtension.class;
 		if (isCheckMethodInsideThisClass) {
 			// Must not do performance measuring for the @Check method inside this class, because it will invoke (and
 			// measure) the more fine-grained @CheckProperty methods. Without this, we would count those validations

@@ -106,7 +106,7 @@ import com.google.inject.Singleton;
  * {@link N4JSProjectSetupJsonValidatorExtension}.
  */
 @Singleton
-public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtension {
+public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorExtension {
 
 	/** key for memoization of the n4js.sources section of a package.json. See #getSourceContainers(). */
 	private static final String N4JS_SOURCE_CONTAINERS = "N4JS_SOURCE_CONTAINERS";

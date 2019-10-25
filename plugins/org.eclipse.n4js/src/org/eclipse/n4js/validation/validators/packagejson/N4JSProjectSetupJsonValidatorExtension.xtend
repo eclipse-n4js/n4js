@@ -111,7 +111,7 @@ import static extension com.google.common.base.Strings.nullToEmpty
  * files , see {@link PackageJsonValidatorExtension}.
  */
 @Singleton
-public class N4JSProjectSetupJsonValidatorExtension extends AbstractJSONValidatorExtension {
+public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONValidatorExtension {
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSProjectSetupJsonValidatorExtension);
 
