@@ -20,15 +20,9 @@ import org.eclipse.xtext.testing.GlobalRegistries;
 public class N4jscTestFactory extends N4jscFactory {
 
 	/** Enable overwriting bindings */
-	static public void set() {
+	static public void set(boolean isEnabledBackend) {
 		resetInjector();
-		N4jscFactory.INSTANCE = new N4jscTestFactory(false);
-	}
-
-	/** Enable overwriting bindings. Deactivates the cli backend. */
-	static public void setAndDeactivateBackend() {
-		resetInjector();
-		N4jscFactory.INSTANCE = new N4jscTestFactory(true);
+		N4jscFactory.INSTANCE = new N4jscTestFactory(isEnabledBackend);
 	}
 
 	/** Disable overwriting bindings */
@@ -50,10 +44,10 @@ public class N4jscTestFactory extends N4jscFactory {
 		return N4jscFactory.INSTANCE.injector != null;
 	}
 
-	final private boolean deactivateBackend;
+	final private boolean isEnabledBackend;
 
-	N4jscTestFactory(boolean deactivateBackend) {
-		this.deactivateBackend = deactivateBackend;
+	N4jscTestFactory(boolean isEnabledBackend) {
+		this.isEnabledBackend = isEnabledBackend;
 	}
 
 	/** Thrown when the backend is called. */
@@ -86,10 +80,10 @@ public class N4jscTestFactory extends N4jscFactory {
 
 	@Override
 	N4jscBackend internalCreateBackend() throws Exception {
-		if (deactivateBackend) {
-			return new NoopBackend();
-		} else {
+		if (isEnabledBackend) {
 			return super.internalCreateBackend();
+		} else {
+			return new NoopBackend();
 		}
 	}
 

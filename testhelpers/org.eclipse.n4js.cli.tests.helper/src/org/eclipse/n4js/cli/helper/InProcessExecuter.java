@@ -41,10 +41,12 @@ public class InProcessExecuter {
 		abstract public void doN4jsc(ArgType arg, CliCompileResult cliResult) throws Exception;
 	}
 
-	final private boolean isBackendEnabled;
+	final private boolean isEnabledBackend;
+	final private boolean isMirrorSystemOut;
 
-	InProcessExecuter(boolean isBackendEnabled) {
-		this.isBackendEnabled = isBackendEnabled;
+	InProcessExecuter(boolean isEnabledBackend, boolean isMirrorSystemOut) {
+		this.isEnabledBackend = isEnabledBackend;
+		this.isMirrorSystemOut = isMirrorSystemOut;
 	}
 
 	/**
@@ -75,7 +77,7 @@ public class InProcessExecuter {
 			cliResult.stdOut = systemOutRedirecter.getSystemOut();
 			cliResult.errOut = systemOutRedirecter.getSystemErr();
 
-			if (isBackendEnabled) {
+			if (isEnabledBackend) {
 				N4jscTestLanguageClient callback = (N4jscTestLanguageClient) N4jscFactory.getLanguageClient();
 				cliResult.errors = callback.errors;
 				cliResult.warnings = callback.warnings;
@@ -103,12 +105,8 @@ public class InProcessExecuter {
 	}
 
 	void setRedirections() {
-		if (isBackendEnabled) {
-			N4jscTestFactory.set();
-		} else {
-			N4jscTestFactory.setAndDeactivateBackend();
-		}
-		systemOutRedirecter.set();
+		N4jscTestFactory.set(isEnabledBackend);
+		systemOutRedirecter.set(isMirrorSystemOut);
 		systemExitRedirecter.set();
 	}
 

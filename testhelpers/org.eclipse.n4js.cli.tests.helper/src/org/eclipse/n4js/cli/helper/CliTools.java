@@ -30,10 +30,11 @@ public class CliTools {
 	private static final String RELATIVE_PATH = "...";
 
 	final private Map<String, String> environment = new HashMap<>();
+	private boolean isMirrorSystemOut = false;
 
 	/** Calls n4jsc main method and updates the {@code cliResult}. Backend is deactivated. */
 	public void callN4jscFrontendInprocess(String[] options, boolean removeUsage, CliCompileResult result) {
-		InProcessExecuter inProcessExecuter = new InProcessExecuter(false);
+		InProcessExecuter inProcessExecuter = new InProcessExecuter(false, isMirrorSystemOut);
 		inProcessExecuter.n4jsc(new File("").getAbsoluteFile(), options, result);
 		trimOutputs(result, removeUsage);
 	}
@@ -41,7 +42,7 @@ public class CliTools {
 	/** Calls {@link N4jscMain#main(String[])} and updates the {@code cliResult}. */
 	public void callN4jscInprocess(N4jscOptions options, boolean removeUsage, CliCompileResult result) {
 		String[] args = options.toArgs().toArray(String[]::new);
-		InProcessExecuter inProcessExecuter = new InProcessExecuter(true);
+		InProcessExecuter inProcessExecuter = new InProcessExecuter(true, isMirrorSystemOut);
 		inProcessExecuter.n4jsc(options.getDirs().get(0), args, result);
 		trimOutputs(result, removeUsage);
 	}
@@ -73,6 +74,14 @@ public class CliTools {
 	 */
 	public void setEnvironmentVariable(String name, String value) {
 		this.environment.put(name, value);
+	}
+
+	/**
+	 * Set configuration of n4jsc execution: Iff true, the output is mirrored during execution on System.out and
+	 * System.err
+	 */
+	public void setIsMirrorSystemOut(boolean isMirrorSystemOut) {
+		this.isMirrorSystemOut = isMirrorSystemOut;
 	}
 
 	/** see {@link TestProcessExecuter#runNodejs(Path, Map, Path, String[])} */
