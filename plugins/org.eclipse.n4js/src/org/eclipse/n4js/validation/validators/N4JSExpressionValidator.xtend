@@ -138,6 +138,9 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl
+import org.eclipse.n4js.n4JS.impl.UnaryExpressionImpl
+import org.eclipse.n4js.n4JS.impl.IdentifierRefImpl
 
 /**
  */
@@ -677,9 +680,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkRelationalExpression(RelationalExpression relationalExpression) {
 		if (relationalExpression.rhs !== null && relationalExpression.op === RelationalOperator.INSTANCEOF) {
-			val typeRef = ts.tau(relationalExpression.rhs)
+			val typeRef = ts.tau(relationalExpression.rhs);
+			val G = relationalExpression.newRuleEnvironment;
 			if (typeRef instanceof TypeTypeRef) {
-				val G = relationalExpression.newRuleEnvironment;
 				val staticType = tsh.getStaticType(G, typeRef);
 				if (staticType instanceof TN4Classifier) {
 					if (staticType.typingStrategy !== TypingStrategy.DEFAULT) {
@@ -695,6 +698,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 							IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_BUILT_IN_INTERFACES);
 					}
 				}
+			}
+			
+			if (relationalExpression.rhs instanceof UnaryExpressionImpl) {
+				val message = IssueCodes.getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL();
+				addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
+							IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL);
 			}
 		}
 	}
