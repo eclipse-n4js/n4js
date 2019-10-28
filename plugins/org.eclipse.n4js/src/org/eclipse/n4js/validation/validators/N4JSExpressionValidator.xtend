@@ -138,9 +138,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl
-import org.eclipse.n4js.n4JS.impl.UnaryExpressionImpl
-import org.eclipse.n4js.n4JS.impl.IdentifierRefImpl
 
 /**
  */
