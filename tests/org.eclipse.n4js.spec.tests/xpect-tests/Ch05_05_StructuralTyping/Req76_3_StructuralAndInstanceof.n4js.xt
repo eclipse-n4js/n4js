@@ -20,18 +20,15 @@ class A {
 var a: ~A = { a: 2, f: function () {} };
 let x = 5;
 
-// XPECT FIXME errors --> "instanceof cannot be used with use site structural typing." at "~A"
-// Getting: constructor{A} is not a subtype of number.
-//          number is not a subtype of union{Function,type{Object},type{N4Enum}}.
+// XPECT errors --> "instanceof cannot be used with use site structural typing." at "~A"
 a instanceof ~A;
 
-// XPECT FIXME errors  --> "instanceof cannot be used with use site structural typing." at "~~A"
-// Getting: number is not a subtype of union{Function,type{Object},type{N4Enum}}.
+// XPECT errors  --> "instanceof cannot be used with use site structural typing." at "~~A"
 a instanceof ~~A;
 
 // The following tests are only to ensure that existing correct functionality is maintained:
 
-// XPECT errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "--x"
+// XPECT FIXME errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "--x"
 a instanceof --x;
 
 
