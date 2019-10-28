@@ -37,7 +37,13 @@ In some cases, during the development process, one would like to know what is th
 [[sec:Show_MDN_Documentation_of_Build-In_Types]]
 === Show MDN Documentation of Build-In Types
 
+.MDN Hover
+[req,id=GH-1491a,version=1]
+--
+task::GH-1491[]
+
 Hovering over a known type or its properties/methods in the N4JS editor will cause a tooltip appear containing a link to their MDN (Mozilla Developer Network) counterpart.
+--
 
 [[sec:Example_Projects_and_Files]]
 == Example Projects and Files

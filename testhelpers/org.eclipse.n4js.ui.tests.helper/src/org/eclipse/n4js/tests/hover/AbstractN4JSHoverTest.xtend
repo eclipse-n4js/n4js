@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Philip Aguilar Bremer
- * 	 Max Neuwirt
+ *   Philip Aguilar Bremer, Max Neuwirt; HAW Hamburg
  */
 package org.eclipse.n4js.tests.hover
 
@@ -30,8 +29,8 @@ public abstract class AbstractN4JSHoverTest extends AbstractHoverTest {
 	 * @param regex the regex that needs to be matched against the html string
 	 */
 	def assertRegexInHover(String html, String regex) {
-			assertNotNull("No hover found!", html)
-			assertTrue('''
+		assertNotNull("No hover found!", html)
+		assertTrue('''
 			Could not match the regex '«regex»' in the hover popup:
 				«html»
 		''', html.matches(regex))
