@@ -306,13 +306,16 @@ import com.google.inject.Inject;
 					return numberTypeRef(G);
 				case INV:
 					EObject container = e.eContainer();
+					if (container instanceof UnaryExpression) {
+						UnaryExpression ue = (UnaryExpression) container;
+						container = ue.eContainer();
+					}
 					if (container instanceof RelationalExpression) {
 						RelationalExpression re = (RelationalExpression) container;
 						if (re.getOp() == RelationalOperator.INSTANCEOF) {
 							return anyTypeRef(G);
 						}
 					}
-
 					return numberTypeRef(G);
 				case NOT:
 					return anyTypeRef(G);
