@@ -34,7 +34,10 @@ Hovering over an element (such as type, field, method, function or variable decl
 
 In some cases, during the development process, one would like to know what is the actual or even the inferred type of an N4JS expression. To use this functionality one can select the desired expression in the editor and invoke the ’Show Type Information’ command via the kbd:[Cmd] + kbd:[Option]+ kbd:[I] ( kbd:[Ctrl] + kbd:[Alt]+ kbd:[I] Windows/Linux) from the keyboard. This case a popup window will be raised containing the type information of the actual selection.
 
+[[sec:Show_MDN_Documentation_of_Build-In_Types]]
+=== Show MDN Documentation of Build-In Types
 
+Hovering over a known type or its properties/methods in the N4JS editor will cause a tooltip appear containing a link to their MDN (Mozilla Developer Network) counterpart.
 
 [[sec:Example_Projects_and_Files]]
 == Example Projects and Files

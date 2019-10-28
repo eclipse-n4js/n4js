@@ -111,27 +111,27 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 				//Build-In-Type
 				TObjectPrototype: 
 					if(id.isDeclaredProvidedByRuntime) {
-						jsdocString = createJsdocString(id.name, jsdocString);	
+						jsdocString = createDocString(id.name, jsdocString);	
 					} 
 				//Property
 				TField: {
 					val type = id.typeRef.declaredType;
 					if(type instanceof TObjectPrototype) {
-						jsdocString = createJsdocString(type.name, jsdocString);
+						jsdocString = createDocString(type.name, jsdocString);
 					}
 				}
 				//Declaration
 				N4FieldDeclaration: {
 					val type = id.declaredTypeRef.declaredType;
 					if(type instanceof TObjectPrototype) {
-						jsdocString = createJsdocString(type.name, jsdocString);
+						jsdocString = createDocString(type.name, jsdocString);
 					}	
 				}	
 				//Method
 				TMethod: {
 					val type = id.eContainer;
 					if(type instanceof TObjectPrototype) {
-						jsdocString = createJsdocString(type.name + "/" + id.name, jsdocString);
+						jsdocString = createDocString(type.name + "/" + id.name, jsdocString);
 					}
 				}	
 			}
@@ -148,11 +148,12 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		}
 	}
 	
-	def private String createJsdocString(String name, String jsdocString) {
+	def private String createDocString(String name, String jsdocString) {
+		val mdnString = MDN_STRING_START + name + MDN_STRING_END;
 		if(jsdocString === null) {
-			return N4JSHoverProvider.MDN_STRING_START + name + N4JSHoverProvider.MDN_STRING_END;
+			return mdnString;
 		} else {
-			return jsdocString + "\n\n" + N4JSHoverProvider.MDN_STRING_START + name + N4JSHoverProvider.MDN_STRING_END;
+			return jsdocString + "\n\n" + mdnString;
 		}	
 	}	
 

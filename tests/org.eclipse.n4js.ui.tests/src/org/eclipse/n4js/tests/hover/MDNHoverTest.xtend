@@ -37,7 +37,7 @@ class MDNHoverTest extends AbstractN4JSHoverTest {
 			export public class Bla {
 				private date: Date;
 			}
-		'''.getInfo("Date");
+		'''.getHtmlString("Date");
 		
 		info.assertRegexInHover("(?s).*classifier(?s).+" +
 		"Date(?s).+" +
@@ -51,7 +51,7 @@ class MDNHoverTest extends AbstractN4JSHoverTest {
 			export public class Bla {
 				private str: String;
 			}
-		'''.getInfo("String");
+		'''.getHtmlString("String");
 		
 		info.assertRegexInHover("(?s).*classifier(?s).+" +
 		"String(?s).+" +
@@ -65,7 +65,7 @@ class MDNHoverTest extends AbstractN4JSHoverTest {
 			export public class Bla {
 				private date: Date;
 			}
-		'''.getInfo("date");
+		'''.getHtmlString("date");
 		
 		info.assertRegexInHover("(?s).*date:(?s).+" +
 		"Date(?s).+" +
@@ -83,7 +83,7 @@ class MDNHoverTest extends AbstractN4JSHoverTest {
 				        this.date = new Date('December 17, 1995 03:24:00');				        
 				}
 			}
-		'''.getInfo(".date");
+		'''.getHtmlString(".date");
 		
 		info.assertRegexInHover("(?s).*date:(?s).+" +
 		"Date(?s).+" +
@@ -101,7 +101,7 @@ class MDNHoverTest extends AbstractN4JSHoverTest {
 				        this.date.getDate();
 				    }
 			}
-		'''.getInfo("getDate");
+		'''.getHtmlString("getDate");
 		
 		info.assertRegexInHover("(?s).*getDate\\(\\):(?s).+" +
 		"number(?s).+" +
@@ -119,7 +119,7 @@ class MDNHoverTest extends AbstractN4JSHoverTest {
 				        this.date.getMinutes();
 				    }
 			}
-		'''.getInfo("getMinutes");
+		'''.getHtmlString("getMinutes");
 		
 		info.assertRegexInHover("(?s).*getMinutes\\(\\):(?s).+" +
 		"number(?s).+" +
