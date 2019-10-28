@@ -64,6 +64,7 @@ import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.ShiftExpression;
 import org.eclipse.n4js.n4JS.SuperLiteral;
 import org.eclipse.n4js.n4JS.UnaryExpression;
+import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
@@ -288,6 +289,18 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseUnaryExpression(UnaryExpression e) {
+			EObject parent = e.eContainer();
+			if (parent instanceof UnaryExpression) {
+				UnaryExpression ue = (UnaryExpression) parent;
+				parent = ue.eContainer();
+			}
+			if (parent instanceof RelationalExpression) {
+				RelationalExpression re = (RelationalExpression) parent;
+				if (re.getOp().equals(RelationalOperator.INSTANCEOF)) {
+					return anyTypeRef(G);
+				}
+			}
+
 			if (javaScriptVariantHelper.isTypeAware(e)) { // e.g. in N4JS
 				switch (e.getOp()) {
 				case DELETE:
@@ -305,17 +318,6 @@ import com.google.inject.Inject;
 				case NEG:
 					return numberTypeRef(G);
 				case INV:
-					EObject container = e.eContainer();
-					if (container instanceof UnaryExpression) {
-						UnaryExpression ue = (UnaryExpression) container;
-						container = ue.eContainer();
-					}
-					if (container instanceof RelationalExpression) {
-						RelationalExpression re = (RelationalExpression) container;
-						if (re.getOp() == RelationalOperator.INSTANCEOF) {
-							return anyTypeRef(G);
-						}
-					}
 					return numberTypeRef(G);
 				case NOT:
 					return anyTypeRef(G);
@@ -358,8 +360,12 @@ import com.google.inject.Inject;
 		public TypeRef caseRelationalExpression(RelationalExpression e) {
 			switch (e.getOp()) {
 			case INSTANCEOF:
-				if (e.getRhs() instanceof UnaryExpression) {
-					return anyTypeRef(G);
+				EObject rhs = e.getRhs();
+				if (rhs instanceof UnaryExpression) {
+					UnaryExpression ue = (UnaryExpression) rhs;
+					if (ue.getOp().equals(UnaryOperator.INV)) {
+						return anyTypeRef(G);
+					}
 				}
 
 				if (expression == e.getRhs()) {

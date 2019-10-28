@@ -28,7 +28,7 @@ a instanceof ~~A;
 
 // The following tests are only to ensure that existing correct functionality is maintained:
 
-// XPECT FIXME errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "--x"
+// XPECT errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "--x"
 a instanceof --x;
 
 

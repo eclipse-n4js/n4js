@@ -700,10 +700,13 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			}
 			
-			if (relationalExpression.rhs instanceof UnaryExpressionImpl) {
-				val message = IssueCodes.getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL();
-				addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
+			val rhs = relationalExpression.rhs;
+			if (rhs instanceof UnaryExpression) {
+				if ((rhs as UnaryExpression).getOp().equals(UnaryOperator.INV)) {
+					val message = IssueCodes.getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL();
+					addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
 							IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL);
+				}
 			}
 		}
 	}
