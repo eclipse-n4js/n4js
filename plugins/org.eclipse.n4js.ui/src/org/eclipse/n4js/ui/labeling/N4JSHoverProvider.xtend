@@ -27,11 +27,16 @@ import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
+import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.types.TField
+import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider
 import org.eclipse.n4js.ui.internal.N4JSActivator
 import org.eclipse.n4js.ui.labeling.helper.ImageFileNameCalculationHelper
@@ -44,13 +49,6 @@ import static org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider.composeFirstLin
 import static org.eclipse.n4js.utils.UtilN4.sanitizeForHTML
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.getCorrespondingTypeModelElement
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.AccessibleTypeElement
-import org.eclipse.n4js.ts.types.TObjectPrototype
-import org.eclipse.n4js.ts.types.TField
-import org.eclipse.n4js.n4JS.N4FieldDeclaration
-import org.eclipse.n4js.ts.types.TMethod
 
 /**
  */
@@ -71,9 +69,9 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	@Inject
 	private N4JSDocletParser docletParser;
 	
-	private static final String MDNSTRING = "@see <a href=\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
+	private static final String MDN_STRING_START = "@see <a href=\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
 	
-	private static final String MDNSTRINGEND = "\">MDN Documentation</a>";
+	private static final String MDN_STRING_END = "\">MDN Documentation</a>";
 	
 
 
@@ -152,9 +150,9 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	
 	def private String createJsdocString(String name, String jsdocString) {
 		if(jsdocString === null) {
-			return MDNSTRING + name + MDNSTRINGEND;
+			return N4JSHoverProvider.MDN_STRING_START + name + N4JSHoverProvider.MDN_STRING_END;
 		} else {
-			return jsdocString + "\n\n" + MDNSTRING + name + MDNSTRINGEND;
+			return jsdocString + "\n\n" + N4JSHoverProvider.MDN_STRING_START + name + N4JSHoverProvider.MDN_STRING_END;
 		}	
 	}	
 

@@ -10,13 +10,10 @@
  */
 package org.eclipse.n4js.tests.hover
 
-import org.eclipse.jface.internal.text.html.BrowserInformationControlInput
-import org.eclipse.jface.text.Region
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.ui.testing.AbstractHoverTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,33 +23,13 @@ import org.junit.runner.RunWith
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
-class HoverTest extends AbstractHoverTest {
+class MDNHoverTest extends AbstractN4JSHoverTest {
 	
 	private static final String MDN_STRING_START = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
 	private static final String MDN_STRING_REGEX_END = "MDN Documentation(?s).*";
 	
 	@Before def void setup() {
 		ProjectTestsUtils.createJSProject(projectName);
-	}
-	
-	def assertRegexInHover(String html, String regex) {
-			assertNotNull("No hover found!", html)
-			assertTrue('''
-			Could not match the regex '«regex»' in the hover popup:
-				«html»
-		''', html.matches(regex))
-		}
-	
-	override protected getFileName() {
-		return "src/hover";
-	}
-	
-	def String getInfo(CharSequence it, String hoverText) {
-		val BrowserInformationControlInput info =
-		dslFile.
-		// when
-		hoveringOver(new Region(toString.indexOf(hoverText), hoverText.length));
-		return info?.html;
 	}
 	
 	@Test def testHoverOverBuildInTypeDate() {
@@ -148,6 +125,6 @@ class HoverTest extends AbstractHoverTest {
 		"number(?s).+" +
 		MDN_STRING_START + 
 		"Date/getMinutes.+" +
-		"MDN Documentation(?s).*");	
+		MDN_STRING_REGEX_END);	
 	}
 }
