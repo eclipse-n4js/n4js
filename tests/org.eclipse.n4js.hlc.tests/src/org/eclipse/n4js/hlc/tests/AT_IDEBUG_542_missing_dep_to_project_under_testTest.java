@@ -19,7 +19,7 @@ import java.io.IOException;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
@@ -59,10 +59,10 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 
 		N4jscOptions options = COMPILE(proot);
 
-		CliResult cliResult = main(options);
+		CliCompileResult cliResult = n4jsc(options);
 
 		// Make sure, we get here and have exactly two files compiled:
-		assertEquals(cliResult.toString(), 0, cliResult.getTranspiledFilesCount(proot.toPath().resolve("APIx")));
-		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount(proot.toPath().resolve("APIx-test")));
+		assertEquals(cliResult.toString(), 0, cliResult.getJSFilesCount(proot.toPath().resolve("APIx")));
+		assertEquals(cliResult.toString(), 2, cliResult.getJSFilesCount(proot.toPath().resolve("APIx-test")));
 	}
 }

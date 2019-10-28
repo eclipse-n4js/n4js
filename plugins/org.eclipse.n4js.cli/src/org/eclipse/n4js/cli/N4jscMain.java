@@ -10,8 +10,15 @@
  */
 package org.eclipse.n4js.cli;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
+import org.eclipse.n4js.smith.CollectedDataAccess;
+import org.eclipse.n4js.smith.DataCollectorCSVExporter;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 /**
@@ -25,8 +32,9 @@ public class N4jscMain {
 		final N4jscOptions options = getOptions(args);
 
 		// inform user about data collection
-		if (options.getPerformanceReport() != null) {
+		if (options.isDefinedPerformanceOption()) {
 			N4jscConsole.println("Performance Data Collection is enabled.");
+			CollectedDataAccess.setPaused(false);
 		}
 
 		// debug before help, shortcut for check-settings without running
@@ -40,7 +48,8 @@ public class N4jscMain {
 		}
 
 		try {
-			try {
+			try (Measurement m = N4JSDataCollectors.dcCli.getMeasurement(N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME)) {
+
 				performGoal(options);
 
 			} catch (N4jscException e) {
@@ -48,6 +57,8 @@ public class N4jscMain {
 			} catch (Exception e) {
 				throw new N4jscException(N4jscExitCode.ERROR_UNEXPECTED, e);
 			}
+
+			writePerformanceReportIfRequested(options);
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
 			System.exit(e.getExitCode());
@@ -115,4 +126,21 @@ public class N4jscMain {
 		}
 	}
 
+	private static void writePerformanceReportIfRequested(N4jscOptions options) throws N4jscException {
+		if (options.isDefinedPerformanceOption()) {
+			String performanceKey = options.getPerformanceKey();
+			File performanceReportFile = options.getPerformanceReport();
+
+			String absFileString = performanceReportFile.toPath().toAbsolutePath().toString();
+
+			String verb = performanceReportFile.exists() ? "Replacing " : "Writing ";
+			N4jscConsole.println(verb + "performance report: " + absFileString);
+
+			try {
+				DataCollectorCSVExporter.toFile(performanceReportFile, performanceKey);
+			} catch (IOException e) {
+				throw new N4jscException(N4jscExitCode.PERFORMANCE_REPORT_ERROR);
+			}
+		}
+	}
 }

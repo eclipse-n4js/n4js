@@ -19,15 +19,16 @@ import java.util.Set;
 
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializedParams;
+import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.workspace.IProjectConfig;
-
-import com.google.inject.Injector;
 
 /**
  * The entry point for all cli calls with the goal 'compile'
@@ -35,7 +36,6 @@ import com.google.inject.Injector;
 @SuppressWarnings("restriction")
 public class N4jscCompiler {
 	private final N4jscOptions options;
-	private final Injector injector;
 	private final N4JSLanguageServerImpl languageServer;
 	private final N4jscLanguageClient callback;
 	private final N4JSWorkspaceManager workspaceManager;
@@ -43,22 +43,24 @@ public class N4jscCompiler {
 	/** Starts the compiler in a blocking fashion */
 	static public void start(N4jscOptions options) throws Exception {
 		N4jscCompiler compiler = new N4jscCompiler(options);
-		compiler.start();
+
+		try (Measurement m = N4JSDataCollectors.dcCliCompile.getMeasurement(options.toString())) {
+			compiler.start();
+		}
 	}
 
 	private N4jscCompiler(N4jscOptions options) {
-		this.injector = N4jscFactory.createInjector();
 		this.options = options;
-		this.languageServer = N4jscFactory.getLanguageServer(injector);
-		this.callback = N4jscFactory.getLanguageClient(injector);
-		this.workspaceManager = N4jscFactory.getWorkspaceManager(injector);
+		this.languageServer = N4jscFactory.getLanguageServer();
+		this.callback = N4jscFactory.getLanguageClient();
+		this.workspaceManager = N4jscFactory.getWorkspaceManager();
 		this.languageServer.connect(callback);
 	}
 
 	/** Starts the compiler in a blocking fashion */
 	public void start() throws Exception {
 		InitializeParams params = new InitializeParams();
-		List<File> srcs = options.getSrcFiles();
+		List<File> srcs = options.getDirs();
 		File firstDir = null;
 		for (File src : srcs) {
 			if (src.isDirectory()) {
@@ -73,7 +75,7 @@ public class N4jscCompiler {
 			verbosePrintAllProjects();
 
 			languageServer.initialized(new InitializedParams());
-			languageServer.joinInitialized();
+
 			languageServer.shutdown();
 			languageServer.exit();
 
@@ -85,7 +87,7 @@ public class N4jscCompiler {
 	private void warnIfNoProjectsFound() {
 		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
 		if (projects.isEmpty()) {
-			System.out.println("No projects found at the given location: " + options.getSrcFiles().get(0));
+			N4jscConsole.println("No projects found at the given location: " + options.getDirs().get(0));
 		}
 	}
 
@@ -93,14 +95,15 @@ public class N4jscCompiler {
 		if (options.isVerbose()) {
 			Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
 			if (!projects.isEmpty()) {
-				Path workspace = options.getSrcFiles().get(0).toPath();
+				Path workspace = options.getDirs().get(0).toPath();
 				List<String> projectNameList = projects.stream()
 						.map(p -> p.getName() + " at " + Path.of(p.getPath().toFileString()).relativize(workspace))
 						.collect(toList());
 
-				System.out.println("Projects:");
-				System.out.print("   " + String.join("\n   ", projectNameList));
+				N4jscConsole.println("Projects:");
+				N4jscConsole.print("   " + String.join("\n   ", projectNameList));
 			}
 		}
 	}
+
 }

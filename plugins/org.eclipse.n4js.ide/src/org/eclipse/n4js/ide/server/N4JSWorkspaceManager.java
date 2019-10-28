@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ide.server;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,7 +17,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
-import org.eclipse.xtext.ide.server.WorkspaceManager;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.Issue;
@@ -92,18 +90,7 @@ public class N4JSWorkspaceManager extends XWorkspaceManager {
 	 * @return the base directory of the current workspace
 	 */
 	public URI getBaseDir() {
-		try {
-			Field field = WorkspaceManager.class.getDeclaredField("baseDir");
-			field.setAccessible(true);
-			Object value = field.get(this);
-
-			URI baseDir = (URI) value;
-			return baseDir;
-		} catch (Exception e) {
-			// ignore
-			e.printStackTrace();
-		}
-		return null;
+		return ReflectionUtils.getFieldValue(XWorkspaceManager.class, this, "baseDir");
 	}
 
 	/**

@@ -10,6 +10,7 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,6 +136,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -323,6 +325,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void initialized(InitializedParams params) {
 		initialized.complete(params);
+		initialized.join();
 	}
 
 	@Deprecated
@@ -463,24 +466,44 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		initialized.thenAccept((initParams) -> {
 			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
 			publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
-			publishDiagnosticsParams.setDiagnostics(workspaceManager.doRead(uri,
-					(document, resource) -> toDiagnostics(issues, document)));
+			publishDiagnosticsParams.setDiagnostics(
+					workspaceManager.doRead(uri, (document, resource) -> toDiagnostics(issues, document)));
 			client.publishDiagnostics(publishDiagnosticsParams);
+
+		}).exceptionally(th -> {
+			th.printStackTrace();
+			return null;
 		});
 	}
 
 	/**
-	 * Convert the given issues to diagnostics. Does not return any issue with severity {@link Severity#IGNORE ignore}
-	 * by default.
+	 * Convert the given issues to diagnostics. Does not return any issue with severity {@link Severity#IGNORE ignore}.
 	 */
 	protected List<Diagnostic> toDiagnostics(Iterable<? extends Issue> issues, Document document) {
-		List<Diagnostic> result = new ArrayList<>();
+		List<Diagnostic> sortedDiags = new ArrayList<>();
 		for (Issue issue : issues) {
 			if (issue.getSeverity() != Severity.IGNORE) {
-				result.add(toDiagnostic(issue, document));
+				sortedDiags.add(toDiagnostic(issue, document));
 			}
 		}
-		return result;
+
+		// Sort issues according to line and position
+		final Comparator<Diagnostic> comparator = new Comparator<>() {
+			@Override
+			public int compare(Diagnostic d1, Diagnostic d2) {
+				Position p1 = d1.getRange().getStart();
+				Position p2 = d2.getRange().getStart();
+				int result = ComparisonChain.start()
+						.compare(p1.getLine(), p2.getLine())
+						.compare(p2.getCharacter(), p2.getCharacter())
+						.result();
+				return result;
+			}
+		};
+
+		Collections.sort(sortedDiags, comparator);
+
+		return sortedDiags;
 	}
 
 	/**

@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.xtext.server.XProjectManager;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder.XResult;
@@ -41,6 +40,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -151,6 +151,11 @@ public class N4JSProjectManager extends XProjectManager {
 		newFileContents = new HashMap<>(hashFileContents);
 		newFileContents.keySet().removeAll(deletedFiles);
 
+		Set<URI> uris = new HashSet<>(dirtyFiles);
+		int size1 = dirtyFiles.size();
+		int size2 = uris.size();
+		Preconditions.checkState(size1 == size2, "Duplicate resoruces");
+
 		/*
 		 * We create build request that will alter newFileContents when a file is created / removed
 		 */
@@ -189,9 +194,7 @@ public class N4JSProjectManager extends XProjectManager {
 			// System.out.println("Generating: " + target + " from " + source);
 			scheduleHash(target);
 		});
-		if (projectConfig.getPath().segmentsList().contains(N4JSGlobals.NODE_MODULES)) {
-			result.setAfterValidate((uri, issues) -> false);
-		}
+
 		return result;
 	}
 

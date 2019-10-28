@@ -49,6 +49,8 @@ public class CollectedDataAccess {
 			throw new RuntimeException("Invalid key");
 
 		DataCollector dataCollector = getCollectors().getRootCollectors().get(key);
+		if (dataCollector == null)
+			throw new RuntimeException("Key not found: " + key);
 
 		DataSeries rootSeries = new DataSeries(key, dataCollector.getData());
 		collectSeries(dataCollector, rootSeries);
