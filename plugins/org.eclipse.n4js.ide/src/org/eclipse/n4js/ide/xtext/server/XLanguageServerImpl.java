@@ -55,6 +55,7 @@ import org.eclipse.lsp4j.ExecuteCommandCapabilities;
 import org.eclipse.lsp4j.ExecuteCommandOptions;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FileChangeType;
+import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
@@ -137,7 +138,6 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
@@ -409,7 +409,27 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
-		runBuildable(() -> toBuildable(params));
+		if (isSourceFileOrOpen(uriExtensions.toUri(params.getTextDocument().getUri()))) {
+			runBuildable(() -> toBuildable(params));
+		}
+	}
+
+	private boolean isSourceFileOrOpen(URI uri) {
+		if (workspaceManager.isOpenedFile(uri)) {
+			return true;
+		}
+		return isSourceFile(uri);
+	}
+
+	private boolean isSourceFile(URI uri) {
+		IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
+		if (projectConfig != null) {
+			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
+			if (sourceFolder != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -440,26 +460,25 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-		runBuildable(() -> toBuildable(params));
-	}
+		// TODO: Set watched files to client. Note: Client may have performance issues with lots of folders to watch.
+		final List<URI> dirtyFiles = new ArrayList<>();
+		final List<URI> deletedFiles = new ArrayList<>();
+		for (FileEvent fileEvent : params.getChanges()) {
+			URI uri = uriExtensions.toUri(fileEvent.getUri());
 
-	/**
-	 * Evaluate the params and deduce the respective build command.
-	 */
-	protected XBuildable toBuildable(DidChangeWatchedFilesParams params) {
-		List<URI> dirtyFiles = new ArrayList<>();
-		List<URI> deletedFiles = new ArrayList<>();
-		params.getChanges().stream()
-				.map((fileEvent) -> Pair.of(uriExtensions.toUri(fileEvent.getUri()), fileEvent.getType()))
-				.filter(pair -> !workspaceManager.isDocumentOpen(pair.getKey()))
-				.forEach(pair -> {
-					if (pair.getValue() == FileChangeType.Deleted) {
-						deletedFiles.add(pair.getKey());
-					} else {
-						dirtyFiles.add(pair.getKey());
-					}
-				});
-		return workspaceManager.didChangeFiles(dirtyFiles, deletedFiles);
+			if (!workspaceManager.isDocumentOpen(uri) && isSourceFile(uri)) {
+				FileChangeType changeType = fileEvent.getType();
+
+				if (changeType == FileChangeType.Deleted) {
+					deletedFiles.add(uri);
+				} else {
+					dirtyFiles.add(uri);
+				}
+			}
+		}
+		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
+			runBuildable(() -> workspaceManager.didChangeFiles(dirtyFiles, deletedFiles));
+		}
 	}
 
 	/**
@@ -485,7 +504,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
 
 		List<Diagnostic> diags = toDiagnostics(uri, issues);
-
 		publishDiagnosticsParams.setDiagnostics(diags);
 		client.publishDiagnostics(publishDiagnosticsParams);
 	}

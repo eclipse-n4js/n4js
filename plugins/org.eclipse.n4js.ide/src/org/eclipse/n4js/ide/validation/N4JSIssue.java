@@ -19,18 +19,22 @@ public class N4JSIssue extends IssueImpl {
 	private int lineNumberEnd;
 	private int columnEnd;
 
+	/** @return line of end of issue */
 	public int getLineNumberEnd() {
 		return lineNumberEnd;
 	}
 
+	/** sets line of end of issue */
 	public void setLineNumberEnd(int lineNumberEnd) {
 		this.lineNumberEnd = lineNumberEnd;
 	}
 
+	/** @return column of end of issue */
 	public int getColumnEnd() {
 		return columnEnd;
 	}
 
+	/** sets line of column of issue */
 	public void setColumnEnd(int columnEnd) {
 		this.columnEnd = columnEnd;
 	}

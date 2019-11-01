@@ -398,6 +398,9 @@ public class XIncrementalBuilder {
 			IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
 			XWorkspaceManager workspaceManager = serviceProvider.get(XWorkspaceManager.class);
 			OutputConfigurationProvider outputConfProvider = serviceProvider.get(OutputConfigurationProvider.class);
+			if (workspaceManager == null) {
+				return false;
+			}
 
 			URI resourceUri = resource.getURI();
 			IProjectConfig projectConfig = workspaceManager.getProjectConfig(resourceUri);

@@ -177,7 +177,10 @@ public class ProjectDiscoveryHelper {
 						if (dirName.toString().startsWith("@")) {
 							allProjectDirs.addAll(collectProjects(dir, false));
 						} else {
-							allProjectDirs.add(dir);
+							File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
+							if (pckJson.isFile()) {
+								allProjectDirs.add(dir);
+							}
 						}
 					}
 					return FileVisitResult.CONTINUE;
