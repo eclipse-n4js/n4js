@@ -41,11 +41,15 @@ public class GeneratedJSFilesCounter {
 	 * @return the number of files ending in .js
 	 */
 	static public TreeMap<Path, HashSet<File>> getTranspiledFiles(final Path workspaceRoot) {
-		final File gitRoot = new File(new File("").getAbsolutePath()).getParentFile().getParentFile();
-		final File n4jsLibrariesRoot = new File(gitRoot, N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
+		final AtomicReference<TreeMap<Path, HashSet<File>>> genFilesRef = new AtomicReference<>();
+
+		final File n4jsLibrariesRoot = findN4jsLibRoot();
+		if (n4jsLibrariesRoot == null) {
+			System.out.println("Folder not found: " + N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
+			return genFilesRef.get();
+		}
 		final Collection<String> n4jsLibraryNames = new HashSet<>(Arrays.asList(n4jsLibrariesRoot.list()));
 
-		final AtomicReference<TreeMap<Path, HashSet<File>>> genFilesRef = new AtomicReference<>();
 		genFilesRef.set(new TreeMap<>());
 
 		try {
@@ -100,5 +104,20 @@ public class GeneratedJSFilesCounter {
 		}
 
 		return genFilesRef.get();
+	}
+
+	/**
+	 * Searching for the folder {@link N4JSGlobals#N4JS_LIBS_SOURCES_PATH} is necessary because the current path depends
+	 * on how this method gets called, e.g. from local testing in the Eclipse IDE, or from mvn.
+	 */
+	static private File findN4jsLibRoot() {
+		File base = new File(new File("").getAbsolutePath());
+		File n4jsLibrariesRoot = new File(base, N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
+
+		while (base.getParentFile() != null && !n4jsLibrariesRoot.isDirectory()) {
+			base = base.getParentFile();
+			n4jsLibrariesRoot = new File(base, N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
+		}
+		return n4jsLibrariesRoot;
 	}
 }
