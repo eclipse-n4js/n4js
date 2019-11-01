@@ -119,4 +119,24 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 		return workspace;
 	}
 
+	@Override
+	public boolean indexOnly() {
+		URI projectBase = getPath();
+		String lastSegment = projectBase.lastSegment();
+		if (lastSegment == null || lastSegment.isBlank()) {
+			projectBase = projectBase.trimSegments(1);
+		}
+		projectBase = projectBase.trimSegments(1); // trim the project name
+		lastSegment = projectBase.lastSegment();
+		if (lastSegment != null && lastSegment.startsWith("@")) {
+			projectBase = projectBase.trimSegments(1);
+			lastSegment = projectBase.lastSegment();
+		}
+		if (lastSegment != null && N4JSGlobals.NODE_MODULES.equals(lastSegment)) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

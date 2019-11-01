@@ -321,8 +321,6 @@ public class XIncrementalBuilder {
 			operationCanceledManager.checkCanceled(cancelIndicator);
 
 			if (!request.isIndexOnly()) {
-				// Problem: Now we save Issues, later we need Diagnostics --> Crash when Resource was deleted. Also:
-				// Double HDD access
 				List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
 				boolean proceedGenerate = request.getAfterValidate().afterValidate(resource.getURI(), issues);
 
