@@ -105,6 +105,22 @@ public class XSource2GeneratedMapping implements Externalizable {
 	}
 
 	/**
+	 * Mark the source as deleted and return all the former generated uris.
+	 */
+	public Map<URI, String> deleteSourceAndGetOutputConfigs(URI source) {
+		Set<URI> generated = new HashSet<>(source2generated.removeAll(source));
+		Map<URI, String> result = new HashMap<>();
+		for (URI gen : generated) {
+			generated2source.remove(gen, source);
+			result.put(gen, generated2OutputConfigName.get(gen));
+			if (!generated2source.containsKey(gen)) {
+				generated2OutputConfigName.remove(gen);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Remove the generated file from this mapping.
 	 */
 	public void deleteGenerated(URI generated) {
