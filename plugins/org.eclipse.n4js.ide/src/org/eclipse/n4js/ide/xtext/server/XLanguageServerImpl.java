@@ -95,6 +95,8 @@ import org.eclipse.lsp4j.services.LanguageClientExtensions;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
+import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
+import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
@@ -132,6 +134,8 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -192,6 +196,20 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private Map<String, JsonRpcMethod> supportedMethods = null;
 
 	private final Multimap<String, Endpoint> extensionProviders = LinkedListMultimap.<String, Endpoint> create();
+
+	// TODO we should probably use the DisposableRegistry here
+	/**
+	 * Called by Guice to initialize the languages. This way it is guaranteed that the registration happends exactly
+	 * once.
+	 *
+	 * @param helper
+	 *            the registrar
+	 */
+	@Inject
+	public void registerExtensions(HeadlessExtensionRegistrationHelper helper) {
+		helper.unregisterExtensions();
+		helper.registerExtensions();
+	}
 
 	/**
 	 * Setter
@@ -463,27 +481,33 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	private void publishDiagnostics(URI uri, Iterable<? extends Issue> issues) {
-		initialized.thenAccept((initParams) -> {
-			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
-			publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
-			publishDiagnosticsParams.setDiagnostics(
-					workspaceManager.doRead(uri, (document, resource) -> toDiagnostics(issues, document)));
-			client.publishDiagnostics(publishDiagnosticsParams);
+		PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
+		publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
 
-		}).exceptionally(th -> {
-			th.printStackTrace();
-			return null;
-		});
+		List<Diagnostic> diags = toDiagnostics(uri, issues);
+
+		publishDiagnosticsParams.setDiagnostics(diags);
+		client.publishDiagnostics(publishDiagnosticsParams);
 	}
 
 	/**
-	 * Convert the given issues to diagnostics. Does not return any issue with severity {@link Severity#IGNORE ignore}.
+	 * Convert the given issues to diagnostics. Does not return issues in files that are neither in the workspace nor
+	 * currently opened in the editor. Does not return any issue with severity {@link Severity#IGNORE ignore}.
 	 */
-	protected List<Diagnostic> toDiagnostics(Iterable<? extends Issue> issues, Document document) {
+	protected List<Diagnostic> toDiagnostics(URI uri, Iterable<? extends Issue> issues) {
+		if (!workspaceManager.isDocumentOpen(uri)) {
+			// Closed documents need to exist in the current workspace
+			IProjectConfig projectConfig = workspaceManager.getWorkspaceConfig().findProjectContaining(uri);
+			ISourceFolder sourceFolder = projectConfig.findSourceFolderContaining(uri);
+			if (sourceFolder == null) {
+				return Collections.emptyList();
+			}
+		}
+
 		List<Diagnostic> sortedDiags = new ArrayList<>();
 		for (Issue issue : issues) {
 			if (issue.getSeverity() != Severity.IGNORE) {
-				sortedDiags.add(toDiagnostic(issue, document));
+				sortedDiags.add(toDiagnostic(issue));
 			}
 		}
 
@@ -509,13 +533,23 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Convert the given issue to a diagnostic.
 	 */
-	protected Diagnostic toDiagnostic(Issue issue, Document document) {
+	protected Diagnostic toDiagnostic(Issue issue) {
 		Diagnostic result = new Diagnostic();
 		result.setCode(issue.getCode());
 		result.setMessage(issue.getMessage());
 		result.setSeverity(toDiagnosticSeverity(issue.getSeverity()));
-		Position start = document.getPosition(issue.getOffset());
-		Position end = document.getPosition(issue.getOffset() + issue.getLength());
+
+		Position start = new Position(issue.getLineNumber(), issue.getColumn());
+		Position end = null;
+		if (issue instanceof N4JSIssue) {
+			N4JSIssue n4jsIssue = (N4JSIssue) issue;
+			end = new Position(n4jsIssue.getLineNumberEnd(), n4jsIssue.getColumnEnd());
+		} else {
+			URI uri = issue.getUriToProblem();
+			end = workspaceManager.doRead(uri,
+					(doc, res) -> doc.getPosition(issue.getOffset() + issue.getLength()));
+		}
+
 		result.setRange(new Range(start, end));
 		return result;
 	}
@@ -1179,7 +1213,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * @since 2.16
 	 */
-	protected LanguageClient getLanguageClient() {
+	public LanguageClient getLanguageClient() {
 		return client;
 	}
 

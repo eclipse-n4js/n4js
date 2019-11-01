@@ -28,7 +28,7 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 
 /**
  *
@@ -62,7 +62,7 @@ public class LspServer {
 	}
 
 	private void setupAndRun(ExecutorService threadPool) throws InterruptedException, ExecutionException, IOException {
-		N4JSLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
+		XLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
 
 		Builder<LanguageClient> lsBuilder = new Builder<LanguageClient>()
 				.setLocalService(languageServer)
@@ -80,7 +80,7 @@ public class LspServer {
 		}
 	}
 
-	private void setupAndRunWithSocket(N4JSLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
+	private void setupAndRunWithSocket(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
 			throws InterruptedException, ExecutionException, IOException {
 
 		InetSocketAddress address = new InetSocketAddress("localhost", options.getPort());
@@ -100,13 +100,13 @@ public class LspServer {
 		}
 	}
 
-	private void setupAndRunWithSystemIO(N4JSLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
+	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
 			throws InterruptedException {
 
 		run(languageServer, lsBuilder, System.in, System.out);
 	}
 
-	private void run(N4JSLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder, InputStream in,
+	private void run(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder, InputStream in,
 			OutputStream out)
 			throws InterruptedException {
 

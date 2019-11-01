@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.XProjectManager;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder.XResult;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
@@ -53,7 +54,7 @@ public class N4JSProjectManager extends XProjectManager {
 	@Inject
 	private ProjectStatePersister projectStatePersister;
 	@Inject
-	private N4JSWorkspaceManager workspaceManager;
+	private XWorkspaceManager workspaceManager;
 
 	private Map<URI, HashedFileContent> hashFileContents = new HashMap<>();
 	private Map<URI, HashedFileContent> newFileContents = new HashMap<>();
@@ -160,7 +161,7 @@ public class N4JSProjectManager extends XProjectManager {
 		 * We create build request that will alter newFileContents when a file is created / removed
 		 */
 		XResult result = super.doBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
-		if (!cancelIndicator.isCanceled() && !result.getAffectedResources().isEmpty()) {
+		if (result != null && !result.getAffectedResources().isEmpty()) {
 			dirtyFiles.forEach(this::storeHash);
 			newFileContents.replaceAll((uri, hash) -> {
 				if (hash == null) {
@@ -175,7 +176,6 @@ public class N4JSProjectManager extends XProjectManager {
 		}
 
 		// System.out.println(" took " + sw);
-
 		return result;
 	}
 

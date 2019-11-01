@@ -23,7 +23,9 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
+import org.eclipse.n4js.ide.server.N4JSBuildManager;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
+import org.eclipse.xtext.ide.server.BuildManager;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.resource.IExternalContentSupport;
@@ -44,12 +46,14 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 /**
  * @author Sven Efftinge - Initial contribution and API
  * @since 2.11
  */
 @SuppressWarnings("restriction")
+@Singleton
 public class XWorkspaceManager {
 	private static final Logger LOG = Logger.getLogger(XWorkspaceManager.class);
 
@@ -62,7 +66,7 @@ public class XWorkspaceManager {
 	@Inject
 	private XIProjectDescriptionFactory projectDescriptionFactory;
 
-	private XBuildManager buildManager;
+	private N4JSBuildManager buildManager;
 
 	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
 
@@ -125,9 +129,19 @@ public class XWorkspaceManager {
 	 *            the build manager.
 	 */
 	@Inject
-	public void setBuildManager(XBuildManager buildManager) {
+	public void setBuildManager(N4JSBuildManager buildManager) {
 		buildManager.setWorkspaceManager(this);
 		this.buildManager = buildManager;
+	}
+
+	/** @return the {@link BuildManager} */
+	public N4JSBuildManager getBuildManager() {
+		return buildManager;
+	}
+
+	/** @return true iff the given uri is contained in the set of opened documents */
+	public boolean isOpenedFile(URI uri) {
+		return openDocuments.containsKey(uri);
 	}
 
 	/**
@@ -175,12 +189,17 @@ public class XWorkspaceManager {
 		afterBuild(buildManager.doInitialBuild(newProjects, cancelIndicator));
 	}
 
+	/** @return the current base directory {@link URI} */
+	public URI getBaseDir() {
+		return this.baseDir;
+	}
+
 	/**
 	 * @return the workspace configuration
 	 * @throws ResponseErrorException
 	 *             if the workspace is not yet initialized
 	 */
-	protected IWorkspaceConfig getWorkspaceConfig() throws ResponseErrorException {
+	public IWorkspaceConfig getWorkspaceConfig() throws ResponseErrorException {
 		if (workspaceConfig == null) {
 			ResponseError error = new ResponseError(ResponseErrorCode.serverNotInitialized,
 					"Workspace has not been initialized yet.", null);
@@ -198,7 +217,7 @@ public class XWorkspaceManager {
 	}
 
 	/**
-	 * Callback after a build was performend
+	 * Callback after a build was performed
 	 */
 	protected void afterBuild(List<IResourceDescription.Delta> deltas) {
 		for (ILanguageServerAccess.IBuildListener listener : buildListeners) {
@@ -222,6 +241,11 @@ public class XWorkspaceManager {
 			afterBuild(deltas);
 			return deltas;
 		};
+	}
+
+	/** Clears all issues of the given URI */
+	public void clearIssues(URI uri) {
+		issueAcceptor.apply(uri, Collections.emptyList());
 	}
 
 	/**
@@ -279,7 +303,7 @@ public class XWorkspaceManager {
 	/**
 	 * Find the project that contains the uri.
 	 */
-	protected IProjectConfig getProjectConfig(URI uri) {
+	public IProjectConfig getProjectConfig(URI uri) {
 		return getWorkspaceConfig().findProjectContaining(uri);
 	}
 

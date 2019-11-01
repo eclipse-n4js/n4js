@@ -22,7 +22,7 @@ import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemExitRedirecter.SystemExitException;
-import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.base.Stopwatch;
@@ -87,7 +87,7 @@ public class InProcessExecuter {
 
 				// save projects
 				Injector injector = N4jscFactory.getOrCreateInjector();
-				N4JSWorkspaceManager workspaceManager = injector.getInstance(N4JSWorkspaceManager.class);
+				XWorkspaceManager workspaceManager = injector.getInstance(XWorkspaceManager.class);
 				Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
 				Map<String, String> projectMap = new TreeMap<>();
 				for (IProjectConfig pConfig : projects) {

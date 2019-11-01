@@ -24,8 +24,8 @@ import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
-import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -36,9 +36,9 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 @SuppressWarnings("restriction")
 public class N4jscCompiler {
 	private final N4jscOptions options;
-	private final N4JSLanguageServerImpl languageServer;
+	private final XLanguageServerImpl languageServer;
 	private final N4jscLanguageClient callback;
-	private final N4JSWorkspaceManager workspaceManager;
+	private final XWorkspaceManager workspaceManager;
 
 	/** Starts the compiler in a blocking fashion */
 	static public void start(N4jscOptions options) throws Exception {

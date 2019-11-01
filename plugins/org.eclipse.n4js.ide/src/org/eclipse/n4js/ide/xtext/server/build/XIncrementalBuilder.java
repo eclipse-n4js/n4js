@@ -8,15 +8,19 @@
 package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.generator.GeneratorContext;
 import org.eclipse.xtext.generator.GeneratorDelegate;
@@ -24,8 +28,8 @@ import org.eclipse.xtext.generator.IContextualOutputConfigurationProvider;
 import org.eclipse.xtext.generator.IContextualOutputConfigurationProvider2;
 import org.eclipse.xtext.generator.IFilePostProcessor;
 import org.eclipse.xtext.generator.IFileSystemAccess;
-import org.eclipse.xtext.generator.IShouldGenerate;
 import org.eclipse.xtext.generator.OutputConfiguration;
+import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.generator.URIBasedFileSystemAccess;
 import org.eclipse.xtext.generator.trace.TraceFileNameProvider;
 import org.eclipse.xtext.generator.trace.TraceRegionSerializer;
@@ -223,84 +227,111 @@ public class XIncrementalBuilder {
 		 * Run the build.
 		 */
 		public XIncrementalBuilder.XResult launch() {
-			XSource2GeneratedMapping newSource2GeneratedMapping = this.request.getState().getFileMappings();
-			Set<URI> unloaded = new HashSet<>();
-			for (URI deleted : request.getDeletedFiles()) {
-				if (unloaded.add(deleted)) {
-					unloadResource(deleted);
+			List<IResourceDescription.Delta> resolvedDeltas = new ArrayList<>();
+
+			try {
+
+				XSource2GeneratedMapping newSource2GeneratedMapping = this.request.getState().getFileMappings();
+				Set<URI> unloaded = new HashSet<>();
+				for (URI deleted : request.getDeletedFiles()) {
+					if (unloaded.add(deleted)) {
+						unloadResource(deleted);
+					}
 				}
-			}
-			for (URI dirty : request.getDirtyFiles()) {
-				if (unloaded.add(dirty)) {
-					unloadResource(dirty);
+				for (URI dirty : request.getDirtyFiles()) {
+					if (unloaded.add(dirty)) {
+						unloadResource(dirty);
+					}
 				}
-			}
-			for (URI source : request.getDeletedFiles()) {
-				request.getAfterValidate().afterValidate(source, Collections.emptyList());
-				for (URI generated : newSource2GeneratedMapping.deleteSource(source)) {
-					IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(source);
-					XtextResourceSet resourceSet = request.getResourceSet();
-					Set<OutputConfiguration> configs = serviceProvider
-							.get(IContextualOutputConfigurationProvider2.class)
-							.getOutputConfigurations(resourceSet);
-					String configName = newSource2GeneratedMapping.getOutputConfigName(generated);
-					OutputConfiguration config = FluentIterable.from(configs)
-							.firstMatch((it) -> it.getName().equals(configName)).orNull();
-					if (config != null && config.isCleanUpDerivedResources()) {
-						try {
-							resourceSet.getURIConverter().delete(generated,
-									CollectionLiterals.emptyMap());
-							request.getAfterDeleteFile().apply(generated);
-						} catch (IOException e) {
-							Exceptions.sneakyThrow(e);
+				for (URI source : request.getDeletedFiles()) {
+					request.getAfterValidate().afterValidate(source, Collections.emptyList());
+					for (URI generated : newSource2GeneratedMapping.deleteSource(source)) {
+						IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(source);
+						XtextResourceSet resourceSet = request.getResourceSet();
+						Set<OutputConfiguration> configs = serviceProvider
+								.get(IContextualOutputConfigurationProvider2.class)
+								.getOutputConfigurations(resourceSet);
+						String configName = newSource2GeneratedMapping.getOutputConfigName(generated);
+						OutputConfiguration config = FluentIterable.from(configs)
+								.firstMatch((it) -> it.getName().equals(configName)).orNull();
+						if (config != null && config.isCleanUpDerivedResources()) {
+							try {
+								resourceSet.getURIConverter().delete(generated,
+										CollectionLiterals.emptyMap());
+								request.getAfterDeleteFile().apply(generated);
+							} catch (IOException e) {
+								Exceptions.sneakyThrow(e);
+							}
 						}
 					}
 				}
-			}
-			XIndexer.XIndexResult result = indexer.computeAndIndexAffected(request, context);
-			operationCanceledManager.checkCanceled(request.getCancelIndicator());
+				XIndexer.XIndexResult result = indexer.computeAndIndexAffected(request, context);
+				operationCanceledManager.checkCanceled(request.getCancelIndicator());
 
-			List<IResourceDescription.Delta> resolvedDeltas = new ArrayList<>();
-			for (IResourceDescription.Delta delta : result.getResourceDeltas()) {
-				URI uri = delta.getUri();
-				if (delta.getOld() != null && unloaded.add(uri)) {
-					unloadResource(uri);
+				for (IResourceDescription.Delta delta : result.getResourceDeltas()) {
+					URI uri = delta.getUri();
+					if (delta.getOld() != null && unloaded.add(uri)) {
+						unloadResource(uri);
+					}
+					if (delta.getNew() == null) {
+						resolvedDeltas.add(delta);
+					}
 				}
-				if (delta.getNew() == null) {
-					resolvedDeltas.add(delta);
-				}
+
+				Iterable<URI> uris = FluentIterable
+						.from(result.getResourceDeltas())
+						.filter((delta) -> delta.getNew() != null)
+						.transform(Delta::getUri);
+
+				Iterable<IResourceDescription.Delta> deltas = context.executeClustered(uris,
+						(resource) -> buildClustured(resource, newSource2GeneratedMapping, result));
+
+				Iterables.addAll(resolvedDeltas, deltas);
+
+			} catch (CancellationException e) {
+				// catch here and proceed normally
+				System.out.println();
 			}
 
-			Iterable<IResourceDescription.Delta> deltas = context.executeClustered(
-					FluentIterable.from(result.getResourceDeltas()).filter((it) -> it.getNew() != null)
-							.transform(Delta::getUri),
-					(resource) -> {
-						CancelIndicator cancelIndicator = request.getCancelIndicator();
-						operationCanceledManager.checkCanceled(cancelIndicator);
-						// trigger init
-						resource.getContents();
-						EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
-						operationCanceledManager.checkCanceled(cancelIndicator);
-						IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
-						IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
-						IResourceDescription description = manager.getResourceDescription(resource);
-						SerializableResourceDescription copiedDescription = SerializableResourceDescription
-								.createCopy(description);
-						result.getNewIndex().addDescription(resource.getURI(), copiedDescription);
-						operationCanceledManager.checkCanceled(cancelIndicator);
-						if ((!request.isIndexOnly() && validate(resource)
-								&& serviceProvider.get(IShouldGenerate.class).shouldGenerate(resource,
-										CancelIndicator.NullImpl))) {
-							operationCanceledManager.checkCanceled(cancelIndicator);
-							generate(resource, request, newSource2GeneratedMapping);
-						}
-						IResourceDescription old = context.getOldState().getResourceDescriptions()
-								.getResourceDescription(resource.getURI());
-						return manager.createDelta(old, copiedDescription);
-					});
-
-			Iterables.addAll(resolvedDeltas, deltas);
 			return new XIncrementalBuilder.XResult(this.request.getState(), resolvedDeltas);
+		}
+
+		private Delta buildClustured(Resource resource,
+				XSource2GeneratedMapping newSource2GeneratedMapping,
+				XIndexer.XIndexResult result) {
+
+			CancelIndicator cancelIndicator = request.getCancelIndicator();
+			operationCanceledManager.checkCanceled(cancelIndicator);
+
+			// trigger init
+			resource.getContents();
+			EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
+			operationCanceledManager.checkCanceled(cancelIndicator);
+
+			URI uri = resource.getURI();
+			IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
+			IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
+			IResourceValidator resourceValidator = getResourceServiceProvider(resource).getResourceValidator();
+
+			IResourceDescription description = manager.getResourceDescription(resource);
+			SerializableResourceDescription copiedDescription = SerializableResourceDescription.createCopy(description);
+			result.getNewIndex().addDescription(uri, copiedDescription);
+			operationCanceledManager.checkCanceled(cancelIndicator);
+
+			if (!request.isIndexOnly()) {
+				// Problem: Now we save Issues, later we need Diagnostics --> Crash when Resource was deleted. Also:
+				// Double HDD access
+				List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
+				boolean proceedGenerate = request.getAfterValidate().afterValidate(resource.getURI(), issues);
+
+				if (proceedGenerate) {
+					operationCanceledManager.checkCanceled(cancelIndicator);
+					generate(resource, request, newSource2GeneratedMapping);
+				}
+			}
+
+			IResourceDescription old = context.getOldState().getResourceDescriptions().getResourceDescription(uri);
+			return manager.createDelta(old, copiedDescription);
 		}
 
 		private IResourceServiceProvider getResourceServiceProvider(Resource resource) {
@@ -311,30 +342,22 @@ public class XIncrementalBuilder {
 		}
 
 		/**
-		 * Validate the resource and return true, if the build should proceed for the current state.
-		 */
-		protected boolean validate(Resource resource) {
-			IResourceValidator resourceValidator = getResourceServiceProvider(resource)
-					.getResourceValidator();
-			if (resourceValidator == null) {
-				return true;
-			}
-			List<Issue> validationResult = resourceValidator.validate(resource, CheckMode.ALL,
-					request.getCancelIndicator());
-			return request.getAfterValidate().afterValidate(resource.getURI(), validationResult);
-		}
-
-		/**
 		 * Generate code for the given resource
 		 */
 		@SuppressWarnings("hiding")
 		protected void generate(Resource resource, XBuildRequest request,
 				XSource2GeneratedMapping newMappings) {
+
 			IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
 			GeneratorDelegate generator = serviceProvider.get(GeneratorDelegate.class);
 			if (generator == null) {
 				return;
 			}
+
+			if (isResourceInOutputDirectory(resource)) {
+				return;
+			}
+
 			Set<URI> previous = newMappings.deleteSource(resource.getURI());
 			URIBasedFileSystemAccess fileSystemAccess = this.createFileSystemAccess(serviceProvider, resource);
 			fileSystemAccess.setBeforeWrite((uri, outputCfgName, contents) -> {
@@ -369,6 +392,29 @@ public class XIncrementalBuilder {
 					Exceptions.sneakyThrow(e);
 				}
 			}
+		}
+
+		private boolean isResourceInOutputDirectory(Resource resource) {
+			IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
+			XWorkspaceManager workspaceManager = serviceProvider.get(XWorkspaceManager.class);
+			OutputConfigurationProvider outputConfProvider = serviceProvider.get(OutputConfigurationProvider.class);
+
+			URI resourceUri = resource.getURI();
+			IProjectConfig projectConfig = workspaceManager.getProjectConfig(resourceUri);
+			Set<OutputConfiguration> outputConfigurations = outputConfProvider.getOutputConfigurations(resource);
+			URI projectBaseUri = projectConfig.getPath();
+			Path resourcePath = Paths.get(resourceUri.toFileString());
+
+			for (OutputConfiguration outputConf : outputConfigurations) {
+				for (String outputDir : outputConf.getOutputDirectories()) {
+					URI outputUri = projectBaseUri.appendSegment(outputDir);
+					Path outputPath = Paths.get(outputUri.toFileString());
+					if (resourcePath.startsWith(outputPath)) {
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 		/**

@@ -12,7 +12,7 @@ package org.eclipse.n4js.cli.compiler;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
-import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.inject.Inject;
@@ -25,7 +25,7 @@ import com.google.inject.Singleton;
 public class IssueSerializer {
 
 	@Inject
-	N4JSWorkspaceManager workspaceManager;
+	XWorkspaceManager workspaceManager;
 
 	/** @return user string for an issue */
 	public String diagnostics(Diagnostic diagnostic) {

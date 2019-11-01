@@ -12,8 +12,8 @@ package org.eclipse.n4js.cli;
 
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.ide.N4JSIdeSetup;
-import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
-import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 
 import com.google.inject.Injector;
 
@@ -34,8 +34,8 @@ public class N4jscFactory {
 		return INSTANCE.internalGetOrCreateInjector();
 	}
 
-	/** @return the {@link N4JSLanguageServerImpl} instance from the given injector */
-	public static N4JSLanguageServerImpl getLanguageServer() {
+	/** @return the {@link XLanguageServerImpl} instance from the given injector */
+	public static XLanguageServerImpl getLanguageServer() {
 		return INSTANCE.internalGetLanguageServer();
 	}
 
@@ -44,8 +44,8 @@ public class N4jscFactory {
 		return INSTANCE.internalGetLanguageClient();
 	}
 
-	/** @return the {@link N4JSWorkspaceManager} instance from the given injector */
-	public static N4JSWorkspaceManager getWorkspaceManager() {
+	/** @return the {@link XWorkspaceManager} instance from the given injector */
+	public static XWorkspaceManager getWorkspaceManager() {
 		return INSTANCE.internalGetWorkspaceManager();
 	}
 
@@ -62,8 +62,8 @@ public class N4jscFactory {
 		return injector;
 	}
 
-	N4JSLanguageServerImpl internalGetLanguageServer() {
-		N4JSLanguageServerImpl languageServer = internalGetOrCreateInjector().getInstance(N4JSLanguageServerImpl.class);
+	XLanguageServerImpl internalGetLanguageServer() {
+		XLanguageServerImpl languageServer = internalGetOrCreateInjector().getInstance(XLanguageServerImpl.class);
 		return languageServer;
 	}
 
@@ -72,8 +72,8 @@ public class N4jscFactory {
 		return callback;
 	}
 
-	N4JSWorkspaceManager internalGetWorkspaceManager() {
-		N4JSWorkspaceManager workspaceManager = internalGetOrCreateInjector().getInstance(N4JSWorkspaceManager.class);
+	XWorkspaceManager internalGetWorkspaceManager() {
+		XWorkspaceManager workspaceManager = internalGetOrCreateInjector().getInstance(XWorkspaceManager.class);
 		return workspaceManager;
 	}
 }
