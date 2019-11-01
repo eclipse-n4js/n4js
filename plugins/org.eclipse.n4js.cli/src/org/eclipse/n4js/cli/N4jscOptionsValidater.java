@@ -69,6 +69,11 @@ public class N4jscOptionsValidater {
 			String msg = "Port is out of range: " + options.getPort();
 			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
 		}
+
+		if (!options.getDirs().isEmpty()) {
+			String msg = "Goal LSP cannot receive a directory argument";
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
+		}
 	}
 
 	private static void validateGoalCleanOptions(N4jscOptions options) throws N4jscException {
