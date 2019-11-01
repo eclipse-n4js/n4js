@@ -60,4 +60,14 @@ public class FrontendLspTest extends AbstractCliFrontendTest {
 		assertEquals(result.toString(), "ERROR-13 (Invalid option):  Port is out of range: 65537", result.getStdOut());
 	}
 
+	/**  */
+	@Test
+	public void testLspSuperfluousDirArgument() {
+		String args[] = { "lsp", "./dir/" };
+		CliCompileResult result = n4jsc(args, 12);
+		assertEquals(result.toString(),
+				"ERROR-12 (Invalid dir(s)):  Goal LSP does not expect superfluous directory argument",
+				result.getStdOut());
+	}
+
 }

@@ -71,7 +71,7 @@ public class N4jscOptionsValidater {
 		}
 
 		if (!options.getDirs().isEmpty()) {
-			String msg = "Goal LSP cannot receive a directory argument";
+			String msg = "Goal LSP does not expect superfluous directory argument";
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
 	}
