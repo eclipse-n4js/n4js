@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -148,6 +149,13 @@ public class XProjectManager {
 			return true;
 		});
 		result.setCancelIndicator(cancelIndicator);
+
+		if (projectConfig instanceof N4JSProjectConfig) {
+			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
+			result.setIndexOnly(n4pc.indexOnly());
+		}
+
+		this.getBaseDir();
 		return result;
 	}
 

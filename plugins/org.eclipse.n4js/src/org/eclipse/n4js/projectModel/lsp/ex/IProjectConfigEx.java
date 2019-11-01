@@ -65,6 +65,7 @@ public interface IProjectConfigEx extends IProjectConfig {
 		return false;
 	}
 
+	// Merge to Xtext? (inclusive use site in ProjectManager)
 	/** @return true iff this project should be indexed only (no validation, no generation) */
 	default boolean indexOnly() {
 		return false;
