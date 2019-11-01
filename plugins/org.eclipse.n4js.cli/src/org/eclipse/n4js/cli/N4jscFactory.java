@@ -24,6 +24,11 @@ public class N4jscFactory {
 
 	static N4jscFactory INSTANCE = new N4jscFactory();
 
+	/** Resets the injector setup */
+	public static void resetInjector() {
+		INSTANCE.injector = null;
+	}
+
 	/** @return the {@link N4jscBackend} instance from the given injector */
 	public static N4jscBackend createBackend() throws Exception {
 		return INSTANCE.internalCreateBackend();
@@ -76,4 +81,5 @@ public class N4jscFactory {
 		XWorkspaceManager workspaceManager = internalGetOrCreateInjector().getInstance(XWorkspaceManager.class);
 		return workspaceManager;
 	}
+
 }

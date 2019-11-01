@@ -199,7 +199,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	// TODO we should probably use the DisposableRegistry here
 	/**
-	 * Called by Guice to initialize the languages. This way it is guaranteed that the registration happends exactly
+	 * Called by Guice to initialize the languages. This way it is guaranteed that the registration happens exactly
 	 * once.
 	 *
 	 * @param helper

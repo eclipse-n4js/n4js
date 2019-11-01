@@ -53,7 +53,9 @@ public class LspServer {
 
 		try {
 			while (true) {
-				setupAndRun(threadPool);
+				XLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
+				setupAndRun(threadPool, languageServer);
+				N4jscFactory.resetInjector();
 			}
 
 		} finally {
@@ -61,8 +63,8 @@ public class LspServer {
 		}
 	}
 
-	private void setupAndRun(ExecutorService threadPool) throws InterruptedException, ExecutionException, IOException {
-		XLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
+	private void setupAndRun(ExecutorService threadPool, XLanguageServerImpl languageServer)
+			throws InterruptedException, ExecutionException, IOException {
 
 		Builder<LanguageClient> lsBuilder = new Builder<LanguageClient>()
 				.setLocalService(languageServer)
