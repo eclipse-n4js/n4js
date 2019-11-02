@@ -319,7 +319,9 @@ BreakStatement <Yield>:	{BreakStatement} 'break'
 .Break statement
 [req,id=GH-218,version=1]
 --
-1.  Break is only allowed within switch, do-while, while, or for statements as
+1.  Break without label-identifier is only allowed within switch, do-while, while, or for statements.
+2.  Break with a valid label-identifier is only allowed within switch, do-while, while, for statements or labeled block.
+As
 	defined in cite:[ECMA11a].
 --
 
