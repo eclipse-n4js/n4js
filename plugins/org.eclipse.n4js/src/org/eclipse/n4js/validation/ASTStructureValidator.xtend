@@ -136,8 +136,9 @@ class ASTStructureValidator {
 		static val ALLOW_NESTED_FUNCTION_DECLARATION = EXTERNAL << 1
 		static val ALLOW_RETURN = ALLOW_NESTED_FUNCTION_DECLARATION << 1
 		static val ALLOW_CONTINUE = ALLOW_RETURN << 1
-		static val ALLOW_BREAK = ALLOW_CONTINUE << 1
-		static val ALLOW_VAR_WITHOUT_INITIALIZER = ALLOW_BREAK << 1
+		static val ALLOW_BREAK = ALLOW_CONTINUE << 1 // whether we are in "break-allowed-with/without-label" (for||while||switch-case||labelled-block) area
+		static val ALLOW_BREAK_WITHOUT_LABEL = ALLOW_BREAK << 1 // whether we are in (for||while||switch-case) area
+		static val ALLOW_VAR_WITHOUT_INITIALIZER = ALLOW_BREAK_WITHOUT_LABEL << 1
 		static val ALLOW_YIELD_EXPRESSION = ALLOW_VAR_WITHOUT_INITIALIZER << 1
 		static val ALLOW_SUPER = ALLOW_YIELD_EXPRESSION << 1
 		static val ALLOW_SUPER_CALL = ALLOW_SUPER << 1
@@ -189,6 +190,10 @@ class ASTStructureValidator {
 			return is(ALLOW_BREAK)
 		}
 
+		def boolean isBreakAllowedWithoutLabel() {
+			return is(ALLOW_BREAK_WITHOUT_LABEL)
+		}
+
 		def boolean isContinueAllowed() {
 			return is(ALLOW_CONTINUE)
 		}
@@ -233,6 +238,10 @@ class ASTStructureValidator {
 			with(ALLOW_BREAK, allow)
 		}
 
+		def Constraints allowBreakWithoutLabel(boolean allow) {
+			with(ALLOW_BREAK_WITHOUT_LABEL, allow)
+		}
+
 		def Constraints allowContinue(boolean allow) {
 			with(ALLOW_CONTINUE, allow)
 		}
@@ -264,6 +273,7 @@ class ASTStructureValidator {
 		def Constraints enterFunctionDeclaration() {
 			with(IN_FUNCTION_DECLARATION, true)
 		}
+
 	}
 
 	def void validate(EObject model, IDiagnosticConsumer consumer) {
@@ -350,7 +360,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			validLabels,
-			constraints.strict(false).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false)
+			constraints.strict(false).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false).allowBreakWithoutLabel(false)
 		);
 	}
 
@@ -435,7 +445,7 @@ class ASTStructureValidator {
 			producer,
 			validLabels,
 			// according to ecma6 spec, class bodies are always strict
-			constraints.strict(true).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false)
+			constraints.strict(true).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false).allowBreakWithoutLabel(false)
 		)
 	}
 
@@ -465,7 +475,7 @@ class ASTStructureValidator {
 			producer,
 			validLabels,
 			// according to ecma6 spec, class bodies are always strict
-			constraints.strict(true).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false)
+			constraints.strict(true).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false).allowBreakWithoutLabel(false)
 		)
 	}
 
@@ -755,7 +765,7 @@ class ASTStructureValidator {
 				model,
 				producer,
 				validLabels,
-				constraints.allowNestedFunctions(!constraints.isStrict)
+				constraints.allowNestedFunctions(!constraints.isStrict).allowBreak(true)
 			)
 		} finally {
 			validLabels.remove(model)
@@ -876,7 +886,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			validLabels,
-			constraints.allowBreak(true)
+			constraints.allowBreak(true).allowBreakWithoutLabel(true)
 		)
 	}
 
@@ -944,7 +954,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			validLabels,
-			constraints.allowNestedFunctions(!constraints.isStrict && !constraints.isInFunctionDeclaration).allowBreak(true).allowContinue(true)
+			constraints.allowNestedFunctions(!constraints.isStrict && !constraints.isInFunctionDeclaration).allowBreak(true).allowContinue(true).allowBreakWithoutLabel(true)
 		)
 	}
 
@@ -958,7 +968,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			validLabels,
-			constraints.allowNestedFunctions(!constraints.isStrict && !constraints.isInFunctionDeclaration).allowBreak(true).allowContinue(true)
+			constraints.allowNestedFunctions(!constraints.isStrict && !constraints.isInFunctionDeclaration).allowBreak(true).allowContinue(true).allowBreakWithoutLabel(true)
 		)
 	}
 
@@ -1122,7 +1132,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			Sets.newHashSetWithExpectedSize(2),
-			constraints.allowNestedFunctions(true).allowReturn(true).allowBreak(false).allowContinue(false)
+			constraints.allowNestedFunctions(true).allowReturn(true).allowBreak(false).allowContinue(false).allowBreakWithoutLabel(false)
 		)
 	}
 
@@ -1156,7 +1166,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			Sets.newHashSetWithExpectedSize(2),
-			constraints.allowNestedFunctions(true).allowReturn(true).allowContinue(false).allowBreak(false).allowYieldExpression(true)
+			constraints.allowNestedFunctions(true).allowReturn(true).allowContinue(false).allowBreak(false).allowYieldExpression(true).allowBreakWithoutLabel(false)
 		)
 	}
 
@@ -1269,7 +1279,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			Sets.newHashSetWithExpectedSize(2),
-			constraints.allowNestedFunctions(false).allowReturn(true).allowContinue(false).allowBreak(false).allowYieldExpression(true)
+			constraints.allowNestedFunctions(false).allowReturn(true).allowContinue(false).allowBreak(false).allowYieldExpression(true).allowBreakWithoutLabel(false)
 		)
 	}
 
@@ -1323,14 +1333,14 @@ class ASTStructureValidator {
 		Set<LabelledStatement> validLabels,
 		Constraints constraints
 	) {
-		if (!constraints.isBreakAllowed) {
+		if (!constraints.isBreakAllowed
+				|| (!validateLabelRef(model, producer, validLabels) && !constraints.isBreakAllowedWithoutLabel)
+		) {
 			val target = NodeModelUtils.findActualNodeFor(model)
 			producer.node = target
 			producer.addDiagnostic(
 				new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_BREAK,
 					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_BREAK), IssueCodes.AST_INVALID_BREAK))
-		} else {
-			validateLabelRef(model, producer, validLabels)
 		}
 		recursiveValidateASTStructure(
 			model,
@@ -1340,7 +1350,10 @@ class ASTStructureValidator {
 		)
 	}
 
-	def private void validateLabelRef(LabelRef model, ASTStructureDiagnosticProducer producer,
+/*
+ * @returns whether there is a label
+ */
+	def private boolean validateLabelRef(LabelRef model, ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels
 	) {
 		val labelAsText = model.labelAsText; // cannot use model.label, because we aren't allowed to resolve proxies in this phase!
@@ -1351,6 +1364,7 @@ class ASTStructureValidator {
 				new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_LABEL,
 					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_LABEL), IssueCodes.AST_INVALID_LABEL))
 		}
+		return labelAsText !== null
 	}
 
 	def private dispatch void validateASTStructure(
