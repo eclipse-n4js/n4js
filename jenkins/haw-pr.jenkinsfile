@@ -51,7 +51,7 @@ pipeline {
                             'execute-plugin-ui-tests',
                             'execute-ecma-tests',
                             'execute-accesscontrol-tests',
-                            'execute-smoke-tests'
+                         //   'execute-smoke-tests' // #1533
                          //'execute-hlc-integration-tests'
                         ].join(',')
 
