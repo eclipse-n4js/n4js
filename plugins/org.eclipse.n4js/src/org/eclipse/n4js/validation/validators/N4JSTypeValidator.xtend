@@ -850,7 +850,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		val grandParent = parent?.eContainer;
 		if (parent instanceof Argument) {
 			if (grandParent instanceof NewExpression) {
-				val argIdx = grandParent.arguments.indexOf(parent);
+				val Argument arg = parent 
+				val argIdx = grandParent.arguments.indexOf(arg);
 				val ctorFpar = ctor.getFparForArgIdx(argIdx);
 				if (ctorFpar !== null) {
 					return AnnotationDefinition.SPEC.hasAnnotation(ctorFpar);

@@ -456,7 +456,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 		final int idx = this.getUnboundTypeVars().indexOf(typeVar);
 		if (((idx >= 0) && (idx < this.getUnboundTypeVarsUpperBounds().size()))) {
 			final TypeRef modifiedUpperBound = this.getUnboundTypeVarsUpperBounds().get(idx);
-			if ((modifiedUpperBound != null)) {
+			boolean _isUnknown = modifiedUpperBound.isUnknown();
+			boolean _not = (!_isUnknown);
+			if (_not) {
 				return modifiedUpperBound;
 			}
 		}

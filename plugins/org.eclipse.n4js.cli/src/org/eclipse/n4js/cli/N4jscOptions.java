@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.N4JSCmdLineParser.ParsedOption;
 import org.eclipse.n4js.cli.N4jscGoal.N4jscGoalOptionHandler;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.kohsuke.args4j.Argument;
@@ -45,13 +47,13 @@ public class N4jscOptions {
 	 * If this environment variable is set, the headless compiler will always enable performance data collection,
 	 * regardless of the parameter {@link Options#performanceReport}.
 	 */
-	private static String N4JSC_PERFORMANCE_REPORT_ENV = "N4JSC_PERFORMANCE_REPORT";
+	public static final String N4JSC_PERFORMANCE_REPORT_ENV = "N4JSC_PERFORMANCE_REPORT";
 
 	/** Marker used to distinguish between compile-messages and runner output. */
-	public static String MARKER_RUNNER_OUPTUT = "======= =======";
+	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
 	/** Usage information. */
-	public static String USAGE = "Usage: java -jar n4jsc.jar [GOAL] [FILE(s)] [OPTION(s)]";
+	public static final String USAGE = "Usage: java -jar n4jsc.jar [GOAL] [DIR(s)] [OPTION(s)]";
 
 	/** Use to specify the required goal for an option. */
 	@Retention(RUNTIME)
@@ -142,14 +144,14 @@ public class N4jscOptions {
 
 		@Option(name = "--performanceReport", aliases = "-pR", //
 				hidden = true, //
+				depends = "--performanceKey", //
 				usage = "[compile] enables performance data collection and specifies the location of the performance report.", //
 				handler = N4JSCmdLineParser.N4JSFileOptionHandler.class)
 		@GoalRequirements(goals = N4jscGoal.compile)
-		File performanceReport = null;
+		File performanceReport = new File("performance-report.csv");
 
 		@Option(name = "--performanceKey", aliases = "-pK", //
 				hidden = true, //
-				depends = "--performanceReport", //
 				usage = "[compile] specifies the data collector key of the collector whose performance data is saved in the "
 						+ "performance report.", //
 				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)
@@ -164,6 +166,13 @@ public class N4jscOptions {
 		@GoalRequirements(goals = N4jscGoal.lsp)
 		int port = 5007;
 
+		@Option(name = "--stdio", //
+				usage = "[lsp] uses stdin/stdout for communication instead of sockets", //
+				forbids = "--port", //
+				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+		@GoalRequirements(goals = N4jscGoal.lsp)
+		boolean stdio = false;
+
 		// ARGUMENTS
 
 		@Argument(metaVar = "GOAL", multiValued = false, index = 0, required = false, //
@@ -171,15 +180,15 @@ public class N4jscOptions {
 						+ "\n\t compile  Compiles with given options"
 						+ "\n\t clean    Cleans with given options"
 						+ "\n\t lsp      Starts LSP server"
-						+ "\n\t watch    Starts compiler daemon that watches the given folder(s)"
+						+ "\n\t watch    Starts compiler daemon that watches the given directory(s)"
 						+ "\n\t api      Generates API documentation from n4js files"
 						+ "\n\t", //
 				handler = N4jscGoalOptionHandler.class)
 		N4jscGoal goal = N4jscGoal.compile;
 
-		@Argument(metaVar = "FILE(s)", multiValued = true, index = 1, required = false, //
-				usage = "names of either n4js files or n4js project directories")
-		List<File> srcFiles = new ArrayList<>();
+		@Argument(metaVar = "DIR(s)", multiValued = true, index = 1, required = false, //
+				usage = "names of either n4js project directory(s)")
+		List<File> dirs = new ArrayList<>();
 	}
 
 	/** Internal data store of options */
@@ -212,7 +221,8 @@ public class N4jscOptions {
 
 	private void integrateEnvironment() {
 		// check for performance data collection system environment variable
-		if (options.performanceReport == null && System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null) {
+		Map<String, ParsedOption> opts = getDefinedOptions();
+		if (!opts.containsKey("--performanceReport") && System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null) {
 			String rawPath = System.getenv(N4JSC_PERFORMANCE_REPORT_ENV);
 			File performanceReportFile = new File(rawPath);
 			options.performanceReport = performanceReportFile;
@@ -229,9 +239,14 @@ public class N4jscOptions {
 			options.version = false;
 		}
 
-		options.srcFiles = options.srcFiles.stream().map(f -> {
+		options.dirs = options.dirs.stream().map(f -> {
 			try {
-				return f.getCanonicalFile();
+				File canonicalFile = f.getCanonicalFile();
+				if (N4JSGlobals.PACKAGE_JSON.equals(canonicalFile.getName())) {
+					return canonicalFile.getParentFile();
+				} else {
+					return canonicalFile;
+				}
 			} catch (IOException e) {
 				return null;
 			}
@@ -239,7 +254,7 @@ public class N4jscOptions {
 	}
 
 	/** @return list of all user defined options */
-	public List<N4JSCmdLineParser.ParsedOption> getDefinedOptions() {
+	public Map<String, N4JSCmdLineParser.ParsedOption> getDefinedOptions() {
 		return parser.definedOptions;
 	}
 
@@ -248,9 +263,9 @@ public class N4jscOptions {
 		return options.goal;
 	}
 
-	/** @return given source file(s) or project(s) */
-	public List<File> getSrcFiles() {
-		return options.srcFiles;
+	/** @return given project directory(s) */
+	public List<File> getDirs() {
+		return options.dirs;
 	}
 
 	/** @return true iff {@code --showSetup} */
@@ -318,6 +333,20 @@ public class N4jscOptions {
 		return options.port;
 	}
 
+	/** @return true iff {@code --stdio} */
+	public boolean isStdio() {
+		return options.stdio;
+	}
+
+	/** @return true iff either option {@code performanceKey} or {@code performanceReport} was given */
+	public boolean isDefinedPerformanceOption() {
+		Map<String, ParsedOption> opts = getDefinedOptions();
+		if (opts.containsKey("--performanceKey") || opts.containsKey("--performanceReport")) {
+			return true;
+		}
+		return false;
+	}
+
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */
 	public void printUsage(PrintStream out) {
 		out.println(N4jscOptions.USAGE);
@@ -338,22 +367,35 @@ public class N4jscOptions {
 		s += "\n  testOnly=" + options.testOnly;
 		s += "\n  noTests=" + options.noTests;
 		s += "\n  port=" + options.port;
-		s += "\n  srcFiles=" + options.srcFiles.stream().map(f -> f.getAbsolutePath()).reduce((a, b) -> a + ", " + b);
+		s += "\n  srcFiles=" + options.dirs.stream().map(f -> f.getAbsolutePath()).reduce((a, b) -> a + ", " + b);
 		s += "\n  Current execution directory=" + new File(".").getAbsolutePath();
 		return s;
+	}
+
+	/** @return array of the goal followed by all options followed by all directory arguments */
+	public List<String> toArgs() {
+		List<String> args = new ArrayList<>();
+		args.add(getGoal().name());
+		for (N4JSCmdLineParser.ParsedOption po : getDefinedOptions().values()) {
+			NamedOptionDef od = po.optionDef;
+			String value = po.givenValue;
+			args.add(od.name());
+			if (value != null) {
+				if (value.contains(" ")) {
+					value = "\"" + value + "\"";
+				}
+				args.add(value);
+			}
+		}
+		args.addAll(getDirs().stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList()));
+
+		return args;
 	}
 
 	/** @return the synthesized command line call string */
 	public String toCallString() {
 		String s = "java -jar n4jsc.jar";
-		s += " " + getGoal().name();
-		for (N4JSCmdLineParser.ParsedOption po : getDefinedOptions()) {
-			NamedOptionDef od = po.optionDef;
-			String value = po.givenValue;
-			s += " " + od.name();
-			s += value == null ? "" : " " + value;
-		}
-		s += " " + String.join(", ", getSrcFiles().stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList()));
+		s += " " + String.join(" ", toArgs());
 		return s;
 	}
 

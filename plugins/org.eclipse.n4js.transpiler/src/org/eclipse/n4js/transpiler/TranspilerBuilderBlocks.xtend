@@ -341,7 +341,15 @@ public class TranspilerBuilderBlocks
 	public static def Expression _AND(Iterable<Expression> operands) {
 		return operands.reduce[op1, op2 | _AND(op1, op2) ];
 	}
-	
+
+	public static def _Void0() {
+		return _Void(_NumericLiteral(0));
+	}
+
+	public static def _Void(Expression expr) {
+		return _UnaryExpr(UnaryOperator.VOID, expr);
+	}
+
 	public static def UnaryExpression _UnaryExpr(UnaryOperator op, Expression expr) {
 		val result = N4JSFactory.eINSTANCE.createUnaryExpression;
 		result.op = op;

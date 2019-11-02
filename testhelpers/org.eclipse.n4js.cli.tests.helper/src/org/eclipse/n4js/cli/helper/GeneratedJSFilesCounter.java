@@ -27,7 +27,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 
 /**
- *
+ * Counts all js files of all (sub-)directories starting at a given root folder.
  */
 public class GeneratedJSFilesCounter {
 
@@ -40,7 +40,7 @@ public class GeneratedJSFilesCounter {
 	 *            the directory to recursively search
 	 * @return the number of files ending in .js
 	 */
-	static public TreeMap<Path, HashSet<File>> getTranspiledFiles(final Path workspaceRoot) throws IOException {
+	static public TreeMap<Path, HashSet<File>> getTranspiledFiles(final Path workspaceRoot) {
 		final File gitRoot = new File(new File("").getAbsolutePath()).getParentFile().getParentFile();
 		final File n4jsLibrariesRoot = new File(gitRoot, N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
 		final Collection<String> n4jsLibraryNames = new HashSet<>(Arrays.asList(n4jsLibrariesRoot.list()));
@@ -48,51 +48,56 @@ public class GeneratedJSFilesCounter {
 		final AtomicReference<TreeMap<Path, HashSet<File>>> genFilesRef = new AtomicReference<>();
 		genFilesRef.set(new TreeMap<>());
 
-		Files.walkFileTree(workspaceRoot, new FileVisitor<Path>() {
+		try {
+			Files.walkFileTree(workspaceRoot, new FileVisitor<Path>() {
 
-			@Override
-			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				@Override
+				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 
-				// skip src
-				if (N4JSLanguageConstants.DEFAULT_PROJECT_SRC.equals(dir.getFileName().toString())) {
-					return FileVisitResult.SKIP_SUBTREE;
-				}
-
-				if (n4jsLibraryNames.contains(dir.toFile().getName())) {
-					return FileVisitResult.SKIP_SUBTREE;
-				}
-
-				return FileVisitResult.CONTINUE;
-			}
-
-			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				if (file.getFileName().toString().endsWith(".js")) {
-					TreeMap<Path, HashSet<File>> fileMap = genFilesRef.get();
-					Path directory = file.getParent();
-					if (!fileMap.containsKey(directory)) {
-						fileMap.put(directory, new HashSet<>());
+					// skip src
+					if (N4JSLanguageConstants.DEFAULT_PROJECT_SRC.equals(dir.getFileName().toString())) {
+						return FileVisitResult.SKIP_SUBTREE;
 					}
 
-					Path relativeFile = workspaceRoot.relativize(file);
-					fileMap.get(directory).add(relativeFile.toFile());
+					if (n4jsLibraryNames.contains(dir.toFile().getName())) {
+						return FileVisitResult.SKIP_SUBTREE;
+					}
+
 					return FileVisitResult.CONTINUE;
 				}
-				return FileVisitResult.CONTINUE;
-			}
 
-			@Override
-			public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-				return FileVisitResult.CONTINUE;
-			}
+				@Override
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+					if (file.getFileName().toString().endsWith(".js")) {
+						TreeMap<Path, HashSet<File>> fileMap = genFilesRef.get();
+						Path directory = file.getParent();
+						if (!fileMap.containsKey(directory)) {
+							fileMap.put(directory, new HashSet<>());
+						}
 
-			@Override
-			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-				if (N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT.equals(dir.getFileName().toString()))
-					return FileVisitResult.SKIP_SIBLINGS;
-				return FileVisitResult.CONTINUE;
-			}
-		});
+						Path relativeFile = workspaceRoot.relativize(file);
+						fileMap.get(directory).add(relativeFile.toFile());
+						return FileVisitResult.CONTINUE;
+					}
+					return FileVisitResult.CONTINUE;
+				}
+
+				@Override
+				public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+					return FileVisitResult.CONTINUE;
+				}
+
+				@Override
+				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+					if (N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT.equals(dir.getFileName().toString()))
+						return FileVisitResult.SKIP_SIBLINGS;
+					return FileVisitResult.CONTINUE;
+				}
+			});
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		return genFilesRef.get();
 	}

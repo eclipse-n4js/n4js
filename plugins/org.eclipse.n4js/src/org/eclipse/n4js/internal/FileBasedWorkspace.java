@@ -73,6 +73,14 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 		nameToLocation.putIfAbsent(location.getProjectName(), location);
 	}
 
+	public void registerProject(FileURI location, ProjectDescription resolvedDescription) {
+		if (!projectElementHandles.containsKey(location)) {
+			LazyProjectDescriptionHandle lazyDescriptionHandle = createDescriptionHandle(location, resolvedDescription);
+			projectElementHandles.put(location, lazyDescriptionHandle);
+		}
+		nameToLocation.putIfAbsent(location.getProjectName(), location);
+	}
+
 	@Override
 	public FileURI getProjectLocation(N4JSProjectName name) {
 		return nameToLocation.get(name);
@@ -87,6 +95,10 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 
 	protected LazyProjectDescriptionHandle createLazyDescriptionHandle(FileURI location) {
 		return new LazyProjectDescriptionHandle(location, projectDescriptionLoader);
+	}
+
+	protected LazyProjectDescriptionHandle createDescriptionHandle(FileURI location, ProjectDescription description) {
+		return new LazyProjectDescriptionHandle(location, description);
 	}
 
 	@Override

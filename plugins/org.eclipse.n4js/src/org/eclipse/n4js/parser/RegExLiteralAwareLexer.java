@@ -13,7 +13,6 @@ package org.eclipse.n4js.parser;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.Token;
-
 import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
 
 /**
@@ -81,7 +80,7 @@ public class RegExLiteralAwareLexer extends InternalN4JSLexer {
 			case CharStream.EOF:
 				inRegularExpression = false;
 				return Token.EOF_TOKEN;
-				// line break
+			// line break
 			case 0x000A:
 			case 0x000D:
 			case 0x2028:
@@ -128,6 +127,23 @@ public class RegExLiteralAwareLexer extends InternalN4JSLexer {
 				throw new RuntimeException("Unexpected recognition problem for\n" + input, re);
 			}
 		} else {
+			// check for a sequence `?.[digit]` which must not yield `?.`. `[digit]` but `?` `.[digit]`
+			if (input.LA(1) == '?' && input.LA(2) == '.') {
+				int propablyDigit = input.LA(3);
+				if (propablyDigit >= '0' && propablyDigit <= '9') {
+					try {
+						clearAndResetTokenState();
+						mQuestionMark();
+						if (this.state.token == null) {
+							emit();
+						}
+						return this.state.token;
+					} catch (RecognitionException re) {
+						// this is basically impossible since the regex tail consumes any char except for line breaks
+						throw new RuntimeException("Unexpected recognition problem for\n" + input, re);
+					}
+				}
+			}
 			return super.nextToken();
 		}
 	}

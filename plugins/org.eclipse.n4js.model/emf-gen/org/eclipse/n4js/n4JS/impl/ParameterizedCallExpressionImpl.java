@@ -14,15 +14,12 @@ import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -45,13 +42,12 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ParameterizedCallExpressionImpl#getTypeArgs <em>Type Args</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ParameterizedCallExpressionImpl#getTarget <em>Target</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ParameterizedCallExpressionImpl#getArguments <em>Arguments</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ParameterizedCallExpressionImpl extends ExpressionImpl implements ParameterizedCallExpression {
+public class ParameterizedCallExpressionImpl extends ExpressionWithTargetImpl implements ParameterizedCallExpression {
 	/**
 	 * The cached value of the '{@link #getTypeArgs() <em>Type Args</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -61,16 +57,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 	 * @ordered
 	 */
 	protected EList<TypeRef> typeArgs;
-
-	/**
-	 * The cached value of the '{@link #getTarget() <em>Target</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTarget()
-	 * @generated
-	 * @ordered
-	 */
-	protected Expression target;
 
 	/**
 	 * The cached value of the '{@link #getArguments() <em>Arguments</em>}' containment reference list.
@@ -112,51 +98,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 			typeArgs = new EObjectContainmentEList<TypeRef>(TypeRef.class, this, N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TYPE_ARGS);
 		}
 		return typeArgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Expression getTarget() {
-		return target;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetTarget(Expression newTarget, NotificationChain msgs) {
-		Expression oldTarget = target;
-		target = newTarget;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TARGET, oldTarget, newTarget);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setTarget(Expression newTarget) {
-		if (newTarget != target) {
-			NotificationChain msgs = null;
-			if (target != null)
-				msgs = ((InternalEObject)target).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TARGET, null, msgs);
-			if (newTarget != null)
-				msgs = ((InternalEObject)newTarget).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TARGET, null, msgs);
-			msgs = basicSetTarget(newTarget, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TARGET, newTarget, newTarget));
 	}
 
 	/**
@@ -212,8 +153,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 		switch (featureID) {
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TYPE_ARGS:
 				return ((InternalEList<?>)getTypeArgs()).basicRemove(otherEnd, msgs);
-			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TARGET:
-				return basicSetTarget(null, msgs);
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS:
 				return ((InternalEList<?>)getArguments()).basicRemove(otherEnd, msgs);
 		}
@@ -230,8 +169,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 		switch (featureID) {
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TYPE_ARGS:
 				return getTypeArgs();
-			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TARGET:
-				return getTarget();
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS:
 				return getArguments();
 		}
@@ -250,9 +187,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TYPE_ARGS:
 				getTypeArgs().clear();
 				getTypeArgs().addAll((Collection<? extends TypeRef>)newValue);
-				return;
-			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TARGET:
-				setTarget((Expression)newValue);
 				return;
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS:
 				getArguments().clear();
@@ -273,9 +207,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TYPE_ARGS:
 				getTypeArgs().clear();
 				return;
-			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TARGET:
-				setTarget((Expression)null);
-				return;
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS:
 				getArguments().clear();
 				return;
@@ -293,8 +224,6 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 		switch (featureID) {
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TYPE_ARGS:
 				return typeArgs != null && !typeArgs.isEmpty();
-			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TARGET:
-				return target != null;
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS:
 				return arguments != null && !arguments.isEmpty();
 		}

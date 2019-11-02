@@ -7,10 +7,12 @@ import org.eclipse.xtext.conversion.ValueConverter;
 import org.eclipse.xtext.conversion.impl.AbstractDeclarativeValueConverterService;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * A value converter service specific to JSON literals.
  */
+@Singleton
 public class JSONValueConverterService extends AbstractDeclarativeValueConverterService {
 
 	@Inject

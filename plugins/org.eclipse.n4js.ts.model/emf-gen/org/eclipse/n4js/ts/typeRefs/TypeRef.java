@@ -108,6 +108,17 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 *  Tells whether the receiving type reference is an {@link UnknownTypeRef}.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isUnknown();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * Convenience method, flag indicating whether user can add properties to the instance not defined in the type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"

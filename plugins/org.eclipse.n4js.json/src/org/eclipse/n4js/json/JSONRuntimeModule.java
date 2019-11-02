@@ -11,6 +11,7 @@
 package org.eclipse.n4js.json;
 
 import org.eclipse.n4js.json.conversion.JSONValueConverterService;
+import org.eclipse.n4js.json.generator.NeverGenerate;
 import org.eclipse.n4js.json.naming.JSONQualifiedNameProvider;
 import org.eclipse.n4js.json.parser.JSONHiddenTokenHelper;
 import org.eclipse.n4js.json.resource.JSONResourceDescriptionManager;
@@ -19,6 +20,7 @@ import org.eclipse.n4js.json.validation.JSONIssueCodes;
 import org.eclipse.n4js.json.validation.JSONIssueSeveritiesProvider;
 import org.eclipse.n4js.xtext.serializer.SerializerPatchModule;
 import org.eclipse.xtext.conversion.IValueConverterService;
+import org.eclipse.xtext.generator.IShouldGenerate;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.parsetree.reconstr.IHiddenTokenHelper;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
@@ -66,5 +68,10 @@ public class JSONRuntimeModule extends AbstractJSONRuntimeModule {
 	/** Avoid races in internal serializer caches */
 	public void configureSerializerPatches(Binder binder) {
 		new SerializerPatchModule().configure(binder);
+	}
+
+	/** Never generate something from .json files */
+	public Class<? extends IShouldGenerate> bindIShouldGenerate() {
+		return NeverGenerate.class;
 	}
 }

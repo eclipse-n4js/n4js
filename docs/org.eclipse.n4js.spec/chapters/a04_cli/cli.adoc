@@ -1,0 +1,91 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= CLI
+:find:
+
+
+The headless tool provides goals for a variety of use cases.
+Compiling a given project is the most obvious use case.
+Other use cases are cleaning a given project or generating the api documentation.
+Moreover, the headless tool provides LSP-Server functionality and can be used as an
+incremental builder daemon that listens to file system events. 
+
+
+
+[[sec:Headless_Compiler]]
+[.language-bash]
+== Command Line Call
+
+The headless compiler `n4jsc.jar` is invoked via
+
+[source,bash]
+----
+java -jar n4jsc.jar [GOAL] [DIR(s)] [OPTION(s)]
+----
+
+Calling `java -jar n4jsc.jar --help` will print out all available goals and options.
+
+
+
+=== Argument GOAL
+
+The headless compiler provides the following goals which are executed on all given n4js projects:
+compile (implicit goal)::
+   Compiles all n4js files
+   
+clean::
+   Cleans all output folders
+
+lsp::
+   Starts an lsp server
+
+api::
+   Generates api documentation
+
+watch::
+   Starts a compile daemon that watches the file system
+
+
+If the call of `n4jsc` omits a goal, the implicit goal `compile` is used.
+
+
+=== Argument DIR(s)
+
+The goal is executed on a set of given projects.
+The set is determined by the `DIR(s)` argument, which used to find all relevant n4js projects.
+
+
+=== Finding projects
+
+For every given directory by the `DIR` argument, the following approach is used to determine the set of all projects.
+The approach considers both npm and yarn project file structures.
+
+Firstly, a set of all projects and secondly the set of all their dependencies is determined.
+The set of all project is determined as follows:
+* Step 1 - Find npm projects:
+** check the given directory is a project (ie. contains a package.json)
+** if so, go to step 2
+** if not, go from the given directory to the parent directory until it is a project:
+*** if so, to to step 2
+*** if no project could be found: End without any project
+
+* Step 2 - Find yarn projects:
+** If the given project is a yarn workspace project, add all projects referenced in property `workspace`
+** go to step 3 
+
+* Step 3 - Find dependencies:
+** For all projects: Add projects in node_module folders
+
+
+
+
+

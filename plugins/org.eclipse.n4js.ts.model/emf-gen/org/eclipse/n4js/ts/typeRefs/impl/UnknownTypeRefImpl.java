@@ -54,6 +54,16 @@ public class UnknownTypeRefImpl extends TypeRefImpl implements UnknownTypeRef {
 	 * @generated
 	 */
 	@Override
+	public boolean isUnknown() {
+		return true;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String getTypeRefAsString() {
 		return "[unknown]";
 	}
@@ -73,6 +83,7 @@ public class UnknownTypeRefImpl extends TypeRefImpl implements UnknownTypeRef {
 		}
 		if (baseClass == TypeRef.class) {
 			switch (baseOperationID) {
+				case TypeRefsPackage.TYPE_REF___IS_UNKNOWN: return TypeRefsPackage.UNKNOWN_TYPE_REF___IS_UNKNOWN;
 				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
@@ -88,6 +99,8 @@ public class UnknownTypeRefImpl extends TypeRefImpl implements UnknownTypeRef {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypeRefsPackage.UNKNOWN_TYPE_REF___IS_UNKNOWN:
+				return isUnknown();
 			case TypeRefsPackage.UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING:
 				return getTypeRefAsString();
 		}

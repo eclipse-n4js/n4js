@@ -11,6 +11,7 @@
 package org.eclipse.n4js.cli.helper;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
@@ -26,16 +27,20 @@ public class SystemOutRedirecter {
 	private ByteArrayOutputStream redirectErr;
 
 	/** Sets up the System outputs and Security Manager */
-	final public void setRedirections() {
+	@SuppressWarnings("resource")
+	final public void set(boolean mirrorOnSystemOut) {
 		oldSystemOut = System.out;
 		oldSystemErr = System.err;
 
 		redirectOut = new ByteArrayOutputStream();
 		redirectErr = new ByteArrayOutputStream();
 
+		PrintStream mirrorOut = mirrorOnSystemOut ? oldSystemOut : null;
+		PrintStream mirrorErr = mirrorOnSystemOut ? oldSystemErr : null;
+
 		try {
-			PrintStream psOut = new PrintStream(redirectOut, true, "UTF-8");
-			PrintStream psErr = new PrintStream(redirectErr, true, "UTF-8");
+			PrintStream psOut = new DualStream(redirectOut, true, "UTF-8", mirrorOut);
+			PrintStream psErr = new DualStream(redirectErr, true, "UTF-8", mirrorErr);
 			System.setOut(psOut);
 			System.setErr(psErr);
 		} catch (UnsupportedEncodingException e) {
@@ -44,9 +49,11 @@ public class SystemOutRedirecter {
 	}
 
 	/** Restores everything. */
-	final public void unsetRedirections() {
+	final public void unset() {
 		System.out.flush();
 		System.err.flush();
+		System.out.close();
+		System.err.close();
 		System.setOut(oldSystemOut);
 		System.setErr(oldSystemErr);
 	}
@@ -55,7 +62,7 @@ public class SystemOutRedirecter {
 	public String getSystemOut() {
 		try {
 			System.out.flush();
-			String output = redirectOut.toString("UTF-8");
+			String output = redirectOut == null ? "" : redirectOut.toString("UTF-8");
 			return output;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -67,7 +74,7 @@ public class SystemOutRedirecter {
 	public String getSystemErr() {
 		try {
 			System.err.flush();
-			String output = redirectErr.toString("UTF-8");
+			String output = redirectErr == null ? "" : redirectErr.toString("UTF-8");
 			return output;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -75,4 +82,30 @@ public class SystemOutRedirecter {
 		}
 	}
 
+	static class DualStream extends PrintStream {
+		private final PrintStream out2;
+
+		public DualStream(OutputStream out, boolean autoFlush, String encoding, PrintStream out2)
+				throws UnsupportedEncodingException {
+
+			super(out, autoFlush, encoding);
+			this.out2 = out2;
+		}
+
+		@Override
+		public void println(String x) {
+			super.println(x);
+			if (out2 != null) {
+				out2.println(x);
+			}
+		}
+
+		@Override
+		public void print(String x) {
+			super.print(x);
+			if (out2 != null) {
+				out2.print(x);
+			}
+		}
+	}
 }

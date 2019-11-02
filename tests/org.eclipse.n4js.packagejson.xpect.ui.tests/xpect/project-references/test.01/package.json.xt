@@ -47,7 +47,7 @@
  */
 // XPECT nowarnings -->
 {
-	// XPECT errors --> "The project configuration contains a dependency cycle of projects [test.01] -> [test.01]." at ""test.01""
+	// TODO: GH-1500 XPECT FIXME errors --> "The project configuration contains a dependency cycle of projects [test.01] -> [test.01]." at ""test.01""
 	"name": "test.01",
 	"version": "0.0.1",
 	"dependencies": {

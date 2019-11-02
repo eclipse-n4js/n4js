@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.binaries.Binary;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileCopier;
@@ -273,7 +274,7 @@ public class N4CliHelper {
 		// include user-provided environment variables
 		pb.environment().putAll(environment);
 		pb.directory(new File(workingDir));
-		EnvironmentVariableUtils.inheritNodeJsPathEnvVariableUtils(pb);
+		Binary.inheritNodeJsPathEnvVariable(pb.environment());
 
 		pb.redirectErrorStream(true);
 		pb.redirectOutput(Redirect.to(log));
@@ -291,6 +292,21 @@ public class N4CliHelper {
 		System.out.println("===== <= Content of external Process-output below (@see: " + outputLogFile + ") => =====");
 		String output = readLogfile(outputLogFile);
 		System.out.println(output);
+	}
+
+	/**
+	 * see {@link #setupWorkspace(Path, Path, Predicate, boolean)}.
+	 * <p>
+	 * Parameter {@code createYarnWorkspace} is inferred from number of directories in {@code sourceLocation}
+	 */
+	public static void setupWorkspace(Path sourceLocation, Path destinationLocation,
+			Predicate<N4JSProjectName> n4jsLibrariesPredicate) throws IOException {
+
+		List<Path> fixtureSubFolders = Files.list(sourceLocation).filter(p -> Files.isDirectory(p))
+				.collect(Collectors.toList());
+
+		boolean needYarnWorkspace = fixtureSubFolders.size() > 1;
+		setupWorkspace(sourceLocation, destinationLocation, n4jsLibrariesPredicate, needYarnWorkspace);
 	}
 
 	/**
