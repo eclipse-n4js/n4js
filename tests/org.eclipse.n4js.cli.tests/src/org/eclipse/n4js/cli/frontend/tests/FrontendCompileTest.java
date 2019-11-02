@@ -10,25 +10,28 @@
  */
 package org.eclipse.n4js.cli.frontend.tests;
 
+import static org.eclipse.n4js.smith.N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.eclipse.n4js.cli.helper.CliResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.junit.Test;
 
 /** Front end tests for the CLI interface */
 public class FrontendCompileTest extends AbstractCliFrontendTest {
 	private static final String FILE_TC = "file.tc";
+	private static final String REPORT_FILE_NAME = "report.csv";
+	private static final File REPORT_FILE = new File(REPORT_FILE_NAME);
 
 	/**  */
 	@Test
 	public void testNoArgsImplicitGoal() {
 		String args[] = {};
-		CliResult result = main(args, 12);
+		CliCompileResult result = n4jsc(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid file(s)):  n4js file(s) or project(s) missing",
+				"ERROR-12 (Invalid dir(s)):  n4js directory(s) missing",
 				result.getStdOut());
 	}
 
@@ -36,29 +39,29 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void testNoArgs() {
 		String args[] = { "compile" };
-		CliResult result = main(args, 12);
+		CliCompileResult result = n4jsc(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid file(s)):  n4js file(s) or project(s) missing",
+				"ERROR-12 (Invalid dir(s)):  n4js directory(s) missing",
 				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testArgsFileImplicitGoal() {
-		String args[] = { "compile", "test.n4js" };
-		CliResult result = main(args, 12);
+		String args[] = { "compile", "test" };
+		CliCompileResult result = n4jsc(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid file(s)):  file(s) do not exist: /test.n4js",
+				"ERROR-12 (Invalid dir(s)):  directory(s) do not exist: .../test",
 				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testArgsFile() {
-		String args[] = { "test.n4js" };
-		CliResult result = main(args, 12);
+		String args[] = { "test" };
+		CliCompileResult result = n4jsc(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid file(s)):  file(s) do not exist: /test.n4js",
+				"ERROR-12 (Invalid dir(s)):  directory(s) do not exist: .../test",
 				result.getStdOut());
 	}
 
@@ -66,7 +69,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void testArgsCurDirImplicitGoal() {
 		String args[] = { "." };
-		CliResult result = main(args);
+		CliCompileResult result = n4jsc(args);
 		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
@@ -74,15 +77,92 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void testArgsCurDir() {
 		String args[] = { "compile", "." };
-		CliResult result = main(args);
+		CliCompileResult result = n4jsc(args);
 		assertEquals(result.toString(), "", result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceReportGiven() {
+		if (REPORT_FILE.exists()) {
+			REPORT_FILE.delete();
+		}
+
+		String args[] = { "compile", "--performanceReport", REPORT_FILE_NAME };
+		CliCompileResult result = n4jsc(args, 10);
+		assertEquals(result.toString(),
+				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pR)\" requires the option(s) [--performanceKey]",
+				result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceReportGivenPerformanceKeyGiven() {
+		if (REPORT_FILE.exists()) {
+			REPORT_FILE.delete();
+		}
+
+		String args[] = { "compile", ".", "--performanceReport", REPORT_FILE_NAME, "--performanceKey",
+				N4JS_CLI_COLLECTOR_NAME };
+
+		CliCompileResult result = n4jsc(args, 0);
+		assertEquals(result.toString(),
+				"Performance Data Collection is enabled.\nWriting performance report: .../report.csv",
+				result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceReportGivenPerformanceKeyMissing() {
+		if (REPORT_FILE.exists()) {
+			REPORT_FILE.delete();
+		}
+
+		String args[] = { "compile", ".", "--performanceReport", REPORT_FILE_NAME, "--performanceKey", "" };
+		CliCompileResult result = n4jsc(args, 13);
+		assertEquals(result.toString(),
+				"ERROR-13 (Invalid option):  Missing performance key.",
+				result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceReportMissing() {
+		String args[] = { "compile", "--performanceReport", " " };
+		CliCompileResult result = n4jsc(args, 10);
+		assertEquals(result.toString(),
+				"ERROR-10 (Invalid command line string):  option \"--performanceReport (-pR)\" requires the option(s) [--performanceKey]",
+				result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceKeyGiven() {
+		File reportFile = new File("performance-report.csv");
+		if (reportFile.exists()) {
+			reportFile.delete();
+		}
+
+		String args[] = { "compile", ".", "--performanceKey", N4JS_CLI_COLLECTOR_NAME };
+		CliCompileResult result = n4jsc(args, 0);
+		assertEquals(result.toString(),
+				"Performance Data Collection is enabled.\nWriting performance report: .../performance-report.csv",
+				result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void checkPerformanceKeyMissing() {
+		String args[] = { "compile", ".", "--performanceKey", "" };
+		CliCompileResult result = n4jsc(args, 13);
+		assertEquals(result.toString(), "ERROR-13 (Invalid option):  Missing performance key.", result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void checkNoTestsOk() {
 		String args[] = { ".", "--noTests" };
-		CliResult result = main(args);
+		CliCompileResult result = n4jsc(args);
 		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
@@ -90,7 +170,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkNoTestsWrongGoal() {
 		String args[] = { "lsp", ".", "--noTests" };
-		CliResult result = main(args, 13);
+		CliCompileResult result = n4jsc(args, 13);
 		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Given option --noTests requires goal(s) compile, but goal lsp was given.",
 				result.getStdOut());
@@ -100,7 +180,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkTestOnlyOk() {
 		String args[] = { ".", "--testOnly" };
-		CliResult result = main(args);
+		CliCompileResult result = n4jsc(args);
 		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
@@ -108,7 +188,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkTestOnlyWrongGoal() {
 		String args[] = { "lsp", ".", "--testOnly" };
-		CliResult result = main(args, 13);
+		CliCompileResult result = n4jsc(args, 13);
 		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Given option --testOnly requires goal(s) compile, but goal lsp was given.",
 				result.getStdOut());
@@ -118,7 +198,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkTestOnlyPlusNoTests() {
 		String args[] = { ".", "--testOnly", "--noTests" };
-		CliResult result = main(args, 10);
+		CliCompileResult result = n4jsc(args, 10);
 
 		String stdOut = result.getStdOut();
 		assertTrue(stdOut.startsWith("ERROR-10 (Invalid command line string):  option"));
@@ -129,7 +209,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkMaxErrsOk() {
 		String args[] = { ".", "--maxErrs", "1" };
-		CliResult result = main(args);
+		CliCompileResult result = n4jsc(args);
 		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
@@ -137,7 +217,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkMaxErrsMissingOp() {
 		String args[] = { ".", "--maxErrs" };
-		CliResult result = main(args, 10);
+		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
 				"ERROR-10 (Invalid command line string):  Option \"--maxErrs\" takes an operand",
 				result.getStdOut());
@@ -147,7 +227,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkMaxErrsWrongGoal() {
 		String args[] = { "lsp", ".", "--maxErrs", "1" };
-		CliResult result = main(args, 13);
+		CliCompileResult result = n4jsc(args, 13);
 		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Given option --maxErrs requires goal(s) compile, but goal lsp was given.",
 				result.getStdOut());
@@ -157,7 +237,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkMaxWarnsOk() {
 		String args[] = { ".", "--maxErrs", "1" };
-		CliResult result = main(args);
+		CliCompileResult result = n4jsc(args);
 		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
@@ -165,7 +245,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkMaxWarnsMissingOp() {
 		String args[] = { ".", "--maxWarns" };
-		CliResult result = main(args, 10);
+		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
 				"ERROR-10 (Invalid command line string):  Option \"--maxWarns\" takes an operand",
 				result.getStdOut());
@@ -175,7 +255,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkMaxWarnsWrongGoal() {
 		String args[] = { "lsp", ".", "--maxWarns", "1" };
-		CliResult result = main(args, 13);
+		CliCompileResult result = n4jsc(args, 13);
 		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Given option --maxWarns requires goal(s) compile, but goal lsp was given.",
 				result.getStdOut());
@@ -185,7 +265,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkCleanOk() {
 		String args[] = { ".", "--clean" };
-		CliResult result = main(args);
+		CliCompileResult result = n4jsc(args);
 		assertEquals(result.toString(), "", result.getStdOut());
 	}
 
@@ -193,7 +273,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkCleanWrongGoal() {
 		String args[] = { "lsp", ".", "--clean" };
-		CliResult result = main(args, 13);
+		CliCompileResult result = n4jsc(args, 13);
 		assertEquals(result.toString(),
 				"ERROR-13 (Invalid option):  Given option --clean requires goal(s) compile, but goal lsp was given.",
 				result.getStdOut());
@@ -204,7 +284,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkTestCatalogOk() {
 		try {
 			String args[] = { ".", "--testCatalog", FILE_TC };
-			CliResult result = main(args);
+			CliCompileResult result = n4jsc(args);
 			assertEquals(result.toString(), "", result.getStdOut());
 
 		} finally {
@@ -217,7 +297,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkTestCatalogMissingOp() {
 		try {
 			String args[] = { ".", "--testCatalog" };
-			CliResult result = main(args, 10);
+			CliCompileResult result = n4jsc(args, 10);
 			assertEquals(result.toString(),
 					"ERROR-10 (Invalid command line string):  Option \"--testCatalog (-tc)\" takes an operand",
 					result.getStdOut());
@@ -232,7 +312,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkTestCatalogWrongGoal() {
 		try {
 			String args[] = { "lsp", ".", "--testCatalog", FILE_TC };
-			CliResult result = main(args, 13);
+			CliCompileResult result = n4jsc(args, 13);
 			assertEquals(result.toString(),
 					"ERROR-13 (Invalid option):  Given option --testCatalog requires goal(s) compile, but goal lsp was given.",
 					result.getStdOut());

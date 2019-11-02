@@ -61,6 +61,7 @@ import org.eclipse.n4js.n4JS.CaseClause;
 import org.eclipse.n4js.n4JS.CastExpression;
 import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.CatchVariable;
+import org.eclipse.n4js.n4JS.CoalesceExpression;
 import org.eclipse.n4js.n4JS.CommaExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ContinueStatement;
@@ -82,6 +83,7 @@ import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
+import org.eclipse.n4js.n4JS.ExpressionWithTarget;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.ForStatement;
@@ -911,6 +913,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass expressionWithTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass parameterizedCallExpressionEClass = null;
 
 	/**
@@ -1157,6 +1166,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass binaryLogicalExpressionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass coalesceExpressionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -4657,6 +4673,46 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getExpressionWithTarget() {
+		return expressionWithTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getExpressionWithTarget_Target() {
+		return (EReference)expressionWithTargetEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getExpressionWithTarget_OptionalChaining() {
+		return (EAttribute)expressionWithTargetEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getExpressionWithTarget__IsOrHasTargetWithOptionalChaining() {
+		return expressionWithTargetEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getParameterizedCallExpression() {
 		return parameterizedCallExpressionEClass;
 	}
@@ -4667,18 +4723,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getParameterizedCallExpression_Target() {
-		return (EReference)parameterizedCallExpressionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getParameterizedCallExpression_Arguments() {
-		return (EReference)parameterizedCallExpressionEClass.getEStructuralFeatures().get(1);
+		return (EReference)parameterizedCallExpressionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -4767,18 +4813,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getIndexedAccessExpression_Target() {
-		return (EReference)indexedAccessExpressionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getIndexedAccessExpression_Index() {
-		return (EReference)indexedAccessExpressionEClass.getEStructuralFeatures().get(1);
+		return (EReference)indexedAccessExpressionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -4807,18 +4843,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTaggedTemplateString_Target() {
-		return (EReference)taggedTemplateStringEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getTaggedTemplateString_Template() {
-		return (EReference)taggedTemplateStringEClass.getEStructuralFeatures().get(1);
+		return (EReference)taggedTemplateStringEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -4857,7 +4883,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getParameterizedPropertyAccessExpression_Target() {
+	public EReference getParameterizedPropertyAccessExpression_Property() {
 		return (EReference)parameterizedPropertyAccessExpressionEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -4867,18 +4893,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getParameterizedPropertyAccessExpression_Property() {
-		return (EReference)parameterizedPropertyAccessExpressionEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getParameterizedPropertyAccessExpression_PropertyAsText() {
-		return (EAttribute)parameterizedPropertyAccessExpressionEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)parameterizedPropertyAccessExpressionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -5699,6 +5715,36 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EReference getBinaryLogicalExpression_Rhs() {
 		return (EReference)binaryLogicalExpressionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getCoalesceExpression() {
+		return coalesceExpressionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getCoalesceExpression_Expression() {
+		return (EReference)coalesceExpressionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getCoalesceExpression_DefaultExpression() {
+		return (EReference)coalesceExpressionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -7757,8 +7803,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(parameterizedAccessEClass, PARAMETERIZED_ACCESS__TYPE_ARGS);
 		createEOperation(parameterizedAccessEClass, PARAMETERIZED_ACCESS___IS_PARAMETERIZED);
 
+		expressionWithTargetEClass = createEClass(EXPRESSION_WITH_TARGET);
+		createEReference(expressionWithTargetEClass, EXPRESSION_WITH_TARGET__TARGET);
+		createEAttribute(expressionWithTargetEClass, EXPRESSION_WITH_TARGET__OPTIONAL_CHAINING);
+		createEOperation(expressionWithTargetEClass, EXPRESSION_WITH_TARGET___IS_OR_HAS_TARGET_WITH_OPTIONAL_CHAINING);
+
 		parameterizedCallExpressionEClass = createEClass(PARAMETERIZED_CALL_EXPRESSION);
-		createEReference(parameterizedCallExpressionEClass, PARAMETERIZED_CALL_EXPRESSION__TARGET);
 		createEReference(parameterizedCallExpressionEClass, PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS);
 		createEOperation(parameterizedCallExpressionEClass, PARAMETERIZED_CALL_EXPRESSION___GET_RECEIVER);
 
@@ -7771,19 +7821,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(argumentEClass, ARGUMENT__EXPRESSION);
 
 		indexedAccessExpressionEClass = createEClass(INDEXED_ACCESS_EXPRESSION);
-		createEReference(indexedAccessExpressionEClass, INDEXED_ACCESS_EXPRESSION__TARGET);
 		createEReference(indexedAccessExpressionEClass, INDEXED_ACCESS_EXPRESSION__INDEX);
 		createEOperation(indexedAccessExpressionEClass, INDEXED_ACCESS_EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET);
 
 		taggedTemplateStringEClass = createEClass(TAGGED_TEMPLATE_STRING);
-		createEReference(taggedTemplateStringEClass, TAGGED_TEMPLATE_STRING__TARGET);
 		createEReference(taggedTemplateStringEClass, TAGGED_TEMPLATE_STRING__TEMPLATE);
 
 		memberAccessEClass = createEClass(MEMBER_ACCESS);
 		createEReference(memberAccessEClass, MEMBER_ACCESS__COMPOSED_MEMBER_CACHE);
 
 		parameterizedPropertyAccessExpressionEClass = createEClass(PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION);
-		createEReference(parameterizedPropertyAccessExpressionEClass, PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET);
 		createEReference(parameterizedPropertyAccessExpressionEClass, PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY);
 		createEAttribute(parameterizedPropertyAccessExpressionEClass, PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY_AS_TEXT);
 		createEOperation(parameterizedPropertyAccessExpressionEClass, PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET);
@@ -7897,6 +7944,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(binaryLogicalExpressionEClass, BINARY_LOGICAL_EXPRESSION__LHS);
 		createEAttribute(binaryLogicalExpressionEClass, BINARY_LOGICAL_EXPRESSION__OP);
 		createEReference(binaryLogicalExpressionEClass, BINARY_LOGICAL_EXPRESSION__RHS);
+
+		coalesceExpressionEClass = createEClass(COALESCE_EXPRESSION);
+		createEReference(coalesceExpressionEClass, COALESCE_EXPRESSION__EXPRESSION);
+		createEReference(coalesceExpressionEClass, COALESCE_EXPRESSION__DEFAULT_EXPRESSION);
 
 		conditionalExpressionEClass = createEClass(CONDITIONAL_EXPRESSION);
 		createEReference(conditionalExpressionEClass, CONDITIONAL_EXPRESSION__EXPRESSION);
@@ -8282,14 +8333,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		newTargetEClass.getESuperTypes().add(this.getExpression());
 		newExpressionEClass.getESuperTypes().add(this.getExpression());
 		newExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
-		parameterizedCallExpressionEClass.getESuperTypes().add(this.getExpression());
+		expressionWithTargetEClass.getESuperTypes().add(this.getExpression());
+		parameterizedCallExpressionEClass.getESuperTypes().add(this.getExpressionWithTarget());
 		parameterizedCallExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
 		importCallExpressionEClass.getESuperTypes().add(this.getExpression());
 		argumentEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
-		indexedAccessExpressionEClass.getESuperTypes().add(this.getExpression());
+		indexedAccessExpressionEClass.getESuperTypes().add(this.getExpressionWithTarget());
 		indexedAccessExpressionEClass.getESuperTypes().add(this.getMemberAccess());
-		taggedTemplateStringEClass.getESuperTypes().add(this.getExpression());
-		parameterizedPropertyAccessExpressionEClass.getESuperTypes().add(this.getExpression());
+		taggedTemplateStringEClass.getESuperTypes().add(this.getExpressionWithTarget());
+		parameterizedPropertyAccessExpressionEClass.getESuperTypes().add(this.getExpressionWithTarget());
 		parameterizedPropertyAccessExpressionEClass.getESuperTypes().add(this.getMemberAccess());
 		parameterizedPropertyAccessExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
 		awaitExpressionEClass.getESuperTypes().add(this.getExpression());
@@ -8321,6 +8373,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		equalityExpressionEClass.getESuperTypes().add(this.getExpression());
 		binaryBitwiseExpressionEClass.getESuperTypes().add(this.getExpression());
 		binaryLogicalExpressionEClass.getESuperTypes().add(this.getExpression());
+		coalesceExpressionEClass.getESuperTypes().add(this.getExpression());
 		conditionalExpressionEClass.getESuperTypes().add(this.getExpression());
 		assignmentExpressionEClass.getESuperTypes().add(this.getExpression());
 		commaExpressionEClass.getESuperTypes().add(this.getExpression());
@@ -8889,8 +8942,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getParameterizedAccess__IsParameterized(), theEcorePackage.getEBoolean(), "isParameterized", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEClass(expressionWithTargetEClass, ExpressionWithTarget.class, "ExpressionWithTarget", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getExpressionWithTarget_Target(), this.getExpression(), null, "target", null, 0, 1, ExpressionWithTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExpressionWithTarget_OptionalChaining(), theEcorePackage.getEBoolean(), "optionalChaining", null, 0, 1, ExpressionWithTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getExpressionWithTarget__IsOrHasTargetWithOptionalChaining(), theEcorePackage.getEBoolean(), "isOrHasTargetWithOptionalChaining", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(parameterizedCallExpressionEClass, ParameterizedCallExpression.class, "ParameterizedCallExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getParameterizedCallExpression_Target(), this.getExpression(), null, "target", null, 0, 1, ParameterizedCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getParameterizedCallExpression_Arguments(), this.getArgument(), null, "arguments", null, 0, -1, ParameterizedCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getParameterizedCallExpression__GetReceiver(), this.getExpression(), "getReceiver", 0, 1, !IS_UNIQUE, IS_ORDERED);
@@ -8905,20 +8963,17 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getArgument_Expression(), this.getExpression(), null, "expression", null, 0, 1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(indexedAccessExpressionEClass, IndexedAccessExpression.class, "IndexedAccessExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIndexedAccessExpression_Target(), this.getExpression(), null, "target", null, 0, 1, IndexedAccessExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIndexedAccessExpression_Index(), this.getExpression(), null, "index", null, 0, 1, IndexedAccessExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getIndexedAccessExpression__IsValidSimpleAssignmentTarget(), theEcorePackage.getEBoolean(), "isValidSimpleAssignmentTarget", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(taggedTemplateStringEClass, TaggedTemplateString.class, "TaggedTemplateString", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTaggedTemplateString_Target(), this.getExpression(), null, "target", null, 0, 1, TaggedTemplateString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTaggedTemplateString_Template(), this.getTemplateLiteral(), null, "template", null, 0, 1, TaggedTemplateString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(memberAccessEClass, MemberAccess.class, "MemberAccess", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getMemberAccess_ComposedMemberCache(), theTypesPackage.getComposedMemberCache(), null, "composedMemberCache", null, 0, 1, MemberAccess.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(parameterizedPropertyAccessExpressionEClass, ParameterizedPropertyAccessExpression.class, "ParameterizedPropertyAccessExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getParameterizedPropertyAccessExpression_Target(), this.getExpression(), null, "target", null, 0, 1, ParameterizedPropertyAccessExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getParameterizedPropertyAccessExpression_Property(), theTypesPackage.getIdentifiableElement(), null, "property", null, 0, 1, ParameterizedPropertyAccessExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedPropertyAccessExpression_PropertyAsText(), theEcorePackage.getEString(), "propertyAsText", null, 0, 1, ParameterizedPropertyAccessExpression.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -9046,6 +9101,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getBinaryLogicalExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, BinaryLogicalExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getBinaryLogicalExpression_Op(), this.getBinaryLogicalOperator(), "op", null, 0, 1, BinaryLogicalExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBinaryLogicalExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, BinaryLogicalExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(coalesceExpressionEClass, CoalesceExpression.class, "CoalesceExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCoalesceExpression_Expression(), this.getExpression(), null, "expression", null, 0, 1, CoalesceExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCoalesceExpression_DefaultExpression(), this.getExpression(), null, "defaultExpression", null, 0, 1, CoalesceExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(conditionalExpressionEClass, ConditionalExpression.class, "ConditionalExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getConditionalExpression_Expression(), this.getExpression(), null, "expression", null, 0, 1, ConditionalExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

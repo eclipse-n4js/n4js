@@ -10,14 +10,19 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.StringJoiner;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.hlc.base.BuildType;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -26,7 +31,7 @@ import org.junit.Test;
 /**
  * Downloads, installs, compiles and runs 'express' with N4JS definition file support.
  */
-public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends AbstractN4jscTest {
+public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends AbstractCliCompileTest {
 	File workspace;
 
 	private static final String PROJECT_NAME_N4JS = "project.using.external.from.n4js";
@@ -51,46 +56,40 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 	 * running it with Common JS.
 	 */
 	@Test
-	public void testCompileAndRunWithExternalDependenciesAndDefinitionFiles() throws IOException, ExitCodeException {
+	public void testCompileAndRunWithExternalDependenciesAndDefinitionFiles() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/" + PROJECT_NAME_N4JS + "/src/Main.n4js";
+		final String fileToRun = packages + "/" + PROJECT_NAME_N4JS + "/src-gen/Main.js";
 
-		final String[] args = {
-				"--installMissingDependencies",
-				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--projectlocations", packages,
-				"--buildType", BuildType.projects.toString(),
-				packages + "/" + PROJECT_NAME_N4JS,
-				packages + "/n4js-runtime"
-		};
-		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(EXPECTED, out);
+		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
+		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+
+		N4jscOptions options = COMPILE(workspace);
+		CliCompileResult cliResult = n4jsc(options);
+		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount());
+
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		assertEquals(nodejsResult.toString(), EXPECTED, nodejsResult.getStdOut());
 	}
 
 	/**
 	 * Same test as above, but importing the external dependency from an N4JSX file (instead of an N4JS file).
 	 */
 	@Test
-	public void testCompileAndRunWithExternalDependenciesAndDefinitionFilesFromN4JSX()
-			throws IOException, ExitCodeException {
+	public void testCompileAndRunWithExternalDependenciesAndDefinitionFilesFromN4JSX() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/" + PROJECT_NAME_N4JSX + "/src/MainX.n4jsx";
+		final String fileToRun = packages + "/" + PROJECT_NAME_N4JSX + "/src-gen/MainX.js";
 
-		final String[] args = {
-				"--installMissingDependencies",
-				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--projectlocations", packages,
-				"--buildType", BuildType.projects.toString(),
-				packages + "/" + PROJECT_NAME_N4JSX,
-				packages + "/n4js-runtime"
-		};
+		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
+		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
 
-		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(EXPECTED, out);
+		N4jscOptions options = COMPILE(workspace);
+		CliCompileResult cliResult = n4jsc(options);
+		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount());
+
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		assertEquals(nodejsResult.toString(), EXPECTED, nodejsResult.getStdOut());
 	}
 
 	/** Keep in sync with the modules being executed ( {@code Main} and {@code MainX}). */

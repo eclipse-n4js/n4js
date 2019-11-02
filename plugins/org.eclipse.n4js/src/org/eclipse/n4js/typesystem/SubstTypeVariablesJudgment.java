@@ -321,7 +321,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				final TypeRef newUB = substTypeVariables(G, oldUB, false);
 				if (newUB != currTV_declUB) { // note: identity compare is what we want
 					while (resultUnboundTypeVarsUpperBounds.size() < idxOfCurrTV) {
-						resultUnboundTypeVarsUpperBounds.add(null); // add 'null' as padding entry
+						// add an UnknownTypeRef as padding entry
+						resultUnboundTypeVarsUpperBounds.add(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
 					}
 					resultUnboundTypeVarsUpperBounds.add(newUB);
 					return true;

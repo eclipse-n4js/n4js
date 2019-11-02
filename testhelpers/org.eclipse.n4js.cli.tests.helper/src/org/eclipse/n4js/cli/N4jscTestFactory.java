@@ -11,10 +11,8 @@
 package org.eclipse.n4js.cli;
 
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
-import org.eclipse.n4js.cli.helper.N4jscTestCallback;
+import org.eclipse.n4js.cli.helper.N4jscTestLanguageClient;
 import org.eclipse.xtext.testing.GlobalRegistries;
-
-import com.google.inject.Injector;
 
 /**
  * Overwrites some bindings of N4jscFactory
@@ -22,26 +20,34 @@ import com.google.inject.Injector;
 public class N4jscTestFactory extends N4jscFactory {
 
 	/** Enable overwriting bindings */
-	static public void set() {
-		N4jscFactory.INSTANCE = new N4jscTestFactory(false);
-	}
-
-	/** Enable overwriting bindings. Deactivates the cli backend. */
-	static public void setAndDeactivateBackend() {
-		N4jscFactory.INSTANCE = new N4jscTestFactory(true);
+	static public void set(boolean isEnabledBackend) {
+		resetInjector();
+		N4jscFactory.INSTANCE = new N4jscTestFactory(isEnabledBackend);
 	}
 
 	/** Disable overwriting bindings */
 	static public void unset() {
+		resetInjector();
 		N4jscFactory.INSTANCE = new N4jscFactory();
 	}
 
-	static private Injector injector;
+	/** Forces to create new injector */
+	static public void resetInjector() {
+		if (isInjectorCreated()) {
+			GlobalRegistries.clearGlobalRegistries();
+			N4jscFactory.INSTANCE.injector = null;
+		}
+	}
 
-	final private boolean deactivateBackend;
+	/** @return true iff an injector was created already */
+	static public boolean isInjectorCreated() {
+		return N4jscFactory.INSTANCE.injector != null;
+	}
 
-	N4jscTestFactory(boolean deactivateBackend) {
-		this.deactivateBackend = deactivateBackend;
+	final private boolean isEnabledBackend;
+
+	N4jscTestFactory(boolean isEnabledBackend) {
+		this.isEnabledBackend = isEnabledBackend;
 	}
 
 	/** Thrown when the backend is called. */
@@ -74,28 +80,16 @@ public class N4jscTestFactory extends N4jscFactory {
 
 	@Override
 	N4jscBackend internalCreateBackend() throws Exception {
-		if (deactivateBackend) {
-			return new NoopBackend();
-		} else {
+		if (isEnabledBackend) {
 			return super.internalCreateBackend();
+		} else {
+			return new NoopBackend();
 		}
 	}
 
 	@Override
-	Injector internalCreateInjector() {
-		GlobalRegistries.clearGlobalRegistries();
-		injector = super.internalCreateInjector();
-		return injector;
-	}
-
-	/** @return the last {@link Injector} that was created by {@link N4jscFactory#createInjector()} */
-	static public Injector getLastCreatedInjector() {
-		return injector;
-	}
-
-	@Override
-	N4jscLanguageClient internalGetLanguageClient(Injector pInjector) {
-		N4jscLanguageClient callback = pInjector.getInstance(N4jscTestCallback.class);
+	N4jscLanguageClient internalGetLanguageClient() {
+		N4jscLanguageClient callback = getOrCreateInjector().getInstance(N4jscTestLanguageClient.class);
 		return callback;
 	}
 

@@ -20,9 +20,8 @@ import java.nio.file.Path;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
-import org.eclipse.n4js.cli.helper.CliResult;
-import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.cli.runner.helper.NodejsResult;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -55,11 +54,11 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractCliCompileTe
 		Path fileToRun = projectDir.resolve("src-gen/Client.js");
 
 		N4jscOptions options = COMPILE(workspace);
-		CliResult cliResult = main(options);
-		assertEquals(cliResult.toString(), 6, cliResult.getTranspiledFilesCount());
+		CliCompileResult cliResult = n4jsc(options);
+		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount());
 
-		NodejsResult nodejsResult = run(projectDir, fileToRun);
-		N4CliHelper.assertExpectedOutput("foo === 36: true, bar === 'bar': true", nodejsResult.getStdOut());
+		ProcessResult nodejsResult = runNodejs(projectDir, fileToRun);
+		assertEquals(nodejsResult.toString(), "foo === 36: true, bar === 'bar': true", nodejsResult.getStdOut());
 	}
 
 }

@@ -4154,6 +4154,8 @@ norm1_PropertySpread:
 ruleParameterizedCallExpression:
 	ruleConcreteTypeArguments
 	ruleIdentifierRef
+	'?.'
+	?
 	ruleArgumentsWithParentheses
 ;
 
@@ -4161,6 +4163,8 @@ ruleParameterizedCallExpression:
 norm1_ParameterizedCallExpression:
 	ruleConcreteTypeArguments
 	norm1_IdentifierRef
+	'?.'
+	?
 	norm1_ArgumentsWithParentheses
 ;
 
@@ -4191,8 +4195,12 @@ norm1_ImportCallExpression:
 ruleLeftHandSideExpression:
 	ruleMemberExpression
 	(
+		'?.'
+		?
 		ruleArgumentsWithParentheses
 		(
+			'?.'
+			?
 			ruleArgumentsWithParentheses
 			    |
 			ruleIndexedAccessExpressionTail
@@ -4200,7 +4208,9 @@ ruleLeftHandSideExpression:
 			ruleParameterizedPropertyAccessExpressionTail
 			    |
 			(
-				(RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+				('?.' | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+				'?.'
+				?
 				ruleTemplateLiteral
 			)
 		)*
@@ -4211,8 +4221,12 @@ ruleLeftHandSideExpression:
 norm1_LeftHandSideExpression:
 	norm1_MemberExpression
 	(
+		'?.'
+		?
 		norm1_ArgumentsWithParentheses
 		(
+			'?.'
+			?
 			norm1_ArgumentsWithParentheses
 			    |
 			norm1_IndexedAccessExpressionTail
@@ -4220,7 +4234,9 @@ norm1_LeftHandSideExpression:
 			norm1_ParameterizedPropertyAccessExpressionTail
 			    |
 			(
-				(RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+				('?.' | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+				'?.'
+				?
 				norm1_TemplateLiteral
 			)
 		)*
@@ -4308,6 +4324,8 @@ ruleMemberExpression:
 				    |
 				ruleParameterizedPropertyAccessExpressionTail
 				    |
+				'?.'
+				?
 				ruleTemplateLiteral
 			)*
 		)?
@@ -4318,6 +4336,8 @@ ruleMemberExpression:
 			    |
 			ruleParameterizedPropertyAccessExpressionTail
 			    |
+			'?.'
+			?
 			ruleTemplateLiteral
 		)*
 	)
@@ -4358,6 +4378,8 @@ norm1_MemberExpression:
 				    |
 				norm1_ParameterizedPropertyAccessExpressionTail
 				    |
+				'?.'
+				?
 				norm1_TemplateLiteral
 			)*
 		)?
@@ -4368,6 +4390,8 @@ norm1_MemberExpression:
 			    |
 			norm1_ParameterizedPropertyAccessExpressionTail
 			    |
+			'?.'
+			?
 			norm1_TemplateLiteral
 		)*
 	)
@@ -4375,6 +4399,8 @@ norm1_MemberExpression:
 
 // Rule IndexedAccessExpressionTail
 ruleIndexedAccessExpressionTail:
+	'?.'
+	?
 	'['
 	norm1_Expression
 	']'
@@ -4382,6 +4408,8 @@ ruleIndexedAccessExpressionTail:
 
 // Rule IndexedAccessExpressionTail
 norm1_IndexedAccessExpressionTail:
+	'?.'
+	?
 	'['
 	norm3_Expression
 	']'
@@ -4389,14 +4417,22 @@ norm1_IndexedAccessExpressionTail:
 
 // Rule ParameterizedPropertyAccessExpressionTail
 ruleParameterizedPropertyAccessExpressionTail:
-	'.'
+	(
+		'.'
+		    |
+		'?.'
+	)
 	ruleConcreteTypeArguments?
 	ruleIdentifierName
 ;
 
 // Rule ParameterizedPropertyAccessExpressionTail
 norm1_ParameterizedPropertyAccessExpressionTail:
-	'.'
+	(
+		'.'
+		    |
+		'?.'
+	)
 	ruleConcreteTypeArguments?
 	ruleIdentifierName
 ;
@@ -5725,9 +5761,61 @@ ruleLogicalOROperator:
 	'||'
 ;
 
+// Rule CoalesceExpression
+ruleCoalesceExpression:
+	ruleLogicalORExpression
+	(
+		(
+			('??'
+			)=>
+			'??'
+		)
+		ruleLogicalORExpression
+	)*
+;
+
+// Rule CoalesceExpression
+norm1_CoalesceExpression:
+	norm1_LogicalORExpression
+	(
+		(
+			('??'
+			)=>
+			'??'
+		)
+		norm1_LogicalORExpression
+	)*
+;
+
+// Rule CoalesceExpression
+norm2_CoalesceExpression:
+	norm2_LogicalORExpression
+	(
+		(
+			('??'
+			)=>
+			'??'
+		)
+		norm2_LogicalORExpression
+	)*
+;
+
+// Rule CoalesceExpression
+norm3_CoalesceExpression:
+	norm3_LogicalORExpression
+	(
+		(
+			('??'
+			)=>
+			'??'
+		)
+		norm3_LogicalORExpression
+	)*
+;
+
 // Rule ConditionalExpression
 ruleConditionalExpression:
-	ruleLogicalORExpression
+	ruleCoalesceExpression
 	(
 		(
 			('?'
@@ -5742,7 +5830,7 @@ ruleConditionalExpression:
 
 // Rule ConditionalExpression
 norm1_ConditionalExpression:
-	norm1_LogicalORExpression
+	norm1_CoalesceExpression
 	(
 		(
 			('?'
@@ -5757,7 +5845,7 @@ norm1_ConditionalExpression:
 
 // Rule ConditionalExpression
 norm2_ConditionalExpression:
-	norm2_LogicalORExpression
+	norm2_CoalesceExpression
 	(
 		(
 			('?'
@@ -5772,7 +5860,7 @@ norm2_ConditionalExpression:
 
 // Rule ConditionalExpression
 norm3_ConditionalExpression:
-	norm3_LogicalORExpression
+	norm3_CoalesceExpression
 	(
 		(
 			('?'

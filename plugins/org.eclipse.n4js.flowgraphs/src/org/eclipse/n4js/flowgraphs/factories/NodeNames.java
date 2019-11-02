@@ -39,5 +39,7 @@ class NodeNames {
 	static final String TARGET = "target";
 	static final String SHORT_CIRCUIT_JUMP = "shortCircuitJump";
 	static final String CONDITION_FORK = "conditionFork";
+	static final String OPTIONAL_CHAINING_FORK = "optionalChainingFork";
+	static final String NULLISH_COALESCING_FORK = "nullishCoalescingFork";
 
 }
