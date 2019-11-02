@@ -10,12 +10,17 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
-import org.eclipse.n4js.cli.helper.N4CliHelper;
-import org.eclipse.n4js.hlc.base.BuildType;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -27,14 +32,13 @@ import com.google.common.base.Predicates;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
-@Ignore("See GH-940")
-public class InstallCompileRunN4jscExternalTest extends AbstractN4jscTest {
+public class InstallCompileRunN4jscExternalTest extends AbstractCliCompileTest {
 	File workspace;
 
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external", Predicates.alwaysTrue(), true);
+		workspace = setupWorkspace("external", Predicates.alwaysFalse(), true);
 	}
 
 	/** Delete workspace. */
@@ -44,25 +48,33 @@ public class InstallCompileRunN4jscExternalTest extends AbstractN4jscTest {
 	}
 
 	/**
-	 * Test for checking the npm support in the headless case by downloading third party package, importing it and
-	 * running it with Common JS.
+	 * Test for checking the npm support by downloading a third party package, importing and running it.
 	 */
 	@Test
-	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
+	@Ignore // GH-1510
+	public void testCompileAndRunWithExternalDependencies() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/external.project/src/Main.n4js";
+		final String fileToRun = packages + "/external.project/src-gen/Main.js";
 
-		final String[] args = {
-				"--installMissingDependencies",
-				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--projectlocations", packages,
-				"--buildType", BuildType.allprojects.toString()
-		};
-		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(
-				"express properties: application, request, response, Route, Router, query, static", out);
+		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
+		// error An unexpected error occurred: "could not find a copy of eslint to link in:
+		// wsp/node_modules/is-promise/node_modules/listr-update-renderer/node_modules/ansi-regex/node_modules/xo/node_modules"
+		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
+		// assertTrue(yarnInstallResult.toString(),
+		// yarnInstallResult.getErrOut().contains("could not find a copy of eslint to link in"));
+
+		N4jscOptions options = COMPILE(workspace);
+		CliCompileResult cliResult = n4jsc(options);
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
+
+		String expectedString = "express properties: Route, Router, application, bodyParser, compress, ";
+		expectedString += "cookieParser, cookieSession, csrf, default, directory, errorHandler, favicon, json, ";
+		expectedString += "limit, logger, methodOverride, multipart, query, request, response, responseTime, ";
+		expectedString += "session, static, staticCache, timeout, urlencoded, vhost";
+
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 
 }

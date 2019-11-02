@@ -13,27 +13,21 @@ package org.eclipse.n4js.cli.helper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
+import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.cli.N4jscTestFactory;
-import org.eclipse.n4js.cli.compiler.N4jscCompiler;
-import org.eclipse.n4js.cli.runner.helper.NodejsExecuter;
-import org.eclipse.n4js.cli.runner.helper.NodejsResult;
-import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
-import org.eclipse.xtext.util.Arrays;
-import org.eclipse.xtext.workspace.IProjectConfig;
+import org.junit.Before;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.inject.Injector;
 
-/** Subclass this class for test cases that compile n4js code and run js code */
-@SuppressWarnings("restriction")
+/**
+ * Subclass this class for test cases that compile n4js code and run js code
+ */
 public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	/** name of workspace sub-folder (inside target folder) */
 	private static final String WSP = "wsp";
@@ -41,39 +35,97 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	protected static final String PACKAGES = N4CliHelper.PACKAGES;
 	/** name of folder containing the test resources */
 	protected static final String FIXTURE = "probands";
-	/** name of default test data set */
-	protected static final String TEST_DATA_SET__BASIC = "basic";
 	/** name of test data set for launching testers from the command line */
 	protected static final String TEST_DATA_SET__TESTERS = "testers";
 	/** name of test data set for npm scopes */
 	protected static final String TEST_DATA_SET__NPM_SCOPES = "npmScopes";
 
-	@Override
-	public void doMain(N4jscOptions options, CliResult result) throws Exception {
-		N4jscCompiler.start(options);
-
-		// save transpiled files
-		File workspaceRoot = options.getSrcFiles().get(0);
-		result.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
-
-		// save projects
-		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
-		N4JSWorkspaceManager workspaceManager = lastInjector.getInstance(N4JSWorkspaceManager.class);
-		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
-		Map<String, String> projectMap = new TreeMap<>();
-		for (IProjectConfig pConfig : projects) {
-			Path projectPath = Path.of(pConfig.getPath().toFileString());
-			Path relativeProjectPath = workspaceRoot.toPath().relativize(projectPath);
-			projectMap.put(pConfig.getName(), relativeProjectPath.toString());
-		}
-		result.projects = projectMap;
+	/** Specifies how n4jsc is executed */
+	static public enum N4jscVariant {
+		/** N4jsc is called using a function call to {@link N4jscMain#main(String[])} */
+		inprocess,
+		/** N4jsc is called using the {@code n4jsc.jar} and a Java {@link ProcessBuilder} */
+		exprocess
 	}
 
-	/** {@link NodejsExecuter#run(Path, Path)} */
-	public NodejsResult run(Path workingDir, Path runFile) {
-		Injector lastInjector = N4jscTestFactory.getLastCreatedInjector();
-		NodejsExecuter nodejsExecuter = new NodejsExecuter(lastInjector);
-		return nodejsExecuter.run(workingDir, runFile);
+	final private N4jscVariant variant;
+	private CliTools cliTools;
+
+	/** Constructor */
+	public AbstractCliCompileTest() {
+		this(N4jscVariant.inprocess);
+	}
+
+	/** Constructor */
+	public AbstractCliCompileTest(N4jscVariant variant) {
+		this.variant = variant;
+	}
+
+	/** Initializes {@link #cliTools} */
+	@Before
+	final public void setupTestProcessExecuter() {
+		cliTools = new CliTools();
+	}
+
+	@Override
+	public CliCompileResult createResult() {
+		CliCompileResult result = null;
+
+		switch (variant) {
+		case inprocess:
+			result = new CliCompileResult();
+			break;
+		case exprocess:
+			result = new CliCompileProcessResult();
+			break;
+		default:
+			throw new IllegalStateException();
+		}
+
+		return result;
+	}
+
+	@Override
+	public void doN4jsc(N4jscOptions options, boolean removeUsage, CliCompileResult result) {
+		switch (variant) {
+		case inprocess:
+			cliTools.callN4jscInprocess(options, removeUsage, result);
+			return;
+		case exprocess:
+			cliTools.callN4jscExprocess(options, removeUsage, (CliCompileProcessResult) result);
+			return;
+		default:
+			throw new IllegalStateException();
+		}
+	}
+
+	/**
+	 * Sets the given name and value pair to the environment.
+	 * <p>
+	 * <b>Note:</b> Only active when used in {@link N4jscVariant#exprocess }
+	 */
+	public void setEnvironmentVariable(String name, String value) {
+		cliTools.setEnvironmentVariable(name, value);
+	}
+
+	/** see {@link TestProcessExecuter#runNodejs(Path, Map, Path, String[])} */
+	public ProcessResult runNodejs(Path workingDir, Path runFile, String... options) {
+		return cliTools.runNodejs(workingDir, runFile, options);
+	}
+
+	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
+	public ProcessResult npmInstall(Path workingDir, String... options) {
+		return cliTools.npmInstall(workingDir, options);
+	}
+
+	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
+	public ProcessResult npmList(Path workingDir, String... options) {
+		return cliTools.npmList(workingDir, options);
+	}
+
+	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
+	public ProcessResult yarnInstall(Path workingDir, String... options) {
+		return cliTools.yarnInstall(workingDir, options);
 	}
 
 	/**
@@ -107,7 +159,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	 */
 	protected static File setupWorkspace(String testDataSet, boolean createYarnWorkspace, N4JSProjectName... libNames)
 			throws IOException {
-		return setupWorkspace(testDataSet, libName -> Arrays.contains(libNames, libName), createYarnWorkspace);
+		return setupWorkspace(testDataSet, libName -> Arrays.asList(libNames).contains(libName), createYarnWorkspace);
 	}
 
 	/**
@@ -128,6 +180,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 			Predicate<N4JSProjectName> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
 		Path fixture = new File(testDataRoot, testDataSet).toPath();
 		Path root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_");
+		root = root.toFile().getCanonicalFile().toPath();
 		Path wsp = root.resolve(WSP);
 		N4CliHelper.setupWorkspace(fixture, wsp, n4jsLibrariesPredicate, createYarnWorkspace);
 		return wsp.toFile();

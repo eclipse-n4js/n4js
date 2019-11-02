@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.n4js.ui,
  org.eclipse.n4js.json.tests.helper,
  org.eclipse.n4js.regex.tests.helper,
  org.eclipse.xtext.ui,
- org.junit
+ org.junit,
+ org.eclipse.xtext.builder
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.lang.tests

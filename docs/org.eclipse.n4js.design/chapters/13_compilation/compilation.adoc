@@ -70,12 +70,7 @@ In constrast to the default Xtext behaviour in the N4JS IDE allows
 [.center]
 image::{find}images/cd_GeneratorAndBuilderParticipant.svg[title="Builder (UI) and Generator (Core)"]
 
-[[sec:compiler_discovery_in_headless]]
-====  Compiler discovery in headless
 
-* `N4JSHeadlessStandaloneSetup` is used to combine `N4JSRuntimeModule` and `N4JSHeadlessGeneratorModule` so there is `PropertiesFileBasedValuesProvider` is bind as implementation for `IPreferenceValuesProvider`
-* via `N4JSHeadlessStandaloneSetup` the injector is created which is used to create an instance of `ICompositeGenerator`
-* in the headless mode the subgenerators of are manually registered via an extension point in the class `HeadlessExtensionRegistrationHelper`.
 
 [[sec:general_generator_implementation]]
 ====  General generator implementation
@@ -544,29 +539,4 @@ In order to reuse all existing code as far as possible, missing elements are mod
 
 It is important to not access the AST-elements of type-information obtained from the project-comparison, since this would trigger the AST-loading and invalidate (proxifying) existing `EObjects`.
 
-[[sec:n4jsc_Headless_Compiler_Interface]]
-[.language-n4js]
-== n4jsc Headless Compiler Interface
 
-The headless compiler interface consists of a runnable class capable of reading command line options packaged together with all required dependencies into one executable ``.jar`` archive.
-
-The sources of the command line interface are located in in the `tools/` subfolder of the main git repository. They comprise of the package `org.eclipse.n4js.hlc` and corresponding test package `org.eclipse.n4js.hlc.tests`. (c.f. <<sec:tools,Tools>>).
-
-A description of how to use the headless compiler can be found in the N4IDE document.
-
-[[sec:building_the_headless_compiler]]
-=== building the headless compiler
-
-The maven-modules related to the headless compiler build are organised in the `tools` folder in the project-root. In order to build the headless compiler as part of the common build-chain, the maven-profile `buildTools` needs to be activated (off by default), e.g. `mvn -PbuildTools` .
-
-To build the headless compiler separately, the project-pom can be set to `tools/pom.xml`, however then the tycho-generated artefacts must be accessible by this build. This can be achieved in three different ways:
-
-a. the build takes place on a workspace formerly building the n4js-project without cleaning it (interesting for local experiments),
-b. a former n4js-build installed the artefacts into the currently configured local-.m2-repository of maven or
-c. a former n4js-build deployed the artefacts to the configured nexus-server.
-
-Note however, on our build-server option a) is not feasible, option b) requires you to setup a build-chain and ensuring the same build-node to be building on
-// ToDo - missing xref (see <<sec:Build_Job_Configuration_for_the_Headless_Compiler,Build Job Config for Headless Compiler>>)
-and c) is difficult up to nearly impossible without a proper versioning-scheme.
-
-Parameters for the headless-compiler-build are defined in the parent-pom located at `releng/org.eclipse.n4js.parent/pom.xml` with properties prefixed by `hlc.`.

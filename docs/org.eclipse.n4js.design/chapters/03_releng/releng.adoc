@@ -11,6 +11,106 @@ Contributors:
 
 = Release Engineering
 
+[[sec:overview_of_published_artifacts]]
+== Overview of Published Artifacts
+
+The main published artifacts are:
+
+* the headless builder, i.e. n4jsc.jar,
+* the IDE products for Windows, macOS, and Linux,
+* the N4JS libraries (or "n4js-libs", for short), including the N4JS runtime libraries and
+  the 'mangelhaft' test framework (i.e. the projects in folder `n4js-libs/packages`).
+
+The former two are published to `download.eclipse.org` (see https://download.eclipse.org/n4js/) and
+the latter is published to the official public npm registry at https://www.npmjs.com/.
+
+Other published artifacts include various documentation and the N4JS web site.
+
+
+[[sec:versioning]]
+== Versioning
+
+=== Example
+
+The main published artifacts (see <<sec:overview_of_published_artifacts>>) are versioned
+as follows:
+
+[cols="10,6,1"]
+|===
+| Language Version (applies to n4jsc.jar as well) | Version of n4js-libs      | Note
+
+| n4js-ide_macos_0.14.20.v20190912-0200.dmg       | 0.14.20                   |
+| n4js-ide_macos_0.14.20.v20190913-0200.dmg       |                           | 1.
+| n4js-ide_macos_0.14.20.v20190914-0200.dmg       |                           |
+| n4js-ide_macos_0.14.21.v20190915-0200.dmg       | 0.14.21                   | 2.
+| n4js-ide_macos_0.14.21.v20190916-0200.dmg       |                           |
+| n4js-ide_macos_0.15.0.next_v20190916-1422.dmg   | 0.15.0-next.20190916.1422 | 3.
+| n4js-ide_macos_0.14.21.v20190917-0200.dmg       |                           | 
+| n4js-ide_macos_0.15.0.next_v20190917-1138.dmg   | 0.15.0-next.20190917.1138 |
+| n4js-ide_macos_0.14.21.v20190918-0200.dmg       |                           |
+| n4js-ide_macos_0.15.0.v20190919-0200.dmg        | 0.15.0                    | 4.
+| n4js-ide_macos_0.15.0.v20190920-0200.dmg        |                           |
+|===
+
+Notes:
+
+1. New IDE published for unchanged version 0.14.20 of n4js-libs.
+2. When publishing a new version of n4js-libs, the major/minor/patch segment of the IDE is increased accordingly.
+3. Experimental publishing of breaking changes in n4js-libs with a pre-release tag and npm dist-tag 'next'.
+   The tag is also prepended to the last segment of the IDE version.
+   NOTE: since the version scheme of maven/OSGi does not support something like semver's pre-release tags,
+   these IDE versions must not be published to any public registries!
+4. Release of the breaking changes from release channel 'next' to release channel 'latest'.
+
+
+=== Configuring Versioning
+
+The developer can conveniently control versioning via file `version.json`:
+
+* When introducing non-breaking changes in the n4js-libs, nothing has to be changed in `version.json`;
+  version increments will be computed automatically by incrementing the patch segment.
+* When introducing breaking changes in the n4js-libs, edit file `version.json` to request an
+  increment of the major/minor segment.
+* In any case, if publishing from a topic branch is desired for testing purposes before merging
+  to master, simply configure a "tag" in file `version.json` and run the publishing build from
+  that branch. This will publish the n4js-libs under an npm dist-tag and publish the other
+  artifacts to separate folders (and won't change the LATEST folders).
+  NOTE: don't forget to set property "tag" back to an empty string in `version.json` before merging to master.
+
+In case of breaking changes only in the Java / Xtend code of the core language (IDE or headless builder)
+we do not yet increment any versions except updating time stamps, so file `version.json` does not have
+to be changed in this case.
+
+
+=== Details of Version Computation
+
+The versioning of all the main published artifacts (see <<sec:overview_of_published_artifacts>>)
+is controlled by shell script `compute-version.sh`. This script will compute the correct, incremented
+version of the currently running build and write all version-related information to a newly
+created file `version-info.json` in the root folder of the repository. In addition, it will update
+the place-holder version in file `plugins/org.eclipse.n4js/res/language-version.properties` to make
+the version number available to the Java code at runtime. Actual publishing will then be performed
+by script `publish-n4js-libs.sh` (for the n4js-libs) and by plain file copying in the Jenkinsfile
+`eclipse-publish.jenkinsfile` of the publishing build (for the `n4jsc.jar` and the IDE products).
+
+The logic for finding the correct, incremented version number for a currently running build
+applied by script `compute-version.sh` is as follows:
+
+1. As a basis for the current build's version number, use the major, minor, and patch segments
+   of the newest version of the n4js-libs available on `npmjs.org` for the dist-tag `latest`.
+2. Check whether a new version of the n4js-libs has to be published to `npmjs.org` by the current
+   build. This is the case of the current commit ID of top-level folder `n4js-libs` of the local
+   git working copy differs from the commit ID of the newest version of the n4js-libs available
+   on `npmjs.org` for the dist-tag `latest`.
+3. If a new version of n4js-libs has to be published, increment the major, minor, or patch segment(s)
+   depending on the configuration in `version.json`.
+   Otherwise, don't increment these segments.
+4. Now, versions used for publishing are:
+   a. For publishing the n4js-libs, use the major, minor, patch segment resulting from step 3.
+   b. For publsihing the headless builder and the IDE products, use the major, minor, patch segment
+      resulting from step 3 and append a time stamp segment.
+
+
 == Nightly build on Eclipse infrastructure
 
 The N4JS IDE, headless n4jsc.jar, and the N4JS update site is being built on the Eclipse Common Build
@@ -83,8 +183,11 @@ execute-hlc-integration-tests:: run integration tests using the headless jar (re
 Available system properties:
 
 [horizontal]
-noTests::               suppress execution of all tests
-startAndKeepVerdaccio:: enforce starting and suppress stopping of the test verdaccio (see <<sec:test-verdaccio>>)
+noTests::               if defined (i.e. "-DnoTests"), suppress execution of all tests
+languageVersion::       an optional version string to show in the Eclipse About dialog of IDE products (should be defined by publishing builds)
+startAndKeepVerdaccio:: if defined (i.e. "-DstartAndKeepVerdaccio"), enforce starting and suppress stopping of the test verdaccio (see <<sec:test-verdaccio>>)
+fatUpdateSite::         if set to true (i.e. "-DfatUpdateSite=true"), the generated update site will include all third-party dependencies
+excludeJRE::            if defined (i.e. "-DexcludeJRE"), the Java runtime environment will not be bundled with the IDE products
 
 
 

@@ -470,6 +470,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createParameterizedAccessAdapter();
 			}
 			@Override
+			public Adapter caseExpressionWithTarget(ExpressionWithTarget object) {
+				return createExpressionWithTargetAdapter();
+			}
+			@Override
 			public Adapter caseParameterizedCallExpression(ParameterizedCallExpression object) {
 				return createParameterizedCallExpressionAdapter();
 			}
@@ -612,6 +616,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseBinaryLogicalExpression(BinaryLogicalExpression object) {
 				return createBinaryLogicalExpressionAdapter();
+			}
+			@Override
+			public Adapter caseCoalesceExpression(CoalesceExpression object) {
+				return createCoalesceExpressionAdapter();
 			}
 			@Override
 			public Adapter caseConditionalExpression(ConditionalExpression object) {
@@ -2180,6 +2188,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExpressionWithTarget <em>Expression With Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.ExpressionWithTarget
+	 * @generated
+	 */
+	public Adapter createExpressionWithTargetAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ParameterizedCallExpression <em>Parameterized Call Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -2680,6 +2702,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createBinaryLogicalExpressionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.CoalesceExpression <em>Coalesce Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.CoalesceExpression
+	 * @generated
+	 */
+	public Adapter createCoalesceExpressionAdapter() {
 		return null;
 	}
 

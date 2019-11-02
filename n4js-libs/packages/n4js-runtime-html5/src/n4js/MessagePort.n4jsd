@@ -14,4 +14,7 @@ export external public interface ~MessagePort extends EventTarget {
     public postMessage(message: any, transferList: Object/* Transferable */[]=);
     public start(): void;
     public close(): void;
+    
+    public onmessage: (MessageEvent) => void;
+    public onmessageerror: (MessageEvent) => void;
 }

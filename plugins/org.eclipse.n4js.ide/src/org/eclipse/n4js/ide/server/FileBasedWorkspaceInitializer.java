@@ -25,6 +25,7 @@ import org.eclipse.n4js.generator.headless.BuildSet;
 import org.eclipse.n4js.generator.headless.BuildSetComputer;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
+import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfig;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -34,7 +35,6 @@ import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
-import org.eclipse.xtext.ide.server.IWorkspaceConfigFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -43,7 +43,7 @@ import com.google.inject.Singleton;
  *
  */
 @Singleton
-public class FileBasedWorkspaceInitializer implements IWorkspaceConfigFactory {
+public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 
 	@Inject
 	private IN4JSCore n4jsCore;

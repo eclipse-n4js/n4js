@@ -10,11 +10,11 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import org.eclipse.n4js.ide.xtext.server.XDefaultProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.lsp.IN4JSProjectConfig;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.xtext.ide.server.DefaultProjectDescriptionFactory;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
@@ -24,7 +24,7 @@ import com.google.common.collect.FluentIterable;
  *
  */
 @SuppressWarnings("restriction")
-public class N4JSProjectDescriptionFactory extends DefaultProjectDescriptionFactory {
+public class N4JSProjectDescriptionFactory extends XDefaultProjectDescriptionFactory {
 
 	@Override
 	public ProjectDescription getProjectDescription(IProjectConfig config) {

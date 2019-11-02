@@ -16,3 +16,6 @@ function foo(parts, a, b) {}
 
 // XPECT errors --> "Unsupported feature: tagged template literals." at "foo"
 foo`hello`;
+
+// XPECT errors --> "Unsupported feature: tagged template literals." at "foo"
+foo?.`hello`;
