@@ -153,21 +153,41 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	@Fix(IssueCodes.TYS_INVALID_TYPE_SYNTAX)
 	def transformJavaTypeAnnotationToColonStyle(Issue issue, IssueResolutionAcceptor acceptor) {
 		//TODO #GH-1492
-		acceptor.accept(issue, 'Change to colon style', 'The method annotation should be in colon style. This quick fix will change the code to colon style.', ImageNames.REORDER) [ context, marker, offset, length, element |
-			//--
+		acceptor.accept(issue, 'Convert to colon style', 'The method annotation should be in colon style. This quick fix will change the code to colon style.', ImageNames.REORDER) [ context, marker, offset, length, element |
+
 			val doc = context.xtextDocument
 			val currLineReg = doc.getLineInformationOfOffset(offset);
 			val currLine = doc.get(currLineReg.getOffset(), currLineReg.getLength())
-			//--
+
 			var indentation = 0;
 			while (indentation < currLine.length() && Character.isWhitespace(currLine.charAt(indentation))) {
 				indentation++;
 			}
-			//--
+
 			val currLineWithoutIndentation = currLine.substring(indentation, currLine.length())
-			//--
+
+			var returnTypeOfMethod = ""
+			var index = 0
+			for (; index < currLineWithoutIndentation.length() && !Character.isWhitespace(currLineWithoutIndentation.charAt(index)); index++) {
+				returnTypeOfMethod += currLineWithoutIndentation.charAt(index);
+			}
+
+			while (index < currLineWithoutIndentation.length() && Character.isWhitespace(currLineWithoutIndentation.charAt(index))) {
+				index++;
+			}
+			val charToBeDeletedStaringFromBegin = index;
+
+			val char closingBracket = ')'
+			while (index < currLineWithoutIndentation.length() && currLineWithoutIndentation.charAt(index) !== closingBracket) {
+				index++;
+			}
+			val posForDoubleDot = index + 1;
+
+			val lenOfMethodSignature = posForDoubleDot - charToBeDeletedStaringFromBegin;
+
 			return #[
-				replace(context.xtextDocument, offset, 0, currLineWithoutIndentation)
+				replace(context.xtextDocument, offset, charToBeDeletedStaringFromBegin, ""), //remove old return type and whitespaces
+				replace(context.xtextDocument, offset+charToBeDeletedStaringFromBegin+lenOfMethodSignature, 0, ": " + returnTypeOfMethod) //place the return type after method signature
 			];
 		]
 	}
