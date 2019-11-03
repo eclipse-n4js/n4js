@@ -150,6 +150,28 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		});
 	}
 
+	@Fix(IssueCodes.TYS_INVALID_TYPE_SYNTAX)
+	def transformJavaTypeAnnotationToColonStyle(Issue issue, IssueResolutionAcceptor acceptor) {
+		//TODO #GH-1492
+		acceptor.accept(issue, 'Change to colon style', 'The method annotation should be in colon style. This quick fix will change the code to colon style.', ImageNames.REORDER) [ context, marker, offset, length, element |
+			//--
+			val doc = context.xtextDocument
+			val currLineReg = doc.getLineInformationOfOffset(offset);
+			val currLine = doc.get(currLineReg.getOffset(), currLineReg.getLength())
+			//--
+			var indentation = 0;
+			while (indentation < currLine.length() && Character.isWhitespace(currLine.charAt(indentation))) {
+				indentation++;
+			}
+			//--
+			val currLineWithoutIndentation = currLine.substring(indentation, currLine.length())
+			//--
+			return #[
+				replace(context.xtextDocument, offset, 0, currLineWithoutIndentation)
+			];
+		]
+	}
+
 	@Fix(IssueCodes.CLF_FIELD_OPTIONAL_OLD_SYNTAX)
 	def fixOldSyntaxForOptionalFields(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, 'Change to new syntax', 'The syntax for optional fields has changed. This quick fix will change the code to the new syntax.', ImageNames.REORDER) [ context, marker, offset, length, element |
