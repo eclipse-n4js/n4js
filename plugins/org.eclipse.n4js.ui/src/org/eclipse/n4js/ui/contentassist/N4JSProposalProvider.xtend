@@ -55,6 +55,12 @@ import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 
 import static extension org.eclipse.n4js.ui.utils.ConfigurableCompletionProposalExtensions.*
+import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.n4JS.N4FieldDeclaration
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
+import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.ts.types.util.MemberList
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -77,6 +83,9 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	@Inject
 	private N4JSLabelProvider labelProvider;
+	
+	@Inject
+	private ContainerTypesHelper containerTypesHelper;
 
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
@@ -358,5 +367,21 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		}
 
 		return null;
+	}
+	
+	override public void complete_N4FieldDeclaration(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		super.complete_N4FieldDeclaration(model, ruleCall, context, acceptor);
+		if(model instanceof LiteralOrComputedPropertyName) {
+			val mc = containerTypesHelper.fromContext(model);
+			val n4classdeclaration = model.eContainer.eContainer;
+			if(n4classdeclaration instanceof N4ClassDeclaration) {
+				val tclass = n4classdeclaration.definedType;
+				System.out.println(mc.inheritedMembers(tclass as TClass)); //for debugging
+			}		
+		}
+	}	
+	
+	override public void complete_LiteralOrComputedPropertyName(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		super.complete_LiteralOrComputedPropertyName(model, ruleCall, context, acceptor);
 	}
 }
