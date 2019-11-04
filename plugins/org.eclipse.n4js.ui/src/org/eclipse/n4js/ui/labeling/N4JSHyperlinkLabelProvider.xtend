@@ -37,7 +37,7 @@ class N4JSHyperlinkLabelProvider extends N4JSLabelProvider {
 	 */
 	override String getText(Object element) {
 		if (element instanceof EObject) {
-			val text = N4JSHierarchicalNameComputerHelper.calculateLogicallyQualifiedDisplayName(element,
+			val text = N4JSHierarchicalNameComputerHelper.calculateHierarchicalDisplayName(element,
 				labelProviderDelegate, true);
 			return text;
 		} else {
