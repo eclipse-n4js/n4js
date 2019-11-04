@@ -30,7 +30,7 @@ public class TestReport {
 
 	/** Writes XML content of the report to the given file. */
 	public void dump(File toFile) throws IOException {
-		Files.write(reportContent, toFile, Charsets.UTF_8);
+		Files.asCharSink(toFile, Charsets.UTF_8).write(reportContent);
 	}
 
 	/**

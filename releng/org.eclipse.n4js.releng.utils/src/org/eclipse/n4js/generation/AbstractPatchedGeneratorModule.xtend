@@ -23,7 +23,7 @@ import org.eclipse.n4js.serializer.StableOrderSyntacticSequencerPDAProvider
  * Abstract base module for the language generators 
  */
 abstract class AbstractPatchedGeneratorModule extends DefaultGeneratorModule {
-	
+
 	def configureAntlrGrammarGenerator(Binder binder) {
 		binder.bind(AntlrGrammarGenerator).to(N4JSAntlrGrammarGenerator)
 	}
@@ -31,9 +31,9 @@ abstract class AbstractPatchedGeneratorModule extends DefaultGeneratorModule {
 	def configureAntlrContentAssistGrammarGenerator(Binder binder) {
 		binder.bind(AntlrContentAssistGrammarGenerator).to(N4JSAntlrContentAssistGrammarGenerator)
 	}
-	
+
 	def configurePatchedSerializerGenerator(Binder binder) {
 		binder.bind(SyntacticSequencerPDAProvider).to(StableOrderSyntacticSequencerPDAProvider);
 	}
-	
+
 }

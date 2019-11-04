@@ -70,6 +70,7 @@ import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.BooleanLiteral;
 import org.eclipse.n4js.n4JS.CastExpression;
 import org.eclipse.n4js.n4JS.CatchVariable;
+import org.eclipse.n4js.n4JS.CoalesceExpression;
 import org.eclipse.n4js.n4JS.CommaExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.EqualityExpression;
@@ -92,6 +93,7 @@ import org.eclipse.n4js.n4JS.N4ClassExpression;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.NewExpression;
@@ -163,7 +165,6 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
-import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
@@ -191,8 +192,6 @@ import com.google.inject.Inject;
 	private JavaScriptVariantHelper javaScriptVariantHelper;
 	@Inject
 	private ReactHelper reactHelper;
-	@Inject
-	private TypeSystemHelper tsh;
 
 	/**
 	 * See {@link N4JSTypeSystem#type(RuleEnvironment, TypableElement)} and
@@ -314,7 +313,6 @@ import com.google.inject.Inject;
 		// AST nodes: declarations
 		// ----------------------------------------------------------------------
 
-		// FIXME use sanitization utility method in next two methods!!
 		@Override
 		public TypeRef casePropertyNameValuePair(PropertyNameValuePair property) {
 			// note: keep this rule aligned with rules caseN4FieldDeclaration and caseVariableDeclaration
@@ -323,7 +321,7 @@ import com.google.inject.Inject;
 				T = property.getDeclaredTypeRef();
 			} else if (property.getExpression() != null) {
 				final TypeRef E = ts.type(G, property.getExpression());
-				T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
+				T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E);
 			} else {
 				T = anyTypeRef(G);
 			}
@@ -338,7 +336,7 @@ import com.google.inject.Inject;
 				T = fieldDecl.getDeclaredTypeRef();
 			} else if (fieldDecl.getExpression() != null) {
 				final TypeRef E = ts.type(G, fieldDecl.getExpression());
-				T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
+				T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E);
 			} else {
 				T = anyTypeRef(G);
 			}
@@ -373,9 +371,9 @@ import com.google.inject.Inject;
 					final RuleEnvironment G2 = wrap(G);
 					G2.put(guardKey, Boolean.TRUE);
 					final TypeRef ofPartTypeRef = ts.type(G2, forOfStmnt.getExpression());
-					final TypeArgument elemType = destructureHelper.extractIterableElementType(G2, ofPartTypeRef);
+					final TypeArgument elemType = tsh.extractIterableElementType(G2, ofPartTypeRef);
 					if (elemType != null) {
-						T = ts.upperBound(G2, elemType);
+						T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G2, elemType);
 					} else {
 						T = unknown();
 					}
@@ -402,8 +400,12 @@ import com.google.inject.Inject;
 						// in case of ThisTypeRefs, there should be no existential type-refs (so there is no use in
 						// getting rid of it :-/)
 						// as part of IDE-785 leave the BoundThisTypeRef in place for variables w/o defined type.
+					} else if (E instanceof UnknownTypeRef) {
+						// NOTE: in case of variables (as opposed to fields, properties) we use UnknownTypeRef as the
+						// inferred type and do *not* convert it to 'any', as #sanitizeTypeOfVariableFieldProperty()
+						// in the else-block would do.
 					} else {
-						E = ts.upperBound(G2, E); // take upper bound to get rid of ExistentialTypeRef (if any)
+						E = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G2, E);
 					}
 					if (E.getDeclaredType() == undefinedType(G)
 							|| E.getDeclaredType() == nullType(G)
@@ -488,7 +490,7 @@ import com.google.inject.Inject;
 				final Expression initExpr = fpar.getInitializer();
 				if (initExpr != null) {
 					final TypeRef E = ts.type(G, initExpr);
-					T = typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
+					T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E);
 				} else {
 					T = anyTypeRef(G);
 				}
@@ -612,11 +614,18 @@ import com.google.inject.Inject;
 
 			if (T != null
 					&& idref.eContainer() instanceof ParameterizedCallExpression
-					&& idref.eContainmentFeature() == N4JSPackage.eINSTANCE.getParameterizedCallExpression_Target()) {
+					&& idref.eContainmentFeature() == N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET) {
 				final TMethod callableCtorFunction = typeSystemHelper.getCallableClassConstructorFunction(G, T);
 				if (callableCtorFunction != null) {
 					T = ref(callableCtorFunction);
 				}
+			}
+
+			if (!N4JSASTUtils.isWriteAccess(idref)) {
+				T = ts.substTypeVariablesWithFullCapture(G, T);
+			} else {
+				// in case of write access: we must not capture wildcards!
+				T = ts.substTypeVariables(G, T);
 			}
 
 			return T;
@@ -651,6 +660,9 @@ import com.google.inject.Inject;
 				return unknown();
 			}
 			final TClass containingClass = ((N4ClassDeclaration) container).getDefinedTypeAsClass();
+			if (containingClass == null) {
+				return unknown();
+			}
 			final TClassifier superClassifier = getDeclaredOrImplicitSuperType(G, containingClass);
 
 			TClassifier effectiveSuperClassifier = superClassifier;
@@ -789,7 +801,7 @@ import com.google.inject.Inject;
 			// standard case:
 
 			TypeRef targetTypeRef = ts.type(G, expr.getTarget());
-			targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef);
+			targetTypeRef = ts.upperBoundWithReopenAndResolve(G, targetTypeRef);
 
 			TypeRef indexTypeRef = ts.type(G, expr.getIndex());
 
@@ -897,25 +909,18 @@ import com.google.inject.Inject;
 				}
 			}
 
+			final TypeRef receiverTypeRefUB = ts.upperBoundWithReopen(G2, receiverTypeRef);
 			final IdentifiableElement prop = expr.getProperty();
 			final TypeRef propTypeRef;
 			if (prop instanceof TMethod && ((TMethod) prop).isConstructor()) {
 				// accessing the built-in constructor property ...
 				final TypeArgument ctorTypeArg;
-				if (receiverTypeRef instanceof TypeTypeRef) {
+				if (receiverTypeRefUB instanceof TypeTypeRef) {
 					// case "C.constructor"
 					ctorTypeArg = functionTypeRef(G);
-				} else if (receiverTypeRef instanceof ParameterizedTypeRef
-						|| receiverTypeRef instanceof BoundThisTypeRef) {
-					// case "c.constructor" or "this.constructor"
-					final Type declType;
-					if (receiverTypeRef instanceof BoundThisTypeRef) {
-						final ParameterizedTypeRef actualThisTypeRef = ((BoundThisTypeRef) receiverTypeRef)
-								.getActualThisTypeRef();
-						declType = actualThisTypeRef != null ? actualThisTypeRef.getDeclaredType() : null;
-					} else {
-						declType = receiverTypeRef.getDeclaredType();
-					}
+				} else {
+					// cases such as "c.constructor" or "this.constructor"
+					final Type declType = receiverTypeRefUB.getDeclaredType();
 					final boolean finalCtorSig = declType instanceof TClassifier
 							&& N4JSLanguageUtils.hasCovariantConstructor((TClassifier) declType);
 					if (finalCtorSig) {
@@ -925,13 +930,11 @@ import com.google.inject.Inject;
 					} else {
 						ctorTypeArg = null; // will boil down to UnknownTypeRef (see below)
 					}
-				} else {
-					ctorTypeArg = null;
 				}
 				propTypeRef = ctorTypeArg != null
 						? TypeUtils.createTypeTypeRef(ctorTypeArg, true)
 						: unknown();
-			} else if (receiverTypeRef.isDynamic() && prop != null && prop.eIsProxy()) {
+			} else if (receiverTypeRefUB.isDynamic() && prop != null && prop.eIsProxy()) {
 				// access to an unknown property of a dynamic type
 				propTypeRef = anyTypeRefDynamic(G2);
 			} else {
@@ -941,8 +944,19 @@ import com.google.inject.Inject;
 				}
 			}
 
-			TypeRef T;
-			T = ts.substTypeVariables(G2, propTypeRef);
+			TypeRef T = propTypeRef;
+
+			// Because 'propTypeRef' was taken from the TMember in the TModule and therefore does not have any context
+			// information, we just "lost" all substitution / capturing that might have been performed on
+			// 'receiverTypeRef' by other #case...() methods. Therefore, we have to perform substitution / capturing in
+			// much the same was as in method #caseIdentifierRef():
+			if (!N4JSASTUtils.isWriteAccess(expr)) {
+				T = ts.substTypeVariablesWithFullCapture(G2, T);
+			} else {
+				// in case of write access: we must not capture contained wildcards!
+				T = ts.substTypeVariablesWithPartialCapture(G2, T);
+			}
+
 			T = n4idlVersionResolver.resolveVersion(T, receiverTypeRef);
 
 			if (expr.getTarget() instanceof SuperLiteral && T instanceof FunctionTypeExprOrRef) {
@@ -1022,7 +1036,7 @@ import com.google.inject.Inject;
 						//         }
 						//     }
 						// @formatter:on
-						T = ts.upperBound(G2, T); // taking upper bound turns this[C] into C
+						T = ts.upperBoundWithReopen(G2, T); // taking upper bound turns this[C] into C
 					}
 				}
 				return T;
@@ -1189,6 +1203,13 @@ import com.google.inject.Inject;
 		}
 
 		@Override
+		public TypeRef caseCoalesceExpression(CoalesceExpression expr) {
+			final TypeRef value = ts.type(G, expr.getExpression());
+			final TypeRef dflt = ts.type(G, expr.getDefaultExpression());
+			return typeSystemHelper.createUnionType(G, value, dflt);
+		}
+
+		@Override
 		public TypeRef caseAssignmentExpression(AssignmentExpression expr) {
 			switch (expr.getOp()) {
 			case ASSIGN:
@@ -1219,6 +1240,9 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseCommaExpression(CommaExpression e) {
+			if (e.getExprs().isEmpty()) {
+				return unknown();
+			}
 			final Expression last = e.getExprs().get(e.getExprs().size() - 1);
 			return ts.type(G, last);
 		}

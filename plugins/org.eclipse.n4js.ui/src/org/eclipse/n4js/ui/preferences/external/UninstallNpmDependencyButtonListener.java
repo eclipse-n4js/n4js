@@ -17,13 +17,13 @@ import java.util.function.Supplier;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.UIUtils;
 import org.eclipse.n4js.utils.StatusHelper;
@@ -61,7 +61,7 @@ public class UninstallNpmDependencyButtonListener extends SelectionAdapter {
 	public void widgetSelected(final SelectionEvent e) {
 
 		final InputDialog dialog = new InputDialog(UIUtils.getShell(), "npm Uninstall",
-				"Specify an npm package name to uninstall:", getSelectedNpm.get().getProjectName(),
+				"Specify an npm package name to uninstall:", getSelectedNpm.get().getProjectName().getName(),
 				validatorHelper.getPackageNameToUninstallValidator());
 
 		dialog.open();
@@ -76,7 +76,7 @@ public class UninstallNpmDependencyButtonListener extends SelectionAdapter {
 			IN4JSProject npmProject = getSelectedNpm.get();
 			new ProgressMonitorDialog(UIUtils.getShell()).run(true, true, monitor -> {
 				try {
-					URI location = npmProject.getLocation();
+					FileURI location = (FileURI) npmProject.getLocation();
 					IStatus status = libManager.uninstallNPM(location, monitor);
 					multistatus.merge(status);
 				} finally {

@@ -19,7 +19,7 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.parser.AntlrStreamWithToString
 import org.eclipse.n4js.ui.contentassist.TokenSourceFactory
-import org.eclipse.n4js.ui.contentassist.antlr.lexer.InternalN4JSLexer
+import org.eclipse.n4js.ide.contentassist.antlr.lexer.InternalN4JSLexer
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.testing.InjectWith

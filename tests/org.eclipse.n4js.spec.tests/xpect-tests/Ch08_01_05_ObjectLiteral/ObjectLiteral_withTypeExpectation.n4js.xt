@@ -75,7 +75,7 @@ var ol04 : ~ClsGetter = { g: a };
 
 // with setter from use-site structural class
 
-// XPECT type of '{ s: c }' --> ~Object with { s: union{B,C} }
+// XPECT type of '{ s: c }' --> ~Object with { s: B }
 // XPECT noerrors -->
 var ol05 : ~ClsSetter = { s: c };
 // XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
@@ -114,7 +114,7 @@ var ol14 : ClsGetterStruct = { g: a };
 
 // with setter from def-site structural class
 
-// XPECT type of '{ s: c }' --> ~Object with { s: union{B,C} }
+// XPECT type of '{ s: c }' --> ~Object with { s: B }
 // XPECT noerrors -->
 var ol15 : ClsSetterStruct = { s: c };
 // XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
@@ -153,7 +153,7 @@ var ol24 : ~Object with { get g() : B } = { g: a };
 
 // with setter from "with"-clause
 
-// XPECT type of '{ s: c }' --> ~Object with { s: union{B,C} }
+// XPECT type of '{ s: c }' --> ~Object with { s: B }
 // XPECT noerrors -->
 var ol25 : ~Object with { set s(value : B) } = { s: c };
 // XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
@@ -192,7 +192,7 @@ new ClsGetter({ g: a });
 
 // with setter via ~~this constructor
 
-// XPECT type of '{ s: c }' --> ~Object with { s: union{B,C} }
+// XPECT type of '{ s: c }' --> ~Object with { s: B }
 // XPECT noerrors -->
 new ClsSetter({ s: c });
 // XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"

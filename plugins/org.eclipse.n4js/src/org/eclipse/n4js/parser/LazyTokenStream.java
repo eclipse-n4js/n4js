@@ -14,11 +14,10 @@ import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenSource;
+import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
 import org.eclipse.xtext.parser.antlr.ITokenDefProvider;
 import org.eclipse.xtext.parser.antlr.Lexer;
 import org.eclipse.xtext.parser.antlr.XtextTokenStream;
-
-import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
 
 /**
  * <p>
@@ -59,7 +58,7 @@ public class LazyTokenStream extends XtextTokenStream {
 		int index = tokens.size();
 		Token t = tokenSource.nextToken();
 		while (t != null && t.getType() != CharStream.EOF) {
-			// stop on div, div-equal and right curly brace tokens tokens.
+			// stop on div, div-equal and right curly brace tokens.
 			int type = t.getType();
 			if (type == InternalN4JSLexer.Solidus || type == InternalN4JSLexer.SolidusEqualsSign
 					|| type == InternalN4JSLexer.RightCurlyBracket) {

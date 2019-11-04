@@ -14,6 +14,7 @@ import static org.eclipse.core.runtime.IStatus.ERROR;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -68,7 +69,7 @@ public class N4ProductActivator extends AbstractUIPlugin {
 	 * @return the image descriptor.
 	 */
 	public static ImageDescriptor getImageDescriptor(final String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, path).orElse(null);
 	}
 
 	/**

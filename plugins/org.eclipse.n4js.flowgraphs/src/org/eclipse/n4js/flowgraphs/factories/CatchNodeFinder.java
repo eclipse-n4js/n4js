@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
+import org.eclipse.n4js.n4JS.ExpressionWithTarget;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.IfStatement;
@@ -46,6 +47,7 @@ public class CatchNodeFinder {
 	static private final CatchEvaluator catchThrowEvaluator = new CatchThrowEvaluator();
 	static private final CatchEvaluator catchShortCircuitThenEvaluator = new CatchShortCircuitThenEvaluator();
 	static private final CatchEvaluator catchShortCircuitElseEvaluator = new CatchShortCircuitElseEvaluator();
+	static private final CatchEvaluator catchOptionalChainingEvaluator = new CatchOptionalChainingEvaluator();
 
 	/** @return the node to which the given {@code jumpNode} jumps via the given {@link JumpToken}. Can return null. */
 	static Pair<Node, ControlFlowType> find(JumpToken jumpToken, Node jumpNode, ComplexNodeMapper cnMapper) {
@@ -81,6 +83,8 @@ public class CatchNodeFinder {
 			return catchShortCircuitThenEvaluator;
 		case IfFalse:
 			return catchShortCircuitElseEvaluator;
+		case IfNullishTarget:
+			return catchOptionalChainingEvaluator;
 		default:
 			throw new IllegalArgumentException("not implemented");
 		}
@@ -473,6 +477,29 @@ public class CatchNodeFinder {
 
 			ComplexNode cn = cnMapper.get(cfe);
 			return cn.getNode(NodeNames.EXIT);
+		}
+
+		@Override
+		public boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken) {
+			return jumpToken.cfType == catchToken.cfType;
+		}
+	}
+
+	/**
+	 * Catches jumps that happen due to nullish targets in optional chains (see
+	 * {@link ExpressionWithTarget#isOptionalChaining()}.
+	 */
+	static private class CatchOptionalChainingEvaluator extends CatchEvaluator {
+
+		@Override
+		public boolean isCatchingType(ControlFlowElement cfe) {
+			return cfe instanceof ExpressionWithTarget;
+		}
+
+		@Override
+		public Node getCatchingNode(ControlFlowElement cfe, ControlFlowElement lastCFE, ComplexNodeMapper cnMapper) {
+			ComplexNode cn = cnMapper.get(cfe);
+			return cn.getExit();
 		}
 
 		@Override

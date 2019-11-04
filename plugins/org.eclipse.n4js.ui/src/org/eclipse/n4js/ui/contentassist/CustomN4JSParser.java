@@ -20,12 +20,13 @@ import java.util.Set;
 
 import org.antlr.runtime.BaseRecognizer;
 import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenSource;
+import org.eclipse.n4js.ide.contentassist.antlr.N4JSParser;
+import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.ui.contentassist.antlr.N4JSParser;
-import org.eclipse.n4js.ui.contentassist.antlr.internal.InternalN4JSParser;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.Group;
 import org.eclipse.xtext.UnorderedGroup;
@@ -70,31 +71,6 @@ public class CustomN4JSParser extends N4JSParser {
 			return state;
 		}
 
-		/*
-		 * TODO temporary override: remove as soon as the applied fix is available in Xtext itself
-		 */
-		@Override
-		public void announceRewind(int marker) {
-			int useLookAhead = -1;
-			if (marker != 0 && delegate == null && strict && predictionLevel != 0 && lookAheadAddOn > 0
-					&& state.syntaxErrors == 0
-					&& input.index() == input.size()
-					&& marker + lookAheadAddOn <= input.size()
-					&& isBacktracking()) {
-				useLookAhead = lookAheadAddOn;
-				delegate = createNotErrorRecoveryStrategy();
-				wasErrorCount = state.syntaxErrors;
-			}
-			currentMarker = marker;
-			lookAheadAddOn = currentMarker - firstMarker;
-			if (useLookAhead != -1) {
-				if (useLookAhead + firstMarker >= input.index()) {
-					announceEof(useLookAhead);
-				}
-			}
-			marked--;
-		}
-
 	}
 
 	/**
@@ -106,6 +82,22 @@ public class CustomN4JSParser extends N4JSParser {
 		CustomInternalN4JSParser result = new CustomInternalN4JSParser();
 		result.setGrammarAccess(getGrammarAccess());
 		return result;
+	}
+
+	/**
+	 * Workaround for Xpect which messes with the injectors and singletons.
+	 *
+	 * Rather than trying to find the rule name in the cached instance of ruleNames, we invoke the entry rule directly.
+	 */
+	@Override
+	protected Collection<FollowElement> getFollowElements(AbstractInternalContentAssistParser parser) {
+		try {
+			InternalN4JSParser casted = (InternalN4JSParser) parser;
+			casted.entryRuleScript();
+			return casted.getFollowElements();
+		} catch (RecognitionException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Inject

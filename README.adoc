@@ -1,5 +1,5 @@
 ////
-Copyright (c) 2016 NumberFour AG.
+Copyright (c) 2019 NumberFour AG and others.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
 which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ N4JS is based on ECMAScript Version 5 and ECMAScript 2015 is supported to a grea
 
 == Releases
 
-The Eclipse N4JS project is in the link:https://wiki.eclipse.org/Development_Resources/HOWTO/Incubation_Phase[Incubation Phase] and there is no official release available yet (for unofficial releases see the link:https://www.eclipse.org/n4js/download.html[download page].
+The Eclipse N4JS project is in the link:https://wiki.eclipse.org/Development_Resources/HOWTO/Incubation_Phase[Incubation Phase] and there is no official release available yet (for unofficial releases see the link:https://www.eclipse.org/n4js/downloads.html[download page].
 This doesn't mean that N4JS is unstable; we have an extensive test suite (>90.000 tests including the https://github.com/tc39/test262[ECMAScript test suites]) to ensure a stable nightly build.
 N4JS has been in use in several large non-public projects for years. 
 There still may be bugs (as there are always bugs) and features which are currently under development. 
@@ -34,41 +34,15 @@ This setup installs the correct Eclipse version, creates a new workspace and clo
 The recommended way to install the Eclipse IDE and set up the workspace is to use the Eclipse Installer.
 This installer is to be downloaded from https://wiki.eclipse.org/Eclipse_Installer
 
-Run the installer and apply the following steps:
+For details, see the link:https://github.com/eclipse/n4js/blob/master/docs/org.eclipse.n4js.design/chapters/02_eclipseSetup/eclipseSetup.adoc[section Eclipse Installer] in the design document.
 
-1. change to "Advance Mode" via the menu (upper-right corner) (no need to move the installer)
-2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "Oxygen"
-3. double-click the entry **Eclipse Projects/N4JS** so that it is shown in the catalog view below
-4. on the next page, configure paths accordingly. You only have to configure the installation and workspace folder.
-5. start installation
-
-The installer will then guide you through the rest of the installation. All plug-ins are downloaded and configured automatically, so is the workspace including downloading the git repository and setting up the workspace.
-
-Once the Oomph installation is done, perform the following steps inside the newly installed Eclipse IDE:
-
-1. compile n4js-libs by running the MWE2 workflow `BuildN4jsLibs.mwe2` (e.g. right-click this file in explorer and select "Run As > MWE2 Workflow" from context menu).
-2. generate documentation by running `N4js.doc.maven.launch` (e.g. right-click this file in explorer and select "Run As > n4js.doc.maven" from context menu).
-   This will resolve all warnings in the documentation bundles.
-
-=== Manual IDE Configuration
-
-For a manual install, clone the code and import all top-level projects from the docs, features, plugins, releng, testhelpers, and tests folders. Activate the targetplatform contained in the `releng/org.eclipse.n4js.targetplatform/` project.
-
-The N4JS IDE is developed with Eclipse Oxygen 4.7 or better since the system is based on Eclipse anyway.
-It is almost impossible to use another IDE to develop Eclipse plugins. The list of required plugins includes:
-
-- Xtext/Xtend 2.10.0
-- Xcore 1.4.0
-- Xsemantics 1.10.0
-- Xpect 0.1
-
-It is important to use the latest version of Xtext and the corresponding service release of Xcore. You will find the latest version numbers and plugins used in the target platform definition at
-https://github.com/eclipse/n4js/blob/master/releng/org.eclipse.n4js.targetplatform/org.eclipse.n4js.targetplatform.target
 
 == Documentation
 
 - https://www.eclipse.org/n4js/userguides[User Guides and Tutorials]: IDE Setup, writing Node.js modules and exporting as npm with the N4JS IDE
-- https://www.eclipse.org/n4js/spec/N4JSSpec.html[N4JS Language Specification]
+- https://www.eclipse.org/n4js/spec/[N4JS Language Specification]
+- https://www.eclipse.org/n4js/idespec/[N4JS IDE Specification]
+- https://www.eclipse.org/n4js/design/[N4JS Design Documentation]
 - https://www.eclipse.org/n4js/features/[Complete Feature Table]
 - https://www.eclipse.org/n4js/releases/[Release Notes]
 
@@ -78,7 +52,7 @@ https://github.com/eclipse/n4js/blob/master/releng/org.eclipse.n4js.targetplatfo
 - https://www.eclipse.org/forums/index.php/f/365/[Eclipse Forum]
 - https://dev.eclipse.org/mailman/listinfo/n4js-dev[Developer Mailing List]
 - https://github.com/eclipse/n4js/issues/[Issues]
-- http://n4js.blogspot.de/[Eclipse N4JS Blog]
+- https://n4js.blogspot.de/[Eclipse N4JS Blog]
 - https://projects.eclipse.org/projects/technology.n4js[Eclipse Project Pages]
 - https://projects.eclipse.org/projects/technology.n4js/who[Who's Involved]
 
@@ -88,7 +62,7 @@ Ensure you have
 
 - Java 11
 - Maven 3.2.x and
-- Node.js 8
+- Node.js >=8
 
 installed on your system.
 
@@ -122,7 +96,7 @@ The existence of `local-snapshot-deploy-folder` will trigger a profile enabling 
 
 == License
 
-Copyright (c) 2017 NumberFour AG.
+Copyright (c) 2019 NumberFour AG and others.
 
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0

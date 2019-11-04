@@ -10,12 +10,14 @@
  */
 package org.eclipse.n4js.generator.headless;
 
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+
 /**
  * Signaling severe Problems in Compilation
  */
 public class N4JSCompileErrorException extends N4JSCompileException implements N4ProgressStateRecorder.IProgressState {
 
-	private final String projectName;
+	private final N4JSProjectName projectName;
 
 	/**
 	 * @param message
@@ -23,7 +25,7 @@ public class N4JSCompileErrorException extends N4JSCompileException implements N
 	 * @param projectName
 	 *            erroneous project
 	 */
-	public N4JSCompileErrorException(String message, String projectName) {
+	public N4JSCompileErrorException(String message, N4JSProjectName projectName) {
 		super(message);
 		this.projectName = projectName;
 	}
@@ -36,7 +38,7 @@ public class N4JSCompileErrorException extends N4JSCompileException implements N
 	 * @param t
 	 *            nested cause
 	 */
-	public N4JSCompileErrorException(String message, String projectName, Throwable t) {
+	public N4JSCompileErrorException(String message, N4JSProjectName projectName, Throwable t) {
 		super(message, t);
 		this.projectName = projectName;
 	}
@@ -44,7 +46,7 @@ public class N4JSCompileErrorException extends N4JSCompileException implements N
 	/**
 	 * @return name of erroneous project
 	 */
-	public String getProjectName() {
+	public N4JSProjectName getProjectName() {
 		return projectName;
 	}
 }

@@ -16,6 +16,7 @@ import static org.eclipse.n4js.ts.types.util.Variance.INV;
 import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.CONJUNCTION;
 import static org.eclipse.n4js.typesystem.constraints.Reducer.BooleanOp.DISJUNCTION;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,13 +46,14 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
-import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer;
 import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.StructuralMembersTriple;
 import org.eclipse.n4js.utils.StructuralMembersTripleIterator;
 import org.eclipse.n4js.utils.StructuralTypesHelper;
 import org.eclipse.xtext.xbase.lib.Pair;
+
+import com.google.common.base.Optional;
 
 /**
  * Contains all logic for reduction, i.e. for reducing a {@link TypeConstraint} into simpler {@link TypeBound}s. A
@@ -114,9 +116,26 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	// REDUCTION
 
 	/**
+	 * Convenience method for {@link #reduce(TypeArgument, TypeArgument, Variance)}, accepting zero or more
+	 * {@link TypeConstraint}s.
+	 *
+	 * @return true iff new bounds were added
+	 */
+	public boolean reduce(Iterable<? extends TypeConstraint> constraints) {
+		boolean wasAdded = false;
+		for (TypeConstraint constraint : constraints) {
+			wasAdded |= reduce(constraint);
+			if (ic.isDoomed()) {
+				break;
+			}
+		}
+		return wasAdded;
+	}
+
+	/**
 	 * Convenience method for {@link #reduce(TypeArgument, TypeArgument, Variance)}, accepting a {@link TypeConstraint}.
 	 *
-	 * @return true iff new bounds were added (this signals a round of incorporation should follow)
+	 * @return true iff new bounds were added
 	 */
 	public boolean reduce(TypeConstraint constraint) {
 		if (constraint == TypeConstraint.TRUE) {
@@ -146,17 +165,35 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			}
 			return false;
 		}
-		if ((left instanceof TypeRef) && (right instanceof TypeRef)) {
-			// both TypeRefs
-			return reduceTypeRef((TypeRef) left, (TypeRef) right, variance);
+		if (left.eIsProxy() || right.eIsProxy()) {
+			if (DEBUG) {
+				log("ignoring constraint due to proxies");
+			}
+			return false;
 		}
-		// at least one wildcard
-		if ((left instanceof Wildcard) && (right instanceof Wildcard)) {
-			// both wildcards
-			return reduceWildcard((Wildcard) left, (Wildcard) right, variance);
+		if (left instanceof ExistentialTypeRef) {
+			ExistentialTypeRef leftCasted = (ExistentialTypeRef) left;
+			if (leftCasted.isReopened()) {
+				return reduce(leftCasted.getWildcard(), right, variance);
+			}
 		}
-		// a wildcard and a TypeRef, in any order
-		return giveUp(left, right, variance); // TODO probably wrong like this? cf. IDE-1653
+		if (right instanceof ExistentialTypeRef) {
+			ExistentialTypeRef rightCasted = (ExistentialTypeRef) right;
+			if (rightCasted.isReopened()) {
+				return reduce(left, rightCasted.getWildcard(), variance);
+			}
+		}
+		final boolean leftIsWildcard = left instanceof Wildcard;
+		final boolean rightIsWildcard = right instanceof Wildcard;
+		if (leftIsWildcard && rightIsWildcard) {
+			return reduceWildcardBoth((Wildcard) left, (Wildcard) right, variance);
+		} else if (rightIsWildcard) {
+			return reduceWildcardRight((TypeRef) left, (Wildcard) right, variance);
+		} else if (leftIsWildcard) {
+			return reduceWildcardRight((TypeRef) right, (Wildcard) left, variance.inverse());
+		}
+		// no wildcards, both are TypeRefs
+		return reduceTypeRef((TypeRef) left, (TypeRef) right, variance);
 	}
 
 	/**
@@ -374,32 +411,34 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		}
 	}
 
-	// TODO IDE-1653 reconsider handling of wildcards in Reducer#reduceWildcard()
-	private boolean reduceWildcard(Wildcard left, Wildcard right, @SuppressWarnings("unused") Variance variance) {
+	private boolean reduceWildcardBoth(Wildcard left, Wildcard right, Variance variance) {
 		if (left == right) {
 			// trivial ==, <:, and :> of a wildcard to itself.
 			return false;
 		}
 		boolean wasAdded = false;
-		final TypeRef lbLeft = left.getDeclaredLowerBound();
-		final TypeRef lbRight = right.getDeclaredLowerBound();
-		if (lbLeft != null || lbRight != null) {
-			// ⟨ ? super L Φ ? ⟩ implies `L = bottom`
-			// ⟨ ? super L Φ ? extends R ⟩ implies `L = bottom`
-			// ⟨ ? super L Φ ? super R ⟩ implies `L = R`
-			final TypeRef lbLeftOrBottom = (lbLeft != null) ? lbLeft : bottom();
-			final TypeRef lbRightOrBottom = (lbRight != null) ? lbRight : bottom();
-			wasAdded |= reduce(lbLeftOrBottom, lbRightOrBottom, INV);
+		if (variance == CO || variance == INV) {
+			final TypeRef ubLeft = ts.upperBound(G, left);
+			final TypeRef lbRight = ts.lowerBound(G, right);
+			wasAdded |= reduce(ubLeft, lbRight, CO);
 		}
-		final TypeRef ubLeft = left.getDeclaredUpperBound();
-		final TypeRef ubRight = right.getDeclaredUpperBound();
-		if (ubLeft != null || ubRight != null) {
-			// ⟨ ? extends L Φ ? ⟩ implies `L = top`
-			// ⟨ ? extends L Φ ? super R ⟩ implies `L = top`
-			// ⟨ ? extends L Φ ? extends R ⟩ implies `L = R`
-			final TypeRef ubLeftOrTop = (ubLeft != null) ? ubLeft : top();
-			final TypeRef ubRightOrTop = (ubRight != null) ? ubRight : top();
-			wasAdded |= reduce(ubLeftOrTop, ubRightOrTop, INV);
+		if (variance == CONTRA || variance == INV) {
+			final TypeRef lbLeft = ts.lowerBound(G, left);
+			final TypeRef ubRight = ts.upperBound(G, right);
+			wasAdded |= reduce(ubRight, lbLeft, CO);
+		}
+		return wasAdded;
+	}
+
+	private boolean reduceWildcardRight(TypeRef left, Wildcard right, Variance variance) {
+		boolean wasAdded = false;
+		if (variance == CO || variance == INV) {
+			final TypeRef lbRight = ts.lowerBound(G, right);
+			wasAdded = reduce(left, lbRight, variance);
+		}
+		if (variance == CONTRA || variance == INV) {
+			final TypeRef ubRight = ts.upperBound(G, right);
+			wasAdded |= reduce(left, ubRight, CONTRA);
 		}
 		return wasAdded;
 	}
@@ -457,17 +496,44 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	}
 
 	private boolean reduceTypeTypeRef(TypeTypeRef left, TypeTypeRef right, Variance variance) {
-		final TypeArgument leftStatic = TypeUtils.copy(left.getTypeArg());
-		final TypeArgument rightStatic = TypeUtils.copy(right.getTypeArg());
-		if (!left.isConstructorRef() && !right.isConstructorRef()) {
-			// both sides are plain TypeTypeRefs
-			return reduce(leftStatic, rightStatic, variance);
-		} else {
-			// at least one side is constructor{...}
-			return reduce(leftStatic, rightStatic, INV); // TODO this is wrong
-			// instead:
-			// ⟨ constructor{D} <: constructor{C} ⟩ implies ⟨ D <: C ⟩ (as above) and ⟨ D#constructor <: C#constructor ⟩
+		boolean wasAdded = false;
+		if (variance == CO || variance == INV) {
+			wasAdded |= reduceTypeTypeRef(left, right);
 		}
+		if (variance == CONTRA || variance == INV) {
+			wasAdded |= reduceTypeTypeRef(right, left);
+		}
+		return wasAdded;
+	}
+
+	private boolean reduceTypeTypeRef(TypeTypeRef left, TypeTypeRef right) {
+		final TypeArgument leftTypeArg = left.getTypeArg();
+		final TypeArgument rightTypeArg = right.getTypeArg();
+		if (leftTypeArg == null || rightTypeArg == null) {
+			return giveUp(left, right, Variance.CO);
+		}
+
+		final boolean leftIsCtorRef = left.isConstructorRef();
+		final boolean rightIsCtorRef = right.isConstructorRef();
+
+		if (!leftIsCtorRef && rightIsCtorRef) {
+			// case: type{} <: constructor{}
+			return giveUp(left, right, Variance.CO);
+
+		}
+
+		// check type arguments
+		boolean wasAdded = false;
+		wasAdded |= reduceTypeArgumentCompatibilityCheck(leftTypeArg, rightTypeArg, Variance.CO);
+
+		final boolean rightArgIsOpen = rightTypeArg instanceof Wildcard
+				|| (rightTypeArg instanceof ExistentialTypeRef && ((ExistentialTypeRef) rightTypeArg).isReopened());
+		if (!rightArgIsOpen && rightIsCtorRef && !ic.isDoomed()) {
+			// ⟨ constructor{D} <: constructor{C} ⟩ implies ⟨ D#constructor <: C#constructor ⟩
+			// TODO constraint missing! (see SubtypeJudgment#applyTypeTypeRef() for details)
+		}
+
+		return wasAdded;
 	}
 
 	/**
@@ -478,9 +544,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	private boolean reduceFunctionTypeExprOrRef(FunctionTypeExprOrRef left, FunctionTypeExprOrRef right,
 			Variance variance) {
 		if (left.isGeneric() || right.isGeneric()) {
-			final FunctionTypeExprOrRef leftNonGen = ic.newInferenceVariablesFor(left);
-			final FunctionTypeExprOrRef rightNonGen = ic.newInferenceVariablesFor(right);
-			return reduceFunctionTypeExprOrRef(leftNonGen, rightNonGen, variance);
+			left = ic.newInferenceVariablesFor(left);
+			right = ic.newInferenceVariablesFor(right);
+			if (left.isGeneric() || right.isGeneric()) {
+				throw new IllegalStateException("still generic even after introducing inference variables");
+			}
 		}
 		boolean wasAdded = false;
 		// derive constraints for types of fpars
@@ -557,9 +625,10 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			final int len = Math.min(typeArgsOfIterableN.size(), typeParamsOfIterableN.size());
 			for (int idx = 0; idx < len; idx++) {
 				TypeArgument currTypeArgOfIterableN = typeArgsOfIterableN.get(idx);
-				TypeVariable curTypeParamOfIterableN = typeParamsOfIterableN.get(idx);
-				wasAdded |= reduceConstraintForTypeArgumentPair(currTypeArgOfIterableN, curTypeParamOfIterableN,
-						singleTypeArgOfArray);
+				TypeVariable currTypeParamOfIterableN = typeParamsOfIterableN.get(idx);
+				Variance currDefSiteVariance = currTypeParamOfIterableN.getVariance();
+				wasAdded |= reduceTypeArgumentCompatibilityCheck(singleTypeArgOfArray, currTypeArgOfIterableN,
+						currDefSiteVariance);
 			}
 			return wasAdded;
 		}
@@ -627,55 +696,23 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			final TypeVariable leftParam = leftParams.get(idx);
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
 				final TypeRef leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam));
-				wasAdded |= reduceConstraintForTypeArgumentPair(leftArg, leftParam, leftParamSubst);
+				final Variance defSiteVariance = leftParam.getVariance();
+				wasAdded |= reduceTypeArgumentCompatibilityCheck(leftParamSubst, leftArg, defSiteVariance);
 			}
 		}
 		return wasAdded;
-
 	}
 
 	/**
-	 * Will add a constraint ⟨ leftArg :> rightArg ⟩, taking into account wildcards, closed existential types, and
-	 * definition site variance.
+	 * Implementation located in {@code GenericsComputer} to facilitate keeping it aligned to the corresponding method
+	 * used in subtype checks; for all details see
+	 * {@code GenericsComputer#reduceTypeArgumentCompatibilityCheck(RuleEnvironment, TypeArgument, TypeArgument, Optional, boolean)}.
 	 */
-	private boolean reduceConstraintForTypeArgumentPair(TypeArgument leftArg, TypeVariable leftParam,
-			TypeArgument rightArg) {
-		boolean wasAdded = false;
-		if (leftArg instanceof Wildcard) {
-			final TypeRef ub = ((Wildcard) leftArg).getDeclaredUpperBound();
-			if (ub != null) {
-				wasAdded |= reduce(ub, ts.upperBound(G, rightArg), CONTRA);
-			}
-			final TypeRef lb = ((Wildcard) leftArg).getDeclaredLowerBound();
-			if (lb != null) {
-				wasAdded |= reduce(lb, ts.lowerBound(G, rightArg), CO);
-			}
-		} else if (rightArg instanceof ExistentialTypeRef) {
-			// TODO IDE-1653 reconsider this entire case
-			// re-open the existential type, because we assume it was closed only while adding substitutions
-			// UPDATE: this is wrong if right.typeArgs already contained an ExistentialTypeRef! (but might be
-			// an non-harmful over approximation)
-			final Wildcard w = ((ExistentialTypeRef) rightArg).getWildcard();
-			final TypeRef ub = w.getDeclaredUpperBound();
-			if (ub != null) {
-				wasAdded |= reduce(ub, ts.upperBound(G, leftArg), CONTRA);
-			}
-			final TypeRef lb = w.getDeclaredLowerBound();
-			if (lb != null) {
-				wasAdded |= reduce(lb, ts.lowerBound(G, leftArg), CO);
-			}
-		} else {
-			if (!(leftArg instanceof TypeRef)) {
-				throw new UnsupportedOperationException("unsupported subtype of TypeArgument: "
-						+ leftArg.getClass().getName());
-			}
-			// due to the assumption of the method, we always have: leftArg :> rightArg
-			// (so for def-site variance we just look at the left side in this case, i.e. leftParam)
-			final Variance leftDefSiteVarianceRaw = leftParam.getVariance();
-			final Variance leftDefSiteVariance = leftDefSiteVarianceRaw != null ? leftDefSiteVarianceRaw : INV;
-			wasAdded |= reduce(leftArg, rightArg, CONTRA.mult(leftDefSiteVariance));
-		}
-		return wasAdded;
+	private boolean reduceTypeArgumentCompatibilityCheck(TypeArgument leftArg, TypeArgument rightArg,
+			Variance variance) {
+		final List<TypeConstraint> constraints = tsh.reduceTypeArgumentCompatibilityCheck(G, leftArg, rightArg,
+				Optional.of(variance), true);
+		return reduce(constraints);
 	}
 
 	/**
@@ -694,7 +731,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		}
 		// now, variance is either CO or INV
 
-		final StructuralTypingComputer stc = tsh.getStructuralTypingComputer();
 		final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
 		final StructTypingInfo infoFaked = new StructTypingInfo(G2, left, right, // <- G2 will be changed!
 				left.getTypingStrategy(), right.getTypingStrategy());
@@ -702,7 +738,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		boolean wasAdded = false;
 		final StructuralTypesHelper structTypesHelper = tsh.getStructuralTypesHelper();
 		final StructuralMembersTripleIterator iter = structTypesHelper.getMembersTripleIterator(G2, left, right, false);
-		while (iter.hasNext()) {
+		while (iter.hasNext() && !ic.isDoomed()) {
 			final StructuralMembersTriple next = iter.next();
 			final TMember l = next.getLeft();
 			final TMember r = next.getRight();
@@ -713,15 +749,20 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				// commencing with type inference here produces better error messages.)
 				continue;
 			}
-			final TypeConstraint constraint = stc.reduceMembers(left, l, r, variance, infoFaked);
-			if (containsReopenedExistentialType(G2, constraint)) { // note: using G2 here, not G!
-				// by completely ignoring all constraints that contain a re-opened ExistentialTypeRef we might lose some
-				// information; but otherwise we would have to deal with this all throughout InferenceContext,
-				// Reducer, BoundSet
-				// TODO reconsider handling of re-opened ExistentialTypeRefs in InferenceContext, IDE-1653
-				continue;
+			final List<TypeConstraint> constraints = new ArrayList<>();
+			switch (variance) {
+			case CO:
+				constraints.addAll(tsh.reduceMembers(G2, left, l, r, infoFaked));
+				break;
+			case CONTRA:
+				constraints.addAll(tsh.reduceMembers(G2, left, r, l, infoFaked));
+				break;
+			case INV:
+				constraints.addAll(tsh.reduceMembers(G2, left, l, r, infoFaked));
+				constraints.addAll(tsh.reduceMembers(G2, left, r, l, infoFaked));
+				break;
 			}
-			wasAdded |= reduce(constraint);
+			wasAdded |= reduce(constraints);
 		}
 		return wasAdded;
 	}
@@ -763,20 +804,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		final TypeRef rightSubst = ts.substTypeVariables(G_temp, right);
 		// step 2: now, perform subtype check reusing existing logic
 		return ts.subtypeSucceeded(G, leftSubst, rightSubst);
-	}
-
-	private static final boolean containsReopenedExistentialType(RuleEnvironment someG, TypeConstraint constraint) {
-		return constraint != null
-				&& (RuleEnvironmentExtensions.isExistentialTypeToBeReopened(someG, constraint.left, true)
-						|| RuleEnvironmentExtensions.isExistentialTypeToBeReopened(someG, constraint.right, true));
-	}
-
-	private TypeRef bottom() {
-		return RuleEnvironmentExtensions.bottomTypeRef(G);
-	}
-
-	private TypeRef top() {
-		return RuleEnvironmentExtensions.topTypeRef(G);
 	}
 
 	private void log(final String message) {

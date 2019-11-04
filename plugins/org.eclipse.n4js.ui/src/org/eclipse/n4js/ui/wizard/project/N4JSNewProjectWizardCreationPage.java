@@ -11,13 +11,12 @@
 package org.eclipse.n4js.ui.wizard.project;
 
 import static com.google.common.base.CharMatcher.breakingWhitespace;
+import static com.google.common.base.CharMatcher.inRange;
 import static com.google.common.base.CharMatcher.is;
-import static com.google.common.base.CharMatcher.javaLetter;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.jface.databinding.viewers.ViewersObservables.observeSingleSelection;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.projectDescription.ProjectType.API;
 import static org.eclipse.n4js.projectDescription.ProjectType.LIBRARY;
@@ -40,15 +39,15 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeanProperties;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -196,7 +195,6 @@ public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProject
 		locationArea.updateProjectName(getProjectNameWithScope());
 	}
 
-	@SuppressWarnings("unchecked")
 	private void createVendorIdControls(DataBindingContext dbc, Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(GridLayoutFactory.swtDefaults().numColumns(2).create());
@@ -398,7 +396,8 @@ public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProject
 			// Implementation ID is optional
 			if (!isNullOrEmpty(implementationId)) {
 				final char leadingChar = implementationId.charAt(0);
-				if (!is('_').or(javaLetter()).matches(leadingChar)) {
+
+				if (is('_').or(inRange('a', 'z').or(inRange('A', 'Z'))).matches(leadingChar)) {
 					setErrorMessage("Implementation ID should start either an upper or a lower case character "
 							+ "from the Latin alphabet or with the underscore character.");
 					return false;
@@ -442,44 +441,39 @@ public class N4JSNewProjectWizardCreationPage extends ExtensibleWizardNewProject
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void initDefaultCreateGreeterBindings(DataBindingContext dbc, Button createGreeterFileButton) {
 		// Bind the "create greeter file"-checkbox
-		dbc.bindValue(WidgetProperties.selection().observe(createGreeterFileButton),
+		dbc.bindValue(WidgetProperties.buttonSelection().observe(createGreeterFileButton),
 				BeanProperties.value(N4JSProjectInfo.class, N4JSProjectInfo.CREATE_GREETER_FILE_PROP_NAME)
 						.observe(projectInfo));
 	}
 
-	@SuppressWarnings("unchecked")
 	private void initTestProjectBinding(DataBindingContext dbc, Button addNormalSourceFolderButton,
 			Button createTestGreeterFileButton) {
 		// Bind the "normal source folder"-checkbox
-		dbc.bindValue(WidgetProperties.selection().observe(addNormalSourceFolderButton),
+		dbc.bindValue(WidgetProperties.buttonSelection().observe(addNormalSourceFolderButton),
 				PojoProperties.value(N4JSProjectInfo.class, N4JSProjectInfo.ADDITIONAL_NORMAL_SOURCE_FOLDER_PROP_NAME)
 						.observe(projectInfo));
 
 		// Bind the "Create greeter file"-checkbox
-		dbc.bindValue(WidgetProperties.selection().observe(createTestGreeterFileButton),
+		dbc.bindValue(WidgetProperties.buttonSelection().observe(createTestGreeterFileButton),
 				BeanProperties.value(N4JSProjectInfo.class, N4JSProjectInfo.CREATE_GREETER_FILE_PROP_NAME)
 						.observe(projectInfo));
 	}
 
-	@SuppressWarnings("unchecked")
 	private void initProjectTypeBinding(final DataBindingContext dbc, final ComboViewer projectType) {
-		dbc.bindValue(observeSingleSelection(projectType),
+		dbc.bindValue(ViewerProperties.singleSelection().observe(projectType),
 				PojoProperties.value(N4JSProjectInfo.class, PROJECT_TYPE_PROP_NAME).observe(projectInfo));
 	}
 
-	@SuppressWarnings("unchecked")
 	private void initImplementationIdBinding(final DataBindingContext dbc, final Text text) {
 		dbc.bindValue(WidgetProperties.text(Modify).observe(text),
 				PojoProperties.value(N4JSProjectInfo.class, IMPLEMENTATION_ID_PROP_NAME).observe(projectInfo));
 	}
 
-	@SuppressWarnings("unchecked")
 	private void initApiViewerBinding(DataBindingContext dbc, ListViewer apiViewer) {
 		dbc.bindList(
-				ViewersObservables.observeMultiSelection(apiViewer),
+				ViewerProperties.multipleSelection().observe(apiViewer),
 				PojoProperties.list(N4JSProjectInfo.class, IMPLEMENTED_PROJECTS_PROP_NAME).observe(projectInfo));
 	}
 

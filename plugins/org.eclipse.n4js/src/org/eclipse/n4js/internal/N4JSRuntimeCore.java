@@ -15,7 +15,6 @@ import static java.lang.Boolean.TRUE;
 import static org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +29,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.OrderedResourceDescriptionsData;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -52,7 +55,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 
 	private final FileBasedWorkspace workspace;
 
-	private final N4JSModel model;
+	private final N4JSModel<? extends SafeURI<?>> model;
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
@@ -67,7 +70,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	 * Public for testing purpose.
 	 */
 	@Inject
-	public N4JSRuntimeCore(FileBasedWorkspace workspace, N4JSModel model) {
+	public N4JSRuntimeCore(FileBasedWorkspace workspace, N4JSModel<? extends SafeURI<?>> model) {
 		this.workspace = workspace;
 		this.model = model;
 	}
@@ -81,8 +84,13 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	}
 
 	@Override
+	public SafeURI<?> toProjectLocation(URI uri) {
+		return model.toProjectLocation(uri);
+	}
+
+	@Override
 	public Optional<? extends IN4JSProject> findProject(URI nestedLocation) {
-		if (nestedLocation == null) {
+		if (nestedLocation == null || N4Scheme.isN4Scheme(nestedLocation)) {
 			return Optional.absent();
 		}
 		IN4JSProject result = model.findProjectWith(nestedLocation);
@@ -90,16 +98,18 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	}
 
 	@Override
-	public Iterable<IN4JSProject> findAllProjects() {
-		List<IN4JSProject> projects = new ArrayList<>();
-		this.workspace.getAllProjectLocationsIterator().forEachRemaining(
-				location -> projects.add(model.getN4JSProject(location)));
-		return projects;
+	public Set<? extends IN4JSProject> findAllProjects() {
+		return model.getAllProjects();
 	}
 
 	@Override
-	public Map<String, IN4JSProject> findAllProjectMappings() {
-		Map<String, IN4JSProject> allProjectMappings = new HashMap<>();
+	public Optional<? extends IN4JSProject> findProject(N4JSProjectName name) {
+		return Optional.fromNullable(model.findProject(name));
+	}
+
+	@Override
+	public Map<N4JSProjectName, IN4JSProject> findAllProjectMappings() {
+		Map<N4JSProjectName, IN4JSProject> allProjectMappings = new HashMap<>();
 		for (IN4JSProject project : findAllProjects()) {
 			allProjectMappings.put(project.getProjectName(), project);
 		}
@@ -108,7 +118,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 
 	@Override
 	public Optional<? extends IN4JSSourceContainer> findN4JSSourceContainer(URI nestedLocation) {
-		if (nestedLocation == null) {
+		if (nestedLocation == null || (nestedLocation.isFile() && nestedLocation.isRelative())) {
 			return Optional.absent();
 		} else {
 			return model.findN4JSSourceContainer(nestedLocation);
@@ -118,8 +128,8 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	@Override
 	public void registerProject(File file) {
 		if (file.isDirectory()) {
-			URI uri = URI.createURI(file.toURI().toString()).trimSegments(1);
-			workspace.registerProject(uri);
+			URI uri = new FileURI(file).toURI();
+			workspace.registerProject((FileURI) toProjectLocation(uri));
 		} else {
 			throw new IllegalArgumentException(file.getAbsolutePath() + " is not a valid project location");
 		}

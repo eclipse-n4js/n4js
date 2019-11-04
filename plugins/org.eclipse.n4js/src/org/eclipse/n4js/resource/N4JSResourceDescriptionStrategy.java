@@ -18,6 +18,7 @@ import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.TClass;
+import org.eclipse.n4js.ts.types.TConstableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
@@ -56,6 +57,13 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 */
 	private static final String TYPE_ACCESS_MODIFIER_KEY = "TYPE_ACCESS_MODIFIER";
 	private static final TypeAccessModifier TYPE_ACCESS_MODIFIER_DEFAULT = TypeAccessModifier.PUBLIC;
+
+	/**
+	 * The user data key for the const flag of {@link TConstableElement}s - used to distinguish between var/let and
+	 * const without creating a resource just from the proxy in the index.
+	 */
+	private static final String CONST_KEY = "CONST";
+	private static final boolean CONST_DEFAULT = false;
 
 	/**
 	 * User data to store the {@link TClass#isFinal() final} property of a {@link TClass} in the index without resolving
@@ -228,6 +236,15 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		}
 	}
 
+	/** @return the const flag of the given description. Default value is {@value #CONST_DEFAULT}. */
+	public static boolean getConst(IEObjectDescription description) {
+		String value = description.getUserData(CONST_KEY);
+		if (value == null) {
+			return CONST_DEFAULT;
+		}
+		return Boolean.parseBoolean(value);
+	}
+
 	/** @return the version number of the given description. */
 	public static int getVersion(IEObjectDescription description) {
 		try {
@@ -317,6 +334,14 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		}
 	}
 
+	/** Supplies the given userData map with the user data value for the const flag of {@link TConstableElement}s. */
+	private void addConstUserData(Map<String, String> userData, TConstableElement element) {
+		boolean isConst = element.isConst();
+		if (isConst != CONST_DEFAULT) {
+			userData.put(CONST_KEY, Boolean.toString(isConst));
+		}
+	}
+
 	/** Supplies the given userData map with the user data value for the access modifier. */
 	private void addVersionableVersion(Map<String, String> userData, Type type) {
 		int version = type.getVersion();
@@ -334,6 +359,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (qualifiedName != null) { // e.g. non-exported variables will return null for FQN
 			Map<String, String> userData = new HashMap<>();
 			addAccessModifierUserData(userData, variable.getTypeAccessModifier());
+			addConstUserData(userData, variable);
 
 			IEObjectDescription eod = EObjectDescription.create(qualifiedName, variable, userData);
 			acceptor.accept(eod);

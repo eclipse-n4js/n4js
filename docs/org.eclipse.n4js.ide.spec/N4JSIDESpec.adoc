@@ -1,0 +1,67 @@
+////
+Copyright (c) 2019 NumberFour AG and others
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+:find:
+include::{find}config.adoc[]
+
+mathinclude::{find}commands.tex[]
+
+//[.n4jslogo]
+//image::{find}images/n4jslogo.png[100,100,align="center"]
+
+= N4JS IDE Specification
+{docdatetime}
+
+
+[.center]
+*Last Updated: {docdate}*
+
+[.center]
+*Authors:* +
+Jens von Pilgrim, Jakub Siberski, Mark-Oliver Reiser, Torsten Krämer, Ákos Kitta, Sebastian Zarnekow, Lorenzo Bettini, Jörg Reichert, Kristian Duske, Marcus Mews, Minh Quang Tran, Luca Beurer-Kellner
+
+<<<
+
+:leveloffset: +1
+
+include::{find}abstract.adoc[]
+
+
+include::{find}chapters/01_introduction/introduction.adoc[]
+
+include::{find}chapters/02_views/views.adoc[]
+include::{find}chapters/04_navigation/navigation.adoc[]
+include::{find}chapters/05_assistance/assistance.adoc[]
+include::{find}chapters/06_wizards/wizards.adoc[]
+include::{find}chapters/08_executionsupport/executionsupport.adoc[]
+include::{find}chapters/09_testsupport/testsupport.adoc[]
+
+include::{find}chapters/10_helpsystem/helpsystem.adoc[]
+include::{find}chapters/11_bugmanagement/bugmanagement.adoc[]
+
+
+ifdef::backend-docbook5[<<<]
+
+
+[appendix]
+include::{find}chapters/a01_license/license.adoc[]
+
+[appendix]
+include::{find}acronyms.adoc[]
+
+
+
+[appendix]
+= Bibliography
+
+bibliography::[]
+
+:leveloffset: -1

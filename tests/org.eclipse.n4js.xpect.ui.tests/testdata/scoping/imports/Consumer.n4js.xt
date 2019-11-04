@@ -65,14 +65,15 @@ i18nKey - primitives_n4.n4ts, number - primitives_js.n4ts, int - primitives_js.n
 scoping.imports.Consumer.Class2 - T,
 scoping.imports.DifferentClasses.Class2 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.0,
 scoping.imports.DifferentClasses.Class4 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.1,
-scoping.imports.DifferentClasses.Class6 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.2,
+!scoping.imports.DifferentClasses.Class6 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.2,
 scoping.imports.DifferentClasses.Class8 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.3,
 scoping.imports.MultipleClasses.Class1 - proxy:MultipleClasses.n4js#/1/@topLevelTypes.0,
 scoping.imports.MultipleClasses.Class2 - proxy:MultipleClasses.n4js#/1/@topLevelTypes.1,
-scoping.imports.MultipleClasses.Class3 - proxy:MultipleClasses.n4js#/1/@topLevelTypes.2,
+!scoping.imports.MultipleClasses.Class3 - proxy:MultipleClasses.n4js#/1/@topLevelTypes.2,
 scoping.imports.MultipleClasses.Class4 - proxy:MultipleClasses.n4js#/1/@topLevelTypes.3,
-scoping.imports.MultipleClasses.MultipleClasses - proxy:MultipleClasses.n4js#/1/@topLevelTypes.4,
-string - primitives_js.n4ts, symbol - primitives_js.n4ts, typeName - primitives_n4.n4ts
+!scoping.imports.MultipleClasses.MultipleClasses - proxy:MultipleClasses.n4js#/1/@topLevelTypes.4,
+string - primitives_js.n4ts, symbol - primitives_js.n4ts, typeName - primitives_n4.n4ts,
+undefined - primitives_js.n4ts
 ---*/
 var class1 : Class1
 

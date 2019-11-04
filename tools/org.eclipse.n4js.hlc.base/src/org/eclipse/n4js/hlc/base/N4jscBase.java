@@ -61,8 +61,8 @@ import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.N4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.Measurement;
@@ -71,6 +71,7 @@ import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.TesterActivator;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.StatusUtils;
 import org.eclipse.xtext.ISetup;
@@ -119,6 +120,10 @@ public class N4jscBase implements IApplication {
 	@Option(name = "--help", aliases = "-h", usage = "print help & exit")
 	// , help=true // TODO new versions(>3.5.2014) of args4j, support help-flag
 	boolean help = false;
+
+	/** Print language version and exit */
+	@Option(name = "--version", usage = "print version & exit")
+	boolean version = false;
 
 	/** Debug print of all read-in arguments */
 	@Option(name = "--debug", usage = "print information about the current setup of the compiler")
@@ -394,6 +399,13 @@ public class N4jscBase implements IApplication {
 			if (help) {
 				// print and exit:
 				printExtendedUsage(parser, System.out);
+				return SuccessExitStatus.INSTANCE;
+			}
+
+			// Check version option:
+			if (version) {
+				// print and exit:
+				System.out.println(N4JSLanguageUtils.getLanguageVersion());
 				return SuccessExitStatus.INSTANCE;
 			}
 
@@ -856,10 +868,10 @@ public class N4jscBase implements IApplication {
 	private BuildSet computeTargetPlatformBuildSet(Collection<? extends IN4JSProject> workspaceProjects)
 			throws ExitCodeException {
 
-		Set<String> namesOfWorkspaceProjects = new LinkedHashSet<>();
+		Set<N4JSProjectName> namesOfWorkspaceProjects = new LinkedHashSet<>();
 		List<java.nio.file.Path> n4jsProjectPaths = new LinkedList<>();
 		for (IN4JSProject prj : workspaceProjects) {
-			n4jsProjectPaths.add(prj.getLocationPath());
+			n4jsProjectPaths.add(prj.getLocation().toFileSystemPath());
 			namesOfWorkspaceProjects.add(prj.getProjectName());
 		}
 
@@ -898,7 +910,7 @@ public class N4jscBase implements IApplication {
 				if (buildtype != BuildType.dontcompile) {
 					flushAndIinsertMarkerInOutputs();
 				}
-				headlessTester.runTests(tester, implementationId, checkLocationToTest(), testReportRoot);
+				headlessTester.runTests(tester, toName(implementationId), checkLocationToTest(), testReportRoot);
 			}
 
 			if (runThisFile != null) {
@@ -908,16 +920,23 @@ public class N4jscBase implements IApplication {
 
 				LinkedList<Path> projectPaths = new LinkedList<>();
 				LinkedList<String> additionalPaths = new LinkedList<>();
-				for (N4JSProject prj : buildSet.getAllProjects()) {
-					projectPaths.add(prj.getLocationPath());
+				for (IN4JSProject prj : buildSet.getAllProjects()) {
+					projectPaths.add(prj.getLocation().toFileSystemPath());
 				}
 				List<Path> modulesFolders = nodeModulesDiscoveryHelper.findNodeModulesFolders(projectPaths);
 				for (Path nmFolder : modulesFolders) {
 					additionalPaths.add(nmFolder.toString());
 				}
-				headlessRunner.startRunner(runner, implementationId, checkFileToRun(), additionalPaths);
+				headlessRunner.startRunner(runner, toName(implementationId), checkFileToRun(), additionalPaths);
 			}
 		}
+	}
+
+	private N4JSProjectName toName(String name) {
+		if (name == null) {
+			return null;
+		}
+		return new N4JSProjectName(name);
 	}
 
 	/**
@@ -1010,8 +1029,10 @@ public class N4jscBase implements IApplication {
 	 * Dumping all options to screen.
 	 */
 	private void printDebugLines() {
+		final String versionStr = N4JSLanguageUtils.getLanguageVersion();
 		final char NL = '\n';
 		StringBuffer sb = new StringBuffer();
+		sb.append("language.version=").append(versionStr).append(NL);
 		sb.append("N4jsc.options=").append(NL) //
 				.append("debug=").append(debug).append(NL) //
 				.append("runner=").append(runner).append(NL) //

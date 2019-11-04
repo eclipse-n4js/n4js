@@ -70,7 +70,7 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 	override getExpectedTypesSerialization() '''
 		TModule {
 		    ref EObject astElement ref: Script@(unresolved proxy src/org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles.n4js#/0)
-		    attr EString astMD5 '752c8770faa7f94d96cd74123d08cb8b'
+		    attr EString astMD5 '22b4445f617bd45c1bcdfd6c6f2f23b1'
 		    attr EString moduleSpecifier 'org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles'
 		    attr EString projectName 'org.eclipse.n4js.lang.tests'
 		    attr EString qualifiedName 'org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles'

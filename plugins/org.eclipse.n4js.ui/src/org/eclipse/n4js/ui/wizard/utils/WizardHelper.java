@@ -16,12 +16,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.n4js.external.LibraryManager;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.ui.statushandlers.StatusManager;
 
@@ -64,8 +64,8 @@ public class WizardHelper {
 					try {
 						monitor.subTask("Installing dependencies");
 						for (IProject project : projects) {
-							URI projectFolderURI = URI.createFileURI(project.getLocation().toFile().getAbsolutePath());
-							IStatus status = libManager.runNpmYarnInstall(projectFolderURI, monitor);
+							IStatus status = libManager.runNpmYarnInstall(new PlatformResourceURI(project),
+									monitor);
 							if (status.matches(IStatus.ERROR)) {
 								throw status.getException();
 							}

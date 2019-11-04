@@ -57,7 +57,6 @@ Contributors:
       <import plugin="org.eclipse.equinox.common"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="org.eclipse.osgi"/>
-      <import plugin="com.ibm.icu"/>
       <import plugin="org.objectweb.asm"/>
       <import plugin="org.eclipse.xtext.ecore"/>
       <import plugin="org.junit"/>
@@ -99,7 +98,7 @@ Contributors:
       <import plugin="org.eclipse.e4.core.services"/>
       <import plugin="org.eclipse.e4.core.commands"/>
       <import plugin="org.eclipse.osgi.services"/>
-      <import plugin="org.eclipse.equinox.ds"/>
+      <import plugin="org.apache.felix.scr"/>
       <import plugin="org.eclipse.equinox.util"/>
       <import plugin="org.w3c.css.sac"/>
       <import plugin="org.eclipse.emf.ecore.change"/>
@@ -192,6 +191,8 @@ Contributors:
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
+      <import plugin="org.eclipse.lsp4j"/>
+      <import plugin="org.eclipse.lsp4j.jsonrpc"/>
    </requires>
 
    <plugin

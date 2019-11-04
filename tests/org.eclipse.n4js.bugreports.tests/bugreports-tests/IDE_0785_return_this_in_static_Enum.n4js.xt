@@ -10,9 +10,10 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportPendingTest END_SETUP  */
-enum E{ A: "a"}
 
-var el : E= E.A;
+enum E { A: "a" }
+
+var el : E = E.A;
 //XPECT noerrors ---> "type{E} is not a subtype of E."
 el = E.findLiteralByName('A');
 //XPECT noerrors ---> "type{E} is not a subtype of E."

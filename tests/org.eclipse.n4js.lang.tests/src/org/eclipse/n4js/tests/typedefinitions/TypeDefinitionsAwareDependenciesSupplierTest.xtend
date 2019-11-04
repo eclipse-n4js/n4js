@@ -15,12 +15,14 @@ import java.util.ArrayList
 import java.util.Collections
 import java.util.List
 import java.util.Random
-import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.internal.N4JSProject
 import org.eclipse.n4js.internal.TypeDefinitionsAwareDependenciesSupplier
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.projectModel.locations.FileURI
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
@@ -39,9 +41,9 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	/** There is a single implementation and definition project. The implementation project is listed first. */
 	@Test
 	public def void testSingleTypeDefinitionDependencyOrder1() {
-		val implementation = project("impl");
+		val implementation = project(new N4JSProjectName("impl"));
 		val definition = implementation.definitionProject;
-		val client = project("client", #[implementation, definition]);
+		val client = project(new N4JSProjectName("client"), #[implementation, definition]);
 		
 		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		assertOrder("Definition project is listed before implementation.", orderedDependencies, #["impl-n4jsd", "impl"]);
@@ -50,9 +52,9 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	/** There is a single implementation and definition project. The definition project is listed first. */
 	@Test
 	public def void testSingleTypeDefinitionDependencyOrder2() {
-		val implementation = project("impl");
+		val implementation = project(new N4JSProjectName("impl"));
 		val definition = implementation.definitionProject;
-		val client = project("client", #[definition, implementation]);
+		val client = project(new N4JSProjectName("client"), #[definition, implementation]);
 		
 		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		assertOrder("Definition project is listed before implementation.", orderedDependencies, #["impl-n4jsd", "impl"]);
@@ -61,12 +63,12 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	/** There is multiple distinct implementation and definition projects. */
 	@Test
 	public def void testMultipleTypeDefinitionDependencyOrder1() {
-		val implementation1 = project("impl1");
+		val implementation1 = project(new N4JSProjectName("impl1"));
 		val definition1 = implementation1.definitionProject;
-		val implementation2 = project("impl2");
+		val implementation2 = project(new N4JSProjectName("impl2"));
 		val definition2 = implementation2.definitionProject;
 		
-		val client = project("client", #[definition1, implementation1, definition2, implementation2]);
+		val client = project(new N4JSProjectName("client"), #[definition1, implementation1, definition2, implementation2]);
 		
 		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		assertOrder("Definition projects are listed before implementation.", 
@@ -76,12 +78,12 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	/** There is a duplicate project ID among definition projects. */
 	@Test
 	public def void testDuplicateProjectsDependencyOrder() {
-		val implementation1 = project("impl1");
-		val definition1 = definitionProject("impl-n4jsd", implementation1);
-		val implementation2 = project("impl2");
-		val definition2 = definitionProject("impl-n4jsd", implementation2);
+		val implementation1 = project(new N4JSProjectName("impl1"));
+		val definition1 = definitionProject(new N4JSProjectName("impl-n4jsd"), implementation1);
+		val implementation2 = project(new N4JSProjectName("impl2"));
+		val definition2 = definitionProject(new N4JSProjectName("impl-n4jsd"), implementation2);
 		
-		val client = project("client", #[definition1, implementation1, definition2, implementation2]);
+		val client = project(new N4JSProjectName("client"), #[definition1, implementation1, definition2, implementation2]);
 		
 		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		assertOrder("Duplicate type definition project IDs do not prevent the dependency order computation 
@@ -92,13 +94,13 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	/** There is two type definition projects that both provide definitions for the same implementation project. */
 	@Test
 	public def void testOneToManyTypeDefinitionsMapping1() {
-		val implementation = project("impl");
-		val def1 = definitionProject("def1", implementation);
-		val def2 = definitionProject("def2", implementation);
+		val implementation = project(new N4JSProjectName("impl"));
+		val def1 = definitionProject(new N4JSProjectName("def1"), implementation);
+		val def2 = definitionProject(new N4JSProjectName("def2"), implementation);
 		
-		val client = project("client", #[implementation, def1, def2]);		
+		val client = project(new N4JSProjectName("client"), #[implementation, def1, def2]);		
 		// notice order of 'def2', 'def1'
-		val clientReversed = project("client", #[implementation, def2, def1]);
+		val clientReversed = project(new N4JSProjectName("client"), #[implementation, def2, def1]);
 		
 		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		val orderedDependenciesReversed = TypeDefinitionsAwareDependenciesSupplier.get(clientReversed);
@@ -115,11 +117,11 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	/** There is a type definition dependency whose implementation project is not listed among the dependencies (orphan definition). */
 	@Test
 	public def void testOrphanedTypeDefinitions() {
-		val implementation = project("impl");
-		val orphanDefinition = definitionProject("def", "non-existent");
+		val implementation = project(new N4JSProjectName("impl"));
+		val orphanDefinition = definitionProject(new N4JSProjectName("def"), new N4JSProjectName("non-existent"));
 		val regularDefinition = implementation.definitionProject;
 		
-		val client = project("client", #[implementation, orphanDefinition, regularDefinition]);
+		val client = project(new N4JSProjectName("client"), #[implementation, orphanDefinition, regularDefinition]);
 		
 		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		
@@ -135,17 +137,17 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	 */
 	@Test
 	public def void testShuffledPermutations() {
-		val pureImplProjects = (0..10).map[num | project("impl" + num)];
-		val implProjectsWithTypeDef = (0..20).map[num | project("impl-no-types-" + num)];
+		val pureImplProjects = (0..10).map[num | project(new N4JSProjectName("impl" + num))];
+		val implProjectsWithTypeDef = (0..20).map[num | project(new N4JSProjectName("impl-no-types-" + num))];
 		val typeDefProjectWithImpl = implProjectsWithTypeDef.map[p | p.definitionProject];
-		val orphanTypeDefProjects = (0..10).map[num | definitionProject("orphan-def" + num, "non-existent-" + num)];
+		val orphanTypeDefProjects = (0..10).map[num | definitionProject(new N4JSProjectName("orphan-def" + num), new N4JSProjectName("non-existent-" + num))];
 		
 		val dependencies = newArrayList();
 		dependencies.addAll(pureImplProjects + implProjectsWithTypeDef + typeDefProjectWithImpl + orphanTypeDefProjects);
 		// shuffle dependency order (with constant seed)
 		Collections.shuffle(dependencies, new Random(821));
 				
-		val client = project("client", dependencies);
+		val client = project(new N4JSProjectName("client"), dependencies);
 		val orderedDependencies = TypeDefinitionsAwareDependenciesSupplier.get(client);
 		
 		val orderRepresentation = orderedDependencies.join(" ");
@@ -195,7 +197,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	/**
 	 * Returns with a new project (of type 'library') with the given projectName and list of dependencies.
 	 */
-	private static def IN4JSProject project(String projectName, IN4JSProject... dependencies) {
+	private static def IN4JSProject project(N4JSProjectName projectName, IN4JSProject... dependencies) {
 		return new MockTypeDefinitionsProject(projectName, dependencies);
 	}
 	
@@ -206,14 +208,14 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	 * The name of the type definition project is inferred from the {@code implementationProject} by appending the suffix {@code -n4jsd}. 
 	 */
 	private static def IN4JSProject definitionProject(IN4JSProject implementationProject) {
-		return definitionProject(implementationProject.projectName + "-n4jsd", implementationProject);
+		return definitionProject(new N4JSProjectName(implementationProject.projectName + "-n4jsd"), implementationProject);
 	}
 	
 	/** 
 	 * Returns with a new definition project (of type 'definition') whose "definesPackage" property is set to the 
 	 * projectName of {@code implementationProject}. 
 	 */
-	private static def IN4JSProject definitionProject(String projectName, IN4JSProject implementationProject) {
+	private static def IN4JSProject definitionProject(N4JSProjectName projectName, IN4JSProject implementationProject) {
 		return definitionProject(projectName, implementationProject.projectName);
 	}
 	
@@ -221,7 +223,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	 * Returns with a new definition project (of type 'definition') whose "definesPackage" property is set to the 
 	 * {@code definesPackage}. 
 	 */
-	private static def IN4JSProject definitionProject(String projectName, String definesPackage) {
+	private static def IN4JSProject definitionProject(N4JSProjectName projectName, N4JSProjectName definesPackage) {
 		return new MockTypeDefinitionsProject(projectName, definesPackage);
 	}
 }
@@ -233,22 +235,22 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
  * undefined behavior (or NPEs etc.).
  */
 class MockTypeDefinitionsProject extends N4JSProject {
-	private final String definesPackage;
+	private final N4JSProjectName definesPackage;
 	private final ImmutableList<? extends IN4JSProject> dependencies;
 
-	new(String projectName) {
+	new(N4JSProjectName projectName) {
 		super(newLocation(projectName), false, null);
 		this.definesPackage = null;
 		this.dependencies = ImmutableList.of();
 	}
 
-	new(String projectName, String definesPackage) {
+	new(N4JSProjectName projectName, N4JSProjectName definesPackage) {
 		super(newLocation(projectName), false, null);
 		this.definesPackage = definesPackage;
 		this.dependencies = ImmutableList.of();
 	}
 
-	new(String projectName, IN4JSProject... dependencies) {
+	new(N4JSProjectName projectName, IN4JSProject... dependencies) {
 		super(newLocation(projectName), false, null);
 		this.definesPackage = null;
 		this.dependencies = ImmutableList.copyOf(dependencies);
@@ -266,7 +268,7 @@ class MockTypeDefinitionsProject extends N4JSProject {
 		return this.dependencies;
 	}
 
-	public override String getDefinesPackageName() {
+	public override N4JSProjectName getDefinesPackageName() {
 		return this.definesPackage;
 	}
 
@@ -299,8 +301,7 @@ class MockTypeDefinitionsProject extends N4JSProject {
 	 * The returned location is guaranteed to be distinct from all other locations returned
 	 * by this method (passing the same project ID twice, will yield two distinct locations). 
 	 */
-	private static def URI newLocation(String projectName) {
-		return URI.createFileURI("container" + containerCounter++ + "/" + projectName
-		)
+	private static def FileURI newLocation(N4JSProjectName projectName) {
+		return new FileURI(URIUtils.toFileUri("/container" + containerCounter++ + "/" + projectName))
 	}
 }

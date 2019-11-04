@@ -10,17 +10,16 @@
  */
 package org.eclipse.n4js.antlr;
 
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.LETTER_NUMBER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.LOWERCASE_LETTER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.MODIFIER_LETTER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.OTHER_LETTER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.TITLECASE_LETTER;
-import static com.ibm.icu.lang.UCharacterEnums.ECharacterCategory.UPPERCASE_LETTER;
+import static java.lang.Character.LETTER_NUMBER;
+import static java.lang.Character.LOWERCASE_LETTER;
+import static java.lang.Character.MODIFIER_LETTER;
+import static java.lang.Character.OTHER_LETTER;
+import static java.lang.Character.TITLECASE_LETTER;
+import static java.lang.Character.UPPERCASE_LETTER;
 
 import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrGrammarGenUtil;
 
 import com.google.common.base.Strings;
-import com.ibm.icu.lang.UCharacter;
 
 /**
  * A keyword helper that produces lexer rules with support for unicode escapes. Used by Xtend 1 extension
@@ -93,7 +92,7 @@ public class UnicodeKeywordHelper {
 	}
 
 	private static boolean isLetter(int c) {
-		int type = UCharacter.getType(c);
+		int type = Character.getType(c);
 		boolean result = type == UPPERCASE_LETTER
 				|| type == LOWERCASE_LETTER
 				|| type == TITLECASE_LETTER

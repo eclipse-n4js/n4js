@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.internal;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 
 /**
@@ -19,15 +19,24 @@ import org.eclipse.n4js.utils.ProjectDescriptionLoader;
  */
 public class LazyProjectDescriptionHandle {
 
-	private final URI projectLocation;
+	private final FileURI projectLocation;
 	private final ProjectDescriptionLoader descriptionLoader;
 
 	private ProjectDescription resolved;
 
 	/** */
-	protected LazyProjectDescriptionHandle(URI location, ProjectDescriptionLoader descriptionLoader) {
+	protected LazyProjectDescriptionHandle(FileURI location,
+			ProjectDescriptionLoader descriptionLoader) {
 		this.projectLocation = location;
 		this.descriptionLoader = descriptionLoader;
+	}
+
+	/** */
+	protected LazyProjectDescriptionHandle(FileURI location,
+			ProjectDescription description) {
+		this.projectLocation = location;
+		this.descriptionLoader = null;
+		this.resolved = description;
 	}
 
 	/**
@@ -43,7 +52,7 @@ public class LazyProjectDescriptionHandle {
 	/**
 	 * Returns the project location this handle represents.
 	 */
-	URI getLocation() {
+	FileURI getLocation() {
 		return projectLocation;
 	}
 }

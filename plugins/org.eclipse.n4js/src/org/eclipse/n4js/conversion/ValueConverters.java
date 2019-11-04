@@ -82,6 +82,9 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 	@Inject
 	private VersionRequestValueConverter versionRequestValueConverter;
 
+	@Inject
+	private JSXIdentifierValueConverter jsxIdentifierValueConverter;
+
 	/**
 	 * @return the registered value converter for the rule {@code NO_SUBSTITUTION_TEMPLATE_LITERAL}
 	 */
@@ -200,6 +203,14 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 	@ValueConverter(rule = "TypeReferenceName")
 	public IValueConverter<String> TypeReferenceName() {
 		return typeReferenceNameValueConverter;
+	}
+
+	/**
+	 * @return the registered value converter for the rule {@code JSXIdentifier}
+	 */
+	@ValueConverter(rule = "JSXIdentifier")
+	public IValueConverter<String> JSXIdentifier() {
+		return jsxIdentifierValueConverter;
 	}
 
 	/**

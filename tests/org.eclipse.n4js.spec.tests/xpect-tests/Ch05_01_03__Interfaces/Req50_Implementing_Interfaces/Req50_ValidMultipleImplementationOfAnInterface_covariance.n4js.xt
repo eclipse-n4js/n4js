@@ -32,7 +32,7 @@ class B01 extends A01 {}
 class C01 extends B01 implements I<C> {}
 // XPECT noerrors -->
 class D01 extends C01 {}
-// XPECT type of 'new D01().read()' --> intersection{B,C}
+// XPECT type of 'new D01().read()' --> C
 new D01().read();
 
 
@@ -42,7 +42,7 @@ class B02 extends A02 {}
 class C02 extends B02 implements I<A> {} // also ok: super type of B
 // XPECT noerrors -->
 class D02 extends C02 {}
-// XPECT type of 'new D02().read()' --> intersection{A,B}
+// XPECT type of 'new D02().read()' --> B
 new D02().read();
 
 
@@ -58,11 +58,11 @@ new D03().read();
 
 // XPECT noerrors -->
 class A11 implements I<B>, J<C> {}
-// XPECT type of 'new A11().read()' --> intersection{B,C}
+// XPECT type of 'new A11().read()' --> C
 new A11().read();
 
 
 // XPECT noerrors -->
 class A21 implements I<B>, J_C {}
-// XPECT type of 'new A21().read()' --> intersection{B,C}
+// XPECT type of 'new A21().read()' --> C
 new A21().read();

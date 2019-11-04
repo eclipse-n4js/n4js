@@ -26,12 +26,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.PlatformResourceURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -46,13 +47,13 @@ import com.google.inject.Inject;
  */
 public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipantTest {
 
-	private static final String PACKAGE_REACT = "react";
-	private static final String PACKAGE_N4JSD_REACT = "@n4jsd/react";
+	private static final N4JSProjectName PACKAGE_REACT = new N4JSProjectName("react");
+	private static final N4JSProjectName PACKAGE_N4JSD_REACT = new N4JSProjectName("@n4jsd/react");
 	private static final String PROBANDS = "probands";
 
 	private static final String WORKSPACE_LOC = "workspace";
-	private static final String PA = "A";
-	private static final String PB = "B";
+	private static final N4JSProjectName PA = new N4JSProjectName("A");
+	private static final N4JSProjectName PB = new N4JSProjectName("B");
 	private static final String SRC_FOLDER = "src";
 
 	private static final String CLIENT_MODULE = "src/A.n4jsx";
@@ -87,7 +88,8 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		ProjectTestsUtils.importProject(projectsRoot, PA);
 		waitForAutoBuild();
 
-		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PA);
+		final IProject project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(PA.toEclipseProjectName().getRawName());
 		assertTrue(PA + " project is not accessible.", project.isAccessible());
 		final IFile clientModule = project
 				.getFile(getResourceName(SRC_FOLDER, PA + "." + N4JSGlobals.N4JSX_FILE_EXTENSION));
@@ -105,9 +107,10 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 				"line 6: Project does not exist with project ID: react.",
 				"line 7: Project does not exist with project ID: @n4jsd/react.");
 
-		libManager.installNPM(N4JS_RUNTIME, URIUtils.toFileUri(project), new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
+		libManager.installNPM(N4JS_RUNTIME, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_REACT, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_N4JSD_REACT, new PlatformResourceURI(project).toFileURI(),
+				new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -134,7 +137,8 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		ProjectTestsUtils.importProject(projectsRoot, PB);
 		waitForAutoBuild();
 
-		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PB);
+		final IProject project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(PB.toEclipseProjectName().getRawName());
 		assertTrue(PB + " project is not accessible.", project.isAccessible());
 		final IFile clientModule = project
 				.getFile(getResourceName(SRC_FOLDER, PB + "." + N4JSGlobals.N4JSX_FILE_EXTENSION));
@@ -143,9 +147,10 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		final IFile projectDescriptionFile = project.getFile(getResourceName(IN4JSProject.PACKAGE_JSON));
 		assertTrue(projectDescriptionFile + " B module is not accessible.", projectDescriptionFile.isAccessible());
 
-		libManager.installNPM(N4JS_RUNTIME, URIUtils.toFileUri(project), new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
-		libManager.installNPM(PACKAGE_N4JSD_REACT, URIUtils.toFileUri(project), new NullProgressMonitor());
+		libManager.installNPM(N4JS_RUNTIME, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_REACT, new PlatformResourceURI(project).toFileURI(), new NullProgressMonitor());
+		libManager.installNPM(PACKAGE_N4JSD_REACT, new PlatformResourceURI(project).toFileURI(),
+				new NullProgressMonitor());
 		IResourcesSetupUtil.fullBuild();
 		waitForAutoBuild();
 
@@ -160,7 +165,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	}
 
 	private ProcessResult runClient() {
-		final String pathToModuleToRun = getResourceName(PA, CLIENT_MODULE);
+		final String pathToModuleToRun = getResourceName(PA.getRawName(), CLIENT_MODULE);
 		final org.eclipse.emf.common.util.URI moduleToRun = createPlatformResourceURI(pathToModuleToRun, true);
 		final RunConfiguration config = runnerFrontEnd.createConfiguration(ID, null, moduleToRun);
 		final Process process;

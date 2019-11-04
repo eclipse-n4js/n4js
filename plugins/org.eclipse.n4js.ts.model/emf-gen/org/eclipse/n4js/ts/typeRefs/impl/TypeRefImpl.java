@@ -149,6 +149,16 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
+	public boolean isUnknown() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isDynamic() {
 		return false;
 	}
@@ -428,6 +438,8 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return isFinalByType();
 			case TypeRefsPackage.TYPE_REF___IS_ARRAY_LIKE:
 				return isArrayLike();
+			case TypeRefsPackage.TYPE_REF___IS_UNKNOWN:
+				return isUnknown();
 			case TypeRefsPackage.TYPE_REF___IS_DYNAMIC:
 				return isDynamic();
 			case TypeRefsPackage.TYPE_REF___IS_EXISTENTIAL:

@@ -32,6 +32,14 @@ public enum ControlFlowType {
 	IfTrue,
 	/** IfFalse edges flow from the condition of an {@link IfStatement} to its then else or its exit node */
 	IfFalse,
+	/**
+	 * IfNullishTarget edges flow from the target of an optionally chained ExpressionWithTarget to the end of the chain
+	 */
+	IfNullishTarget,
+	/**
+	 * IfNullish edges flow from the expression of an nullish coalesce expression to the default expression.
+	 */
+	IfNullish,
 	/** Return edges are caused by {@link ReturnStatement}s */
 	Return,
 	/** Throw edges are caused by {@link ThrowStatement}s */
@@ -57,13 +65,10 @@ public enum ControlFlowType {
 	/** Used to mark {@link CatchToken}s that can catch any {@link JumpToken} */
 	CatchesAll;
 
-	/** Set of all control flow types except for {@literal ControlFlowType.Repeat} */
-	static public final ControlFlowType[] NonRepeatTypes = { Successor, Break, Continue, Throw, Return, LoopEnter,
-			LoopExit };
-
 	/** Set of all control flow types except for {@literal ControlFlowType.DeadCode} */
-	static public final ControlFlowType[] NonDeadTypes = { Successor, IfTrue, IfFalse, Break, Continue, Throw, Return,
-			LoopEnter, LoopExit, LoopRepeat, LoopReenter, LoopInfinite };
+	static public final ControlFlowType[] NonDeadTypes = { Successor, IfTrue, IfFalse, IfNullishTarget, IfNullish,
+			Break, Continue,
+			Throw, Return, LoopEnter, LoopExit, LoopRepeat, LoopReenter, LoopInfinite };
 
 	/** @return a filtered list that contains only {@link ControlFlowType}s of the given types */
 	static public List<ControlFlowType> filter(Iterable<ControlFlowType> list, ControlFlowType... onlyThese) {

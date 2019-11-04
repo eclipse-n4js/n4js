@@ -59,8 +59,8 @@ C.m2(ga,ga2);
 C.<A>m2(gea, gea2); // expect error (same in Java)
 
 // XPECT errors ---
-// "G<? extends A> is not a subtype of G<A>." at "gea"
-// "G<? extends A> is not a subtype of G<A>." at "gea2"
+// "G<? extends A> is not a subtype of G<T>." at "gea"
+// "G<? extends A> is not a subtype of G<T>." at "gea2"
 // ---
 C.m2(gea, gea2); // expect error (same in Java)
 

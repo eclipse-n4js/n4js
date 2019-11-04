@@ -206,7 +206,7 @@ public class JSDoc2ADocSpecProcessor extends JSDoc2SpecProcessor {
 			boolean fileChanged = !fileExists;
 
 			if (fileExists) {
-				String oldContent = Files.toString(scf.getFile(), Charsets.UTF_8).replace("\r\n", "\n");
+				String oldContent = Files.asCharSource(scf.getFile(), Charsets.UTF_8).read().replace("\r\n", "\n");
 				String newContent = scf.getNewContent();
 				if (!oldContent.equals(newContent))
 					fileChanged = true;

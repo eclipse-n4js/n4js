@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutionCommand;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
@@ -101,7 +102,7 @@ public class BinariesCommandFactory {
 	 *            flag if uninstalled packages should be saved in package.json of the uninstall path (ignored by yarn).
 	 */
 	public ProcessExecutionCommand createUninstallPackageCommand(File invocationPath,
-			List<String> packageNames, boolean saveDependency) {
+			List<N4JSProjectName> packageNames, boolean saveDependency) {
 
 		return new ProcessExecutionCommand() {
 			private static final String COMMAND_NAME = "uninstall_npm_package";

@@ -41,8 +41,8 @@ public class SourceFolderContentProposalProviderFactory {
 		}
 
 		IN4JSProject n4Project = StreamSupport.stream(n4jsCore.findAllProjects().spliterator(), false)
-				.filter(project -> project.getProjectName().equals(contextProject.getName())) // Filter for the context
-																								// project
+				// Filter for the context project
+				.filter(p -> p.getProjectName().getRawName().equals(contextProject.getName())) 
 				.findAny().orElse(null);
 
 		if (n4Project == null) {

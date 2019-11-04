@@ -10,13 +10,18 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -25,7 +30,7 @@ import org.junit.Test;
 /**
  * Test for checking the static polyfill imports in the generated modules.
  */
-public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractN4jscTest {
+public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractCliCompileTest {
 
 	File workspace;
 	static String WS_IDEBUG_654_2 = "IDEBUG-654_2";
@@ -46,30 +51,22 @@ public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractN4jscTest 
 
 	/***/
 	@Test
-	public void compileCheckPolyfillImports_ExpectExist() throws ExitCodeException, IOException {
+	public void compileCheckPolyfillImports_ExpectExist() {
 
-		// pre compile
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		// Compile
-		final String[] args_precompile = { "--projectlocations", wsRoot, "--buildType", "allprojects" };
-		new N4jscBase().doMain(args_precompile);
+		Path projectDir = workspace.toPath().resolve(WS_IDEBUG_654_2);
+		Path fileToRun = projectDir.resolve("src-gen/Main.js");
 
-		// run without compile
-		final String fileToRun = wsRoot + "/IDEBUG-654_2/src/Main.n4js";
-		final String[] args = { "--projectlocations", wsRoot,
-				"--buildType", "dontcompile",
-				"--runWith", "nodejs",
-				"--run", fileToRun
-		};
+		N4jscOptions options = COMPILE(workspace);
+		CliCompileResult cliResult = n4jsc(options);
+		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());
 
-		// Run
-		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(
+		ProcessResult nodejsResult = runNodejs(projectDir, fileToRun);
+		assertEquals(nodejsResult.toString(),
 				"functionFromModuleA\n" +
 						"variableFromModuleB\n" +
 						"variableFromModuleC\n" +
 						"variableFromModuleC",
-				out);
+				nodejsResult.getStdOut());
 
 	}
 

@@ -11,24 +11,38 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
-import org.eclipse.n4js.n4JS.ExpressionStatement
+import java.util.List
+import org.eclipse.n4js.n4JS.AdditiveExpression
+import org.eclipse.n4js.n4JS.AwaitExpression
+import org.eclipse.n4js.n4JS.BinaryBitwiseExpression
+import org.eclipse.n4js.n4JS.BinaryLogicalExpression
+import org.eclipse.n4js.n4JS.BooleanLiteral
+import org.eclipse.n4js.n4JS.CastExpression
+import org.eclipse.n4js.n4JS.CommaExpression
+import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
-import org.eclipse.n4js.n4JS.RelationalOperator
+import org.eclipse.n4js.n4JS.NullLiteral
+import org.eclipse.n4js.n4JS.NumericLiteral
+import org.eclipse.n4js.n4JS.ObjectLiteral
+import org.eclipse.n4js.n4JS.ParenExpression
+import org.eclipse.n4js.n4JS.PromisifyExpression
 import org.eclipse.n4js.n4JS.Statement
+import org.eclipse.n4js.n4JS.StringLiteral
+import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.BootstrapCallAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import org.eclipse.n4js.ts.types.TInterface
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import java.util.List
 
 /**
  */
@@ -58,18 +72,19 @@ class InterfaceDeclarationTransformation extends Transformation {
 		val ifcSTE = findSymbolTableEntryForElement(ifcDecl, true);
 
 		val varDecl = createVarDecl(ifcDecl);
-		val fieldInitFun = createInstanceFieldInitializationFunction(ifcDecl, ifcSTE);
+		val fieldDefaults = createInstanceFieldDefaultsObject(ifcDecl, ifcSTE);
 		val staticFieldInits = createStaticFieldInitializations(ifcSTE, ifcDecl);
 		val memberDefs = bootstrapCallAssistant.createInterfaceMemberDefinitionSection(ifcDecl);
 		val makeIfcCall = bootstrapCallAssistant.createMakeInterfaceCall(ifcDecl);
 
+		state.tracer.copyTrace(ifcDecl, fieldDefaults);
 		state.tracer.copyTrace(ifcDecl, staticFieldInits);
 		state.tracer.copyTrace(ifcDecl, memberDefs);
 		state.tracer.copyTrace(ifcDecl, makeIfcCall);
 
 		replace(ifcDecl, varDecl);
 		val root = varDecl.eContainer.orContainingExportDeclaration;
-		insertAfter(root, #[fieldInitFun] + staticFieldInits + memberDefs + #[makeIfcCall]);
+		insertAfter(root, fieldDefaults + staticFieldInits + memberDefs + #[makeIfcCall]);
 
 		state.info.markAsToHoist(varDecl);
 	}
@@ -83,96 +98,119 @@ class InterfaceDeclarationTransformation extends Transformation {
 		];
 	}
 
-	def private ExpressionStatement createInstanceFieldInitializationFunction(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
-		// I.$fieldInit = function I_fieldInit(target, spec, mixinExclusion) {
-		//     // ...
+	def private Statement[] createInstanceFieldDefaultsObject(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
+		// I.$fieldDefaults = {
+		//     fieldName1: undefined,
+		//     fieldName2: () => <INIT_EXPRESSION>,
+		//     ...
 		// };
-		val $fieldInitSTE = steFor_$fieldInit;
-		return _ExprStmnt(_AssignmentExpr()=>[
-			lhs = _PropertyAccessExpr(ifcSTE, $fieldInitSTE);
-			// _fieldInit needs to be called via "call(this, ...)" to bind this correctly and avoid unnecessary rewrite of "this"
-			rhs = _FunExpr(false, ifcDecl.name + '_fieldInit', #[ _Fpar("spec"), _Fpar("mixinExclusion") ])=>[
-				body.statements += createInstanceFieldInitializations(ifcDecl);
-				body.statements += createDelegationToFieldInitOfExtendedInterfaces(ifcDecl);
-			];
-		]);
-	}
-
-	def private Statement[] createInstanceFieldInitializations(N4InterfaceDeclaration ifcDecl) {
-		// if(spec) {
-		//      if(!(mixinExclusion.hasOwnProperty("field") || this.hasOwnProperty("field"))) {
-		//     	    target.field = 'field' in spec ? spec.field : 42;
-		//      }
-		// } else {
-		//     if(!(mixinExclusion.hasOwnProperty("field") || this.hasOwnProperty("field"))) {
-		//         target.field = 42;
-		//     }
-		// }
+		val $fieldDefaultsSTE = steFor_$fieldDefaults;
 		val fields = ifcDecl.ownedFields.filter[!static].toList;
-		if(!fields.empty) {
-			val hasOwnPropertySTE = getSymbolTableEntryForMember(state.G.objectType, "hasOwnProperty", false, false, true);
-			val fieldInitsFromSpec = <Statement>newArrayList;
-			val fieldInitsNormal = <Statement>newArrayList;
-			for(field : fields) {
-				val fieldSTE = findSymbolTableEntryForElement(field, true);
-				// target.field = 'field' in spec ? spec.field : 42;
-				val specStmnt = _ExprStmnt(_AssignmentExpr(
-					_PropertyAccessExpr(_Snippet("this"), fieldSTE),
-					_ConditionalExpr(
-						_RelationalExpr(_StringLiteralForSTE(fieldSTE), RelationalOperator.IN, _Snippet("spec")),
-						_PropertyAccessExpr(_Snippet("spec"), fieldSTE),
-						{if(field.expression!==null) copy(field.expression) else undefinedRef()}
+		if (fields.empty) {
+			return #[];
+		}
+		return #[
+			_ExprStmnt(
+				_AssignmentExpr(
+					_PropertyAccessExpr(ifcSTE, $fieldDefaultsSTE),
+					_ObjLit(
+						fields.filter[!name.isNullOrEmpty].map[field|
+							field.name -> if (field.hasNonTrivialInitExpression) {
+								if (canSkipFunctionWrapping(field.expression)) {
+									field.expression
+								} else {
+									_ArrowFunc(false, #[], field.expression.wrapInParenthesesIfNeeded)
+								}
+							} else {
+								undefinedRef()
+							}
+						]
 					)
-				));
-				fieldInitsFromSpec += ifStmntMixinExclusionORtarget(hasOwnPropertySTE,fieldSTE,specStmnt);
-
-				// if(!(mixinExclusion.hasOwnProperty("field") || target.hasOwnProperty("field"))) {target.field = 42;}
-				val trueBody = _ExprStmnt(_AssignmentExpr(
-					_PropertyAccessExpr(_Snippet("this"), fieldSTE),
-					{if(field.expression!==null) copy(field.expression) else undefinedRef()}
-				));
-				fieldInitsNormal += ifStmntMixinExclusionORtarget(hasOwnPropertySTE,fieldSTE,trueBody);
-			}
-			// if(spec) {...} else {...}
-			return #[_IfStmnt(
-				_Snippet("spec"),
-				_Block(fieldInitsFromSpec),
-				_Block(fieldInitsNormal)
-			)];
-		}
-		return #[];
-	}
-
-	def private ifStmntMixinExclusionORtarget(SymbolTableEntry hasOwnPropertySTE, SymbolTableEntry fieldSTE, Statement trueBody ){
-		return _IfStmnt(
-			_NOT(_Parenthesis(_OR(
-				_CallExpr(_PropertyAccessExpr(_Snippet("mixinExclusion"), hasOwnPropertySTE), _StringLiteralForSTE(fieldSTE)),
-				_CallExpr(_PropertyAccessExpr(_Snippet("this"), hasOwnPropertySTE), _StringLiteralForSTE(fieldSTE))
-			))),
-			trueBody
-		);
-	}
-
-
-	def private Statement[] createDelegationToFieldInitOfExtendedInterfaces(N4InterfaceDeclaration ifcDecl) {
-		// I.$fieldInit(target, spec, mixinExclusion);
-		val result = newArrayList;
-		val $fieldInitSTE = steFor_$fieldInit;
-		val superIfcSTEs = typeAssistant.getSuperInterfacesSTEs(ifcDecl).filter [
-			// regarding the cast to TInterface: see preconditions of ClassDeclarationTransformation
-			// GHOLD-388: Generate $fieldInit call only if the interface is neither built-in nor provided by runtime nor external without @N4JS
-			!(originalTarget as TInterface).builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation;
+				)
+			)
 		];
-
-		for(superIfcSTE : superIfcSTEs) {
-			result += _ExprStmnt(_CallExpr(
-				__NSSafe_PropertyAccessExpr(superIfcSTE, $fieldInitSTE, steFor_call()),
-				_Snippet("this"), _Snippet("spec"), _Snippet("mixinExclusion")
-			));
-		}
-		return result;
 	}
-	
+
+	def private Expression wrapInParenthesesIfNeeded(Expression expr) {
+		if (expr instanceof CommaExpression
+			|| expr instanceof ObjectLiteral
+			|| expr instanceof AwaitExpression
+			|| expr instanceof YieldExpression
+			|| expr instanceof PromisifyExpression) {
+			return _Parenthesis(expr);
+		}
+		return expr;
+	}
+
+	def private boolean canSkipFunctionWrapping(Expression initExpression) {
+		return switch(initExpression) {
+			BooleanLiteral: true
+			NullLiteral: true
+			NumericLiteral: true
+			StringLiteral: true
+			UnaryExpression: {
+				// WARNING: some unary operators have a side effect, so they have to be wrapped in a function!
+				val isFreeOfSideEffect = switch(initExpression.op) {
+					case INC: false
+					case DEC: false
+					case DELETE: false
+					case POS: true
+					case NEG: true
+					case INV: true
+					case NOT: true
+					case TYPEOF: true
+					case VOID: true
+				}
+				return isFreeOfSideEffect
+					&& canSkipFunctionWrapping(initExpression.expression);
+			}
+			AdditiveExpression: {
+				val isFreeOfSideEffect = switch(initExpression.op) {
+					case ADD: true
+					case SUB: true
+				}
+				return isFreeOfSideEffect
+					&& canSkipFunctionWrapping(initExpression.lhs)
+					&& canSkipFunctionWrapping(initExpression.rhs);
+			}
+			MultiplicativeExpression: {
+				val isFreeOfSideEffect = switch(initExpression.op) {
+					case TIMES: true
+					case DIV: true
+					case MOD: true
+				}
+				return isFreeOfSideEffect
+					&& canSkipFunctionWrapping(initExpression.lhs)
+					&& canSkipFunctionWrapping(initExpression.rhs);
+			}
+			BinaryBitwiseExpression: {
+				val isFreeOfSideEffect = switch(initExpression.op) {
+					case OR: true
+					case XOR: true
+					case AND: true
+				}
+				return isFreeOfSideEffect
+					&& canSkipFunctionWrapping(initExpression.lhs)
+					&& canSkipFunctionWrapping(initExpression.rhs);
+			}
+			BinaryLogicalExpression: {
+				val isFreeOfSideEffect = switch(initExpression.op) {
+					case OR: true
+					case AND: true
+				}
+				return isFreeOfSideEffect
+					&& canSkipFunctionWrapping(initExpression.lhs)
+					&& canSkipFunctionWrapping(initExpression.rhs);
+			}
+			CastExpression: canSkipFunctionWrapping(initExpression.expression)
+			ParenExpression: canSkipFunctionWrapping(initExpression.expression)
+			IdentifierRef: {
+				return initExpression.id === state.G.globalObjectScope.fieldUndefined;
+			}
+			default: false
+		};
+	}
+
 	/**
 	 * Creates a new list of statements to initialize the static fields of the given {@code ifcDecl}.
 	 * 

@@ -108,6 +108,7 @@ public class JettyManager implements HttpServerManager {
 			try {
 				server = new Server(configureThreadPool(port));
 				ServerConnector connector = new ServerConnector(server);
+				connector.setReuseAddress(true);
 				connector.setPort(port);
 				server.setConnectors(new Connector[] { connector });
 				final ServletContextHandler contextHandler = new ServletContextHandler(server, CONTEXT_ROOT, true,
@@ -118,9 +119,12 @@ public class JettyManager implements HttpServerManager {
 				server.setDumpBeforeStop(dumpServerOnStop);
 				server.start();
 			} catch (Exception e) {
+				// This might happen in multi-thread / multi-process scenarios.
+				// Check maven and JUnit options whether tester.tests are run in parallel.
 				LOGGER.error("Cache failed to start new server instance at PORT=" + port, e);
 				if (server != null && server.isRunning()) {
 					server.stop();
+					server.join();
 				}
 				Throwables.throwIfUnchecked(e);
 				throw new RuntimeException(e);
@@ -191,12 +195,15 @@ public class JettyManager implements HttpServerManager {
 
 	@Override
 	public void stopServer(final int port) {
-		for (final int localPort : (-1 == port ? getAllRunningServerPorts() : singletonList(port))) {
+		boolean allPorts = -1 == port;
+		Iterable<Integer> portList = -1 == port ? getAllRunningServerPorts() : singletonList(port);
+		for (final int localPort : portList) {
 			if (isRunning(localPort)) {
 				try {
 					final Server server = serverCache.getIfPresent(localPort);
 					if (null != server) {
 						server.stop();
+						server.join();
 						if (server.isStopped()) {
 							LOGGER.info("Jetty instance has successfully stopped on '" + localPort + "'.");
 							serverCache.invalidate(localPort);
@@ -204,10 +211,16 @@ public class JettyManager implements HttpServerManager {
 							LOGGER.warn("Unexpected behavior while shutting down Jetty on '" + localPort
 									+ "'. Termination failed.");
 						}
+					} else {
+						LOGGER.warn("Unexpected behavior while shutting down Jetty on '" + localPort
+								+ "'. No server found on this port.");
 					}
 				} catch (final Exception e) {
 					LOGGER.error("Error while stopping Jetty server on '" + localPort + "'.", e);
 				}
+			} else if (allPorts) {
+				LOGGER.warn("Unexpected behavior while shutting down Jetty on '" + localPort
+						+ "'. Port is free.");
 			}
 		}
 	}

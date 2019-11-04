@@ -28,9 +28,6 @@ public class N4FilebasedWorkspaceResourceSetContainerState extends ResourceSetBa
 	@Inject
 	private IN4JSCore core;
 
-	@Inject
-	private N4JSModel model;
-
 	/**
 	 * @param handle
 	 *            uri for the current project prefixed with {@code FileBasedWorkspace#N4FBPRJ}
@@ -51,9 +48,9 @@ public class N4FilebasedWorkspaceResourceSetContainerState extends ResourceSetBa
 			throw new IllegalStateException("No project with handle '" + handle + "' known in current In4jscore.");
 		}
 
-		Iterable<? extends IN4JSProject> dps = model.getSortedDependencies(project.get());
+		Iterable<? extends IN4JSProject> dps = project.get().getSortedDependencies();
 		// map uri to handle-form and add.
-		dps.forEach(d -> visibleContainers.add(FileBasedWorkspace.handleFrom(d.getLocation())));
+		dps.forEach(d -> visibleContainers.add(FileBasedWorkspace.handleFrom(d.getLocation().toURI())));
 
 		return visibleContainers;
 	}

@@ -1,0 +1,489 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Wizards
+:find:
+
+WARNING: Some descriptions may be outdated.
+
+WARNING: All requirement sections are not linked to real issues. They were left here as an example and to complete the issues.
+
+[[sec:N4JS_Project_Wizard]]
+== N4JS Project Wizard
+
+Wizard creates a new N4JS project.
+
+The following information is to be specified by the user:
+
+[horizontal]
+Project Name::
+  string, name of project
+Default Location::
+  boolean, true by default
+Location::
+  string, computed default location, if user set location then default location flag must be false
+Project Type::
+  enumeration, the type of the new project
+
+The following files are to be created:
+
+[horizontal]
+Project Folder::
+  with name of project at given location
+Manifest::
+  with default project structure and name
+Source Folder::
+  default source folder (src)
+Output Folder::
+  default source folder (src-gen)
+
+[[sec:Empty_N4JS_File]]
+== Empty N4JS File
+
+The following information is to be specified by the user:
+
+[horizontal]
+Package Name::
+  dot separated name of the package, empty by default (or set to the package/folder selected in the navigator)
+Module Name::
+  string, name of the module – must be a valid module name without extension
+
+The following files are to be created:
+
+[horizontal]
+Package Folder(s)::
+  if folders representing package structure do not exist, they are to be created
+Module File::
+  empty file with name of module and extension ``n4js``  in the appropriate package folder
+
+[[sec:Empty_JS_File]]
+== Empty JS File
+
+Similar to <<sec:Empty_N4JS_File,Empty N4JS File>> but with the file extension `js`.
+
+[[sec:N4JS_Class_File_Wizard]]
+=== N4JS Class Wizard
+
+It is recommended to define a single classifier in a file, the name of the classifier should have the same name as the file. Based on that assumption, file wizards are provided for N4JS classes, interfaces and enumerations.
+
+[.center]
+image::{find}fig/newclasswizard.png[scaledwidth=60%]
+
+[[N4JSNewClass_FieldProperties]]
+
+[[field-properties]]
+===  Field Properties
+
+[[Class_File_Wizard-Project_Field]] The New N4JS Class wizard offers following fields:
+
+Project:: Specifies the containing project.
+
+.Project constraints
+[req,id=GH-1413a,version=1]
+--
+[horizontal]
+Constraints::
+  1.  It is a path of a valid project in the current workspace
+  2.  This field must not be empty
+--
+
+.Project browse button
+[req,id=GH-1413b,version=1]
+--
+Browse Button::
+  Browsing only allows the selection of projects in the current workspace. Project creation is not possible.
+--
+
+.Project initial selection inference
+[req,id=GH-1413c,version=1]
+--
+Initial selection::
+  The project should be derived from the initial selection.
+--
+
+.Project content assist
+[req,id=GH-1413d,version=1]
+--
+Content Assist::
+  Workspace projects
+--
+
+[[Class_File_Wizard-Source_Folder_Field]]
+
+Source folder:: Specifies the containing source folder.
+
+.Source folder constraints
+[req,id=GH-1413e,version=1]
+--
+
+[horizontal]
+Constraints::
+1.  The folder is listed as source folder in the project manifest
+2.  This field must not be empty.
+3.  The name is a valid path that means each segment of the path matches the following expression:
++
+[source,ebnf]
+----
+[a-zA-z_](([\\.][a-zA-z_0-9\\-])|[a-zA-z_0-9\\-])*
+----
+--
+
+.Source folder browse button
+[req,id=GH-1413f,version=1]
+--
+Browse Button::
+  Browsing only allows the selection of source folders in the selected project. The dialog should provide a list of all source folders of the selected project. This includes nested source folders. A list element is a relative path of a source folder in the project.
+--
+
+.Source folder initial selection inference
+[req,id=GH-1413g,version=1]
+--
+Initial selection::
+  The source folder field should be derived from the initial selection
+--
+
+.Source folder content assist
+[req,id=GH-1413h,version=1]
+--
+Content Assist::
+  source folders defined by the project manifest
+--
+
+[[Class_File_Wizard-Module_Specifier_Field]]
+
+Module specifier::
+Specifies the module specifier. May only specify a module container (a folder) but could also include module name. May also be an already existing module. Does not include the file extension.
+
+.Module specifier constraints
+[req,id=GH-1413i,version=1]
+--
+The specifier is a valid module specifier that is
+- Segments are separated by the path separator
+- No separator at the beginning or end
+--
+
+.Module specifier completion
+[req,id=GH-1413j,version=1]
+--
+Manually inserting a specifier ending with a separator is valid.
+It is then interpreted as base path for the full module specifier automatically completed by the class name. (cf. grey suffix)
+--
+
+.Module specifier grey suffix
+[req,id=GH-1413k,version=1]
+--
+A grey suffix should suggest the attached class name as module name if the specifier only specifies a base path.
+--
+
+.Module specifier browse button
+[req,id=GH-1413l,version=1]
+--
+Browsing only allows the selection of modules or module containers in the selected source folder. The browse dialog has to offer a module container creation functionality. In contrast to the other parts of the wizard, the creation of module containers in this dialog should be immediate and on file system level. This is important to comply with the conceptual model of eclipse and the operating system.
+
+When inserting a non-existent path in the text input and opening the browse dialog, an additional dialog should ask the user whether he wants to create this structure on the file system. If he denies, the dialog shows the selection to the level it already exists on the file system.
+--
+
+.Module specifier initial selection inference
+[req,id=GH-1413m,version=1]
+--
+The module specifier should be derived from the initial selection by using the container of the selection as initial module container
+--
+
+.Module specifier content assist
+[req,id=GH-1413n,version=1]
+--
+Modules in the selected source folder
+--
+
+[.todo]
+For now the spec doesn't specify any constraints for module specifiers
+
+Class name::
+Specifies the class name.
+
+.Class name basic constraints
+[req,id=GH-1413o,version=1]
+--
+
+[horizontal]
+Constraints::
+  1.  The name is a valid n4js class identifier Must not be empty
+  2.  If the target module already exists no other type with the same identifier may exist in this module
+--
+
+.Class name conflict validation
+[req,id=GH-1413p,version=1]
+--
+If the target module already exists no other type with the same identifier may exist in this module
+--
+
+[[Class_File_Wizard-Definition_File_Field]]
+
+.File type options
+[req,id=GH-1413q,version=1]
+--
+Definition file (.n4jsd):: Specifies whether the class should be declared external. This option changes the file extension to ``n4jsd``
+--
+
+.Access modifier constraints
+[req,id=GH-1413r,version=1]
+--
+Specifies the access modifiers of the class. One of `public`, `project`, *private*. `@Internal` is an additionally selectable option.
+
+[horizontal]
+Constraints::
+  1.  One of the provided access modifiers has to be selected
+  2.  The `@Internal` option is only selectable in case of `public` or `project`
+--
+
+
+Other modifiers:: Specifies other modifiers and annotations of the class. The non-exclusive options are ``@Final`` and *@N4JS*
+
+.Other modifiers constraints
+[req,id=GH-1413s,version=1]
+--
+Constraints::
+  1.  *@N4JS* annotation is only enabled and selectable if the Definition File box is checked
+--
+
+Super class:: Specifies the super class
+
+.Super class constraints
+[req,id=GH-1413t,version=1]
+--
+[horizontal]
+Constraints::
+  1.  A valid absolute class specifier that is a module specifier and a class name separated by a dot.
+--
+
+.Super class browse button
+[req,id=GH-1413u,version=1]
+--
+
+[horizontal]
+Browse Button::
+  Browsing allows the selection of all classes in the current workspace with modifiable source and visible classes with unmodifiable sources.
+--
+
+.Super class content assist
+[req,id=GH-1413v,version=1]
+--
+Content Assist::
+  All classes matching mentioned criteria
+--
+
+[[Class_File_Wizard-Interfaces_Field]]
+Interfaces:: Specifies the implemented interfaces of the class
+
+.Interfaces constraints
+[req,id=GH-1413w,version=1]
+--
+1.  A valid absolute interface specifier that is a module specifier and an interface name separated by a dot.
+--
+
+.Interfaces browsing
+[req,id=GH-1413x,version=1]
+--
+Add Button:: Browsing allows the selection of all interfaces in the current workspace with modifiable source and visible interfaces with unmodifiable sources.
+
+Remove Button:: Removes the selected interface from the list. Disabled if nothing is selected.
+--
+
+.Interfaces content assist
+[req,id=GH-1413y,version=1]
+--
+Text input is available by clicking in empty space at the end of the list. Content Assist provides all interfaces matching mentioned criteria.
+--
+
+.Create method stubs
+[req,id=GH-1413z1,version=1]
+--
+Specifies if the wizard should generate method stubs for all abstract methods of the newly generated class. That are abstract super class methods or methods that need to be implemented by the class to conform to the selected interfaces.
+--
+
+.Create method stub conflict detection
+[req,id=GH-1413z2,version=1]
+--
+If the selected interfaces are impossible to implement (e.g. method name overlap with unrelated parameter types) this option needs to be disabled and a warning needs to be shown.
+--
+
+[.todo]
+Shouldn't this be a constraint of the selected interfaces? (Never generate invalid code)
+
+[[visibility-issues-or-final-super-classes]]
+===  Visibility issues or `@Final` super classes
+
+.Visibility issue conflict solving
+[req,id=GH-1413z3,version=1]
+--
+
+By allowing the user to select invisible interfaces and super classes or unextendable ``@Final``-annotated super classes, accessability issues may come up. The goal is to never generate a file containing invalid code. To accomplish this, conflicts must get solved before the file is generated.
+
+
+The slight limitation of the selection of interfaces and classes to elements from modifiable sources (cf. <<Req-GH-1413u,super class browse button>>) allows to solve all possibly occurring visibility issues.
+
+If the modifications by finishing the wizard do imply changes different from insertions and creations, a compare view is to be shown, giving the user an overview of the needed changes before they’re applied.
+--
+
+[[generation-1]]
+===  Generation
+
+.Wizard generation
+[req,id=GH-1413z4,version=1]
+--
+The following changes are to be made by the wizard:
+
+1.  Create a new file containing the new class (optional)
+2.  Insert the new class into the specified module
+3.  Change the source module of the super class to fix possible visibility issues (optional)
+4.  Change the source module of the interfaces to fix possible visibility issues (optional)
+5.  Change the project manifest to add a new source folder (optional) or add new project dependencies (optional)
+--
+
+[[preview-1]]
+===  Preview
+
+.Generation preview
+[req,id=GH-1413z5,version=1]
+--
+On the right of the wizard form a preview window should be provided. It should preview the full path of the generated file and all code that is generated with the options of the wizard. Changes should be updated in realtime as the user is choosing different options.
+--
+
+[[sec:N4JS_Interface_Wizard]]
+== Interface Wizard
+
+The N4JS interface wizards is strongly similar to the <<sec:N4JS_Class_File_Wizard,N4JS Class Wizard>>. The following paragraph is meant to state the differences and will strongly refer to the N4JS Class Wizard as a lot of properties stay the same.
+
+
+[.center]
+image::{find}fig/newinterfacewizard.png[scaledwidth=60%]
+
+[[field-properties-1]]
+===  Field Properties
+
+
+[horizontal]
+Project::
+Specifies the containing project.
+See <<Class_File_Wizard-Project_Field,N4JS Class Wizard Project>>.
+
+Source Folder::
+  Specifies the containing source folder. +
+  See <<Class_File_Wizard-Source_Folder_Field,N4JS Class Wizard Source Folder>>
+
+Module Specifier::
+  Specifies the containing source folder. +
+  See <<Class_File_Wizard-Module_Specifier_Field,N4JS Class Wizard Module specifier>>
+
+Interface name::
+  Specifies the name of the interface +
+  Constraints;;
+    1.  The name is a valid n4js interface identifier
+    2.  Must not be empty
+    3.  If the target module already exists, no other type with the same identifier may exist in this module
+
+Definition file (.n4jsd)::
+  Specifies whether the interface should be declared external. This option changes the file extension to ``n4jsd`` .
+
+Access Modifiers:: Specifies the interface’s access modifiers
+
+See <<Req-GH-1413r,N4JS Class Wizard Modifier Field>> except for the following point:
+
+__Other than classes, interfaces must not be declared as `@Final`, therefore this option is removed.__
+
+Interfaces:: The interfaces the interface is implementing
+
+See <<Class_File_Wizard-Interfaces_Field,N4JS Class Wizard Interfaces field>> except for the following point:
+
+__Other than classes interfaces must not be declared as `@Final`, therefore this option is removed.__
+
+Create method stubs::
+Specifies if the wizard should generate method stubs for all abstract methods of the newly generated class. That are abstract super interface methods or methods that need to be implemented by the interface to conform to the given interfaces.
++
+If the selected interfaces are impossible to implement (e.g. method name overlap with unrelated parameter types) this option needs to be disabled and a warning needs to be shown.
+
+[.todo]
+Shouldn't this be a constraint of the selected interfaces? (Never generate invalid code)
+
+[[visibility-issues]]
+===  Visibility Issues
+
+As the user might select invisible interfaces, the wizard has to solve these visibility issues. See ** for details.
+
+[[import-naming-conflicts]]
+===  Import naming conflicts
+
+As the user may select identically named interfaces, the wizard has to solve these naming conflicts. See
+*<<Req-GH-1413z3,Class Wizard Visibility Issues>>* for details.
+
+[[generation-2]]
+===  Generation
+
+1.  Create a new file at the given module specifier location (optional)
+2.  Insert the new interface into the specified module
+3.  Change the source module of the super class to fix visibility issues (optional)
+4.  Change the source module of the interfaces to fix possible visibility issues (optional)
+5.  Change the project manifest to add a possibly new source folder (optional) or add new project dependencies (optional)
+
+[[preview-2]]
+===  Preview
+
+The Interface Wizard should provided a preview. (See <<sec:N4JS_Wizards:Wizard_Preview,Wizard Preview>>)
+
+[[sec:N4JS_Enum_File_Wizard]]
+== Enum Wizard
+
+The N4JS Enum File wizards provides the user a wizard to create enums. When speaking of enums in this context ordinary enums as specified in the N4JS Specification are meant.
+
+[[field-properties-2]]
+===  Field Properties
+
+[horizontal]
+Project::
+  Specifies the containing project. +
+  See <<Class_File_Wizard-Project_Field,N4JS Class Wizard Project>>
+
+Source Folder::
+  Specifies the containing source folder. +
+ See <<Class_File_Wizard-Source_Folder_Field,N4JS Class Wizard Source Folder>>
+
+Module Specifier::
+  Specifies the containing source folder. See <<Class_File_Wizard-Module_Specifier_Field,N4JS Class Wizard Module specifier>>
+
+Enum name::
+  Specifies the name of the interface +
+  Constraints;;
+    1.  The name is a valid n4js enum identifier
+    2.  Must not be empty
+    3.  If the target module already exists, no other type with the same identifier may exist in this module
+
+Modifiers::
+  Specifies the interface’s access modifiers
+  +
+  Allows the user to select from following modifier options: `public`,`project`,`private`. The wizard automatically adds missing `export` if needed.
+  +
+  Furthermore the enum can be declared `@Internal` using a checkbox.
+
+[.todo]
+Should the enum wizard also provide functionality to create enum literals?
+
+[[generation-3]]
+===  Generation
+
+The following changes are to be made by the wizard:
+
+1.  Create a new file containing the new enum (optional, only if module doesn’t exists yet )
+2.  Insert the new enum into the specified module
+
+[[preview-3]]
+===  Preview
+
+The Enum Wizard should provided a preview. (See <<sec:N4JS_Wizards:Wizard_Preview,Wizard Preview>>)

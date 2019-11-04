@@ -361,7 +361,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				if (targetIdRef?.id !== prop.eContainer && !isExceptionCase) {
 					val message = IssueCodes.getMessageForCLF_INVALID_ACCESS_OF_STATIC_MEMBER_OF_INTERFACE;
 					addIssue(message, propAccessExpr,
-						N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Target,
+						N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET,
 						IssueCodes.CLF_INVALID_ACCESS_OF_STATIC_MEMBER_OF_INTERFACE);
 				}
 			}
@@ -396,7 +396,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (typeRef instanceof FunctionTypeExprOrRef) {
 			// check type arguments
 			internalCheckTypeArguments(typeRef.typeVars, callExpression.typeArgs, true, typeRef.declaredType,
-				callExpression, N4JSPackage.eINSTANCE.parameterizedCallExpression_Target);
+				callExpression, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 
 			// check Calling async functions with missing await
 			internalCheckCallingAsyncFunWithoutAwaitingForIt(typeRef, callExpression)
@@ -984,8 +984,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			var trhs = ts.type(G, ee.rhs)
 
 			// we are only interested in upper bound here, cf. IDEBUG-260
-			tlhs = ts.upperBound(G, tlhs)
-			trhs = ts.upperBound(G, trhs)
+			tlhs = ts.upperBoundWithReopen(G, tlhs)
+			trhs = ts.upperBoundWithReopen(G, trhs)
 
 			val leftSubOfRight = ts.subtypeSucceeded(G, tlhs, trhs)
 			val rightSubOfLeft = ts.subtypeSucceeded(G, trhs, tlhs)
@@ -1243,12 +1243,13 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (castExpression.expression === null)
 			return;
 
-		val S = ts.tau(castExpression.expression, castExpression);
-		val T = castExpression.targetTypeRef
+		val G = RuleEnvironmentExtensions.newRuleEnvironment(castExpression);
+
+		val S = ts.upperBoundWithReopen(G, ts.tau(castExpression.expression, castExpression));
+		val T = ts.upperBoundWithReopen(G, castExpression.targetTypeRef);
 
 		// avoid consequential errors
 		if (S === null || T === null || T instanceof UnknownTypeRef || S instanceof UnknownTypeRef) return;
-		val G = RuleEnvironmentExtensions.newRuleEnvironment(castExpression)
 
 		if (ts.subtypeSucceeded(G, S, T)) { // Constraint 81.2 (Cast Validation At Compile-Time): 1
 			addIssue(IssueCodes.getMessageForEXP_CAST_UNNECESSARY(S.typeRefAsString, T.typeRefAsString),
@@ -1442,7 +1443,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (targetTypeRefRaw instanceof UnknownTypeRef) {
 			return; // saw an UnknownTypeRef -> so we are expected to suppress all follow-up errors
 		}
-		val targetTypeRef = ts.resolveType(G, targetTypeRefRaw);
+		val targetTypeRef = ts.upperBoundWithReopenAndResolve(G, targetTypeRefRaw);
 		val indexTypeRef = ts.type(G, index);
 		if (indexTypeRef instanceof UnknownTypeRef) {
 			return; // saw an UnknownTypeRef -> so we are expected to suppress all follow-up errors

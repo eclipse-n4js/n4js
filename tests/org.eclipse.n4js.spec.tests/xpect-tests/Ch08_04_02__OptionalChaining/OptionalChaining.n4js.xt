@@ -1,0 +1,134 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+function log(str: any) {
+	console.log(str);
+}
+function logException(fn: ()=>string) {
+	try {
+		fn();
+	} catch(e) {
+		console.log("EXCEPTION:", (e as Error).message);
+		return;
+	}
+	throw new Error("ERROR: expected exception was not thrown!");
+}
+
+class MyClass {
+
+	public prop = "property value";
+
+	public def: MyClass;
+	public undef: MyClass;
+}
+
+let def: MyClass = new MyClass();
+let undef: MyClass = undefined;
+def.def = def;
+
+let defFn: (...any)=>string = ()=>"return value of defFn";
+let undefFn: (...any)=>string = undefined;
+
+let undefObj: Object+ = undefined;
+
+
+// ============================= Test Cases =============================
+
+
+console.log('======== Base Cases');
+
+log(def?.prop);
+log(undef?.prop);
+
+log(def?.['prop']);
+log(undef?.['prop']);
+
+log(defFn?.());
+log(undefFn?.());
+
+
+console.log('======== Short-Circuiting');
+
+function mustNotBeEvaluated(): string { throw new Error("ERROR: this should not have been evaluated!"); }
+
+log(undefObj?.[mustNotBeEvaluated()]);
+log(undefFn?.(mustNotBeEvaluated()));
+
+
+console.log('======== Long Short-Circuiting');
+
+log(undefObj?.undef.undef.undef[mustNotBeEvaluated()]);
+log(undefObj?.undef.undef.undef(mustNotBeEvaluated()));
+
+log(def.def?.def.def.def.prop);
+log(def.undef?.def.def.def.prop);
+log(def.undef?.def.def.undef.prop); // must not throw exception (thanks to long short-circuiting) (*1*)
+logException(() => def.def?.def.def.undef.prop); // should throw "Cannot read property 'prop' of undefined"
+
+
+console.log('======== Grouping');
+
+// compare the following to case *1* above:
+logException(() => (def.undef?.def.def.undef).prop); // should throw "Cannot read property 'prop' of undefined"
+
+
+console.log('======== Stacking');
+
+log(def.def?.def.def.def?.def.prop);
+log(def.undef?.def.def.def?.def.prop);
+log(def.undef?.def.def.def?.def.prop);
+log(def.def?.def.def.undef?.def.prop);
+log(def.undef?.def.def.undef?.def.prop);
+
+logException(() => undef.def?.def.def.def?.def.prop);
+logException(() => def.def?.undef.def.def?.def.prop);
+logException(() => def.def?.def.undef.def?.def.prop);
+logException(() => def.def?.def.def.def?.undef.prop);
+
+
+/* XPECT output ---
+<==
+stdout:
+======== Base Cases
+property value
+undefined
+property value
+undefined
+return value of defFn
+undefined
+======== Short-Circuiting
+undefined
+undefined
+======== Long Short-Circuiting
+undefined
+undefined
+property value
+undefined
+undefined
+EXCEPTION: Cannot read property 'prop' of undefined
+======== Grouping
+EXCEPTION: Cannot read property 'prop' of undefined
+======== Stacking
+property value
+undefined
+undefined
+undefined
+undefined
+EXCEPTION: Cannot read property 'def' of undefined
+EXCEPTION: Cannot read property 'def' of undefined
+EXCEPTION: Cannot read property 'def' of undefined
+EXCEPTION: Cannot read property 'prop' of undefined
+stderr:
+==>
+--- */

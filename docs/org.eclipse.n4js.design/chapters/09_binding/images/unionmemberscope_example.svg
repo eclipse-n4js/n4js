@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="20.5 46.5 1082.5 569" width="1082.5" height="569">
+  <defs>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <clipPath id="inner_stroke_clip_path">
+      <path d="M 41 237.25 L 210 237.25 L 210 277.25 L 41 277.25 Z"/>
+    </clipPath>
+    <font-face font-family="Monaco" font-size="11" units-per-em="1000" underline-position="-37.597656" underline-thickness="75.68359" slope="0" x-height="545.41016" cap-height="757.8125" ascent="1e3" descent="-250" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Monaco"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="Arrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <clipPath id="inner_stroke_clip_path_2">
+      <path d="M 20.5 332.75 L 242.5 332.75 L 242.5 372.75 L 20.5 372.75 Z"/>
+    </clipPath>
+    <clipPath id="inner_stroke_clip_path_3">
+      <path d="M 873.5 332.75 L 1101.5 332.75 L 1101.5 372.75 L 873.5 372.75 Z"/>
+    </clipPath>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledDiamond_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 4 -3 L 0 0 L 4 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <clipPath id="inner_stroke_clip_path_4">
+      <path d="M 875 237.25 L 1103 237.25 L 1103 277.25 L 875 277.25 Z"/>
+    </clipPath>
+    <clipPath id="inner_stroke_clip_path_5">
+      <path d="M 20.5 440.75 L 242.5 440.75 L 242.5 480.75 L 20.5 480.75 Z"/>
+    </clipPath>
+    <clipPath id="inner_stroke_clip_path_6">
+      <path d="M 873.5 440.75 L 1101.5 440.75 L 1101.5 480.75 L 873.5 480.75 Z"/>
+    </clipPath>
+    <clipPath id="inner_stroke_clip_path_7">
+      <path d="M 754 567.5 L 1009 567.5 L 1009 607.5 L 754 607.5 Z"/>
+    </clipPath>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2017-03-01 14:37:38 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="20.5" y="46.5" width="1082.5" height="569"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_6">
+        <rect x="365.5" y="47" width="110" height="48.5" fill="white"/>
+        <rect x="365.5" y="47" width="110" height="48.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(370.5 62.026)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="5.4" y="15">NULL scope</tspan>
+        </text>
+      </g>
+      <g id="Graphic_7">
+        <rect x="359.5" y="137.5" width="122" height="48.5" fill="white"/>
+        <rect x="359.5" y="137.5" width="122" height="48.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(364.5 143.302)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.096" y="15">MemberScope</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="22.064" y="33.448">N4Object</tspan>
+        </text>
+      </g>
+      <g id="Line_8">
+        <path d="M 421.04325 137.5 C 421.11486 131.9096 421.16406 125.52947 421.16406 118.55078 C 421.16406 114.00821 421.1432 109.5905 421.1089 105.39599" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_9">
+        <rect x="359.5" y="233" width="122" height="48.5" fill="white"/>
+        <rect x="359.5" y="233" width="122" height="48.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(364.5 238.802)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.096" y="15">MemberScope</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="50.224" y="33.448">C</tspan>
+        </text>
+      </g>
+      <g id="Line_10">
+        <line x1="420.5" y1="233" x2="420.5" y2="195.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_15">
+        <rect x="359.5" y="328.5" width="122" height="48.5" fill="white"/>
+        <rect x="359.5" y="328.5" width="122" height="48.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(364.5 334.302)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="4.896" y="15">VisibilityAware</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.096" y="33.448">MemberScope</tspan>
+        </text>
+      </g>
+      <g id="Line_16">
+        <line x1="420.5" y1="328.5" x2="420.5" y2="291.4" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_17">
+        <rect x="337" y="432" width="167" height="57.5" fill="white"/>
+        <rect x="337" y="432" width="167" height="57.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(342 442.302)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="2.948" y="15">TypingStrategyAware</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="25.596" y="33.448">MemberScope</tspan>
+        </text>
+      </g>
+      <g id="Line_18">
+        <line x1="420.5" y1="432" x2="420.5" y2="386.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_33">
+        <rect x="41" y="237.25" width="169" height="40" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#inner_stroke_clip_path)"/>
+        <text transform="translate(46 242.25)" fill="black">
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="11">m1 -&gt; EObjectDescription</tspan>
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="25.918457">m2 -&gt; EObjectDescription</tspan>
+        </text>
+      </g>
+      <g id="Line_53">
+        <line x1="359.5" y1="257.25" x2="219.9" y2="257.25" marker-end="url(#Arrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_54">
+        <text transform="translate(262 232)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.428" y="15">exposes</tspan>
+        </text>
+      </g>
+      <g id="Graphic_55">
+        <rect x="20.5" y="332.75" width="222" height="40" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#inner_stroke_clip_path_2)"/>
+        <text transform="translate(25.5 337.75)" fill="black">
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="11">m1 -&gt; InvisibleMemberDescription</tspan>
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="25.918457">m2 -&gt; EObjectDescription</tspan>
+        </text>
+      </g>
+      <g id="Line_59">
+        <line x1="359.5" y1="352.75" x2="252.4" y2="352.75" marker-end="url(#Arrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_60">
+        <text transform="translate(262 326.5)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.428" y="15">exposes</tspan>
+        </text>
+      </g>
+      <g id="Graphic_61">
+        <rect x="613" y="47" width="110" height="48.5" fill="white"/>
+        <rect x="613" y="47" width="110" height="48.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(618 62.026)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="5.4" y="15">NULL scope</tspan>
+        </text>
+      </g>
+      <g id="Graphic_62">
+        <rect x="607" y="137.5" width="122" height="48.5" fill="white"/>
+        <rect x="607" y="137.5" width="122" height="48.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(612 143.302)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.096" y="15">MemberScope</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="22.064" y="33.448">N4Object</tspan>
+        </text>
+      </g>
+      <g id="Line_63">
+        <path d="M 668.54325 137.5 C 668.6149 131.9096 668.6641 125.52947 668.6641 118.55078 C 668.6641 114.00821 668.6432 109.5905 668.6089 105.39599" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_64">
+        <rect x="607" y="233" width="122" height="48.5" fill="white"/>
+        <rect x="607" y="233" width="122" height="48.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(612 238.802)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.096" y="15">MemberScope</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="50.368" y="33.448">D</tspan>
+        </text>
+      </g>
+      <g id="Line_65">
+        <line x1="668" y1="233" x2="668" y2="195.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_66">
+        <rect x="607" y="328.5" width="122" height="48.5" fill="white"/>
+        <rect x="607" y="328.5" width="122" height="48.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(612 334.302)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="4.896" y="15">VisibilityAware</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.096" y="33.448">MemberScope</tspan>
+        </text>
+      </g>
+      <g id="Line_67">
+        <line x1="668" y1="328.5" x2="668" y2="291.4" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_68">
+        <rect x="584.5" y="432" width="167" height="57.5" fill="white"/>
+        <rect x="584.5" y="432" width="167" height="57.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(589.5 442.302)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="2.948" y="15">TypingStrategyAware</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="25.596" y="33.448">MemberScope</tspan>
+        </text>
+      </g>
+      <g id="Line_69">
+        <line x1="668" y1="432" x2="668" y2="386.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_76">
+        <rect x="873.5" y="332.75" width="228" height="40" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#inner_stroke_clip_path_3)"/>
+        <text transform="translate(878.5 337.75)" fill="black">
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="11">m1 -&gt; InvisibleMemberDescription</tspan>
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="25.918457">m2 -&gt; WrongWriteAccessDescription</tspan>
+        </text>
+      </g>
+      <g id="Graphic_78">
+        <text transform="translate(771.75 232)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.428" y="15">exposes</tspan>
+        </text>
+      </g>
+      <g id="Graphic_79">
+        <rect x="462" y="557.5" width="167" height="57.5" fill="white"/>
+        <rect x="462" y="557.5" width="167" height="57.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(467 577.026)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="4.556" y="15">UnionMemberScope</tspan>
+        </text>
+      </g>
+      <g id="Line_81">
+        <line x1="449.13546" y1="489.5" x2="510.3369" y2="550.9462" marker-end="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_82">
+        <line x1="639.93725" y1="489.5" x2="580.0239" y2="550.8806" marker-end="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_83">
+        <rect x="875" y="237.25" width="228" height="40" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#inner_stroke_clip_path_4)"/>
+        <text transform="translate(880 242.25)" fill="black">
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="11">m1 -&gt; EObjectDescription</tspan>
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="25.918457">m2 -&gt; WrongWriteAccessDescription</tspan>
+        </text>
+      </g>
+      <g id="Line_84">
+        <line x1="729" y1="257.25" x2="865.1" y2="257.25" marker-end="url(#Arrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_87">
+        <text transform="translate(771.75 326.5)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.428" y="15">exposes</tspan>
+        </text>
+      </g>
+      <g id="Line_86">
+        <line x1="729" y1="352.75" x2="863.6" y2="352.75" marker-end="url(#Arrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_88">
+        <rect x="20.5" y="440.75" width="222" height="40" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#inner_stroke_clip_path_5)"/>
+        <text transform="translate(25.5 445.75)" fill="black">
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="11">m1 -&gt; InvisibleMemberDescription</tspan>
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="25.918457">m2 -&gt; EObjectDescription</tspan>
+        </text>
+      </g>
+      <g id="Line_89">
+        <line x1="337" y1="460.75" x2="252.4" y2="460.75" marker-end="url(#Arrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_90">
+        <text transform="translate(256.25 437)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.428" y="15">exposes</tspan>
+        </text>
+      </g>
+      <g id="Graphic_91">
+        <rect x="873.5" y="440.75" width="228" height="40" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#inner_stroke_clip_path_6)"/>
+        <text transform="translate(878.5 445.75)" fill="black">
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="11">m1 -&gt; InvisibleMemberDescription</tspan>
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="25.918457">m2 -&gt; WrongWriteAccessDescription</tspan>
+        </text>
+      </g>
+      <g id="Graphic_92">
+        <text transform="translate(775.75 437)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.428" y="15">exposes</tspan>
+        </text>
+      </g>
+      <g id="Line_93">
+        <line x1="751.5" y1="460.75" x2="863.6" y2="460.75" marker-end="url(#Arrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_94">
+        <rect x="754" y="567.5" width="255" height="40" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" clip-path="url(#inner_stroke_clip_path_7)"/>
+        <text transform="translate(759 572.5)" fill="black">
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="11">m1 -&gt; UnionMemberDescriptionWithError</tspan>
+          <tspan font-family="Monaco" font-size="11" font-weight="400" fill="black" x="0" y="25.918457">m2 -&gt; UnionMemberDescriptionWithError</tspan>
+        </text>
+      </g>
+      <g id="Graphic_95">
+        <text transform="translate(651 557)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="3.428" y="15">exposes</tspan>
+        </text>
+      </g>
+      <g id="Line_96">
+        <line x1="629" y1="586.56064" x2="744.1001" y2="586.98884" marker-end="url(#Arrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

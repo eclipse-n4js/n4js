@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="34.034308 64.69685 738.69404 463.6142" width="738.69404" height="463.6142">
+  <defs>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="10" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="9" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2015-09-02 08:48:51 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="34.034308" y="64.69685" width="738.69404" height="463.6142"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_163">
+        <rect x="286.2992" y="65.19685" width="99" height="36" fill="white"/>
+        <rect x="286.2992" y="65.19685" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(291.2992 76.19685)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.816406" y="11">ES6 Syntax</tspan>
+        </text>
+      </g>
+      <g id="Graphic_164">
+        <rect x="170.07874" y="293.38583" width="99" height="36" fill="white"/>
+        <rect x="170.07874" y="293.38583" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(175.07874 304.38583)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.163086" y="11">CommonJS</tspan>
+        </text>
+      </g>
+      <g id="Graphic_165">
+        <rect x="286.2992" y="293.38583" width="99" height="36" fill="white"/>
+        <rect x="286.2992" y="293.38583" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(291.2992 304.38583)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="30.835938" y="11">AMD</tspan>
+        </text>
+      </g>
+      <g id="Graphic_166">
+        <rect x="528.6614" y="293.38583" width="99" height="36" fill="white"/>
+        <rect x="528.6614" y="293.38583" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(533.6614 304.38583)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="16.483398" y="11">System.js</tspan>
+        </text>
+      </g>
+      <g id="Graphic_148">
+        <path d="M 236.93957 412.05736 C 236.93957 407.52946 235.68227 406.96927 226.49804 402.4882 L 226.40102 402.44185 C 217.16828 397.91395 217.07225 397.91395 207.59696 397.91395 C 194.9804 397.91395 137.93957 397.91395 137.93957 397.91395 L 137.93957 445.7119 L 236.93957 445.7119 L 236.93957 412.05736 Z" fill="white"/>
+        <path d="M 236.93957 412.05736 C 236.93957 407.52946 235.68227 406.96927 226.49804 402.4882 L 226.40102 402.44185 C 217.16828 397.91395 217.07225 397.91395 207.59696 397.91395 C 194.9804 397.91395 137.93957 397.91395 137.93957 397.91395 L 137.93957 445.7119 L 236.93957 445.7119 L 236.93957 412.05736 Z M 236.93957 411.8241 C 236.93957 407.52946 236.84255 407.52946 217.07225 407.52946 L 217.07225 407.52946 C 217.07225 397.9608 217.07225 397.91395 208.1771 397.91395" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(142.93957 400.8129)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="21.929688" y="11">Different </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="6.481445" y="25">Semantics: no </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="12.481445" y="39">live-binding!</tspan>
+        </text>
+      </g>
+      <g id="Line_188">
+        <line x1="311.0492" y1="329.38583" x2="218.6237" y2="398.4955" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_189">
+        <line x1="219.57874" y1="329.38583" x2="195.91405" y2="397.4417" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_190">
+        <rect x="673.22835" y="293.38583" width="99" height="36" fill="white"/>
+        <rect x="673.22835" y="293.38583" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(678.22835 304.38583)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="21.15332" y="11">&lt;script&gt;</tspan>
+        </text>
+      </g>
+      <g id="Line_213">
+        <line x1="310" y1="101.19685" x2="223.79335" y2="284.42775" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_214">
+        <text transform="translate(228.5829 145.62416)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«transpiler:</tspan>
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="22">Babel, Traceur, TypeScript»</tspan>
+        </text>
+      </g>
+      <g id="Line_215">
+        <line x1="345.6992" y1="101.19685" x2="336.3085" y2="283.49894" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_216">
+        <text transform="translate(285.34995 183.49028)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«transpiler:</tspan>
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="22">Babel, Traceur, TypeScript»</tspan>
+        </text>
+      </g>
+      <g id="Line_217">
+        <line x1="365.4992" y1="101.19685" x2="546.4903" y2="286.30715" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_218">
+        <text transform="translate(431.1023 227.7751)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«transpiler: </tspan>
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="22">Babel, Traceur, TypeScript»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_221">
+        <rect x="337.32284" y="491.811" width="99" height="36" fill="white"/>
+        <rect x="337.32284" y="491.811" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(342.32284 495.811)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="16.483398" y="11">System.js </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="1.8320312" y="25">Module Loader</tspan>
+        </text>
+      </g>
+      <g id="Line_146">
+        <line x1="416.52284" y1="491.811" x2="547.0315" y2="336.95594" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_212">
+        <text transform="translate(470.0524 410.24805)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«loads»</tspan>
+        </text>
+      </g>
+      <g id="Line_222">
+        <line x1="357.12284" y1="491.811" x2="249.97562" y2="337.5174" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_223">
+        <text transform="translate(277.79805 408.0215)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«loads»</tspan>
+        </text>
+      </g>
+      <g id="Line_224">
+        <line x1="376.92284" y1="491.811" x2="338.22908" y2="338.983" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_225">
+        <text transform="translate(332.996 407.85407)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«loads»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_226">
+        <path d="M 622.83465 414.5759 C 622.83465 411.21694 621.69995 410.80137 613.4113 407.47717 L 613.3237 407.44277 C 604.9913 404.0838 604.9046 404.0838 596.35325 404.0838 C 584.96694 404.0838 533.4882 404.0838 533.4882 404.0838 L 533.4882 439.542 L 622.83465 439.542 L 622.83465 414.5759 Z" fill="white"/>
+        <path d="M 622.83465 414.5759 C 622.83465 411.21694 621.69995 410.80137 613.4113 407.47717 L 613.3237 407.44277 C 604.9913 404.0838 604.9046 404.0838 596.35325 404.0838 C 584.96694 404.0838 533.4882 404.0838 533.4882 404.0838 L 533.4882 439.542 L 622.83465 439.542 L 622.83465 414.5759 Z M 622.83465 414.40286 C 622.83465 411.21694 622.7471 411.21694 604.9046 411.21694 L 604.9046 411.21694 C 604.9046 404.11857 604.9046 404.0838 596.8768 404.0838" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(538.4882 407.8129)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="6.986706" y="11">ES6 Module </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="5.6478386" y="25">Loader Spec</tspan>
+        </text>
+      </g>
+      <g id="Line_227">
+        <line x1="578.1614" y1="329.38583" x2="578.1614" y2="403.5838" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_228">
+        <rect x="37.43307" y="65.19685" width="99" height="36" fill="white"/>
+        <rect x="37.43307" y="65.19685" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(42.43307 69.19685)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="13.93457" y="11">TypeScript </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="24.82422" y="25">Syntax</tspan>
+        </text>
+      </g>
+      <g id="Graphic_229">
+        <rect x="35.43307" y="297.6378" width="99" height="36" fill="white"/>
+        <rect x="35.43307" y="297.6378" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(40.43307 308.6378)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="13.495117" y="11">TS Internal</tspan>
+        </text>
+      </g>
+      <g id="Line_230">
+        <line x1="86.93307" y1="101.19685" x2="85.03386" y2="287.7383" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_231">
+        <text transform="translate(39.034308 232.61462)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«transpiler: TypeScript»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_232">
+        <path d="M 586.8268 79.23073 C 586.8268 75.87178 585.6921 75.45621 577.4034 72.132 L 577.31585 72.09761 C 568.9834 68.73865 568.8967 68.73865 560.3454 68.73865 C 548.9591 68.73865 497.4803 68.73865 497.4803 68.73865 L 497.4803 104.19685 L 586.8268 104.19685 L 586.8268 79.23073 Z" fill="white"/>
+        <path d="M 586.8268 79.23073 C 586.8268 75.87178 585.6921 75.45621 577.4034 72.132 L 577.31585 72.09761 C 568.9834 68.73865 568.8967 68.73865 560.3454 68.73865 C 548.9591 68.73865 497.4803 68.73865 497.4803 68.73865 L 497.4803 104.19685 L 586.8268 104.19685 L 586.8268 79.23073 Z M 586.8268 79.0577 C 586.8268 75.87178 586.7392 75.87178 568.8967 75.87178 L 568.8967 75.87178 C 568.8967 68.7734 568.8967 68.73865 560.86895 68.73865" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(502.4803 72.46775)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="4.32362" y="11">read-only ref, </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="9.321667" y="25">live-binding</tspan>
+        </text>
+      </g>
+      <g id="Line_233">
+        <line x1="385.2992" y1="86.79685" x2="496.9803" y2="86.56253" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_234">
+        <rect x="413.85827" y="294.23415" width="99" height="36" fill="white"/>
+        <rect x="413.85827" y="294.23415" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(418.85827 299.73415)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="30.835938" y="11">UMD </tspan>
+          <tspan font-family="Helvetica" font-size="9" font-weight="400" fill="black" x="5.3688965" y="23">(CommonJS+AMD)</tspan>
+        </text>
+      </g>
+      <g id="Line_235">
+        <line x1="345.6992" y1="101.19685" x2="434.3148" y2="285.3136" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_236">
+        <text transform="translate(324.22746 186.19857)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«transpiler:</tspan>
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="22">Babel, Traceur, TypeScript»</tspan>
+        </text>
+      </g>
+      <g id="Line_237">
+        <line x1="413.40133" y1="321.43713" x2="229.07144" y2="403.3194" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_238">
+        <line x1="396.72284" y1="491.811" x2="459.5838" y2="339.3864" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_239">
+        <text transform="translate(416.8559 409.0838)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«loads»</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

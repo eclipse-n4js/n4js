@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.jsdoc.dom.Doclet;
 import org.eclipse.n4js.jsdoc.dom.FullMemberReference;
 import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TMember;
@@ -149,7 +149,7 @@ public class SpecInfosByName {
 		QualifiedName qn = QualifiedName.create(ref.getModuleName().split("/"));
 		IEObjectDescription eod = scope.getSingleElement(qn);
 		if (eod != null) {
-			URI uri = eod.getEObjectURI();
+			FileURI uri = new FileURI(eod.getEObjectURI());
 			RepoRelativePath rrp = RepoRelativePath.compute(uri, n4jsCore);
 			return rrp;
 		} else {

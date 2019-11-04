@@ -45,8 +45,10 @@ public class NodeYarnProcessBuilder {
 		INSTALL, UNINSTALL
 	}
 
-	private static final String[] WIN_SHELL_COMAMNDS = { "cmd", "/c" };
-	private static final String[] NIX_SHELL_COMAMNDS = { "sh", "-c" };
+	/** Shell command for Windows OS */
+	public static final String[] WIN_SHELL_COMAMNDS = { "cmd", "/c" };
+	/** Shell command for *nix OS */
+	public static final String[] NIX_SHELL_COMAMNDS = { "sh", "-c" };
 
 	/**
 	 * Additional environment variables supplied to node/yarn when invoked via this class.

@@ -345,7 +345,6 @@ interface ~i~I {
 
 |===
 
-<<<
 
 Note that even if a type is defined without the structural modifier, it is not possible to use `instanceof` for variables declared as structural, as shown in the next example:
 
@@ -390,11 +389,24 @@ foo(c: ~~C, i: ~~I) {
 ^h| Type ^h| Structural Type ^h| Structural Field Type
 |===
 
+--
+
+.Nominal and structural typing spec attributes
+[req,id=IDE-78701,version=1]
+--
+Within this spec, we define the following attributes of a type reference $T$:
+
 * If a type is referenced with the structural type modifier ``pass:[~]`` , the property $T.refStructural$ is true.
 * If a type is referenced with the structural field type modifier ``pass:[~~]``, the property $T.refStructuralField$ is true.
 * If a type is referenced with the structural read-only field type modifier ``pass:[~r~]``, the property $T.refStructuralReadOnlyField$ is true.
 * If a type is referenced with the structural write-only field type modifier ``pass:[~w~]``, then the property $T.refStructuralWriteOnlyField$ is true.
 * If a type is referenced with the structural initializer field type modifier ``pass:[~i~]``, then the property $T.refStructuralInitField$ is true.
+
+* We use $T.isStructural$ to simply refer any structural typing, i.e.+
+$T.isStructural = T.refStructural \lor T.refStructuralField \lor $T.refStructuralReadOnlyField \lor T.refStructuralWriteOnlyField || T.refStructuralInitField || T.defStructural$
+
+* We use $T.isNominal$ as the opposite of $T.isStructural$, i.e. +
+$T.isNominal = \lnot T.isStructural$
 
 We call the following:
 

@@ -16,14 +16,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.junit.runner.Description;
-
 import org.eclipse.n4js.xpect.ui.N4IDEXpectUIPlugin;
 import org.eclipse.n4js.xpect.ui.results.XpectFileContentsUtil.XpectFileContentAccess;
 import org.eclipse.n4js.xpect.ui.runner.N4IDEXpectFileNameUtil;
+import org.eclipse.swt.graphics.Image;
+import org.junit.runner.Description;
 
 /**
  * Provides icons and display names for test results view {@link N4IDEXpectView}
@@ -169,7 +168,7 @@ class XpectLabelProvider extends LabelProvider {
 
 	public static ImageDescriptor getImageDescriptor(String name) {
 		String iconPath = "icons/";
-		return AbstractUIPlugin.imageDescriptorFromPlugin(N4IDEXpectUIPlugin.PLUGIN_ID, iconPath + name);
+		return ResourceLocator.imageDescriptorFromBundle(N4IDEXpectUIPlugin.PLUGIN_ID, iconPath + name).orElse(null);
 	}
 
 	@Override

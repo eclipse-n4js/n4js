@@ -12,6 +12,7 @@ package org.eclipse.n4js.ts.typeRefs.impl;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
@@ -267,6 +268,13 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	private EEnum optionalFieldStrategyEEnum = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType uuidEDataType = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -412,7 +420,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__IsDynamic() {
+	public EOperation getTypeRef__IsUnknown() {
 		return typeRefEClass.getEOperations().get(3);
 	}
 
@@ -422,7 +430,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__IsExistential() {
+	public EOperation getTypeRef__IsDynamic() {
 		return typeRefEClass.getEOperations().get(4);
 	}
 
@@ -432,7 +440,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__IsGeneric() {
+	public EOperation getTypeRef__IsExistential() {
 		return typeRefEClass.getEOperations().get(5);
 	}
 
@@ -442,7 +450,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__IsParameterized() {
+	public EOperation getTypeRef__IsGeneric() {
 		return typeRefEClass.getEOperations().get(6);
 	}
 
@@ -452,7 +460,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__IsRaw() {
+	public EOperation getTypeRef__IsParameterized() {
 		return typeRefEClass.getEOperations().get(7);
 	}
 
@@ -462,7 +470,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__GetDeclaredUpperBound() {
+	public EOperation getTypeRef__IsRaw() {
 		return typeRefEClass.getEOperations().get(8);
 	}
 
@@ -472,7 +480,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__GetDeclaredLowerBound() {
+	public EOperation getTypeRef__GetDeclaredUpperBound() {
 		return typeRefEClass.getEOperations().get(9);
 	}
 
@@ -482,7 +490,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__GetTypeArgs() {
+	public EOperation getTypeRef__GetDeclaredLowerBound() {
 		return typeRefEClass.getEOperations().get(10);
 	}
 
@@ -492,7 +500,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__GetTypeRefAsString() {
+	public EOperation getTypeRef__GetTypeArgs() {
 		return typeRefEClass.getEOperations().get(11);
 	}
 
@@ -502,7 +510,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__ToString() {
+	public EOperation getTypeRef__GetTypeRefAsString() {
 		return typeRefEClass.getEOperations().get(12);
 	}
 
@@ -512,7 +520,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__IsTopType() {
+	public EOperation getTypeRef__ToString() {
 		return typeRefEClass.getEOperations().get(13);
 	}
 
@@ -522,7 +530,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__IsBottomType() {
+	public EOperation getTypeRef__IsTopType() {
 		return typeRefEClass.getEOperations().get(14);
 	}
 
@@ -532,7 +540,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__GetTypingStrategy() {
+	public EOperation getTypeRef__IsBottomType() {
 		return typeRefEClass.getEOperations().get(15);
 	}
 
@@ -542,7 +550,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__GetStructuralMembers() {
+	public EOperation getTypeRef__GetTypingStrategy() {
 		return typeRefEClass.getEOperations().get(16);
 	}
 
@@ -552,7 +560,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__IsUseSiteStructuralTyping() {
+	public EOperation getTypeRef__GetStructuralMembers() {
 		return typeRefEClass.getEOperations().get(17);
 	}
 
@@ -562,7 +570,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__IsDefSiteStructuralTyping() {
+	public EOperation getTypeRef__IsUseSiteStructuralTyping() {
 		return typeRefEClass.getEOperations().get(18);
 	}
 
@@ -572,7 +580,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__GetASTNodeOptionalFieldStrategy() {
+	public EOperation getTypeRef__IsDefSiteStructuralTyping() {
 		return typeRefEClass.getEOperations().get(19);
 	}
 
@@ -582,8 +590,18 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeRef__GetVersion() {
+	public EOperation getTypeRef__GetASTNodeOptionalFieldStrategy() {
 		return typeRefEClass.getEOperations().get(20);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTypeRef__GetVersion() {
+		return typeRefEClass.getEOperations().get(21);
 	}
 
 	/**
@@ -1272,8 +1290,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getExistentialTypeRef_Wildcard() {
-		return (EReference)existentialTypeRefEClass.getEStructuralFeatures().get(0);
+	public EAttribute getExistentialTypeRef_Id() {
+		return (EAttribute)existentialTypeRefEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1282,8 +1300,18 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getExistentialTypeRef_BoundTypeVariable() {
-		return (EReference)existentialTypeRefEClass.getEStructuralFeatures().get(1);
+	public EAttribute getExistentialTypeRef_Reopened() {
+		return (EAttribute)existentialTypeRefEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getExistentialTypeRef_Wildcard() {
+		return (EReference)existentialTypeRefEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1342,8 +1370,18 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getUnknownTypeRef__GetTypeRefAsString() {
+	public EOperation getUnknownTypeRef__IsUnknown() {
 		return unknownTypeRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getUnknownTypeRef__GetTypeRefAsString() {
+		return unknownTypeRefEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -1962,6 +2000,16 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
+	public EDataType getUUID() {
+		return uuidEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public TypeRefsFactory getTypeRefsFactory() {
 		return (TypeRefsFactory)getEFactoryInstance();
 	}
@@ -1993,6 +2041,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(typeRefEClass, TYPE_REF___GET_MODIFIERS_AS_STRING);
 		createEOperation(typeRefEClass, TYPE_REF___IS_FINAL_BY_TYPE);
 		createEOperation(typeRefEClass, TYPE_REF___IS_ARRAY_LIKE);
+		createEOperation(typeRefEClass, TYPE_REF___IS_UNKNOWN);
 		createEOperation(typeRefEClass, TYPE_REF___IS_DYNAMIC);
 		createEOperation(typeRefEClass, TYPE_REF___IS_EXISTENTIAL);
 		createEOperation(typeRefEClass, TYPE_REF___IS_GENERIC);
@@ -2092,14 +2141,16 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(parameterizedTypeRefStructuralEClass, PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING);
 
 		existentialTypeRefEClass = createEClass(EXISTENTIAL_TYPE_REF);
+		createEAttribute(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF__ID);
+		createEAttribute(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF__REOPENED);
 		createEReference(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF__WILDCARD);
-		createEReference(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF__BOUND_TYPE_VARIABLE);
 		createEOperation(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF___IS_EXISTENTIAL);
 		createEOperation(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF___IS_GENERIC);
 		createEOperation(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF___IS_PARAMETERIZED);
 		createEOperation(existentialTypeRefEClass, EXISTENTIAL_TYPE_REF___GET_TYPE_REF_AS_STRING);
 
 		unknownTypeRefEClass = createEClass(UNKNOWN_TYPE_REF);
+		createEOperation(unknownTypeRefEClass, UNKNOWN_TYPE_REF___IS_UNKNOWN);
 		createEOperation(unknownTypeRefEClass, UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING);
 
 		typeTypeRefEClass = createEClass(TYPE_TYPE_REF);
@@ -2176,6 +2227,9 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 
 		// Create enums
 		optionalFieldStrategyEEnum = createEEnum(OPTIONAL_FIELD_STRATEGY);
+
+		// Create data types
+		uuidEDataType = createEDataType(UUID);
 	}
 
 	/**
@@ -2255,6 +2309,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getTypeRef__IsFinalByType(), theEcorePackage.getEBoolean(), "isFinalByType", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTypeRef__IsArrayLike(), theEcorePackage.getEBoolean(), "isArrayLike", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTypeRef__IsUnknown(), theEcorePackage.getEBoolean(), "isUnknown", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTypeRef__IsDynamic(), theEcorePackage.getEBoolean(), "isDynamic", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -2416,8 +2472,9 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getParameterizedTypeRefStructural__GetTypeRefAsString(), theEcorePackage.getEString(), "getTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(existentialTypeRefEClass, ExistentialTypeRef.class, "ExistentialTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExistentialTypeRef_Id(), this.getUUID(), "id", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExistentialTypeRef_Reopened(), theEcorePackage.getEBoolean(), "reopened", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getExistentialTypeRef_Wildcard(), this.getWildcard(), null, "wildcard", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getExistentialTypeRef_BoundTypeVariable(), theTypesPackage.getTypeVariable(), null, "boundTypeVariable", null, 0, 1, ExistentialTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getExistentialTypeRef__IsExistential(), theEcorePackage.getEBoolean(), "isExistential", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -2428,6 +2485,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getExistentialTypeRef__GetTypeRefAsString(), theEcorePackage.getEString(), "getTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(unknownTypeRefEClass, UnknownTypeRef.class, "UnknownTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getUnknownTypeRef__IsUnknown(), theEcorePackage.getEBoolean(), "isUnknown", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getUnknownTypeRef__GetTypeRefAsString(), theEcorePackage.getEString(), "getTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -2543,6 +2602,9 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		addEEnumLiteral(optionalFieldStrategyEEnum, OptionalFieldStrategy.OFF);
 		addEEnumLiteral(optionalFieldStrategyEEnum, OptionalFieldStrategy.GETTERS_OPTIONAL);
 		addEEnumLiteral(optionalFieldStrategyEEnum, OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL);
+
+		// Initialize data types
+		initEDataType(uuidEDataType, java.util.UUID.class, "UUID", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

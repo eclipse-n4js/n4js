@@ -10,13 +10,18 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -25,7 +30,7 @@ import org.junit.Test;
 /**
  * Test setting final field in the ctor if filled class inherits a spec ctor.
  */
-public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest extends AbstractN4jscTest {
+public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest extends AbstractCliCompileTest {
 
 	File workspace;
 	static String WS_IDEBUG_695 = "IDEBUG-695";
@@ -47,29 +52,16 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 
 	/***/
 	@Test
-	public void compileCheckFinalFieldCanBeSetInInheritedCtor_ExpectCanBeSet() throws ExitCodeException, IOException {
+	public void compileCheckFinalFieldCanBeSetInInheritedCtor_ExpectCanBeSet() {
+		Path projectDir = workspace.toPath().resolve(WS_IDEBUG_695);
+		Path fileToRun = projectDir.resolve("src-gen/Main.js");
 
-		// pre compile
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		// Compile
-		final String[] args_precompile = { "--projectlocations", wsRoot, "--buildType", "allprojects" };
-		new N4jscBase().doMain(args_precompile);
+		N4jscOptions options = COMPILE(workspace);
+		CliCompileResult cliResult = n4jsc(options);
+		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount());
 
-		// run without compile
-		final String fileToRun = wsRoot + "/IDEBUG-695/src/Main.n4js";
-		final String[] args = {
-				"--projectlocations", wsRoot,
-				"--buildType", "dontcompile",
-				"--runWith", "nodejs",
-				"--run", fileToRun
-		};
-
-		// Run
-		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(
-				"A.a == 5: true",
-				out);
-
+		ProcessResult nodejsResult = runNodejs(projectDir, fileToRun);
+		assertEquals(nodejsResult.toString(), "A.a == 5: true", nodejsResult.getStdOut());
 	}
 
 }

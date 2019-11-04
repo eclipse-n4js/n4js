@@ -244,7 +244,6 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseIndexedAccessExpression(IndexedAccessExpression iae) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "target", iae, iae.getTarget());
 			addDelegatingNode(cfc, "index", iae, iae.getIndex());
 			return cfc;
 		}
@@ -317,7 +316,6 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseParameterizedCallExpression(ParameterizedCallExpression pce) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, NodeNames.TARGET, pce, pce.getTarget());
 			for (int i = 0; i < pce.getArguments().size(); i++) {
 				Argument arg = pce.getArguments().get(i);
 				addDelegatingNode(cfc, "arg_" + i, pce, arg.getExpression());
@@ -337,10 +335,7 @@ final class CFEChildren {
 
 		@Override
 		public List<Node> caseParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression ppae) {
-
-			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "target", ppae, ppae.getTarget());
-			return cfc;
+			return Collections.emptyList();
 		}
 
 		@Override
@@ -383,7 +378,6 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseTaggedTemplateString(TaggedTemplateString tts) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "target", tts, tts.getTarget());
 			addDelegatingNode(cfc, "template", tts, tts.getTemplate());
 			return cfc;
 		}

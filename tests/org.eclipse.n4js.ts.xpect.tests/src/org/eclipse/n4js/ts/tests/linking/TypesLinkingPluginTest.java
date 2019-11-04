@@ -10,16 +10,15 @@
  */
 package org.eclipse.n4js.ts.tests.linking;
 
-import org.junit.runner.RunWith;
-import org.eclipse.xpect.runner.XpectRunner;
+import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.xpect.runner.XpectTestFiles;
-import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.LinkingTest;
+import org.junit.runner.RunWith;
 
 /**
  */
-@RunWith(XpectRunner.class)
-@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "model/linking", fileExtensions = "xt")
+@RunWith(N4JSXpectRunner.class)
+@XpectTestFiles(baseDir = "model/linking")
 public class TypesLinkingPluginTest extends LinkingTest {
 	// nothing more required
 }

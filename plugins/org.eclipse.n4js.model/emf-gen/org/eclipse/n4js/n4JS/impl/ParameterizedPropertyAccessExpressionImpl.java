@@ -48,14 +48,13 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ParameterizedPropertyAccessExpressionImpl#getComposedMemberCache <em>Composed Member Cache</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ParameterizedPropertyAccessExpressionImpl#getTypeArgs <em>Type Args</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ParameterizedPropertyAccessExpressionImpl#getTarget <em>Target</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ParameterizedPropertyAccessExpressionImpl#getProperty <em>Property</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ParameterizedPropertyAccessExpressionImpl#getPropertyAsText <em>Property As Text</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl implements ParameterizedPropertyAccessExpression {
+public class ParameterizedPropertyAccessExpressionImpl extends ExpressionWithTargetImpl implements ParameterizedPropertyAccessExpression {
 	/**
 	 * The cached value of the '{@link #getComposedMemberCache() <em>Composed Member Cache</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -75,16 +74,6 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * @ordered
 	 */
 	protected EList<TypeRef> typeArgs;
-
-	/**
-	 * The cached value of the '{@link #getTarget() <em>Target</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTarget()
-	 * @generated
-	 * @ordered
-	 */
-	protected Expression target;
 
 	/**
 	 * The cached value of the '{@link #getProperty() <em>Property</em>}' reference.
@@ -194,51 +183,6 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 * @generated
 	 */
 	@Override
-	public Expression getTarget() {
-		return target;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetTarget(Expression newTarget, NotificationChain msgs) {
-		Expression oldTarget = target;
-		target = newTarget;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET, oldTarget, newTarget);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setTarget(Expression newTarget) {
-		if (newTarget != target) {
-			NotificationChain msgs = null;
-			if (target != null)
-				msgs = ((InternalEObject)target).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET, null, msgs);
-			if (newTarget != null)
-				msgs = ((InternalEObject)newTarget).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET, null, msgs);
-			msgs = basicSetTarget(newTarget, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET, newTarget, newTarget));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public IdentifiableElement getProperty() {
 		if (property != null && property.eIsProxy()) {
 			InternalEObject oldProperty = (InternalEObject)property;
@@ -303,7 +247,8 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 	 */
 	@Override
 	public boolean isValidSimpleAssignmentTarget() {
-		return true;
+		boolean _isOrHasTargetWithOptionalChaining = this.isOrHasTargetWithOptionalChaining();
+		return (!_isOrHasTargetWithOptionalChaining);
 	}
 
 	/**
@@ -327,8 +272,6 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 		switch (featureID) {
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TYPE_ARGS:
 				return ((InternalEList<?>)getTypeArgs()).basicRemove(otherEnd, msgs);
-			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET:
-				return basicSetTarget(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -346,8 +289,6 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 				return basicGetComposedMemberCache();
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TYPE_ARGS:
 				return getTypeArgs();
-			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET:
-				return getTarget();
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY:
 				if (resolve) return getProperty();
 				return basicGetProperty();
@@ -373,9 +314,6 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 				getTypeArgs().clear();
 				getTypeArgs().addAll((Collection<? extends TypeRef>)newValue);
 				return;
-			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET:
-				setTarget((Expression)newValue);
-				return;
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY:
 				setProperty((IdentifiableElement)newValue);
 				return;
@@ -400,9 +338,6 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TYPE_ARGS:
 				getTypeArgs().clear();
 				return;
-			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET:
-				setTarget((Expression)null);
-				return;
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY:
 				setProperty((IdentifiableElement)null);
 				return;
@@ -425,8 +360,6 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionImpl im
 				return composedMemberCache != null;
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TYPE_ARGS:
 				return typeArgs != null && !typeArgs.isEmpty();
-			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET:
-				return target != null;
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY:
 				return property != null;
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY_AS_TEXT:

@@ -78,7 +78,7 @@ public final class IssuesProvider implements Provider<List<Issue>> {
 			return issues;
 		}
 		ArrayList<Issue> result = new ArrayList<>(issues);
-		result.removeAll(Collections.singleton(null));
+		result.removeAll(Collections.<Issue> singleton(null));
 		operationCanceledManager.checkCanceled(ci);
 		return result;
 	}

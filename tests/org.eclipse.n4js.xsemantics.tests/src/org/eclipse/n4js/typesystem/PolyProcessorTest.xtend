@@ -21,15 +21,8 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
@@ -175,37 +168,6 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		// NOTE: not using N4JSTypeSystem#type() here to make 100% sure we are just reading from the cache
 		return ASTMetaInfoUtils.getTypeFailSafe(expression);
 	}
-
-
-	def protected static TypeRef ref(Type type, TypeArgument... typeArgs) {
-		return TypeUtils.createTypeRef(type,typeArgs);
-	}
-	def protected static TypeRef of(Type type, TypeRef... typeRefs) {
-		return TypeUtils.createTypeRef(type,typeRefs);
-	}
-	/** Like {@link #ref(Type,TypeArgument..)}, but takes Types, instead of TypeRefs are arguments. */
-	def protected static TypeRef of(Type type, Type... types) {
-		return TypeUtils.createTypeRef(type,types.map[ref]);
-	}
-	def protected static UnionTypeExpression union(Type... types) {
-		return TypeUtils.createNonSimplifiedUnionType(types.map[it.ref]);
-	}
-	def protected static IntersectionTypeExpression intersection(Type... types) {
-		return TypeUtils.createNonSimplifiedIntersectionType(types.map[it.ref]);
-	}
-	def protected FunctionTypeExpression functionType(Type returnType, Type... fparTypes) {
-		return functionType(#[], returnType, fparTypes);
-	}
-	def protected FunctionTypeExpression functionType(TypeVariable[] typeVars, Type returnType, Type... fparTypes) {
-		val fpars = fparTypes.map[type|
-			val fpar = TypesFactory.eINSTANCE.createTFormalParameter;
-			fpar.typeRef = type.ref;
-			return fpar;
-		];
-		return TypeUtils.createFunctionTypeExpression(null, typeVars, fpars, returnType.ref);
-	}
-
-
 
 
 	@Test
@@ -370,7 +332,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 		.parse
 		.firstArrayLiteral.assertType(
-			_G.arrayType.ref(union(_G.numberType, _G.stringType)) // Array<union{number,string}>
+			_G.arrayType.of(union(_G.numberType, _G.stringType)) // Array<union{number,string}>
 		)
 	}
 	@Test
@@ -380,7 +342,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 		.parse
 		.firstArrayLiteral.assertType(
-			_G.arrayType.ref(union(_G.stringType, _G.numberType)) // Array<union{string,number}>
+			_G.arrayType.of(union(_G.stringType, _G.numberType)) // Array<union{string,number}>
 		)
 	}
 	@Test
@@ -390,7 +352,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 		.parse
 		.firstArrayLiteral.assertType(
-			_G.arrayType.ref(union(B1, B2)) // Array<union{B1,B2}>
+			_G.arrayType.of(union(B1, B2)) // Array<union{B1,B2}>
 		)
 	}
 	@Test
@@ -400,7 +362,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 		.parse
 		.firstArrayLiteral.assertType(
-			_G.arrayType.ref(_G.anyTypeRef) // Array<any>
+			_G.arrayType.of(_G.anyTypeRef) // Array<any>
 		)
 	}
 	@Test
@@ -410,7 +372,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 		.parse
 		.firstArrayLiteral.assertType(
-			_G.arrayType.ref(A.ref) // Array<A>
+			_G.arrayType.of(A.ref) // Array<A>
 		)
 	}
 	@Test
@@ -420,7 +382,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 		.parse
 		.firstArrayLiteral.assertType(
-			_G.arrayType.ref(union(B1, B2)) // Array<union{B1,B2}>
+			_G.arrayType.of(union(B1, B2)) // Array<union{B1,B2}>
 		)
 	}
 

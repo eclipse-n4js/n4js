@@ -1,0 +1,15 @@
+Eclipse.app
+.recommenders
+.gradle
+.metadata
+bin
+classes
+build
+xtext-gen
+xtend-gen
+test-data
+*.log
+node_modules
+lib
+nohup.out
+.DS_Store

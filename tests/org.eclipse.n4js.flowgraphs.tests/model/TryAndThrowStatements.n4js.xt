@@ -770,3 +770,61 @@ function ThrowTryIfReturnFinallyStatement() {
 	}
 	"end";
 }
+
+
+function ThrowTryThrowReturnFinally() : any {
+	// ThrowTryThrowReturnFinally XPECT cfContainer --> FunctionDeclaration::Block
+	/* ThrowTryThrowReturnFinally XPECT allEdges ---
+		"start" --> 1,
+		1 -IfFalse-> 3,
+		1 -IfTrue-> 2,
+		2 --> throw 2;,
+		3 --> return 3;,
+		return 3; -Return-> 4,
+		throw 2; -Throw-> 4,
+		4 --> "end",
+		"end" --> 5,
+		5 --> return 5;
+	--- */
+	/* ThrowTryThrowReturnFinally XPECT allBranches ---
+		B0: "start" -> 1[B1|B2],
+		B1: [B0] -> 2 -> throw 2;[B3|b4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 4,
+		b4: [B1] -> [B5],
+		B5: [B2|b4]3 -> return 3;[B6|b7],
+		B6: [B5] -> 4,
+		b7: [B5] -> 4 -> "end" -> 5 -> return 5;[b8|B9],
+		b8: [b7][B10],
+		B9: [b7][B10],
+		B10: [b8|B9]
+	--- */
+	/* ThrowTryThrowReturnFinally XPECT allPaths ---
+		"start" -> 1 -> 2 -> throw 2; -> 4,
+		"start" -> 1 -> 3 -> return 3; -> 4
+	---	*/
+	// ThrowTryThrowReturnFinally XPECT path from '"start"' to '"end"' -->
+	// ThrowTryThrowReturnFinally XPECT path from '"start"' notTo '"end"' notVia '1' -->
+	/* ThrowTryThrowReturnFinally backward XPECT allPaths direction 'Backward' ---
+		4 -> return 3; -> 3 -> 1 -> "start",
+		4 -> throw 2; -> 2 -> 1 -> "start"
+	---	*/
+	// ThrowTryThrowReturnFinally XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// ThrowTryThrowReturnFinally XPECT succs at '"start"' --> 1
+	// ThrowTryThrowReturnFinally XPECT succs at '1' --> 2, 3
+	// ThrowTryThrowReturnFinally XPECT succs at '2' --> throw 2;
+	// ThrowTryThrowReturnFinally XPECT succs at '3' --> return 3;
+	// ThrowTryThrowReturnFinally XPECT succs at '4' --> "end"
+	"start";
+    try {
+        if (1) {
+            throw 2;
+        }
+        return 3;
+    } finally {
+    	4
+    }
+	// ThrowTryThrowReturnFinally XPECT warnings --> "Dead code." at ""end";     return 5;"
+	"end";
+    return 5;
+}

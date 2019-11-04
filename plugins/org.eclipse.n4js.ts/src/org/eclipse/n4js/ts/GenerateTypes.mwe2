@@ -18,7 +18,6 @@ import org.eclipse.n4js.generation.*
 var fileExtensions = "n4ts"
 var rootPath = ".."
 var runtimeProjectName = "org.eclipse.n4js.ts"
-var runtimeProjectPath = "${rootPath}/${runtimeProjectName}"
 
 Workflow {
 	component = XtextGenerator {
@@ -28,8 +27,6 @@ Workflow {
 				rootPath = rootPath
 				genericIde = {
 					enabled = true
-					name = "${runtimeProjectName}.ui"
-					root = "${runtimeProjectPath}.ui"
 				}
 				eclipsePlugin = {
 					enabled = true

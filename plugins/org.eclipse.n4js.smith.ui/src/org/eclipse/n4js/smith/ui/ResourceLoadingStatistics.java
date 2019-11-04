@@ -85,7 +85,7 @@ public class ResourceLoadingStatistics {
 
 		static void printReport(IN4JSProject project, List<FileLoadInfo> results, PrintStream out, String elapsedTime) {
 			out.println("------------------------------------------------------------------------------------");
-			out.println("Resource loading per file for project: " + project.getLocation().lastSegment() + " took "
+			out.println("Resource loading per file for project: " + project.getLocation().getName() + " took "
 					+ elapsedTime);
 			out.println();
 			final List<FileLoadInfo> othersFromAST = results.stream().filter(result -> result.countLoadedFromAST > 0)
@@ -134,7 +134,7 @@ public class ResourceLoadingStatistics {
 		// for proper progress reporting, first collect all URIs in all N4JS projects
 		int uriCount = 0;
 		final Map<IN4JSProject, List<URI>> urisPerProject = new LinkedHashMap<>();
-		final Iterable<IN4JSProject> projects = n4jsCore.findAllProjects();
+		final Iterable<? extends IN4JSProject> projects = n4jsCore.findAllProjects();
 		for (IN4JSProject project : projects) {
 			operationCanceledManager.checkCanceled(cancelIndicator);
 			if (!isManagedByLibraryManager(project)) {

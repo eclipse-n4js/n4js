@@ -17,17 +17,19 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.naming.IQualifiedNameConverter;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.IScopeProvider;
+import org.eclipse.n4js.xtext.scoping.FilteringScope;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
 import org.eclipse.xpect.expectation.ICommaSeparatedValuesExpectation;
 import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xpect.xtext.lib.tests.ScopingTest;
 import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.ICrossEReferenceAndEObject;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.IScopeProvider;
 
 import com.google.inject.Inject;
 
@@ -91,9 +93,10 @@ public class ScopeXpectMethod extends ScopingTest {
 		EObject eobj = arg1.getEObject();
 		IScope scope = scopeProvider.getScope(eobj, arg1.getCrossEReference());
 		URI uri = eobj == null ? null : eobj.eResource() == null ? null : eobj.eResource().getURI();
-		expectation.assertEquals(new ScopeAllElements(scope), new IsInScopeWithOptionalPositionPredicate(converter,
-				uri, false,
-				scope));
+		IScope scopeWithoutErrors = new FilteringScope(scope,
+				desc -> !IEObjectDescriptionWithError.isErrorDescription(desc));
+		expectation.assertEquals(new ScopeAllElements(scopeWithoutErrors),
+				new IsInScopeWithOptionalPositionPredicate(converter, uri, false, scope));
 	}
 
 	/**

@@ -103,6 +103,7 @@ import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
+import org.eclipse.n4js.n4JS.CoalesceExpression
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -370,6 +371,40 @@ class ASTStructureValidator {
 //					new DiagnosticMessage(IssueCodes.messageForIMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST,
 //						IssueCodes.getDefaultSeverity(IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST), IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST))
 			}
+		}
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
+	}
+	
+	def private dispatch void validateASTStructure(
+		CoalesceExpression model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		val container = model.eContainer 
+		if (container instanceof BinaryLogicalExpression) {
+			val target = NodeModelUtils.findActualNodeFor(model)
+			producer.node = target
+			producer.addDiagnostic(
+					new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_COALESCE_PARENT(container.op.literal),
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_COALESCE_PARENT), IssueCodes.AST_INVALID_COALESCE_PARENT))
+		} else if (model.expression instanceof BinaryLogicalExpression) {
+			val target = NodeModelUtils.findActualNodeFor(model.expression)
+			producer.node = target
+			producer.addDiagnostic(
+					new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_COALESCE_CHILD((model.expression as BinaryLogicalExpression).op.literal),
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_COALESCE_CHILD), IssueCodes.AST_INVALID_COALESCE_CHILD))
+		} else if (model.defaultExpression instanceof BinaryLogicalExpression) {
+			val target = NodeModelUtils.findActualNodeFor(model.defaultExpression)
+			producer.node = target
+			producer.addDiagnostic(
+					new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_COALESCE_CHILD((model.defaultExpression as BinaryLogicalExpression).op.literal),
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_COALESCE_CHILD), IssueCodes.AST_INVALID_COALESCE_CHILD))
 		}
 		recursiveValidateASTStructure(
 			model,
@@ -994,7 +1029,7 @@ class ASTStructureValidator {
 			val target = NodeModelUtils.findActualNodeFor(model)
 			if(target !== null) {
 				producer.node = target
-				if (model.eContainingFeature === N4JSPackage.Literals.PARAMETERIZED_CALL_EXPRESSION__TARGET) {
+				if (model.eContainingFeature === N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET && model.eContainer instanceof ParameterizedCallExpression) {
 					producer.addDiagnostic(
 						new DiagnosticMessage(IssueCodes.messageForKEY_SUP_CTOR_INVALID_LOC,
 							IssueCodes.getDefaultSeverity(IssueCodes.KEY_SUP_CTOR_INVALID_LOC),
@@ -1405,12 +1440,7 @@ class ASTStructureValidator {
 		if(elem!==null && elem.spread) {
 			if(!DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)) {
 				// use of spread in an array literal that is *not* used as a destructuring pattern
-				// --> always error (legal in ES6 but not yet supported; might be supported later)
-				val nodes = NodeModelUtils.findNodesForFeature(elem, N4JSPackage.eINSTANCE.arrayElement_Spread);
-				producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(elem)
-				producer.addDiagnostic(
-					new DiagnosticMessage(IssueCodes.getMessageForAST_SPREAD_IN_ARRAY_LITERAL_UNSUPPORTED,
-						IssueCodes.getDefaultSeverity(IssueCodes.AST_SPREAD_IN_ARRAY_LITERAL_UNSUPPORTED), IssueCodes.AST_SPREAD_IN_ARRAY_LITERAL_UNSUPPORTED))
+				// --> valid at any position
 			}
 			else {
 				// use of spread in an array literal that *is* used as a destructuring pattern

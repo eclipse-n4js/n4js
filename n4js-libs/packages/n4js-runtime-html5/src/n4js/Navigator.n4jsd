@@ -9,6 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 @@Global @@ProvidedByRuntime
+import {Geolocation} from "GeoLocation";
+import {ServiceWorkerContainer} from "ServiceWorkerContainer";
 
 export external public abstract class Navigator extends Element implements NavigatorID {
     public onLine: boolean;
@@ -17,7 +19,9 @@ export external public abstract class Navigator extends Element implements Navig
     public language: string;
     public get geolocation(): Geolocation;
     public get standalone(): boolean;
+    public get serviceWorker(): ServiceWorkerContainer;
+
     // getBattery, connection, ...
 }
 
-export external public const navigator: Navigator;
+export external public const navigator: Navigator+;

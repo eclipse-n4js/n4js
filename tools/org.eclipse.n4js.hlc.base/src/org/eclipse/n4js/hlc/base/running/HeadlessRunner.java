@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
@@ -60,7 +61,7 @@ public class HeadlessRunner {
 	 * @throws ExitCodeException
 	 *             in cases of errors
 	 */
-	public void startRunner(String runner, String implementationId, URI locationToRun,
+	public void startRunner(String runner, N4JSProjectName implementationId, URI locationToRun,
 			Collection<String> additionalPaths) throws ExitCodeException {
 
 		IRunnerDescriptor runnerDescriptor = checkRunner(runner);

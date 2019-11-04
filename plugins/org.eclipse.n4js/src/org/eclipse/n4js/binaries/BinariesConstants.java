@@ -58,6 +58,11 @@ public final class BinariesConstants {
 	public static final String DEFAULT_YARN_PATH_VM_ARG = "org.eclipse.n4js.defaultYarnPath";
 
 	/**
+	 * Default java path, similar to {@code DEFAULT_NODE_PATH_VM_ARG}
+	 */
+	public static final String DEFAULT_JAVA_PATH_VM_ARG = "org.eclipse.n4js.defaultJavaPath";
+
+	/**
 	 * Jenkins environment variable for the {@code Node.js} binary path. Points to the actual binary (with an absolute
 	 * path) instead of pointing to the folder containing the binary.
 	 *
@@ -76,6 +81,16 @@ public final class BinariesConstants {
 	 * argument might override this configuration.
 	 */
 	public static final String YARN_PATH_ENV = "YARN_PATH";
+
+	/**
+	 * Jenkins environment variable for the {@code java} binary path. Points to the actual binary (with an absolute
+	 * path) instead of pointing to the folder containing the binary.
+	 *
+	 * <p>
+	 * Even if it is available the {@link #DEFAULT_JAVA_PATH_VM_ARG <code>org.eclipse.n4js.defaultJavaPath</code>} VM
+	 * argument might override this configuration.
+	 */
+	public static final String JAVA_PATH_ENV = "JAVA_HOME";
 
 	/**
 	 * The (fallback) built-in default {@code Node.js} path if the above VM or ENV property is not specified.
@@ -101,12 +116,24 @@ public final class BinariesConstants {
 			? new File("C:" + separator + "Program Files" + separator + "yarn").getAbsolutePath()
 			: new File(separator + "usr" + File.separator + "local" + separator + "bin").getAbsolutePath();
 
+	/**
+	 * The (fallback) built-in default {@code java} path if the above VM or ENV property is not specified.
+	 *
+	 * <ul>
+	 * <li>On Windows systems: {@code C:\Program Files\Java}</li>
+	 * <li>On Unix systems: {@code /usr/bin/java}</li>
+	 * </ul>
+	 */
+	public static final String BUILT_IN_DEFAULT_JAVA_PATH = isWindows()
+			? new File("C:" + separator + "Program Files" + separator + "Java").getAbsolutePath()
+			: new File(separator + "usr" + File.separator + "bin" + separator + "java").getAbsolutePath();
+
 	/** The minimum {@code Node.js} version. */
 	public static final VersionNumber NODE_MIN_VERSION = SemverUtils.createVersionNumber(10, 13, 0);
 	/** The label for {@code Node.js}. */
 	public static final String NODE_LABEL = "Node.js";
-	/** The {@code Node.js} binary name (OS specific). */
-	public static final String NODE_BINARY_NAME = isWindows() ? "node.exe" : "node";
+	/** The {@code Node.js} binary name without file extension. */
+	public static final String NODE_BINARY_NAME = "node";
 	/** The argument for node.js to print out the version number */
 	public static final String VERSION_ARGUMENT = "-v";
 
@@ -114,7 +141,7 @@ public final class BinariesConstants {
 	public static final VersionNumber NPM_MIN_VERSION = SemverUtils.createVersionNumber(6, 4, 0);
 	/** The label for {@code npm}. */
 	public static final String NPM_LABEL = "npm";
-	/** The {@code npm} binary name. */
+	/** The {@code npm} binary name without file extension. */
 	public static final String NPM_BINARY_NAME = "npm";
 	/** The label for {@code npmrc}. */
 	public static final String NPMRC_LABEL = "npmrc";
@@ -123,12 +150,28 @@ public final class BinariesConstants {
 
 	/** The label for {@code yarn}. */
 	public static final String YARN_LABEL = "Yarn";
-	/** The {@code yarn} binary name (OS specific). */
-	public static final String YARN_BINARY_NAME = isWindows() ? "yarn.exe" : "yarn";
+	/** The {@code yarn} binary name without file extension. */
+	public static final String YARN_BINARY_NAME = "yarn";
 	/** The minimum {@code yarn} version. */
 	public static final VersionNumber YARN_MIN_VERSION = SemverUtils.createVersionNumber(1, 13, 0);
 	/** The argument for yarn to print out the version number */
 	public static final String YARN_VERSION_ARGUMENT = "-v";
+
+	/** The label for {@code java}. */
+	public static final String JAVA_LABEL = "Java";
+	/** The {@code java} binary name without file extension. */
+	public static final String JAVA_BINARY_NAME = "java";
+	/** The minimum {@code java} version. */
+	public static final VersionNumber JAVA_MIN_VERSION = SemverUtils.createVersionNumber(11, 0, 3);
+	/** The argument for java to print out the version number */
+	public static final String JAVA_VERSION_ARGUMENT = "-version";
+
+	/** File extensions for executable files on windows platform */
+	public static final String[] EXECS_WINDOWS = { ".bat", ".cmd", ".exe" };
+	/** File extensions for executable files on non-windows platforms */
+	public static final String[] EXECS_OTHERS = { "" };
+	/** File extensions for executable files (OS specific) */
+	public static final String[] EXECUTABLE_FILE_EXTENSIONS = isWindows() ? EXECS_WINDOWS : EXECS_OTHERS;
 
 	private BinariesConstants() {
 		// No initialization.
