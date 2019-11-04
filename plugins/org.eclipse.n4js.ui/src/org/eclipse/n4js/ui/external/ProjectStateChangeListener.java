@@ -118,7 +118,7 @@ public class ProjectStateChangeListener extends ProjectOpenedOrClosedListener {
 						Set<URI> toBeUpdated = toBeBuilt.getToBeUpdated();
 						Set<String> projectNames = new LinkedHashSet<>();
 						for (IProject project : affectedProjects) {
-							IFile file = project.getFile("package.json");
+							IFile file = project.getFile(N4JSGlobals.PACKAGE_JSON);
 							if (file.exists()) {
 								projectNames.add(project.getName());
 								toBeUpdated.add(URI.createPlatformResourceURI(file.getFullPath().toString(), true));

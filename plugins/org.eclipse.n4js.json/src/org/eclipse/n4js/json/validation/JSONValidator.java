@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
@@ -52,8 +53,10 @@ public class JSONValidator extends AbstractJSONValidator {
 	 */
 	@Check
 	public void checkUsingValidatorExtensions(JSONDocument document) {
-		validatorExtensionRegistry.getValidatorExtensions()
-				.forEach(validatorExtension -> validatorExtension.validateJSON(document, this.getChain()));
+		DiagnosticChain chain = this.getChain();
+		for (IJSONValidatorExtension validatorExtension : validatorExtensionRegistry.getValidatorExtensions()) {
+			validatorExtension.validateJSON(document, chain);
+		}
 	}
 
 	/**
@@ -85,7 +88,7 @@ public class JSONValidator extends AbstractJSONValidator {
 		ICompositeNode documentNode = NodeModelUtils.findActualNodeFor(document);
 		ICompositeNode rootNode = documentNode.getRootNode();
 
-		// find hidden leaf nodes that fulfill #isCommentNode criteria and add an issue 
+		// find hidden leaf nodes that fulfill #isCommentNode criteria and add an issue
 		StreamSupport.stream(rootNode.getAsTreeIterable().spliterator(), false)
 				.filter(n -> n instanceof HiddenLeafNode)
 				.filter(n -> isCommentNode(n))

@@ -20,7 +20,7 @@ import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 
 /**
- * Method annotation to be used in combination with {@link AbstractJSONValidatorExtension} in order to declaratively
+ * Method annotation to be used in combination with {@link AbstractPackageJSONValidatorExtension} in order to declaratively
  * specify validation check methods that validate only certain properties of a {@link JSONDocument}.
  *
  * Methods annotated with this annotation may either have no parameter at all or a single parameter of type

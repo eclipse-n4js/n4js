@@ -248,7 +248,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		IWorkbenchPage page = EclipseUIUtils.getActivePage();
 		Path path = Paths.get(PROJECT_NAME.toEclipseProjectName().getRawName(), N4JSGlobals.NODE_MODULES,
 				"n4js-runtime-node",
-				"package.json");
+				N4JSGlobals.PACKAGE_JSON);
 		org.eclipse.core.runtime.Path iPath = new org.eclipse.core.runtime.Path(path.toString());
 		IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
 		XtextEditor editor = openAndGetXtextEditorWithID(iFile, page, JsonActivator.ORG_ECLIPSE_N4JS_JSON_JSON);
@@ -282,7 +282,7 @@ public class HyperlinkPluginUITest extends AbstractBuilderParticipantTest {
 		editor = (XtextEditor) uriEditorOpener.open(uriEvent, true);
 		UIUtils.waitForUiThread();
 
-		assertEquals("Wrong editor title", "package.json", editor.getTitle());
+		assertEquals("Wrong editor title", N4JSGlobals.PACKAGE_JSON, editor.getTitle());
 	}
 
 }

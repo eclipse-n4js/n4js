@@ -12,5 +12,5 @@ fi
 
 # Copy n4jsc.jar "./tests/org.eclipse.n4js.hlc.tests/target"
 echo "Copy n4jsc.jar to /tests/org.eclipse.n4js.hlc.tests/target"
-cp tools/org.eclipse.n4js.hlc/target/n4jsc.jar ./tests/org.eclipse.n4js.hlc.tests/target/
+cp target/n4jsc.jar ./tests/org.eclipse.n4js.hlc.tests/target/
 echo "You can run tests in /tests/org.eclipse.n4js.hlc.tests now."

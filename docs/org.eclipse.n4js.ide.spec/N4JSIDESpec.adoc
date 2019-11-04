@@ -47,7 +47,6 @@ include::{find}chapters/09_testsupport/testsupport.adoc[]
 include::{find}chapters/10_helpsystem/helpsystem.adoc[]
 include::{find}chapters/11_bugmanagement/bugmanagement.adoc[]
 
-include::{find}chapters/20_cli/cli.adoc[]
 
 ifdef::backend-docbook5[<<<]
 

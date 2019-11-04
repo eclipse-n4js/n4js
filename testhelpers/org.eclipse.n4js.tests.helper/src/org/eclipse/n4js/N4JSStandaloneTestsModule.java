@@ -41,8 +41,8 @@ public class N4JSStandaloneTestsModule extends BaseTestModule {
 	 * Due to its eager-singleton binding, it will be executed at the time of injector creation.
 	 */
 	@SingletonBinding(eager = true)
-	public Class<? extends N4JSStandloneRegistrationHelper> bindRegistrationHelper() {
-		return N4JSStandloneRegistrationHelper.class;
+	public Class<? extends N4JSStandaloneRegistrationHelper> bindRegistrationHelper() {
+		return N4JSStandaloneRegistrationHelper.class;
 	}
 
 	/** */

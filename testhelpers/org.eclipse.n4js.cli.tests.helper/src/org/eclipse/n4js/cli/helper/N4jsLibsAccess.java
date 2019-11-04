@@ -34,7 +34,6 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
-import org.eclipse.n4js.libs.build.BuildN4jsLibs;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.UtilN4;
@@ -356,7 +355,7 @@ public class N4jsLibsAccess {
 	}
 
 	/**
-	 * Uses a heuristic to check if MWE2 workflow {@link BuildN4jsLibs} has been run and throw an {@link AssertionError}
+	 * Uses a heuristic to check if MWE2 workflow {@code BuildN4jsLibs} has been run and throw an {@link AssertionError}
 	 * if this isn't the case.
 	 */
 	private static void assertN4jsLibsAreBuilt(Path n4jsLibsLocation) {
@@ -366,7 +365,7 @@ public class N4jsLibsAccess {
 		Path n4jsRuntimeSrcGen = n4jsRuntimeLink.resolve("src-gen");
 		String warning = "\n" +
 				"******************************************************************\n" +
-				"Maybe you forgot to run MWE2 workflow " + BuildN4jsLibs.class.getSimpleName() + "?\n" +
+				"Maybe you forgot to run MWE2 workflow BuildN4jsLibs?\n" +
 				"******************************************************************";
 		Assert.assertTrue("n4js-runtime does not exist in node_modules folder: " + n4jsRuntimeLink + warning,
 				Files.exists(n4jsRuntimeLink));

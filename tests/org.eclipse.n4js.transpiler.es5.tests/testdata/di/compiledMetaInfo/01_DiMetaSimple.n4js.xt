@@ -59,11 +59,11 @@ function replacer(key, value){
     }
     return value;
 }
-var diData = JSON.stringify(tA['$di'], replacer, '\t')
+var diData = JSON.stringify(tA[Symbol.for('org.eclipse.n4js/diInfo')], replacer, '\t')
 console.log('when needed DI data is there');
 console.log(diData);
 //note types are not strings 
-var iFields = (tA['$di'] as Object)['fieldsInjectedTypes'];
+var iFields = (tA[Symbol.for('org.eclipse.n4js/diInfo')] as Object)['fieldsInjectedTypes'];
 var field = (iFields as Array<Object>)[0];
 var fType = field['type'];
 var fTypeVal = (fType as Object)['n4type'];

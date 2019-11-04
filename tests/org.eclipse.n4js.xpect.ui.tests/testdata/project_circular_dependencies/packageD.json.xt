@@ -40,7 +40,7 @@
  */
 
 {
-	// XPECT errors --> "The project configuration contains a dependency cycle of projects D -> [A] -> C -> B -> [A]." at ""D""
+	// TODO: GH-1525 XPECT FIXME errors --> "The project configuration contains a dependency cycle of projects D -> [A] -> C -> B -> [A]." at ""D""
 	"name": "D",
 	"version": "0.0.1",
 	"dependencies": {

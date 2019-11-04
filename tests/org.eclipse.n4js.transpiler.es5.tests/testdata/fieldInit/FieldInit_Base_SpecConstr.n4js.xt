@@ -17,11 +17,13 @@
 stdout:
 C initializes C.s with sC
 C initializes C.s2 with s2C
+D initializes D.sp2 with sp2D
 D initializes D.sp3 with sp3D
 D initializes D.t with tD
 R1 initializes R1.u with uR1
 R2 initializes R2.v with vR2
 R2 initializes R2.w with undefined
+R2 initializes R2.sp4 with sp4R2
 R2 initializes R2.sp5 with sp5R2
 D.constructor initializes D.constructor.sp1 with sp1Spec
 D.constructor initializes D.constructor.sp2 with undefined

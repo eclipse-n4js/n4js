@@ -261,13 +261,22 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_REF___IS_ARRAY_LIKE = TYPE_ARGUMENT_OPERATION_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___IS_UNKNOWN = TYPE_ARGUMENT_OPERATION_COUNT + 4;
+
+	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_DYNAMIC = TYPE_ARGUMENT_OPERATION_COUNT + 4;
+	int TYPE_REF___IS_DYNAMIC = TYPE_ARGUMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Existential</em>' operation.
@@ -276,7 +285,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_EXISTENTIAL = TYPE_ARGUMENT_OPERATION_COUNT + 5;
+	int TYPE_REF___IS_EXISTENTIAL = TYPE_ARGUMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -285,7 +294,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_GENERIC = TYPE_ARGUMENT_OPERATION_COUNT + 6;
+	int TYPE_REF___IS_GENERIC = TYPE_ARGUMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -294,7 +303,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_PARAMETERIZED = TYPE_ARGUMENT_OPERATION_COUNT + 7;
+	int TYPE_REF___IS_PARAMETERIZED = TYPE_ARGUMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -303,7 +312,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_RAW = TYPE_ARGUMENT_OPERATION_COUNT + 8;
+	int TYPE_REF___IS_RAW = TYPE_ARGUMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
@@ -312,7 +321,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_DECLARED_UPPER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 9;
+	int TYPE_REF___GET_DECLARED_UPPER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
@@ -321,7 +330,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 10;
+	int TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Type Args</em>' operation.
@@ -330,7 +339,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPE_ARGS = TYPE_ARGUMENT_OPERATION_COUNT + 11;
+	int TYPE_REF___GET_TYPE_ARGS = TYPE_ARGUMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -339,7 +348,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 12;
+	int TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -348,7 +357,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___TO_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 13;
+	int TYPE_REF___TO_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -357,7 +366,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_TOP_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 14;
+	int TYPE_REF___IS_TOP_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Is Bottom Type</em>' operation.
@@ -366,7 +375,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_BOTTOM_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 15;
+	int TYPE_REF___IS_BOTTOM_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -375,7 +384,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPING_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 16;
+	int TYPE_REF___GET_TYPING_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -384,7 +393,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 17;
+	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -393,7 +402,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 18;
+	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -402,7 +411,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 19;
+	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -411,7 +420,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 20;
+	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -420,7 +429,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_VERSION = TYPE_ARGUMENT_OPERATION_COUNT + 21;
+	int TYPE_REF___GET_VERSION = TYPE_ARGUMENT_OPERATION_COUNT + 22;
 
 	/**
 	 * The number of operations of the '<em>Type Ref</em>' class.
@@ -429,7 +438,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 22;
+	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 23;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StaticBaseTypeRefImpl <em>Static Base Type Ref</em>}' class.
@@ -512,6 +521,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int STATIC_BASE_TYPE_REF___IS_ARRAY_LIKE = TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___IS_UNKNOWN = TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -765,6 +783,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int BASE_TYPE_REF___IS_ARRAY_LIKE = STATIC_BASE_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___IS_UNKNOWN = STATIC_BASE_TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -1038,6 +1065,15 @@ public interface TypeRefsPackage extends EPackage {
 	int COMPOSED_TYPE_REF___IS_ARRAY_LIKE = STATIC_BASE_TYPE_REF___IS_ARRAY_LIKE;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___IS_UNKNOWN = STATIC_BASE_TYPE_REF___IS_UNKNOWN;
+
+	/**
 	 * The operation id for the '<em>Is Existential</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1298,6 +1334,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNION_TYPE_EXPRESSION___IS_ARRAY_LIKE = COMPOSED_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___IS_UNKNOWN = COMPOSED_TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Existential</em>' operation.
@@ -1562,6 +1607,15 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___IS_ARRAY_LIKE = COMPOSED_TYPE_REF___IS_ARRAY_LIKE;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___IS_UNKNOWN = COMPOSED_TYPE_REF___IS_UNKNOWN;
+
+	/**
 	 * The operation id for the '<em>Is Existential</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1813,6 +1867,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF___IS_ARRAY_LIKE = BASE_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___IS_UNKNOWN = BASE_TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -2075,6 +2138,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF_NOMINAL___IS_ARRAY_LIKE = THIS_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___IS_UNKNOWN = THIS_TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -2382,6 +2454,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF_STRUCTURAL___IS_ARRAY_LIKE = THIS_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___IS_UNKNOWN = THIS_TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -2718,6 +2799,15 @@ public interface TypeRefsPackage extends EPackage {
 	int BOUND_THIS_TYPE_REF___IS_ARRAY_LIKE = THIS_TYPE_REF___IS_ARRAY_LIKE;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___IS_UNKNOWN = THIS_TYPE_REF___IS_UNKNOWN;
+
+	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3041,6 +3131,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE = BASE_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___IS_UNKNOWN = BASE_TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -3504,6 +3603,15 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_UNKNOWN = PARAMETERIZED_TYPE_REF___IS_UNKNOWN;
+
+	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3827,6 +3935,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXISTENTIAL_TYPE_REF___IS_ARRAY_LIKE = TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___IS_UNKNOWN = TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -4235,13 +4352,22 @@ public interface TypeRefsPackage extends EPackage {
 	int UNKNOWN_TYPE_REF___GET_VERSION = TYPE_REF___GET_VERSION;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___IS_UNKNOWN = TYPE_REF_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF_OPERATION_COUNT + 0;
+	int UNKNOWN_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Unknown Type Ref</em>' class.
@@ -4250,7 +4376,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNKNOWN_TYPE_REF_OPERATION_COUNT = TYPE_REF_OPERATION_COUNT + 1;
+	int UNKNOWN_TYPE_REF_OPERATION_COUNT = TYPE_REF_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeTypeRefImpl <em>Type Type Ref</em>}' class.
@@ -4351,6 +4477,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_TYPE_REF___IS_ARRAY_LIKE = BASE_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___IS_UNKNOWN = BASE_TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -4724,6 +4859,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPR_OR_REF___IS_ARRAY_LIKE = STATIC_BASE_TYPE_REF___IS_ARRAY_LIKE;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___IS_UNKNOWN = STATIC_BASE_TYPE_REF___IS_UNKNOWN;
+
+	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5092,6 +5236,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_REF___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___IS_UNKNOWN = PARAMETERIZED_TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -5527,6 +5680,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION___IS_ARRAY_LIKE = FUNCTION_TYPE_EXPR_OR_REF___IS_ARRAY_LIKE;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___IS_UNKNOWN = FUNCTION_TYPE_EXPR_OR_REF___IS_UNKNOWN;
+
+	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5850,6 +6012,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DEFERRED_TYPE_REF___IS_ARRAY_LIKE = TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___IS_UNKNOWN = TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -6260,6 +6431,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_UNKNOWN = PARAMETERIZED_TYPE_REF___IS_UNKNOWN;
+
+	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6610,6 +6790,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int VERSIONED_FUNCTION_TYPE_REF___IS_ARRAY_LIKE = VERSIONED_PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_FUNCTION_TYPE_REF___IS_UNKNOWN = VERSIONED_PARAMETERIZED_TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -7072,6 +7261,15 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_ARRAY_LIKE = VERSIONED_PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE;
 
 	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_UNKNOWN = VERSIONED_PARAMETERIZED_TYPE_REF___IS_UNKNOWN;
+
+	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7396,6 +7594,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTypeRef__IsArrayLike();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isUnknown() <em>Is Unknown</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Unknown</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#isUnknown()
+	 * @generated
+	 */
+	EOperation getTypeRef__IsUnknown();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isDynamic() <em>Is Dynamic</em>}' operation.
@@ -8357,6 +8565,16 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getUnknownTypeRef();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.UnknownTypeRef#isUnknown() <em>Is Unknown</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Unknown</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.UnknownTypeRef#isUnknown()
+	 * @generated
+	 */
+	EOperation getUnknownTypeRef__IsUnknown();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.UnknownTypeRef#getTypeRefAsString() <em>Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9086,6 +9304,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TYPE_REF___IS_ARRAY_LIKE = eINSTANCE.getTypeRef__IsArrayLike();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Unknown</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_REF___IS_UNKNOWN = eINSTANCE.getTypeRef__IsUnknown();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Dynamic</b></em>' operation.
@@ -9866,6 +10092,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass UNKNOWN_TYPE_REF = eINSTANCE.getUnknownTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Unknown</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation UNKNOWN_TYPE_REF___IS_UNKNOWN = eINSTANCE.getUnknownTypeRef__IsUnknown();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Type Ref As String</b></em>' operation.

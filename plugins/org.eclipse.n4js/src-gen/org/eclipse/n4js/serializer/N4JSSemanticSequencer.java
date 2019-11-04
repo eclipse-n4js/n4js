@@ -38,6 +38,7 @@ import org.eclipse.n4js.n4JS.CaseClause;
 import org.eclipse.n4js.n4JS.CastExpression;
 import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.CatchVariable;
+import org.eclipse.n4js.n4JS.CoalesceExpression;
 import org.eclipse.n4js.n4JS.CommaExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ContinueStatement;
@@ -221,6 +222,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
 						|| rule == grammarAccess.getLogicalORExpressionRule()
 						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
+						|| rule == grammarAccess.getCoalesceExpressionRule()
+						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getConditionalExpressionRule()
 						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getAssignmentExpressionRule()
@@ -247,6 +250,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else if (rule == grammarAccess.getLogicalORExpressionRule()
 						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
+						|| rule == grammarAccess.getCoalesceExpressionRule()
+						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getConditionalExpressionRule()
 						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getAssignmentExpressionRule()
@@ -312,6 +317,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.CATCH_VARIABLE:
 				sequence_BogusTypeRefFragment_CatchVariable_ColonSepDeclaredTypeRef(context, (CatchVariable) semanticObject); 
+				return; 
+			case N4JSPackage.COALESCE_EXPRESSION:
+				sequence_CoalesceExpression(context, (CoalesceExpression) semanticObject); 
 				return; 
 			case N4JSPackage.COMMA_EXPRESSION:
 				sequence_Expression(context, (CommaExpression) semanticObject); 
@@ -476,6 +484,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
 						|| rule == grammarAccess.getLogicalORExpressionRule()
 						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
+						|| rule == grammarAccess.getCoalesceExpressionRule()
+						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getConditionalExpressionRule()
 						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getAssignmentExpressionRule()
@@ -535,6 +545,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
 						|| rule == grammarAccess.getLogicalORExpressionRule()
 						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
+						|| rule == grammarAccess.getCoalesceExpressionRule()
+						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getConditionalExpressionRule()
 						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getAssignmentExpressionRule()
@@ -572,11 +584,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION:
-				if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_2_0_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_2_1_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_2_2_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_2_3_0_0()) {
-					sequence_IndexedAccessExpressionTail_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(context, (IndexedAccessExpression) semanticObject); 
+				if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_3_0_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_3_1_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_3_2_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_3_3_0_0()) {
+					sequence_IndexedAccessExpressionTail_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(context, (IndexedAccessExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getLeftHandSideExpressionRule()
@@ -605,6 +617,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
 						|| rule == grammarAccess.getLogicalORExpressionRule()
 						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
+						|| rule == grammarAccess.getCoalesceExpressionRule()
+						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getConditionalExpressionRule()
 						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getAssignmentExpressionRule()
@@ -636,7 +650,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_IntLiteral(context, (IntLiteral) semanticObject); 
 				return; 
 			case N4JSPackage.JSX_ELEMENT:
-				sequence_JSXAttributes_JSXElement(context, (JSXElement) semanticObject); 
+				sequence_JSXElement(context, (JSXElement) semanticObject); 
 				return; 
 			case N4JSPackage.JSX_ELEMENT_NAME:
 				sequence_JSXElementName(context, (JSXElementName) semanticObject); 
@@ -727,6 +741,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
 						|| rule == grammarAccess.getLogicalORExpressionRule()
 						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
+						|| rule == grammarAccess.getCoalesceExpressionRule()
+						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getConditionalExpressionRule()
 						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getAssignmentExpressionRule()
@@ -892,6 +908,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
 						|| rule == grammarAccess.getLogicalORExpressionRule()
 						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
+						|| rule == grammarAccess.getCoalesceExpressionRule()
+						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getConditionalExpressionRule()
 						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getAssignmentExpressionRule()
@@ -944,6 +962,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
 						|| rule == grammarAccess.getLogicalORExpressionRule()
 						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
+						|| rule == grammarAccess.getCoalesceExpressionRule()
+						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getConditionalExpressionRule()
 						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getAssignmentExpressionRule()
@@ -963,11 +983,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_Arguments_ConcreteTypeArguments_ParameterizedCallExpression(context, (ParameterizedCallExpression) semanticObject); 
 					return; 
 				}
-				else if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_2_0_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_2_1_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_2_2_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_2_3_0_0()) {
-					sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(context, (ParameterizedCallExpression) semanticObject); 
+				else if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_3_0_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_3_1_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_3_2_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_3_3_0_0()) {
+					sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(context, (ParameterizedCallExpression) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1003,6 +1023,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
 						|| rule == grammarAccess.getLogicalORExpressionRule()
 						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
+						|| rule == grammarAccess.getCoalesceExpressionRule()
+						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getConditionalExpressionRule()
 						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getAssignmentExpressionRule()
@@ -1012,11 +1034,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_ConcreteTypeArguments_LeftHandSideExpression_MemberExpression_ParameterizedPropertyAccessExpressionTail(context, (ParameterizedPropertyAccessExpression) semanticObject); 
 					return; 
 				}
-				else if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_2_0_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_2_1_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_2_2_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_2_3_0_0()) {
-					sequence_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(context, (ParameterizedPropertyAccessExpression) semanticObject); 
+				else if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_3_0_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_3_1_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_3_2_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_3_3_0_0()) {
+					sequence_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(context, (ParameterizedPropertyAccessExpression) semanticObject); 
 					return; 
 				}
 				else if (action == grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_1_3_3_0_0()
@@ -1161,11 +1183,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_SwitchStatement(context, (SwitchStatement) semanticObject); 
 				return; 
 			case N4JSPackage.TAGGED_TEMPLATE_STRING:
-				if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_2_0_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_2_1_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_2_2_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_2_3_0_0()) {
-					sequence_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(context, (TaggedTemplateString) semanticObject); 
+				if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_3_0_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_3_1_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_3_2_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_3_3_0_0()) {
+					sequence_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(context, (TaggedTemplateString) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getLeftHandSideExpressionRule()
@@ -1194,6 +1216,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getLogicalANDExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
 						|| rule == grammarAccess.getLogicalORExpressionRule()
 						|| action == grammarAccess.getLogicalORExpressionAccess().getBinaryLogicalExpressionLhsAction_1_0_0_0()
+						|| rule == grammarAccess.getCoalesceExpressionRule()
+						|| action == grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getConditionalExpressionRule()
 						|| action == grammarAccess.getConditionalExpressionAccess().getConditionalExpressionExpressionAction_1_0_0_0()
 						|| rule == grammarAccess.getAssignmentExpressionRule()
@@ -1652,6 +1676,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns AdditiveExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns AdditiveExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns AdditiveExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns AdditiveExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns AdditiveExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns AdditiveExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns AdditiveExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns AdditiveExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns AdditiveExpression
@@ -1686,6 +1713,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns AdditiveExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns AdditiveExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns AdditiveExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns AdditiveExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns AdditiveExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns AdditiveExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns AdditiveExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns AdditiveExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns AdditiveExpression
@@ -1721,6 +1751,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns AdditiveExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns AdditiveExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns AdditiveExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns AdditiveExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns AdditiveExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns AdditiveExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns AdditiveExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns AdditiveExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns AdditiveExpression
@@ -1753,6 +1786,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns AdditiveExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns AdditiveExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns AdditiveExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns AdditiveExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns AdditiveExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns AdditiveExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns AdditiveExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns AdditiveExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns AdditiveExpression
@@ -1782,6 +1818,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns AdditiveExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns AdditiveExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns AdditiveExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns AdditiveExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns AdditiveExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns AdditiveExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns AdditiveExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns AdditiveExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns AdditiveExpression
@@ -1808,6 +1847,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns AdditiveExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns AdditiveExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns AdditiveExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns AdditiveExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns AdditiveExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns AdditiveExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns AdditiveExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns AdditiveExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns AdditiveExpression
@@ -1831,6 +1873,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns AdditiveExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns AdditiveExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns AdditiveExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns AdditiveExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns AdditiveExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns AdditiveExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns AdditiveExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns AdditiveExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns AdditiveExpression
@@ -1851,6 +1896,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns AdditiveExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns AdditiveExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns AdditiveExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns AdditiveExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns AdditiveExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns AdditiveExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns AdditiveExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns AdditiveExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns AdditiveExpression
@@ -1868,6 +1916,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns AdditiveExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns AdditiveExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns AdditiveExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns AdditiveExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns AdditiveExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns AdditiveExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns AdditiveExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns AdditiveExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns AdditiveExpression
@@ -1878,6 +1929,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns AdditiveExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns AdditiveExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns AdditiveExpression
+	 *     CoalesceExpression<In,Yield> returns AdditiveExpression
+	 *     CoalesceExpression<In> returns AdditiveExpression
+	 *     CoalesceExpression<Yield> returns AdditiveExpression
+	 *     CoalesceExpression returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns AdditiveExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns AdditiveExpression
 	 *     ConditionalExpression<In,Yield> returns AdditiveExpression
 	 *     ConditionalExpression<In> returns AdditiveExpression
 	 *     ConditionalExpression<Yield> returns AdditiveExpression
@@ -2209,6 +2277,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns FunctionExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns FunctionExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns FunctionExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2250,6 +2321,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2289,6 +2363,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns FunctionExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns FunctionExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns FunctionExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2328,6 +2405,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns FunctionExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns FunctionExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns FunctionExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2367,6 +2447,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2405,6 +2488,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2443,6 +2529,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2478,6 +2567,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2512,6 +2604,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2547,6 +2642,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2579,6 +2677,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2608,6 +2709,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2634,6 +2738,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2657,6 +2764,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2677,6 +2787,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns FunctionExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns FunctionExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns FunctionExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2694,6 +2807,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns FunctionExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns FunctionExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns FunctionExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns FunctionExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns FunctionExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns FunctionExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns FunctionExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns FunctionExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
@@ -2704,6 +2820,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns FunctionExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns FunctionExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns FunctionExpression
+	 *     CoalesceExpression<In,Yield> returns FunctionExpression
+	 *     CoalesceExpression<In> returns FunctionExpression
+	 *     CoalesceExpression<Yield> returns FunctionExpression
+	 *     CoalesceExpression returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns FunctionExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns FunctionExpression
 	 *     ConditionalExpression<In,Yield> returns FunctionExpression
 	 *     ConditionalExpression<In> returns FunctionExpression
 	 *     ConditionalExpression<Yield> returns FunctionExpression
@@ -2840,6 +2973,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -2881,6 +3017,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -2920,6 +3059,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -2959,6 +3101,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -2998,6 +3143,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3036,6 +3184,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3074,6 +3225,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3109,6 +3263,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3143,6 +3300,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3178,6 +3338,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3210,6 +3373,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3239,6 +3405,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3265,6 +3434,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3288,6 +3460,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3308,6 +3483,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns N4ClassExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns N4ClassExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns N4ClassExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3325,6 +3503,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns N4ClassExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns N4ClassExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns N4ClassExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns N4ClassExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns N4ClassExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns N4ClassExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns N4ClassExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns N4ClassExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
@@ -3335,6 +3516,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns N4ClassExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns N4ClassExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns N4ClassExpression
+	 *     CoalesceExpression<In,Yield> returns N4ClassExpression
+	 *     CoalesceExpression<In> returns N4ClassExpression
+	 *     CoalesceExpression<Yield> returns N4ClassExpression
+	 *     CoalesceExpression returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns N4ClassExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns N4ClassExpression
 	 *     ConditionalExpression<In,Yield> returns N4ClassExpression
 	 *     ConditionalExpression<In> returns N4ClassExpression
 	 *     ConditionalExpression<Yield> returns N4ClassExpression
@@ -4283,6 +4481,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4321,6 +4522,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4359,6 +4563,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4394,6 +4601,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4428,6 +4638,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4463,6 +4676,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4495,6 +4711,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4524,6 +4743,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4550,6 +4772,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4573,6 +4798,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4593,6 +4821,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4610,6 +4841,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParameterizedCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -4620,6 +4854,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ParameterizedCallExpression
+	 *     CoalesceExpression<In,Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression<In> returns ParameterizedCallExpression
+	 *     CoalesceExpression<Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ParameterizedCallExpression
 	 *     ConditionalExpression<In,Yield> returns ParameterizedCallExpression
 	 *     ConditionalExpression<In> returns ParameterizedCallExpression
 	 *     ConditionalExpression<Yield> returns ParameterizedCallExpression
@@ -4657,9 +4908,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (
-	 *             (typeArgs+=TypeRef typeArgs+=TypeRef* target=IdentifierRef) | 
-	 *             target=LeftHandSideExpression_ParameterizedCallExpression_1_0 | 
-	 *             target=LeftHandSideExpression_ParameterizedCallExpression_1_2_0_0
+	 *             (typeArgs+=TypeRef typeArgs+=TypeRef* target=IdentifierRef optionalChaining?='?.'?) | 
+	 *             (target=LeftHandSideExpression_ParameterizedCallExpression_1_0 optionalChaining?='?.'?) | 
+	 *             (target=LeftHandSideExpression_ParameterizedCallExpression_1_3_0_0 optionalChaining?='?.'?)
 	 *         ) 
 	 *         (arguments+=Argument arguments+=Argument*)?
 	 *     )
@@ -4700,6 +4951,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In> returns NewExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.In> returns NewExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In> returns NewExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -4739,6 +4993,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In> returns NewExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.Yield> returns NewExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.In> returns NewExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.Yield> returns NewExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In> returns NewExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.Yield> returns NewExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -4778,6 +5035,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In> returns NewExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.Yield> returns NewExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.In> returns NewExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.Yield> returns NewExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In> returns NewExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.Yield> returns NewExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -4829,6 +5089,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns NewExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns NewExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns NewExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns NewExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns NewExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns NewExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -4870,6 +5133,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns NewExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns NewExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns NewExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -4908,6 +5174,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns NewExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns NewExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns NewExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -4946,6 +5215,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns NewExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns NewExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns NewExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -4981,6 +5253,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns NewExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns NewExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns NewExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -5015,6 +5290,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns NewExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns NewExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns NewExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -5050,6 +5328,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns NewExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns NewExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns NewExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -5082,6 +5363,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns NewExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns NewExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns NewExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -5111,6 +5395,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns NewExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns NewExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns NewExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -5137,6 +5424,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns NewExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns NewExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns NewExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -5160,6 +5450,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns NewExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns NewExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns NewExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -5180,6 +5473,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns NewExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns NewExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns NewExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns NewExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -5197,6 +5493,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns NewExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns NewExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns NewExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns NewExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns NewExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns NewExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns NewExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
@@ -5207,6 +5506,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns NewExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns NewExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns NewExpression
+	 *     CoalesceExpression<In,Yield> returns NewExpression
+	 *     CoalesceExpression<In> returns NewExpression
+	 *     CoalesceExpression<Yield> returns NewExpression
+	 *     CoalesceExpression returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns NewExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns NewExpression
 	 *     ConditionalExpression<In,Yield> returns NewExpression
 	 *     ConditionalExpression<In> returns NewExpression
 	 *     ConditionalExpression<Yield> returns NewExpression
@@ -5283,6 +5599,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -5324,6 +5643,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -5363,6 +5685,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -5402,6 +5727,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ParameterizedCallExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ParameterizedCallExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
@@ -5414,7 +5742,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0 returns ParameterizedCallExpression
 	 *
 	 * Constraint:
-	 *     (typeArgs+=TypeRef typeArgs+=TypeRef* target=IdentifierRef (arguments+=Argument arguments+=Argument*)?)
+	 *     (typeArgs+=TypeRef typeArgs+=TypeRef* target=IdentifierRef optionalChaining?='?.'? (arguments+=Argument arguments+=Argument*)?)
 	 */
 	protected void sequence_Arguments_ConcreteTypeArguments_ParameterizedCallExpression(ISerializationContext context, ParameterizedCallExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -5457,6 +5785,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5498,6 +5829,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5537,6 +5871,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5576,6 +5913,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5615,6 +5955,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5653,6 +5996,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5691,6 +6037,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5726,6 +6075,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5760,6 +6112,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5795,6 +6150,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5827,6 +6185,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5856,6 +6217,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5882,6 +6246,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5905,6 +6272,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5925,6 +6295,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ImportCallExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ImportCallExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5942,6 +6315,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ImportCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ImportCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ImportCallExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ImportCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
@@ -5952,6 +6328,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ImportCallExpression
+	 *     CoalesceExpression<In,Yield> returns ImportCallExpression
+	 *     CoalesceExpression<In> returns ImportCallExpression
+	 *     CoalesceExpression<Yield> returns ImportCallExpression
+	 *     CoalesceExpression returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ImportCallExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ImportCallExpression
 	 *     ConditionalExpression<In,Yield> returns ImportCallExpression
 	 *     ConditionalExpression<In> returns ImportCallExpression
 	 *     ConditionalExpression<Yield> returns ImportCallExpression
@@ -5996,166 +6389,181 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0 returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0 returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0 returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0 returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CastExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0 returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<PostfixExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CastExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0 returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<PostfixExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CastExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0 returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CastExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0 returns ParameterizedCallExpression
 	 *
 	 * Constraint:
 	 *     (
-	 *         (target=LeftHandSideExpression_ParameterizedCallExpression_1_0 | target=LeftHandSideExpression_ParameterizedCallExpression_1_2_0_0) 
+	 *         (
+	 *             (target=LeftHandSideExpression_ParameterizedCallExpression_1_0 optionalChaining?='?.'?) | 
+	 *             (target=LeftHandSideExpression_ParameterizedCallExpression_1_3_0_0 optionalChaining?='?.'?)
+	 *         ) 
 	 *         (arguments+=Argument arguments+=Argument*)?
 	 *     )
 	 */
-	protected void sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(ISerializationContext context, ParameterizedCallExpression semanticObject) {
+	protected void sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(ISerializationContext context, ParameterizedCallExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6224,6 +6632,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6265,6 +6676,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6304,6 +6718,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6343,6 +6760,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6382,6 +6802,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6420,6 +6843,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6458,6 +6884,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6493,6 +6922,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6527,6 +6959,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6562,6 +6997,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6594,6 +7032,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6623,6 +7064,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6649,6 +7093,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6672,6 +7119,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6692,6 +7142,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ArrayLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ArrayLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ArrayLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6709,6 +7162,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ArrayLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ArrayLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ArrayLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ArrayLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ArrayLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ArrayLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ArrayLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ArrayLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
@@ -6719,6 +7175,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ArrayLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ArrayLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ArrayLiteral
+	 *     CoalesceExpression<In,Yield> returns ArrayLiteral
+	 *     CoalesceExpression<In> returns ArrayLiteral
+	 *     CoalesceExpression<Yield> returns ArrayLiteral
+	 *     CoalesceExpression returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ArrayLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ArrayLiteral
 	 *     ConditionalExpression<In,Yield> returns ArrayLiteral
 	 *     ConditionalExpression<In> returns ArrayLiteral
 	 *     ConditionalExpression<Yield> returns ArrayLiteral
@@ -7026,6 +7499,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7067,6 +7543,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7106,6 +7585,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7145,6 +7627,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7184,6 +7669,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7222,6 +7710,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7260,6 +7751,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7295,6 +7789,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7329,6 +7826,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7364,6 +7864,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7396,6 +7899,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7425,6 +7931,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7451,6 +7960,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7474,6 +7986,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7494,6 +8009,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns BinaryIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7511,6 +8029,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns BinaryIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns BinaryIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns BinaryIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns BinaryIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns BinaryIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
@@ -7521,6 +8042,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns BinaryIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns BinaryIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns BinaryIntLiteral
+	 *     CoalesceExpression<In,Yield> returns BinaryIntLiteral
+	 *     CoalesceExpression<In> returns BinaryIntLiteral
+	 *     CoalesceExpression<Yield> returns BinaryIntLiteral
+	 *     CoalesceExpression returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns BinaryIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns BinaryIntLiteral
 	 *     ConditionalExpression<In,Yield> returns BinaryIntLiteral
 	 *     ConditionalExpression<In> returns BinaryIntLiteral
 	 *     ConditionalExpression<Yield> returns BinaryIntLiteral
@@ -7693,6 +8231,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns BinaryBitwiseExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryBitwiseExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryBitwiseExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns BinaryBitwiseExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryBitwiseExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryBitwiseExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns BinaryBitwiseExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryBitwiseExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryBitwiseExpression
@@ -7739,6 +8280,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns BinaryBitwiseExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryBitwiseExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryBitwiseExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns BinaryBitwiseExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryBitwiseExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryBitwiseExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns BinaryBitwiseExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryBitwiseExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryBitwiseExpression
@@ -7759,6 +8303,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns BinaryBitwiseExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryBitwiseExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryBitwiseExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns BinaryBitwiseExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryBitwiseExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryBitwiseExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns BinaryBitwiseExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryBitwiseExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryBitwiseExpression
@@ -7776,6 +8323,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns BinaryBitwiseExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns BinaryBitwiseExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns BinaryBitwiseExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns BinaryBitwiseExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryBitwiseExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryBitwiseExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns BinaryBitwiseExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryBitwiseExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryBitwiseExpression
@@ -7786,6 +8336,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns BinaryBitwiseExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns BinaryBitwiseExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns BinaryBitwiseExpression
+	 *     CoalesceExpression<In,Yield> returns BinaryBitwiseExpression
+	 *     CoalesceExpression<In> returns BinaryBitwiseExpression
+	 *     CoalesceExpression<Yield> returns BinaryBitwiseExpression
+	 *     CoalesceExpression returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns BinaryBitwiseExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns BinaryBitwiseExpression
 	 *     ConditionalExpression<In,Yield> returns BinaryBitwiseExpression
 	 *     ConditionalExpression<In> returns BinaryBitwiseExpression
 	 *     ConditionalExpression<Yield> returns BinaryBitwiseExpression
@@ -7850,6 +8417,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns BinaryBitwiseExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryBitwiseExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryBitwiseExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns BinaryBitwiseExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryBitwiseExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryBitwiseExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns BinaryBitwiseExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryBitwiseExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryBitwiseExpression
@@ -8003,6 +8573,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8044,6 +8617,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8083,6 +8659,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8122,6 +8701,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8161,6 +8743,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8199,6 +8784,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8237,6 +8825,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8272,6 +8863,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8306,6 +8900,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8341,6 +8938,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8373,6 +8973,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8402,6 +9005,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8428,6 +9034,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8451,6 +9060,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8471,6 +9083,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns BooleanLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns BooleanLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BooleanLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8488,6 +9103,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns BooleanLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns BooleanLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns BooleanLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns BooleanLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns BooleanLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BooleanLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns BooleanLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns BooleanLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
@@ -8498,6 +9116,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns BooleanLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns BooleanLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns BooleanLiteral
+	 *     CoalesceExpression<In,Yield> returns BooleanLiteral
+	 *     CoalesceExpression<In> returns BooleanLiteral
+	 *     CoalesceExpression<Yield> returns BooleanLiteral
+	 *     CoalesceExpression returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns BooleanLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns BooleanLiteral
 	 *     ConditionalExpression<In,Yield> returns BooleanLiteral
 	 *     ConditionalExpression<In> returns BooleanLiteral
 	 *     ConditionalExpression<Yield> returns BooleanLiteral
@@ -8605,6 +9240,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns CastExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns CastExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns CastExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns CastExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns CastExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns CastExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns CastExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns CastExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
@@ -8640,6 +9278,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns CastExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns CastExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns CastExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns CastExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns CastExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns CastExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns CastExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns CastExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
@@ -8674,6 +9315,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns CastExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns CastExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns CastExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns CastExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns CastExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns CastExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns CastExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns CastExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
@@ -8709,6 +9353,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns CastExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns CastExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns CastExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns CastExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns CastExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns CastExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns CastExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns CastExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
@@ -8741,6 +9388,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns CastExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns CastExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns CastExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns CastExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns CastExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns CastExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns CastExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns CastExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
@@ -8770,6 +9420,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns CastExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns CastExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns CastExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns CastExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns CastExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns CastExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns CastExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns CastExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
@@ -8796,6 +9449,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns CastExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns CastExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns CastExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns CastExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns CastExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns CastExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns CastExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns CastExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
@@ -8819,6 +9475,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns CastExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns CastExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns CastExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns CastExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns CastExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns CastExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns CastExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns CastExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
@@ -8839,6 +9498,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns CastExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns CastExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns CastExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns CastExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns CastExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns CastExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns CastExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns CastExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
@@ -8856,6 +9518,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns CastExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns CastExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns CastExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns CastExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns CastExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns CastExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns CastExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns CastExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
@@ -8866,6 +9531,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns CastExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns CastExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns CastExpression
+	 *     CoalesceExpression<In,Yield> returns CastExpression
+	 *     CoalesceExpression<In> returns CastExpression
+	 *     CoalesceExpression<Yield> returns CastExpression
+	 *     CoalesceExpression returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns CastExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns CastExpression
 	 *     ConditionalExpression<In,Yield> returns CastExpression
 	 *     ConditionalExpression<In> returns CastExpression
 	 *     ConditionalExpression<Yield> returns CastExpression
@@ -8999,6 +9681,76 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     CoalesceExpression<In,Yield> returns CoalesceExpression
+	 *     CoalesceExpression<In> returns CoalesceExpression
+	 *     CoalesceExpression<Yield> returns CoalesceExpression
+	 *     CoalesceExpression returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns CoalesceExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns CoalesceExpression
+	 *     ConditionalExpression<In,Yield> returns CoalesceExpression
+	 *     ConditionalExpression<In> returns CoalesceExpression
+	 *     ConditionalExpression<Yield> returns CoalesceExpression
+	 *     ConditionalExpression returns CoalesceExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In,Yield> returns CoalesceExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In> returns CoalesceExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Yield> returns CoalesceExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In> returns CoalesceExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.Yield> returns CoalesceExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns CoalesceExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In> returns CoalesceExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.Yield> returns CoalesceExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In,Expression.Yield> returns CoalesceExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0 returns CoalesceExpression
+	 *     AssignmentExpression<In,Yield> returns CoalesceExpression
+	 *     AssignmentExpression<In> returns CoalesceExpression
+	 *     AssignmentExpression<Yield> returns CoalesceExpression
+	 *     AssignmentExpression returns CoalesceExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In,Yield> returns CoalesceExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In> returns CoalesceExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Yield> returns CoalesceExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In> returns CoalesceExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.Yield> returns CoalesceExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In,Expression.Yield> returns CoalesceExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0 returns CoalesceExpression
+	 *     Expression<In,Yield> returns CoalesceExpression
+	 *     Expression<In> returns CoalesceExpression
+	 *     Expression<Yield> returns CoalesceExpression
+	 *     Expression returns CoalesceExpression
+	 *     Expression.CommaExpression_1_0<In,Yield> returns CoalesceExpression
+	 *     Expression.CommaExpression_1_0<In> returns CoalesceExpression
+	 *     Expression.CommaExpression_1_0<Yield> returns CoalesceExpression
+	 *     Expression.CommaExpression_1_0 returns CoalesceExpression
+	 *
+	 * Constraint:
+	 *     (expression=CoalesceExpression_CoalesceExpression_1_0_0_0 defaultExpression=LogicalORExpression)
+	 */
+	protected void sequence_CoalesceExpression(ISerializationContext context, CoalesceExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.COALESCE_EXPRESSION__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.COALESCE_EXPRESSION__EXPRESSION));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.COALESCE_EXPRESSION__DEFAULT_EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.COALESCE_EXPRESSION__DEFAULT_EXPRESSION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getCoalesceExpressionAccess().getCoalesceExpressionExpressionAction_1_0_0_0(), semanticObject.getExpression());
+		feeder.accept(grammarAccess.getCoalesceExpressionAccess().getDefaultExpressionLogicalORExpressionParserRuleCall_1_1_0(), semanticObject.getDefaultExpression());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     ExportedVariableDeclarationOrBinding<Yield> returns ExportedVariableDeclaration
 	 *     ExportedVariableDeclarationOrBinding returns ExportedVariableDeclaration
 	 *     ExportedVariableDeclaration<Yield> returns ExportedVariableDeclaration
@@ -9076,6 +9828,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         target=JSXElementNameExpression_ParameterizedPropertyAccessExpression_1_0 
+	 *         optionalChaining?='?.'? 
 	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
@@ -9118,6 +9871,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9156,6 +9912,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9194,6 +9953,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9229,6 +9991,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9263,6 +10028,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9298,6 +10066,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9330,6 +10101,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9359,6 +10133,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9385,6 +10162,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9408,6 +10188,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9428,6 +10211,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9445,6 +10231,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9455,6 +10244,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression<In> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
 	 *     ConditionalExpression<In,Yield> returns ParameterizedPropertyAccessExpression
 	 *     ConditionalExpression<In> returns ParameterizedPropertyAccessExpression
 	 *     ConditionalExpression<Yield> returns ParameterizedPropertyAccessExpression
@@ -9492,10 +10298,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (
-	 *             target=LeftHandSideExpression_ParameterizedPropertyAccessExpression_1_2_2_0 | 
+	 *             target=LeftHandSideExpression_ParameterizedPropertyAccessExpression_1_3_2_0 | 
 	 *             target=MemberExpression_ParameterizedPropertyAccessExpression_1_3_3_1_0 | 
 	 *             target=MemberExpression_ParameterizedPropertyAccessExpression_2_1_1_0
 	 *         ) 
+	 *         optionalChaining?='?.'? 
 	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
@@ -9507,167 +10314,180 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0 returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0 returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0 returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0 returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0 returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0 returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0 returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0 returns ParameterizedPropertyAccessExpression
 	 *
 	 * Constraint:
 	 *     (
-	 *         target=LeftHandSideExpression_ParameterizedPropertyAccessExpression_1_2_2_0 
+	 *         target=LeftHandSideExpression_ParameterizedPropertyAccessExpression_1_3_2_0 
+	 *         optionalChaining?='?.'? 
 	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
 	 */
-	protected void sequence_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
+	protected void sequence_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -9703,6 +10523,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9742,6 +10565,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9781,6 +10607,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9795,6 +10624,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         target=MemberExpression_ParameterizedPropertyAccessExpression_1_3_3_1_0 
+	 *         optionalChaining?='?.'? 
 	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
@@ -9835,6 +10665,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9874,6 +10707,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9913,6 +10749,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9927,6 +10766,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         target=MemberExpression_ParameterizedPropertyAccessExpression_2_1_1_0 
+	 *         optionalChaining?='?.'? 
 	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
@@ -9966,6 +10806,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -9982,6 +10825,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (target=MemberExpression_ParameterizedPropertyAccessExpression_1_3_3_1_0 | target=MemberExpression_ParameterizedPropertyAccessExpression_2_1_1_0) 
+	 *         optionalChaining?='?.'? 
 	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
@@ -10166,6 +11010,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10207,6 +11054,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10246,6 +11096,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10285,6 +11138,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10324,6 +11180,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10362,6 +11221,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10400,6 +11262,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10435,6 +11300,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10469,6 +11337,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10504,6 +11375,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10536,6 +11410,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10565,6 +11442,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10591,6 +11471,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10614,6 +11497,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10634,6 +11520,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns DoubleLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns DoubleLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns DoubleLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10651,6 +11540,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns DoubleLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns DoubleLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns DoubleLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns DoubleLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns DoubleLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns DoubleLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns DoubleLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns DoubleLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
@@ -10661,6 +11553,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns DoubleLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns DoubleLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns DoubleLiteral
+	 *     CoalesceExpression<In,Yield> returns DoubleLiteral
+	 *     CoalesceExpression<In> returns DoubleLiteral
+	 *     CoalesceExpression<Yield> returns DoubleLiteral
+	 *     CoalesceExpression returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns DoubleLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns DoubleLiteral
 	 *     ConditionalExpression<In,Yield> returns DoubleLiteral
 	 *     ConditionalExpression<In> returns DoubleLiteral
 	 *     ConditionalExpression<Yield> returns DoubleLiteral
@@ -10765,6 +11674,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns EqualityExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns EqualityExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns EqualityExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns EqualityExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns EqualityExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns EqualityExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns EqualityExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns EqualityExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns EqualityExpression
@@ -10794,6 +11706,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns EqualityExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns EqualityExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns EqualityExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns EqualityExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns EqualityExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns EqualityExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns EqualityExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns EqualityExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns EqualityExpression
@@ -10820,6 +11735,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns EqualityExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns EqualityExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns EqualityExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns EqualityExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns EqualityExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns EqualityExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns EqualityExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns EqualityExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns EqualityExpression
@@ -10843,6 +11761,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns EqualityExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns EqualityExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns EqualityExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns EqualityExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns EqualityExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns EqualityExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns EqualityExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns EqualityExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns EqualityExpression
@@ -10863,6 +11784,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns EqualityExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns EqualityExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns EqualityExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns EqualityExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns EqualityExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns EqualityExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns EqualityExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns EqualityExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns EqualityExpression
@@ -10880,6 +11804,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns EqualityExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns EqualityExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns EqualityExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns EqualityExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns EqualityExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns EqualityExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns EqualityExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns EqualityExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns EqualityExpression
@@ -10890,6 +11817,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns EqualityExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns EqualityExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns EqualityExpression
+	 *     CoalesceExpression<In,Yield> returns EqualityExpression
+	 *     CoalesceExpression<In> returns EqualityExpression
+	 *     CoalesceExpression<Yield> returns EqualityExpression
+	 *     CoalesceExpression returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns EqualityExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns EqualityExpression
 	 *     ConditionalExpression<In,Yield> returns EqualityExpression
 	 *     ConditionalExpression<In> returns EqualityExpression
 	 *     ConditionalExpression<Yield> returns EqualityExpression
@@ -11047,6 +11991,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AnnotatedExpression.N4ClassExpression_1_0_0<LogicalORExpression.In> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.N4ClassExpression_1_0_0<LogicalORExpression.Yield> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.N4ClassExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ExpressionAnnotationList
+	 *     AnnotatedExpression.N4ClassExpression_1_0_0<CoalesceExpression.In> returns ExpressionAnnotationList
+	 *     AnnotatedExpression.N4ClassExpression_1_0_0<CoalesceExpression.Yield> returns ExpressionAnnotationList
+	 *     AnnotatedExpression.N4ClassExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.N4ClassExpression_1_0_0<ConditionalExpression.In> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.N4ClassExpression_1_0_0<ConditionalExpression.Yield> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.N4ClassExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ExpressionAnnotationList
@@ -11088,6 +12035,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AnnotatedExpression.FunctionExpression_1_1_0<LogicalORExpression.In> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.FunctionExpression_1_1_0<LogicalORExpression.Yield> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.FunctionExpression_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ExpressionAnnotationList
+	 *     AnnotatedExpression.FunctionExpression_1_1_0<CoalesceExpression.In> returns ExpressionAnnotationList
+	 *     AnnotatedExpression.FunctionExpression_1_1_0<CoalesceExpression.Yield> returns ExpressionAnnotationList
+	 *     AnnotatedExpression.FunctionExpression_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.FunctionExpression_1_1_0<ConditionalExpression.In> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.FunctionExpression_1_1_0<ConditionalExpression.Yield> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.FunctionExpression_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ExpressionAnnotationList
@@ -11257,6 +12207,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11298,6 +12251,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11337,6 +12293,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11376,6 +12335,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11415,6 +12377,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11453,6 +12418,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11491,6 +12459,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11526,6 +12497,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11560,6 +12534,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11595,6 +12572,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11627,6 +12607,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11656,6 +12639,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11682,6 +12668,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11705,6 +12694,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11725,6 +12717,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns HexIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns HexIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns HexIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11742,6 +12737,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns HexIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns HexIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns HexIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns HexIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns HexIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns HexIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns HexIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns HexIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
@@ -11752,6 +12750,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns HexIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns HexIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns HexIntLiteral
+	 *     CoalesceExpression<In,Yield> returns HexIntLiteral
+	 *     CoalesceExpression<In> returns HexIntLiteral
+	 *     CoalesceExpression<Yield> returns HexIntLiteral
+	 *     CoalesceExpression returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns HexIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns HexIntLiteral
 	 *     ConditionalExpression<In,Yield> returns HexIntLiteral
 	 *     ConditionalExpression<In> returns HexIntLiteral
 	 *     ConditionalExpression<Yield> returns HexIntLiteral
@@ -11839,6 +12854,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns IdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns IdentifierRef
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns IdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -11880,6 +12898,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -11919,6 +12940,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns IdentifierRef
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns IdentifierRef
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns IdentifierRef
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -11958,6 +12982,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns IdentifierRef
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns IdentifierRef
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns IdentifierRef
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -11997,6 +13024,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12035,6 +13065,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12073,6 +13106,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12108,6 +13144,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12142,6 +13181,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12177,6 +13219,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12209,6 +13254,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12238,6 +13286,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12264,6 +13315,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12287,6 +13341,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12307,6 +13364,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns IdentifierRef
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns IdentifierRef
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IdentifierRef
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12324,6 +13384,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns IdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns IdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns IdentifierRef
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns IdentifierRef
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns IdentifierRef
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns IdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns IdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
@@ -12334,6 +13397,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns IdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns IdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns IdentifierRef
+	 *     CoalesceExpression<In,Yield> returns IdentifierRef
+	 *     CoalesceExpression<In> returns IdentifierRef
+	 *     CoalesceExpression<Yield> returns IdentifierRef
+	 *     CoalesceExpression returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns IdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns IdentifierRef
 	 *     ConditionalExpression<In,Yield> returns IdentifierRef
 	 *     ConditionalExpression<In> returns IdentifierRef
 	 *     ConditionalExpression<Yield> returns IdentifierRef
@@ -12420,6 +13500,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12461,6 +13544,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12500,6 +13586,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12539,6 +13628,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12578,6 +13670,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12616,6 +13711,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12654,6 +13752,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12689,6 +13790,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12723,6 +13827,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12758,6 +13865,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12790,6 +13900,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12819,6 +13932,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12845,6 +13961,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12868,6 +13987,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12888,6 +14010,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns VersionedIdentifierRef
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns VersionedIdentifierRef
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns VersionedIdentifierRef
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12905,6 +14030,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns VersionedIdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns VersionedIdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns VersionedIdentifierRef
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns VersionedIdentifierRef
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns VersionedIdentifierRef
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns VersionedIdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
@@ -12915,6 +14043,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns VersionedIdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns VersionedIdentifierRef
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns VersionedIdentifierRef
+	 *     CoalesceExpression<In,Yield> returns VersionedIdentifierRef
+	 *     CoalesceExpression<In> returns VersionedIdentifierRef
+	 *     CoalesceExpression<Yield> returns VersionedIdentifierRef
+	 *     CoalesceExpression returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns VersionedIdentifierRef
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns VersionedIdentifierRef
 	 *     ConditionalExpression<In,Yield> returns VersionedIdentifierRef
 	 *     ConditionalExpression<In> returns VersionedIdentifierRef
 	 *     ConditionalExpression<Yield> returns VersionedIdentifierRef
@@ -13007,173 +14152,176 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<PostfixExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<CastExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<UnaryExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<MultiplicativeExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AdditiveExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ShiftExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In,RelationalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In,EqualityExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In,Expression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0 returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<PostfixExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<CastExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<UnaryExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<MultiplicativeExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AdditiveExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ShiftExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In,RelationalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In,EqualityExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In,Expression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0 returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<PostfixExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<CastExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<UnaryExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<MultiplicativeExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AdditiveExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ShiftExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In,RelationalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In,EqualityExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In,Expression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0 returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<PostfixExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<CastExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<UnaryExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<MultiplicativeExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AdditiveExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ShiftExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In,Expression.Yield> returns IndexedAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0 returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<PostfixExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CastExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<UnaryExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<MultiplicativeExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AdditiveExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ShiftExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.In,Expression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0 returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<PostfixExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CastExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<UnaryExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<MultiplicativeExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AdditiveExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ShiftExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.In,RelationalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.In,EqualityExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.In,Expression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0 returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<PostfixExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CastExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<UnaryExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<MultiplicativeExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AdditiveExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ShiftExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.In,RelationalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.In,EqualityExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.In,Expression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0 returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<PostfixExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CastExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<UnaryExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<MultiplicativeExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AdditiveExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ShiftExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.In,Expression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0 returns IndexedAccessExpression
 	 *
 	 * Constraint:
-	 *     (target=LeftHandSideExpression_IndexedAccessExpression_1_2_1_0 index=Expression)
+	 *     (target=LeftHandSideExpression_IndexedAccessExpression_1_3_1_0 optionalChaining?='?.'? index=Expression)
 	 */
-	protected void sequence_IndexedAccessExpressionTail_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(ISerializationContext context, IndexedAccessExpression semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_2_1_0(), semanticObject.getTarget());
-		feeder.accept(grammarAccess.getIndexedAccessExpressionTailAccess().getIndexExpressionParserRuleCall_1_0(), semanticObject.getIndex());
-		feeder.finish();
+	protected void sequence_IndexedAccessExpressionTail_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(ISerializationContext context, IndexedAccessExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -13210,6 +14358,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13248,6 +14399,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13286,6 +14440,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13321,6 +14478,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13355,6 +14515,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13390,6 +14553,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13422,6 +14588,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13451,6 +14620,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13477,6 +14649,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13500,6 +14675,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13520,6 +14698,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13537,6 +14718,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns IndexedAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns IndexedAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns IndexedAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13547,6 +14731,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns IndexedAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns IndexedAccessExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns IndexedAccessExpression
+	 *     CoalesceExpression<In,Yield> returns IndexedAccessExpression
+	 *     CoalesceExpression<In> returns IndexedAccessExpression
+	 *     CoalesceExpression<Yield> returns IndexedAccessExpression
+	 *     CoalesceExpression returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns IndexedAccessExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns IndexedAccessExpression
 	 *     ConditionalExpression<In,Yield> returns IndexedAccessExpression
 	 *     ConditionalExpression<In> returns IndexedAccessExpression
 	 *     ConditionalExpression<Yield> returns IndexedAccessExpression
@@ -13584,10 +14785,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (
-	 *             target=LeftHandSideExpression_IndexedAccessExpression_1_2_1_0 | 
+	 *             target=LeftHandSideExpression_IndexedAccessExpression_1_3_1_0 | 
 	 *             target=MemberExpression_IndexedAccessExpression_1_3_3_0_0 | 
 	 *             target=MemberExpression_IndexedAccessExpression_2_1_0_0
 	 *         ) 
+	 *         optionalChaining?='?.'? 
 	 *         index=Expression
 	 *     )
 	 */
@@ -13626,6 +14828,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13640,7 +14845,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression returns IndexedAccessExpression
 	 *
 	 * Constraint:
-	 *     ((target=MemberExpression_IndexedAccessExpression_1_3_3_0_0 | target=MemberExpression_IndexedAccessExpression_2_1_0_0) index=Expression)
+	 *     (
+	 *         (target=MemberExpression_IndexedAccessExpression_1_3_3_0_0 | target=MemberExpression_IndexedAccessExpression_2_1_0_0) 
+	 *         optionalChaining?='?.'? 
+	 *         index=Expression
+	 *     )
 	 */
 	protected void sequence_IndexedAccessExpressionTail_MemberExpression(ISerializationContext context, IndexedAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -13678,6 +14887,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13717,6 +14929,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13756,6 +14971,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13768,19 +14986,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0 returns IndexedAccessExpression
 	 *
 	 * Constraint:
-	 *     (target=MemberExpression_IndexedAccessExpression_1_3_3_0_0 index=Expression)
+	 *     (target=MemberExpression_IndexedAccessExpression_1_3_3_0_0 optionalChaining?='?.'? index=Expression)
 	 */
 	protected void sequence_IndexedAccessExpressionTail_MemberExpression_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, IndexedAccessExpression semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_1_3_3_0_0(), semanticObject.getTarget());
-		feeder.accept(grammarAccess.getIndexedAccessExpressionTailAccess().getIndexExpressionParserRuleCall_1_0(), semanticObject.getIndex());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -13815,6 +15024,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13854,6 +15066,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13893,6 +15108,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns IndexedAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns IndexedAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns IndexedAccessExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns IndexedAccessExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IndexedAccessExpression
@@ -13905,19 +15123,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0 returns IndexedAccessExpression
 	 *
 	 * Constraint:
-	 *     (target=MemberExpression_IndexedAccessExpression_2_1_0_0 index=Expression)
+	 *     (target=MemberExpression_IndexedAccessExpression_2_1_0_0 optionalChaining?='?.'? index=Expression)
 	 */
 	protected void sequence_IndexedAccessExpressionTail_MemberExpression_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(ISerializationContext context, IndexedAccessExpression semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION__INDEX));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_2_1_0_0(), semanticObject.getTarget());
-		feeder.accept(grammarAccess.getIndexedAccessExpressionTailAccess().getIndexExpressionParserRuleCall_1_0(), semanticObject.getIndex());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -13955,6 +15164,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns IntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns IntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns IntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -13996,6 +15208,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14035,6 +15250,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns IntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns IntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns IntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14074,6 +15292,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns IntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns IntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns IntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14113,6 +15334,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14151,6 +15375,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14189,6 +15416,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14224,6 +15454,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14258,6 +15491,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14293,6 +15529,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14325,6 +15564,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14354,6 +15596,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14380,6 +15625,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14403,6 +15651,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14423,6 +15674,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns IntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns IntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns IntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14440,6 +15694,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns IntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns IntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns IntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns IntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns IntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns IntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns IntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns IntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
@@ -14450,6 +15707,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns IntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns IntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns IntLiteral
+	 *     CoalesceExpression<In,Yield> returns IntLiteral
+	 *     CoalesceExpression<In> returns IntLiteral
+	 *     CoalesceExpression<Yield> returns IntLiteral
+	 *     CoalesceExpression returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns IntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns IntLiteral
 	 *     ConditionalExpression<In,Yield> returns IntLiteral
 	 *     ConditionalExpression<In> returns IntLiteral
 	 *     ConditionalExpression<Yield> returns IntLiteral
@@ -14543,6 +15817,24 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     JSXElementName returns JSXElementName
+	 *
+	 * Constraint:
+	 *     expression=JSXElementNameExpression
+	 */
+	protected void sequence_JSXElementName(ISerializationContext context, JSXElementName semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.JSX_ELEMENT_NAME__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.JSX_ELEMENT_NAME__EXPRESSION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getJSXElementNameAccess().getExpressionJSXElementNameExpressionParserRuleCall_0(), semanticObject.getExpression());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     PrimaryExpression<Yield> returns JSXElement
 	 *     PrimaryExpression returns JSXElement
 	 *     LeftHandSideExpression<Yield> returns JSXElement
@@ -14575,6 +15867,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns JSXElement
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns JSXElement
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns JSXElement
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns JSXElement
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns JSXElement
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns JSXElement
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14616,6 +15911,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns JSXElement
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns JSXElement
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns JSXElement
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14655,6 +15953,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns JSXElement
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns JSXElement
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns JSXElement
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns JSXElement
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns JSXElement
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns JSXElement
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14694,6 +15995,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns JSXElement
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns JSXElement
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns JSXElement
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns JSXElement
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns JSXElement
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns JSXElement
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14733,6 +16037,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns JSXElement
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns JSXElement
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns JSXElement
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14771,6 +16078,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns JSXElement
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns JSXElement
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns JSXElement
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14809,6 +16119,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns JSXElement
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns JSXElement
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns JSXElement
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14844,6 +16157,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns JSXElement
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns JSXElement
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns JSXElement
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14878,6 +16194,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns JSXElement
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns JSXElement
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns JSXElement
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14913,6 +16232,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns JSXElement
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns JSXElement
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns JSXElement
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14945,6 +16267,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns JSXElement
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns JSXElement
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns JSXElement
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -14974,6 +16299,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns JSXElement
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns JSXElement
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns JSXElement
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -15000,6 +16328,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns JSXElement
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns JSXElement
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns JSXElement
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -15023,6 +16354,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns JSXElement
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns JSXElement
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns JSXElement
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -15043,6 +16377,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns JSXElement
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXElement
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXElement
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns JSXElement
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns JSXElement
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -15060,6 +16397,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns JSXElement
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns JSXElement
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns JSXElement
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns JSXElement
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXElement
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXElement
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns JSXElement
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXElement
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
@@ -15070,6 +16410,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns JSXElement
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXElement
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns JSXElement
+	 *     CoalesceExpression<In,Yield> returns JSXElement
+	 *     CoalesceExpression<In> returns JSXElement
+	 *     CoalesceExpression<Yield> returns JSXElement
+	 *     CoalesceExpression returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXElement
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns JSXElement
 	 *     ConditionalExpression<In,Yield> returns JSXElement
 	 *     ConditionalExpression<In> returns JSXElement
 	 *     ConditionalExpression<Yield> returns JSXElement
@@ -15109,26 +16466,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* (jsxChildren+=JSXChild* jsxClosingName=JSXElementName)?)
 	 */
-	protected void sequence_JSXAttributes_JSXElement(ISerializationContext context, JSXElement semanticObject) {
+	protected void sequence_JSXElement(ISerializationContext context, JSXElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     JSXElementName returns JSXElementName
-	 *
-	 * Constraint:
-	 *     expression=JSXElementNameExpression
-	 */
-	protected void sequence_JSXElementName(ISerializationContext context, JSXElementName semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.JSX_ELEMENT_NAME__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.JSX_ELEMENT_NAME__EXPRESSION));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getJSXElementNameAccess().getExpressionJSXElementNameExpressionParserRuleCall_0(), semanticObject.getExpression());
-		feeder.finish();
 	}
 	
 	
@@ -15185,6 +16524,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns JSXFragment
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns JSXFragment
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15226,6 +16568,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15265,6 +16610,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns JSXFragment
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns JSXFragment
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15304,6 +16652,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns JSXFragment
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns JSXFragment
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15343,6 +16694,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15381,6 +16735,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15419,6 +16776,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15454,6 +16814,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15488,6 +16851,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15523,6 +16889,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15555,6 +16924,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15584,6 +16956,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15610,6 +16985,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15633,6 +17011,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15653,6 +17034,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns JSXFragment
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns JSXFragment
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15670,6 +17054,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns JSXFragment
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns JSXFragment
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns JSXFragment
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns JSXFragment
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
@@ -15680,6 +17067,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns JSXFragment
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns JSXFragment
+	 *     CoalesceExpression<In,Yield> returns JSXFragment
+	 *     CoalesceExpression<In> returns JSXFragment
+	 *     CoalesceExpression<Yield> returns JSXFragment
+	 *     CoalesceExpression returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns JSXFragment
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns JSXFragment
 	 *     ConditionalExpression<In,Yield> returns JSXFragment
 	 *     ConditionalExpression<In> returns JSXFragment
 	 *     ConditionalExpression<Yield> returns JSXFragment
@@ -15730,7 +17134,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     JSXPropertyAttribute returns JSXPropertyAttribute
 	 *
 	 * Constraint:
-	 *     (property=[IdentifiableElement|IdentifierName] (jsxAttributeValue=StringLiteral | jsxAttributeValue=AssignmentExpression)?)
+	 *     (
+	 *         property=[IdentifiableElement|JSXIdentifier] 
+	 *         (jsxAttributeValue=StringLiteral | jsxAttributeValue=JSXElement | jsxAttributeValue=JSXFragment | jsxAttributeValue=AssignmentExpression)?
+	 *     )
 	 */
 	protected void sequence_JSXPropertyAttribute(ISerializationContext context, JSXPropertyAttribute semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -15785,173 +17192,176 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<PostfixExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<CastExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<UnaryExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<MultiplicativeExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AdditiveExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ShiftExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In,RelationalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In,EqualityExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In,Expression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0 returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<PostfixExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<CastExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<UnaryExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<MultiplicativeExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AdditiveExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ShiftExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In,RelationalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In,EqualityExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In,Expression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0 returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<PostfixExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<CastExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<UnaryExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<MultiplicativeExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AdditiveExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ShiftExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In,RelationalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In,EqualityExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In,Expression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0 returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<PostfixExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<CastExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<UnaryExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<MultiplicativeExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AdditiveExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ShiftExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In,Expression.Yield> returns TaggedTemplateString
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0 returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<PostfixExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CastExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<UnaryExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<MultiplicativeExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AdditiveExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ShiftExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Expression.In,Expression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0 returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<PostfixExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CastExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<UnaryExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<MultiplicativeExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AdditiveExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ShiftExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<RelationalExpression.In,RelationalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<EqualityExpression.In,EqualityExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0<Expression.In,Expression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_3_1_0 returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<PostfixExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CastExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<UnaryExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<MultiplicativeExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AdditiveExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ShiftExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<RelationalExpression.In,RelationalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<EqualityExpression.In,EqualityExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0<Expression.In,Expression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_3_2_0 returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<PostfixExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CastExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<UnaryExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<MultiplicativeExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AdditiveExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ShiftExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0<Expression.In,Expression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.TaggedTemplateString_1_3_3_0_0 returns TaggedTemplateString
 	 *
 	 * Constraint:
-	 *     (target=LeftHandSideExpression_TaggedTemplateString_1_2_3_0_0 template=TemplateLiteral)
+	 *     (target=LeftHandSideExpression_TaggedTemplateString_1_3_3_0_0 optionalChaining?='?.'? template=TemplateLiteral)
 	 */
-	protected void sequence_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(ISerializationContext context, TaggedTemplateString semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_2_3_0_0(), semanticObject.getTarget());
-		feeder.accept(grammarAccess.getLeftHandSideExpressionAccess().getTemplateTemplateLiteralParserRuleCall_1_2_3_0_1_0(), semanticObject.getTemplate());
-		feeder.finish();
+	protected void sequence_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(ISerializationContext context, TaggedTemplateString semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -15988,6 +17398,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16026,6 +17439,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16064,6 +17480,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16099,6 +17518,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16133,6 +17555,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16168,6 +17593,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16200,6 +17628,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16229,6 +17660,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16255,6 +17689,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16278,6 +17715,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16298,6 +17738,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16315,6 +17758,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns TaggedTemplateString
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns TaggedTemplateString
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns TaggedTemplateString
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -16325,6 +17771,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns TaggedTemplateString
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns TaggedTemplateString
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns TaggedTemplateString
+	 *     CoalesceExpression<In,Yield> returns TaggedTemplateString
+	 *     CoalesceExpression<In> returns TaggedTemplateString
+	 *     CoalesceExpression<Yield> returns TaggedTemplateString
+	 *     CoalesceExpression returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns TaggedTemplateString
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns TaggedTemplateString
 	 *     ConditionalExpression<In,Yield> returns TaggedTemplateString
 	 *     ConditionalExpression<In> returns TaggedTemplateString
 	 *     ConditionalExpression<Yield> returns TaggedTemplateString
@@ -16361,9 +17824,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         (target=LeftHandSideExpression_TaggedTemplateString_1_2_3_0_0 template=TemplateLiteral) | 
-	 *         (target=MemberExpression_TaggedTemplateString_1_3_3_2_0 template=TemplateLiteral) | 
-	 *         (target=MemberExpression_TaggedTemplateString_2_1_2_0 template=TemplateLiteral)
+	 *         (target=LeftHandSideExpression_TaggedTemplateString_1_3_3_0_0 optionalChaining?='?.'? template=TemplateLiteral) | 
+	 *         (target=MemberExpression_TaggedTemplateString_1_3_3_2_0 optionalChaining?='?.'? template=TemplateLiteral) | 
+	 *         (target=MemberExpression_TaggedTemplateString_2_1_2_0 optionalChaining?='?.'? template=TemplateLiteral)
 	 *     )
 	 */
 	protected void sequence_LeftHandSideExpression_MemberExpression(ISerializationContext context, TaggedTemplateString semanticObject) {
@@ -16405,6 +17868,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16446,6 +17912,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16485,6 +17954,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16524,6 +17996,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16563,6 +18038,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16601,6 +18079,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16639,6 +18120,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16674,6 +18158,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16708,6 +18195,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16743,6 +18233,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16775,6 +18268,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16804,6 +18300,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16830,6 +18329,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16853,6 +18355,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16873,6 +18378,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns LegacyOctalIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns LegacyOctalIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns LegacyOctalIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16890,6 +18398,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns LegacyOctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns LegacyOctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns LegacyOctalIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns LegacyOctalIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns LegacyOctalIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns LegacyOctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
@@ -16900,6 +18411,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns LegacyOctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns LegacyOctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns LegacyOctalIntLiteral
+	 *     CoalesceExpression<In,Yield> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression<In> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression<Yield> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns LegacyOctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns LegacyOctalIntLiteral
 	 *     ConditionalExpression<In,Yield> returns LegacyOctalIntLiteral
 	 *     ConditionalExpression<In> returns LegacyOctalIntLiteral
 	 *     ConditionalExpression<Yield> returns LegacyOctalIntLiteral
@@ -17013,6 +18541,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns BinaryLogicalExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns BinaryLogicalExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns BinaryLogicalExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns BinaryLogicalExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryLogicalExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryLogicalExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns BinaryLogicalExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryLogicalExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryLogicalExpression
@@ -17053,6 +18584,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns BinaryLogicalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns BinaryLogicalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns BinaryLogicalExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns BinaryLogicalExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns BinaryLogicalExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns BinaryLogicalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns BinaryLogicalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryLogicalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryLogicalExpression
@@ -17063,6 +18597,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns BinaryLogicalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns BinaryLogicalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns BinaryLogicalExpression
+	 *     CoalesceExpression<In,Yield> returns BinaryLogicalExpression
+	 *     CoalesceExpression<In> returns BinaryLogicalExpression
+	 *     CoalesceExpression<Yield> returns BinaryLogicalExpression
+	 *     CoalesceExpression returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns BinaryLogicalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns BinaryLogicalExpression
 	 *     ConditionalExpression<In,Yield> returns BinaryLogicalExpression
 	 *     ConditionalExpression<In> returns BinaryLogicalExpression
 	 *     ConditionalExpression<Yield> returns BinaryLogicalExpression
@@ -17139,6 +18690,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -17178,6 +18732,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -17217,6 +18774,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -17229,19 +18789,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0 returns TaggedTemplateString
 	 *
 	 * Constraint:
-	 *     (target=MemberExpression_TaggedTemplateString_1_3_3_2_0 template=TemplateLiteral)
+	 *     (target=MemberExpression_TaggedTemplateString_1_3_3_2_0 optionalChaining?='?.'? template=TemplateLiteral)
 	 */
 	protected void sequence_MemberExpression_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, TaggedTemplateString semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_1_3_3_2_0(), semanticObject.getTarget());
-		feeder.accept(grammarAccess.getMemberExpressionAccess().getTemplateTemplateLiteralParserRuleCall_1_3_3_2_1_0(), semanticObject.getTemplate());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -17276,6 +18827,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -17315,6 +18869,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -17354,6 +18911,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -17366,19 +18926,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0 returns TaggedTemplateString
 	 *
 	 * Constraint:
-	 *     (target=MemberExpression_TaggedTemplateString_2_1_2_0 template=TemplateLiteral)
+	 *     (target=MemberExpression_TaggedTemplateString_2_1_2_0 optionalChaining?='?.'? template=TemplateLiteral)
 	 */
 	protected void sequence_MemberExpression_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(ISerializationContext context, TaggedTemplateString semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TARGET));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TAGGED_TEMPLATE_STRING__TEMPLATE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_2_1_2_0(), semanticObject.getTarget());
-		feeder.accept(grammarAccess.getMemberExpressionAccess().getTemplateTemplateLiteralParserRuleCall_2_1_2_1_0(), semanticObject.getTemplate());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -17414,6 +18965,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns NewTarget
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns NewTarget
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns NewTarget
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns NewTarget
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns NewTarget
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns NewTarget
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17455,6 +19009,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns NewTarget
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns NewTarget
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns NewTarget
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17493,6 +19050,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns NewTarget
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns NewTarget
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns NewTarget
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17531,6 +19091,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns NewTarget
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns NewTarget
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns NewTarget
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17566,6 +19129,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns NewTarget
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns NewTarget
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns NewTarget
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17600,6 +19166,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns NewTarget
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns NewTarget
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns NewTarget
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17635,6 +19204,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns NewTarget
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns NewTarget
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns NewTarget
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17667,6 +19239,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns NewTarget
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns NewTarget
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns NewTarget
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17696,6 +19271,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns NewTarget
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns NewTarget
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns NewTarget
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17722,6 +19300,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns NewTarget
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns NewTarget
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns NewTarget
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17745,6 +19326,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns NewTarget
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns NewTarget
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns NewTarget
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17765,6 +19349,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns NewTarget
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns NewTarget
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NewTarget
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns NewTarget
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns NewTarget
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17782,6 +19369,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns NewTarget
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns NewTarget
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns NewTarget
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns NewTarget
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns NewTarget
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NewTarget
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns NewTarget
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns NewTarget
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
@@ -17792,6 +19382,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns NewTarget
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns NewTarget
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns NewTarget
+	 *     CoalesceExpression<In,Yield> returns NewTarget
+	 *     CoalesceExpression<In> returns NewTarget
+	 *     CoalesceExpression<Yield> returns NewTarget
+	 *     CoalesceExpression returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns NewTarget
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns NewTarget
 	 *     ConditionalExpression<In,Yield> returns NewTarget
 	 *     ConditionalExpression<In> returns NewTarget
 	 *     ConditionalExpression<Yield> returns NewTarget
@@ -17864,6 +19471,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns TaggedTemplateString
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns TaggedTemplateString
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns TaggedTemplateString
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TaggedTemplateString
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns TaggedTemplateString
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns TaggedTemplateString
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TaggedTemplateString
@@ -17879,8 +19489,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         (target=MemberExpression_TaggedTemplateString_1_3_3_2_0 template=TemplateLiteral) | 
-	 *         (target=MemberExpression_TaggedTemplateString_2_1_2_0 template=TemplateLiteral)
+	 *         (target=MemberExpression_TaggedTemplateString_1_3_3_2_0 optionalChaining?='?.'? template=TemplateLiteral) | 
+	 *         (target=MemberExpression_TaggedTemplateString_2_1_2_0 optionalChaining?='?.'? template=TemplateLiteral)
 	 *     )
 	 */
 	protected void sequence_MemberExpression(ISerializationContext context, TaggedTemplateString semanticObject) {
@@ -17935,6 +19545,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns MultiplicativeExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns MultiplicativeExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns MultiplicativeExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns MultiplicativeExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns MultiplicativeExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns MultiplicativeExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns MultiplicativeExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
@@ -17970,6 +19583,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns MultiplicativeExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns MultiplicativeExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns MultiplicativeExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns MultiplicativeExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns MultiplicativeExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns MultiplicativeExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns MultiplicativeExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
@@ -18004,6 +19620,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns MultiplicativeExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns MultiplicativeExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns MultiplicativeExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns MultiplicativeExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns MultiplicativeExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns MultiplicativeExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns MultiplicativeExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
@@ -18039,6 +19658,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns MultiplicativeExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns MultiplicativeExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns MultiplicativeExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns MultiplicativeExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns MultiplicativeExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns MultiplicativeExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns MultiplicativeExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
@@ -18071,6 +19693,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns MultiplicativeExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns MultiplicativeExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns MultiplicativeExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns MultiplicativeExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns MultiplicativeExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns MultiplicativeExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns MultiplicativeExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
@@ -18100,6 +19725,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns MultiplicativeExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns MultiplicativeExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns MultiplicativeExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns MultiplicativeExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns MultiplicativeExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns MultiplicativeExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns MultiplicativeExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
@@ -18126,6 +19754,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns MultiplicativeExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns MultiplicativeExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns MultiplicativeExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns MultiplicativeExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns MultiplicativeExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns MultiplicativeExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns MultiplicativeExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
@@ -18149,6 +19780,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns MultiplicativeExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns MultiplicativeExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns MultiplicativeExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns MultiplicativeExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns MultiplicativeExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns MultiplicativeExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns MultiplicativeExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
@@ -18169,6 +19803,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns MultiplicativeExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns MultiplicativeExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns MultiplicativeExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns MultiplicativeExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns MultiplicativeExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns MultiplicativeExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns MultiplicativeExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
@@ -18186,6 +19823,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns MultiplicativeExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns MultiplicativeExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns MultiplicativeExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns MultiplicativeExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns MultiplicativeExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns MultiplicativeExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns MultiplicativeExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
@@ -18196,6 +19836,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns MultiplicativeExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns MultiplicativeExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns MultiplicativeExpression
+	 *     CoalesceExpression<In,Yield> returns MultiplicativeExpression
+	 *     CoalesceExpression<In> returns MultiplicativeExpression
+	 *     CoalesceExpression<Yield> returns MultiplicativeExpression
+	 *     CoalesceExpression returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns MultiplicativeExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns MultiplicativeExpression
 	 *     ConditionalExpression<In,Yield> returns MultiplicativeExpression
 	 *     ConditionalExpression<In> returns MultiplicativeExpression
 	 *     ConditionalExpression<Yield> returns MultiplicativeExpression
@@ -18388,6 +20045,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns NullLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns NullLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns NullLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18429,6 +20089,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18468,6 +20131,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns NullLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns NullLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns NullLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18507,6 +20173,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns NullLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns NullLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns NullLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18546,6 +20215,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18584,6 +20256,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18622,6 +20297,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18657,6 +20335,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18691,6 +20372,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18726,6 +20410,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18758,6 +20445,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18787,6 +20477,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18813,6 +20506,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18836,6 +20532,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18856,6 +20555,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns NullLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns NullLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns NullLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18873,6 +20575,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns NullLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns NullLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns NullLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns NullLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns NullLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns NullLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns NullLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns NullLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
@@ -18883,6 +20588,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns NullLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns NullLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns NullLiteral
+	 *     CoalesceExpression<In,Yield> returns NullLiteral
+	 *     CoalesceExpression<In> returns NullLiteral
+	 *     CoalesceExpression<Yield> returns NullLiteral
+	 *     CoalesceExpression returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns NullLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns NullLiteral
 	 *     ConditionalExpression<In,Yield> returns NullLiteral
 	 *     ConditionalExpression<In> returns NullLiteral
 	 *     ConditionalExpression<Yield> returns NullLiteral
@@ -18978,6 +20700,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19019,6 +20744,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19058,6 +20786,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19097,6 +20828,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19136,6 +20870,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19174,6 +20911,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19212,6 +20952,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19247,6 +20990,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19281,6 +21027,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19316,6 +21065,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19348,6 +21100,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19377,6 +21132,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19403,6 +21161,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19426,6 +21187,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19446,6 +21210,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ObjectLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ObjectLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ObjectLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19463,6 +21230,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ObjectLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ObjectLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ObjectLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ObjectLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ObjectLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ObjectLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ObjectLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ObjectLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
@@ -19473,6 +21243,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ObjectLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ObjectLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ObjectLiteral
+	 *     CoalesceExpression<In,Yield> returns ObjectLiteral
+	 *     CoalesceExpression<In> returns ObjectLiteral
+	 *     CoalesceExpression<Yield> returns ObjectLiteral
+	 *     CoalesceExpression returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ObjectLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ObjectLiteral
 	 *     ConditionalExpression<In,Yield> returns ObjectLiteral
 	 *     ConditionalExpression<In> returns ObjectLiteral
 	 *     ConditionalExpression<Yield> returns ObjectLiteral
@@ -19549,6 +21336,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19590,6 +21380,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19629,6 +21422,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19668,6 +21464,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19707,6 +21506,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19745,6 +21547,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19783,6 +21588,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19818,6 +21626,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19852,6 +21663,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19887,6 +21701,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19919,6 +21736,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19948,6 +21768,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19974,6 +21797,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -19997,6 +21823,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -20017,6 +21846,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns OctalIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns OctalIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns OctalIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -20034,6 +21866,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns OctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns OctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns OctalIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns OctalIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns OctalIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns OctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns OctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
@@ -20044,6 +21879,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns OctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns OctalIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns OctalIntLiteral
+	 *     CoalesceExpression<In,Yield> returns OctalIntLiteral
+	 *     CoalesceExpression<In> returns OctalIntLiteral
+	 *     CoalesceExpression<Yield> returns OctalIntLiteral
+	 *     CoalesceExpression returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns OctalIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns OctalIntLiteral
 	 *     ConditionalExpression<In,Yield> returns OctalIntLiteral
 	 *     ConditionalExpression<In> returns OctalIntLiteral
 	 *     ConditionalExpression<Yield> returns OctalIntLiteral
@@ -20333,6 +22185,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ParenExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns ParenExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ParenExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20374,6 +22229,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20413,6 +22271,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ParenExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns ParenExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ParenExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20452,6 +22313,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ParenExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns ParenExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ParenExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20491,6 +22355,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20529,6 +22396,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20567,6 +22437,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20602,6 +22475,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20636,6 +22512,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20671,6 +22550,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20703,6 +22585,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20732,6 +22617,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20758,6 +22646,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20781,6 +22672,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20801,6 +22695,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ParenExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ParenExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParenExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20818,6 +22715,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParenExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParenExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParenExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ParenExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ParenExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ParenExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParenExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParenExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
@@ -20828,6 +22728,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParenExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParenExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ParenExpression
+	 *     CoalesceExpression<In,Yield> returns ParenExpression
+	 *     CoalesceExpression<In> returns ParenExpression
+	 *     CoalesceExpression<Yield> returns ParenExpression
+	 *     CoalesceExpression returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParenExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ParenExpression
 	 *     ConditionalExpression<In,Yield> returns ParenExpression
 	 *     ConditionalExpression<In> returns ParenExpression
 	 *     ConditionalExpression<Yield> returns ParenExpression
@@ -20908,6 +22825,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns PostfixExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns PostfixExpression
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns PostfixExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -20946,6 +22866,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns PostfixExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns PostfixExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns PostfixExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -20981,6 +22904,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns PostfixExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns PostfixExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns PostfixExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -21015,6 +22941,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns PostfixExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns PostfixExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns PostfixExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -21050,6 +22979,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns PostfixExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns PostfixExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns PostfixExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -21082,6 +23014,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns PostfixExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns PostfixExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns PostfixExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -21111,6 +23046,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns PostfixExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns PostfixExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns PostfixExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -21137,6 +23075,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns PostfixExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns PostfixExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns PostfixExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -21160,6 +23101,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns PostfixExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns PostfixExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns PostfixExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -21180,6 +23124,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns PostfixExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns PostfixExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns PostfixExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -21197,6 +23144,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns PostfixExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns PostfixExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns PostfixExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns PostfixExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns PostfixExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns PostfixExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns PostfixExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns PostfixExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
@@ -21207,6 +23157,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns PostfixExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns PostfixExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns PostfixExpression
+	 *     CoalesceExpression<In,Yield> returns PostfixExpression
+	 *     CoalesceExpression<In> returns PostfixExpression
+	 *     CoalesceExpression<Yield> returns PostfixExpression
+	 *     CoalesceExpression returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns PostfixExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns PostfixExpression
 	 *     ConditionalExpression<In,Yield> returns PostfixExpression
 	 *     ConditionalExpression<In> returns PostfixExpression
 	 *     ConditionalExpression<Yield> returns PostfixExpression
@@ -21413,6 +23380,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21454,6 +23424,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21493,6 +23466,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21532,6 +23508,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21571,6 +23550,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21609,6 +23591,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21647,6 +23632,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21682,6 +23670,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21716,6 +23707,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21751,6 +23745,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21783,6 +23780,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21812,6 +23812,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21838,6 +23841,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21861,6 +23867,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21881,6 +23890,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns RegularExpressionLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns RegularExpressionLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RegularExpressionLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21898,6 +23910,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns RegularExpressionLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns RegularExpressionLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns RegularExpressionLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns RegularExpressionLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns RegularExpressionLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RegularExpressionLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
@@ -21908,6 +23923,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns RegularExpressionLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns RegularExpressionLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns RegularExpressionLiteral
+	 *     CoalesceExpression<In,Yield> returns RegularExpressionLiteral
+	 *     CoalesceExpression<In> returns RegularExpressionLiteral
+	 *     CoalesceExpression<Yield> returns RegularExpressionLiteral
+	 *     CoalesceExpression returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns RegularExpressionLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns RegularExpressionLiteral
 	 *     ConditionalExpression<In,Yield> returns RegularExpressionLiteral
 	 *     ConditionalExpression<In> returns RegularExpressionLiteral
 	 *     ConditionalExpression<Yield> returns RegularExpressionLiteral
@@ -21985,6 +24017,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns RelationalExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns RelationalExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RelationalExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns RelationalExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns RelationalExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RelationalExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns RelationalExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns RelationalExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RelationalExpression
@@ -22017,6 +24052,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns RelationalExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns RelationalExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RelationalExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns RelationalExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns RelationalExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RelationalExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns RelationalExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns RelationalExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RelationalExpression
@@ -22046,6 +24084,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns RelationalExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns RelationalExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RelationalExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns RelationalExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns RelationalExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RelationalExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns RelationalExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns RelationalExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RelationalExpression
@@ -22072,6 +24113,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns RelationalExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns RelationalExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RelationalExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns RelationalExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns RelationalExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RelationalExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns RelationalExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns RelationalExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RelationalExpression
@@ -22095,6 +24139,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns RelationalExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns RelationalExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RelationalExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns RelationalExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns RelationalExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RelationalExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns RelationalExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns RelationalExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RelationalExpression
@@ -22115,6 +24162,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns RelationalExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns RelationalExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns RelationalExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns RelationalExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns RelationalExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RelationalExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns RelationalExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns RelationalExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RelationalExpression
@@ -22132,6 +24182,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns RelationalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns RelationalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns RelationalExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns RelationalExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns RelationalExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns RelationalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns RelationalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns RelationalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RelationalExpression
@@ -22142,6 +24195,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns RelationalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns RelationalExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns RelationalExpression
+	 *     CoalesceExpression<In,Yield> returns RelationalExpression
+	 *     CoalesceExpression<In> returns RelationalExpression
+	 *     CoalesceExpression<Yield> returns RelationalExpression
+	 *     CoalesceExpression returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns RelationalExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns RelationalExpression
 	 *     ConditionalExpression<In,Yield> returns RelationalExpression
 	 *     ConditionalExpression<In> returns RelationalExpression
 	 *     ConditionalExpression<Yield> returns RelationalExpression
@@ -22248,6 +24318,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22289,6 +24362,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22328,6 +24404,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22367,6 +24446,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22406,6 +24488,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22444,6 +24529,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22482,6 +24570,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22517,6 +24608,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22551,6 +24645,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22586,6 +24683,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22618,6 +24718,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22647,6 +24750,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22673,6 +24779,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22696,6 +24805,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22716,6 +24828,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ScientificIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ScientificIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ScientificIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22733,6 +24848,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ScientificIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ScientificIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ScientificIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ScientificIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ScientificIntLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ScientificIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ScientificIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
@@ -22743,6 +24861,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ScientificIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ScientificIntLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ScientificIntLiteral
+	 *     CoalesceExpression<In,Yield> returns ScientificIntLiteral
+	 *     CoalesceExpression<In> returns ScientificIntLiteral
+	 *     CoalesceExpression<Yield> returns ScientificIntLiteral
+	 *     CoalesceExpression returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ScientificIntLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ScientificIntLiteral
 	 *     ConditionalExpression<In,Yield> returns ScientificIntLiteral
 	 *     ConditionalExpression<In> returns ScientificIntLiteral
 	 *     ConditionalExpression<Yield> returns ScientificIntLiteral
@@ -22832,6 +24967,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ShiftExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ShiftExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ShiftExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ShiftExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ShiftExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ShiftExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ShiftExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ShiftExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ShiftExpression
@@ -22867,6 +25005,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ShiftExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ShiftExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ShiftExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ShiftExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ShiftExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ShiftExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ShiftExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ShiftExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ShiftExpression
@@ -22899,6 +25040,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ShiftExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ShiftExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ShiftExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ShiftExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ShiftExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ShiftExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ShiftExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ShiftExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ShiftExpression
@@ -22928,6 +25072,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ShiftExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ShiftExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ShiftExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ShiftExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ShiftExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ShiftExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ShiftExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ShiftExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ShiftExpression
@@ -22954,6 +25101,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ShiftExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ShiftExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ShiftExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ShiftExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ShiftExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ShiftExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ShiftExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ShiftExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ShiftExpression
@@ -22977,6 +25127,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ShiftExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ShiftExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ShiftExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ShiftExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ShiftExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ShiftExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ShiftExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ShiftExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ShiftExpression
@@ -22997,6 +25150,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ShiftExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ShiftExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ShiftExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ShiftExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ShiftExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ShiftExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ShiftExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ShiftExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ShiftExpression
@@ -23014,6 +25170,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ShiftExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ShiftExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ShiftExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ShiftExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ShiftExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ShiftExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ShiftExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ShiftExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ShiftExpression
@@ -23024,6 +25183,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ShiftExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ShiftExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ShiftExpression
+	 *     CoalesceExpression<In,Yield> returns ShiftExpression
+	 *     CoalesceExpression<In> returns ShiftExpression
+	 *     CoalesceExpression<Yield> returns ShiftExpression
+	 *     CoalesceExpression returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ShiftExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ShiftExpression
 	 *     ConditionalExpression<In,Yield> returns ShiftExpression
 	 *     ConditionalExpression<In> returns ShiftExpression
 	 *     ConditionalExpression<Yield> returns ShiftExpression
@@ -23133,6 +25309,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns StringLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns StringLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns StringLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23174,6 +25353,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23213,6 +25395,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns StringLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns StringLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns StringLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23252,6 +25437,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns StringLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns StringLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns StringLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23291,6 +25479,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23329,6 +25520,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23367,6 +25561,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23402,6 +25599,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23436,6 +25636,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23471,6 +25674,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23503,6 +25709,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23532,6 +25741,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23558,6 +25770,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23581,6 +25796,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23601,6 +25819,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns StringLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns StringLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns StringLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23618,6 +25839,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns StringLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns StringLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns StringLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns StringLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns StringLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns StringLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns StringLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns StringLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
@@ -23628,6 +25852,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns StringLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns StringLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns StringLiteral
+	 *     CoalesceExpression<In,Yield> returns StringLiteral
+	 *     CoalesceExpression<In> returns StringLiteral
+	 *     CoalesceExpression<Yield> returns StringLiteral
+	 *     CoalesceExpression returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns StringLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns StringLiteral
 	 *     ConditionalExpression<In,Yield> returns StringLiteral
 	 *     ConditionalExpression<In> returns StringLiteral
 	 *     ConditionalExpression<Yield> returns StringLiteral
@@ -23713,6 +25954,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns SuperLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns SuperLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns SuperLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -23754,6 +25998,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -23793,6 +26040,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns SuperLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns SuperLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns SuperLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -23832,6 +26082,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns SuperLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns SuperLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns SuperLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -23871,6 +26124,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -23909,6 +26165,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -23947,6 +26206,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -23982,6 +26244,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -24016,6 +26281,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -24051,6 +26319,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -24083,6 +26354,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -24112,6 +26386,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -24138,6 +26415,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -24161,6 +26441,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -24181,6 +26464,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns SuperLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns SuperLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns SuperLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -24198,6 +26484,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns SuperLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns SuperLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns SuperLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns SuperLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns SuperLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns SuperLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns SuperLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns SuperLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
@@ -24208,6 +26497,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns SuperLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns SuperLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns SuperLiteral
+	 *     CoalesceExpression<In,Yield> returns SuperLiteral
+	 *     CoalesceExpression<In> returns SuperLiteral
+	 *     CoalesceExpression<Yield> returns SuperLiteral
+	 *     CoalesceExpression returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns SuperLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns SuperLiteral
 	 *     ConditionalExpression<In,Yield> returns SuperLiteral
 	 *     ConditionalExpression<In> returns SuperLiteral
 	 *     ConditionalExpression<Yield> returns SuperLiteral
@@ -24320,6 +26626,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24361,6 +26670,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24400,6 +26712,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24439,6 +26754,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24478,6 +26796,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24516,6 +26837,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24554,6 +26878,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24589,6 +26916,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24623,6 +26953,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24658,6 +26991,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24690,6 +27026,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24719,6 +27058,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24745,6 +27087,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24768,6 +27113,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24788,6 +27136,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns TemplateLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns TemplateLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns TemplateLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24805,6 +27156,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns TemplateLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns TemplateLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns TemplateLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns TemplateLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns TemplateLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns TemplateLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns TemplateLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns TemplateLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
@@ -24815,6 +27169,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns TemplateLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns TemplateLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns TemplateLiteral
+	 *     CoalesceExpression<In,Yield> returns TemplateLiteral
+	 *     CoalesceExpression<In> returns TemplateLiteral
+	 *     CoalesceExpression<Yield> returns TemplateLiteral
+	 *     CoalesceExpression returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns TemplateLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns TemplateLiteral
 	 *     ConditionalExpression<In,Yield> returns TemplateLiteral
 	 *     ConditionalExpression<In> returns TemplateLiteral
 	 *     ConditionalExpression<Yield> returns TemplateLiteral
@@ -24933,6 +27304,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ThisLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In> returns ThisLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ThisLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -24974,6 +27348,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25013,6 +27390,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ThisLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In> returns ThisLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ThisLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25052,6 +27432,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ThisLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In> returns ThisLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ThisLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25091,6 +27474,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     PostfixExpression.PostfixExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25129,6 +27515,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     CastExpression.CastExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25167,6 +27556,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25202,6 +27594,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25236,6 +27631,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25271,6 +27669,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25303,6 +27704,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25332,6 +27736,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25358,6 +27765,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25381,6 +27791,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25401,6 +27814,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ThisLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ThisLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ThisLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25418,6 +27834,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ThisLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ThisLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ThisLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns ThisLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns ThisLiteral
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns ThisLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ThisLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ThisLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
@@ -25428,6 +27847,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ThisLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ThisLiteral
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ThisLiteral
+	 *     CoalesceExpression<In,Yield> returns ThisLiteral
+	 *     CoalesceExpression<In> returns ThisLiteral
+	 *     CoalesceExpression<Yield> returns ThisLiteral
+	 *     CoalesceExpression returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns ThisLiteral
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns ThisLiteral
 	 *     ConditionalExpression<In,Yield> returns ThisLiteral
 	 *     ConditionalExpression<In> returns ThisLiteral
 	 *     ConditionalExpression<Yield> returns ThisLiteral
@@ -25626,6 +28062,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns UnaryExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns UnaryExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns UnaryExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In> returns UnaryExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.Yield> returns UnaryExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns UnaryExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns UnaryExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns UnaryExpression
 	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
@@ -25661,6 +28100,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns UnaryExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns UnaryExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns UnaryExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In> returns UnaryExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.Yield> returns UnaryExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns UnaryExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns UnaryExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns UnaryExpression
 	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
@@ -25695,6 +28137,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns UnaryExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns UnaryExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns UnaryExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In> returns UnaryExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.Yield> returns UnaryExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns UnaryExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns UnaryExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns UnaryExpression
 	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
@@ -25730,6 +28175,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns UnaryExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns UnaryExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns UnaryExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In> returns UnaryExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.Yield> returns UnaryExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns UnaryExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns UnaryExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns UnaryExpression
 	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
@@ -25762,6 +28210,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns UnaryExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns UnaryExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns UnaryExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In> returns UnaryExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.Yield> returns UnaryExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns UnaryExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns UnaryExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns UnaryExpression
 	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
@@ -25791,6 +28242,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns UnaryExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns UnaryExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns UnaryExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns UnaryExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns UnaryExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns UnaryExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns UnaryExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns UnaryExpression
 	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
@@ -25817,6 +28271,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns UnaryExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns UnaryExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns UnaryExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns UnaryExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns UnaryExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns UnaryExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns UnaryExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns UnaryExpression
 	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
@@ -25840,6 +28297,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns UnaryExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns UnaryExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns UnaryExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In> returns UnaryExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.Yield> returns UnaryExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns UnaryExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns UnaryExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns UnaryExpression
 	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
@@ -25860,6 +28320,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns UnaryExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns UnaryExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns UnaryExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns UnaryExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns UnaryExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns UnaryExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns UnaryExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns UnaryExpression
 	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
@@ -25877,6 +28340,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns UnaryExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns UnaryExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns UnaryExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In> returns UnaryExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.Yield> returns UnaryExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<CoalesceExpression.In,CoalesceExpression.Yield> returns UnaryExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns UnaryExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns UnaryExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
@@ -25887,6 +28353,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns UnaryExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns UnaryExpression
 	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns UnaryExpression
+	 *     CoalesceExpression<In,Yield> returns UnaryExpression
+	 *     CoalesceExpression<In> returns UnaryExpression
+	 *     CoalesceExpression<Yield> returns UnaryExpression
+	 *     CoalesceExpression returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In,Yield> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<In> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Yield> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.Yield> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.Yield> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.Yield> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0<Expression.In,Expression.Yield> returns UnaryExpression
+	 *     CoalesceExpression.CoalesceExpression_1_0_0_0 returns UnaryExpression
 	 *     ConditionalExpression<In,Yield> returns UnaryExpression
 	 *     ConditionalExpression<In> returns UnaryExpression
 	 *     ConditionalExpression<Yield> returns UnaryExpression
