@@ -34,7 +34,7 @@ interfaceElement meta: {
  "origin": "org.eclipse.n4js.transpiler.es5.tests",
  "annotations": [],
  "name": "I",
- "fqn": "classes.AT_953_alias.imported.dep.I",
+ "fqn": "classes/AT_953_alias/imported/dep/I",
  "allImplementedInterfaces": [],
  "ownedMembers": [
   {

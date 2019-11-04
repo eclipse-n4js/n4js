@@ -35,7 +35,7 @@ stdout:
 module Other.n4js is being loaded ...
 C
 org.eclipse.n4js.transpiler.es5.tests
-reflection.optimizeTrivialUsage.Other.C
+reflection/optimizeTrivialUsage/Other/C
 stderr:
 ==>
 --- */

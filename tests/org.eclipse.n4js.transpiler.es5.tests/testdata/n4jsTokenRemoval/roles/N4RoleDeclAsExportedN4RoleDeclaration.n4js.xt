@@ -20,13 +20,13 @@ N4Interface {
   annotations: [],
   name: 'R3',
   fqn:
-   'n4jsTokenRemoval.roles.N4RoleDeclAsExportedN4RoleDeclaration.R3',
+   'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R3',
   n4superType: undefined,
   allImplementedInterfaces:
-   [ 'n4jsTokenRemoval.roles.N4RoleDeclAsExportedN4RoleDeclaration.R1',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsExportedN4RoleDeclaration.R0',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsExportedN4RoleDeclaration.I1',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsExportedN4RoleDeclaration.I0' ],
+   [ 'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R1',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R0',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I1',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I0' ],
   ownedMembers: [],
   consumedMembers: [] }
 N4Interface {
@@ -34,13 +34,13 @@ N4Interface {
   annotations: [],
   name: 'R4',
   fqn:
-   'n4jsTokenRemoval.roles.N4RoleDeclAsExportedN4RoleDeclaration.R4',
+   'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R4',
   n4superType: undefined,
   allImplementedInterfaces:
-   [ 'n4jsTokenRemoval.roles.N4RoleDeclAsExportedN4RoleDeclaration.R1',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsExportedN4RoleDeclaration.R0',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsExportedN4RoleDeclaration.I1',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsExportedN4RoleDeclaration.I0' ],
+   [ 'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R1',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/R0',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I1',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsExportedN4RoleDeclaration/I0' ],
   ownedMembers: [],
   consumedMembers: [] }
 stderr:

@@ -35,7 +35,7 @@ console.log(C.n4type.fqn);
 stdout:
 C
 org.eclipse.n4js.transpiler.es5.tests
-reflection.optimizeTrivialUsage.Other.C
+reflection/optimizeTrivialUsage/Other/C
 stderr:
 ==>
 --- */

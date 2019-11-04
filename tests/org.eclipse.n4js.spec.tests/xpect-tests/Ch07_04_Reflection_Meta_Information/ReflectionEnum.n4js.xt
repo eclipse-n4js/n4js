@@ -15,8 +15,8 @@
 /* XPECT output ---
 <==
 stdout:
-Ch07_04_Reflection_Meta_Information.ReflectionEnum.E
-Ch07_04_Reflection_Meta_Information.ReflectionEnum.E
+Ch07_04_Reflection_Meta_Information/ReflectionEnum/E
+Ch07_04_Reflection_Meta_Information/ReflectionEnum/E
 true
 [ E { name: 'L1', value: 'l1' },
   E { name: 'L2', value: 'L2' },
