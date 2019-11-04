@@ -61,6 +61,12 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.ts.types.util.MemberList
+import org.eclipse.n4js.ts.types.impl.TMethodImpl
+import org.eclipse.n4js.n4JS.Annotation
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.util.EDataTypeEList
+import org.eclipse.n4js.n4JS.N4Modifier
+import org.eclipse.n4js.n4JS.impl.AnnotationImpl
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -370,18 +376,74 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	}
 	
 	override public void complete_N4FieldDeclaration(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		super.complete_N4FieldDeclaration(model, ruleCall, context, acceptor);
+//		super.complete_N4FieldDeclaration(model, ruleCall, context, acceptor);
+	}	
+	
+	//				val proposalString = mc.inheritedMembers(tclass as TClass).map[].join(" ") + " "
+	override public void complete_LiteralOrComputedPropertyName(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		super.complete_LiteralOrComputedPropertyName(model, ruleCall, context, acceptor);
 		if(model instanceof LiteralOrComputedPropertyName) {
 			val mc = containerTypesHelper.fromContext(model);
 			val n4classdeclaration = model.eContainer.eContainer;
 			if(n4classdeclaration instanceof N4ClassDeclaration) {
 				val tclass = n4classdeclaration.definedType;
-				System.out.println(mc.inheritedMembers(tclass as TClass)); //for debugging
+				System.out.println(mc.inheritedMembers(tclass as TClass));
+				var proposalString =""; 
+				for(TMember methodMember: mc.inheritedMembers(tclass as TClass))
+				{
+ 					if(containsAnnotation((model.eContainer as N4FieldDeclaration).annotations, "Override") &&
+ 					containsDeclarationModifier((model.eContainer as N4FieldDeclaration).declaredModifiers, methodMember.memberAccessModifier.toString))
+ 					{
+						proposalString = methodMember.memberAsString	
+ 					}
+					else if(!containsAnnotation((model.eContainer as N4FieldDeclaration).annotations, "Override") &&
+ 					!containsDeclarationModifier((model.eContainer as N4FieldDeclaration).declaredModifiers, methodMember.memberAccessModifier.toString)) {
+						proposalString = "@Override \n" + methodMember.memberAccessModifier.toString + " " + methodMember.memberAsString	
+					}
+					else if(!containsAnnotation((model.eContainer as N4FieldDeclaration).annotations, "Override")) {
+						proposalString = methodMember.memberAsString
+					}
+					else if(!containsDeclarationModifier((model.eContainer as N4FieldDeclaration).declaredModifiers, methodMember.memberAccessModifier.toString)) {
+						proposalString = methodMember.memberAccessModifier.toString + " " + methodMember.memberAsString
+					}
+					val ICompletionProposal proposal = 
+						createMethodCompletionProposal(proposalString + " {}", methodMember.memberAsString, context);
+					acceptor.accept(proposal);					
+				}
 			}		
 		}
-	}	
-	
-	override public void complete_LiteralOrComputedPropertyName(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		super.complete_LiteralOrComputedPropertyName(model, ruleCall, context, acceptor);
 	}
+	
+	def createMethodCompletionProposal(String proposal, String validProposal, ContentAssistContext context) {
+		if (isValidProposal(validProposal, context.prefix, context)) {
+			return doCreateProposal(proposal, new StyledString(validProposal), null, getPriorityHelper().getDefaultPriority(), context);
+		}
+		return null;
+		
+	}
+	
+	def private boolean containsAnnotation(EList<Annotation> annotations, String annotation) {
+		for(Annotation a: annotations) {
+			if(a.name.toLowerCase === annotation.toLowerCase) {
+				return true;
+			}
+		}
+		return false;	
+	}
+	
+	def private boolean containsDeclarationModifier(EList<N4Modifier> modifiers, String modifier) {
+		for(N4Modifier m: modifiers) {
+			if(m.getName().toLowerCase === modifier.toLowerCase) {
+				return true;
+			}
+		}
+		return false;	
+	}
+	
+//	def private String createMethodProposalString(EObject model) {
+//		if(model instanceof LiteralOrComputedPropertyName) {
+//			val mc = containerTypesHelper.fromContext(model);
+//			}
+//		return "";
+//	}
 }
