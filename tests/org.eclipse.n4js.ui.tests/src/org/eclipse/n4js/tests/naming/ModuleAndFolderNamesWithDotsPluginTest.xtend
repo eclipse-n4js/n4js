@@ -15,6 +15,7 @@ import java.io.File
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.external.LibraryManager
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Test
@@ -28,7 +29,7 @@ class ModuleAndFolderNamesWithDotsPluginTest extends AbstractBuilderParticipantT
 
 	private static final String PROBANDS = "probands";
 	private static final String SUBFOLDER = "ModuleAndFolderNamesWithDots";
-	private static final String PROJECT_NAME = "ModuleAndFolderNamesWithDots";
+	private static final N4JSProjectName PROJECT_NAME = new N4JSProjectName("ModuleAndFolderNamesWithDots");
 
 	@Inject
 	private LibraryManager libraryManager;

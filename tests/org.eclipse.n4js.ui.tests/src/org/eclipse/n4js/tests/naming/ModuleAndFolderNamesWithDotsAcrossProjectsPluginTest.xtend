@@ -16,6 +16,7 @@ import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.external.LibraryManager
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.junit.Test
@@ -29,8 +30,8 @@ class ModuleAndFolderNamesWithDotsAcrossProjectsPluginTest extends AbstractBuild
 
 	private static final String PROBANDS = "probands";
 	private static final String SUBFOLDER = "ModuleAndFolderNamesWithDotsAcrossProjects";
-	private static final String YARN_WORKSPACE_PROJECT = "YarnWorkspaceProject";
-	private static final String PROJECT_NAME = "Main";
+	private static final N4JSProjectName YARN_WORKSPACE_PROJECT = new N4JSProjectName("YarnWorkspaceProject");
+	private static final N4JSProjectName PROJECT_NAME = new N4JSProjectName("Main");
 
 	@Inject
 	private LibraryManager libraryManager;
@@ -40,7 +41,7 @@ class ModuleAndFolderNamesWithDotsAcrossProjectsPluginTest extends AbstractBuild
 		val root = new File(getResourceUri(PROBANDS, SUBFOLDER));
 		ProjectTestsUtils.importYarnWorkspace(libraryManager, root, YARN_WORKSPACE_PROJECT,
 			Lists.newArrayList(N4JSGlobals.N4JS_RUNTIME));
-		val project = ResourcesPlugin.workspace.root.getProject(PROJECT_NAME);
+		val project = ResourcesPlugin.workspace.root.getProject(PROJECT_NAME.toEclipseProjectName.rawName);
 
 		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		testedWorkspace.fullBuild;
