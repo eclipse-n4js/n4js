@@ -25,8 +25,6 @@ false
 true
 false
 ========================================
-$implements was called!
-$instanceof was called!
 ========================================
 stderr:
 ==>
@@ -69,6 +67,9 @@ console.log(a instanceof t);
 console.log('========================================');
 
 
+// NOTE: as of September 2019 this has changed; we no longer use functions $implements/$instanceof
+//       but instead use the ES6 Symbol.hasInstance on interfaces. Therefore, the following was deactivated:
+/*
 // to assert that the proper built-in function is called for instance below, we change them as follows:
 var global = new Function('return this;')() as Object;
 global['$implements'] = function() {
@@ -77,6 +78,7 @@ global['$implements'] = function() {
 global['$instanceof'] = function() {
 	console.log('$instanceof was called!')
 }
+*/
 
 a instanceof A; // this should not print anything (because the native instanceof operator is being used)!
 a instanceof I;

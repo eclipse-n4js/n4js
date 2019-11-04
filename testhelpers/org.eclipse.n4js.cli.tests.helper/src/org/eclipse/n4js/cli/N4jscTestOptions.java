@@ -12,9 +12,17 @@ package org.eclipse.n4js.cli;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.kohsuke.args4j.NamedOptionDef;
+import org.kohsuke.args4j.Option;
+
+import com.google.common.base.Objects;
 
 /** Helper class to create n4jsc option programmatically */
 public class N4jscTestOptions extends N4jscOptions {
@@ -81,6 +89,8 @@ public class N4jscTestOptions extends N4jscOptions {
 		return instance;
 	}
 
+	private final Map<String, N4JSCmdLineParser.ParsedOption> definedOptions = new LinkedHashMap<>();
+
 	/** Set goal to compile */
 	public N4jscTestOptions f(File... files) {
 		return f(Arrays.asList(files));
@@ -96,85 +106,142 @@ public class N4jscTestOptions extends N4jscOptions {
 			}
 		}).filter(f -> f != null).collect(Collectors.toList());
 
-		options.srcFiles = files;
+		options.dirs = files;
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions verbose() {
-		options.verbose = true;
+		setDefinedOption(() -> options.verbose = true);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions showSetup() {
-		options.showSetup = true;
+		setDefinedOption(() -> options.showSetup = true);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions clean() {
-		options.clean = true;
+		setDefinedOption(() -> options.clean = true);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions testOnly() {
-		options.testOnly = true;
+		setDefinedOption(() -> options.testOnly = true);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions noTests() {
-		options.noTests = true;
+		setDefinedOption(() -> options.noTests = true);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions log() {
-		options.log = true;
+		setDefinedOption(() -> options.log = true);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions logFile(String pLogFile) {
-		options.logFile = pLogFile;
+		setDefinedOption(() -> options.logFile = pLogFile);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions maxErrs(int pMaxErrs) {
-		options.maxErrs = pMaxErrs;
+		setDefinedOption(() -> options.maxErrs = pMaxErrs);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions maxWarns(int pMaxWarns) {
-		options.maxWarns = pMaxWarns;
+		setDefinedOption(() -> options.maxWarns = pMaxWarns);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions port(int pPort) {
-		options.port = pPort;
+		setDefinedOption(() -> options.port = pPort);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions testCatalog(File pTestCatalog) {
-		options.testCatalog = pTestCatalog;
+		setDefinedOption(() -> options.testCatalog = pTestCatalog);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions performanceKey(String pPerformanceKey) {
-		options.performanceKey = pPerformanceKey;
+		setDefinedOption(() -> options.performanceKey = pPerformanceKey);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions performanceReport(File pPerformanceReport) {
-		options.performanceReport = pPerformanceReport;
+		setDefinedOption(() -> options.performanceReport = pPerformanceReport);
 		return this;
+	}
+
+	@Override
+	public Map<String, N4JSCmdLineParser.ParsedOption> getDefinedOptions() {
+		return definedOptions;
+	}
+
+	/**
+	 * Since the options are not read by a parser (instead just set in this class), the definedOptions need to be
+	 * reconstructed using the actual option variables and annotations.
+	 */
+	private boolean setDefinedOption(Runnable setter) {
+		int definedOptionsCount = definedOptions.size();
+
+		Map<Field, Object> optionFieldValues = new LinkedHashMap<>();
+		try {
+			Field[] fields = options.getClass().getDeclaredFields();
+
+			for (Field field : fields) {
+				Object currentValue = field.get(options);
+				if (currentValue != null && currentValue != Boolean.FALSE) {
+					Option annotationOption = field.getAnnotation(Option.class);
+					if (annotationOption != null) {
+
+						optionFieldValues.put(field, currentValue);
+					}
+				}
+			}
+
+			setter.run();
+
+			for (Field field : fields) {
+				Object currentValue = field.get(options);
+				if (currentValue != null && currentValue != Boolean.FALSE) {
+					Option annotationOption = field.getAnnotation(Option.class);
+					if (annotationOption != null) {
+
+						Object lastValue = optionFieldValues.get(field);
+						if (!Objects.equal(lastValue, currentValue)) {
+							NamedOptionDef nod = new NamedOptionDef(annotationOption);
+							String lastValueStr = lastValue == null ? "" : String.valueOf(lastValue);
+							String currentValueStr = String.valueOf(currentValue);
+
+							N4JSCmdLineParser.ParsedOption pOption = new N4JSCmdLineParser.ParsedOption(
+									nod, lastValueStr, currentValueStr);
+
+							definedOptions.put(nod.name(), pOption);
+						}
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return definedOptionsCount < definedOptions.size();
 	}
 }

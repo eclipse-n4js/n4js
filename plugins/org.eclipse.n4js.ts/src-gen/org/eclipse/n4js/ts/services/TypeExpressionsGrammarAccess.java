@@ -213,7 +213,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*
 		public Group getGroup_0_4() { return cGroup_0_4; }
 		
-		//{ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']'
+		//({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')
 		public Group getGroup_0_4_0() { return cGroup_0_4_0; }
 		
 		//{ParameterizedTypeRef.typeArgs+=current}
@@ -259,7 +259,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*
 		public Group getGroup_1_6() { return cGroup_1_6; }
 		
-		//{ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']'
+		//({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')
 		public Group getGroup_1_6_0() { return cGroup_1_6_0; }
 		
 		//{ParameterizedTypeRef.typeArgs+=current}
@@ -283,7 +283,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*
 		public Group getGroup_2_1() { return cGroup_2_1; }
 		
-		//{ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']'
+		//({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')
 		public Group getGroup_2_1_0() { return cGroup_2_1_0; }
 		
 		//{ParameterizedTypeRef.typeArgs+=current}
@@ -391,7 +391,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//(ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//ParameterizedTypeRef | ThisTypeRef
+		//(ParameterizedTypeRef | ThisTypeRef)
 		public Alternatives getAlternatives_0_0() { return cAlternatives_0_0; }
 		
 		//ParameterizedTypeRef
@@ -688,7 +688,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>'
+		//({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{FunctionTypeExpression}
@@ -779,13 +779,13 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//'...'
 		public Keyword getVariadicFullStopFullStopFullStopKeyword_0_0() { return cVariadicFullStopFullStopFullStopKeyword_0_0; }
 		
-		//=> (name=BindingIdentifier<Yield=false> -> ColonSepTypeRef) | typeRef=TypeRef
+		//(=> (name=BindingIdentifier<Yield=false> -> ColonSepTypeRef) | typeRef=TypeRef)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//=> (name=BindingIdentifier<Yield=false> -> ColonSepTypeRef)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//name=BindingIdentifier<Yield=false> -> ColonSepTypeRef
+		//(name=BindingIdentifier<Yield=false> -> ColonSepTypeRef)
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 		
 		//name=BindingIdentifier<Yield=false>
@@ -1018,7 +1018,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//(TypeReference | {VersionedParameterizedTypeRef} TypeReference VersionRequest) -> TypeArguments?
 		public Group getGroup() { return cGroup; }
 		
-		//TypeReference | {VersionedParameterizedTypeRef} TypeReference VersionRequest
+		//(TypeReference | {VersionedParameterizedTypeRef} TypeReference VersionRequest)
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
 		//TypeReference
@@ -1069,8 +1069,8 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//TStructMemberList)?
 		public Group getGroup() { return cGroup; }
 		
-		//definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference | {VersionedParameterizedTypeRefStructural}
-		//definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference VersionRequest
+		//(definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference | {VersionedParameterizedTypeRefStructural}
+		//definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference VersionRequest)
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
 		//definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
@@ -1148,7 +1148,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//'['
 		public Keyword getIterableTypeExpressionLeftSquareBracketKeyword_0_0() { return cIterableTypeExpressionLeftSquareBracketKeyword_0_0; }
 		
-		//typeArgs+=EmptyIterableTypeExpressionTail | typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'
+		//(typeArgs+=EmptyIterableTypeExpressionTail | typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']')
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//typeArgs+=EmptyIterableTypeExpressionTail
@@ -1380,7 +1380,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({TStructMethod} TypeVariables? name=IdentifierName '(')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{TStructMethod} TypeVariables? name=IdentifierName '('
+		//({TStructMethod} TypeVariables? name=IdentifierName '(')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{TStructMethod}
@@ -1579,7 +1579,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({TStructGetter} 'get' name=IdentifierName)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{TStructGetter} 'get' name=IdentifierName
+		//({TStructGetter} 'get' name=IdentifierName)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{TStructGetter}
@@ -1638,7 +1638,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({TStructSetter} 'set' name=IdentifierName)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{TStructSetter} 'set' name=IdentifierName
+		//({TStructSetter} 'set' name=IdentifierName)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{TStructSetter}
@@ -1733,7 +1733,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//{TypeTypeRef}
 		public Action getTypeTypeRefAction_0() { return cTypeTypeRefAction_0; }
 		
-		//'type' | constructorRef?='constructor'
+		//('type' | constructorRef?='constructor')
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//'type'
@@ -1851,7 +1851,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({Wildcard} '?')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{Wildcard} '?'
+		//({Wildcard} '?')
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{Wildcard}

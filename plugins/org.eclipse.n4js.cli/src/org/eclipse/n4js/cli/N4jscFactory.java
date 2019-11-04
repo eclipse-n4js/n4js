@@ -30,45 +30,50 @@ public class N4jscFactory {
 	}
 
 	/** Creates a new injector */
-	public static Injector createInjector() {
-		return INSTANCE.internalCreateInjector();
+	public static Injector getOrCreateInjector() {
+		return INSTANCE.internalGetOrCreateInjector();
 	}
 
 	/** @return the {@link N4JSLanguageServerImpl} instance from the given injector */
-	public static N4JSLanguageServerImpl getLanguageServer(Injector injector) {
-		return INSTANCE.internalGetLanguageServer(injector);
+	public static N4JSLanguageServerImpl getLanguageServer() {
+		return INSTANCE.internalGetLanguageServer();
 	}
 
 	/** @return the {@link N4jscLanguageClient} instance from the given injector */
-	public static N4jscLanguageClient getLanguageClient(Injector injector) {
-		return INSTANCE.internalGetLanguageClient(injector);
+	public static N4jscLanguageClient getLanguageClient() {
+		return INSTANCE.internalGetLanguageClient();
 	}
 
 	/** @return the {@link N4JSWorkspaceManager} instance from the given injector */
-	public static N4JSWorkspaceManager getWorkspaceManager(Injector injector) {
-		return INSTANCE.internalGetWorkspaceManager(injector);
+	public static N4JSWorkspaceManager getWorkspaceManager() {
+		return INSTANCE.internalGetWorkspaceManager();
 	}
+
+	Injector injector;
 
 	N4jscBackend internalCreateBackend() throws Exception {
 		return new N4jscBackend();
 	}
 
-	Injector internalCreateInjector() {
-		return new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
+	Injector internalGetOrCreateInjector() {
+		if (injector == null) {
+			injector = new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
+		}
+		return injector;
 	}
 
-	N4JSLanguageServerImpl internalGetLanguageServer(Injector injector) {
-		N4JSLanguageServerImpl languageServer = injector.getInstance(N4JSLanguageServerImpl.class);
+	N4JSLanguageServerImpl internalGetLanguageServer() {
+		N4JSLanguageServerImpl languageServer = internalGetOrCreateInjector().getInstance(N4JSLanguageServerImpl.class);
 		return languageServer;
 	}
 
-	N4jscLanguageClient internalGetLanguageClient(Injector injector) {
-		N4jscLanguageClient callback = injector.getInstance(N4jscLanguageClient.class);
+	N4jscLanguageClient internalGetLanguageClient() {
+		N4jscLanguageClient callback = internalGetOrCreateInjector().getInstance(N4jscLanguageClient.class);
 		return callback;
 	}
 
-	N4JSWorkspaceManager internalGetWorkspaceManager(Injector injector) {
-		N4JSWorkspaceManager workspaceManager = injector.getInstance(N4JSWorkspaceManager.class);
+	N4JSWorkspaceManager internalGetWorkspaceManager() {
+		N4JSWorkspaceManager workspaceManager = internalGetOrCreateInjector().getInstance(N4JSWorkspaceManager.class);
 		return workspaceManager;
 	}
 }

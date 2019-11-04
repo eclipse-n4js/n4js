@@ -46,7 +46,7 @@
    END_SETUP
  */
 {
-	// XPECT errors --> "The project configuration contains a dependency cycle of projects [test.03] -> [test.03]." at ""test.03""
+	// TODO: GH-1500 XPECT FIXME errors --> "The project configuration contains a dependency cycle of projects [test.03] -> [test.03]." at ""test.03""
 	"name": "test.03",
 	"version": "0.0.1",
 	"dependencies": {

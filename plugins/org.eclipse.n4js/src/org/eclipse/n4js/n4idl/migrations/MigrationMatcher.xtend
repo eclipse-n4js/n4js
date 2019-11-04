@@ -33,9 +33,6 @@ class MigrationMatcher {
 	
 	/**
 	 * Initializes a new {@link MigrationMatcher}.
-	 * 
-	 * @param match The first migration match or {@code null} for an empty matcher.
-	 * @param distance The initially best distance (for empty matcher, pass {@link TypeDistanceComputer#MAX_DISTANCE}).
 	 */
 	private new() {
 		this.bestDistance = TypeDistanceComputer.MAX_DISTANCE;
@@ -71,7 +68,7 @@ class MigrationMatcher {
 	/**
 	 * Returns the best distance this matcher has matched.
 	 * 
-	 * {@link #allMatches} can be assumed to be of this distance.
+	 * {@link #getAllMatches} can be assumed to be of this distance.
 	 */
 	public def double getDistance() {
 		return this.bestDistance;
@@ -80,7 +77,7 @@ class MigrationMatcher {
 	/** 
 	 * Returns all matches matched by this {@link MigrationMatcher}.
 	 * 
-	 * All returned candidates can be assumed to be of the same {@link #distance}.
+	 * All returned candidates can be assumed to be of the same {@link #getDistance}.
 	 */
 	public def List<TMigration> getAllMatches() {
 		return this.matches.toList;

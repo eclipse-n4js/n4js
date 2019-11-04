@@ -13,7 +13,6 @@ package org.eclipse.n4js.parser;
 import java.util.ArrayList;
 
 import org.antlr.runtime.Token;
-
 import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser;
 
 /**
@@ -40,7 +39,7 @@ public class JSTokenList extends ArrayList<Token> {
 		int type = tok.getType();
 		if (type == InternalN4JSParser.EqualsSignGreaterThanSign) {
 			// The arrow expression may not follow a semicolon thus we promote those here
-			// to he default channel if they precede the arrow => operator
+			// to the default channel if they precede the arrow => operator
 			for (int i = size() - 2; i >= 0; i--) {
 				Token prev = get(i);
 				if (prev.getChannel() == Token.HIDDEN_CHANNEL) {

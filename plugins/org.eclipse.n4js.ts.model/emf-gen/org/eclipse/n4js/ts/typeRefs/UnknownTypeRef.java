@@ -38,6 +38,14 @@ public interface UnknownTypeRef extends TypeRef {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isUnknown();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 * <!-- end-model-doc -->

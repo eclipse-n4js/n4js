@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.ide.server;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.ide.server.BuildManager.Buildable;
-import org.eclipse.xtext.ide.server.WorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.XBuildManager;
+import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.Issue;
@@ -25,6 +25,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -33,17 +34,30 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 // TODO: Xtext - make WorkspaceManager a @Singleton?
 @Singleton
-public class N4JSWorkspaceManager extends WorkspaceManager {
+public class N4JSWorkspaceManager extends XWorkspaceManager {
 
 	private Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
+	private N4JSBuildManager accessibleBuildManager;
 
 	@Override
 	public void initialize(URI pBaseDir, Procedure2<? super URI, ? super Iterable<Issue>> pIssueAcceptor,
 			CancelIndicator cancelIndicator) {
 
+		// Stopwatch sw = Stopwatch.createStarted();
 		super.initialize(pBaseDir, pIssueAcceptor, cancelIndicator);
-
 		this.issueAcceptor = pIssueAcceptor;
+		// System.out.println("Workspace.initialize took: " + sw);
+	}
+
+	@Override
+	@Inject
+	public void setBuildManager(XBuildManager buildManager) {
+		super.setBuildManager(buildManager);
+		this.accessibleBuildManager = (N4JSBuildManager) buildManager;
+	}
+
+	N4JSBuildManager getBuildManager() {
+		return accessibleBuildManager;
 	}
 
 	/**
@@ -52,11 +66,11 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 	 * This method will clear those issues that relate to a non-source resource.
 	 */
 	@Override
-	public Buildable didClose(URI uri) {
+	public XBuildable didClose(URI uri) {
 		IProjectConfig projectConfig = getWorkspaceConfig().findProjectContaining(uri);
-		final Buildable closedBuildable = super.didClose(uri);
+		final XBuildable closedBuildable = super.didClose(uri);
 
-		Buildable cleaningBuildable = new Buildable() {
+		XBuildable cleaningBuildable = new XBuildable() {
 			@Override
 			public List<Delta> build(CancelIndicator cancelIndicator) {
 				List<Delta> build = closedBuildable.build(cancelIndicator);
@@ -76,18 +90,7 @@ public class N4JSWorkspaceManager extends WorkspaceManager {
 	 * @return the base directory of the current workspace
 	 */
 	public URI getBaseDir() {
-		try {
-			Field field = WorkspaceManager.class.getDeclaredField("baseDir");
-			field.setAccessible(true);
-			Object value = field.get(this);
-
-			URI baseDir = (URI) value;
-			return baseDir;
-		} catch (Exception e) {
-			// ignore
-			e.printStackTrace();
-		}
-		return null;
+		return ReflectionUtils.getFieldValue(XWorkspaceManager.class, this, "baseDir");
 	}
 
 	/**

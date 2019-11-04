@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+function CoalescingExpression() {
+	// CoalescingExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* CoalescingExpression XPECT allEdges ---
+		"start" --> 'expression',
+		'expression' --> 'expression' ?? 'default',
+		'expression' -IfNullish-> 'default',
+		'default' --> 'expression' ?? 'default',
+		'expression' ?? 'default' --> "end"
+	--- */
+	/* CoalescingExpression XPECT allBranches ---
+	    B0: "start" -> 'expression'[B1|B2],
+	    B1: [B0] -> 'default' -> [B3],
+		B2: [B0] -> [B3],
+		B3: [B1|B2]'expression' ?? 'default' -> "end"
+	--- */
+	/* CoalescingExpression XPECT allPaths ---
+		"start" -> 'expression' -> 'default' -> 'expression' ?? 'default' -> "end",
+		"start" -> 'expression' -> 'expression' ?? 'default' -> "end"
+	--- */
+	// CoalescingExpression XPECT path from '"start"' to '"end"' -->
+	// CoalescingExpression XPECT path from '"start"' to '"end"' notVia 'default' -->
+	// CoalescingExpression XPECT path from '"start"' notTo '"end"' notVia 'expression' -->
+	/* CoalescingExpression backward XPECT allPaths direction 'Backward' ---
+		"end" -> 'expression' ?? 'default' -> 'default' -> 'expression' -> "start",
+		"end" -> 'expression' ?? 'default' -> 'expression' -> "start"
+	--- */
+	// CoalescingExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// CoalescingExpression XPECT succs at '"start"' --> 'expression'
+	// CoalescingExpression XPECT succs at 'expression' --> 'default', 'expression' ?? 'default'
+	// CoalescingExpression XPECT succs at 'default' --> 'expression' ?? 'default'
+	"start";
+	'expression' ?? 'default';
+	"end";
+}

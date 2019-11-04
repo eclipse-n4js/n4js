@@ -930,6 +930,15 @@ public interface N4JSFactory extends EFactory {
 	BinaryLogicalExpression createBinaryLogicalExpression();
 
 	/**
+	 * Returns a new object of class '<em>Coalesce Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Coalesce Expression</em>'.
+	 * @generated
+	 */
+	CoalesceExpression createCoalesceExpression();
+
+	/**
 	 * Returns a new object of class '<em>Conditional Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

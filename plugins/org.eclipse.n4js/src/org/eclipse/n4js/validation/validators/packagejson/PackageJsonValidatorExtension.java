@@ -70,7 +70,6 @@ import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement;
 import org.eclipse.n4js.semver.Semver.LocalPathVersionRequirement;
@@ -107,7 +106,7 @@ import com.google.inject.Singleton;
  * {@link N4JSProjectSetupJsonValidatorExtension}.
  */
 @Singleton
-public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtension {
+public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorExtension {
 
 	/** key for memoization of the n4js.sources section of a package.json. See #getSourceContainers(). */
 	private static final String N4JS_SOURCE_CONTAINERS = "N4JS_SOURCE_CONTAINERS";
@@ -115,16 +114,7 @@ public class PackageJsonValidatorExtension extends AbstractJSONValidatorExtensio
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
-	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
-	@Inject
 	private SemverHelper semverHelper;
-
-	@Override
-	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
-		// this validator extension only applies to package.json files
-		return fileExtensionCalculator.getFilenameWithoutXpectExtension(eObject.eResource().getURI())
-				.equals(IN4JSProject.PACKAGE_JSON);
-	}
 
 	/**
 	 * Validates the initial structure of a package.json {@link JSONDocument}.

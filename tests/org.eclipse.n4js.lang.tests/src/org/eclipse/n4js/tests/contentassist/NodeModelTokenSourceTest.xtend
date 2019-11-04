@@ -313,7 +313,7 @@ class NodeModelTokenSourceTest implements Procedures.Procedure1<Integer> {
 		
 		Assert.assertTrue(curlies.remove(grammarAccess.JSXExpressionAccess.rightCurlyBracketKeyword_2))
 		Assert.assertTrue(curlies.remove(grammarAccess.JSXSpreadAttributeAccess.rightCurlyBracketKeyword_3))
-		Assert.assertTrue(curlies.remove(grammarAccess.JSXPropertyAttributeAccess.rightCurlyBracketKeyword_1_1_1_2))
+		Assert.assertTrue(curlies.remove(grammarAccess.JSXPropertyAttributeAccess.rightCurlyBracketKeyword_1_1_3_2))
 
 		for (c : curlies) {
 			println(new GrammarElementTitleSwitch().showRule.showAssignments.showQualified.apply(c))

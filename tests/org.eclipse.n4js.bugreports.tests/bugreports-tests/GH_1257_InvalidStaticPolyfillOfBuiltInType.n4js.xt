@@ -18,7 +18,7 @@
 export public class Date extends Date {
 	
 	public foo() {
-		// XPECT type of 'super.hasOwnProperty' --> {function(string):boolean}
+		// XPECT type of 'super.hasOwnProperty' --> {function(union{string,symbol}):boolean}
 		super.hasOwnProperty("dummy");
 	}
 }

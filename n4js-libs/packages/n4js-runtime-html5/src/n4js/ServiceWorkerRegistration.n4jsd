@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {ServiceWorker} from "ServiceWorker";
+
+/**
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration
+ */
+export external public interface ~ServiceWorkerRegistration extends EventTarget {
+    public get scope(): string;
+    public get installing(): ServiceWorker;
+    public get waiting(): ServiceWorker;
+    public get active(): ServiceWorker;
+    public get navigationPreload(): Object+; // @see https://developer.mozilla.org/en-US/docs/Web/API/NavigationPreloadManager
+    public get pushManager(): Object+; // @see https://developer.mozilla.org/en-US/docs/Web/API/PushManager
+    
+    public async getNotifications(options: ~Object with { tag: string }=): Notification[];
+    public async showNotification(title: string, options: Object=): void;
+    public async update(): ServiceWorkerRegistration;
+    public async unregister(): boolean;
+}

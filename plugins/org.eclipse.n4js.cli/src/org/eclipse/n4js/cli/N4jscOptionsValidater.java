@@ -18,15 +18,17 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscOptions.GoalRequirements;
 
+import com.google.common.base.Strings;
+
 /**
- *
+ * Validates the given n4jsc.jar options
  */
 public class N4jscOptionsValidater {
 
-	/**
-	 */
+	/** Entry function for validator */
 	static public N4jscExitCode validate(N4jscOptions options) throws N4jscException {
 
 		validateGoalDefinitions(options);
@@ -79,13 +81,16 @@ public class N4jscOptionsValidater {
 		if (options.getTestCatalog() != null) {
 			validateTestCatalogFile(options);
 		}
+
+		if (options.getPerformanceKey() != null || options.getPerformanceReport() != null) {
+			validatePerformanceReport(options);
+		}
 	}
 
 	private static void validateGoalDefinitions(N4jscOptions options) throws N4jscException {
 		Map<String, GoalRequirements> nameFieldMap = options.getOptionNameToGoalRequirementMap();
 
-		for (N4JSCmdLineParser.ParsedOption po : options.getDefinedOptions()) {
-			String name = po.optionDef.name();
+		for (String name : options.getDefinedOptions().keySet()) {
 			if (nameFieldMap.containsKey(name)) {
 				GoalRequirements goalRequirements = nameFieldMap.get(name);
 				List<N4jscGoal> goals = Arrays.asList(goalRequirements.goals());
@@ -102,31 +107,35 @@ public class N4jscOptionsValidater {
 
 	/** Make sure the srcFiles are valid */
 	private static void validateFilesAndDirectories(N4jscOptions options) throws N4jscException {
-		if (options.getSrcFiles().isEmpty()) {
-			String msg = "n4js file(s) or project(s) missing";
-			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
+		if (options.getDirs().isEmpty()) {
+			String msg = "n4js directory(s) missing";
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
-		if (options.getSrcFiles().size() > 1) {
-			String msg = "Multiple project root directories not supported yet.";
-			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
+		if (options.getDirs().size() > 1) {
+			String msg = "Multiple project directories not supported yet.";
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
 
 		StringJoiner notExisting = new StringJoiner(",");
 		StringJoiner neitherFileNorDir = new StringJoiner(",");
-		for (File srcFile : options.getSrcFiles()) {
-			if (!srcFile.exists()) {
-				notExisting.add(srcFile.toString());
-			} else if (!srcFile.isFile() && !srcFile.isDirectory()) {
-				neitherFileNorDir.add(srcFile.toString());
+		for (File dir : options.getDirs()) {
+			if (!dir.exists()) {
+				notExisting.add(dir.toString());
+			} else if (dir.isDirectory()) {
+				continue;
+			} else if (dir.isFile() && N4JSGlobals.PACKAGE_JSON.equals(dir.getName())) {
+				continue;
+			} else {
+				neitherFileNorDir.add(dir.toString());
 			}
 		}
 		if (!notExisting.toString().isEmpty()) {
-			String msg = "file(s) do not exist: " + notExisting.toString();
-			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
+			String msg = "directory(s) do not exist: " + notExisting.toString();
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
 		if (!neitherFileNorDir.toString().isEmpty()) {
-			String msg = "file(s) are neither a file nor a directory: " + neitherFileNorDir.toString();
-			throw new N4jscException(N4jscExitCode.ARGUMENT_FILES_INVALID, msg);
+			String msg = "directory(s) are neither directory nor a package.json file: " + neitherFileNorDir.toString();
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
 	}
 
@@ -160,4 +169,10 @@ public class N4jscOptionsValidater {
 		}
 	}
 
+	private static void validatePerformanceReport(N4jscOptions options) throws N4jscException {
+		if (options.getPerformanceReport() != null && Strings.isNullOrEmpty(options.getPerformanceKey())) {
+			String msg = "Missing performance key.";
+			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
+		}
+	}
 }
