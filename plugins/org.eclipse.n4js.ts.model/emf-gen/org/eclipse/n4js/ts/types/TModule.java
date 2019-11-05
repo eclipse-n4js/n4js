@@ -56,7 +56,10 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * The qualified name of the module, which is derived from the file name.
+	 * The qualified name of the module, which is derived from the file path. Includes the module's
+	 * file name (without extension) and the names of all ancestor folders up to, excluding the
+	 * containing project's source folder. The containing project's name is also not included,
+	 * but can be retrieved via {@link #getProjectName()}.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Qualified Name</em>' attribute.
 	 * @see #setQualifiedName(String)
@@ -459,12 +462,13 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns the qualified module name as a file path, using '/' as a segment delimiter. No file extension is added,
-	 * though.
+	 * Returns this module's module specifier as it would appear, for example, in the string literal at the end of an
+	 * import statement.
 	 * <p>
-	 * TODO Since we changed the delimiter for our internal qualified names from '.' to '/', this is no longer required.
-	 * However, qualified names will soon be revisited in IDE-2227 and this might change again, so we keep this method.
-	 * Also see method <code>QualifiedNameComputer#getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(Type)</code>.
+	 * Since we changed the delimiter for our internal qualified names from '.' to '/', this simply returns the same
+	 * value as {@link #getQualifiedName()}. However, this getter is retained for the time being to let client code
+	 * differentiate between internal use (qualified name, e.g. in the Xtext index) and Javascript context (module
+	 * specifier, e.g. in import statements).
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Module Specifier</em>' attribute.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ModuleSpecifier()
