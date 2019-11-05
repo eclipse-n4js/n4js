@@ -47,7 +47,6 @@ import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
-import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
@@ -80,13 +79,13 @@ import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.ContainerType;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
@@ -289,35 +288,25 @@ import com.google.inject.Inject;
 			return anyTypeRef(G);
 		}
 
-		private boolean unaryExpressionContainsNumber(Expression expression) {
-			// TODO: Also recognize '(3 + 4)' as number.
-			if (!(expression instanceof UnaryExpression))
-				return false;
-			UnaryExpression ue = (UnaryExpression) expression;
-			Expression exp = ue.getExpression();
-			if (exp instanceof IdentifierRef) {
-				IdentifiableElement idfElem = ((IdentifierRef) exp).getId();
-				if (idfElem instanceof VariableDeclaration) {
-					Expression innerExp = ((VariableDeclaration) idfElem).getExpression();
-					return innerExp instanceof IntLiteral;
-				}
-			}
-
-			return false;
-		}
-
 		@Override
 		public TypeRef caseUnaryExpression(UnaryExpression e) {
+			Expression innerExpression = e.getExpression();
+			TypeRef typeRef = ts.tau(innerExpression);
+
+			if (innerExpression instanceof UnaryExpression) {
+				typeRef = ts.tau(((UnaryExpression) innerExpression).getExpression());
+			}
+
+			boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
+
 			EObject parent = e.eContainer();
 			if (parent instanceof UnaryExpression) {
-				UnaryExpression ue = (UnaryExpression) parent;
-				parent = ue.eContainer();
+				parent = ((UnaryExpression) parent).eContainer();
 			}
+
 			if (parent instanceof RelationalExpression) {
 				RelationalExpression re = (RelationalExpression) parent;
 				boolean isInstanceOf = re.getOp().equals(RelationalOperator.INSTANCEOF);
-				boolean isNumber = unaryExpressionContainsNumber(re.getRhs());
-				Expression rhs = re.getRhs();
 
 				if (isInstanceOf) {
 					return isNumber ? numberTypeRef(G) : anyTypeRef(G);
@@ -387,7 +376,14 @@ import com.google.inject.Inject;
 				if (rhs instanceof UnaryExpression) {
 					UnaryExpression ue = (UnaryExpression) rhs;
 					boolean isInv = ue.getOp().equals(UnaryOperator.INV);
-					boolean isNumber = unaryExpressionContainsNumber(ue);
+					TypeRef typeRef = ts.tau(ue.getExpression());
+
+					Expression innerExpression = ue.getExpression();
+					if (innerExpression instanceof UnaryExpression) {
+						typeRef = ts.tau(((UnaryExpression) innerExpression).getExpression());
+					}
+
+					boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
 					if (isInv && !isNumber) {
 						return anyTypeRef(G);
 					}
