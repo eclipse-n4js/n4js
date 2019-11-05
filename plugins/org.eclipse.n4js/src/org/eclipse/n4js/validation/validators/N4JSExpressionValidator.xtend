@@ -701,7 +701,14 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			val rhs = relationalExpression.rhs;
 			if (rhs instanceof UnaryExpression) {
 				if ((rhs as UnaryExpression).getOp().equals(UnaryOperator.INV)) {
-					if (!RuleEnvironmentExtensions.isNumeric(G, typeRef)) {
+					val innerExpression = (rhs as UnaryExpression).expression;
+					var rhsTypeRef = ts.tau(innerExpression);
+					
+					if (innerExpression instanceof UnaryExpression) {
+						rhsTypeRef = ts.tau((innerExpression as UnaryExpression).expression);
+					}
+					
+					if (!RuleEnvironmentExtensions.isNumeric(G, rhsTypeRef)) {
 						val message = IssueCodes.getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL();
 						addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
 							IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL);	
