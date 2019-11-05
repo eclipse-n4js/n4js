@@ -25,7 +25,7 @@ var c : C;
 // base cases
 
 
-// XPECT type of '[ b, c ]' --> Array<union{B,C}>
+// XPECT type of '[ b, c ]' --> Array<B>
 var v01 = [ b, c ];
 
 // XPECT type of '[ b, c ]' --> Array<B>
@@ -34,7 +34,7 @@ var v02 : Array<B> = [ b, c ];
 // XPECT type of '[ b, c ]' --> Array<A>
 var v03 : Array<A> = [ b, c ];
 
-// XPECT type of '[ b, c ]' --> Array<union{B,C}>
+// XPECT type of '[ b, c ]' --> Array<B>
 var v04 : Array<? extends B> = [ b, c ];
 
 
@@ -42,7 +42,7 @@ var v04 : Array<? extends B> = [ b, c ];
 // with padding
 
 
-// XPECT type of '[ ,,, b,,, c,,, ]' --> Array<union{B,C}>
+// XPECT type of '[ ,,, b,,, c,,, ]' --> Array<B>
 var v11 = [ ,,, b,,, c,,, ];
 
 // XPECT type of '[ ,,, b,,, c,,, ]' --> Array<B>
@@ -51,8 +51,55 @@ var v12 : Array<B> = [ ,,, b,,, c,,, ];
 // XPECT type of '[ ,,, b,,, c,,, ]' --> Array<A>
 var v13 : Array<A> = [ ,,, b,,, c,,, ];
 
-// XPECT type of '[ ,,, b,,, c,,, ]' --> Array<union{B,C}>
+// XPECT type of '[ ,,, b,,, c,,, ]' --> Array<B>
 var v14 : Array<? extends B> = [ ,,, b,,, c,,, ];
+
+
+// ------------------------------------------------------------------
+// with spread of a literal
+
+// XPECT type of '[ b, ...[c] ]' --> Array<B>
+var v21 = [ b, ...[c] ];
+
+// XPECT type of '[ b, ...[c] ]' --> Array<B>
+var v22 : Array<B> = [ b, ...[c] ];
+
+// XPECT type of '[ b, ...[c] ]' --> Array<A>
+var v23 : Array<A> = [ b, ...[c] ];
+
+// XPECT type of '[ b, ...[c] ]' --> Array<B>
+var v24 : Array<? extends B> = [ b, ...[c] ];
+
+
+// ------------------------------------------------------------------
+// with spread of some other expression
+
+function getArrOfC(): C[] { return null; }
+
+class ~MyIterable<T> {
+	public [Symbol.iterator](): Iterator<T> { return null; }
+}
+let myIterableOfC: MyIterable<C>;
+
+// XPECT type of '[ b, ...getArrOfC() ]' --> Array<B>
+var v31a = [ b, ...getArrOfC() ];
+// XPECT type of '[ b, ...myIterableOfC ]' --> Array<B>
+var v31b = [ b, ...myIterableOfC ];
+
+// XPECT type of '[ b, ...getArrOfC() ]' --> Array<B>
+var v32a : Array<B> = [ b, ...getArrOfC() ];
+// XPECT type of '[ b, ...myIterableOfC ]' --> Array<B>
+var v32b : Array<B> = [ b, ...myIterableOfC ];
+
+// XPECT type of '[ b, ...getArrOfC() ]' --> Array<A>
+var v33a : Array<A> = [ b, ...getArrOfC() ];
+// XPECT type of '[ b, ...myIterableOfC ]' --> Array<A>
+var v33b : Array<A> = [ b, ...myIterableOfC ];
+
+// XPECT type of '[ b, ...getArrOfC() ]' --> Array<B>
+var v34a : Array<? extends B> = [ b, ...getArrOfC() ];
+// XPECT type of '[ b, ...myIterableOfC ]' --> Array<B>
+var v34b : Array<? extends B> = [ b, ...myIterableOfC ];
 
 
 // ------------------------------------------------------------------
@@ -60,16 +107,16 @@ var v14 : Array<? extends B> = [ ,,, b,,, c,,, ];
 
 
 // XPECT type of '[]' --> Array<any>
-var v21 = [];
+var v41 = [];
 
 // XPECT type of '[]' --> Array<B>
-var v22 : Array<B> = [];
+var v42 : Array<B> = [];
 
 // XPECT type of '[]' --> Array<any>
-var v23 : Array<?> = [];
+var v43 : Array<?> = [];
 
 // XPECT type of '[]' --> Array<B>
-var v24 : Array<? extends B> = [];
+var v44 : Array<? extends B> = [];
 
 
 // ------------------------------------------------------------------
@@ -78,17 +125,17 @@ var v24 : Array<? extends B> = [];
 // the special handling applies only to IterableN!)
 
 
-// XPECT type of '[ b, c ]' --> Array<union{B,C}>
-var v31 = [ b, c ];
+// XPECT type of '[ b, c ]' --> Array<B>
+var v51 = [ b, c ];
 
-// XPECT type of '[ b, c ]' --> Array<union{B,C}>
-var v32 : Iterable<B> = [ b, c ];
+// XPECT type of '[ b, c ]' --> Array<B>
+var v52 : Iterable<B> = [ b, c ];
 
-// XPECT type of '[ b, c ]' --> Array<union{B,C}>
-var v33 : Iterable<A> = [ b, c ];
+// XPECT type of '[ b, c ]' --> Array<B>
+var v53 : Iterable<A> = [ b, c ];
 
-// XPECT type of '[ b, c ]' --> Array<union{B,C}>
-var v34 : Iterable<? extends B> = [ b, c ];
+// XPECT type of '[ b, c ]' --> Array<B>
+var v54 : Iterable<? extends B> = [ b, c ];
 
 
 // ------------------------------------------------------------------

@@ -1,0 +1,153 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Formatting
+:experimental:
+:find:
+
+WARNING: This chapter may be outdated.
+
+
+[[sec:FmtObjective]]
+[.language-n4js]
+==  Objective
+
+Writing textual code has many degrees of freedom. The resulting layout differs between authors. Carefully placing whitespace and newlines can increase the readability. Some handling of whitespace can be automated. This chapter describes the techniques used to automate the formatting to some degree.
+
+Formatting N4js source code ensures a consistent style. It takes care of:
+
+* surrounding language constructs with white space to improve readability
+* indenting logically grouped elements
+* wrapping long lines of code and comments
+* inserting semicolons, which would otherwise be automatically inserted (ASI)
+* formatting documentation
+
+Formatting will never alter the semantics of the code and it will not reorganize it.
+
+[[sec:FmtFormatting_Comments]]
+===  Formatting Comments
+
+N4js distinguishes five different types of comments _single line comments_, _not-indented single line comments_, _multiline comments_, _fixed multiline comments_ and _Jsdoc style multiline comments._
+
+Single line comments start with `//`  and include all characters until the end of line. They usually will be indented and wrapped if they exceed the maximum line length unless they start immediately at the first column. Single line comments starting at position 0 are called _not-indented single line comments_.
+
+Multiline comments start with ``pass:[/*]``  and span all character including line breaks up the the end given by `pass:[*]/` . The three variants are distinguished by the third and fourth character:
+
+* Comments starting with ``/pass:[*-]``  are always fixed multiline comments.
+* Comments starting with `pass:[/**]`  and following any other character but `pass:[*]`  are Jsdoc style multiline comments. (E.g. `pass:[/**+]`  start Jsdoc but `pass:[/***]`  does not.)
+* All others starting with `pass:[/*]`  are ordinary multiline comments.
+
+_Not-indented single line comments_ and _fixed multiline comments_ will always remain as they are. Usually they are used to comment out code sections.
+
+[[sec:FmtArchitecture]]
+[.language-n4js]
+==  Architecture
+
+Formatting mainly takes place in polymorphic dispatch methods `format` in class `N4JSFormatter`. Some language features are formatted with an entry-point using a super-class. This is mainly the case for structures that are sufficiently similar. E.g. `format( FunctionOrFieldAccessor )` is responsible for getter, setter, methods, functions, ….
+
+Some common source-code formattings are grouped by `configureXY()` methods. They get called from the `format` methods for similar code structures, c.f. `configureAnnotations`
+
+Since we do not support formatting of the TypeExpression-language stand-alone, this class provides only one format-method throwing an `UnsupportedOperationException` type expressions formatting is defined in class `N4JSFormatter` at the end of the file.
+
+[[fig:formatter_overview]]
+[.center]
+image::{find}images/FormatterArchitecture.svg[title="Overview of classes used for formatting"]
+
+The first entry-point for a script is `N4JSFormatter.format(Script, IFormattableDocument)`. Within this method an instance of `N4JSGenericFormatter` is created and used to configure general aspects of automatic-semicolon insertion (put a ’`;`’ where ASI took place in the parser) and handling of colons (’`:`’).
+
+[[sec:Implementation_example]]
+===  Implementation example
+
+Considering the following N4js-snippet where the return value of a function call will be casted to some type.
+
+[source]
+----
+functionCall("a","b") as MyType<string>
+----
+
+The whole line is a CastExpression comprising of an expression (`functionCall(a,b)`) and a type reference (`MyType<string>`).
+
+The `format`-dispatch method written in Xtend would look like:
+
+[source]
+----
+    def dispatch void format(CastExpression expr, extension IFormattableDocument document) {
+        expr.regionFor.keyword("as").prepend[newLines = 0; oneSpace].append[newLines = 0; oneSpace];
+        expr.expression.format;
+        expr.targetTypeRef.format;
+    }
+----
+
+In line 2 the format around the keyword `as` is specified where in line 3 and 4 the formatting of the containing elements will be dispatched.
+
+Note that `regionFor` in line 2 is a method declared in `IFormattableDocument` and used via the extension-parameter `document`. It returns an object of type `ISemanticRegionFinder`. Invoking the `keyword` method on this object returns an instance of `ISemanticRegion` which will be passed to the extension methods `prepend` and `append` following the builder pattern. Both `prepend` and `append` take a lambda expression operating on a single parameter of type `IHiddenRegionFormatter`. Inside the lambda-expression this parameter is implicitly used to invoke the methods `setNewLines(0)` and `oneSpace()`. These calls simply disallow line-breaks around as and force the whitespace to be just a single character.
+
+Possible other formatting instructions can be found in `IHiddenRegionFormatter`.
+
+Due to some bugs in auto-wrappingfootnote:[version at the time of writing is Xtext 2.12] unsuccessful attempts to wrap a line can insert unexpected new-lines in regions several lines in front of the currently treated source-line.
+
+Debugging the formatter can be cumbersome as, due to GH-12footnote:[https://github.com/eclipse/xtext-core/issues/12], the `toString()` methods if internal data-structures throw exceptions.
+
+[[sec:FmtFormatter_Implementation_Guidelines]]
+==  Formatter Implementation Guidelines
+
+* Each formatted element should only format it’s inner content. This avoids conflicting situations.
+* For each region possibly containing whitespace must be formatted.
+* Use priorities for conflict-resolutions sparse. For contradicting informations in the same region, the higher priority wins. If both information have the same priority, then an Exception will be thrown, showing two stack-traces to indicate the two code-regions being responsible for the situation.
+* For auto-wrapping a callback can be registered. In case of wrapping you can then conditionally change the format. Registering a callback implicitly sets the auto-wrap flag for the region.
+* Cover formatting with at least two different unit-tests. One having as little white-space as possible (all in one line) and the other as much white-space as possible in order to identify unformatted regions.
+
+[[sec:FmtConfiguration]]
+==  Configuration
+
+Some formattings can be customised through preference key-value pairs. Class `N4JSFormatterPreferenceKeys` acts as the entry-point to define such key-(default-)value pairs. Some preferences are inherited and are based on values stored in the default preference store (Line length, default tab width, …).
+
+Currently the preferences are not yet accessible by the end-user.
+
+[[sec:FmtUI_Integration]]
+==  UI Integration
+
+Code formatting is invoked with standard key-strokes ( kbd:[CMD]+kbd:[Shift]+kbd:[F] on Mac, kbd:[Ctrl]+kbd:[Shift]+kbd:[F] on Windows)
+
+There is no UI for preferences values yet.
+
+[[sec:FmtUnit_Testing_with_Xpect]]
+[.language-n4js]
+==  Unit Testing with Xpect
+
+With Xpect Method `formattedLines` implemented in class `org.eclipse.n4js.xpect.FormatterXpectMethod` in bundle `org.eclipse.n4js.tests.helper` the formatting can be tested. The test method requires the number of lines which should be formatted. The desired test is given as a standard multiline expectation.
+
+[source]
+----
+/* XPECT formattedLines 1 ---
+var a, b, c, d, e;
+--- */
+var a,b,c,d,e;
+----
+
+Preferences can be configured in the Xpect setup section by providing string values. Numbers and booleans are converted automatically by the preferences framework.
+
+[source]
+----
+/* XPECT_SETUP org.eclipse.n4js.tests.N4JSXpectTest
+    ResourceSet {
+        ThisFile {}
+        File "wishesImported.n4js" {  }
+    }
+    Preference "indentation" "    " {}
+    Preference "line.width.max" "100" {}
+    Preference "format.auto_wrap_in_front_of_logical_operator" "false" {}
+
+   END_SETUP
+ */
+----
+
+Tip: Full coverage of the formatting can be tested via authoring the input using spaces as indentation characters if the formatter would use tabs or vice versa. That way untouched lines are distinguishable during the test-runs

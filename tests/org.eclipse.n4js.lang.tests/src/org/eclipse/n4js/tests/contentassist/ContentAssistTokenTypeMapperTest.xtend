@@ -18,7 +18,7 @@ import org.eclipse.n4js.ui.contentassist.ContentAssistTokenTypeMapper
 import com.google.inject.Inject
 import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.junit.Test
-import org.eclipse.n4js.ui.contentassist.antlr.internal.InternalN4JSParser
+import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser
 import org.junit.Assert
 
 /**

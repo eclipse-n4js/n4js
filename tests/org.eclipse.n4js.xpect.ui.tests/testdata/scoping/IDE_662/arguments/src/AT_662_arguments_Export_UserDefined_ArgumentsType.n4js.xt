@@ -28,9 +28,11 @@
 import {ArgumentsType,XAt} from "A"
 
 /* XPECT scopeWithResource at |ArgumentsType ---
-A.A - proxy:A.n4js.xt#/1/@topLevelTypes.1,
-A.ArgumentsType - proxy:A.n4js.xt#/1/@topLevelTypes.4, A.R - proxy:A.n4js.xt#/1/@topLevelTypes.2,
-A.R2 - proxy:A.n4js.xt#/1/@topLevelTypes.3, A.XAt - proxy:A.n4js.xt#/1/@topLevelTypes.5,
+!A.A - proxy:A.n4js.xt#/1/@topLevelTypes.1,
+A.ArgumentsType - proxy:A.n4js.xt#/1/@topLevelTypes.4,
+!A.R - proxy:A.n4js.xt#/1/@topLevelTypes.2,
+!A.R2 - proxy:A.n4js.xt#/1/@topLevelTypes.3,
+A.XAt - proxy:A.n4js.xt#/1/@topLevelTypes.5,
 AT_662_arguments_Export_UserDefined_ArgumentsType.B - T, ArgumentsType - A.n4js.xt, Array - builtin_js.n4ts, B - T,
 Boolean - builtin_js.n4ts, Date - builtin_js.n4ts, Error - builtin_js.n4ts, EvalError - builtin_js.n4ts,
 Function - builtin_js.n4ts, Generator - builtin_js.n4ts, Iterable - builtin_js.n4ts,
@@ -51,7 +53,7 @@ Object - builtin_js.n4ts, Promise - builtin_js.n4ts, RangeError - builtin_js.n4t
 ReferenceError - builtin_js.n4ts, RegExp - builtin_js.n4ts, String - builtin_js.n4ts, Symbol - builtin_js.n4ts,
 SyntaxError - builtin_js.n4ts, TEMP_ReturnTypeOfMatchExec - builtin_js.n4ts, TypeError - builtin_js.n4ts, URIError - builtin_js.n4ts,
 XAt - A.n4js.xt, any - primitives_n4.n4ts, boolean - primitives_js.n4ts, console - console.n4ts,
-i18nKey - primitives_n4.n4ts, null - primitives_js.n4ts, number - primitives_js.n4ts, int - primitives_js.n4ts,
+i18nKey - primitives_n4.n4ts, number - primitives_js.n4ts, int - primitives_js.n4ts,
 pathSelector - primitives_n4.n4ts, string - primitives_js.n4ts, symbol - primitives_js.n4ts, typeName - primitives_n4.n4ts,
 undefined - primitives_js.n4ts, void - primitives_n4.n4ts
  ---*/

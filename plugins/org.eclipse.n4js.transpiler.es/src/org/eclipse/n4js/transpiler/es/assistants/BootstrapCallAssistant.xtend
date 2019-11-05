@@ -114,7 +114,7 @@ class BootstrapCallAssistant extends TransformationAssistant {
 				arguments += #[
 					_IdentRef(findSymbolTableEntryForElement(classDecl, false)),
 					__NSSafe_IdentRef(superClassSTE),
-					createDirectlyImplementedInterfacesArgument(classDecl),
+					createDirectlyImplementedOrExtendedInterfacesArgument(classDecl),
 					createMemberDefinitions(classDecl, false),
 					createMemberDefinitions(classDecl, true),
 					createN4TypeMetaInfoFactoryFunction(classDecl, superClassSTE)
@@ -177,12 +177,18 @@ class BootstrapCallAssistant extends TransformationAssistant {
 	 * </pre>
 	 */
 	def public ExpressionStatement createMakeInterfaceCall(N4InterfaceDeclaration ifcDecl) {
-
+		val extendedInterfaces = createDirectlyImplementedOrExtendedInterfacesArgument(ifcDecl);
+		val extendedInterfacesFn = if(!extendedInterfaces.elements.empty) {
+			_ArrowFunc(false, #[], extendedInterfaces)
+		} else {
+			undefinedRef()
+		};
 		return _ExprStmnt(
 			_CallExpr => [
 				target = _IdentRef( steFor_$makeInterface );
 				arguments += #[
 					_IdentRef(findSymbolTableEntryForElement(ifcDecl, false)),
+					extendedInterfacesFn,
 					createN4TypeMetaInfoFactoryFunction(ifcDecl, null)
 				].map[_Argument(it)];
 			]
@@ -219,7 +225,6 @@ class BootstrapCallAssistant extends TransformationAssistant {
 				target = _IdentRef(steFor_$makeEnum);
 				arguments += #[
 					_IdentRef(findSymbolTableEntryForElement(enumDecl, false)),
-					_BooleanLiteral(isStringBased),
 					enumLiteralArray,
 					createN4TypeMetaInfoFactoryFunction(enumDecl, null)
 				].map[_Argument(it)];
@@ -467,12 +472,12 @@ class BootstrapCallAssistant extends TransformationAssistant {
 		];
 	}
 
-	def private ArrayLiteral createDirectlyImplementedInterfacesArgument(N4ClassDeclaration typeDecl) {
-		val directlyImplementedInterfaces = typeAssistant.getSuperInterfacesSTEs(typeDecl);
+	def private ArrayLiteral createDirectlyImplementedOrExtendedInterfacesArgument(N4ClassifierDeclaration typeDecl) {
+		val interfaces = typeAssistant.getSuperInterfacesSTEs(typeDecl);
 
 		// the return value of this method is intended for default method patching; for this purpose, we have to
 		// filter out some of the directly implemented interfaces:
-		val directlyImplementedInterfacesFiltered = directlyImplementedInterfaces.filter[ifcSTE|
+		val directlyImplementedInterfacesFiltered = interfaces.filter[ifcSTE|
 			val tIfc = ifcSTE.originalTarget;
 			if(tIfc instanceof TInterface) {
 				return !tIfc.builtIn // built-in types are not defined in Api/Impl projects -> no patching required

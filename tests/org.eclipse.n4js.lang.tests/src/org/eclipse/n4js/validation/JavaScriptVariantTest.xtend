@@ -12,10 +12,10 @@ package org.eclipse.n4js.validation
 
 import com.google.inject.Inject
 import com.google.inject.Provider
-import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -100,7 +100,7 @@ class JavaScriptVariantTest {
 	 */
 	def assertVariant(JavaScriptVariant expectedVariant, String filePath, CharSequence src) {
 		val rs = resourceSetProvider.get
-		val script= src.parse(URI.createFileURI(filePath), rs);
+		val script= src.parse(URIUtils.toFileUri(filePath), rs);
 		val location = script.eAllContents.filter(StringLiteral).findFirst["here"==it.value];
 		assertNotNull("Bogus test, did not find string literal \"here\"")
 		val variant = JavaScriptVariant.getVariant(location)

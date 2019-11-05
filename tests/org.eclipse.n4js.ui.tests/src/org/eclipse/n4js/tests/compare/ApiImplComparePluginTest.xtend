@@ -17,6 +17,7 @@ import org.eclipse.n4js.ApiImplCompareTestHelper
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.n4js.compare.ProjectCompareHelper
 import org.eclipse.n4js.external.LibraryManager
+import org.eclipse.n4js.tests.builder.TestedN4JSWorkspace
 import org.eclipse.n4js.tests.util.ProjectTestsUtils
 import org.eclipse.n4js.ui.compare.ProjectCompareTreeHelper
 import org.eclipse.xtext.testing.InjectWith
@@ -24,6 +25,7 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -41,6 +43,10 @@ import static extension org.eclipse.n4js.tests.util.ProjectTestsUtils.*
 class ApiImplComparePluginTest extends AbstractApiImplCompareTest {
 
 	@Inject
+	@Rule
+	public TestedN4JSWorkspace testedWorkspace;
+
+	@Inject
 	private ProjectCompareHelper projectCompareHelper;
 	@Inject
 	private ProjectCompareTreeHelper projectCompareTreeHelper;
@@ -56,15 +62,14 @@ class ApiImplComparePluginTest extends AbstractApiImplCompareTest {
 		IResourcesSetupUtil.cleanWorkspace
 		val parentFolder = new File("probands/ApiImplCompare");
 		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_PROJECT);
+		testedWorkspace.fullBuild;
 	}
 
 	@After
 	public def void teardownEclipseWorkspace() {
 		ProjectTestsUtils.closeAllProjectsInWorkspace();
 		IResourcesSetupUtil.cleanWorkspace();
-		IResourcesSetupUtil.cleanBuild();
-		waitForAutoBuild();
-		ProjectTestsUtils.waitForAllJobs;
+		testedWorkspace.cleanBuild();
 		assertEquals(0, root().getProjects().length);
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
 				countResourcesInIndex());

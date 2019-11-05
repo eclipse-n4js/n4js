@@ -23,7 +23,7 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-		<modules>
+	<modules>
 		<!-- ************************************** JUnit Tests -->
 
 		<!-- Release Engineering Tools Tests -->
@@ -109,6 +109,7 @@ Contributors:
 		<module>org.eclipse.n4js.test.helpers.tests</module>
 
 		<!-- *************************************** Headless Tools Tests -->
+		<module>org.eclipse.n4js.cli.tests</module>
 		<module>org.eclipse.n4js.hlc.tests</module>
 		<module>org.eclipse.n4js.hlc.integrationtests</module>
 
@@ -328,6 +329,7 @@ Contributors:
 							<!-- IDE-1435 unbound by default, rebind in profile to phase "integration-test" -->
 							<phase />
 							<configuration>
+                                <runOrder>alphabetical</runOrder>
 								<!-- 30 Minutes timeout (plus 1sec to simplify search for this timeout in log) -->
 								<forkedProcessTimeoutInSeconds>1801</forkedProcessTimeoutInSeconds>
 								<!-- argLine needs to be one line, if you atoformat line break will break tests -->
@@ -363,6 +365,7 @@ Contributors:
 							<!-- IDE-1435 unbound by default, rebind in profile to phase "integration-test" -->
 							<phase />
 							<configuration>
+                                <runOrder>alphabetical</runOrder>
 								<systemProperties>
 									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
@@ -386,7 +389,7 @@ Contributors:
 								<application>org.eclipse.ui.ide.workbench</application>
 								-->
 								<product>org.eclipse.n4js.product.product</product>
-								<application>org.eclipse.n4js.product.application</application>
+								<!-- <application>org.eclipse.n4js.product.application</application> -->
 								<showEclipseLog>true</showEclipseLog>
 								<dependencies>
 									<!-- since Eclipse 4.4 and Tycho 0.20.0 PluginUI tests were not starting,
@@ -458,6 +461,7 @@ Contributors:
 							</goals>
 							<phase>test</phase>
 							<configuration>
+                                <runOrder>alphabetical</runOrder>
 								<systemProperties>
 									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>

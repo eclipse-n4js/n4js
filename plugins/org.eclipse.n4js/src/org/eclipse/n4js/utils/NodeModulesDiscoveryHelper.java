@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -148,8 +148,18 @@ public class NodeModulesDiscoveryHelper {
 		return Optional.absent();
 	}
 
+	/**
+	 * Note that this method is expensive, since it reads a package.json file.
+	 *
+	 * @return true iff the given folder contains a package.json file and this file has a {@code workspaces} property.
+	 */
+	public boolean isYarnWorkspaceRoot(File folder) {
+		return isYarnWorkspaceRoot(folder, Optional.absent(), new HashMap<>());
+	}
+
 	private boolean isYarnWorkspaceRoot(File folder, Optional<File> projectFolder,
 			Map<File, List<String>> workspacesCache) {
+
 		if (!folder.isDirectory()) {
 			return false;
 		}
@@ -161,8 +171,8 @@ public class NodeModulesDiscoveryHelper {
 			workspaces = workspacesFromCache;
 		} else {
 			// load value from package.json
-			URI candidateURI = URI.createFileURI(folder.getPath());
-			workspaces = projectDescriptionLoader.loadWorkspacesFromProjectDescriptionAtLocation(candidateURI);
+			workspaces = projectDescriptionLoader
+					.loadWorkspacesFromProjectDescriptionAtLocation(new FileURI(folder));
 			if (workspaces != null) {
 				workspacesCache.put(folder, workspaces);
 			}

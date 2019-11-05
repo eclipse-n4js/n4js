@@ -30,7 +30,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 /**
  * This transformation will prepare the output code for module loading. Since dropping support for commonjs and SystemJS
@@ -76,7 +76,7 @@ class ModuleWrappingTransformation extends Transformation {
 		collectNodes(state.im, ExportDeclaration, false).forEach[splitDefaultExportFromVarDecl];
 
 		// add implicit import of "n4js-runtime"
-		addEmptyImport(N4JSGlobals.N4JS_RUNTIME);
+		addEmptyImport(N4JSGlobals.N4JS_RUNTIME.rawName);
 	}
 
 	def private void transformImportDecl(ImportDeclaration importDeclIM) {
@@ -129,7 +129,7 @@ class ModuleWrappingTransformation extends Transformation {
 			// SPECIAL CASE #3
 			// in case of project imports (a.k.a. bare imports) we simply use
 			// the target project's name as module specifier:
-			return getActualProjectName(targetProject);
+			return getActualProjectName(targetProject).rawName;
 		}
 
 		return createAbsoluteModuleSpecifier(targetProject, targetModule);
@@ -154,7 +154,7 @@ class ModuleWrappingTransformation extends Transformation {
 		
 		// first segment is the project name
 		val targetProjectName = getActualProjectName(targetProject);
-		if (!targetProjectName.isNullOrEmpty) {
+		if (targetProjectName !== null) {
 			sb.append(targetProjectName);
 		}
 
@@ -181,10 +181,10 @@ class ModuleWrappingTransformation extends Transformation {
 		return sb.toString();
 	}
 
-	def private String getActualProjectName(IN4JSProject project) {
+	def private N4JSProjectName getActualProjectName(IN4JSProject project) {
 		if (project.projectType === ProjectType.DEFINITION) {
 			val definedProjectName = project.definesPackageName;
-			if (!definedProjectName.isNullOrEmpty) {
+			if (definedProjectName !== null && !definedProjectName.isEmpty) {
 				return definedProjectName;
 			}
 		}

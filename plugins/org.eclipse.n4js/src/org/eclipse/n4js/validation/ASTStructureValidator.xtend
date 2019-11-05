@@ -103,6 +103,7 @@ import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
+import org.eclipse.n4js.n4JS.CoalesceExpression
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -135,8 +136,9 @@ class ASTStructureValidator {
 		static val ALLOW_NESTED_FUNCTION_DECLARATION = EXTERNAL << 1
 		static val ALLOW_RETURN = ALLOW_NESTED_FUNCTION_DECLARATION << 1
 		static val ALLOW_CONTINUE = ALLOW_RETURN << 1
-		static val ALLOW_BREAK = ALLOW_CONTINUE << 1
-		static val ALLOW_VAR_WITHOUT_INITIALIZER = ALLOW_BREAK << 1
+		static val ALLOW_BREAK = ALLOW_CONTINUE << 1 // whether we are in "break-allowed-with/without-label" (for||while||switch-case||labelled-block) area
+		static val ALLOW_BREAK_WITHOUT_LABEL = ALLOW_BREAK << 1 // whether we are in (for||while||switch-case) area
+		static val ALLOW_VAR_WITHOUT_INITIALIZER = ALLOW_BREAK_WITHOUT_LABEL << 1
 		static val ALLOW_YIELD_EXPRESSION = ALLOW_VAR_WITHOUT_INITIALIZER << 1
 		static val ALLOW_SUPER = ALLOW_YIELD_EXPRESSION << 1
 		static val ALLOW_SUPER_CALL = ALLOW_SUPER << 1
@@ -188,6 +190,10 @@ class ASTStructureValidator {
 			return is(ALLOW_BREAK)
 		}
 
+		def boolean isBreakAllowedWithoutLabel() {
+			return is(ALLOW_BREAK_WITHOUT_LABEL)
+		}
+
 		def boolean isContinueAllowed() {
 			return is(ALLOW_CONTINUE)
 		}
@@ -232,6 +238,10 @@ class ASTStructureValidator {
 			with(ALLOW_BREAK, allow)
 		}
 
+		def Constraints allowBreakWithoutLabel(boolean allow) {
+			with(ALLOW_BREAK_WITHOUT_LABEL, allow)
+		}
+
 		def Constraints allowContinue(boolean allow) {
 			with(ALLOW_CONTINUE, allow)
 		}
@@ -263,6 +273,7 @@ class ASTStructureValidator {
 		def Constraints enterFunctionDeclaration() {
 			with(IN_FUNCTION_DECLARATION, true)
 		}
+
 	}
 
 	def void validate(EObject model, IDiagnosticConsumer consumer) {
@@ -349,7 +360,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			validLabels,
-			constraints.strict(false).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false)
+			constraints.strict(false).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false).allowBreakWithoutLabel(false)
 		);
 	}
 
@@ -370,6 +381,40 @@ class ASTStructureValidator {
 //					new DiagnosticMessage(IssueCodes.messageForIMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST,
 //						IssueCodes.getDefaultSeverity(IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST), IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST))
 			}
+		}
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
+	}
+	
+	def private dispatch void validateASTStructure(
+		CoalesceExpression model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		val container = model.eContainer 
+		if (container instanceof BinaryLogicalExpression) {
+			val target = NodeModelUtils.findActualNodeFor(model)
+			producer.node = target
+			producer.addDiagnostic(
+					new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_COALESCE_PARENT(container.op.literal),
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_COALESCE_PARENT), IssueCodes.AST_INVALID_COALESCE_PARENT))
+		} else if (model.expression instanceof BinaryLogicalExpression) {
+			val target = NodeModelUtils.findActualNodeFor(model.expression)
+			producer.node = target
+			producer.addDiagnostic(
+					new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_COALESCE_CHILD((model.expression as BinaryLogicalExpression).op.literal),
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_COALESCE_CHILD), IssueCodes.AST_INVALID_COALESCE_CHILD))
+		} else if (model.defaultExpression instanceof BinaryLogicalExpression) {
+			val target = NodeModelUtils.findActualNodeFor(model.defaultExpression)
+			producer.node = target
+			producer.addDiagnostic(
+					new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_COALESCE_CHILD((model.defaultExpression as BinaryLogicalExpression).op.literal),
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_COALESCE_CHILD), IssueCodes.AST_INVALID_COALESCE_CHILD))
 		}
 		recursiveValidateASTStructure(
 			model,
@@ -400,7 +445,7 @@ class ASTStructureValidator {
 			producer,
 			validLabels,
 			// according to ecma6 spec, class bodies are always strict
-			constraints.strict(true).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false)
+			constraints.strict(true).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false).allowBreakWithoutLabel(false)
 		)
 	}
 
@@ -430,7 +475,7 @@ class ASTStructureValidator {
 			producer,
 			validLabels,
 			// according to ecma6 spec, class bodies are always strict
-			constraints.strict(true).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false)
+			constraints.strict(true).allowNestedFunctions(true).allowReturn(false).allowContinue(false).allowBreak(false).allowBreakWithoutLabel(false)
 		)
 	}
 
@@ -841,7 +886,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			validLabels,
-			constraints.allowBreak(true)
+			constraints.allowBreak(true).allowBreakWithoutLabel(true)
 		)
 	}
 
@@ -909,7 +954,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			validLabels,
-			constraints.allowNestedFunctions(!constraints.isStrict && !constraints.isInFunctionDeclaration).allowBreak(true).allowContinue(true)
+			constraints.allowNestedFunctions(!constraints.isStrict && !constraints.isInFunctionDeclaration).allowBreak(true).allowContinue(true).allowBreakWithoutLabel(true)
 		)
 	}
 
@@ -923,7 +968,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			validLabels,
-			constraints.allowNestedFunctions(!constraints.isStrict && !constraints.isInFunctionDeclaration).allowBreak(true).allowContinue(true)
+			constraints.allowNestedFunctions(!constraints.isStrict && !constraints.isInFunctionDeclaration).allowBreak(true).allowContinue(true).allowBreakWithoutLabel(true)
 		)
 	}
 
@@ -994,7 +1039,7 @@ class ASTStructureValidator {
 			val target = NodeModelUtils.findActualNodeFor(model)
 			if(target !== null) {
 				producer.node = target
-				if (model.eContainingFeature === N4JSPackage.Literals.PARAMETERIZED_CALL_EXPRESSION__TARGET) {
+				if (model.eContainingFeature === N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET && model.eContainer instanceof ParameterizedCallExpression) {
 					producer.addDiagnostic(
 						new DiagnosticMessage(IssueCodes.messageForKEY_SUP_CTOR_INVALID_LOC,
 							IssueCodes.getDefaultSeverity(IssueCodes.KEY_SUP_CTOR_INVALID_LOC),
@@ -1087,7 +1132,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			Sets.newHashSetWithExpectedSize(2),
-			constraints.allowNestedFunctions(true).allowReturn(true).allowBreak(false).allowContinue(false)
+			constraints.allowNestedFunctions(true).allowReturn(true).allowBreak(false).allowContinue(false).allowBreakWithoutLabel(false)
 		)
 	}
 
@@ -1121,7 +1166,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			Sets.newHashSetWithExpectedSize(2),
-			constraints.allowNestedFunctions(true).allowReturn(true).allowContinue(false).allowBreak(false).allowYieldExpression(true)
+			constraints.allowNestedFunctions(true).allowReturn(true).allowContinue(false).allowBreak(false).allowYieldExpression(true).allowBreakWithoutLabel(false)
 		)
 	}
 
@@ -1234,7 +1279,7 @@ class ASTStructureValidator {
 			model,
 			producer,
 			Sets.newHashSetWithExpectedSize(2),
-			constraints.allowNestedFunctions(false).allowReturn(true).allowContinue(false).allowBreak(false).allowYieldExpression(true)
+			constraints.allowNestedFunctions(false).allowReturn(true).allowContinue(false).allowBreak(false).allowYieldExpression(true).allowBreakWithoutLabel(false)
 		)
 	}
 
@@ -1288,14 +1333,14 @@ class ASTStructureValidator {
 		Set<LabelledStatement> validLabels,
 		Constraints constraints
 	) {
-		if (!constraints.isBreakAllowed) {
+		if (!constraints.isBreakAllowed
+				|| (!validateLabelRef(model, producer, validLabels) && !constraints.isBreakAllowedWithoutLabel)
+		) {
 			val target = NodeModelUtils.findActualNodeFor(model)
 			producer.node = target
 			producer.addDiagnostic(
 				new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_BREAK,
 					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_BREAK), IssueCodes.AST_INVALID_BREAK))
-		} else {
-			validateLabelRef(model, producer, validLabels)
 		}
 		recursiveValidateASTStructure(
 			model,
@@ -1305,7 +1350,10 @@ class ASTStructureValidator {
 		)
 	}
 
-	def private void validateLabelRef(LabelRef model, ASTStructureDiagnosticProducer producer,
+/*
+ * @returns whether there is a label
+ */
+	def private boolean validateLabelRef(LabelRef model, ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels
 	) {
 		val labelAsText = model.labelAsText; // cannot use model.label, because we aren't allowed to resolve proxies in this phase!
@@ -1316,6 +1364,7 @@ class ASTStructureValidator {
 				new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_LABEL,
 					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_LABEL), IssueCodes.AST_INVALID_LABEL))
 		}
+		return labelAsText !== null
 	}
 
 	def private dispatch void validateASTStructure(
@@ -1405,12 +1454,7 @@ class ASTStructureValidator {
 		if(elem!==null && elem.spread) {
 			if(!DestructureUtils.isArrayOrObjectLiteralUsedAsDestructuringPattern(elem.eContainer)) {
 				// use of spread in an array literal that is *not* used as a destructuring pattern
-				// --> always error (legal in ES6 but not yet supported; might be supported later)
-				val nodes = NodeModelUtils.findNodesForFeature(elem, N4JSPackage.eINSTANCE.arrayElement_Spread);
-				producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(elem)
-				producer.addDiagnostic(
-					new DiagnosticMessage(IssueCodes.getMessageForAST_SPREAD_IN_ARRAY_LITERAL_UNSUPPORTED,
-						IssueCodes.getDefaultSeverity(IssueCodes.AST_SPREAD_IN_ARRAY_LITERAL_UNSUPPORTED), IssueCodes.AST_SPREAD_IN_ARRAY_LITERAL_UNSUPPORTED))
+				// --> valid at any position
 			}
 			else {
 				// use of spread in an array literal that *is* used as a destructuring pattern

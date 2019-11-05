@@ -63,6 +63,7 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_UNMATCHED_
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -84,7 +85,6 @@ import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -108,7 +108,6 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
-import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -152,8 +151,6 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	private ContainerTypesHelper containerTypesHelper;
 	@Inject
 	private N4JSTypeSystem ts;
-	@Inject
-	private TypeSystemHelper tsh;
 	@Inject
 	private MemberVisibilityChecker memberVisibilityChecker;
 	@Inject
@@ -1236,10 +1233,12 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		// (simplifies subtype check and, more importantly, leads to better error messages)
 		RuleEnvironment G = getCurrentRuleEnvironment();
 		if (left.isConstructor() && typeLeft instanceof FunctionTypeExprOrRef) {
-			typeLeft = changeReturnTypeToVoid(G, (FunctionTypeExprOrRef) typeLeft);
+			typeLeft = TypeUtils.createFunctionTypeExpression(null, Collections.emptyList(),
+					((FunctionTypeExprOrRef) typeLeft).getFpars(), null);
 		}
 		if (right.isConstructor() && typeRight instanceof FunctionTypeExprOrRef) {
-			typeRight = changeReturnTypeToVoid(G, (FunctionTypeExprOrRef) typeRight);
+			typeRight = TypeUtils.createFunctionTypeExpression(null, Collections.emptyList(),
+					((FunctionTypeExprOrRef) typeRight).getFpars(), null);
 		}
 
 		return ts.subtype(G, typeLeft, typeRight);
@@ -1265,13 +1264,5 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		MemberCollector memberCollector = containerTypesHelper.fromContext(getCurrentClassifierDefinition());
 		TClassifier tClassifier = getCurrentClassifier();
 		return new MemberCube(tClassifier, memberCollector);
-	}
-
-	/** Returns a copy of the given {@link FunctionTypeExprOrRef} with its return type changed to <code>void</code>. */
-	private FunctionTypeExpression changeReturnTypeToVoid(RuleEnvironment G, FunctionTypeExprOrRef typeRef) {
-		final RuleEnvironment G_empty = RuleEnvironmentExtensions.newRuleEnvironment(G);
-		final FunctionTypeExpression result = tsh.createSubstitutionOfFunctionTypeExprOrRef(G_empty, typeRef);
-		result.setReturnTypeRef(null); // TODO use RuleEnvironmentExtensions.voidTypeRef(G) here
-		return result;
 	}
 }

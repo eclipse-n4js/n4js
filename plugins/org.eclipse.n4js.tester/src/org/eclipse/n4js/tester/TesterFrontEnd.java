@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
@@ -81,7 +82,7 @@ public class TesterFrontEnd {
 	}
 
 	/**
-	 * Similar to {@link RunnerFrontEnd#createConfiguration(String, String, URI)}, but for testing.
+	 * Similar to {@link RunnerFrontEnd#createConfiguration(String, N4JSProjectName, URI)}, but for testing.
 	 *
 	 * @param testerId
 	 *            ID of the tester to use.
@@ -93,7 +94,8 @@ public class TesterFrontEnd {
 	 *            for which {@link #canTest(URI)} returns true.
 	 * @return the new run configuration.
 	 */
-	public TestConfiguration createConfiguration(String testerId, String implementationId, final URI moduleToTest) {
+	public TestConfiguration createConfiguration(String testerId, N4JSProjectName implementationId,
+			final URI moduleToTest) {
 		final ITesterDescriptor testerDesc = testerRegistry.getDescriptor(testerId);
 		final ITester tester = testerDesc.getTester();
 
@@ -170,9 +172,10 @@ public class TesterFrontEnd {
 	}
 
 	/**
-	 * Similar to {@link RunnerFrontEnd#run(String, String, URI)}, but for testing.
+	 * Similar to {@link RunnerFrontEnd#run(String, N4JSProjectName, URI)}, but for testing.
 	 */
-	public Process test(String testerId, String implementationId, URI resourceToTest) throws ExecutionException {
+	public Process test(String testerId, N4JSProjectName implementationId, URI resourceToTest)
+			throws ExecutionException {
 		return test(createConfiguration(testerId, implementationId, resourceToTest));
 	}
 

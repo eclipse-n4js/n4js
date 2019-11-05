@@ -15,13 +15,6 @@ Contributors:
    <extension-point id="resourceDescriptionsPersisterContribution" name="Resource Descriptions Persister Contribution" schema="schema/resourceDescriptionsPersisterContribution.exsd"/>
    <extension-point id="workingSetManager" name="N4JS Working Set Manager" schema="schema/workingSetManager.exsd"/>
 
-  <extension
-        point="org.eclipse.xtext.ui.shared.overridingGuiceModule">
-     <module
-           class="org.eclipse.n4js.ui.MyReferenceSearchResultContentProviderCustomModule">
-     </module>
-   </extension>  
-  
 <!-- CUSTOM CODE -->
 <!--
   A specialized Types representation is registered for n4ts files that are loaded
@@ -949,24 +942,10 @@ Contributors:
   <extension
         point="org.eclipse.ui.bindings">
         <key
-             commandId="org.eclipse.n4js.ui.refactoring.rename"
-             contextId="org.eclipse.xtext.ui.XtextEditorScope"
-             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-             sequence="M1+M2+R">
-        </key>
-        
-        <key
              commandId="org.eclipse.n4js.ui.organize.imports.OrganizeImports"
              contextId="org.eclipse.xtext.ui.XtextEditorScope"
              schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
              sequence="M1+M2+O">
-        </key>
-        <!-- Disabled refactor/rename binding in Xtext editor. -->
-        <key
-             commandId=""
-             contextId="org.eclipse.xtext.ui.XtextEditorScope"
-             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-             sequence="M1+M3+R">
         </key>
        <key
              commandId="org.eclipse.n4js.ui.search.openTypeSelectionDialog"

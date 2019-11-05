@@ -501,7 +501,7 @@ class ComputeProjectOrder {
 	 * @return an object describing the resulting order
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	static <T> VertexOrder<Object> computeVertexOrder(SortedSet<? extends T> vertexes, List<? extends T[]> references) {
+	static <T> VertexOrder<T> computeVertexOrder(SortedSet<? extends T> vertexes, List<? extends T[]> references) {
 
 		// Step 1: Create the graph object.
 		final Digraph g1 = new Digraph();

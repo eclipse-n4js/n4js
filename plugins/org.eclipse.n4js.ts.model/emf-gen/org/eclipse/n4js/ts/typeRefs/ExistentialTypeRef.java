@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ts.typeRefs;
 
-import org.eclipse.n4js.ts.types.TypeVariable;
+import java.util.UUID;
 
 /**
  * <!-- begin-user-doc -->
@@ -43,8 +43,8 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * declared type of g1, g2, and g3 could have been specified without wildcards).
  * <p>
  * For details, see<br/>
- * S. Wehr and P. Thiemann: Subtyping Existential Types. 2008, <a href="http://www.informatik.uni-freiburg.de/~wehr/publications/Wehr_Subtyping_existential_types.pdf">PDF</a><br/>
- * N. Cameron, S. Drossopoulou, and E. Ernst: A Model for Java with Wildcards. Springer, 2008,<a href="http://dx.doi.org/10.1007/978-3-540-70592-5_2">DOI</a><br/>
+ * S. Wehr and P. Thiemann: Subtyping Existential Types. 2008, <a href="http://www.stefanwehr.de/publications/Wehr_Subtyping_existential_types.pdf">PDF</a><br/>
+ * N. Cameron, S. Drossopoulou, and E. Ernst: A Model for Java with Wildcards. Springer, 2008,<a href="https://doi.org/10.1007/978-3-540-70592-5_2">DOI</a><br/>
  * M. Torgersen, E. Ernst, and C. P. Hansen: Wild FJ. 2005
  * <!-- end-model-doc -->
  *
@@ -52,8 +52,9 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isReopened <em>Reopened</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getWildcard <em>Wildcard</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getBoundTypeVariable <em>Bound Type Variable</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getExistentialTypeRef()
@@ -61,6 +62,60 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * @generated
  */
 public interface ExistentialTypeRef extends TypeRef {
+	/**
+	 * Returns the value of the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Globally unique identifier of this capture. Required due to the copying semantics of
+	 * {@code TypeRef}s: unlike types, type references may be copied at will and therefore a
+	 * plain POJO identity comparison of two ExistentialTypeRefs cannot be used to check if
+	 * two {@code ExistentialTypeRef}s refer to the same capture.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Id</em>' attribute.
+	 * @see #setId(UUID)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getExistentialTypeRef_Id()
+	 * @model unique="false" dataType="org.eclipse.n4js.ts.typeRefs.UUID"
+	 * @generated
+	 */
+	UUID getId();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getId <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Id</em>' attribute.
+	 * @see #getId()
+	 * @generated
+	 */
+	void setId(UUID value);
+
+	/**
+	 * Returns the value of the '<em><b>Reopened</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If true, this existential type roughly behaves like the wildcard it was created from.
+	 * For detailed semantics see {@code SubtypeJudgment#applyExistentialTypeRef_Left|Right()}.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Reopened</em>' attribute.
+	 * @see #setReopened(boolean)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getExistentialTypeRef_Reopened()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isReopened();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#isReopened <em>Reopened</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Reopened</em>' attribute.
+	 * @see #isReopened()
+	 * @generated
+	 */
+	void setReopened(boolean value);
+
 	/**
 	 * Returns the value of the '<em><b>Wildcard</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -82,28 +137,6 @@ public interface ExistentialTypeRef extends TypeRef {
 	 * @generated
 	 */
 	void setWildcard(Wildcard value);
-
-	/**
-	 * Returns the value of the '<em><b>Bound Type Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Bound Type Variable</em>' reference.
-	 * @see #setBoundTypeVariable(TypeVariable)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getExistentialTypeRef_BoundTypeVariable()
-	 * @model
-	 * @generated
-	 */
-	TypeVariable getBoundTypeVariable();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef#getBoundTypeVariable <em>Bound Type Variable</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Bound Type Variable</em>' reference.
-	 * @see #getBoundTypeVariable()
-	 * @generated
-	 */
-	void setBoundTypeVariable(TypeVariable value);
 
 	/**
 	 * <!-- begin-user-doc -->

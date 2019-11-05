@@ -12,16 +12,15 @@ package org.eclipse.n4js.ui.wizard.components;
 
 import static org.eclipse.n4js.ui.wizard.components.WizardComponentUtils.fillLabelDefaults;
 
-import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.n4js.ui.wizard.classifiers.N4JSClassifierWizardModel;
+import org.eclipse.n4js.ui.wizard.model.DefinitionFileModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import org.eclipse.n4js.ui.wizard.classifiers.N4JSClassifierWizardModel;
-import org.eclipse.n4js.ui.wizard.model.DefinitionFileModel;
 
 /**
  * A component which allows the selection of a checkbox specifying the Definition File property
@@ -62,12 +61,10 @@ public class FileTypeComponent extends WizardComponent {
 	private void setupBindings() {
 		// Definition file property binding (definition file)
 
-		@SuppressWarnings("unchecked")
 		IObservableValue<Boolean> externalValue = BeanProperties
-				.value(DefinitionFileModel.class, N4JSClassifierWizardModel.DEFINITION_FILE_PROPERTY)
+				.value(DefinitionFileModel.class, N4JSClassifierWizardModel.DEFINITION_FILE_PROPERTY, Boolean.class)
 				.observe(model);
-		@SuppressWarnings("unchecked")
-		IObservableValue<Boolean> externalUI = WidgetProperties.selection().observe(definitionFileBox);
+		IObservableValue<Boolean> externalUI = WidgetProperties.buttonSelection().observe(definitionFileBox);
 		getDataBindingContext().bindValue(externalUI, externalValue);
 	}
 

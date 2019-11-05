@@ -18,6 +18,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.n4js.external.NpmLogger;
 import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.ui.IStartup;
@@ -50,6 +51,9 @@ public class N4JSExternalLibraryStartup implements IStartup {
 
 	@Inject
 	private ProjectStateChangeListener indexSyncScheduler;
+
+	@Inject
+	private NpmLogger npmLogger;
 
 	@Override
 	public void earlyStartup() {
@@ -103,6 +107,7 @@ public class N4JSExternalLibraryStartup implements IStartup {
 		public void postExecuteSuccess(String commandId, Object returnValue) {
 			if ("org.eclipse.ui.file.refresh".equals(commandId)) {
 				indexSyncScheduler.forceIndexSync();
+				npmLogger.logInfo("external locations updated");
 			}
 		}
 

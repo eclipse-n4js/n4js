@@ -15,7 +15,7 @@ import { XUnitReportSpec } from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUni
  */
 export default public class ~NodeTestOptions extends XUnitReportSpec {
     /**
-     * Scan for projects in directories.
+     * Scan for N4JS projects in directories.
      */
     public scan: string[];
     

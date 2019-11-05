@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Dosgi.requiredJavaVersion=1.8 -Xms1024m -Xmx2048m
+      <vmArgs>-Dosgi.requiredJavaVersion=11 -Xms1024m -Xmx2048m
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
@@ -34,7 +34,6 @@
       <plugin id="com.fasterxml.jackson.core.jackson-databind"/>
       <plugin id="com.google.guava"/>
       <plugin id="com.google.inject"/>
-      <plugin id="com.ibm.icu"/>
       <plugin id="com.jcraft.jsch"/>
       <plugin id="javaewah"/>
       <plugin id="javax.inject"/>
@@ -128,11 +127,11 @@
    </plugins>
 
    <configurations>
-      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <property name="org.eclipse.core.resources/encoding" value="UTF-8" />
       <property name="osgi.instance.area.default" value="@user.home/workspace" />
-      <property name="osgi.requiredJavaVersion" value="1.8" />
+      <property name="osgi.requiredJavaVersion" value="11" />
    </configurations>
 
    <preferencesInfo>

@@ -24,6 +24,7 @@
 	language="")
 package org.eclipse.n4js.ts.typeRefs
 
+import java.util.UUID
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
@@ -37,6 +38,8 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils
+
+type UUID wraps UUID
 
 /*
  * Base class for all things that can provide a version. The returned value will be 0 in any language that does not
@@ -125,6 +128,11 @@ abstract class TypeRef extends TypeArgument, Versionable {
 	op boolean isArrayLike() {
 		val dtype = declaredType;
 		return dtype!==null && dtype.isArrayLike;
+	}
+
+	/* Tells whether the receiving type reference is an {@link UnknownTypeRef}. */
+	op boolean isUnknown() {
+		return false;
 	}
 
 	/*
@@ -736,13 +744,26 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
  * declared type of g1, g2, and g3 could have been specified without wildcards).
  * <p>
  * For details, see<br/>
- * S. Wehr and P. Thiemann: Subtyping Existential Types. 2008, <a href="http://www.informatik.uni-freiburg.de/~wehr/publications/Wehr_Subtyping_existential_types.pdf">PDF</a><br/>
- * N. Cameron, S. Drossopoulou, and E. Ernst: A Model for Java with Wildcards. Springer, 2008,<a href="http://dx.doi.org/10.1007/978-3-540-70592-5_2">DOI</a><br/>
+ * S. Wehr and P. Thiemann: Subtyping Existential Types. 2008, <a href="http://www.stefanwehr.de/publications/Wehr_Subtyping_existential_types.pdf">PDF</a><br/>
+ * N. Cameron, S. Drossopoulou, and E. Ernst: A Model for Java with Wildcards. Springer, 2008,<a href="https://doi.org/10.1007/978-3-540-70592-5_2">DOI</a><br/>
  * M. Torgersen, E. Ernst, and C. P. Hansen: Wild FJ. 2005
  */
 class ExistentialTypeRef extends TypeRef {
+	/*
+	 * Globally unique identifier of this capture. Required due to the copying semantics of
+	 * {@code TypeRef}s: unlike types, type references may be copied at will and therefore a
+	 * plain POJO identity comparison of two ExistentialTypeRefs cannot be used to check if
+	 * two {@code ExistentialTypeRef}s refer to the same capture.
+	 */
+	UUID ^id
+	/*
+	 * If true, this existential type roughly behaves like the wildcard it was created from.
+	 * For detailed semantics see {@code SubtypeJudgment#applyExistentialTypeRef_Left|Right()}.
+	 */
+	boolean reopened
+
 	refers Wildcard wildcard
-	refers TypeVariable boundTypeVariable
+
 	/*
 	 * Always returns true for existential types.
 	 */
@@ -782,6 +803,9 @@ class ExistentialTypeRef extends TypeRef {
  * appear in an N4JSResource that does not have any original parse or validation errors!
  */
 class UnknownTypeRef extends TypeRef {
+	op boolean isUnknown() {
+		return true;
+	}
 	/*
 	 * Overrides {@link TypeRef#getTypeRefAsString()}
 	 */
@@ -1138,9 +1162,10 @@ class FunctionTypeExpression extends FunctionTypeExprOrRef {
 	refers TypeVariable[] unboundTypeVars
 	/*
 	 * Property 'unboundTypeVars' refers to type variables contained somewhere else. During type variable substitution,
-	 * we would have to substitute type variable in their upper bounds, but we cannot, of course, directly change them.
+	 * we would have to substitute type variables in these upper bounds, but we cannot, of course, directly change them.
 	 * Thus, for the type variables in unboundTypeVars, rule 'substTypeVariablesInFunctionType[ExprOr]Ref' will store
-	 * the upper bounds here, but only if they are different from the type variables original upper bounds.
+	 * the upper bounds here, but only if they are different from the type variables original upper bounds. If they are
+	 * not different, then an UnknownTypeRef will be used in this list for padding.
 	 */
 	contains TypeRef[] unboundTypeVarsUpperBounds
 	/*
@@ -1159,7 +1184,7 @@ class FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * substitution).
 	 * <p>
 	 * See property {@link FunctionTypeExpression#getUnboundTypeVarsUpperBounds() unboundTypeVarsUpperBounds} and
-	 * method {@link DerivationComputer#performSubstitutionOnUpperBounds()}.
+	 * method {@link SubstTypeVariablesJudgment#performSubstitutionOnUpperBounds()}.
 	 */
 	op TypeRef getTypeVarUpperBound(TypeVariable typeVar) {
 		if(typeVar===null) {
@@ -1168,7 +1193,7 @@ class FunctionTypeExpression extends FunctionTypeExprOrRef {
 		val idx = unboundTypeVars.indexOf(typeVar);
 		if(idx>=0 && idx<unboundTypeVarsUpperBounds.size) {
 			val modifiedUpperBound = unboundTypeVarsUpperBounds.get(idx);
-			if(modifiedUpperBound!==null) { // we allow 'unboundTypeVarsUpperBounds' to contain null entries for padding
+			if(!modifiedUpperBound.isUnknown) { // we allow 'unboundTypeVarsUpperBounds' to contain UnknownTypeRefs for padding
 				return modifiedUpperBound;
 			}
 		}

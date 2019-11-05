@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.common.collect.ArrayListMultimap
 import com.google.inject.Inject
+import java.util.Collection
 import java.util.LinkedList
 import java.util.List
+import java.util.TreeSet
 import org.eclipse.emf.common.util.EList
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Argument
@@ -22,9 +25,7 @@ import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList
 import org.eclipse.n4js.n4JS.ExpressionStatement
-import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
-import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
@@ -50,7 +51,6 @@ import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -74,10 +74,10 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.types.util.Variance
+import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -108,6 +108,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
+	@Inject
+	private TypeCompareHelper typeCompareHelper;
 
 	@Inject
 	private N4JSScopeProvider n4jsScopeProvider;
@@ -173,18 +175,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		// this validation might be removed in the future, see GHOLD-204
-		if (declaredType instanceof TFunction) {
-			if (!(paramTypeRef.eContainer instanceof TypeTypeRef)) { // avoid duplicate error message
-				addIssue(getMessageForTYS_FUNCTION_DISALLOWED_AS_TYPE(), paramTypeRef, TYS_FUNCTION_DISALLOWED_AS_TYPE);
-				return;
-			}
-		}
-
 		val isInTypeTypeRef = paramTypeRef.eContainer instanceof TypeTypeRef || (
 			paramTypeRef.eContainer instanceof Wildcard && paramTypeRef.eContainer.eContainer instanceof TypeTypeRef);
 
-		internalCheckValidLocationForVoid(paramTypeRef);
 		if (isInTypeTypeRef) {
 			internalCheckValidTypeInTypeTypeRef(paramTypeRef);
 		} else {
@@ -202,31 +195,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRef) {
 		if (typeRef.declaredType instanceof PrimitiveType && typeRef.typingStrategy != TypingStrategy.NOMINAL) {
 			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRef, TYS_STRUCTURAL_PRIMITIVE);
-		}
-	}
-
-	/**
-	 * Requirements 13, Void type.
-	 */
-	def private void internalCheckValidLocationForVoid(ParameterizedTypeRef typeRef) {
-		if (typeRef.declaredType instanceof VoidType) {
-			val isValidLocationForVoid = (
-					typeRef.eContainer instanceof FunctionDefinition &&
-				typeRef.eContainmentFeature === N4JSPackage.eINSTANCE.functionDefinition_ReturnTypeRef
-				) || (
-					typeRef.eContainer instanceof FunctionTypeExpression &&
-				typeRef.eContainmentFeature === TypeRefsPackage.eINSTANCE.functionTypeExpression_ReturnTypeRef
-				) || (
-					typeRef.eContainer instanceof TFunction && typeRef.eContainmentFeature === TypesPackage.eINSTANCE.TFunction_ReturnTypeRef
-				) || (
-					// void is not truly allowed as the return type of a getter, but there's a separate validation for
-					// that; so treat this case as legal here:
-					typeRef.eContainer instanceof GetterDeclaration &&
-				typeRef.eContainmentFeature === N4JSPackage.eINSTANCE.typedElement_DeclaredTypeRef
-				);
-			if (!isValidLocationForVoid) {
-				addIssue(IssueCodes.getMessageForTYS_VOID_AT_WRONG_LOCATION, typeRef, TYS_VOID_AT_WRONG_LOCATION);
-			}
 		}
 	}
 
@@ -525,7 +493,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		} else if (expression instanceof ArrayLiteral) {
 			if (!expectedTypeRef.typeArgs.empty) {
 				val arrayElementType = expectedTypeRef.typeArgs.get(0);
-				val typeArgTypeRef = ts.resolveType(G, arrayElementType);
+				val typeArgTypeRef = ts.upperBoundWithReopenAndResolve(G, arrayElementType);
 				for (arrElem : expression.elements) {
 					val arrExpr = arrElem.expression;
 					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, typeArgTypeRef, arrExpr);
@@ -738,8 +706,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			val G = ite.newRuleEnvironment;
 			val List<TypeRef> intersectionTR = tsh.getSubtypesOnly(G, tClassRefs);
 
-			checkIntersectionTypeContainsMaxOneClass(ite, G, tClassRefs, intersectionTR);
-			checkIntersectionHasUnnecessarySupertype(ite, G, tClassRefs, intersectionTR);
+			checkIntersectionTypeContainsMaxOneClass(G, intersectionTR, false);
+			checkIntersectionHasUnnecessarySupertype(tClassRefs, intersectionTR);
 		}
 	}
 
@@ -748,22 +716,102 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 * <i>Only one class must be contained in the intersection type.</i><br/><br/>
 	 * Currently, only a warning is displayed.
 	 */
-	def private void checkIntersectionTypeContainsMaxOneClass(IntersectionTypeExpression ite, RuleEnvironment G,
-		List<TypeRef> tClassRefs, List<TypeRef> intersectionTR) {
+	def private void checkIntersectionTypeContainsMaxOneClass(RuleEnvironment G,
+			List<TypeRef> intersectionTR, boolean covariantTypeArgValidation) {
 		if (intersectionTR.size() > 1) {
+			
+			val ArrayListMultimap<Type, TypeRef> byTypes = ArrayListMultimap.create();
+			
 			for (TypeRef tClassR : intersectionTR) {
-				val message = messageForINTER_ONLY_ONE_CLASS_ALLOWED;
-				addIssue(message, tClassR, INTER_ONLY_ONE_CLASS_ALLOWED);
+				byTypes.put(tClassR.declaredType, tClassR)
+			}
+			
+			if (byTypes.keySet.size>1) {
+				if (covariantTypeArgValidation) {
+					val message = messageForINTER_TYEPARGS_ONLY_ONE_CLASS_ALLOWED;
+					for (TypeRef tClassR : intersectionTR) {
+						if (! (tClassR.eContainer instanceof TypeVariable)) { // nested, type ref coming from def site
+							addIssue(message, tClassR, INTER_TYEPARGS_ONLY_ONE_CLASS_ALLOWED);
+						}
+					}
+				} else {
+					val message = messageForINTER_ONLY_ONE_CLASS_ALLOWED;
+					for (TypeRef tClassR : intersectionTR) {
+						addIssue(message, tClassR, INTER_ONLY_ONE_CLASS_ALLOWED);
+					}
+				}
+			} else {
+				val type = byTypes.keys.head;
+				if (type.isGeneric) {
+					val List<TypeRef> ptrs = byTypes.get(type); // similar to intersectionTR
+
+					if (allCovariantOrWildcardWithUpperBound(type.typeVars, ptrs)) {
+						val length = type.typeVars.length;
+						for (var v=0; v<length; v++) {
+							val vIndex = v; // final
+							// typerefs already simplified by initial call to this method:
+							val typeArgsPerVariable = 
+								extractNonStructTypeRefs(ptrs.map[
+									ptr|
+									val ta = ptr.typeArgs.get(vIndex);
+									var TypeRef upper;
+									if (ta instanceof TypeRef) {
+										upper = ta; 
+									}
+									if (upper===null && ta instanceof Wildcard) {
+										upper = (ta as Wildcard).declaredUpperBound;
+									}
+									if (upper===null) {
+										upper = type.typeVars.get(vIndex).declaredUpperBound;
+									}
+									return upper;
+									
+								]);
+							checkIntersectionTypeContainsMaxOneClass(G, typeArgsPerVariable, true);
+						}
+						
+						// all type args use super:
+					} else if (ptrs.forall[ptr | ptr.typeArgs.forall(ta| ta instanceof Wildcard &&
+							(ta as Wildcard).declaredLowerBound !== null)]) {
+						// all common super types, at least Object, as type arg would work! no warning.
+					} else {
+						// instantiation not possible except with undefined
+						val message = messageForINTER_WITH_ONE_GENERIC;
+						for (TypeRef tClassR : intersectionTR) {
+							if (! (tClassR.eContainer instanceof TypeVariable)) { // nested, type ref coming from def site
+								addIssue(message, tClassR, INTER_WITH_ONE_GENERIC);
+							}
+						}
+					}
+				}	
 			}
 		}
+	}
+		
+	private def boolean allCovariantOrWildcardWithUpperBound(List<TypeVariable> typeVars, List<TypeRef> refs) throws IndexOutOfBoundsException {
+		val length = typeVars.length;
+		for (var i=0; i<length; i++) {
+			if (! typeVars.get(i).declaredCovariant) {
+				for (TypeRef ref: refs) {
+					val ta = ref.typeArgs.get(i);
+					if (ta instanceof Wildcard) {
+						if (ta.declaredUpperBound===null) {
+							return false;
+						}	
+					} else {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
 	 * This validates a warning in chapter 4.10.2:<br/>
 	 * <i>The use of unnecessary supertypes in intersection types produces a warning.</i>
 	 */
-	def private void checkIntersectionHasUnnecessarySupertype(IntersectionTypeExpression ite, RuleEnvironment G,
-		List<TypeRef> tClassRefs, List<TypeRef> intersectionTR) {
+	def private void checkIntersectionHasUnnecessarySupertype(List<TypeRef> tClassRefs, List<TypeRef> intersectionTR) {
 		tClassRefs.removeAll(intersectionTR);
 
 		for (TypeRef tClassR : tClassRefs) {
@@ -773,16 +821,32 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private List<TypeRef> extractNonStructTypeRefs(ComposedTypeRef ctr) {
-		val List<TypeRef> tClassRefs = new LinkedList();
-		val G = ctr.newRuleEnvironment;
-		val List<TypeRef> tRefs = tsh.getSimplifiedTypeRefs(G, ctr);
+		val typeRefs = new TreeSet<TypeRef>(typeCompareHelper.getTypeRefComparator);
+		collectAndFlattenElementTypeRefs(ctr, typeRefs);
+		return extractNonStructTypeRefs(typeRefs);
+	}
 
-		for (TypeRef tR : tRefs) {
-			val Type type = tR.getDeclaredType();
-			if (type instanceof TClass) {
-				var isStructural = tR.isDefSiteStructuralTyping() || tR.isUseSiteStructuralTyping();
-				if (!isStructural)
-					tClassRefs.add(tR);
+	def private void collectAndFlattenElementTypeRefs(ComposedTypeRef ctr, Collection<TypeRef> addHere) {
+		val composedTypeKind = ctr.eClass;
+		for (tr : ctr.typeRefs) {
+			if (composedTypeKind.isInstance(tr)) {
+				collectAndFlattenElementTypeRefs(tr as ComposedTypeRef, addHere);
+			} else {
+				addHere += tr;
+			}
+		}
+	}
+
+	def private List<TypeRef> extractNonStructTypeRefs(Iterable<TypeRef> simplifiedTypeRefs) {
+		val List<TypeRef> tClassRefs = new LinkedList();
+		for (TypeRef tR : simplifiedTypeRefs) {
+			if (tR!==null) { // may happen if argument has been a result of a computation
+				val Type type = tR.getDeclaredType();
+				if (type instanceof TClass) {
+					var isStructural = tR.isDefSiteStructuralTyping() || tR.isUseSiteStructuralTyping();
+					if (!isStructural)
+						tClassRefs.add(tR);
+				}
 			}
 		}
 		return tClassRefs;
@@ -796,7 +860,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		val grandParent = parent?.eContainer;
 		if (parent instanceof Argument) {
 			if (grandParent instanceof NewExpression) {
-				val argIdx = grandParent.arguments.indexOf(parent);
+				val Argument arg = parent 
+				val argIdx = grandParent.arguments.indexOf(arg);
 				val ctorFpar = ctor.getFparForArgIdx(argIdx);
 				if (ctorFpar !== null) {
 					return AnnotationDefinition.SPEC.hasAnnotation(ctorFpar);

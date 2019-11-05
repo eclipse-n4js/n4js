@@ -153,12 +153,12 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 	def void testTwoInferenceVariables_leadingToIntersection_01() {
 		script.assertSolution(
 			#[
-				constraint(alpha,'<:',A),
-				constraint(beta,'<:',B),
+				constraint(alpha,'<:',X),
+				constraint(beta,'<:',Y),
 				constraint(alpha,'=',beta)
 			],
-			alpha -> intersection(A,B),
-			beta -> intersection(A,B)
+			alpha -> intersection(X,Y),
+			beta -> intersection(X,Y)
 		)
 	}
 
@@ -166,12 +166,12 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 	def void testTwoInferenceVariables_leadingToIntersection_02() {
 		script.assertSolution(
 			#[
-				constraint(alpha,'<:',A),
+				constraint(alpha,'<:',X),
 				constraint(alpha,'<:',beta),
-				constraint(C,'<:',beta)
+				constraint(Y,'<:',beta)
 			],
-			alpha -> intersection(A,C),
-			beta -> C.ref
+			alpha -> intersection(X,Y),
+			beta -> Y.ref
 		)
 	}
 
@@ -255,31 +255,66 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 	}
 
 	@Test
-	def void testRawTypeNotAcceptedAsSolution01() {
+	def void testBoundThisTypeRef01() {
 		val thisG = TypeRefsFactory.eINSTANCE.createBoundThisTypeRef => [
 			actualThisTypeRef = G.rawTypeRef as ParameterizedTypeRef;
 		];
 
-		script.assertNoSolution(
+		script.assertSolution(
 			#[
 				constraint(alpha,':>',thisG),
 				constraint(alpha,'<:',G.of(A))
 			],
-			alpha
+			alpha -> thisG
+		)
+	}
+
+	@Test
+	def void testBoundThisTypeRef02() {
+		val thisG = TypeRefsFactory.eINSTANCE.createBoundThisTypeRef => [
+			actualThisTypeRef = G.rawTypeRef as ParameterizedTypeRef;
+		];
+
+		script.assertSolution(
+			#[
+				constraint(alpha,':>',thisG)
+			],
+			alpha -> thisG
+		)
+	}
+
+	@Test
+	def void testRawTypeNotAcceptedAsSolution01() {
+		script.assertSolution(
+			#[
+				constraint(alpha,':>',G.rawTypeRef),
+				constraint(alpha,'<:',G.of(A))
+			],
+			alpha -> G.of(A)
 		)
 	}
 
 	@Test
 	def void testRawTypeNotAcceptedAsSolution02() {
-		val thisG = TypeRefsFactory.eINSTANCE.createBoundThisTypeRef => [
-			actualThisTypeRef = G.rawTypeRef as ParameterizedTypeRef;
-		];
-
-		script.assertNoSolution(
+		script.assertSolution(
 			#[
-				constraint(alpha,':>',thisG)
+				constraint(alpha,':>',G.rawTypeRef)
 			],
-			alpha
+			alpha -> G.of(wildcard())
+		)
+	}
+
+	// FIXME IDE-1653 more tests like that
+	@Test
+	def void testArrayVsIterable() {
+		script.assertSolution(
+			#[
+				constraint(A,    '<:',alpha),
+				constraint(alpha,'<:',A),
+				constraint(_G.arrayTypeRef(beta.ref),'<:',_G.iterableTypeRef(wildcardExtends(alpha))) // Array<β> <: Iterable<? extends α>
+			],
+			alpha -> A.ref,
+			beta -> A.ref
 		)
 	}
 
@@ -292,7 +327,7 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 				constraint(I1,'<:',alpha)
 			],
 			alpha -> I1.ref,
-			beta -> union(A,I1)
+			beta -> I1.ref
 		)
 	}
 }

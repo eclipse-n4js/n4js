@@ -1,0 +1,52 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= JSDoc
+:find:
+
+WARNING: This chapter may be outdated.
+
+
+[[sec:Design_Rationale]]
+[.language-n4js]
+==  Design Rationale
+
+JSDoc parser provides general API for parsing and obtaining information embedded in comments. This may have low significance for N4JS itself but is essential when working with JS dialects (e.g. vanilla JS) that use JSDoc comments for enrich given dialect with semantic information. Anticipated uses may include: - type information extraction when importing external code - validation of links between commented fragments - supporting markup for documentation
+
+NOTE: Although current focus is on migration process we want to provide general solution that can be customized for given use cases
+
+===  General Design
+
+When using the API client has to create instance of DocletParser and configure it with __LienTag__s and __InLineTag__s that are to be used.
+
+LineTags can depend on InlineTags (e.g. InlineTg in description of parameters of the LineTag). API provides support for that but client has to configure this.
+
+[[fig:cd_JSDocParserAPI]]
+[.center]
+image::{find}images/cd_JSDocParserAPI.svg[title="JSDoc Parser API (without model)"]
+
+Initiated DocletParser can be used to parse _String_ containing given JSDoc comment.Based on provided __ITagDefinition__s parser will parse input string and return JSDoc DOM AST (see fig. XX with ecore diagram). By querying tree structure client can obtain information extracted form parsed input String.
+
+[[fig:cd_JSDocModel]]
+[.center]
+image::{find}images/cd_JSDocModel.svg[title="JSDoc AST/DOM Model"]
+
+The root of the this AST is the Doclet. The doclet itself contains some content (as it is a Composite containing ContentNodes), usually Description and an arbitrary number of LineTags. LineTags are created by custom ITagDefinition implementations that extend AbstractLineTagDefinition. They contain the title and an arbitrary number of values, stored in a map. These values are Composite nodes as well, containing tag specific content. E.g., the parameter tag will create the values for the parameter type, the parameter name, and the description. Description (in LineTags as well as in doclet itself) is free text with optional InlineTags. InlineTags are created by custom ITagDefinition that extends AbstractInlineTagDefinition. In general tag values are designed as a comprise between a very general tree (basically containing only text nodes) and a structured typed tree (containing type expressions etc.). Although it should be possible to model a tag value by only using Text nodes, some special typed nodes are provided for sake of simplicity (and probably performance). E.g., TypeReferences are modeled using a typed node, in order to simplify external handling of these references (for type analysis, and refactorings such as renaming a type). New typed nodes will probably be introduced (see below). Markers can be attached to nodes for internal purposes. E.g., a marker can be used to distinguish different syntax versions of defining an array (`String[]` vs. `Array<String>`).Literals can be used to simplify rewriting. That is, they can contain information on line breaks, JSDoc line prefixes etc., which are not needed for the semantics of a tag, but only for the syntax (not used yet). Also, each node contains a position for simplifying rewriting.
+
+[[fig:cd_JSDocParserAndModel]]
+[.center]
+image::{find}images/cd_JSDocParserAndModel.svg[title="JSDoc Parser and Model"]
+
+[[sec:Type_Expressions]]
+===  Type Expressions
+
+Type expressions are are not handled by JSDoc Parser by itself as instances of the grammars are use case specific, e.g. for migration purposes grammar for type expressions used in migration process is specific to the in question therefore specific type expressions parser will be provided separately.DocLetParser by default can only extract String representing given type expression, parsing and interpreting it stays in responsibility of given tag implementation provided by the client.
+

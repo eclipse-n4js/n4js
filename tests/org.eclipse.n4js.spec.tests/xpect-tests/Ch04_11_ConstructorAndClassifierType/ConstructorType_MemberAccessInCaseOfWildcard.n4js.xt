@@ -71,7 +71,7 @@ class C4<T extends A> {
 	m(): constructor{? extends T} {return null;}
 }
 var c4: C4<?>;
-// XPECT type of 't4' --> constructor{? extends ? extends A}
+// XPECT type of 't4' --> constructor{? extends A}
 var t4 = c4.m();
 // XPECT type of 'm41' --> constructor{Function}
 var m41 = t4.constructor;

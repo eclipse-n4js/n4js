@@ -21,6 +21,7 @@ import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ExpressionWithTarget;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
@@ -253,6 +254,10 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseIdentifierRef(IdentifierRef object) {
 				return createIdentifierRefAdapter();
+			}
+			@Override
+			public Adapter caseExpressionWithTarget(ExpressionWithTarget object) {
+				return createExpressionWithTargetAdapter();
 			}
 			@Override
 			public Adapter caseMemberAccess(MemberAccess object) {
@@ -875,6 +880,20 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIdentifierRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExpressionWithTarget <em>Expression With Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.ExpressionWithTarget
+	 * @generated
+	 */
+	public Adapter createExpressionWithTargetAdapter() {
 		return null;
 	}
 

@@ -7,7 +7,7 @@
   "internalVersion": "2019-03-15T08:46:12Z",
   "description": "N4JS compiler and command line tools.",
   "scripts": {
-    "postinstall": "./npm-postinstall.js",
+    "postinstall": "node ./npm-postinstall.js",
     "build": "./npm-build.sh",
     "test": "eslint . && mocha tests"
   },
@@ -21,8 +21,8 @@
     "index.n4jsd"
   ],
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "mocha": "^3.5.3"
+    "eslint": "^6.2.2",
+    "mocha": "^6.2.0"
   },
   "eslintConfig": {
     "env": {
@@ -37,10 +37,7 @@
     }
   },
   "dependencies": {
-    "npmlog": "4.1.2",
-    "n4js-runtime-fetch": "^0.1.0",
-    "n4js-runtime-es2015": "^0.1.0",
-    "n4js-runtime-node": "^0.1.0"
+    "npmlog": "4.1.2"
   },
   "n4js": {
     "projectType": "validation",
@@ -53,10 +50,6 @@
         "."
       ]
     },
-    "requiredRuntimeLibraries": [
-      "n4js-runtime-fetch",
-      "n4js-runtime-es2015",
-      "n4js-runtime-node"
-    ]
+    "requiredRuntimeLibraries": []
   }
 }

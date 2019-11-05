@@ -10,15 +10,12 @@
  */
 package org.eclipse.n4js.internal;
 
-import java.util.Objects;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
@@ -36,38 +33,8 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 	private WildcardPathFilterHelper wildcardHelper;
 
 	@Override
-	public int getDepthOfLocation(URI nestedLocation) {
-		// make sure we are in the root folder of an IN4JSProject and obtain its location
-		IN4JSProject containingProject = findProject(nestedLocation).orNull();
-		if (containingProject == null || !containingProject.exists()) {
-			return -1;
-		}
-		URI containingProjectLocation = containingProject.getLocation();
-		// trim trailing empty segments in both location URIs (if any)
-		while (Objects.equals(nestedLocation.lastSegment(), "")) {
-			nestedLocation = nestedLocation.trimSegments(1);
-		}
-		while (Objects.equals(containingProjectLocation.lastSegment(), "")) {
-			containingProjectLocation = containingProjectLocation.trimSegments(1);
-		}
-		// compute and return depth
-		return nestedLocation.segmentCount() - containingProjectLocation.segmentCount();
-	}
-
-	@Override
-	public boolean isInSameProject(URI nestedLocation1, URI nestedLocation2) {
-		final Optional<? extends IN4JSProject> project1 = findProject(nestedLocation1);
-		if (project1.isPresent()) {
-			final Optional<? extends IN4JSProject> project2 = findProject(nestedLocation2);
-			return project2.isPresent() && project1.get().equals(project2.get());
-		}
-		return false;
-	}
-
-	@Override
 	public boolean isNoValidate(URI nestedLocation) {
 		boolean noValidate = false;
-
 		ModuleFilter validationFilter = getModuleValidationFilter(nestedLocation);
 		if (validationFilter != null) {
 			noValidate |= wildcardHelper.isPathContainedByFilter(nestedLocation, validationFilter);
@@ -86,8 +53,10 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 		return outputPath;
 	}
 
-	@Override
-	public ModuleFilter getModuleValidationFilter(URI nestedLocation) {
+	/**
+	 * returns for the given URI the no-validate module filter
+	 */
+	protected ModuleFilter getModuleValidationFilter(URI nestedLocation) {
 		ModuleFilter moduleFilter = null;
 		Optional<? extends IN4JSSourceContainer> container = findN4JSSourceContainer(nestedLocation);
 		if (container.isPresent()) {

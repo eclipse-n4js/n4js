@@ -9,7 +9,7 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-= Tips & Tricks, Dos & Don'ts
+= Tips and Tricks
 :find:
 
 In this chapter we collect some coding hints and guidelines on how to properly use the APIs of Eclipse, EMF, Xtext and
@@ -18,6 +18,22 @@ other dependencies we are using, as well as our own utilities and helpers.
 This chapter is only about coding; add information on things like Eclipse setup or Maven/Jenkins to one of the preceding
 chapters. Similarly, this chapter is intended to provide just a quick overview, check-list and reminder; add detailed
 information and diagrams to one of the succeeding chapters.
+
+
+== Versioning
+
+The rule of thumb for configuring the version increments through file `version.json` is as follows:
+
+* when introducing non-breaking changes in the n4js-libs, nothing has to be changed in `version.json`;
+  (version increments will be computed automatically by incrementing the patch segment).
+* when introducing breaking changes in the n4js-libs, edit file `version.json` to request an
+  increment of the major/minor segment.
+* in case of breaking changes ONLY in the core language (IDE or headless builder), we do not yet
+  increment any versions (except updating time stamps which is done automatically), so file
+  `version.json` does not have to be changed in this case.
+
+For details, including how to configure a pre-release tag / dist-tag for publishing for testing
+purposes, see <<sec:versioning>>.
 
 
 == Naming
@@ -40,14 +56,14 @@ In many situations developer needs to use some kind of logging. When in need, fo
 . Use `org.apache.log4j.Logger;` for logging. Other logging utilities (like java built in logger) are not configured.
 . do not use `System.out` nor `Sysetem.err` for logging. It is ok to use it for debugging purposes, but those calls
 should never be merged to master. _(with exception of headless compiler, which uses them explicitly)_
-. There is central logger configuration in `org.eclipse.n4js.utils.logging` (and `com.enfore.n4js.utils.logging`) that should 
+. There is central logger configuration in `org.eclipse.n4js.utils.logging` (and `org.eclipse.n4js.utils.logging`) that should 
 be used
 .. `log4j.xml` used for production
 .. `log4j_tests.xml` used when running tests
 . in Eclipse run configurations logger has to be set properly, e.g.
-`log4j.configuration=file:${workspace_loc:com.enfore.n4js.utils.logging/log4j_tests.xml}`
+`log4j.configuration=file:${workspace_loc:org.eclipse.n4js.utils.logging/log4j_tests.xml}`
 . in maven configurations logger has to be set separately, e.g.
-`-Dlog4j.configuration="file:${basedir}/../../plugins/com.enfore.n4js.utils.logging/log4j_tests.xml`
+`-Dlog4j.configuration="file:${basedir}/../../plugins/org.eclipse.n4js.utils.logging/log4j_tests.xml`
 
 
 == Cancellation Handling
@@ -120,6 +136,10 @@ class C {
 * Caching of user workspace projects (implemented in MuliCleartriggerCache)
 ** caches only some project information and should be refactored along with Core, Model and EclipseBasedN4JSWorkspace
 
+== Dependency Injection
+
+There are some things to keep in mind when using dependency injection in the context of Xtext. This is a longer topic and it is discussed in the appendix
+<<sec:XtextInjection>>.
 
 == Miscellaneous
 * Resource load states: when an N4JS/N4JSD file is loaded, a certain sequence of processing is triggered (parsing,

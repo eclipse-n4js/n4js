@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.internal;
 
-import java.util.Iterator;
-import java.util.List;
+import java.io.File;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.Strings;
 
@@ -40,24 +40,18 @@ public class N4JSProjectSourceContainer extends AbstractSourceContainer implemen
 	}
 
 	@Override
-	public Iterator<URI> iterator() {
-		return project.getModel().iterator(this);
-	}
-
-	@Override
-	public URI findArtifact(QualifiedName name, Optional<String> fileExtension) {
+	public SafeURI<?> findArtifact(QualifiedName name, Optional<String> fileExtension) {
 		return project.getModel().findArtifact(this, name, fileExtension);
 	}
 
 	@Override
-	public URI getLocation() {
-		List<String> segmentList = Strings.split(getRelativeLocation(), '/');
-		String[] segments = segmentList.toArray(new String[segmentList.size()]);
-		if (!URI.validSegments(segments)) {
-			return null;
+	public SafeURI<?> getLocation() {
+		String location = getRelativeLocation();
+		if (!Strings.isEmpty(location)) {
+			String linuxPath = OSInfo.isWindows() ? location.replace(File.separatorChar, '/') : location;
+			return project.getLocation().appendPath(linuxPath);
 		}
-		URI result = project.getLocation().appendSegments(segments);
-		return result;
+		return project.getLocation();
 	}
 
 	@Override

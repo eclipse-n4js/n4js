@@ -733,6 +733,9 @@ import org.eclipse.xtext.EcoreUtil2;
 	public Boolean caseParameterizedCallExpression(ParameterizedCallExpression original) {
 		processTypeArgs(original.getTypeArgs());
 		process(original.getTarget());
+		if (original.isOptionalChaining()) {
+			write("?.");
+		}
 		write('(');
 		process(original.getArguments(), ", ");
 		write(')');
@@ -760,6 +763,9 @@ import org.eclipse.xtext.EcoreUtil2;
 	@Override
 	public Boolean caseIndexedAccessExpression(IndexedAccessExpression original) {
 		process(original.getTarget());
+		if (original.isOptionalChaining()) {
+			write("?.");
+		}
 		write('[');
 		process(original.getIndex());
 		write(']');
@@ -772,6 +778,9 @@ import org.eclipse.xtext.EcoreUtil2;
 		final String propName = original_IM.getPropertyName();
 		process(original_IM.getTarget());
 		if (isLegalIdentifier(propName)) {
+			if (original.isOptionalChaining()) {
+				write('?');
+			}
 			write('.');
 			processTypeArgs(original.getTypeArgs());
 			write(propName);
@@ -779,6 +788,9 @@ import org.eclipse.xtext.EcoreUtil2;
 			// NOTE: re-writing a property access into an index access, here, is not 100% clean; instead, we could
 			// throw an exception here and require an additional (late) AST transformation that transforms all property
 			// access expression without legal identifier into access expressions; but this would be overkill.
+			if (original.isOptionalChaining()) {
+				write("?.");
+			}
 			write('[');
 			writeQuoted(propName);
 			write(']');

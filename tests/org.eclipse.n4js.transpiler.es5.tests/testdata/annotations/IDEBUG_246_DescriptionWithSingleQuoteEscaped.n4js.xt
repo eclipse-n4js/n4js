@@ -15,7 +15,7 @@
 <==
 stdout:
 [Function: D]
-@ Description [ '<\'>' ]
+@ Description
   t1 <'>
   t2 true
   t3 "<'>"
@@ -26,9 +26,11 @@ stderr:
 @Description("<\'>")
 class D{}
 
+// Remark: avoid using x.toString() calls since different node versions emit different string literals!
+
 console.log(D)
 D.n4type.annotations.forEach(function(a){
-	console.log("@", a.name, a.details)
+	console.log("@", a.name)
 	a.details.forEach(function(ad){
 		console.log(" ", "t1", ad)
 		console.log(" ", "t2",ad==="<\'>")

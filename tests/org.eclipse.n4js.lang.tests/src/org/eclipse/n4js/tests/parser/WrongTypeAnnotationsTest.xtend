@@ -11,6 +11,10 @@
 package org.eclipse.n4js.tests.parser
 
 import org.junit.Test
+import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.n4JS.ExpressionStatement
+import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4JS.IdentifierRef
 
 /**
  */
@@ -56,5 +60,22 @@ class WrongTypeAnnotationsTest extends AbstractParserTest {
 		'''.parseESWithError
 	// assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 	}
-
+	
+	@Test
+	def void testWrongArrowFunctionSignature() {
+		val script = '''
+			let fun = number... a => b.sort;
+		'''.parseESWithError
+		val elements = script.scriptElements
+		assertEquals(2, elements.size)
+		val varStmt = elements.head as VariableStatement
+		val varDecl = varStmt.varDeclsOrBindings.head as VariableDeclaration
+		assertEquals('fun', varDecl.name)
+		assertNull(varDecl.expression)
+		val exprStmt = elements.last as ExpressionStatement
+		val identifierRef = exprStmt.expression as IdentifierRef
+		// this is really bad error recovery
+		assertEquals('sort', identifierRef.idAsText)
+	}
+	
 }

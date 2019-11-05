@@ -12,11 +12,14 @@ package org.eclipse.n4js.ui.wizard.components;
 
 import static org.eclipse.n4js.ui.wizard.components.WizardComponentUtils.fillTextDefaults;
 
-import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.typed.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.ui.dialog.SingleClassSelectionDialog;
+import org.eclipse.n4js.ui.wizard.classes.N4JSClassWizardModel;
+import org.eclipse.n4js.ui.wizard.model.ClassifierReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,10 +30,6 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import org.eclipse.n4js.ui.dialog.SingleClassSelectionDialog;
-import org.eclipse.n4js.ui.wizard.classes.N4JSClassWizardModel;
-import org.eclipse.n4js.ui.wizard.model.ClassifierReference;
 
 /**
  * A provider for {@link SuperClassComponent}s
@@ -89,10 +88,8 @@ public class SuperClassComponentProvider {
 		private void setupBindings() {
 			// super class property binding
 
-			@SuppressWarnings("unchecked")
-			IObservableValue<ClassifierReference> superClassValue = BeanProperties
-					.value(N4JSClassWizardModel.class, N4JSClassWizardModel.SUPER_CLASS_PROPERTY).observe(model);
-			@SuppressWarnings("unchecked")
+			IObservableValue<ClassifierReference> superClassValue = BeanProperties.value(N4JSClassWizardModel.class,
+					N4JSClassWizardModel.SUPER_CLASS_PROPERTY, ClassifierReference.class).observe(model);
 			IObservableValue<String> superClassUI = WidgetProperties.text(SWT.Modify).observe(text);
 
 			getDataBindingContext().bindValue(superClassUI, superClassValue,

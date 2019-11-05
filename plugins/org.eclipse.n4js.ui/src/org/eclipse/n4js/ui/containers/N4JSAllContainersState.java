@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.containers;
 
-import static com.google.common.collect.FluentIterable.from;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,9 +24,11 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ui.external.ProjectStateChangeListener;
 import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.xtext.ui.containers.AbstractAllContainersState;
 
@@ -43,8 +43,6 @@ import com.google.inject.Singleton;
 public class N4JSAllContainersState extends AbstractAllContainersState {
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSAllContainersState.class);
-
-	private static final String PLATFORM_RESOURCE_SCHEME = "platform:/resource";
 
 	@Inject
 	private N4JSProjectsStateHelper projectsHelper;
@@ -151,7 +149,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 				return false;
 			}
 			if (delta.getResource() instanceof IFolder) {
-				if ("node_modules".equals(delta.getFullPath().lastSegment())) {
+				if (N4JSGlobals.NODE_MODULES.equals(delta.getFullPath().lastSegment())) {
 					return true;
 				}
 				return false;
@@ -203,19 +201,7 @@ public class N4JSAllContainersState extends AbstractAllContainersState {
 	}
 
 	private boolean isSourceContainerModification(final IResourceDelta delta) {
-		final String fullPathStr = delta.getFullPath().toString();
-		final URI folderUri = URI.createPlatformResourceURI(fullPathStr, true);
-		final IN4JSProject project = core.findProject(folderUri).orNull();
-		if (null != project && project.exists()) {
-			return from(project.getSourceContainers())
-					.transform(container -> container.getLocation())
-					.filter(uri -> uri.isPlatformResource())
-					.transform(uri -> uri.toString())
-					.transform(uri -> uri.replaceFirst(PLATFORM_RESOURCE_SCHEME, ""))
-					.firstMatch(uri -> uri.equals(fullPathStr))
-					.isPresent();
-		}
-		return false;
+		return ProjectStateChangeListener.isSourceContainerModification(core, delta.getFullPath());
 	}
 
 	private boolean packageJSONFileHasBeenChanged(IResourceDelta delta) {

@@ -23,7 +23,7 @@ import org.eclipse.xtext.nodemodel.ILeafNode;
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 
-import org.eclipse.n4js.ui.contentassist.antlr.internal.InternalN4JSParser;
+import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser;
 
 /**
  * Converts the grammar elements from a leaf node to the CA parsers expected token type.

@@ -10,7 +10,17 @@
  */
 package org.eclipse.n4js.ts.scoping.builtin;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.URIConverter;
+import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
+import org.eclipse.xtext.resource.ClasspathUriResolutionException;
+import org.eclipse.xtext.resource.ClasspathUriUtil;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
+import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.inject.Inject;
 
@@ -20,9 +30,58 @@ import com.google.inject.Inject;
  */
 public class ResourceSetWithBuiltInScheme extends SynchronizedXtextResourceSet {
 
+	private final UriExtensions uriExtensions = new UriExtensions();
+
 	@Inject
 	private void configureWith(BuiltInSchemeRegistrar registrar) {
 		registrar.registerScheme(this);
+	}
+
+	private URI resolveClasspathURI(URI uri) {
+		return getClasspathUriResolver().resolve(getClasspathURIContext(), uri);
+	}
+
+	@Override
+	public URIConverter getURIConverter() {
+		if (uriConverter == null) {
+			uriConverter = new ExtensibleURIConverterImpl() {
+				@Override
+				public URI normalize(URI uri) {
+					URI normalizedURI = normalizationMap.get(uri);
+					if (normalizedURI != null) {
+						return normalizedURI;
+					}
+					if (ClasspathUriUtil.isClasspathUri(uri)) {
+						URI result = ResourceSetWithBuiltInScheme.this.resolveClasspathURI(uri);
+						if (ClasspathUriUtil.isClasspathUri(result))
+							throw new ClasspathUriResolutionException(result);
+						result = super.normalize(result);
+						return result;
+					}
+					URI result = super.normalize(uri);
+					if (!result.isRelative())
+						result = uriExtensions.withEmptyAuthority(result);
+					return result;
+				}
+
+				@Override
+				public InputStream createInputStream(URI uri, Map<?, ?> options) throws IOException {
+					// timeout is set here because e.g. SAXXMIHandler.resolveEntity(String,String) calls it without a
+					// timeout
+					// causing the builder to wait too long...
+					options = addTimeout(options);
+					return super.createInputStream(uri, options);
+				}
+
+				@Override
+				public Map<String, ?> contentDescription(URI uri, Map<?, ?> options) throws IOException {
+					options = addTimeout(options);
+					return super.contentDescription(uri, options);
+				}
+
+			};
+		}
+		return super.getURIConverter();
 	}
 
 }

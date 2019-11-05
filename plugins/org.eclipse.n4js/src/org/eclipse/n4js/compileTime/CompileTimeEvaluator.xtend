@@ -294,7 +294,7 @@ class CompileTimeEvaluator {
 		if (targetElem !== sym && !(targetElem instanceof TClassifier || targetElem instanceof TEnum)) {
 			return CompileTimeValue.error(
 				"target of a property access must be a direct reference to a class, interface, or enum", expr,
-				N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Target);
+				N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 		}
 		return CompileTimeValue.error("property access must point to const fields, literals of @StringBased enums, or built-in symbols", expr);
 	}

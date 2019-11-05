@@ -32,7 +32,6 @@ Contributors:
 		<dir.lib>${project.build.directory}/lib</dir.lib>
 		<plugins.file>plugins-list.txt</plugins.file>
 		<path.dot>.</path.dot>
-		<cli.fat.jar.classifier>jar-with-dependencies</cli.fat.jar.classifier>
 	</properties>
 
 
@@ -157,7 +156,7 @@ Contributors:
 				</executions>
 			</plugin>
 
-			<!-- copy the longname-jar to a usable shorthand name. -->
+			<!-- Copy the longname-jar to a usable shorthand name AND also copy it to the global target folder in the repository root folder. -->
 			<plugin>
 				<groupId>com.coderplus.maven.plugins</groupId>
 				<artifactId>copy-rename-maven-plugin</artifactId>
@@ -170,9 +169,17 @@ Contributors:
 							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<sourceFile>${project.build.directory}/${hlc.jar-longname}</sourceFile>
-							<destinationFile>${project.build.directory}/${hlc.jar-shortname}</destinationFile>
 							<overWrite>true</overWrite>
+							<fileSets>
+								<fileSet>
+									<sourceFile>${project.build.directory}/${hlc.jar-longname}</sourceFile>
+									<destinationFile>${project.build.directory}/${hlc.jar-shortname}</destinationFile>
+								</fileSet>
+								<fileSet>
+									<sourceFile>${project.build.directory}/${hlc.jar-shortname}</sourceFile>
+									<destinationFile>${project.basedir}/../../target/${hlc.jar-shortname}</destinationFile>
+								</fileSet>
+							</fileSets>
 						</configuration>
 					</execution>
 				</executions>

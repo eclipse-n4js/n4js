@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
@@ -42,12 +43,12 @@ import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.nodejs.NodeRunner;
 import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
-import org.eclipse.n4js.test.helper.hlc.N4jsLibsAccess;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
@@ -165,7 +166,7 @@ public class XpectN4JSES5TranspilerHelper {
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
 					packagesPath.resolve(artificialProjectName),
-					artificialProjectName);
+					new N4JSProjectName(artificialProjectName));
 		} else {
 			// In the non-GUI case, we need to calculate dependencies etc. manually
 			final Iterable<Resource> dependencies = from(getDependentResources());
@@ -207,7 +208,7 @@ public class XpectN4JSES5TranspilerHelper {
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
 					root.resolve(artificialProjectName),
-					artificialProjectName);
+					new N4JSProjectName(artificialProjectName));
 		}
 
 		return configRunner.executeWithConfig(runConfig, decorateStdStreams);
@@ -300,7 +301,7 @@ public class XpectN4JSES5TranspilerHelper {
 
 					if (potentialExternalSourceRelativeURISegments != null) {
 						URI potentialExternalSourceURI = c.getLocation().appendSegments(
-								potentialExternalSourceRelativeURISegments);
+								potentialExternalSourceRelativeURISegments).toURI();
 						try {
 							Resource externalDep = dep.getResourceSet().getResource(potentialExternalSourceURI, true);
 							script = (Script) externalDep.getContents().get(0);

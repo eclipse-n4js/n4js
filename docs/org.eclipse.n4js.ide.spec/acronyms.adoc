@@ -1,0 +1,90 @@
+////
+Copyright (c) 2019 NumberFour AG and others
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+[[sec:Acronyms]]
+= Acronyms
+
+[[AC]]
+
+
+[.language-bash]
+[cols="^1m,5h,^1m,5h"]
+|===
+|CDep
+|Compile-Time Dependency
+|RDep
+|Run-Time Dependency
+|LDep
+|Load-Time Dependency
+|IDep
+|Initialization-Time Dependency
+|EDep
+|Execution-Time Dependency
+|ANTLR
+|ANother Tool for Language Recognition
+|API
+|Application Programming Interface
+|AST
+|Abstract Syntax Tree
+|ASI
+|Automatic Semicolon Insertion
+|BNF
+|Backus-Naur Form
+|CLI
+|Command Line Interface (including a headless compiler and runner.)
+|DI
+|Dependency Injection
+|DIC
+|DI Component
+|DOM
+|Document Object Model
+|DSL
+|Domain Specific Language
+|EBNF
+|Extended Backus-Naur Form
+|EMF
+|Eclipse Modeling Framework [[EMF]]
+|FQN
+|Fully Qualified Name
+|GLB
+|Greatest Lower Bound, also known as _infimum_
+|GCST
+|Greatest Common Sub Type, also known as _meet_
+|IDE
+|Integrated Development Environment
+|IDL
+|Interface Definition Language
+|LSP
+|Liskov Substitution Principle cite:[Martin96b]
+//TODO missing from biblio ^^^
+|LUB
+|Least Upper Bound, also known as _supremum_
+|LCST
+|Least Common Super Type, also known as _join_
+|N4JS
+|N4JS for JavaScript
+|N4JSED
+|N4JS Environment Definition
+|N4JSIDE
+|N4JS Integrated Development Environment (Eclipse-based IDE for all N4JS related languages and projects)
+|VM
+|Virtual Machine
+|XML
+|Extensible Markup Language
+|XSLT / XSL
+|XSL Transformations
+|XSL
+|Extensible Stylesheet Language
+|WYSIWYG
+|What You See Is What You Get
+|WLOG
+|Without loss of generality
+|===

@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="8.003937 10.838583 1012.7559 899.2283" width="1012.7559" height="899.2283">
+  <defs>
+    <font-face font-family="Helvetica" font-size="8" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledDiamond_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-9 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M -8 0 L -4 3 L 0 0 L -4 -3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="EmptyCenterBall_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -6 12 12" markerWidth="12" markerHeight="12" color="black">
+      <g>
+        <circle cx="4.799998" cy="0" r="4.79999555411813" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UML2Socket_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -7 8 14" markerWidth="8" markerHeight="14" color="black">
+      <g>
+        <path d="M 6 -6 C -1 -6 -1 6 6 6" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2018-04-02 21:55:48 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="8.003937" y="10.838583" width="1012.7559" height="899.2283"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_51">
+        <rect x="646.0866" y="67.677165" width="141.73228" height="45" fill="#b8f2ff"/>
+        <rect x="646.0866" y="67.677165" width="141.73228" height="45" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(651.0866 78.177165)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="15.168877" y="8">«org.eclipse.n4js.ui.internal»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="29.186455" y="21">N4JSInjector</tspan>
+        </text>
+      </g>
+      <g id="Graphic_50">
+        <rect x="858.685" y="96.02362" width="147.40157" height="45.35433" fill="#b8f2ff"/>
+        <rect x="858.685" y="96.02362" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.685 106.70079)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="36.458603" y="8">«org.eclipse.n4js»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="8.694931" y="21">N4JSRuntimeModule</tspan>
+        </text>
+      </g>
+      <g id="Graphic_49">
+        <rect x="858.685" y="42.165354" width="147.40157" height="45.35433" fill="#b8f2ff"/>
+        <rect x="858.685" y="42.165354" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.685 52.84252)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="32.233994" y="8">«org.eclipse.n4js.ui»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="26.69493" y="21">N4JSUiModule</tspan>
+        </text>
+      </g>
+      <g id="Line_48">
+        <path d="M 797.5689 90.17717 L 823.5689 90.17717 L 823.5689 118.70079 L 858.685 118.70079" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_47">
+        <path d="M 797.5689 90.17717 L 823.5689 90.17717 L 823.5689 64.84252 L 858.685 64.84252" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_46">
+        <path d="M 636.8366 90.17717 L 522.8366 90.17717 L 522.8366 288.77953 L 399.47244 288.77953" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_45">
+        <rect x="164.19685" y="11.338583" width="144.35433" height="45" fill="#dedede"/>
+        <rect x="164.19685" y="11.338583" width="144.35433" height="45" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(169.19685 21.838583)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="2.0287247" y="8">«org.eclipse.xtext.ui.shared.internal»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="25.165443" y="21">SharedInjector</tspan>
+        </text>
+      </g>
+      <g id="Graphic_44">
+        <rect x="252.07087" y="266.10236" width="147.40157" height="45.35433" fill="#dedede"/>
+        <rect x="252.07087" y="266.10236" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(257.07087 276.77953)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="3.552353" y="8">«org.eclipse.xtext.ui.shared.internal»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="27.3629" y="21">SharedModule</tspan>
+        </text>
+      </g>
+      <g id="Graphic_43">
+        <rect x="252.28346" y="615.1181" width="147.40157" height="45.35433" fill="#dedede"/>
+        <rect x="252.28346" y="615.1181" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(257.28346 625.7953)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="33.122665" y="8">«com.google.inject»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="17.363876" y="21">OverridingModule</tspan>
+        </text>
+      </g>
+      <g id="Graphic_42">
+        <rect x="530.07874" y="790.8661" width="147.40157" height="45.35433" fill="#e4c9ff"/>
+        <rect x="530.07874" y="790.8661" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(535.07874 801.5433)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="13.780869" y="8">«org.eclipse.n4js.ts.ui.internal»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.715439" y="21">ContributingModule</tspan>
+        </text>
+      </g>
+      <g id="Line_41">
+        <path d="M 236.37402 65.58858 L 236.37402 288.77953 L 252.07087 288.77953" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_40">
+        <path d="M 236.37402 65.58858 L 236.37402 637.7953 L 252.28346 637.7953" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_39">
+        <rect x="541.4173" y="615.1181" width="229.3937" height="45" fill="#b8f2ff"/>
+        <rect x="541.4173" y="615.1181" width="229.3937" height="45" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(546.4173 625.6181)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="73.23006" y="8">«org.eclipse.n4js.ui»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="5.0249786" y="21">N4JSClusteringBuilderConfiguration</tspan>
+        </text>
+      </g>
+      <g id="Line_38">
+        <line x1="541.4173" y1="637.6181" x2="474.3675" y2="637.7834" marker-end="url(#EmptyCenterBall_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_37">
+        <line x1="400.18504" y1="637.7953" x2="461.0675" y2="637.7953" marker-end="url(#UML2Socket_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_36">
+        <rect x="8.503937" y="700.1575" width="144.35433" height="45" fill="#dedede"/>
+        <rect x="8.503937" y="700.1575" width="144.35433" height="45" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(13.503937 710.6575)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="2.0287247" y="8">«org.eclipse.xtext.ui.shared.internal»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="30.509193" y="21">ChildInjector</tspan>
+        </text>
+      </g>
+      <g id="Line_35">
+        <path d="M 80.6811 690.9075 L 80.6811 33.838583 L 164.19685 33.838583" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_34">
+        <rect x="226.77165" y="790.8661" width="147.40157" height="45.35433" fill="#dedede"/>
+        <rect x="226.77165" y="790.8661" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(231.77165 801.5433)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="33.122665" y="8">«com.google.inject»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="17.363876" y="21">OverridingModule</tspan>
+        </text>
+      </g>
+      <g id="Line_33">
+        <path d="M 80.6811 754.4075 L 80.6811 813.5433 L 226.77165 813.5433" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_32">
+        <line x1="530.07874" y1="813.5433" x2="435.4535" y2="813.2061" marker-end="url(#EmptyCenterBall_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_31">
+        <line x1="374.17323" y1="813.5433" x2="422.1537" y2="813.2423" marker-end="url(#UML2Socket_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_30">
+        <rect x="646.0866" y="189.56693" width="141.73228" height="45" fill="#efcfbb"/>
+        <rect x="646.0866" y="189.56693" width="141.73228" height="45" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(651.0866 200.06693)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="5.1649704" y="8">«org.eclipse.n4js.n4mf.ui.internal»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="27.862236" y="21">N4MFInjector</tspan>
+        </text>
+      </g>
+      <g id="Graphic_29">
+        <rect x="858.685" y="217.91338" width="147.40157" height="45.35433" fill="#efcfbb"/>
+        <rect x="858.685" y="217.91338" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.685 228.59055)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="26.454697" y="8">«org.eclipse.n4js.n4mf»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="8.694931" y="21">N4JSRuntimeModule</tspan>
+        </text>
+      </g>
+      <g id="Graphic_28">
+        <rect x="858.685" y="161.22047" width="147.40157" height="45.35433" fill="#efcfbb"/>
+        <rect x="858.685" y="161.22047" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.685 171.89764)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="22.230087" y="8">«org.eclipse.n4js.n4mf.ui»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="26.69493" y="21">N4JSUiModule</tspan>
+        </text>
+      </g>
+      <g id="Line_27">
+        <path d="M 797.0689 212.06693 L 823.0689 212.06693 L 823.0689 240.59055 L 858.685 240.59055" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_26">
+        <path d="M 797.0689 212.06693 L 823.0689 212.06693 L 823.0689 183.89764 L 858.685 183.89764" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_25">
+        <path d="M 636.8366 212.06693 L 522.8366 212.06693 L 522.8366 288.77953 L 399.47244 288.77953" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_24">
+        <rect x="646.0866" y="490.03937" width="141.73228" height="45" fill="#e4c9ff"/>
+        <rect x="646.0866" y="490.03937" width="141.73228" height="45" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(651.0866 500.53937)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="10.94622" y="8">«org.eclipse.n4js.ts.ui.internal»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="27.296806" y="21">TypesInjector</tspan>
+        </text>
+      </g>
+      <g id="Graphic_23">
+        <rect x="858.8976" y="464.8819" width="147.40157" height="45.35433" fill="#e4c9ff"/>
+        <rect x="858.8976" y="464.8819" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.8976 475.55905)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="32.235947" y="8">«org.eclipse.n4js.ts»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="6.8052826" y="21">TypesRuntimeModule</tspan>
+        </text>
+      </g>
+      <g id="Graphic_22">
+        <rect x="858.685" y="409.25197" width="147.40157" height="45.35433" fill="#e4c9ff"/>
+        <rect x="858.685" y="409.25197" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.685 419.92913)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="28.011337" y="8">«org.eclipse.n4js.ts.ui»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="24.805283" y="21">TypesUiModule</tspan>
+        </text>
+      </g>
+      <g id="Line_21">
+        <path d="M 797.5689 512.53937 L 823.5689 512.53937 L 823.5689 487.55905 L 858.8976 487.55905" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_20">
+        <path d="M 797.0689 512.53937 L 823.0689 512.53937 L 823.0689 431.92913 L 858.685 431.92913" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_19">
+        <rect x="646.0866" y="317.126" width="141.73228" height="45" fill="#f1fda4"/>
+        <rect x="646.0866" y="317.126" width="141.73228" height="45" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(651.0866 327.626)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="4.051689" y="8">«org.eclipse.n4js.regex.ui.internal»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="26.186455" y="21">RegexInjector</tspan>
+        </text>
+      </g>
+      <g id="Graphic_18">
+        <rect x="858.8976" y="342.99212" width="147.40157" height="45.35433" fill="#f1fda4"/>
+        <rect x="858.8976" y="342.99212" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.8976 346.6693)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="25.341415" y="8">«org.eclipse.n4js.regex»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="14.015244" y="21">RegularExpression</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="23.70372" y="35">RuntimeModule</tspan>
+        </text>
+      </g>
+      <g id="Graphic_17">
+        <rect x="858.8976" y="289.13386" width="147.40157" height="45.35433" fill="#f1fda4"/>
+        <rect x="858.8976" y="289.13386" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.8976 292.81102)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="21.116806" y="8">«org.eclipse.n4js.regex.ui»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="14.015244" y="21">RegularExpression</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="41.70372" y="35">UiModule</tspan>
+        </text>
+      </g>
+      <g id="Line_16">
+        <path d="M 797.5689 339.626 L 823.5689 339.626 L 823.5689 365.6693 L 858.8976 365.6693" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_15">
+        <path d="M 797.0689 339.626 L 823.0689 339.626 L 823.0689 311.81102 L 858.8976 311.81102" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_14">
+        <path d="M 636.8366 512.53937 L 522.8366 512.53937 L 522.8366 288.77953 L 399.47244 288.77953" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_13">
+        <path d="M 636.8366 339.626 L 522.8366 339.626 L 522.8366 288.77953 L 399.47244 288.77953" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_12">
+        <rect x="858.8976" y="600.9449" width="147.40157" height="45.35433" fill="#e4c9ff"/>
+        <rect x="858.8976" y="600.9449" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.8976 604.62204)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="32.235947" y="8">«org.eclipse.n4js.ts»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="22.792587" y="21">TypeExpression</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="23.70372" y="35">RuntimeModule</tspan>
+        </text>
+      </g>
+      <g id="Graphic_11">
+        <rect x="858.8976" y="544.25197" width="147.40157" height="45.35433" fill="#e4c9ff"/>
+        <rect x="858.8976" y="544.25197" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.8976 547.9291)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="28.011337" y="8">«org.eclipse.n4js.ts.ui»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="22.792587" y="21">TypeExpression</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="41.70372" y="35">UiModule</tspan>
+        </text>
+      </g>
+      <g id="Line_10">
+        <path d="M 797.0689 512.53937 L 823.0689 512.53937 L 823.0689 623.62204 L 858.8976 623.62204" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_9">
+        <path d="M 797.0689 512.53937 L 823.0689 512.53937 L 823.0689 566.9291 L 858.8976 566.9291" marker-start="url(#FilledDiamond_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_8">
+        <rect x="529.86614" y="864.2126" width="147.40157" height="45.35433" fill="#ffd7df"/>
+        <rect x="529.86614" y="864.2126" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(534.86614 874.8898)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="11.335556" y="8">«org.eclipse.n4js.environments»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.715439" y="21">ContributingModule</tspan>
+        </text>
+      </g>
+      <g id="Line_7">
+        <line x1="529.86614" y1="886.8898" x2="434.5067" y2="816.0513" marker-end="url(#EmptyCenterBall_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_6">
+        <rect x="529.86614" y="719.6457" width="147.40157" height="45.35433" fill="#b8f2ff"/>
+        <rect x="529.86614" y="719.6457" width="147.40157" height="45.35433" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(534.86614 730.3228)" fill="black">
+          <tspan font-family="Helvetica" font-size="8" font-weight="400" fill="black" x="18.003525" y="8">«org.eclipse.n4js.ui.internal»</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.715439" y="21">ContributingModule</tspan>
+        </text>
+      </g>
+      <g id="Line_5">
+        <line x1="529.86614" y1="742.3228" x2="434.55946" y2="810.399" marker-end="url(#EmptyCenterBall_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_4">
+        <path d="M 1020.2598 767.8902 C 1020.2598 756.0751 1016.7678 754.6133 991.2597 742.9204 L 990.9903 742.7994 C 965.3475 730.98425 965.0807 730.98425 938.7643 730.98425 C 903.7233 730.98425 745.2992 730.98425 745.2992 730.98425 L 745.2992 855.7087 L 1020.2598 855.7087 L 1020.2598 767.8902 Z" fill="white"/>
+        <path d="M 1020.2598 767.8902 C 1020.2598 756.0751 1016.7678 754.6133 991.2597 742.9204 L 990.9903 742.7994 C 965.3475 730.98425 965.0807 730.98425 938.7643 730.98425 C 903.7233 730.98425 745.2992 730.98425 745.2992 730.98425 L 745.2992 855.7087 L 1020.2598 855.7087 L 1020.2598 767.8902 Z M 1020.2598 767.2815 C 1020.2598 756.0751 1019.9904 756.0751 965.0807 756.0751 L 965.0807 756.0751 C 965.0807 731.1065 965.0807 730.98425 940.3755 730.98425" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(750.2992 758.34645)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="2.4051208" y="11">Note that &lt;n4js.environments&gt; is a weird bundle. </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="8.730316" y="25">It is not an UI bundle, but it depends on UI and </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="21.755707" y="39">contributes to the UI (via extension point). </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x=".3982849" y="53">Additionally it has no owned Activator, instead it is </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="74.78012" y="67">loaded from &lt;n4js.ts&gt;</tspan>
+        </text>
+      </g>
+      <g id="Line_3">
+        <line x1="677.2677" y1="886.8898" x2="745.3166" y2="855.9158" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

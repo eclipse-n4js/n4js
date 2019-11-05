@@ -23,7 +23,7 @@ import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.transpiler.operations.TranspilerStateOperations.*
+import static extension org.eclipse.n4js.transpiler.TranspilerStateOperations.*
 
 /**
  */

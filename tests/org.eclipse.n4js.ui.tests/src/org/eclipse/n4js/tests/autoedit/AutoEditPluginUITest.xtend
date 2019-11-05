@@ -11,16 +11,18 @@
 package org.eclipse.n4js.tests.autoedit
 
 import com.google.common.base.Charsets
-import org.eclipse.n4js.ui.internal.N4JSActivator
 import org.eclipse.core.resources.IEncodedStorage
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.PlatformObject
+import org.eclipse.core.runtime.preferences.InstanceScope
+import org.eclipse.n4js.ui.internal.N4JSActivator
 import org.eclipse.ui.PlatformUI
+import org.eclipse.ui.preferences.ScopedPreferenceStore
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
-import org.eclipse.xtext.ui.testing.AbstractCStyleLanguageAutoEditTest
 import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.ui.editor.utils.EditorUtils
+import org.eclipse.xtext.ui.testing.AbstractCStyleLanguageAutoEditTest
 import org.eclipse.xtext.util.StringInputStream
 import org.junit.After
 import org.junit.Before
@@ -30,6 +32,8 @@ import org.junit.Test
  */
 class AutoEditPluginUITest extends AbstractCStyleLanguageAutoEditTest {
 
+	private static final String ORG_ECLIPSE_UI_EDITORS = "org.eclipse.ui.editors";
+	private static final String SPACES_FOR_TABS = "spacesForTabs";
 	private static final String LINE_SEPARATOR = System.lineSeparator;
 
 	@FinalFieldsConstructor
@@ -58,16 +62,29 @@ class AutoEditPluginUITest extends AbstractCStyleLanguageAutoEditTest {
 		}
 
 	}
+	
+	var ScopedPreferenceStore prefsUiEditors;
+	var boolean prefsUiEditors_spacesForTabs;
 
 	@Before
 	override void setUp() throws Exception {
 		closeWelcomePage();
 		closeEditors();
+		
+		// Some test cases of class AbstractCStyleLanguageAutoEditTest expect tabs,
+		// hence we need to set the default to tabs instead of spaces.
+		prefsUiEditors = new ScopedPreferenceStore(InstanceScope.INSTANCE, ORG_ECLIPSE_UI_EDITORS);
+		prefsUiEditors_spacesForTabs = prefsUiEditors.getBoolean(SPACES_FOR_TABS);
+		if (prefsUiEditors_spacesForTabs) {
+			prefsUiEditors.setValue(SPACES_FOR_TABS, false);
+		}
 	}
 
 	@After
 	override void tearDown() throws Exception {
 		closeEditors();
+		// Restore initial setting
+		prefsUiEditors.setValue(SPACES_FOR_TABS, prefsUiEditors_spacesForTabs);
 	}
 
 	override protected String getEditorId() {

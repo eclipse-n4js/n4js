@@ -5,7 +5,7 @@
 		"semver": "6.1.1"
 	},
 	"scripts": {
-		"build": "./npm-build-all.sh"
+		"test": "lerna run --stream test"
 	},
 	"workspaces": [
 		"packages/*"

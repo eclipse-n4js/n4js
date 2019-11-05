@@ -19,8 +19,6 @@ import com.google.common.collect.ComparisonChain;
 
 /** Represents the control flow between two nodes. */
 public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlFlowEdge> {
-	/** The type of the control flow */
-	public final ControlFlowType cfType;
 	/** The context of an edge that is caused by {@link FinallyBlock}s */
 	public final JumpToken finallyPathContext;
 
@@ -37,12 +35,11 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 	 * Creates a control flow edge from start to end of the given {@link ControlFlowType}.
 	 */
 	public ControlFlowEdge(Node start, Node end, ControlFlowType cfType) {
-		super(start, end);
+		super(start, end, cfType);
 		boolean correctEdgeDirection = cfType.isBackwards() == (start.astPosition > end.astPosition);
 		checkState(correctEdgeDirection, "Edge has wrong direction");
 
 		this.finallyPathContext = null;
-		this.cfType = cfType;
 	}
 
 	/**
@@ -50,9 +47,8 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 	 * Creates a control flow edge from start to end caused by a {@link FinallyBlock} and the given {@link JumpToken}.
 	 */
 	public ControlFlowEdge(Node start, Node end, JumpToken finallyPathContext) {
-		super(start, end);
+		super(start, end, finallyPathContext.cfType);
 		this.finallyPathContext = finallyPathContext;
-		this.cfType = finallyPathContext.cfType;
 	}
 
 	/** There should be no two edges with same start and end nodes. */
@@ -61,6 +57,7 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		int result = ComparisonChain.start()
 				.compare(start.id, edge.start.id)
 				.compare(end.id, edge.end.id)
+				.compare(cfType, edge.cfType)
 				.result();
 
 		return result;

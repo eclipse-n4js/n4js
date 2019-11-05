@@ -34,6 +34,7 @@ Contributors:
 		<module>org.eclipse.n4js.tester.tests.helper</module>
 		<module>org.eclipse.n4js.json.tests.helper</module>
 		<module>org.eclipse.n4js.semver.tests.helper</module>
+		<module>org.eclipse.n4js.cli.tests.helper</module>
 	</modules>
 
 </project>

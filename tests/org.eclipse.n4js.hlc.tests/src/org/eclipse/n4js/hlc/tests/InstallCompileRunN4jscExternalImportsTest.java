@@ -10,12 +10,18 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
-import org.eclipse.n4js.hlc.base.BuildType;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.test.helper.hlc.N4CliHelper;
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +33,7 @@ import com.google.common.base.Predicates;
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
-public class InstallCompileRunN4jscExternalImportsTest extends AbstractN4jscTest {
+public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompileTest {
 	File workspace;
 
 	/** Prepare workspace. */
@@ -47,23 +53,27 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractN4jscTest
 	 * running it with Common JS.
 	 */
 	@Test
-	@Ignore // remove @Ignore when GH-887 is merged
-	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
+	@Ignore // GH-1510
+	public void testCompileAndRunWithExternalDependencies() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/external.project/src/Main.n4js";
+		final String fileToRun = packages + "/external.project/src-gen/Main.js";
 
-		final String[] args = {
-				"--installMissingDependencies",
-				"--runWith", "nodejs",
-				"--run", fileToRun,
-				"--projectlocations", packages,
-				"--buildType", BuildType.allprojects.toString()
-		};
-		final String out = runAndCaptureOutput(args);
-		N4CliHelper.assertExpectedOutput(
-				"react is not undefined true\nreact-dom is not undefined true\nimports from libs are different true",
-				out);
+		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
+		assertEquals(yarnInstallResult.toString(), 1, yarnInstallResult.getExitCode());
+		assertTrue(yarnInstallResult.toString(),
+				yarnInstallResult.getErrOut().contains("could not find a copy of eslint to link in"));
+
+		N4jscOptions options = COMPILE(workspace);
+		CliCompileResult cliResult = n4jsc(options);
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
+
+		String expectedString = "react is not undefined true\n"
+				+ "react-dom is not undefined true\n"
+				+ "imports from libs are different true";
+
+		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 
 }

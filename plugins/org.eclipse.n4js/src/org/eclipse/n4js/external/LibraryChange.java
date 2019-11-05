@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.external;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.xtext.util.Strings;
 
 import com.google.common.base.Objects;
@@ -39,14 +39,14 @@ public class LibraryChange {
 	/** The type of the npm change */
 	public final LibraryChangeType type;
 	/** The location of the npm package */
-	public final URI location;
+	public final FileURI location;
 	/** The name of the npm package that */
-	public final String name;
+	public final N4JSProjectName name;
 	/** The new version to be installed. Not defined when {@link #type} is {@link LibraryChangeType#Removed}. */
 	public final String version;
 
 	/** Constructor */
-	public LibraryChange(LibraryChangeType type, URI location, String name, String version) {
+	public LibraryChange(LibraryChangeType type, FileURI location, N4JSProjectName name, String version) {
 		Preconditions.checkArgument(name != null && !name.isEmpty());
 		this.type = type;
 		this.location = location;
@@ -66,15 +66,15 @@ public class LibraryChange {
 		} else if (version == null || lc.version == null) {
 			return false;
 		}
-		return URIUtils.equals(location, lc.location);
+		return location.equals(lc.location);
 	}
 
 	@Override
 	public int hashCode() {
 		if (version != null) {
-			return Objects.hashCode(URIUtils.hashCode(location), version);
+			return Objects.hashCode(location, version);
 		}
-		return URIUtils.hashCode(location);
+		return location.hashCode();
 	}
 
 	@Override

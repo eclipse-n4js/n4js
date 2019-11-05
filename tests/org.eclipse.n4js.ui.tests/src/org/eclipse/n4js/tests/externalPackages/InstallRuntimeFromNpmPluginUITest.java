@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
@@ -75,8 +76,8 @@ public class InstallRuntimeFromNpmPluginUITest extends AbstractBuilderParticipan
 						// test project of type 'library'
 						.withType(ProjectType.LIBRARY)
 						// add dependency to node runtime environment in specific version
-						.withDependency("n4js-runtime", "0.14.0")
-						.withDependency("n4js-runtime-node", "0.14.0"));
+						.withDependency(new N4JSProjectName("n4js-runtime"), "0.14.0")
+						.withDependency(new N4JSProjectName("n4js-runtime-node"), "0.14.0"));
 
 		configureProjectWithXtext(project);
 

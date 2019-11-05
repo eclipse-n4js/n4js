@@ -21,12 +21,9 @@ import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
-import org.eclipse.n4js.n4JS.AssignmentExpression;
-import org.eclipse.n4js.n4JS.DestructNode;
-import org.eclipse.n4js.n4JS.DestructureUtils;
-import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionExpression;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.utils.FindReferenceHelper;
@@ -119,7 +116,7 @@ public class NullUndefinedValidator implements FlowValidator {
 		writeRefs.add(ndr.cfe);
 
 		for (EObject ref : refs) {
-			if (isWriteAccess(ref)) {
+			if (N4JSASTUtils.isWriteAccess(ref)) {
 				writeRefs.add(ref);
 			}
 		}
@@ -136,30 +133,6 @@ public class NullUndefinedValidator implements FlowValidator {
 			if (parentScope != getParentScope(ref)) {
 				return true;
 			}
-		}
-
-		return false;
-	}
-
-	private boolean isWriteAccess(EObject reference) {
-		EObject parent = reference.eContainer();
-		if (parent == null) {
-			return false;
-		}
-
-		if (parent instanceof AssignmentExpression) {
-			AssignmentExpression ae = (AssignmentExpression) parent;
-			return ae.getLhs() == reference;
-		}
-		if (parent instanceof ForStatement) {
-			ForStatement fs = (ForStatement) parent;
-			return fs.getInitExpr() == reference;
-		}
-
-		DestructNode dNode = DestructureUtils.getCorrespondingDestructNode(reference);
-		if (dNode != null) {
-			dNode = dNode.findNodeForElement(parent);
-			return dNode != null;
 		}
 
 		return false;

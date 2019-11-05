@@ -11,15 +11,14 @@
 package org.eclipse.n4js.transpiler.es5.xpect.tests;
 
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
+import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
-import org.junit.runner.RunWith;
 import org.eclipse.xpect.XpectImport;
-import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
 import org.eclipse.xpect.runner.XpectTestFiles;
-import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
+import org.junit.runner.RunWith;
 
 /**
  */
@@ -27,9 +26,9 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 		ValidationTest.class,
 		OutputXpectMethod.class
 })
-@RunWith(XpectRunner.class)
+@RunWith(N4JSXpectRunner.class)
 @XpectImport({ N4JSStandaloneTestsModule.class, N4JSSuppressIssuesSetup.class })
-@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "testdata", fileExtensions = { "xt" })
+@XpectTestFiles(baseDir = "testdata")
 public class CompileAndExecuteTest {
 	// nop
 }

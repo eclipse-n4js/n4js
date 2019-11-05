@@ -15,7 +15,18 @@
 /* XPECT output ~~~
 <==
 stdout:
-{ '$fieldInit': [Function: I5_fieldInit], '$methods': {} }
+N4Interface {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'I5',
+  fqn:
+   'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedExportableElement.I5',
+  n4superType: undefined,
+  allImplementedInterfaces:
+   [ 'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedExportableElement.I1',
+     'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedExportableElement.I0' ],
+  ownedMembers: [],
+  consumedMembers: [] }
 stderr:
 ==>
 ~~~ */
@@ -27,4 +38,4 @@ interface I1<A extends Object,B,C> extends I0{}
 
 export @Internal public interface I5<P extends any,R,S> extends I1<Object, number, undefined>, I0{}
 
-console.log(I5)
+console.log(I5.n4type)

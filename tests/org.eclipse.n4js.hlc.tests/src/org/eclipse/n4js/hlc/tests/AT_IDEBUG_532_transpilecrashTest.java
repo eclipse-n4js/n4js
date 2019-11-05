@@ -10,12 +10,17 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
+import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
+import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -23,7 +28,7 @@ import org.junit.Test;
 
 /**
  */
-public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
+public class AT_IDEBUG_532_transpilecrashTest extends AbstractCliCompileTest {
 
 	File workspace;
 	static String WSP_532 = "IDEBUG-532";
@@ -35,7 +40,8 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 	@Before
 	public void setupWorkspace() throws IOException {
 		workspace = setupWorkspace(WSP_532, true,
-				N4JSGlobals.N4JS_RUNTIME, "n4js-runtime-es2015", "org.eclipse.n4js.mangelhaft");
+				N4JSGlobals.N4JS_RUNTIME, new N4JSProjectName("n4js-runtime-es2015"),
+				new N4JSProjectName("org.eclipse.n4js.mangelhaft"));
 	}
 
 	/** Delete workspace. */
@@ -46,17 +52,17 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 
 	/** The Problem was, that nothing was compiled. */
 	@Test
-	public void testCompileOfExtendedIterator_from_RuntimeLibrary() throws ExitCodeException {
+	public void testCompileOfExtendedIterator_from_RuntimeLibrary() {
 
-		String proot = new File(workspace, PACKAGES).getAbsolutePath().toString();
+		File proot = new File(workspace, PACKAGES);
 
-		String[] args = { "--projectlocations", proot, "--buildType", "allprojects" };
+		N4jscOptions options = COMPILE(proot);
 
-		// compile
-		new N4jscBase().doMain(args);
+		CliCompileResult cliResult = n4jsc(options);
 
 		// Make sure, we get here and have exactly one file compiled:
-		assertFilesCompiledToES(0, proot + "/" + "APIx");
-		assertFilesCompiledToES(1, proot + "/" + "IMPLx");
+
+		assertEquals(cliResult.toString(), 0, cliResult.getJSFilesCount(proot.toPath().resolve("APIx")));
+		assertEquals(cliResult.toString(), 1, cliResult.getJSFilesCount(proot.toPath().resolve("IMPLx")));
 	}
 }

@@ -33,7 +33,6 @@ class ArrowFunction_Part1_Transformation extends Transformation {
 	}
 
 	override assertPreConditions() {
-		blockAssistant.assertArrowFunctionConditions();
 	}
 
 	override assertPostConditions() {

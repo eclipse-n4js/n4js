@@ -13,30 +13,18 @@
 (function (global) {
     "use strict";
 
-    var ArraySlice = Array.prototype.slice,
+    var symHasInstance = Symbol.hasInstance,
+        ArraySlice = Array.prototype.slice,
         noop = function() {};
 
-    if (typeof __REACT_HOT_LOADER__ !== "undefined") {
-        var defineProperties = Object.defineProperties.bind(Object),
-            defineProperty = Object.defineProperty.bind(Object);
-
-        Object.defineProperties = function(fn, props) {
-            for (var k in props) {
-                var prop = props[k];
-                prop.configurable = true;
-                if (prop.value) {
-                    prop.writable = true;
-                }
+    function defineN4TypeGetter(instance, factoryFn) {
+        var n4type;
+        Object.defineProperty(instance, "n4type", {
+            configurable: true, // for hot reloading/patching
+            get: function() {
+                return n4type || (n4type = factoryFn());
             }
-            return defineProperties(fn, props);
-        };
-        Object.defineProperty = function(fn, name, prop) {
-            prop.configurable = true;
-            if (prop.value) {
-                prop.writable = true;
-            }
-            return defineProperty(fn, name, prop);
-        };
+        });
     }
 
     /** Call context is prototype object. */
@@ -64,7 +52,7 @@
      *                                interfaces defined in definition files without annotation @N4JS.
      * @param instanceMethods - An object holding the methods for the class instance and mixed in methods
      * @param staticMethods - An object holding the descriptors for the class static methods
-     * @param n4typeFn - The factory function to create the meta type.
+     * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
      */
     function $makeClass(ctor, superCtor, implementedInterfaces, instanceMethods, staticMethods, n4typeFn) {
         if (typeof superCtor === "function") {
@@ -74,10 +62,13 @@
 
         var proto = Object.create(superCtor.prototype, instanceMethods);
         implementedInterfaces.forEach(mixinDefaultMethods, proto);
-        Object.defineProperty(proto, "constructor", { value: ctor });
+        Object.defineProperty(proto, "constructor", {
+            value: ctor
+        });
 
-        var n4type = n4typeFn(proto, ctor);
-        Object.defineProperty(ctor, "n4type", { value: n4type });
+        if (n4typeFn) {
+            defineN4TypeGetter(ctor, n4typeFn.bind(null, proto, ctor));
+        }
 
         ctor.prototype = proto;
     }
@@ -86,12 +77,67 @@
      * Setup a interface. Methods and field initializers are already merged into the interface object.
      *
      * @param tinterface - The interface object.
-     * @param n4typeFn - The factory function to create the meta type.
+     * @param extendedInterfacesFn - Optional function returning an array of interfaces extended by 'tinterface'.
+     *                               May be 'undefined' in case no interfaces are extended.
+     * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
      */
-    function $makeInterface(tinterface, n4typeFn) {
-        var proto = tinterface.$methods,
-            n4type = n4typeFn(proto, tinterface);
-        Object.defineProperty(tinterface, "n4type", { value: n4type });
+    function $makeInterface(tinterface, extendedInterfacesFn, n4typeFn) {
+        tinterface.$extends = extendedInterfacesFn || (()=>[]);
+
+        if (n4typeFn) {
+            defineN4TypeGetter(tinterface, n4typeFn.bind(null, tinterface.$methods, tinterface));
+        }
+
+        Object.defineProperty(tinterface, symHasInstance, {
+            /**
+             * Check whether a value is instance of a class implementing an interface.
+             *
+             * @param instance - The instance which type is to be checked whether it implements the interface
+             * @return boolean
+             */
+            value: function(instance) {
+                if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
+                    return false;
+                }
+                const implementedInterface = tinterface.n4type.fqn;
+                return instance.constructor.n4type.allImplementedInterfaces.indexOf(implementedInterface) !== -1;
+            }
+        });
+    }
+
+    /**
+     * Initialize the fields declared by the given interfaces in the target object 'target'.
+     * Takes care of defaults defined in the interfaces and values provided via the optional
+     * 'spec' object. Will never override properties that already exist in the target object
+     * or that exist in the 'mixinExclusion' object.
+     *
+     * @param target - The object to be initialized. Usually a newly created instance of
+     *                 some class implementing the given interfaces.
+     * @param interfaces - Array of zero or more interfaces.
+     * @param spec - If invoked from a @Spec-constructor, this is the spec-object; otherwise 'undefined'.
+     * @param mixinExclusion - An object with properties that must not be overridden in the target object.
+     */
+    function $initFieldsFromInterfaces(target, interfaces, spec, mixinExclusion) {
+        for(const ifc of interfaces) {
+            const defs = ifc.$fieldDefaults || {};
+            for(const fieldName of Object.getOwnPropertyNames(defs)) {
+                if(target.hasOwnProperty(fieldName) || mixinExclusion.hasOwnProperty(fieldName)) {
+                    continue;
+                }
+                let value = undefined;
+                if(spec) {
+                    value = spec[fieldName];
+                }
+                if(value === undefined) {
+                    value = defs[fieldName];
+                    if (typeof value === "function") {
+                        value = value.call(target);
+                    }
+                }
+                target[fieldName] = value;
+            }
+            $initFieldsFromInterfaces(target, ifc.$extends(), spec, mixinExclusion);
+        }
     }
 
     /**
@@ -100,18 +146,22 @@
      * @param enumeration - the enumeration constructor function
      * @param members - An array of <String, String> tuples containing
      *                  information about the enum members
-     * @param n4type - The factory function for the metatype
+     * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
      * @return The constructed enumeration type
      */
-    function $makeEnum(enumeration, stringBased/* TODO obsolete */, members, n4type) {
+    function $makeEnum(enumeration, members, n4typeFn) {
         var length, index, member, name, value, values, literal;
 
         Object.setPrototypeOf(enumeration, global.N4Enum);
         enumeration.prototype = Object.create(global.N4Enum.prototype, {});
-        Object.defineProperty(enumeration, 'n4type', {
-            value: n4type(noop)
+
+        if (n4typeFn) {
+            defineN4TypeGetter(enumeration, n4typeFn.bind(null, noop));
+        }
+
+        Object.defineProperty(enumeration.prototype, "constructor", {
+            value: enumeration
         });
-        Object.defineProperty(enumeration.prototype, "constructor", { value: enumeration });
 
         length = members.length;
         values = new Array(length);
@@ -131,41 +181,6 @@
         Object.defineProperty(enumeration, 'literals', {
             value: values
         });
-    }
-
-    /**
-     * Check whether a value is instance of a class implementing an interface.
-     *
-     * @param instance - The instance which type is to be checked whether it implements the interface
-     * @param implementedInterface - The fully qualified name of the interface including the package identifier
-     * @return boolean
-     */
-    function $implements(instance, implementedInterface) {
-        if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
-            return false;
-        }
-        return instance.constructor.n4type.allImplementedInterfaces.indexOf(implementedInterface) !== -1;
-    }
-
-    /**
-     * Instanceof-wrapper delegating to $implements in case of potential interfaces on the right hand side.
-     *
-     * @param instance - The instance which type is to be checked whether it implements the interface
-     * @param supertpye - type to check against
-     * @return boolean true if instance-parameter is an instance of supertype-parameter
-     */
-    function $instanceof(instance, supertype) {
-        switch (typeof instance) {
-            case "object":
-            case "function":
-                if (typeof supertype === "object") { // interface type
-                    var t = (supertype["n4type"] || null);
-                    var fqn = t ? t.fqn : "";
-                    return $implements(instance, fqn);
-                }
-                return instance instanceof supertype;
-        }
-        return false;
     }
 
     /**
@@ -256,9 +271,9 @@
     //expose in global scope
     global.$makeClass = $makeClass;
     global.$makeInterface = $makeInterface;
+    global.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
     global.$makeEnum = $makeEnum;
-    global.$implements = $implements;
-    global.$instanceof = $instanceof;
+
     global.$sliceToArrayForDestruct = $sliceToArrayForDestruct;
     global.$spawn = $spawn;
     global.$n4promisifyFunction = $n4promisifyFunction;

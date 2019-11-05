@@ -102,6 +102,6 @@ public class MigrationUtils {
 	 */
 	public static boolean isMigrateCallIdentifier(IdentifierRef identifierRef) {
 		return isMigrateCall(identifierRef.eContainer())
-				&& identifierRef.eContainingFeature() == N4JSPackage.Literals.PARAMETERIZED_CALL_EXPRESSION__TARGET;
+				&& identifierRef.eContainingFeature() == N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET;
 	}
 }

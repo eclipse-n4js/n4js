@@ -20,16 +20,16 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.runner.RunConfiguration;
+import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.runner.RunConfiguration;
-import org.eclipse.n4js.runner.RunnerFrontEnd;
 
 /**
  */
@@ -106,7 +106,9 @@ public abstract class AbstractRunnerLaunchShortcut implements ILaunchShortcut {
 		if (implementationId == ChooseImplementationHelper.CANCEL)
 			return;
 
-		RunConfiguration runConfig = runnerFrontEnd.createConfiguration(runnerId, implementationId, moduleToRun);
+		RunConfiguration runConfig = runnerFrontEnd.createConfiguration(runnerId,
+				implementationId != null ? new N4JSProjectName(implementationId) : null,
+				moduleToRun);
 
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(getLaunchConfigTypeID());

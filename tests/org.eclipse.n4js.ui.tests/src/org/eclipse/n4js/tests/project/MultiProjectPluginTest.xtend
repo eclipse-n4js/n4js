@@ -33,6 +33,8 @@ import org.junit.Test
 
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
 import static org.junit.Assert.assertTrue
+import org.eclipse.n4js.projectModel.names.N4JSProjectName
+import org.eclipse.n4js.projectModel.names.EclipseProjectName
 
 /**
  */
@@ -76,10 +78,10 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	}
 
 	private def void addSecondProjectToDependencies() {
-		addProjectToDependencies(secondProjectUnderTest.project.name)
+		addProjectToDependencies(new EclipseProjectName(secondProjectUnderTest.project.name).toN4JSProjectName)
 	}
 
-	private def void addProjectToDependencies(String projectName) {
+	private def void addProjectToDependencies(N4JSProjectName projectName) {
 		addProjectToDependencies(firstProjectUnderTest, projectName, "*");
 		waitForAutoBuild();
 	}
@@ -187,7 +189,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	
 	@Test
 	def void testTwoFilesProjectNewlyCreated() throws Exception {
-		addProjectToDependencies("thirdProject")
+		addProjectToDependencies(new N4JSProjectName("thirdProject"))
 		val c = createTestFile(
 			src,
 			"C",
@@ -263,7 +265,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	def void testChangeProjectTypeWithoutOpenedEditors() {
 		changeProjectType(firstProjectUnderTest, ProjectType.LIBRARY);
 		changeProjectType(secondProjectUnderTest, ProjectType.LIBRARY);
-		addProjectToDependencies(secondProjectUnderTest.name);
+		addProjectToDependencies(new EclipseProjectName(secondProjectUnderTest.name).toN4JSProjectName);
 
 		assertIssues(projectDescriptionFile,
 			"line 18: Project depends on workspace project multiProjectTest.second which is missing in the node_modules folder. " +

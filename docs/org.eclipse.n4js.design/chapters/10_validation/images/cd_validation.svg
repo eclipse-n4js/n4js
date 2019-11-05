@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="24.48144 40.036005 514.01856 726.464" width="514.01856" height="726.464">
+  <defs>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -8 14 16" markerWidth="14" markerHeight="16" color="black">
+      <g>
+        <path d="M 12 0 L 0 -7 L 0 7 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="10" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.11 
+    <dc:date>2001-01-11 18:07:48 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke="none" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <rect fill="white" x="24.48144" y="40.036005" width="514.01856" height="726.464"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_163">
+        <rect x="171.803" y="160.518" width="99" height="36" fill="white"/>
+        <rect x="171.803" y="160.518" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(176.803 171.518)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="23.831055" y="11">Builder</tspan>
+        </text>
+      </g>
+      <g id="Graphic_164">
+        <rect x="366" y="275" width="99" height="36" fill="white"/>
+        <rect x="366" y="275" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(371 286)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="17.154297" y="11">Resource</tspan>
+        </text>
+      </g>
+      <g id="Graphic_165">
+        <rect x="101" y="275" width="122" height="36" fill="white"/>
+        <rect x="101" y="275" width="122" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(106 279)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="13.759766" y="11">ManifestAware</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="3.3095703" y="25">ResourceValidator</tspan>
+        </text>
+      </g>
+      <g id="Graphic_166">
+        <rect x="112.5" y="549" width="99" height="36" fill="white"/>
+        <rect x="112.5" y="549" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(117.5 560)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="4.1464844" y="11">N4JSValidator</tspan>
+        </text>
+      </g>
+      <g id="Graphic_167">
+        <rect x="366" y="373.5" width="99" height="36" fill="white"/>
+        <rect x="366" y="373.5" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(371 384.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="11.485352" y="11">N4JSLinker</tspan>
+        </text>
+      </g>
+      <g id="Graphic_168">
+        <rect x="366" y="462" width="99" height="36" fill="white"/>
+        <rect x="366" y="462" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(371 466)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="5.828125" y="11">ASTStructure</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="19.155273" y="25">Validator</tspan>
+        </text>
+      </g>
+      <g id="Graphic_169">
+        <rect x="112.5" y="373.5" width="99" height="36" fill="white"/>
+        <rect x="112.5" y="373.5" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(117.5 377.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="12.81836" y="11">Cancelable</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="6.8271484" y="25">Diagnostican</tspan>
+        </text>
+      </g>
+      <g id="Graphic_170">
+        <rect x="28" y="160.518" width="99" height="36" fill="white"/>
+        <rect x="28" y="160.518" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(33 171.518)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="5.491211" y="11">ValidationJob</tspan>
+        </text>
+      </g>
+      <g id="Group_412">
+        <g id="Graphic_419">
+          <text transform="translate(179.61354 82.03601)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">On Save / Build</tspan>
+          </text>
+        </g>
+        <g id="Group_413">
+          <g id="Graphic_418">
+            <circle cx="221.3027" cy="49.787705" r="6.75071078695634" fill="white"/>
+            <circle cx="221.3027" cy="49.787705" r="6.75071078695634" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_417">
+            <line x1="221.303" y1="56.537005" x2="221.303" y2="66.652005" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_416">
+            <line x1="221.303" y1="66.652005" x2="213.803" y2="80.15301" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_415">
+            <line x1="221.303" y1="66.652005" x2="228.803" y2="80.15301" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_414">
+            <line x1="228.803" y1="62.037005" x2="213.803" y2="61.912005" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_518">
+        <g id="Graphic_525">
+          <text transform="translate(24.48144 82.03601)" fill="black">
+            <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="0" y="11">On Edit / Dirty State</tspan>
+          </text>
+        </g>
+        <g id="Group_519">
+          <g id="Graphic_524">
+            <circle cx="77.49969" cy="49.787705" r="6.75071078695633" fill="white"/>
+            <circle cx="77.49969" cy="49.787705" r="6.75071078695633" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_523">
+            <line x1="77.49999" y1="56.537005" x2="77.49999" y2="66.652005" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_522">
+            <line x1="77.49999" y1="66.652005" x2="69.999994" y2="80.15301" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_521">
+            <line x1="77.49999" y1="66.652005" x2="84.99999" y2="80.15301" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+          <g id="Line_520">
+            <line x1="84.99999" y1="62.037005" x2="69.999994" y2="61.912005" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          </g>
+        </g>
+      </g>
+      <g id="Line_145">
+        <line x1="221.303" y1="101.036" x2="221.303" y2="147.018" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_526">
+        <path d="M 77.5 101.036 L 77.5 116.536 L 77.5 144.518 L 77.5 146.518" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_457">
+        <path d="M 221.303 196.518 L 219 234 L 170.03686 269.2191" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_528">
+        <path d="M 77.523425 197.01745 L 79 228.5 L 153.36308 270.16124" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_529">
+        <path d="M 270.803 178.518 L 308 260 L 357.39528 288.1042" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_272">
+        <text transform="translate(95.71426 115.844)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«01. triggers»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_531">
+        <text transform="translate(236.62326 115.84401)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«01. triggers»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_532">
+        <text transform="translate(292.1455 187)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«03. load»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_533">
+        <rect x="375" y="168" width="99" height="36" fill="white"/>
+        <rect x="375" y="168" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(380 179)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="25.817383" y="11">Parser</tspan>
+        </text>
+      </g>
+      <g id="Line_534">
+        <path d="M 415.5 275 L 427 239 L 425.20535 213.87484" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_535">
+        <text transform="translate(436.0913 233.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«04. parse»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_536">
+        <text transform="translate(321.7046 240)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«ParseResult»</tspan>
+        </text>
+      </g>
+      <g id="Line_537">
+        <path d="M 380.57547 204.47869 L 392.5 244 L 409.6011 267.04933" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_538">
+        <path d="M 415.5 311 L 417 311 L 415.73753 363.60283" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_539">
+        <text transform="translate(419.86476 334)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«05. doLink»</tspan>
+        </text>
+      </g>
+      <g id="Line_540">
+        <line x1="415.5" y1="409.5" x2="415.5" y2="452.1" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_541">
+        <text transform="translate(419.86475 429.75)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«06. validate»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_542">
+        <text transform="translate(98.57666 217)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«02. validate Resource»</tspan>
+        </text>
+      </g>
+      <g id="Line_543">
+        <path d="M 162 311 L 164.212 309 L 162.33932 363.6058" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_544">
+        <text transform="translate(80.36475 334)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«07. validate»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_545">
+        <rect x="110.5" y="467.964" width="99" height="36" fill="white"/>
+        <rect x="110.5" y="467.964" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(115.5 471.964)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="13.498047" y="11">Composite</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="15.15332" y="25">EValidator</tspan>
+        </text>
+      </g>
+      <g id="Line_546">
+        <path d="M 162 409.5 L 164.212 410 L 160.7175 458.09" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_547">
+        <path d="M 211.5 391.5 L 251 391 L 251 446.75 L 201 446.75 L 176.3328 417.10956" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_548">
+        <text transform="translate(231.8247 374.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«08. doValidateContents»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_549">
+        <text transform="translate(80.36475 434.75)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«09. validate»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_550">
+        <text transform="translate(80.36475 520.482)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«10. validate»</tspan>
+        </text>
+      </g>
+      <g id="Line_551">
+        <line x1="160" y1="503.964" x2="161.56079" y2="539.10975" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_552">
+        <rect x="316.5" y="549" width="137" height="36" fill="white"/>
+        <rect x="316.5" y="549" width="137" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(321.5 553)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="39.160156" y="11">Abstract</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="6.133789" y="25">DeclarativeValidator</tspan>
+        </text>
+      </g>
+      <g id="Line_553">
+        <line x1="211.5" y1="567" x2="303" y2="567" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_554">
+        <path d="M 198.99953 548.6496 L 219 529 L 339 530 L 375.8498 545.2206" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_555">
+        <text transform="translate(239.86816 509)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«11. internalValidate»</tspan>
+        </text>
+      </g>
+      <g id="Line_558">
+        <path d="M 453.5 567 L 495.5 565 L 495.5 620.75 L 445.5 620.75 L 393.52317 590.0364" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_559">
+        <text transform="translate(415.249 636)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«12. collectMethods»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_148">
+        <path d="M 538 696.64615 C 538 687.31525 535.4346 686.1608 516.69506 676.92645 L 516.4971 676.8309 C 497.6586 667.5 497.46264 667.5 478.1292 667.5 C 452.38634 667.5 336 667.5 336 667.5 L 336 766 L 538 766 L 538 696.64615 Z" fill="white"/>
+        <path d="M 538 696.64615 C 538 687.31525 535.4346 686.1608 516.69506 676.92645 L 516.4971 676.8309 C 497.6586 667.5 497.46264 667.5 478.1292 667.5 C 452.38634 667.5 336 667.5 336 667.5 L 336 766 L 538 766 L 538 696.64615 Z M 538 696.1655 C 538 687.31525 537.80204 687.31525 497.46264 687.31525 L 497.46264 687.31525 C 497.46264 667.5965 497.46264 667.5 479.31294 667.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(341 674.75)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="5.293945" y="11">1. collect methods of current class </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="27.624023" y="25">and then of super classes</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="16.625977" y="39">2. recursively handle validator </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="19.96582" y="53">classes in composed checks </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="4.274414" y="67">annotation in the current class and </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="32.63086" y="81">the of the super classes</tspan>
+        </text>
+      </g>
+      <g id="Line_24">
+        <line x1="458.7475" y1="653" x2="453.96244" y2="667.0268" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+      <g id="Line_560">
+        <path d="M 162 585 L 209.5 614 L 316.5 614 L 375.88334 588.8596" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_561">
+        <text transform="translate(236.3425 597)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="0" y="10">«13. invoke»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_562">
+        <rect x="90.288" y="724.5" width="99" height="36" fill="white"/>
+        <rect x="90.288" y="724.5" width="99" height="36" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(95.288 728.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="13.480469" y="11">N4JSClass</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="700" fill="black" x="19.155273" y="25">Validator</tspan>
+        </text>
+      </g>
+      <g id="Line_563">
+        <line x1="223" y1="293" x2="356.1" y2="293" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_564">
+        <text transform="translate(236.21457 300.42202)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="1.3891602" y="10">«03-06.. resolve proxies and </tspan>
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="24.18213" y="22">create diagnostics </tspan>
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="19.46289" y="34">for resource issues»</tspan>
+        </text>
+      </g>
+      <g id="Line_565">
+        <path d="M 379.4539 587.348 L 375 634 L 197.83604 737.5059" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_566">
+        <text transform="translate(217.1677 730.5)" fill="black">
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="1.3891602" y="10">«14. invokes concrete </tspan>
+          <tspan font-family="Helvetica" font-size="10" font-weight="400" fill="black" x="16.120605" y="22">check method»</tspan>
+        </text>
+      </g>
+      <g id="Graphic_567">
+        <path d="M 233 647.672 C 233 640.0936 230.4346 639.156 211.69506 631.656 L 211.4971 631.5784 C 192.65858 624 192.46264 624 173.12922 624 C 147.38634 624 31 624 31 624 L 31 704 L 233 704 L 233 647.672 Z" fill="white"/>
+        <path d="M 233 647.672 C 233 640.0936 230.4346 639.156 211.69506 631.656 L 211.4971 631.5784 C 192.65858 624 192.46264 624 173.12922 624 C 147.38634 624 31 624 31 624 L 31 704 L 233 704 L 233 647.672 Z M 233 647.2816 C 233 640.0936 232.80204 640.0936 192.46264 640.0936 L 192.46264 640.0936 C 192.46264 624.0784 192.46264 624 174.31294 624" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(36 636)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="17.625" y="11">finds all methods for the type, </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="21.28418" y="25">the CancelableDiagnostican </tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="13.617188" y="39">currently handles, in the before</tspan>
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="30.298828" y="53">collected check methods   </tspan>
+        </text>
+      </g>
+      <g id="Line_568">
+        <line x1="155.01194" y1="624" x2="209.5" y2="614" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.projectModel;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 /**
  */
@@ -20,10 +20,10 @@ public interface IExternalPackageManager {
 	/**
 	 * Loads the N4JS {@link ProjectDescription} for the given external project root location.
 	 */
-	ProjectDescription loadProjectDescriptionFromProjectRoot(URI rootLocation);
+	ProjectDescription loadProjectDescriptionFromProjectRoot(FileURI rootLocation);
 
 	/**
 	 * @return true iff the given location is the (existing) root folder of a project that contains a package.json file
 	 */
-	public boolean isN4ProjectRoot(URI rootLocation);
+	public boolean isN4ProjectRoot(FileURI rootLocation);
 }

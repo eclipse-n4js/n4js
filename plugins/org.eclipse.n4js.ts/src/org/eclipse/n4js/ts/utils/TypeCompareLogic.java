@@ -154,23 +154,6 @@ import org.eclipse.xtext.naming.QualifiedName;
 		final TypeRef ref1 = (TypeRef) arg1;
 		final TypeRef ref2 = (TypeRef) arg2;
 
-		// special case:
-		// for existential types we compare the type arguments from which they were created (similar to "re-opening" the
-		// existential types; note that with the below code, we also allow an existential type (i.e. Wildcard) to be
-		// "closed" on one side but not on the other)
-		// Example:
-		// @formatter:off
-		//     interface ~I<T> {
-		//         public I<T> m();
-		//     }
-		//     var I<?> i;
-		//     var I<?> x = i;
-		// @formatter:on
-		if (ref1 instanceof ExistentialTypeRef && ref2 instanceof ExistentialTypeRef) {
-			return compare(fqnProvider, ((ExistentialTypeRef) ref1).getWildcard(),
-					((ExistentialTypeRef) ref2).getWildcard());
-		}
-
 		// this needs to be checked before the EClass comparison, due to the inheritance of FunctionTypeExprOrRef and
 		// its subclasses
 		if (ref1 instanceof FunctionTypeExprOrRef && ref2 instanceof FunctionTypeExprOrRef) {
@@ -256,6 +239,19 @@ import org.eclipse.xtext.naming.QualifiedName;
 			if (c != 0) {
 				return c;
 			}
+		} else if (ref1 instanceof ExistentialTypeRef) {
+			final ExistentialTypeRef e1 = (ExistentialTypeRef) ref1;
+			final ExistentialTypeRef e2 = (ExistentialTypeRef) ref2;
+			final boolean reopened1 = e1.isReopened();
+			final boolean reopened2 = e2.isReopened();
+			c = compareComparables(reopened1, reopened2);
+			if (c != 0) {
+				return c;
+			}
+			if (reopened1 && reopened2) {
+				return compare(fqnProvider, e1.getWildcard(), e2.getWildcard());
+			}
+			return compareComparables(e1.getId(), e2.getId());
 		}
 
 		// dynamic

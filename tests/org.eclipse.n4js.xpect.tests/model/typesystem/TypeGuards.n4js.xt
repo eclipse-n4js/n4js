@@ -24,7 +24,7 @@ function foo1() {
 	
 	if (x instanceof J1) {
 		let y: J1;
-		// XPECT type of 'x' --> intersection{I1,J1}
+		// XPECT type of 'x' --> J1
 		// XPECT noerrors --> "J1 is not a subtype of J1." at "x"
 		y = x;
 	}
@@ -58,7 +58,7 @@ function foo3() {
 	
 	if (c instanceof I3) {
 		let dd: C3;
-		// XPECT type of 'c' --> intersection{C3,I3}
+		// XPECT type of 'c' --> C3
 		// XPECT noerrors --> "I3 is not a subtype of C3." at "c"
 		dd = c;
 	}
