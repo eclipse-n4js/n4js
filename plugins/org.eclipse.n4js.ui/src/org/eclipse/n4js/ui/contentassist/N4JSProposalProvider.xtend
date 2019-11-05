@@ -166,7 +166,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * that uses '.' as delimiter.<br>
 	 * However, this <em>will</em> break in case of project/folder names containing '.' (which is valid in Javascript).
 	 * </p><p>
-	 * TODO fix handling of qualified names in content assist
+	 * TODO GH-1546 fix handling of qualified names in content assist
 	 * </p>
 	 *
 	 * @see AbstractJavaBasedContentProposalProvider
