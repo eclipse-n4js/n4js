@@ -9,7 +9,7 @@ package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -67,11 +67,11 @@ public class XBuildRequest {
 
 	private URI baseDir;
 
-	private List<URI> dirtyFiles = new ArrayList<>();
+	private Collection<URI> dirtyFiles = new ArrayList<>();
 
-	private List<URI> deletedFiles = new ArrayList<>();
+	private Collection<URI> deletedFiles = new ArrayList<>();
 
-	private List<IResourceDescription.Delta> externalDeltas = new ArrayList<>();
+	private Collection<IResourceDescription.Delta> externalDeltas = new ArrayList<>();
 
 	/**
 	 * Callback after validation, return <code>false</code> will stop the build.
@@ -117,42 +117,42 @@ public class XBuildRequest {
 	/**
 	 * Getter.
 	 */
-	public List<URI> getDirtyFiles() {
+	public Collection<URI> getDirtyFiles() {
 		return this.dirtyFiles;
 	}
 
 	/**
 	 * Setter.
 	 */
-	public void setDirtyFiles(List<URI> dirtyFiles) {
+	public void setDirtyFiles(Collection<URI> dirtyFiles) {
 		this.dirtyFiles = dirtyFiles;
 	}
 
 	/**
 	 * Getter.
 	 */
-	public List<URI> getDeletedFiles() {
+	public Collection<URI> getDeletedFiles() {
 		return this.deletedFiles;
 	}
 
 	/**
 	 * Setter.
 	 */
-	public void setDeletedFiles(List<URI> deletedFiles) {
+	public void setDeletedFiles(Collection<URI> deletedFiles) {
 		this.deletedFiles = deletedFiles;
 	}
 
 	/**
 	 * Getter.
 	 */
-	public List<IResourceDescription.Delta> getExternalDeltas() {
+	public Collection<IResourceDescription.Delta> getExternalDeltas() {
 		return this.externalDeltas;
 	}
 
 	/**
 	 * Setter.
 	 */
-	public void setExternalDeltas(List<IResourceDescription.Delta> externalDeltas) {
+	public void setExternalDeltas(Collection<IResourceDescription.Delta> externalDeltas) {
 		this.externalDeltas = externalDeltas;
 	}
 

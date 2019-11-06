@@ -23,13 +23,12 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
-import org.eclipse.n4js.ide.server.N4JSBuildManager;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
-import org.eclipse.xtext.ide.server.BuildManager;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -54,7 +53,7 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings("restriction")
 @Singleton
-public class XWorkspaceManager {
+public class XWorkspaceManager implements DocumentResourceProvider {
 	private static final Logger LOG = Logger.getLogger(XWorkspaceManager.class);
 
 	@Inject
@@ -66,7 +65,7 @@ public class XWorkspaceManager {
 	@Inject
 	private XIProjectDescriptionFactory projectDescriptionFactory;
 
-	private N4JSBuildManager buildManager;
+	private XBuildManager buildManager;
 
 	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
 
@@ -129,13 +128,13 @@ public class XWorkspaceManager {
 	 *            the build manager.
 	 */
 	@Inject
-	public void setBuildManager(N4JSBuildManager buildManager) {
+	public void setBuildManager(XBuildManager buildManager) {
 		buildManager.setWorkspaceManager(this);
 		this.buildManager = buildManager;
 	}
 
-	/** @return the {@link BuildManager} */
-	public N4JSBuildManager getBuildManager() {
+	/** @return the {@link XBuildManager} */
+	public XBuildManager getBuildManager() {
 		return buildManager;
 	}
 
@@ -151,21 +150,18 @@ public class XWorkspaceManager {
 	 *            the location
 	 * @param issueAcceptor
 	 *            the issue acceptor
-	 * @param cancelIndicator
-	 *            allows to cancel the initialization
 	 */
 	@SuppressWarnings("hiding")
-	public void initialize(URI baseDir, Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor,
-			CancelIndicator cancelIndicator) {
+	public void initialize(URI baseDir, Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor) {
 		this.baseDir = baseDir;
 		this.issueAcceptor = issueAcceptor;
-		refreshWorkspaceConfig(cancelIndicator);
+		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
 	}
 
 	/**
 	 * Refresh the workspace.
 	 */
-	protected void refreshWorkspaceConfig(CancelIndicator cancelIndicator) {
+	public void refreshWorkspaceConfig(CancelIndicator cancelIndicator) {
 		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
 		List<ProjectDescription> newProjects = new ArrayList<>();
 		Set<String> projectNames = projectName2ProjectManager.keySet();
@@ -186,7 +182,14 @@ public class XWorkspaceManager {
 			projectName2ProjectManager.remove(deletedProject);
 			fullIndex.remove(deletedProject);
 		}
-		afterBuild(buildManager.doInitialBuild(newProjects, cancelIndicator));
+
+		List<Delta> deltas = buildManager.doInitialBuild(newProjects, cancelIndicator);
+		afterBuild(deltas);
+	}
+
+	/** @see XBuildManager#persistProjectState(CancelIndicator) */
+	public void persistProjectState(CancelIndicator indicator) {
+		buildManager.persistProjectState(indicator);
 	}
 
 	/** @return the current base directory {@link URI} */
@@ -235,7 +238,7 @@ public class XWorkspaceManager {
 	 * @return a build command that can be triggered
 	 */
 	public XBuildable didChangeFiles(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		XBuildManager.XBuildable buildable = buildManager.submit(dirtyFiles, deletedFiles);
+		XBuildManager.XBuildable buildable = buildManager.doIncrementalBuild(dirtyFiles, deletedFiles);
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
 			afterBuild(deltas);
@@ -428,9 +431,9 @@ public class XWorkspaceManager {
 	}
 
 	/**
-	 * Find the resource and the document with the given URI and performa a read operation.
+	 * Find the resource and the document with the given URI and performs a read operation.
 	 */
-	public <T> T doRead(URI uri, Function2<? super Document, ? super XtextResource, ? extends T> work) {
+	public <T> T doRead2(URI uri, Function2<? super Document, ? super XtextResource, ? extends T> work) {
 		URI resourceURI = uri.trimFragment();
 		XProjectManager projectMnr = getProjectManager(resourceURI);
 		if (projectMnr != null) {
@@ -441,14 +444,36 @@ public class XWorkspaceManager {
 		return work.apply(null, null);
 	}
 
-	/**
-	 * Find the document for the given resource.
-	 *
-	 * @param resource
-	 *            the resource.
-	 * @return the document
-	 */
-	protected Document getDocument(XtextResource resource) {
+	@Override
+	public XtextResource getResource(URI uri) {
+		URI resourceURI = uri.trimFragment();
+		XProjectManager projectMnr = getProjectManager(resourceURI);
+		if (projectMnr != null) {
+			XtextResource resource = (XtextResource) projectMnr.getResource(resourceURI);
+			return resource;
+		}
+		return null;
+	}
+
+	@Override
+	public Document getDocument(URI uri) {
+		XtextResource resource = getResource(uri);
+		if (resource == null) {
+			return null;
+		}
+		Document doc = openDocuments.get(resource.getURI());
+		if (doc != null) {
+			return doc;
+		}
+		String text = resource.getParseResult().getRootNode().getText();
+		return new Document(Integer.valueOf(1), text);
+	}
+
+	@Override
+	public Document getDocument(XtextResource resource) {
+		if (resource == null) {
+			return null;
+		}
 		Document doc = openDocuments.get(resource.getURI());
 		if (doc != null) {
 			return doc;
@@ -458,7 +483,7 @@ public class XWorkspaceManager {
 	}
 
 	/**
-	 * Return true if there is a open document with the givne URI.
+	 * Return true if there is a open document with the given URI.
 	 *
 	 * @param uri
 	 *            the URI

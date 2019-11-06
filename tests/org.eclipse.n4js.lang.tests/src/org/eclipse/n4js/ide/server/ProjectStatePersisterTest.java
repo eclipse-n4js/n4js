@@ -14,12 +14,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StreamCorruptedException;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.server.ProjectStatePersister.PersistedState;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
@@ -42,13 +45,12 @@ public class ProjectStatePersisterTest {
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
 		AtomicBoolean didCall = new AtomicBoolean();
-		testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()), languageVersion,
-				(indexState, files) -> {
-					Assert.assertTrue(indexState.getFileMappings().getAllGenerated().isEmpty());
-					Assert.assertTrue(indexState.getResourceDescriptions().isEmpty());
-					Assert.assertTrue(files.isEmpty());
-					didCall.set(true);
-				});
+		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()),
+				languageVersion);
+		Assert.assertTrue(pState.indexState.getFileMappings().getAllGenerated().isEmpty());
+		Assert.assertTrue(pState.indexState.getResourceDescriptions().isEmpty());
+		Assert.assertTrue(pState.fileHashs.isEmpty());
+		didCall.set(true);
 		Assert.assertTrue(didCall.get());
 	}
 
@@ -61,10 +63,8 @@ public class ProjectStatePersisterTest {
 		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
 		byte[] bytes = output.toByteArray();
 		bytes[12]++;
-		testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion,
-				(indexState, files) -> {
-					Assert.fail("Unexpeced invocation");
-				});
+		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
+		Assert.assertTrue(pState.fileHashs.isEmpty());
 	}
 
 	/** */
@@ -76,10 +76,8 @@ public class ProjectStatePersisterTest {
 		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
 		byte[] bytes = output.toByteArray();
 		bytes[0]++;
-		testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion,
-				(indexState, files) -> {
-					Assert.fail("Unexpeced invocation");
-				});
+		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
+		Assert.assertTrue(pState == null);
 	}
 
 	/** */
@@ -90,10 +88,9 @@ public class ProjectStatePersisterTest {
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
 		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
 		languageVersion += "XXX";
-		testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()), languageVersion,
-				(indexState, files) -> {
-					Assert.fail("Unexpeced invocation");
-				});
+		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()),
+				languageVersion);
+		Assert.assertTrue(pState == null);
 	}
 
 	/** */
@@ -122,19 +119,20 @@ public class ProjectStatePersisterTest {
 				.singleton(new HashedFileContent(URI.createURI("some:/hash"), 123));
 
 		testMe.writeProjectState(output, languageVersion, index, fingerprints);
-		AtomicBoolean didCall = new AtomicBoolean();
-		testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()), languageVersion,
-				(indexState, files) -> {
-					Assert.assertEquals(fingerprints, files);
-					List<URI> targets = indexState.getFileMappings().getGenerated(sourceURI);
-					Assert.assertEquals(1, targets.size());
-					Assert.assertEquals(targetURI, targets.get(0));
-					Assert.assertEquals("outputty", indexState.getFileMappings().getOutputConfigName(targetURI));
-					Assert.assertEquals(1, indexState.getResourceDescriptions().getAllURIs().size());
-					Assert.assertTrue(
-							indexState.getResourceDescriptions().getAllURIs().contains(resourceDescription.getURI()));
-					didCall.set(true);
-				});
-		Assert.assertTrue(didCall.get());
+		ByteArrayInputStream outputStream = new ByteArrayInputStream(output.toByteArray());
+		PersistedState pState = testMe.readProjectState(outputStream, languageVersion);
+		XIndexState indexState = pState.indexState;
+		Collection<HashedFileContent> files = pState.fileHashs.values();
+
+		Assert.assertEquals(fingerprints, new HashSet<>(files));
+		List<URI> targets = indexState.getFileMappings().getGenerated(sourceURI);
+		Assert.assertEquals(1, targets.size());
+		Assert.assertEquals(targetURI, targets.get(0));
+		Assert.assertEquals("outputty", indexState.getFileMappings().getOutputConfigName(targetURI));
+
+		Set<URI> allIndexedUris = indexState.getResourceDescriptions().getAllURIs();
+		Assert.assertEquals(1, allIndexedUris.size());
+		Assert.assertTrue(allIndexedUris.contains(resourceDescription.getURI()));
+
 	}
 }

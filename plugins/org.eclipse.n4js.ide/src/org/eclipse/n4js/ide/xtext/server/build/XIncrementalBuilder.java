@@ -42,6 +42,7 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.clustering.DisabledClusteringPolicy;
 import org.eclipse.xtext.resource.clustering.IResourceClusteringPolicy;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.IResourceStorageFacade;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.resource.persistence.StorageAwareResource;
@@ -71,6 +72,7 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings("restriction")
 public class XIncrementalBuilder {
+
 	/**
 	 * The result of the build. Encapsulates the new index state and the list of changes.
 	 */
@@ -79,25 +81,19 @@ public class XIncrementalBuilder {
 
 		private final List<IResourceDescription.Delta> affectedResources;
 
-		/**
-		 * Constructor.
-		 */
+		/** Constructor. */
 		public XResult(XIndexState indexState, List<IResourceDescription.Delta> affectedResources) {
 			super();
 			this.indexState = indexState;
 			this.affectedResources = affectedResources;
 		}
 
-		/**
-		 * Getter.
-		 */
+		/** Getter. */
 		public XIndexState getIndexState() {
 			return this.indexState;
 		}
 
-		/**
-		 * Getter.
-		 */
+		/** Getter. */
 		public List<IResourceDescription.Delta> getAffectedResources() {
 			return this.affectedResources;
 		}
@@ -142,14 +138,10 @@ public class XIncrementalBuilder {
 
 	}
 
-	/**
-	 * Builder instance that is bound to a single running build.
-	 */
+	/** Builder instance that is bound to a single running build. */
 	public static class XInternalStatefulIncrementalBuilder {
 
-		/**
-		 * Creates an {@link IFileSystemAccess file system access} that is backed by a {@link URIConverter}.
-		 */
+		/** Creates an {@link IFileSystemAccess file system access} that is backed by a {@link URIConverter}. */
 		@Singleton
 		public static class XURIBasedFileSystemAccessFactory {
 			@Inject
@@ -170,9 +162,7 @@ public class XIncrementalBuilder {
 			@Inject(optional = true)
 			private IProjectConfigProvider projectConfigProvider;
 
-			/**
-			 * Create a new URIBasedFileSystemAccess.
-			 */
+			/** Create a new URIBasedFileSystemAccess. */
 			public URIBasedFileSystemAccess newFileSystemAccess(Resource resource, XBuildRequest request) {
 				URIBasedFileSystemAccess uriBasedFileSystemAccess = new URIBasedFileSystemAccess();
 				uriBasedFileSystemAccess.setOutputConfigurations(IterableExtensions.toMap(
@@ -211,9 +201,7 @@ public class XIncrementalBuilder {
 		@Inject
 		private OperationCanceledManager operationCanceledManager;
 
-		/**
-		 * Unload a resource with the given URI.
-		 */
+		/** Unload a resource with the given URI. */
 		protected void unloadResource(URI uri) {
 			XtextResourceSet resourceSet = this.request.getResourceSet();
 			Resource resource = resourceSet.getResource(uri, false);
@@ -224,9 +212,7 @@ public class XIncrementalBuilder {
 			}
 		}
 
-		/**
-		 * Run the build.
-		 */
+		/** Run the build. */
 		public XIncrementalBuilder.XResult launch() {
 			List<IResourceDescription.Delta> resolvedDeltas = new ArrayList<>();
 
@@ -291,8 +277,7 @@ public class XIncrementalBuilder {
 				Iterables.addAll(resolvedDeltas, deltas);
 
 			} catch (CancellationException e) {
-				// catch here and proceed normally
-				System.out.println();
+				// catch CancellationException here and proceed normally to save already resolved deltas
 			}
 
 			return new XIncrementalBuilder.XResult(this.request.getState(), resolvedDeltas);
@@ -341,9 +326,7 @@ public class XIncrementalBuilder {
 			return context.getResourceServiceProvider(resource.getURI());
 		}
 
-		/**
-		 * Generate code for the given resource
-		 */
+		/** Generate code for the given resource */
 		@SuppressWarnings("hiding")
 		protected void generate(Resource resource, XBuildRequest request,
 				XSource2GeneratedMapping newMappings) {
@@ -385,8 +368,7 @@ public class XIncrementalBuilder {
 			XtextResourceSet resourceSet = request.getResourceSet();
 			for (URI noLongerCreated : previous) {
 				try {
-					resourceSet.getURIConverter().delete(noLongerCreated,
-							CollectionLiterals.emptyMap());
+					resourceSet.getURIConverter().delete(noLongerCreated, CollectionLiterals.emptyMap());
 					request.getAfterDeleteFile().apply(noLongerCreated);
 				} catch (IOException e) {
 					Exceptions.sneakyThrow(e);
@@ -420,39 +402,30 @@ public class XIncrementalBuilder {
 			return false;
 		}
 
-		/**
-		 * Create a new file system access.
-		 */
+		/** Create a new file system access. */
 		protected URIBasedFileSystemAccess createFileSystemAccess(IResourceServiceProvider serviceProvider,
 				Resource resource) {
-			return serviceProvider.get(XURIBasedFileSystemAccessFactory.class).newFileSystemAccess(resource,
-					this.request);
+
+			XURIBasedFileSystemAccessFactory fsaFactory = serviceProvider.get(XURIBasedFileSystemAccessFactory.class);
+			return fsaFactory.newFileSystemAccess(resource, this.request);
 		}
 
-		/**
-		 * Getter
-		 */
+		/** Getter */
 		protected XBuildContext getContext() {
 			return this.context;
 		}
 
-		/**
-		 * Setter
-		 */
+		/** Setter */
 		protected void setContext(XBuildContext context) {
 			this.context = context;
 		}
 
-		/**
-		 * Getter
-		 */
+		/** Getter */
 		protected XBuildRequest getRequest() {
 			return this.request;
 		}
 
-		/**
-		 * Setter
-		 */
+		/** Setter */
 		protected void setRequest(XBuildRequest request) {
 			this.request = request;
 		}
@@ -464,28 +437,30 @@ public class XIncrementalBuilder {
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
-	/**
-	 * Run the build without clustering.
-	 */
+	/** Run the build without clustering. */
 	public XIncrementalBuilder.XResult build(XBuildRequest request,
 			Function1<? super URI, ? extends IResourceServiceProvider> languages) {
+
 		return build(request, languages, new DisabledClusteringPolicy());
 	}
 
-	/**
-	 * Run the build.
-	 */
+	/** Run the build. */
 	public XIncrementalBuilder.XResult build(XBuildRequest request,
 			Function1<? super URI, ? extends IResourceServiceProvider> languages,
 			IResourceClusteringPolicy clusteringPolicy) {
+
+		ResourceDescriptionsData resDescrsCopy = request.getState().getResourceDescriptions().copy();
+		XSource2GeneratedMapping fileMappingsCopy = request.getState().getFileMappings().copy();
+		XIndexState oldState = new XIndexState(resDescrsCopy, fileMappingsCopy);
+
 		XtextResourceSet resourceSet = request.getResourceSet();
-		XIndexState oldState = new XIndexState(request.getState().getResourceDescriptions().copy(),
-				request.getState().getFileMappings().copy());
 		XBuildContext context = new XBuildContext(languages, resourceSet, oldState, clusteringPolicy,
 				request.getCancelIndicator());
+
 		XIncrementalBuilder.XInternalStatefulIncrementalBuilder builder = provider.get();
 		builder.setContext(context);
 		builder.setRequest(request);
+
 		try {
 			return builder.launch();
 		} catch (Throwable t) {

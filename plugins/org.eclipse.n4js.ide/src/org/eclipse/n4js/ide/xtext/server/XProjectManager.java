@@ -7,14 +7,26 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.ide.server.HashedFileContent;
+import org.eclipse.n4js.ide.server.ProjectStatePersister;
+import org.eclipse.n4js.ide.server.ProjectStatePersister.PersistedState;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder.XResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
+import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IExternalContentSupport;
@@ -43,35 +55,29 @@ import com.google.inject.Provider;
  */
 @SuppressWarnings("restriction")
 public class XProjectManager {
-	/**
-	 * The builder.
-	 */
+	/** The builder. */
 	@Inject
 	protected XIncrementalBuilder incrementalBuilder;
 
-	/**
-	 * Creates a new resource set.
-	 */
+	/** Creates a new resource set. */
 	@Inject
 	protected Provider<XtextResourceSet> resourceSetProvider;
 
-	/**
-	 * All languages
-	 */
+	/** All languages */
 	@Inject
 	protected IResourceServiceProvider.Registry languagesRegistry;
 
-	/**
-	 * Scans the file system.
-	 */
+	/** Scans the file system. */
 	@Inject
 	protected IFileSystemScanner fileSystemScanner;
 
-	/**
-	 * External content support for the resource set.
-	 */
+	/** External content support for the resource set. */
 	@Inject
 	protected IExternalContentSupport externalContentSupport;
+
+	/** Reads and writes the type index from/to disk */
+	@Inject
+	protected ProjectStatePersister projectStatePersister;
 
 	private XIndexState indexState = new XIndexState();
 
@@ -89,15 +95,16 @@ public class XProjectManager {
 
 	private IProjectConfig projectConfig;
 
-	/**
-	 * Initialize this project.
-	 */
+	private final Map<URI, HashedFileContent> hashFileContents = new HashMap<>();
+
+	/** Initialize this project. */
 	@SuppressWarnings("hiding")
 	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
 			Procedure2<? super URI, ? super Iterable<Issue>> acceptor,
 			IExternalContentSupport.IExternalContentProvider openedDocumentsContentProvider,
 			Provider<Map<String, ResourceDescriptionsData>> indexProvider,
 			@SuppressWarnings("unused") CancelIndicator cancelIndicator) {
+
 		this.projectDescription = description;
 		this.projectConfig = projectConfig;
 		this.baseDir = projectConfig.getPath();
@@ -106,36 +113,116 @@ public class XProjectManager {
 		this.indexProvider = indexProvider;
 	}
 
-	/**
-	 * Initial build of this project.
-	 */
-	public XIncrementalBuilder.XResult doInitialBuild(CancelIndicator cancelIndicator) {
-		List<URI> allUris = CollectionLiterals.<URI> newArrayList();
-		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
-			allUris.addAll(srcFolder.getAllResources(fileSystemScanner));
+	/** Reads the persisted project state from disk */
+	private void readProjectState(CancelIndicator cancelIndicator) {
+		doClear();
+
+		PersistedState persistedState = projectStatePersister.readProjectState(projectConfig);
+		if (persistedState != null) {
+			for (HashedFileContent hfc : persistedState.fileHashs.values()) {
+				URI uri = hfc.getUri();
+				if (isSourceUnchanged(hfc, persistedState)) {
+					hashFileContents.put(uri, hfc);
+				} else {
+					persistedState.indexState.getFileMappings().deleteSource(uri);
+				}
+			}
+			setIndexState(persistedState.indexState);
 		}
-		return doBuild(allUris, CollectionLiterals.emptyList(), CollectionLiterals.emptyList(), cancelIndicator);
+
+		doIncrementalBuild(Collections.emptySet(), Collections.emptySet(), Collections.emptyList(), cancelIndicator);
 	}
 
-	/**
-	 * Build this project.
-	 */
-	public XIncrementalBuilder.XResult doBuild(List<URI> dirtyFiles, List<URI> deletedFiles,
+	private boolean isSourceUnchanged(HashedFileContent hfc, PersistedState persistedState) {
+		URI sourceUri = hfc.getUri();
+		long loadedHash = hfc.getHash();
+
+		HashedFileContent newHash = doHash(sourceUri);
+		if (newHash == null || loadedHash != newHash.getHash()) {
+			return false;
+		}
+
+		XSource2GeneratedMapping sourceFileMappings = persistedState.indexState.getFileMappings();
+		List<URI> prevGenerated = sourceFileMappings.getGenerated(sourceUri);
+		for (URI generated : prevGenerated) {
+			HashedFileContent genFingerprint = persistedState.fileHashs.get(generated);
+			if (genFingerprint != null) {
+				HashedFileContent generatedHash = doHash(generated);
+				if (generatedHash == null || generatedHash.getHash() != genFingerprint.getHash()) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	private HashedFileContent doHash(URI uri) {
+		try {
+			File srcFile = new File(new java.net.URI(uri.toString()));
+			HashedFileContent generatedTargetContent = new HashedFileContent(uri, srcFile);
+			return generatedTargetContent;
+		} catch (IOException | URISyntaxException e) {
+			return null;
+		}
+	}
+
+	/** Persists the project state to disk */
+	public void writeProjectState() {
+		projectStatePersister.writeProjectState(projectConfig, getIndexState(), hashFileContents.values());
+	}
+
+	/** Initial build reads the project state and resolves changes. */
+	public XIncrementalBuilder.XResult doInitialBuild(CancelIndicator cancelIndicator) {
+		readProjectState(cancelIndicator);
+
+		Set<URI> changedSources = new HashSet<>();
+		Set<URI> allIndexedUris = getIndexState().getResourceDescriptions().getAllURIs();
+
+		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
+			List<URI> allSourceFolderUris = srcFolder.getAllResources(fileSystemScanner);
+			for (URI srcFolderUri : allSourceFolderUris) {
+				if (!allIndexedUris.contains(srcFolderUri)) {
+					changedSources.add(srcFolderUri);
+				}
+			}
+		}
+
+		XResult result = doIncrementalBuild(changedSources, CollectionLiterals.emptySet(),
+				CollectionLiterals.emptyList(), cancelIndicator);
+
+		writeProjectState();
+		return result;
+	}
+
+	/** Clears type index of this project. */
+	public void doClear() {
+		hashFileContents.clear();
+		setIndexState(new XIndexState());
+	}
+
+	/** Build this project. */
+	public XIncrementalBuilder.XResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
+
+		URI persistanceFile = this.projectStatePersister.getFileName(projectConfig);
+		dirtyFiles.remove(persistanceFile);
+		deletedFiles.remove(persistanceFile);
+
 		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
 		XIncrementalBuilder.XResult result = incrementalBuilder.build(request,
 				languagesRegistry::getResourceServiceProvider);
+
 		indexState = result.getIndexState();
 		resourceSet = request.getResourceSet();
 		indexProvider.get().put(projectDescription.getName(), indexState.getResourceDescriptions());
 		return result;
 	}
 
-	/**
-	 * Creates a new build request for this project.
-	 */
-	protected XBuildRequest newBuildRequest(List<URI> changedFiles, List<URI> deletedFiles,
+	/** Creates a new build request for this project. */
+	protected XBuildRequest newBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
+
 		XBuildRequest result = new XBuildRequest();
 		result.setBaseDir(baseDir);
 		result.setState(new XIndexState(indexState.getResourceDescriptions().copy(),
@@ -151,6 +238,7 @@ public class XProjectManager {
 		result.setCancelIndicator(cancelIndicator);
 
 		if (projectConfig instanceof N4JSProjectConfig) {
+			// TODO: merge N4JSProjectConfig#indexOnly() to IProjectConfig
 			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
 			result.setIndexOnly(n4pc.indexOnly());
 		}
@@ -159,9 +247,7 @@ public class XProjectManager {
 		return result;
 	}
 
-	/**
-	 * Create and configure a new resource set for this project.
-	 */
+	/** Create and configure a new resource set for this project. */
 	public XtextResourceSet createNewResourceSet(ResourceDescriptionsData newIndex) {
 		XtextResourceSet result = resourceSetProvider.get();
 		projectDescription.attachToEmfObject(result);
@@ -172,9 +258,7 @@ public class XProjectManager {
 		return result;
 	}
 
-	/**
-	 * Create an empty resource set.
-	 */
+	/** Create an empty resource set. */
 	protected XtextResourceSet createFreshResourceSet(ResourceDescriptionsData newIndex) {
 		if (resourceSet == null) {
 			resourceSet = createNewResourceSet(newIndex);
@@ -188,18 +272,14 @@ public class XProjectManager {
 		return resourceSet;
 	}
 
-	/**
-	 * Get the resource with the given URI.
-	 */
+	/** Get the resource with the given URI. */
 	public Resource getResource(URI uri) {
 		Resource resource = resourceSet.getResource(uri, true);
 		resource.getContents();
 		return resource;
 	}
 
-	/**
-	 * Report an issue.
-	 */
+	/** Report an issue. */
 	public void reportProjectIssue(String message, String code, Severity severity) {
 		Issue.IssueImpl result = new Issue.IssueImpl();
 		result.setMessage(message);
@@ -209,65 +289,47 @@ public class XProjectManager {
 		issueAcceptor.apply(baseDir, ImmutableList.of(result));
 	}
 
-	/**
-	 * Getter
-	 */
-	public XIndexState getIndexState() {
-		return indexState;
-	}
-
-	/**
-	 * Setter
-	 */
+	/** Setter */
 	protected void setIndexState(XIndexState indexState) {
 		this.indexState = indexState;
 	}
 
-	/**
-	 * Getter
-	 */
+	/** Getter */
+	public XIndexState getIndexState() {
+		return indexState;
+	}
+
+	/** Getter */
 	public URI getBaseDir() {
 		return baseDir;
 	}
 
-	/**
-	 * Getter
-	 */
+	/** Getter */
 	protected Procedure2<? super URI, ? super Iterable<Issue>> getIssueAcceptor() {
 		return issueAcceptor;
 	}
 
-	/**
-	 * Getter
-	 */
+	/** Getter */
 	protected Provider<Map<String, ResourceDescriptionsData>> getIndexProvider() {
 		return indexProvider;
 	}
 
-	/**
-	 * Getter
-	 */
+	/** Getter */
 	protected IExternalContentSupport.IExternalContentProvider getOpenedDocumentsContentProvider() {
 		return openedDocumentsContentProvider;
 	}
 
-	/**
-	 * Getter
-	 */
+	/** Getter */
 	public XtextResourceSet getResourceSet() {
 		return resourceSet;
 	}
 
-	/**
-	 * Getter
-	 */
+	/** Getter */
 	public ProjectDescription getProjectDescription() {
 		return projectDescription;
 	}
 
-	/**
-	 * Getter
-	 */
+	/** Getter */
 	public IProjectConfig getProjectConfig() {
 		return projectConfig;
 	}

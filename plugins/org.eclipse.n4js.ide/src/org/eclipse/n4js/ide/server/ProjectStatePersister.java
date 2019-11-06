@@ -21,10 +21,9 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.function.BiConsumer;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -47,6 +46,19 @@ import com.google.common.io.Files;
  */
 @SuppressWarnings("restriction")
 public class ProjectStatePersister {
+
+	/** Data holder class of project state */
+	static public class PersistedState {
+		/** Type index */
+		final public XIndexState indexState;
+		/** Hashes to indicate file changes */
+		final public Map<URI, HashedFileContent> fileHashs;
+
+		PersistedState(XIndexState indexState, Map<URI, HashedFileContent> fileHashs) {
+			this.indexState = indexState;
+			this.fileHashs = fileHashs;
+		}
+	}
 
 	/**
 	 * After the version, the stream contains a zipped, binary object stream with the following shape:
@@ -106,22 +118,28 @@ public class ProjectStatePersister {
 	public void writeProjectState(OutputStream stream, String languageVersion, XIndexState state,
 			Collection<? extends HashedFileContent> files)
 			throws IOException {
+
 		stream.write(CURRENT_VERSION);
 		try (ObjectOutputStream output = new ObjectOutputStream(
 				new BufferedOutputStream(new GZIPOutputStream(stream, 8192)))) {
+
 			output.writeUTF(languageVersion);
-			output.writeInt(state.getResourceDescriptions().getAllURIs().size());
-			for (IResourceDescription description : state.getResourceDescriptions()
-					.getAllResourceDescriptions()) {
+
+			ResourceDescriptionsData resourceDescriptionData = state.getResourceDescriptions();
+			output.writeInt(resourceDescriptionData.getAllURIs().size());
+
+			for (IResourceDescription description : resourceDescriptionData.getAllResourceDescriptions()) {
 				if (description instanceof SerializableResourceDescription) {
 					((SerializableResourceDescription) description).writeExternal(output);
 				} else {
 					throw new IOException("Unexpected type: " + description.getClass().getName());
 				}
 			}
+
 			XSource2GeneratedMapping fileMappings = state.getFileMappings();
 			fileMappings.writeExternal(output);
 			output.writeInt(files.size());
+
 			for (HashedFileContent fingerprint : files) {
 				fingerprint.write(output);
 			}
@@ -133,21 +151,19 @@ public class ProjectStatePersister {
 	 *
 	 * @param project
 	 *            the project
-	 * @param result
-	 *            the acceptor for the result.
 	 */
-	public void readProjectState(IProjectConfig project,
-			BiConsumer<? super XIndexState, ? super Collection<? extends HashedFileContent>> result) {
+	public PersistedState readProjectState(IProjectConfig project) {
 		try {
 			File file = getDataFile(project);
 			if (file.isFile()) {
 				try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
-					readProjectState(nativeIn, N4JSLanguageUtils.getLanguageVersion(), result);
+					return readProjectState(nativeIn, N4JSLanguageUtils.getLanguageVersion());
 				}
 			}
 		} catch (IOException | URISyntaxException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	/**
@@ -155,44 +171,50 @@ public class ProjectStatePersister {
 	 *            the stream to read from.
 	 * @param expectedLanguageVersion
 	 *            the language version as it is expected to be present in the stream
-	 * @param result
-	 *            announce the results here.
 	 * @throws IOException
 	 *             if things go bananas.
 	 * @throws ClassNotFoundException
 	 *             if things go bananas.
 	 */
-	public void readProjectState(InputStream stream,
-			String expectedLanguageVersion,
-			BiConsumer<? super XIndexState, ? super Collection<? extends HashedFileContent>> result)
+	public PersistedState readProjectState(InputStream stream, String expectedLanguageVersion)
 			throws IOException, ClassNotFoundException {
+
 		int version = stream.read();
-		if (version == CURRENT_VERSION) {
-			try (ObjectInputStream input = new ObjectInputStream(
-					new BufferedInputStream(new GZIPInputStream(stream, 8192)))) {
-				String languageVersion = input.readUTF();
-				if (expectedLanguageVersion.equals(languageVersion)) {
-					List<IResourceDescription> descriptions = new ArrayList<>();
-					int size = input.readInt();
-					while (size > 0) {
-						size--;
-						SerializableResourceDescription description = new SerializableResourceDescription();
-						description.readExternal(input);
-						descriptions.add(description);
-					}
-					ResourceDescriptionsData resourceDescriptionsData = new ResourceDescriptionsData(
-							descriptions);
-					XSource2GeneratedMapping fileMappings = new XSource2GeneratedMapping();
-					fileMappings.readExternal(input);
-					Set<HashedFileContent> fingerprints = new HashSet<>();
-					size = input.readInt();
-					while (size > 0) {
-						size--;
-						fingerprints.add(new HashedFileContent(input));
-					}
-					result.accept(new XIndexState(resourceDescriptionsData, fileMappings), fingerprints);
-				}
+		if (version != CURRENT_VERSION) {
+			return null;
+		}
+
+		try (ObjectInputStream input = new ObjectInputStream(
+				new BufferedInputStream(new GZIPInputStream(stream, 8192)))) {
+
+			String languageVersion = input.readUTF();
+			if (!expectedLanguageVersion.equals(languageVersion)) {
+				return null;
 			}
+
+			List<IResourceDescription> descriptions = new ArrayList<>();
+			int size = input.readInt();
+			while (size > 0) {
+				size--;
+				SerializableResourceDescription description = new SerializableResourceDescription();
+				description.readExternal(input);
+				descriptions.add(description);
+			}
+
+			ResourceDescriptionsData resourceDescriptionsData = new ResourceDescriptionsData(descriptions);
+			XSource2GeneratedMapping fileMappings = new XSource2GeneratedMapping();
+			fileMappings.readExternal(input);
+			Map<URI, HashedFileContent> fingerprints = new HashMap<>();
+			size = input.readInt();
+
+			while (size > 0) {
+				size--;
+				HashedFileContent hashFileContent = new HashedFileContent(input);
+				fingerprints.put(hashFileContent.getUri(), hashFileContent);
+			}
+
+			XIndexState indexState = new XIndexState(resourceDescriptionsData, fileMappings);
+			return new PersistedState(indexState, fingerprints);
 		}
 	}
 
@@ -202,7 +224,8 @@ public class ProjectStatePersister {
 		return file;
 	}
 
-	private URI getFileName(IProjectConfig project) {
+	/** @return the file URI of the persisted index */
+	public URI getFileName(IProjectConfig project) {
 		URI rootPath = project.getPath();
 		URI fileName = rootPath.appendSegment(FILENAME);
 		return fileName;

@@ -75,6 +75,7 @@ public class N4jscCompiler {
 			verbosePrintAllProjects();
 
 			languageServer.initialized(new InitializedParams());
+			languageServer.joinInitBuildFinished();
 
 			languageServer.shutdown();
 			languageServer.exit();

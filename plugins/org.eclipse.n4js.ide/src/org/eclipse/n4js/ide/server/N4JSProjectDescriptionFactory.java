@@ -21,7 +21,7 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 import com.google.common.collect.FluentIterable;
 
 /**
- *
+ * Creates {@link ProjectDescription}s for {@link IN4JSProject}s: Adds dependencies.
  */
 @SuppressWarnings("restriction")
 public class N4JSProjectDescriptionFactory extends XDefaultProjectDescriptionFactory {
