@@ -519,7 +519,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private void publishDiagnostics(URI uri, Iterable<? extends Issue> issues) {
 		PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
 		publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
-
 		List<Diagnostic> diags = toDiagnostics(uri, issues);
 		publishDiagnosticsParams.setDiagnostics(diags);
 		client.publishDiagnostics(publishDiagnosticsParams);
