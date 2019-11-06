@@ -19,10 +19,12 @@ import org.eclipse.xtext.workspace.IProjectConfig;
  */
 @SuppressWarnings("restriction")
 public class XDefaultProjectDescriptionFactory implements XIProjectDescriptionFactory {
+
 	@Override
 	public ProjectDescription getProjectDescription(IProjectConfig config) {
 		ProjectDescription result = new ProjectDescription();
 		result.setName(config.getName());
 		return result;
 	}
+
 }

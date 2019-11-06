@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ide.server.ReflectionUtils;
-import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.IssueAcceptor;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.nodemodel.INode;
@@ -35,8 +35,8 @@ import org.eclipse.xtext.validation.RangeBasedDiagnostic;
 /**
  * GH-1537: Purpose of this class is to extend the {@link Issue} by information about the end-line and the end-column.
  * Reason for this extension is that this information is needed when publishing diagnostics in
- * {@link XLanguageServerImpl#publishDiagnostics}. This triggers a second read of a resource, which might be even
- * deleted by then.
+ * {@link IssueAcceptor#publishDiagnostics}. This triggers a second read of a resource, which might be even deleted by
+ * then.
  */
 public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 

@@ -217,8 +217,8 @@ public class XIncrementalBuilder {
 			List<IResourceDescription.Delta> resolvedDeltas = new ArrayList<>();
 
 			try {
-
 				XSource2GeneratedMapping newSource2GeneratedMapping = this.request.getState().getFileMappings();
+
 				Set<URI> unloaded = new HashSet<>();
 				for (URI deleted : request.getDeletedFiles()) {
 					if (unloaded.add(deleted)) {
@@ -230,29 +230,34 @@ public class XIncrementalBuilder {
 						unloadResource(dirty);
 					}
 				}
+
 				for (URI source : request.getDeletedFiles()) {
-					request.getAfterValidate().afterValidate(source, Collections.emptyList());
-					Map<URI, String> outputConfigs = newSource2GeneratedMapping.deleteSourceAndGetOutputConfigs(source);
-					for (URI generated : outputConfigs.keySet()) {
-						IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(source);
-						XtextResourceSet resourceSet = request.getResourceSet();
-						Set<OutputConfiguration> configs = serviceProvider
-								.get(IContextualOutputConfigurationProvider2.class)
-								.getOutputConfigurations(resourceSet);
-						String configName = outputConfigs.get(generated);
-						OutputConfiguration config = FluentIterable.from(configs)
-								.firstMatch(it -> it.getName().equals(configName)).orNull();
+					request.setResultIssues(source, Collections.emptyList());
+
+					Map<URI, String> outputConfigMap = newSource2GeneratedMapping
+							.deleteSourceAndGetOutputConfigs(source);
+					IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(source);
+					IContextualOutputConfigurationProvider2 outputConfigurationProvider = serviceProvider
+							.get(IContextualOutputConfigurationProvider2.class);
+					XtextResourceSet resourceSet = request.getResourceSet();
+					Set<OutputConfiguration> outputConfigs = outputConfigurationProvider
+							.getOutputConfigurations(resourceSet);
+
+					for (URI generated : outputConfigMap.keySet()) {
+						String configName = outputConfigMap.get(generated);
+						OutputConfiguration config = FluentIterable.from(outputConfigs)
+								.firstMatch(oc -> oc.getName().equals(configName)).orNull();
 						if (config != null && config.isCleanUpDerivedResources()) {
 							try {
-								resourceSet.getURIConverter().delete(generated,
-										CollectionLiterals.emptyMap());
-								request.getAfterDeleteFile().apply(generated);
+								resourceSet.getURIConverter().delete(generated, CollectionLiterals.emptyMap());
+								request.setResultDeleteFile(generated);
 							} catch (IOException e) {
 								Exceptions.sneakyThrow(e);
 							}
 						}
 					}
 				}
+
 				XIndexer.XIndexResult result = indexer.computeAndIndexAffected(request, context);
 				operationCanceledManager.checkCanceled(request.getCancelIndicator());
 
@@ -268,7 +273,7 @@ public class XIncrementalBuilder {
 
 				Iterable<URI> uris = FluentIterable
 						.from(result.getResourceDeltas())
-						.filter((delta) -> delta.getNew() != null)
+						.filter(delta -> delta.getNew() != null)
 						.transform(Delta::getUri);
 
 				Iterable<IResourceDescription.Delta> deltas = context.executeClustered(uris,
@@ -295,27 +300,28 @@ public class XIncrementalBuilder {
 			EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
 			operationCanceledManager.checkCanceled(cancelIndicator);
 
-			URI uri = resource.getURI();
+			URI source = resource.getURI();
 			IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
 			IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
 			IResourceValidator resourceValidator = getResourceServiceProvider(resource).getResourceValidator();
 
 			IResourceDescription description = manager.getResourceDescription(resource);
 			SerializableResourceDescription copiedDescription = SerializableResourceDescription.createCopy(description);
-			result.getNewIndex().addDescription(uri, copiedDescription);
+			result.getNewIndex().addDescription(source, copiedDescription);
 			operationCanceledManager.checkCanceled(cancelIndicator);
 
 			if (!request.isIndexOnly()) {
 				List<Issue> issues = resourceValidator.validate(resource, CheckMode.ALL, request.getCancelIndicator());
-				boolean proceedGenerate = request.getAfterValidate().afterValidate(resource.getURI(), issues);
+				request.setResultIssues(source, issues);
+				boolean proceedGenerate = request.shouldGenerate(source);
 
 				if (proceedGenerate) {
 					operationCanceledManager.checkCanceled(cancelIndicator);
-					generate(resource, request, newSource2GeneratedMapping);
+					generate(resource, newSource2GeneratedMapping);
 				}
 			}
 
-			IResourceDescription old = context.getOldState().getResourceDescriptions().getResourceDescription(uri);
+			IResourceDescription old = context.getOldState().getResourceDescriptions().getResourceDescription(source);
 			return manager.createDelta(old, copiedDescription);
 		}
 
@@ -327,10 +333,7 @@ public class XIncrementalBuilder {
 		}
 
 		/** Generate code for the given resource */
-		@SuppressWarnings("hiding")
-		protected void generate(Resource resource, XBuildRequest request,
-				XSource2GeneratedMapping newMappings) {
-
+		protected void generate(Resource resource, XSource2GeneratedMapping newMappings) {
 			IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
 			GeneratorDelegate generator = serviceProvider.get(GeneratorDelegate.class);
 			if (generator == null) {
@@ -341,17 +344,18 @@ public class XIncrementalBuilder {
 				return;
 			}
 
-			Set<URI> previous = newMappings.deleteSource(resource.getURI());
+			URI source = resource.getURI();
+			Set<URI> previous = newMappings.deleteSource(source);
 			URIBasedFileSystemAccess fileSystemAccess = this.createFileSystemAccess(serviceProvider, resource);
 			fileSystemAccess.setBeforeWrite((uri, outputCfgName, contents) -> {
-				newMappings.addSource2Generated(resource.getURI(), uri, outputCfgName);
+				newMappings.addSource2Generated(source, uri, outputCfgName);
 				previous.remove(uri);
-				request.getAfterGenerateFile().apply(resource.getURI(), uri);
+				request.setResultGeneratedFile(source, uri);
 				return contents;
 			});
 			fileSystemAccess.setBeforeDelete((uri) -> {
 				newMappings.deleteGenerated(uri);
-				request.getAfterDeleteFile().apply(uri);
+				request.setResultDeleteFile(uri);
 				return true;
 			});
 			fileSystemAccess.setContext(resource);
@@ -369,7 +373,7 @@ public class XIncrementalBuilder {
 			for (URI noLongerCreated : previous) {
 				try {
 					resourceSet.getURIConverter().delete(noLongerCreated, CollectionLiterals.emptyMap());
-					request.getAfterDeleteFile().apply(noLongerCreated);
+					request.setResultDeleteFile(noLongerCreated);
 				} catch (IOException e) {
 					Exceptions.sneakyThrow(e);
 				}

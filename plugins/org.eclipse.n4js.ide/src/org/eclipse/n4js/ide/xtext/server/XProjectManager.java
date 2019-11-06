@@ -43,7 +43,6 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
@@ -79,11 +78,17 @@ public class XProjectManager {
 	@Inject
 	protected ProjectStatePersister projectStatePersister;
 
+	/** Creates build requests */
+	@Inject
+	protected DefaultBuildRequestFactory buildRequestFactory;
+
+	/** Publishes issues to lsp client */
+	@Inject
+	protected IssueAcceptor issueAcceptor;
+
 	private XIndexState indexState = new XIndexState();
 
 	private URI baseDir;
-
-	private Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
 
 	private Provider<Map<String, ResourceDescriptionsData>> indexProvider;
 
@@ -100,7 +105,6 @@ public class XProjectManager {
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
 	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
-			Procedure2<? super URI, ? super Iterable<Issue>> acceptor,
 			IExternalContentSupport.IExternalContentProvider openedDocumentsContentProvider,
 			Provider<Map<String, ResourceDescriptionsData>> indexProvider,
 			@SuppressWarnings("unused") CancelIndicator cancelIndicator) {
@@ -108,7 +112,6 @@ public class XProjectManager {
 		this.projectDescription = description;
 		this.projectConfig = projectConfig;
 		this.baseDir = projectConfig.getPath();
-		this.issueAcceptor = acceptor;
 		this.openedDocumentsContentProvider = openedDocumentsContentProvider;
 		this.indexProvider = indexProvider;
 	}
@@ -223,18 +226,12 @@ public class XProjectManager {
 	protected XBuildRequest newBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
 
-		XBuildRequest result = new XBuildRequest();
+		XBuildRequest result = buildRequestFactory.getBuildRequest(changedFiles, deletedFiles, externalDeltas);
 		result.setBaseDir(baseDir);
-		result.setState(new XIndexState(indexState.getResourceDescriptions().copy(),
-				indexState.getFileMappings().copy()));
+		ResourceDescriptionsData resourceDescriptionsCopy = indexState.getResourceDescriptions().copy();
+		XSource2GeneratedMapping fileMappingsCopy = indexState.getFileMappings().copy();
+		result.setState(new XIndexState(resourceDescriptionsCopy, fileMappingsCopy));
 		result.setResourceSet(createFreshResourceSet(result.getState().getResourceDescriptions()));
-		result.setDirtyFiles(changedFiles);
-		result.setDeletedFiles(deletedFiles);
-		result.setExternalDeltas(externalDeltas);
-		result.setAfterValidate((URI uri, Iterable<Issue> issues) -> {
-			issueAcceptor.apply(uri, issues);
-			return true;
-		});
 		result.setCancelIndicator(cancelIndicator);
 
 		if (projectConfig instanceof N4JSProjectConfig) {
@@ -243,7 +240,6 @@ public class XProjectManager {
 			result.setIndexOnly(n4pc.indexOnly());
 		}
 
-		this.getBaseDir();
 		return result;
 	}
 
@@ -286,7 +282,7 @@ public class XProjectManager {
 		result.setCode(code);
 		result.setSeverity(severity);
 		result.setUriToProblem(baseDir);
-		issueAcceptor.apply(baseDir, ImmutableList.of(result));
+		issueAcceptor.publishDiagnostics(baseDir, ImmutableList.of(result));
 	}
 
 	/** Setter */
@@ -302,11 +298,6 @@ public class XProjectManager {
 	/** Getter */
 	public URI getBaseDir() {
 		return baseDir;
-	}
-
-	/** Getter */
-	protected Procedure2<? super URI, ? super Iterable<Issue>> getIssueAcceptor() {
-		return issueAcceptor;
 	}
 
 	/** Getter */

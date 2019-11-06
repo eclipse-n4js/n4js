@@ -36,12 +36,10 @@ import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
-import org.eclipse.xtext.xbase.lib.Functions.Function2;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -65,13 +63,14 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	@Inject
 	private XIProjectDescriptionFactory projectDescriptionFactory;
 
+	@Inject
+	private IssueAcceptor issueAcceptor;
+
 	private XBuildManager buildManager;
 
 	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
 
 	private URI baseDir;
-
-	private Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
 
 	private IWorkspaceConfig workspaceConfig;
 
@@ -148,13 +147,10 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 *
 	 * @param baseDir
 	 *            the location
-	 * @param issueAcceptor
-	 *            the issue acceptor
 	 */
 	@SuppressWarnings("hiding")
-	public void initialize(URI baseDir, Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor) {
+	public void initialize(URI baseDir) {
 		this.baseDir = baseDir;
-		this.issueAcceptor = issueAcceptor;
 		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
 	}
 
@@ -172,8 +168,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			} else {
 				XProjectManager projectManager = projectManagerProvider.get();
 				ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-				projectManager.initialize(projectDescription, projectConfig, issueAcceptor,
-						openedDocumentsContentProvider, () -> fullIndex, cancelIndicator);
+				projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
+						() -> fullIndex, cancelIndicator);
 				projectName2ProjectManager.put(projectDescription.getName(), projectManager);
 				newProjects.add(projectDescription);
 			}
@@ -183,7 +179,9 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			fullIndex.remove(deletedProject);
 		}
 
+		Stopwatch sw = Stopwatch.createStarted();
 		List<Delta> deltas = buildManager.doInitialBuild(newProjects, cancelIndicator);
+		System.out.println(sw.stop().elapsed());
 		afterBuild(deltas);
 	}
 
@@ -248,7 +246,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** Clears all issues of the given URI */
 	public void clearIssues(URI uri) {
-		issueAcceptor.apply(uri, Collections.emptyList());
+		issueAcceptor.publishDiagnostics(uri, Collections.emptyList());
 	}
 
 	/**
@@ -428,20 +426,6 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Find the resource and the document with the given URI and performs a read operation.
-	 */
-	public <T> T doRead2(URI uri, Function2<? super Document, ? super XtextResource, ? extends T> work) {
-		URI resourceURI = uri.trimFragment();
-		XProjectManager projectMnr = getProjectManager(resourceURI);
-		if (projectMnr != null) {
-			XtextResource resource = (XtextResource) projectMnr.getResource(resourceURI);
-			Document doc = getDocument(resource);
-			return work.apply(doc, resource);
-		}
-		return work.apply(null, null);
 	}
 
 	@Override
