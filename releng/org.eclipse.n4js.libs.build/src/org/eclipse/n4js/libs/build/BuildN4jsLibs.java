@@ -128,6 +128,7 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 			Preconditions.checkState(installResult.getExitCode() == 0, installResult);
 
 			cliTools.callN4jscInprocess(COMPILE(n4jsLibsRootPath.toFile()), false, compileResult);
+
 			Preconditions.checkState(compileResult.getExitCode() == 0, "Error during n4jsc call");
 			Preconditions.checkState(compileResult.getErrs() == 0, "Errors in compiled sources");
 
