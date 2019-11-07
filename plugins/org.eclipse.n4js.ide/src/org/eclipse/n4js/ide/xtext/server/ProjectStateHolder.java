@@ -23,9 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.server.HashedFileContent;
-import org.eclipse.n4js.ide.server.ProjectStatePersister;
-import org.eclipse.n4js.ide.server.ProjectStatePersister.PersistedState;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.PersistedState;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;

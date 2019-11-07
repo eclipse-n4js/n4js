@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.server;
+package org.eclipse.n4js.ide.xtext.server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

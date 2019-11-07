@@ -92,7 +92,6 @@ import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
-import org.eclipse.n4js.ide.server.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;

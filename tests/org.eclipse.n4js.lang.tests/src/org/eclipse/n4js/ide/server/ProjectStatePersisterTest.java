@@ -22,7 +22,9 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.server.ProjectStatePersister.PersistedState;
+import org.eclipse.n4js.ide.xtext.server.HashedFileContent;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.PersistedState;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
