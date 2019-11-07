@@ -19,11 +19,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- *
+ * Tests if link to Mozilla Developer Network is automatically added to hover in case
+ * of built-in types. 
+ * The test name needs to have a suffix "PluginUITest in order to be correctly executed
+ * by Maven.
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
-class MDNHoverTest extends AbstractN4JSHoverTest {
+class MDNHoverPluginUITest extends AbstractN4JSHoverTest {
 	
 	private static final String MDN_STRING_START = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
 	private static final String MDN_STRING_REGEX_END = "MDN Documentation(?s).*";
