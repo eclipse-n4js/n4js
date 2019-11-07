@@ -94,6 +94,7 @@ import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
+import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
@@ -1097,8 +1098,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public ResourceSet newLiveScopeResourceSet(URI uri) {
 			XProjectManager projectManager = workspaceManager.getProjectManager(uri);
-			XtextResourceSet resourceSet = projectManager
-					.createNewResourceSet(projectManager.getIndexState().getResourceDescriptions());
+			XIndexState indexState = projectManager.getProjectStateHolder().getIndexState();
+			XtextResourceSet resourceSet = projectManager.createNewResourceSet(indexState.getResourceDescriptions());
 			resourceSet.getLoadOptions().put(ResourceDescriptionsProvider.LIVE_SCOPE, true);
 			return resourceSet;
 		}

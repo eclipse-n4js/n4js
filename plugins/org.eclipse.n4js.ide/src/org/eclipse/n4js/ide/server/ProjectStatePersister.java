@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -35,6 +36,7 @@ import org.eclipse.xtext.build.Source2GeneratedMapping;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
+import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.common.io.Files;
@@ -53,10 +55,15 @@ public class ProjectStatePersister {
 		final public XIndexState indexState;
 		/** Hashes to indicate file changes */
 		final public Map<URI, HashedFileContent> fileHashs;
+		/** Hashes to indicate file changes */
+		final public Map<URI, ? extends Collection<Issue>> validationIssues;
 
-		PersistedState(XIndexState indexState, Map<URI, HashedFileContent> fileHashs) {
+		PersistedState(XIndexState indexState, Map<URI, HashedFileContent> fileHashs,
+				Map<URI, ? extends Collection<Issue>> validationIssues) {
+
 			this.indexState = indexState;
 			this.fileHashs = fileHashs;
+			this.validationIssues = validationIssues;
 		}
 	}
 
@@ -90,9 +97,11 @@ public class ProjectStatePersister {
 	 *            the project
 	 * @param state
 	 *            the state to be written
+	 * @param validationIssues
+	 *            map of source files to issues
 	 */
 	public void writeProjectState(IProjectConfig project, XIndexState state,
-			Collection<? extends HashedFileContent> files) {
+			Collection<? extends HashedFileContent> files, Map<URI, ? extends Collection<Issue>> validationIssues) {
 		try {
 			File file = getDataFile(project);
 			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
@@ -214,7 +223,10 @@ public class ProjectStatePersister {
 			}
 
 			XIndexState indexState = new XIndexState(resourceDescriptionsData, fileMappings);
-			return new PersistedState(indexState, fingerprints);
+
+			Map<URI, Collection<Issue>> validationIssues = new LinkedHashMap<>();
+
+			return new PersistedState(indexState, fingerprints, validationIssues);
 		}
 	}
 

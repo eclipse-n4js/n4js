@@ -1,0 +1,205 @@
+/**
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+package org.eclipse.n4js.ide.xtext.server;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.server.HashedFileContent;
+import org.eclipse.n4js.ide.server.ProjectStatePersister;
+import org.eclipse.n4js.ide.server.ProjectStatePersister.PersistedState;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
+import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
+import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
+
+import com.google.inject.Inject;
+
+/**
+ * Holds index, hashes and issue information
+ */
+@SuppressWarnings("restriction")
+public class ProjectStateHolder {
+
+	/** Reads and writes the type index from/to disk */
+	@Inject
+	protected ProjectStatePersister projectStatePersister;
+
+	/** Scans the file system. */
+	@Inject
+	protected IFileSystemScanner fileSystemScanner;
+
+	/** Publishes issues to lsp client */
+	@Inject
+	protected IssueAcceptor issueAcceptor;
+
+	private XIndexState indexState = new XIndexState();
+
+	private Map<URI, HashedFileContent> hashFileMap = new HashMap<>();
+
+	private Map<URI, ? extends Collection<Issue>> validationIssues;
+
+	/** Clears type index of this project. */
+	public void doClear() {
+		hashFileMap.clear();
+		setIndexState(new XIndexState());
+		setValidationIssues(new LinkedHashMap<>());
+	}
+
+	/** Persists the project state to disk */
+	public void writeProjectState(IProjectConfig projectConfig) {
+		Collection<HashedFileContent> hashFileContents = hashFileMap.values();
+		projectStatePersister.writeProjectState(projectConfig, indexState, hashFileContents, validationIssues);
+	}
+
+	/**
+	 * Reads the persisted project state from disk
+	 *
+	 * @return set of all source URIs with modified contents
+	 */
+	public Set<URI> readProjectState(IProjectConfig projectConfig) {
+		doClear();
+
+		PersistedState persistedState = projectStatePersister.readProjectState(projectConfig);
+		if (persistedState == null) {
+			return Collections.emptySet();
+		}
+
+		for (HashedFileContent hfc : persistedState.fileHashs.values()) {
+			URI uri = hfc.getUri();
+			if (isSourceUnchanged(hfc, persistedState)) {
+				hashFileMap.put(uri, hfc);
+			} else {
+				persistedState.indexState.getFileMappings().deleteSource(uri);
+				persistedState.validationIssues.remove(uri);
+			}
+		}
+		setIndexState(persistedState.indexState);
+		setValidationIssues(persistedState.validationIssues);
+
+		Set<URI> changedSources = new HashSet<>();
+		Set<URI> allIndexedUris = indexState.getResourceDescriptions().getAllURIs();
+
+		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
+			List<URI> allSourceFolderUris = srcFolder.getAllResources(fileSystemScanner);
+			for (URI srcFolderUri : allSourceFolderUris) {
+				if (!allIndexedUris.contains(srcFolderUri)) {
+					changedSources.add(srcFolderUri);
+				}
+			}
+		}
+
+		reportValidationIssues(persistedState.validationIssues);
+
+		return changedSources;
+	}
+
+	/** Updates the index state, file hashes and validation issues */
+	public void updateProjectState(XBuildRequest request, XIncrementalBuilder.XResult result) {
+		HashMap<URI, HashedFileContent> newFileContents = new HashMap<>(hashFileMap);
+		for (Delta delta : result.getAffectedResources()) {
+			URI uri = delta.getUri();
+			storeHash(newFileContents, uri);
+		}
+		for (URI deletedFile : request.getResultDeleteFiles()) {
+			newFileContents.remove(deletedFile);
+		}
+
+		setIndexState(result.getIndexState());
+		setValidationIssues(request.getResultIssues());
+		hashFileMap = newFileContents;
+	}
+
+	private boolean isSourceUnchanged(HashedFileContent hfc, PersistedState persistedState) {
+		URI sourceUri = hfc.getUri();
+		long loadedHash = hfc.getHash();
+
+		HashedFileContent newHash = doHash(sourceUri);
+		if (newHash == null || loadedHash != newHash.getHash()) {
+			return false;
+		}
+
+		XSource2GeneratedMapping sourceFileMappings = persistedState.indexState.getFileMappings();
+		List<URI> prevGenerated = sourceFileMappings.getGenerated(sourceUri);
+		for (URI generated : prevGenerated) {
+			HashedFileContent genFingerprint = persistedState.fileHashs.get(generated);
+			if (genFingerprint != null) {
+				HashedFileContent generatedHash = doHash(generated);
+				if (generatedHash == null || generatedHash.getHash() != genFingerprint.getHash()) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	private HashedFileContent doHash(URI uri) {
+		try {
+			File srcFile = new File(new java.net.URI(uri.toString()));
+			HashedFileContent generatedTargetContent = new HashedFileContent(uri, srcFile);
+			return generatedTargetContent;
+		} catch (IOException | URISyntaxException e) {
+			return null;
+		}
+	}
+
+	private void storeHash(HashMap<URI, HashedFileContent> newFileContents, URI uri) {
+		HashedFileContent generatedTargetContent = doHash(uri);
+		if (generatedTargetContent != null) {
+			newFileContents.put(uri, generatedTargetContent);
+		}
+	}
+
+	private void reportValidationIssues(Map<URI, ? extends Collection<Issue>> valIssues) {
+		for (Map.Entry<URI, ? extends Collection<Issue>> srcIssues : valIssues.entrySet()) {
+			URI source = srcIssues.getKey();
+			Collection<Issue> issues = srcIssues.getValue();
+			issueAcceptor.publishDiagnostics(source, issues);
+		}
+	}
+
+	/** @return the file the project state is stored to */
+	public URI getPersistenceFile(IProjectConfig projectConfig) {
+		URI persistanceFile = projectStatePersister.getFileName(projectConfig);
+		return persistanceFile;
+	}
+
+	/** Getter */
+	public XIndexState getIndexState() {
+		return indexState;
+	}
+
+	/** Setter */
+	protected void setIndexState(XIndexState indexState) {
+		this.indexState = indexState;
+	}
+
+	/** Setter */
+	protected void setValidationIssues(Map<URI, ? extends Collection<Issue>> issues) {
+		this.validationIssues = issues;
+	}
+}

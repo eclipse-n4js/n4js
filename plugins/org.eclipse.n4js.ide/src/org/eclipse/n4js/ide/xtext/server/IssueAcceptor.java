@@ -102,9 +102,7 @@ public class IssueAcceptor {
 		return sortedDiags;
 	}
 
-	/**
-	 * Convert the given issue to a diagnostic.
-	 */
+	/** Convert the given issue to a diagnostic. */
 	protected Diagnostic toDiagnostic(Issue issue) {
 		Diagnostic result = new Diagnostic();
 		result.setCode(issue.getCode());

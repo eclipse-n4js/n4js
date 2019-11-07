@@ -56,7 +56,6 @@ import org.eclipse.xtext.workspace.IProjectConfigProvider;
 import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -72,6 +71,10 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings("restriction")
 public class XIncrementalBuilder {
+
+	/** All languages */
+	@Inject
+	protected IResourceServiceProvider.Registry languagesRegistry;
 
 	/**
 	 * The result of the build. Encapsulates the new index state and the list of changes.
@@ -442,15 +445,12 @@ public class XIncrementalBuilder {
 	private OperationCanceledManager operationCanceledManager;
 
 	/** Run the build without clustering. */
-	public XIncrementalBuilder.XResult build(XBuildRequest request,
-			Function1<? super URI, ? extends IResourceServiceProvider> languages) {
-
-		return build(request, languages, new DisabledClusteringPolicy());
+	public XIncrementalBuilder.XResult build(XBuildRequest request) {
+		return build(request, new DisabledClusteringPolicy());
 	}
 
 	/** Run the build. */
 	public XIncrementalBuilder.XResult build(XBuildRequest request,
-			Function1<? super URI, ? extends IResourceServiceProvider> languages,
 			IResourceClusteringPolicy clusteringPolicy) {
 
 		ResourceDescriptionsData resDescrsCopy = request.getState().getResourceDescriptions().copy();
@@ -458,8 +458,8 @@ public class XIncrementalBuilder {
 		XIndexState oldState = new XIndexState(resDescrsCopy, fileMappingsCopy);
 
 		XtextResourceSet resourceSet = request.getResourceSet();
-		XBuildContext context = new XBuildContext(languages, resourceSet, oldState, clusteringPolicy,
-				request.getCancelIndicator());
+		XBuildContext context = new XBuildContext(languagesRegistry::getResourceServiceProvider,
+				resourceSet, oldState, clusteringPolicy, request.getCancelIndicator());
 
 		XIncrementalBuilder.XInternalStatefulIncrementalBuilder builder = provider.get();
 		builder.setContext(context);

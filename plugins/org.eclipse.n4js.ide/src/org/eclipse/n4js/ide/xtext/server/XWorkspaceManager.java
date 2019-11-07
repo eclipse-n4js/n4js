@@ -169,7 +169,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 				XProjectManager projectManager = projectManagerProvider.get();
 				ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
 				projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
-						() -> fullIndex, cancelIndicator);
+						() -> fullIndex);
 				projectName2ProjectManager.put(projectDescription.getName(), projectManager);
 				newProjects.add(projectDescription);
 			}
