@@ -95,6 +95,9 @@ public class N4JSHoverService extends HoverService {
 	@Override
 	protected HoverContext createContext(Document document, XtextResource resource, int offset) {
 		HoverContext hoverContext = super.createContext(document, resource, offset);
+		if (hoverContext == null) {
+			return null;
+		}
 
 		EObject idRef = null;
 		INode node = eobjectHelper.getCrossReferenceNode(resource, new TextRegion(offset, 0));

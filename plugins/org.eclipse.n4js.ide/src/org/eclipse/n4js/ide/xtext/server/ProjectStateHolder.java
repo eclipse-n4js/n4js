@@ -14,12 +14,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -58,13 +58,13 @@ public class ProjectStateHolder {
 
 	private Map<URI, HashedFileContent> hashFileMap = new HashMap<>();
 
-	private Map<URI, ? extends Collection<Issue>> validationIssues;
+	private final Map<URI, Collection<Issue>> validationIssues = new HashMap<>();
 
 	/** Clears type index of this project. */
 	public void doClear() {
 		hashFileMap.clear();
 		setIndexState(new XIndexState());
-		setValidationIssues(new LinkedHashMap<>());
+		validationIssues.clear();
 	}
 
 	/** Persists the project state to disk */
@@ -79,28 +79,27 @@ public class ProjectStateHolder {
 	 * @return set of all source URIs with modified contents
 	 */
 	public Set<URI> readProjectState(IProjectConfig projectConfig) {
+		Set<URI> changedSources = new HashSet<>();
 		doClear();
 
 		PersistedState persistedState = projectStatePersister.readProjectState(projectConfig);
-		if (persistedState == null) {
-			return Collections.emptySet();
-		}
+		if (persistedState != null) {
 
-		for (HashedFileContent hfc : persistedState.fileHashs.values()) {
-			URI uri = hfc.getUri();
-			if (isSourceUnchanged(hfc, persistedState)) {
-				hashFileMap.put(uri, hfc);
-			} else {
-				persistedState.indexState.getFileMappings().deleteSource(uri);
-				persistedState.validationIssues.remove(uri);
+			for (HashedFileContent hfc : persistedState.fileHashs.values()) {
+				URI uri = hfc.getUri();
+				if (isSourceUnchanged(hfc, persistedState)) {
+					hashFileMap.put(uri, hfc);
+				} else {
+					persistedState.indexState.getFileMappings().deleteSource(uri);
+					persistedState.validationIssues.remove(uri);
+				}
 			}
+			setIndexState(persistedState.indexState);
+			mergeValidationIssues(persistedState.validationIssues);
+			reportValidationIssues(persistedState.validationIssues);
 		}
-		setIndexState(persistedState.indexState);
-		setValidationIssues(persistedState.validationIssues);
 
-		Set<URI> changedSources = new HashSet<>();
 		Set<URI> allIndexedUris = indexState.getResourceDescriptions().getAllURIs();
-
 		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
 			List<URI> allSourceFolderUris = srcFolder.getAllResources(fileSystemScanner);
 			for (URI srcFolderUri : allSourceFolderUris) {
@@ -109,8 +108,6 @@ public class ProjectStateHolder {
 				}
 			}
 		}
-
-		reportValidationIssues(persistedState.validationIssues);
 
 		return changedSources;
 	}
@@ -127,7 +124,7 @@ public class ProjectStateHolder {
 		}
 
 		setIndexState(result.getIndexState());
-		setValidationIssues(request.getResultIssues());
+		mergeValidationIssues(request.getResultIssues());
 		hashFileMap = newFileContents;
 	}
 
@@ -196,8 +193,17 @@ public class ProjectStateHolder {
 		this.indexState = indexState;
 	}
 
-	/** Setter */
-	protected void setValidationIssues(Map<URI, ? extends Collection<Issue>> issues) {
-		this.validationIssues = issues;
+	/** Merges the given map of source files to issues to the current state */
+	protected void mergeValidationIssues(Map<URI, Collection<Issue>> issueMap) {
+		for (Iterator<Entry<URI, Collection<Issue>>> iter = issueMap.entrySet().iterator(); iter.hasNext();) {
+			Entry<URI, Collection<Issue>> entry = iter.next();
+			URI source = entry.getKey();
+			Collection<Issue> issues = entry.getValue();
+			if (issues.isEmpty()) {
+				validationIssues.remove(source);
+			} else {
+				validationIssues.put(source, issues);
+			}
+		}
 	}
 }

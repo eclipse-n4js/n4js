@@ -138,7 +138,8 @@ public class XBuildManager {
 		List<ProjectDescription> sortedDescriptions = sortByDependencies(projects);
 		List<IResourceDescription.Delta> result = new ArrayList<>();
 		for (ProjectDescription description : sortedDescriptions) {
-			XProjectManager projectManager = workspaceManager.getProjectManager(description.getName());
+			String projectName = description.getName();
+			XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
 			XIncrementalBuilder.XResult partialresult = projectManager.doInitialBuild(indicator);
 			result.addAll(partialresult.getAffectedResources());
 		}

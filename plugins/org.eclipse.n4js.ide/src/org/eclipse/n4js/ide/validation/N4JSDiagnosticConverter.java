@@ -51,8 +51,8 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 		N4JSIssue issue = new N4JSIssue(); // Changed
 		issue.setSyntaxError(diagnostic instanceof XtextSyntaxDiagnostic);
 		issue.setSeverity(severity);
-		issue.setLineNumber(diagnostic.getLine());
-		issue.setColumn(diagnostic.getColumn());
+		issue.setLineNumber(diagnostic.getLine() - 1);
+		issue.setColumn(diagnostic.getColumn() - 1);
 		issue.setMessage(diagnostic.getMessage());
 
 		if (diagnostic instanceof org.eclipse.xtext.diagnostics.Diagnostic) {
@@ -70,8 +70,8 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 			INode node = ReflectionUtils.getMethodReturn(AbstractDiagnostic.class, "getNode", diagnostic);
 			int posEnd = castedDiagnostic.getOffset() + castedDiagnostic.getLength();
 			LineAndColumn lineAndColumn = NodeModelUtils.getLineAndColumn(node, posEnd);
-			issue.setLineNumberEnd(lineAndColumn.getLine());
-			issue.setColumnEnd(lineAndColumn.getColumn());
+			issue.setLineNumberEnd(lineAndColumn.getLine() - 1);
+			issue.setColumnEnd(lineAndColumn.getColumn() - 1);
 			// END: Changes here
 		}
 		issue.setType(CheckType.FAST);

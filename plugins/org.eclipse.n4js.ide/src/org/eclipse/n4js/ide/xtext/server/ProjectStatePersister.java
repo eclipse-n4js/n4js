@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
@@ -29,6 +30,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -56,10 +58,10 @@ public class ProjectStatePersister {
 		/** Hashes to indicate file changes */
 		final public Map<URI, HashedFileContent> fileHashs;
 		/** Hashes to indicate file changes */
-		final public Map<URI, ? extends Collection<Issue>> validationIssues;
+		final public Map<URI, Collection<Issue>> validationIssues;
 
 		PersistedState(XIndexState indexState, Map<URI, HashedFileContent> fileHashs,
-				Map<URI, ? extends Collection<Issue>> validationIssues) {
+				Map<URI, Collection<Issue>> validationIssues) {
 
 			this.indexState = indexState;
 			this.fileHashs = fileHashs;
@@ -71,12 +73,17 @@ public class ProjectStatePersister {
 	 * After the version, the stream contains a zipped, binary object stream with the following shape:
 	 *
 	 * <pre>
-	 * Language version as per {@link N4JSLanguageUtils#getLanguageVersion() N4JSLanguageUtils.getLanguageVersion}
-	 * Number #r of resource descriptions
-	 * #r times a serializable resource description as per {@link SerializableResourceDescription#writeExternal(java.io.ObjectOutput) SerializableResourceDescription.writeExternal}
-	 * A mapping of generated URIs as per {@link Source2GeneratedMapping#writeExternal(java.io.ObjectOutput) Source2GeneratedMapping.writeExternal}
-	 * Number #f of fingerprints per URI
-	 * #f times a fingerprint as per {@link HashedFileContent#write(java.io.ObjectOutput) HashedFileContent.write}
+	 * - Language version as per {@link N4JSLanguageUtils#getLanguageVersion() N4JSLanguageUtils.getLanguageVersion}
+	 * - Number #r of resource descriptions
+	 * - #r times a serializable resource description as per {@link SerializableResourceDescription#writeExternal(java.io.ObjectOutput) SerializableResourceDescription.writeExternal}
+	 * - A mapping of generated URIs as per {@link Source2GeneratedMapping#writeExternal(java.io.ObjectOutput) Source2GeneratedMapping.writeExternal}
+	 * - Number #f of fingerprints per URI
+	 * - #f times a fingerprint as per {@link HashedFileContent#write(java.io.ObjectOutput) HashedFileContent.write}
+	 * - Number #vs of source files that have issues
+	 * - #vs times:
+	 * 	- source URI
+	 * 	- Number #vi of issues of source
+	 * 	- #vi times a validation issue
 	 * </pre>
 	 */
 	private static final int VERSION_1 = 1;
@@ -105,9 +112,15 @@ public class ProjectStatePersister {
 		try {
 			File file = getDataFile(project);
 			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
-				writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state, files);
+
+				writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state, files, validationIssues);
+
+			} catch (IOException e) {
+				if (file.isFile()) {
+					file.delete();
+				}
 			}
-		} catch (IOException | URISyntaxException e) {
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}
@@ -125,7 +138,7 @@ public class ProjectStatePersister {
 	 *             if things go bananas.
 	 */
 	public void writeProjectState(OutputStream stream, String languageVersion, XIndexState state,
-			Collection<? extends HashedFileContent> files)
+			Collection<? extends HashedFileContent> files, Map<URI, ? extends Collection<Issue>> validationIssues)
 			throws IOException {
 
 		stream.write(CURRENT_VERSION);
@@ -134,23 +147,64 @@ public class ProjectStatePersister {
 
 			output.writeUTF(languageVersion);
 
-			ResourceDescriptionsData resourceDescriptionData = state.getResourceDescriptions();
-			output.writeInt(resourceDescriptionData.getAllURIs().size());
+			writeResourceDescriptions(state, output);
 
-			for (IResourceDescription description : resourceDescriptionData.getAllResourceDescriptions()) {
-				if (description instanceof SerializableResourceDescription) {
-					((SerializableResourceDescription) description).writeExternal(output);
-				} else {
-					throw new IOException("Unexpected type: " + description.getClass().getName());
+			writeFileMappings(state, output);
+
+			writeFingerprints(files, output);
+
+			writeValidationIssues(validationIssues, output);
+		}
+	}
+
+	private void writeResourceDescriptions(XIndexState state, ObjectOutputStream output) throws IOException {
+		ResourceDescriptionsData resourceDescriptionData = state.getResourceDescriptions();
+		output.writeInt(resourceDescriptionData.getAllURIs().size());
+
+		for (IResourceDescription description : resourceDescriptionData.getAllResourceDescriptions()) {
+			if (description instanceof SerializableResourceDescription) {
+				((SerializableResourceDescription) description).writeExternal(output);
+			} else {
+				throw new IOException("Unexpected type: " + description.getClass().getName());
+			}
+		}
+	}
+
+	private void writeFileMappings(XIndexState state, ObjectOutputStream output) throws IOException {
+		state.getFileMappings().writeExternal(output);
+	}
+
+	private void writeFingerprints(Collection<? extends HashedFileContent> files, ObjectOutputStream output)
+			throws IOException {
+
+		output.writeInt(files.size());
+		for (HashedFileContent fingerprint : files) {
+			fingerprint.write(output);
+		}
+	}
+
+	private void writeValidationIssues(Map<URI, ? extends Collection<Issue>> validationIssues, ObjectOutput ouput)
+			throws IOException {
+
+		int numberSources = validationIssues.size();
+		ouput.writeInt(numberSources);
+		for (Map.Entry<URI, ? extends Collection<Issue>> srcIssues : validationIssues.entrySet()) {
+			URI source = srcIssues.getKey();
+			Collection<Issue> issues = srcIssues.getValue();
+
+			ouput.writeUTF(source.toString());
+
+			Collection<N4JSIssue> n4Issues = new ArrayList<>();
+			for (Issue issue : issues) {
+				if (issue instanceof N4JSIssue) {
+					n4Issues.add((N4JSIssue) issue);
 				}
 			}
 
-			XSource2GeneratedMapping fileMappings = state.getFileMappings();
-			fileMappings.writeExternal(output);
-			output.writeInt(files.size());
-
-			for (HashedFileContent fingerprint : files) {
-				fingerprint.write(output);
+			int numberIssues = n4Issues.size();
+			ouput.writeInt(numberIssues);
+			for (N4JSIssue issue : n4Issues) {
+				ouput.writeObject(issue);
 			}
 		}
 	}
@@ -162,15 +216,22 @@ public class ProjectStatePersister {
 	 *            the project
 	 */
 	public PersistedState readProjectState(IProjectConfig project) {
+		File file;
 		try {
-			File file = getDataFile(project);
-			if (file.isFile()) {
-				try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
-					return readProjectState(nativeIn, N4JSLanguageUtils.getLanguageVersion());
+			file = getDataFile(project);
+			try {
+				if (file.isFile()) {
+					try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
+						return readProjectState(nativeIn, N4JSLanguageUtils.getLanguageVersion());
+					}
+				}
+			} catch (IOException | ClassNotFoundException e) {
+				if (file.isFile()) {
+					file.delete();
 				}
 			}
-		} catch (IOException | URISyntaxException | ClassNotFoundException e) {
-			e.printStackTrace();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
 		}
 		return null;
 	}
@@ -201,33 +262,75 @@ public class ProjectStatePersister {
 				return null;
 			}
 
-			List<IResourceDescription> descriptions = new ArrayList<>();
-			int size = input.readInt();
-			while (size > 0) {
-				size--;
-				SerializableResourceDescription description = new SerializableResourceDescription();
-				description.readExternal(input);
-				descriptions.add(description);
-			}
+			ResourceDescriptionsData resourceDescriptionsData = readResourceDescriptions(input);
 
-			ResourceDescriptionsData resourceDescriptionsData = new ResourceDescriptionsData(descriptions);
-			XSource2GeneratedMapping fileMappings = new XSource2GeneratedMapping();
-			fileMappings.readExternal(input);
-			Map<URI, HashedFileContent> fingerprints = new HashMap<>();
-			size = input.readInt();
+			XSource2GeneratedMapping fileMappings = readFileMappings(input);
 
-			while (size > 0) {
-				size--;
-				HashedFileContent hashFileContent = new HashedFileContent(input);
-				fingerprints.put(hashFileContent.getUri(), hashFileContent);
-			}
+			Map<URI, HashedFileContent> fingerprints = readFingerprints(input);
+
+			Map<URI, Collection<Issue>> validationIssues = readValidationIssues(input);
 
 			XIndexState indexState = new XIndexState(resourceDescriptionsData, fileMappings);
-
-			Map<URI, Collection<Issue>> validationIssues = new LinkedHashMap<>();
-
 			return new PersistedState(indexState, fingerprints, validationIssues);
 		}
+	}
+
+	private ResourceDescriptionsData readResourceDescriptions(ObjectInputStream input)
+			throws IOException, ClassNotFoundException {
+
+		List<IResourceDescription> descriptions = new ArrayList<>();
+		int size = input.readInt();
+		while (size > 0) {
+			size--;
+			SerializableResourceDescription description = new SerializableResourceDescription();
+			description.readExternal(input);
+			descriptions.add(description);
+		}
+
+		ResourceDescriptionsData resourceDescriptionsData = new ResourceDescriptionsData(descriptions);
+		return resourceDescriptionsData;
+	}
+
+	private XSource2GeneratedMapping readFileMappings(ObjectInputStream input)
+			throws IOException, ClassNotFoundException {
+
+		XSource2GeneratedMapping fileMappings = new XSource2GeneratedMapping();
+		fileMappings.readExternal(input);
+		return fileMappings;
+	}
+
+	private Map<URI, HashedFileContent> readFingerprints(ObjectInputStream input) throws IOException {
+		Map<URI, HashedFileContent> fingerprints = new HashMap<>();
+		int size = input.readInt();
+		while (size > 0) {
+			size--;
+			HashedFileContent hashFileContent = new HashedFileContent(input);
+			fingerprints.put(hashFileContent.getUri(), hashFileContent);
+		}
+		return fingerprints;
+	}
+
+	private Map<URI, Collection<Issue>> readValidationIssues(ObjectInputStream input)
+			throws IOException, ClassNotFoundException {
+
+		Map<URI, Collection<Issue>> validationIssues = new LinkedHashMap<>();
+
+		int numberOfSources = input.readInt();
+		while (numberOfSources > 0) {
+			numberOfSources--;
+
+			URI source = URI.createURI(input.readUTF());
+			validationIssues.put(source, new ArrayList<>());
+
+			int numberOfIssues = input.readInt();
+			while (numberOfIssues > 0) {
+				numberOfIssues--;
+				N4JSIssue issue = (N4JSIssue) input.readObject();
+				validationIssues.get(source).add(issue);
+			}
+		}
+
+		return validationIssues;
 	}
 
 	private File getDataFile(IProjectConfig project) throws URISyntaxException {

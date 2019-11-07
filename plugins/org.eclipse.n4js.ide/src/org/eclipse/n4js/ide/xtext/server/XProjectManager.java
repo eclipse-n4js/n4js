@@ -103,7 +103,9 @@ public class XProjectManager {
 		XResult result = doIncrementalBuild(changedSources, Collections.emptySet(),
 				Collections.emptyList(), cancelIndicator);
 
-		projectStateHolder.writeProjectState(projectConfig);
+		if (!changedSources.isEmpty()) {
+			projectStateHolder.writeProjectState(projectConfig);
+		}
 		return result;
 	}
 

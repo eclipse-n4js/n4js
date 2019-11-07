@@ -34,9 +34,7 @@ public class HashedFileContent {
 	private final URI uri;
 	private final long hash;
 
-	/**
-	 * Create a fingerprint of the given file at the given location.
-	 */
+	/** Create a fingerprint of the given file at the given location. */
 	public HashedFileContent(URI uri, File file) throws IOException {
 		this.uri = uri;
 		String ext = uri.fileExtension();
@@ -54,9 +52,7 @@ public class HashedFileContent {
 		}
 	}
 
-	/**
-	 * Assign the given hash to the given uri
-	 */
+	/** Assign the given hash to the given uri */
 	public HashedFileContent(URI uri, long hash) {
 		this.uri = uri;
 		this.hash = hash;
@@ -72,16 +68,12 @@ public class HashedFileContent {
 		out.writeLong(hash);
 	}
 
-	/**
-	 * The URI of the file.
-	 */
+	/** The URI of the file. */
 	public URI getUri() {
 		return uri;
 	}
 
-	/**
-	 * The fingerprint.
-	 */
+	/** The fingerprint. */
 	public long getHash() {
 		return hash;
 	}

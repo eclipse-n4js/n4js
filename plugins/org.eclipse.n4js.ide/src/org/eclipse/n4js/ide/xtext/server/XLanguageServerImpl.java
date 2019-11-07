@@ -345,6 +345,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				() -> {
 					try {
 						workspaceManager.refreshWorkspaceConfig(CancelIndicator.NullImpl);
+					} catch (Throwable t) {
+						t.printStackTrace();
 					} finally {
 						initBuildFinished.complete(null);
 					}

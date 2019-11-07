@@ -14,14 +14,18 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StreamCorruptedException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.HashedFileContent;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.PersistedState;
@@ -30,8 +34,10 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
+import org.eclipse.xtext.validation.Issue;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,7 +51,8 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
-		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
+		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList(),
+				Collections.emptyMap());
 		AtomicBoolean didCall = new AtomicBoolean();
 		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()),
 				languageVersion);
@@ -62,7 +69,8 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
-		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
+		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList(),
+				Collections.emptyMap());
 		byte[] bytes = output.toByteArray();
 		bytes[12]++;
 		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
@@ -75,7 +83,8 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
-		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
+		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList(),
+				Collections.emptyMap());
 		byte[] bytes = output.toByteArray();
 		bytes[0]++;
 		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
@@ -88,7 +97,8 @@ public class ProjectStatePersisterTest {
 		ProjectStatePersister testMe = new ProjectStatePersister();
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
-		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList());
+		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList(),
+				Collections.emptyMap());
 		languageVersion += "XXX";
 		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(output.toByteArray()),
 				languageVersion);
@@ -120,7 +130,7 @@ public class ProjectStatePersisterTest {
 		Set<HashedFileContent> fingerprints = Collections
 				.singleton(new HashedFileContent(URI.createURI("some:/hash"), 123));
 
-		testMe.writeProjectState(output, languageVersion, index, fingerprints);
+		testMe.writeProjectState(output, languageVersion, index, fingerprints, Collections.emptyMap());
 		ByteArrayInputStream outputStream = new ByteArrayInputStream(output.toByteArray());
 		PersistedState pState = testMe.readProjectState(outputStream, languageVersion);
 		XIndexState indexState = pState.indexState;
@@ -135,6 +145,56 @@ public class ProjectStatePersisterTest {
 		Set<URI> allIndexedUris = indexState.getResourceDescriptions().getAllURIs();
 		Assert.assertEquals(1, allIndexedUris.size());
 		Assert.assertTrue(allIndexedUris.contains(resourceDescription.getURI()));
+	}
 
+	/** */
+	@Test
+	public void testWriteAndReadValidationIssues() throws IOException, ClassNotFoundException {
+		ProjectStatePersister testMe = new ProjectStatePersister();
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		String languageVersion = N4JSLanguageUtils.getLanguageVersion();
+
+		URI source1 = URI.createURI("some:/source1");
+		URI source2 = URI.createURI("some:/source2");
+
+		List<Issue> scr1Issues = new ArrayList<>();
+		List<Issue> scr2Issues = new ArrayList<>();
+
+		Map<URI, List<Issue>> issueMap = new LinkedHashMap<>();
+		issueMap.put(source1, scr1Issues);
+		issueMap.put(source2, scr2Issues);
+
+		N4JSIssue src1Issue1 = new N4JSIssue();
+		scr1Issues.add(src1Issue1);
+
+		N4JSIssue src2Issue1 = new N4JSIssue();
+		N4JSIssue src2Issue2 = new N4JSIssue();
+		scr2Issues.add(src2Issue1);
+		scr2Issues.add(src2Issue2);
+
+		setValues(src1Issue1, "src1Issue1", 1, 1, Severity.ERROR);
+		setValues(src2Issue1, "src2Issue1", 2, 1, Severity.WARNING);
+		setValues(src2Issue2, "src2Issue2", 2, 2, Severity.INFO);
+
+		testMe.writeProjectState(output, languageVersion, new XIndexState(), Collections.emptyList(), issueMap);
+		byte[] bytes = output.toByteArray();
+		PersistedState pState = testMe.readProjectState(new ByteArrayInputStream(bytes), languageVersion);
+		Assert.assertTrue(pState != null);
+		Assert.assertEquals(issueMap, pState.validationIssues);
+	}
+
+	private void setValues(N4JSIssue issue, String varName, int srcNo, int issueNo, Severity severity) {
+		int prefix = srcNo * 100 + issueNo * 10;
+		issue.setCode(varName + ".code");
+		issue.setColumn(prefix++);
+		issue.setColumnEnd(prefix++);
+		issue.setLength(prefix++);
+		issue.setLineNumber(prefix++);
+		issue.setLineNumberEnd(prefix++);
+		issue.setMessage(varName + ".message");
+		issue.setOffset(prefix++);
+		issue.setSeverity(severity);
+		issue.setSyntaxError(true);
+		issue.setUriToProblem(URI.createURI("some:/" + varName + "/uriToProblem"));
 	}
 }
