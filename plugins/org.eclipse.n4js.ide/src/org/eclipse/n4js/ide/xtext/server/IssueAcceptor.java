@@ -117,7 +117,7 @@ public class IssueAcceptor {
 		} else {
 			URI uri = issue.getUriToProblem();
 			Document doc = workspaceManager.getDocument(uri);
-			doc.getPosition(issue.getOffset() + issue.getLength());
+			end = doc.getPosition(issue.getOffset() + issue.getLength());
 		}
 
 		result.setRange(new Range(start, end));
