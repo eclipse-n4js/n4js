@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.validation;
 
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
@@ -105,8 +106,16 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 			// END: Changes here
 		}
 		final EObject causer = getCauser(diagnostic);
-		if (causer != null)
+		if (causer != null) {
 			issue.setUriToProblem(EcoreUtil.getURI(causer));
+		} else {
+			// see N4JSValidator.N4JSMethodWrapperCancelable#invoke()
+			for (Object obj : diagnostic.getData()) {
+				if (obj instanceof URI) {
+					issue.setUriToProblem((URI) obj);
+				}
+			}
+		}
 
 		issue.setCode(getIssueCode(diagnostic));
 		issue.setType(getIssueType(diagnostic));
