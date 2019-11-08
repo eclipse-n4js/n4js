@@ -299,7 +299,7 @@ public class XBuildRequest {
 			if (severity != null) {
 				switch (severity) {
 				case ERROR:
-					return false;
+					return true;
 				case WARNING:
 					break;
 				case INFO:
@@ -309,6 +309,6 @@ public class XBuildRequest {
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 }
