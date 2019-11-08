@@ -29,6 +29,21 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 	private int lineNumberEnd;
 	private int columnEnd;
 
+	/** Constructor with initializers to avoid NPEs on Integers */
+	public N4JSIssue() {
+		this.setOffset(0);
+		this.setLength(0);
+		this.setColumn(0);
+		this.setColumnEnd(0);
+		this.setLineNumber(0);
+		this.setLineNumberEnd(0);
+		this.setCode("");
+		this.setMessage("");
+		this.setUriToProblem(null);
+		this.setSeverity(Severity.IGNORE);
+		this.setType(CheckType.FAST);
+	}
+
 	/** @return line of end of issue */
 	public int getLineNumberEnd() {
 		return lineNumberEnd;
