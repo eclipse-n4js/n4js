@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -237,15 +238,15 @@ public class XIncrementalBuilder {
 			}
 			for (URI source : request.getDeletedFiles()) {
 				request.getAfterValidate().afterValidate(source, Collections.emptyList());
-				for (URI generated : newSource2GeneratedMapping.deleteSource(source)) {
+				Map<URI, String> outputConfigs = newSource2GeneratedMapping.deleteSourceAndGetOutputConfigs(source);
+				for (URI generated : outputConfigs.keySet()) {
 					IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(source);
 					XtextResourceSet resourceSet = request.getResourceSet();
 					Set<OutputConfiguration> configs = serviceProvider
-							.get(IContextualOutputConfigurationProvider2.class)
-							.getOutputConfigurations(resourceSet);
-					String configName = newSource2GeneratedMapping.getOutputConfigName(generated);
+							.get(IContextualOutputConfigurationProvider2.class).getOutputConfigurations(resourceSet);
+					String configName = outputConfigs.get(generated);
 					OutputConfiguration config = FluentIterable.from(configs)
-							.firstMatch((it) -> it.getName().equals(configName)).orNull();
+							.firstMatch(it -> it.getName().equals(configName)).orNull();
 					if (config != null && config.isCleanUpDerivedResources()) {
 						try {
 							resourceSet.getURIConverter().delete(generated,
