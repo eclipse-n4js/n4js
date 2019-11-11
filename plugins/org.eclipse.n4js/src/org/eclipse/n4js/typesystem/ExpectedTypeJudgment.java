@@ -290,26 +290,30 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseUnaryExpression(UnaryExpression e) {
-			Expression innerExpression = e.getExpression();
-			TypeRef typeRef = ts.tau(innerExpression);
-
-			if (innerExpression instanceof UnaryExpression) {
-				typeRef = ts.tau(((UnaryExpression) innerExpression).getExpression());
+			EObject parentExpression = e.eContainer();
+			boolean isInv = true;
+			if (parentExpression instanceof UnaryExpression) {
+				UnaryExpression ue = ((UnaryExpression) parentExpression);
+				isInv = isInv && ue.getOp().equals(UnaryOperator.INV);
+				parentExpression = ue.eContainer();
 			}
 
-			boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
-
-			EObject parent = e.eContainer();
-			if (parent instanceof UnaryExpression) {
-				parent = ((UnaryExpression) parent).eContainer();
-			}
-
-			if (parent instanceof RelationalExpression) {
-				RelationalExpression re = (RelationalExpression) parent;
+			if (parentExpression instanceof RelationalExpression) {
+				RelationalExpression re = (RelationalExpression) parentExpression;
 				boolean isInstanceOf = re.getOp().equals(RelationalOperator.INSTANCEOF);
 
 				if (isInstanceOf) {
-					return isNumber ? numberTypeRef(G) : anyTypeRef(G);
+					isInv = isInv && e.getOp().equals(UnaryOperator.INV);
+					if (isInv) {
+						Expression innerExpression = e.getExpression();
+						TypeRef typeRef = ts.tau(
+								innerExpression instanceof UnaryExpression
+										? ((UnaryExpression) innerExpression).getExpression()
+										: innerExpression);
+
+						boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
+						return isNumber ? numberTypeRef(G) : anyTypeRef(G);
+					}
 				}
 			}
 
