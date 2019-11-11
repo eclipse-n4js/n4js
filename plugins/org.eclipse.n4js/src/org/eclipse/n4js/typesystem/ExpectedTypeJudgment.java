@@ -380,16 +380,18 @@ import com.google.inject.Inject;
 				if (rhs instanceof UnaryExpression) {
 					UnaryExpression ue = (UnaryExpression) rhs;
 					boolean isInv = ue.getOp().equals(UnaryOperator.INV);
-					TypeRef typeRef = ts.tau(ue.getExpression());
 
-					Expression innerExpression = ue.getExpression();
-					if (innerExpression instanceof UnaryExpression) {
-						typeRef = ts.tau(((UnaryExpression) innerExpression).getExpression());
-					}
+					if (isInv) {
+						Expression innerExpression = ue.getExpression();
+						TypeRef typeRef = ts.tau(
+								innerExpression instanceof UnaryExpression
+										? ((UnaryExpression) innerExpression).getExpression()
+										: innerExpression);
 
-					boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
-					if (isInv && !isNumber) {
-						return anyTypeRef(G);
+						boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
+						if (!isNumber) {
+							return anyTypeRef(G);
+						}
 					}
 				}
 
