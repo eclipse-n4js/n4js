@@ -311,6 +311,7 @@ import com.google.inject.Inject;
 										? ((UnaryExpression) innerExpression).getExpression()
 										: innerExpression);
 
+						// Expect anyType if not numeric to turn off expected type errors.
 						boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
 						return isNumber ? numberTypeRef(G) : anyTypeRef(G);
 					}
