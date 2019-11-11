@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   Philip Aguilar Bremer, Max Neuwirt; HAW Hamburg
  */
@@ -27,57 +27,48 @@ import org.junit.runner.RunWith
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
 class MDNHoverPluginUITest extends AbstractN4JSHoverTest {
-	
+
 	private static final String MDN_STRING_START = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
 	private static final String MDN_STRING_REGEX_END = "MDN Documentation(?s).*";
-	
+
 	@Before def void setup() {
 		ProjectTestsUtils.createJSProject(projectName);
 	}
-	
+
 	@Test def testHoverOverBuildInTypeDate() {
 		val info = '''
 			export public class Bla {
 				private date: Date;
 			}
 		'''.getHtmlString("Date");
-		
-		info.assertRegexInHover("(?s).*classifier(?s).+" +
-		"Date(?s).+" +
-		MDN_STRING_START +
-		"Date.+" +
-		MDN_STRING_REGEX_END);	
+
+		info.assertRegexInHover("(?s).*classifier(?s).+" + "Date(?s).+" + MDN_STRING_START + "Date.+" +
+			MDN_STRING_REGEX_END);
 	}
-		
-		@Test def testHoverOverBuildInTypeString() {
+
+	@Test def testHoverOverBuildInTypeString() {
 		val info = '''
 			export public class Bla {
 				private str: String;
 			}
 		'''.getHtmlString("String");
-		
-		info.assertRegexInHover("(?s).*classifier(?s).+" +
-		"String(?s).+" +
-		MDN_STRING_START + 
-		"String.+" +
-		MDN_STRING_REGEX_END);	
+
+		info.assertRegexInHover("(?s).*classifier(?s).+" + "String(?s).+" + MDN_STRING_START + "String.+" +
+			MDN_STRING_REGEX_END);
 	}
-	
-		@Test def testHoverOverDeclaration() {
+
+	@Test def testHoverOverDeclaration() {
 		val info = '''
 			export public class Bla {
 				private date: Date;
 			}
 		'''.getHtmlString("date");
-		
-		info.assertRegexInHover("(?s).*date:(?s).+" +
-		"Date(?s).+" +
-		MDN_STRING_START +
-		"Date.+" +
-		MDN_STRING_REGEX_END);	
+
+		info.assertRegexInHover("(?s).*date:(?s).+" + "Date(?s).+" + MDN_STRING_START + "Date.+" +
+			MDN_STRING_REGEX_END);
 	}
-	
-		@Test def testHoverOverProperty() {
+
+	@Test def testHoverOverProperty() {
 		val info = '''
 			export public class Bla {
 				private date: Date;
@@ -87,15 +78,12 @@ class MDNHoverPluginUITest extends AbstractN4JSHoverTest {
 				}
 			}
 		'''.getHtmlString(".date");
-		
-		info.assertRegexInHover("(?s).*date:(?s).+" +
-		"Date(?s).+" +
-		MDN_STRING_START +
-		"Date.+" +
-		MDN_STRING_REGEX_END);	
+
+		info.assertRegexInHover("(?s).*date:(?s).+" + "Date(?s).+" + MDN_STRING_START + "Date.+" +
+			MDN_STRING_REGEX_END);
 	}
-	
-		@Test def testHoverOverMethodgetDate() {
+
+	@Test def testHoverOverMethodgetDate() {
 		val info = '''
 			export public class Bla {
 				private date: Date;
@@ -105,14 +93,11 @@ class MDNHoverPluginUITest extends AbstractN4JSHoverTest {
 				    }
 			}
 		'''.getHtmlString("getDate");
-		
-		info.assertRegexInHover("(?s).*getDate\\(\\):(?s).+" +
-		"number(?s).+" +
-		MDN_STRING_START + 
-		"Date/getDate.+" +
-		MDN_STRING_REGEX_END);	
+
+		info.assertRegexInHover("(?s).*getDate\\(\\):(?s).+" + "number(?s).+" + MDN_STRING_START + "Date/getDate.+" +
+			MDN_STRING_REGEX_END);
 	}
-	
+
 	@Test def testHoverOverMethodgetMinutes() {
 		val info = '''
 			export public class Bla {
@@ -123,11 +108,9 @@ class MDNHoverPluginUITest extends AbstractN4JSHoverTest {
 				    }
 			}
 		'''.getHtmlString("getMinutes");
-		
-		info.assertRegexInHover("(?s).*getMinutes\\(\\):(?s).+" +
-		"number(?s).+" +
-		MDN_STRING_START + 
-		"Date/getMinutes.+" +
-		MDN_STRING_REGEX_END);	
+
+		info.assertRegexInHover(
+			"(?s).*getMinutes\\(\\):(?s).+" + "number(?s).+" + MDN_STRING_START + "Date/getMinutes.+" +
+				MDN_STRING_REGEX_END);
 	}
 }

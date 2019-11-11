@@ -111,27 +111,27 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 				//Build-In-Type
 				TObjectPrototype: 
 					if(id.isDeclaredProvidedByRuntime) {
-						jsdocString = createDocString(id.name, jsdocString);	
+						jsdocString = addMDNLink(id.name, jsdocString);	
 					} 
 				//Property
 				TField: {
 					val type = id.typeRef.declaredType;
 					if(type instanceof TObjectPrototype) {
-						jsdocString = createDocString(type.name, jsdocString);
+						jsdocString = addMDNLink(type.name, jsdocString);
 					}
 				}
 				//Declaration
 				N4FieldDeclaration: {
 					val type = id.declaredTypeRef.declaredType;
 					if(type instanceof TObjectPrototype) {
-						jsdocString = createDocString(type.name, jsdocString);
+						jsdocString = addMDNLink(type.name, jsdocString);
 					}	
 				}	
 				//Method
 				TMethod: {
 					val type = id.eContainer;
 					if(type instanceof TObjectPrototype) {
-						jsdocString = createDocString(type.name + "/" + id.name, jsdocString);
+						jsdocString = addMDNLink(type.name + "/" + id.name, jsdocString);
 					}
 				}	
 			}
@@ -148,7 +148,7 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		}
 	}
 	
-	def private String createDocString(String name, String jsdocString) {
+	def private String addMDNLink(String name, String jsdocString) {
 		val mdnString = MDN_STRING_START + name + MDN_STRING_END;
 		if(jsdocString === null) {
 			return mdnString;

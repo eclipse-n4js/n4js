@@ -15,6 +15,7 @@ import org.eclipse.jface.text.Region
 
 /**
  * An abstract class that can return the html text of a hover to test if it matches a particular regex.
+ * Concrete test subclassing this class needs to have a suffix "PluginUITest" in order to be correctly executed by Maven.
  */
 public abstract class AbstractN4JSHoverTest extends AbstractHoverTest {
 	
