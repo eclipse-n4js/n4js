@@ -138,7 +138,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.IntLiteral
 
 /**
  */
@@ -700,12 +699,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			
 			val rhs = relationalExpression.rhs;
 			if (rhs instanceof UnaryExpression) {
-				if ((rhs as UnaryExpression).getOp().equals(UnaryOperator.INV)) {
-					val innerExpression = (rhs as UnaryExpression).expression;
+				if (rhs.getOp().equals(UnaryOperator.INV)) {
+					val innerExpression = rhs.expression;
 					var rhsTypeRef = ts.tau(innerExpression);
 					
 					if (innerExpression instanceof UnaryExpression) {
-						rhsTypeRef = ts.tau((innerExpression as UnaryExpression).expression);
+						rhsTypeRef = ts.tau(innerExpression.expression);
 					}
 					
 					if (!RuleEnvironmentExtensions.isNumeric(G, rhsTypeRef)) {
