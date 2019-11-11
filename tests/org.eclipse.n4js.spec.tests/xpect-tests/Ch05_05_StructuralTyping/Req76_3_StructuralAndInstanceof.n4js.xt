@@ -41,4 +41,10 @@ a instanceof ~(3 + 4)
 a instanceof A;
 
 // XPECT errors --> "instanceof cannot be used with primitive types." at "number" 
-a instanceof number; 
+a instanceof number;
+
+// XPECT errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "(-A)"
+a instanceof (-A);
+
+// XPECT errors --> "constructor{A} is not a subtype of number." at "A"
+1 < ~A;
