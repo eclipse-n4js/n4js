@@ -43,7 +43,10 @@ a instanceof A;
 // XPECT errors --> "instanceof cannot be used with primitive types." at "number" 
 a instanceof number;
 
-// XPECT errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "(-A)"
+// XPECT errors ---
+// "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "(-A)"
+// "constructor{A} is not a subtype of number." at "A"
+// ---
 a instanceof (-A);
 
 // XPECT errors --> "constructor{A} is not a subtype of number." at "A"
