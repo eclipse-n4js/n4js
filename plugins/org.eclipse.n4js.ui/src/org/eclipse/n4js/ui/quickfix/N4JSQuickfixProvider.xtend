@@ -87,6 +87,7 @@ import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.impl.CompositeNodeWithSemanticElement
 import org.eclipse.xtext.nodemodel.ICompositeNode
+import org.eclipse.n4js.n4JS.N4JSPackage
 
 /**
  * N4JS quick fixes.
@@ -173,16 +174,32 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			//TODO motherINode can produce runtime error: TypeCast without checking.
 
 			val roundBracketNode = NodeModelUtilsN4.findKeywordNodeIfSameGrammarRule((motherINode as ICompositeNode), ')', motherINode.grammarElement)
-			val bogusNode = NodeModelUtilsN4.findBogusNode((motherINode as ICompositeNode));
-			val offsetBogusType = bogusNode.totalOffset;
-			val bogusTypelength = bogusNode.totalLength;
+			val INode bogusNode = NodeModelUtils.findNodesForFeature((motherINode as CompositeNodeWithSemanticElement).semanticElement, N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF).head;
+
+			// we need to trim since whitespace may be part of the string.
+			// we know that trimming is not the very best solution, since JavaScript allows for
+			// non-Java whitespaces, but in 99% of the cases this would work and it is only a quickfix
+			val bogusNodeText = bogusNode.text;
+			val String stringOfBogusType = NodeModelUtils.getTokenText(bogusNode);
+			val offsetCorrection = bogusNodeText.indexOf(stringOfBogusType);
+
+			val nodeAfterBogus = NodeModelUtils.findLeafNodeAtOffset(motherINode,bogusNode.endOffset);
+			val spaceAfterBogusLength =
+				if (nodeAfterBogus !== null && nodeAfterBogus.text.startsWith(" ")) {
+					1
+				} else {
+					0
+				}
+				;
+
+			val offsetBogusType = bogusNode.totalOffset + offsetCorrection;
+			val bogusTypeLength = bogusNode.totalLength - offsetCorrection;
 			val offsetRoundBracket = roundBracketNode.totalOffset;
-			var String stringOfBogusType;
-			//---
+
 			if(element instanceof ParameterizedTypeRefImpl){
 				if(element.eContainer instanceof N4MethodDeclarationImpl){
-					val N4MethodDeclarationImpl myObj = element.eContainer as N4MethodDeclarationImpl;
-					stringOfBogusType = myObj.getBogusTypeRef.declaredType.name;
+//					val N4MethodDeclarationImpl myObj = element.eContainer as N4MethodDeclarationImpl;
+//					stringOfBogusType = myObj.getBogusTypeRef.declaredType.name;
 //					val returnTypeName = con.bogusTypeRef.declaredType.name
 //					val funkName = con.declaredName.literalName
 //					val params = con.fpars.get(0)
@@ -191,9 +208,9 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			else{
 				//TODO
 			}
+
 			return #[
-				//TODO: Deleting "bogusTypeLength + 1" is not good.
-				replace(context.xtextDocument, offsetBogusType, bogusTypelength + 1, ""), // removes the bogus type and whitespace at the old location
+				replace(context.xtextDocument, offsetBogusType, bogusTypeLength + spaceAfterBogusLength, ""), // removes the bogus type and whitespace at the old location
 				replace(context.xtextDocument, offsetRoundBracket + 1, 0, ": " + stringOfBogusType) // inserts the bogus type at the new location (behind the closing round bracket)
 			];
 		]
