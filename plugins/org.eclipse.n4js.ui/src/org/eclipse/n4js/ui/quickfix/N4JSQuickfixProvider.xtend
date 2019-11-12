@@ -81,6 +81,12 @@ import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.projectModel.locations.PlatformResourceURI
+import org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl
+import org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl
+import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4
+import org.eclipse.xtext.nodemodel.INode
+import org.eclipse.xtext.nodemodel.impl.CompositeNodeWithSemanticElement
+import org.eclipse.xtext.nodemodel.ICompositeNode
 
 /**
  * N4JS quick fixes.
@@ -154,40 +160,41 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	def transformJavaTypeAnnotationToColonStyle(Issue issue, IssueResolutionAcceptor acceptor) {
 		//TODO #GH-1492
 		acceptor.accept(issue, 'Convert to colon style', 'The method annotation should be in colon style. This quick fix will change the code to colon style.', ImageNames.REORDER) [ context, marker, offset, length, element |
-
-			val doc = context.xtextDocument
-			val currLineReg = doc.getLineInformationOfOffset(offset);
-			val currLine = doc.get(currLineReg.getOffset(), currLineReg.getLength())
-
-			var indentation = 0;
-			while (indentation < currLine.length() && Character.isWhitespace(currLine.charAt(indentation))) {
-				indentation++;
+			val node = NodeModelUtils.getNode(element)
+			var INode motherINode = node.parent;
+			while (!(motherINode instanceof CompositeNodeWithSemanticElement)) {
+				motherINode = motherINode.parent;
+				if (motherINode instanceof CompositeNodeWithSemanticElement) {
+					while (!(motherINode.semanticElement instanceof N4MethodDeclarationImpl)) {
+						motherINode = motherINode.parent;
+					}
+				}
 			}
+			//TODO motherINode can produce runtime error: TypeCast without checking.
 
-			val currLineWithoutIndentation = currLine.substring(indentation, currLine.length())
-
-			var returnTypeOfMethod = ""
-			var index = 0
-			for (; index < currLineWithoutIndentation.length() && !Character.isWhitespace(currLineWithoutIndentation.charAt(index)); index++) {
-				returnTypeOfMethod += currLineWithoutIndentation.charAt(index);
+			val roundBracketNode = NodeModelUtilsN4.findKeywordNodeIfSameGrammarRule((motherINode as ICompositeNode), ')', motherINode.grammarElement)
+			val bogusNode = NodeModelUtilsN4.findBogusNode((motherINode as ICompositeNode));
+			val offsetBogusType = bogusNode.totalOffset;
+			val bogusTypelength = bogusNode.totalLength;
+			val offsetRoundBracket = roundBracketNode.totalOffset;
+			var String stringOfBogusType;
+			//---
+			if(element instanceof ParameterizedTypeRefImpl){
+				if(element.eContainer instanceof N4MethodDeclarationImpl){
+					val N4MethodDeclarationImpl myObj = element.eContainer as N4MethodDeclarationImpl;
+					stringOfBogusType = myObj.getBogusTypeRef.declaredType.name;
+//					val returnTypeName = con.bogusTypeRef.declaredType.name
+//					val funkName = con.declaredName.literalName
+//					val params = con.fpars.get(0)
+				}
 			}
-
-			while (index < currLineWithoutIndentation.length() && Character.isWhitespace(currLineWithoutIndentation.charAt(index))) {
-				index++;
+			else{
+				//TODO
 			}
-			val charToBeDeletedStaringFromBegin = index;
-
-			val char closingBracket = ')'
-			while (index < currLineWithoutIndentation.length() && currLineWithoutIndentation.charAt(index) !== closingBracket) {
-				index++;
-			}
-			val posForDoubleDot = index + 1;
-
-			val lenOfMethodSignature = posForDoubleDot - charToBeDeletedStaringFromBegin;
-
 			return #[
-				replace(context.xtextDocument, offset, charToBeDeletedStaringFromBegin, ""), //remove old return type and whitespaces
-				replace(context.xtextDocument, offset+charToBeDeletedStaringFromBegin+lenOfMethodSignature, 0, ": " + returnTypeOfMethod) //place the return type after method signature
+				//TODO: Deleting "bogusTypeLength + 1" is not good.
+				replace(context.xtextDocument, offsetBogusType, bogusTypelength + 1, ""), // removes the bogus type and whitespace at the old location
+				replace(context.xtextDocument, offsetRoundBracket + 1, 0, ": " + stringOfBogusType) // inserts the bogus type at the new location (behind the closing round bracket)
 			];
 		]
 	}
