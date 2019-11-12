@@ -91,6 +91,8 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				"                                  print (default: 0)\n" +
 				" --maxWarns N                   : [compile] set the maximum number of warnings\n" +
 				"                                  to print (default: 0)\n" +
+				" --noPersist (-np)              : [compile|lsp] disable persisting of type\n" +
+				"                                  index to disk. (default: false)\n" +
 				" --noTests                      : [compile] don't process test folders\n" +
 				"                                  (default: false)\n" +
 				" --port (-p) N                  : [lsp] set the port of the lsp server\n" +

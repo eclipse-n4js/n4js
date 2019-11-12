@@ -142,6 +142,12 @@ public class N4jscOptions {
 		@GoalRequirements(goals = { N4jscGoal.compile, N4jscGoal.lsp })
 		boolean clean = false;
 
+		@Option(name = "--noPersist", aliases = "-np", //
+				usage = "[compile|lsp] disable persisting of type index to disk.", //
+				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+		@GoalRequirements(goals = { N4jscGoal.compile, N4jscGoal.lsp })
+		boolean noPersist = false;
+
 		@Option(name = "--performanceReport", aliases = "-pR", //
 				hidden = true, //
 				depends = "--performanceKey", //
@@ -296,6 +302,11 @@ public class N4jscOptions {
 	/** @return true iff {@code --clean} */
 	public boolean isClean() {
 		return options.clean;
+	}
+
+	/** @return true iff {@code --noPersist} */
+	public boolean isNoPersist() {
+		return options.noPersist;
 	}
 
 	/** @return S of {@code --logFile S} */

@@ -27,16 +27,24 @@ import com.google.common.base.Objects;
 /** Helper class to create n4jsc option programmatically */
 public class N4jscTestOptions extends N4jscOptions {
 
-	/** @return a new instance of {@link N4jscTestOptions} with goal compile */
+	/**
+	 * Will set options {@code --clean} and {@code --noPersist}
+	 *
+	 * @return a new instance of {@link N4jscTestOptions} with goal compile
+	 */
 	static public N4jscTestOptions COMPILE(File... files) {
 		return COMPILE(Arrays.asList(files));
 	}
 
-	/** @return a new instance of {@link N4jscTestOptions} with goal compile */
+	/**
+	 * Will set options {@code --clean} and {@code --noPersist}
+	 *
+	 * @return a new instance of {@link N4jscTestOptions} with goal compile
+	 */
 	static public N4jscTestOptions COMPILE(List<File> files) {
 		N4jscTestOptions instance = new N4jscTestOptions();
 		instance.options.goal = N4jscGoal.compile;
-		return instance.f(files);
+		return instance.f(files).clean().noPersist();
 	}
 
 	/** @return a new instance of {@link N4jscTestOptions} with goal clean */
@@ -125,6 +133,12 @@ public class N4jscTestOptions extends N4jscOptions {
 	/** Sets option */
 	public N4jscTestOptions clean() {
 		setDefinedOption(() -> options.clean = true);
+		return this;
+	}
+
+	/** Sets option */
+	public N4jscTestOptions noPersist() {
+		setDefinedOption(() -> options.noPersist = true);
 		return this;
 	}
 
@@ -227,7 +241,7 @@ public class N4jscTestOptions extends N4jscOptions {
 						if (!Objects.equal(lastValue, currentValue)) {
 							NamedOptionDef nod = new NamedOptionDef(annotationOption);
 							String lastValueStr = lastValue == null ? "" : String.valueOf(lastValue);
-							String currentValueStr = String.valueOf(currentValue);
+							String currentValueStr = currentValue == Boolean.TRUE ? null : String.valueOf(currentValue);
 
 							N4JSCmdLineParser.ParsedOption pOption = new N4JSCmdLineParser.ParsedOption(
 									nod, lastValueStr, currentValueStr);

@@ -71,6 +71,7 @@ public class LspServer {
 		Injector injector = N4jscFactory.getOrCreateInjector();
 		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
 		persisterConfig.setDeleteState(options.isClean());
+		persisterConfig.setWriteToDisk(!options.isNoPersist());
 	}
 
 	private void setupAndRun(ExecutorService threadPool, XLanguageServerImpl languageServer)

@@ -117,7 +117,7 @@ public class N4jscOptionsValidater {
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
 		if (options.getDirs().size() > 1) {
-			String msg = "Multiple project directories not supported yet.";
+			String msg = "Multiple project directories not supported.";
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
 
