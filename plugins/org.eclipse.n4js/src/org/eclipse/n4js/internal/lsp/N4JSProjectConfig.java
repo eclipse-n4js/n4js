@@ -19,23 +19,24 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.lsp.IN4JSProjectConfig;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
-import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
-import org.eclipse.xtext.generator.URIBasedFileSystemAccess;
+import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 /**
  * Wrapper around {@link IN4JSProject}.
  */
-public class N4JSProjectConfig implements IN4JSProjectConfig {
+@SuppressWarnings("restriction")
+public class N4JSProjectConfig implements IProjectConfig {
 
-	private final IN4JSWorkspaceConfig workspace;
+	private final IWorkspaceConfig workspace;
 	private final IN4JSProject delegate;
 
 	/**
 	 * Constructor
 	 */
-	public N4JSProjectConfig(IN4JSWorkspaceConfig workspace, IN4JSProject delegate) {
+	public N4JSProjectConfig(IWorkspaceConfig workspace, IN4JSProject delegate) {
 		this.workspace = workspace;
 		this.delegate = delegate;
 	}
@@ -45,45 +46,41 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 		return delegate.getProjectName().getRawName();
 	}
 
-	@Override
+	/** @return the wrapped n4js project. */
 	public IN4JSProject toProject() {
 		return delegate;
 	}
 
-	/**
-	 * FIXME: MISSING JAVA-DOC<br/>
-	 * THIS METHOD MUST RETURN AN URI THAT ENDS WITH '/'.<br/>
-	 * ADD TO JAVA-DOC
-	 * <p>
-	 * Otherwise, {@link URIBasedFileSystemAccess#getURI(String, String)} will omit the project directory, ie. the last
-	 * directory. The getURI call happens during {@link URIBasedFileSystemAccess#generateFile(String, CharSequence)
-	 * generateFile}.
-	 */
 	@Override
 	public URI getPath() {
 		return delegate.getLocation().withTrailingPathDelimiter().toURI();
 	}
 
 	private class SourceContainerForPackageJson implements IN4JSSourceFolder {
+		private final URI pckjsonURI;
+
+		SourceContainerForPackageJson() {
+			pckjsonURI = delegate.getLocation().appendSegment(N4JSGlobals.PACKAGE_JSON).toURI();
+		}
+
 		@Override
 		public String getName() {
 			return N4JSGlobals.PACKAGE_JSON;
 		}
 
 		@Override
-		public List<URI> getAllResources() {
-			return Collections
-					.singletonList(delegate.getLocation().appendSegment(N4JSGlobals.PACKAGE_JSON).toURI());
+		public List<URI> getAllResources(IFileSystemScanner scanner) {
+			return Collections.singletonList(pckjsonURI);
 		}
 
 		@Override
-		public IN4JSProjectConfig getProject() {
+		public IProjectConfig getProject() {
 			return N4JSProjectConfig.this;
 		}
 
 		@Override
 		public boolean contains(URI uri) {
-			return getAllResources().contains(uri);
+			return pckjsonURI.equals(uri);
 		}
 
 		@Override
@@ -109,17 +106,17 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 		return new N4JSSourceFolder(this, sourceContainer);
 	}
 
-	@Override
+	/** @return the output folders of this project */
 	public List<URI> getOutputFolders() {
 		return Collections.singletonList(delegate.getLocation().appendPath(delegate.getOutputPath()).toURI());
 	}
 
 	@Override
-	public IN4JSWorkspaceConfig getWorkspaceConfig() {
+	public IWorkspaceConfig getWorkspaceConfig() {
 		return workspace;
 	}
 
-	@Override
+	/** @return true iff this project should be indexed only */
 	public boolean indexOnly() {
 		URI projectBase = getPath();
 		String lastSegment = projectBase.lastSegment();
@@ -133,6 +130,7 @@ public class N4JSProjectConfig implements IN4JSProjectConfig {
 			lastSegment = projectBase.lastSegment();
 		}
 		if (lastSegment != null && N4JSGlobals.NODE_MODULES.equals(lastSegment)) {
+			// index only true for npm libraries
 			return true;
 		}
 

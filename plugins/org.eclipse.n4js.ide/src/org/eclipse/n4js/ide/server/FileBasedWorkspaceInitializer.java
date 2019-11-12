@@ -31,10 +31,10 @@ import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfig;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
+import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -43,6 +43,7 @@ import com.google.inject.Singleton;
  *
  */
 @Singleton
+@SuppressWarnings("restriction")
 public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 
 	@Inject
@@ -64,7 +65,7 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 	private ProjectDiscoveryHelper projectDiscoveryHelper;
 
 	@Override
-	public IN4JSWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI) {
+	public IWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI) {
 		try {
 			// TODO is this correct if we have multiple workspace URIs?
 			workspace.clear();

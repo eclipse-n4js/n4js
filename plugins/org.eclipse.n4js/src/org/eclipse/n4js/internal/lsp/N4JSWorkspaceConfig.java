@@ -14,16 +14,17 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.lsp.IN4JSProjectConfig;
-import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.collect.FluentIterable;
 
 /**
  * Wrapper around {@link IN4JSCore}.
  */
-public class N4JSWorkspaceConfig implements IN4JSWorkspaceConfig {
+@SuppressWarnings("restriction")
+public class N4JSWorkspaceConfig implements IWorkspaceConfig {
 
 	private final IN4JSCore delegate;
 
@@ -35,17 +36,17 @@ public class N4JSWorkspaceConfig implements IN4JSWorkspaceConfig {
 	}
 
 	@Override
-	public IN4JSProjectConfig findProjectByName(String name) {
+	public IProjectConfig findProjectByName(String name) {
 		return delegate.findProject(new N4JSProjectName(name)).transform(p -> new N4JSProjectConfig(this, p)).orNull();
 	}
 
 	@Override
-	public IN4JSProjectConfig findProjectContaining(URI member) {
+	public IProjectConfig findProjectContaining(URI member) {
 		return delegate.findProject(member).transform(p -> new N4JSProjectConfig(this, p)).orNull();
 	}
 
 	@Override
-	public Set<? extends IN4JSProjectConfig> getProjects() {
+	public Set<? extends IProjectConfig> getProjects() {
 		return FluentIterable.from(delegate.findAllProjects()).transform(p -> new N4JSProjectConfig(this, p)).toSet();
 	}
 
