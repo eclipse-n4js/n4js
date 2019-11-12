@@ -95,19 +95,19 @@ public class CliCompileResult extends ProcessResult {
 		return new TreeSet<>(warnings.values());
 	}
 
-	/** @return number of all files that where transpiled to js files */
+	/** @return number of all js files in {@code src-gen} folders */
 	public int getTranspiledFilesCount() {
 		return getTranspiledFiles().size();
 	}
 
-	/** @return list of all file names that where transpiled to js files */
+	/** @return list of all js file names in {@code src-gen} folders */
 	public Collection<String> getTranspiledFileNames() {
 		return getTranspiledFiles().stream()
 				.map(f -> f.toString())
 				.collect(Collectors.toList());
 	}
 
-	/** @return list of all files that where transpiled to js files */
+	/** @return list of all js files in {@code src-gen} folders */
 	public Collection<File> getTranspiledFiles() {
 		return getJSFiles(null, true, false);
 	}
