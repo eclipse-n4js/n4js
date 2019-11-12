@@ -54,6 +54,10 @@ public class ProjectStateHolder {
 	@Inject
 	protected IssueAcceptor issueAcceptor;
 
+	/** Holds configuration about project persisting */
+	@Inject
+	protected ProjectStatePersisterConfig persistConfig;
+
 	private XIndexState indexState = new XIndexState();
 
 	private Map<URI, HashedFileContent> hashFileMap = new HashMap<>();
@@ -67,10 +71,21 @@ public class ProjectStateHolder {
 		validationIssues.clear();
 	}
 
+	/** Deletes the persistence file on disk */
+	public void deletePersistenceFile(IProjectConfig projectConfig) {
+		URI persistenceFileURI = getPersistenceFile(projectConfig);
+		File persistenceFile = new File(persistenceFileURI.toFileString());
+		if (persistenceFile.isFile()) {
+			persistenceFile.delete();
+		}
+	}
+
 	/** Persists the project state to disk */
 	public void writeProjectState(IProjectConfig projectConfig) {
-		Collection<HashedFileContent> hashFileContents = hashFileMap.values();
-		projectStatePersister.writeProjectState(projectConfig, indexState, hashFileContents, validationIssues);
+		if (persistConfig.isWriteToDisk()) {
+			Collection<HashedFileContent> hashFileContents = hashFileMap.values();
+			projectStatePersister.writeProjectState(projectConfig, indexState, hashFileContents, validationIssues);
+		}
 	}
 
 	/**
@@ -79,6 +94,10 @@ public class ProjectStateHolder {
 	 * @return set of all source URIs with modified contents
 	 */
 	public Set<URI> readProjectState(IProjectConfig projectConfig) {
+		if (persistConfig.isDeleteState()) {
+			deletePersistenceFile(projectConfig);
+		}
+
 		Set<URI> changedSources = new HashSet<>();
 		doClear();
 
