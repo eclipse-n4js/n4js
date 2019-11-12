@@ -10,22 +10,38 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
+import org.eclipse.xtext.workspace.IProjectConfig;
+
 import com.google.inject.Singleton;
 
 /**
- *
+ * Hold configuration of {@link ProjectStatePersister}
  */
+@SuppressWarnings({ "restriction", "unused" })
 @Singleton
 public class ProjectStatePersisterConfig {
+	/** True iff the file that persists the project state will be deleted at startup */
+	protected boolean isDeleteState = true;
+	/** True iff the project state will be persisted to a file on disk after build */
+	protected boolean isWriteToDisk = false;
+
+	/** Sets whether the project state file will be deleted before at startup */
+	public void setDeleteState(boolean isDeleteState) {
+		this.isDeleteState = isDeleteState;
+	}
 
 	/** @return true iff the file that persists the project state will be deleted at startup */
-	public boolean isDeleteState() {
-		return true;
+	public boolean isDeleteState(IProjectConfig projectConfig) {
+		return isDeleteState;
+	}
+
+	/** Sets whether the project state will be persisted to disk after build */
+	public void setWriteToDisk(boolean isWriteToDisk) {
+		this.isWriteToDisk = isWriteToDisk;
 	}
 
 	/** @return true iff the project state will be persisted to a file on disk after build */
-	public boolean isWriteToDisk() {
-		return false;
+	public boolean isWriteToDisk(IProjectConfig projectConfig) {
+		return isWriteToDisk;
 	}
-
 }

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.TopologicalSorter;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -140,7 +140,7 @@ public class XBuildManager {
 		for (ProjectDescription description : sortedDescriptions) {
 			String projectName = description.getName();
 			XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
-			XIncrementalBuilder.XResult partialresult = projectManager.doInitialBuild(indicator);
+			XBuildResult partialresult = projectManager.doInitialBuild(indicator);
 			result.addAll(partialresult.getAffectedResources());
 		}
 		return result;
@@ -176,7 +176,7 @@ public class XBuildManager {
 			XProjectManager projectManager = workspaceManager.getProjectManager(descr.getName());
 			Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
 			Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
-			XIncrementalBuilder.XResult partialResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
+			XBuildResult partialResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
 					unreportedDeltas, cancelIndicator);
 
 			dirtyFiles.removeAll(projectDirty);

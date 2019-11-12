@@ -15,8 +15,8 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
-import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder.XResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
@@ -97,10 +97,10 @@ public class XProjectManager {
 	}
 
 	/** Initial build reads the project state and resolves changes. */
-	public XIncrementalBuilder.XResult doInitialBuild(CancelIndicator cancelIndicator) {
+	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
 		Set<URI> changedSources = projectStateHolder.readProjectState(projectConfig);
 
-		XResult result = doIncrementalBuild(changedSources, Collections.emptySet(),
+		XBuildResult result = doIncrementalBuild(changedSources, Collections.emptySet(),
 				Collections.emptyList(), cancelIndicator);
 
 		if (!changedSources.isEmpty()) {
@@ -110,7 +110,7 @@ public class XProjectManager {
 	}
 
 	/** Build this project. */
-	public XIncrementalBuilder.XResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
+	public XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
 
 		URI persistanceFile = projectStateHolder.getPersistenceFile(projectConfig);
@@ -118,7 +118,7 @@ public class XProjectManager {
 		deletedFiles.remove(persistanceFile);
 
 		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
-		XIncrementalBuilder.XResult result = incrementalBuilder.build(request);
+		XBuildResult result = incrementalBuilder.build(request);
 
 		projectStateHolder.updateProjectState(request, result);
 		resourceSet = request.getResourceSet();

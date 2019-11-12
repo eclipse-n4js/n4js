@@ -25,8 +25,8 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.PersistedState;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
-import org.eclipse.n4js.ide.xtext.server.build.XIncrementalBuilder;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.IFileSystemScanner;
@@ -82,7 +82,7 @@ public class ProjectStateHolder {
 
 	/** Persists the project state to disk */
 	public void writeProjectState(IProjectConfig projectConfig) {
-		if (persistConfig.isWriteToDisk()) {
+		if (persistConfig.isWriteToDisk(projectConfig)) {
 			Collection<HashedFileContent> hashFileContents = hashFileMap.values();
 			projectStatePersister.writeProjectState(projectConfig, indexState, hashFileContents, validationIssues);
 		}
@@ -94,7 +94,7 @@ public class ProjectStateHolder {
 	 * @return set of all source URIs with modified contents
 	 */
 	public Set<URI> readProjectState(IProjectConfig projectConfig) {
-		if (persistConfig.isDeleteState()) {
+		if (persistConfig.isDeleteState(projectConfig)) {
 			deletePersistenceFile(projectConfig);
 		}
 
@@ -132,7 +132,7 @@ public class ProjectStateHolder {
 	}
 
 	/** Updates the index state, file hashes and validation issues */
-	public void updateProjectState(XBuildRequest request, XIncrementalBuilder.XResult result) {
+	public void updateProjectState(XBuildRequest request, XBuildResult result) {
 		HashMap<URI, HashedFileContent> newFileContents = new HashMap<>(hashFileMap);
 		for (Delta delta : result.getAffectedResources()) {
 			URI uri = delta.getUri();
