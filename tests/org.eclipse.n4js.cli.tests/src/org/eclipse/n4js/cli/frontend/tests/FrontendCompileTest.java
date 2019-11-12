@@ -272,10 +272,10 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	/**  */
 	@Test
 	public void checkCleanWrongGoal() {
-		String args[] = { "lsp", ".", "--clean" };
+		String args[] = { "help", ".", "--clean" };
 		CliCompileResult result = n4jsc(args, 13);
 		assertEquals(result.toString(),
-				"ERROR-13 (Invalid option):  Given option --clean requires goal(s) compile, but goal lsp was given.",
+				"ERROR-13 (Invalid option):  Given option --clean requires goal(s) compile, lsp, but goal help was given.",
 				result.getStdOut());
 	}
 

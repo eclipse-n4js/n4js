@@ -28,7 +28,10 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+
+import com.google.inject.Injector;
 
 /**
  *
@@ -44,6 +47,7 @@ public class LspServer {
 
 	private LspServer(N4jscOptions options) {
 		this.options = options;
+		setPersistionOptions();
 	}
 
 	/** Starts the LSP server in a blocking fashion */
@@ -61,6 +65,12 @@ public class LspServer {
 		} finally {
 			N4jscConsole.println("LSP server terminated.");
 		}
+	}
+
+	private void setPersistionOptions() {
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
+		persisterConfig.setDeleteState(options.isClean());
 	}
 
 	private void setupAndRun(ExecutorService threadPool, XLanguageServerImpl languageServer)

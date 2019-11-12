@@ -137,9 +137,9 @@ public class N4jscOptions {
 		int maxWarns = 0;
 
 		@Option(name = "--clean", aliases = "-c", //
-				usage = "[compile] output folders are cleaned before compilation.", //
+				usage = "[compile|lsp] output folders are cleaned at start.", //
 				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
-		@GoalRequirements(goals = N4jscGoal.compile)
+		@GoalRequirements(goals = { N4jscGoal.compile, N4jscGoal.lsp })
 		boolean clean = false;
 
 		@Option(name = "--performanceReport", aliases = "-pR", //
@@ -177,8 +177,8 @@ public class N4jscOptions {
 
 		@Argument(metaVar = "GOAL", multiValued = false, index = 0, required = false, //
 				usage = "Goals are:"
-						+ "\n\t compile  Compiles with given options"
-						+ "\n\t clean    Cleans with given options"
+						+ "\n\t compile  Compiles src folders"
+						+ "\n\t clean    Cleans output folders and type index"
 						+ "\n\t lsp      Starts LSP server"
 						+ "\n\t watch    Starts compiler daemon that watches the given directory(s)"
 						+ "\n\t api      Generates API documentation from n4js files"

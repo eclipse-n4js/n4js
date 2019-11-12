@@ -24,11 +24,14 @@ import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.xtext.workspace.IProjectConfig;
+
+import com.google.inject.Injector;
 
 /**
  * The entry point for all cli calls with the goal 'compile'
@@ -54,6 +57,8 @@ public class N4jscCompiler {
 		this.languageServer = N4jscFactory.getLanguageServer();
 		this.callback = N4jscFactory.getLanguageClient();
 		this.workspaceManager = N4jscFactory.getWorkspaceManager();
+
+		setPersistionOptions();
 		this.languageServer.connect(callback);
 	}
 
@@ -83,6 +88,12 @@ public class N4jscCompiler {
 		} else {
 			throw new N4jscException(N4jscExitCode.ERROR_UNEXPECTED, "No root directory");
 		}
+	}
+
+	private void setPersistionOptions() {
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
+		persisterConfig.setDeleteState(options.isClean());
 	}
 
 	private void warnIfNoProjectsFound() {
