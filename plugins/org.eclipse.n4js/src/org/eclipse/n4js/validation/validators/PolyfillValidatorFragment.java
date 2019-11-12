@@ -44,25 +44,14 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_S
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForPOLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.eclipse.xtext.resource.IContainer;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
-
-import com.google.common.base.Joiner;
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -78,6 +67,17 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.resource.IContainer;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.inject.Inject;
 
 /**
  * Validates polyfill declaration, used by {@link N4JSClassValidator}. Some modifications related to polyfills and
@@ -403,7 +403,9 @@ public class PolyfillValidatorFragment {
 
 		}
 
-		List<TMember> sortedMembers = clashProviders.keySet().stream().sorted().collect(Collectors.toList());
+		List<TMember> sortedMembers = new ArrayList<>(clashProviders.keySet());
+		Collections.sort(sortedMembers, (m1, m2) -> m1.getName().compareTo(m2.getName()));
+
 		for (TMember myMember : sortedMembers) {
 			// Combine list of Modules involved in the polyfill clash.
 			String uris = Stream
