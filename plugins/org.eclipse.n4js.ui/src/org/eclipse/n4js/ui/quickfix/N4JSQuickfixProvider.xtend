@@ -161,17 +161,19 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	def transformJavaTypeAnnotationToColonStyle(Issue issue, IssueResolutionAcceptor acceptor) {
 		//TODO #GH-1492
 		acceptor.accept(issue, 'Convert to colon style', 'The method annotation should be in colon style. This quick fix will change the code to colon style.', ImageNames.REORDER) [ context, marker, offset, length, element |
+			if (!(element instanceof ParameterizedTypeRefImpl) ||
+					!((element as ParameterizedTypeRefImpl).eContainer instanceof N4MethodDeclarationImpl)
+			) {
+				return #[]; // Its not a N4MethodDeclarationImpl. Not implemented yet.
+			}
+
 			val node = NodeModelUtils.getNode(element)
 			var INode motherINode = node.parent;
-			while (!(motherINode instanceof CompositeNodeWithSemanticElement)) {
+			while (!(motherINode instanceof CompositeNodeWithSemanticElement) ||
+						!(motherINode.semanticElement instanceof N4MethodDeclarationImpl)
+			) {
 				motherINode = motherINode.parent;
-				if (motherINode instanceof CompositeNodeWithSemanticElement) {
-					while (!(motherINode.semanticElement instanceof N4MethodDeclarationImpl)) {
-						motherINode = motherINode.parent;
-					}
-				}
 			}
-			//TODO motherINode can produce runtime error: TypeCast without checking.
 
 			val roundBracketNode = NodeModelUtilsN4.findKeywordNodeIfSameGrammarRule((motherINode as ICompositeNode), ')', motherINode.grammarElement)
 			val INode bogusNode = NodeModelUtils.findNodesForFeature((motherINode as CompositeNodeWithSemanticElement).semanticElement, N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF).head;
@@ -195,19 +197,6 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			val offsetBogusType = bogusNode.totalOffset + offsetCorrection;
 			val bogusTypeLength = bogusNode.totalLength - offsetCorrection;
 			val offsetRoundBracket = roundBracketNode.totalOffset;
-
-			if(element instanceof ParameterizedTypeRefImpl){
-				if(element.eContainer instanceof N4MethodDeclarationImpl){
-//					val N4MethodDeclarationImpl myObj = element.eContainer as N4MethodDeclarationImpl;
-//					stringOfBogusType = myObj.getBogusTypeRef.declaredType.name;
-//					val returnTypeName = con.bogusTypeRef.declaredType.name
-//					val funkName = con.declaredName.literalName
-//					val params = con.fpars.get(0)
-				}
-			}
-			else{
-				//TODO
-			}
 
 			return #[
 				replace(context.xtextDocument, offsetBogusType, bogusTypeLength + spaceAfterBogusLength, ""), // removes the bogus type and whitespace at the old location
