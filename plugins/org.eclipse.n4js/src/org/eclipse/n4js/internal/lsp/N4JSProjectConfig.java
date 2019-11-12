@@ -101,6 +101,10 @@ public class N4JSProjectConfig implements IProjectConfig {
 	public IN4JSSourceFolder findSourceFolderContaining(URI member) {
 		IN4JSSourceContainer sourceContainer = delegate.findSourceContainerWith(member);
 		if (sourceContainer == null) {
+			SourceContainerForPackageJson pckJsonSrcContainer = new SourceContainerForPackageJson();
+			if (pckJsonSrcContainer.contains(member)) {
+				return pckJsonSrcContainer;
+			}
 			return null;
 		}
 		return new N4JSSourceFolder(this, sourceContainer);
