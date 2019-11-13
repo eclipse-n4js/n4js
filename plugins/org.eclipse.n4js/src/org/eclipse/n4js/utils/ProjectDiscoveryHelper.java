@@ -97,6 +97,7 @@ public class ProjectDiscoveryHelper {
 					// Is Yarn project
 					// use projects referenced in packages
 					Path yarnProjectDir = nodeModulesFolder.nodeModulesFolder.getParentFile().toPath();
+					allProjectDirs.add(yarnProjectDir);
 					allProjectDirs.addAll(collectYarnWorkspaceProjects(yarnProjectDir));
 				} else {
 					// Is NPM project
@@ -139,6 +140,10 @@ public class ProjectDiscoveryHelper {
 			Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+					if (root.equals(dir)) {
+						return FileVisitResult.CONTINUE;
+					}
+
 					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
 						return FileVisitResult.SKIP_SUBTREE;
 					}
