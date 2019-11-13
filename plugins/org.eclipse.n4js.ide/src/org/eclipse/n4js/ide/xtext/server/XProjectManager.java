@@ -118,10 +118,11 @@ public class XProjectManager {
 		deletedFiles.remove(persistanceFile);
 
 		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
+		resourceSet = request.getResourceSet(); // resourceSet is already used during the build via #getResource(URI)
+
 		XBuildResult result = incrementalBuilder.build(request);
 
 		projectStateHolder.updateProjectState(request, result);
-		resourceSet = request.getResourceSet();
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
 		indexProvider.get().put(projectDescription.getName(), resourceDescriptions);
 
