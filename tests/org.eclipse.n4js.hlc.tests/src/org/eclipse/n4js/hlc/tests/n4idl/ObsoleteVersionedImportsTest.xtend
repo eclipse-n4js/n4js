@@ -53,10 +53,11 @@ public class ObsoleteVersionedImportsTest extends AbstractCliCompileTest {
 	@Test
 	public def void testNoObsoleteVersionsImported() throws IOException, ExitCodeException {
 		val cliResult = n4jsc(COMPILE(workspace));
+		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
 		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
 		
 		val wsRoot = workspace.getAbsolutePath().toString();
-		val fileToRun = wsRoot + "/packages/ObsoleteVersionedImports/src-ext/run.js";
+		val fileToRun = wsRoot + "/packages/ObsoleteVersionedImports/src-gen/run.js";
 		
 		val expectedString = '''
 		R#1: function R$1() {}
