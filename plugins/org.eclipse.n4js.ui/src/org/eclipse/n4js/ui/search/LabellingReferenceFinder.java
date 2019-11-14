@@ -49,7 +49,7 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 
 				EObject displayObject = calculateDisplayEObject(source);
 				String logicallyQualifiedDisplayName = N4JSHierarchicalNameComputerHelper
-						.calculateLogicallyQualifiedDisplayName(displayObject, labelProvider, false);
+						.calculateHierarchicalDisplayName(displayObject, labelProvider, false);
 				ICompositeNode srcNode = NodeModelUtils.getNode(source);
 				int line = srcNode.getStartLine();
 				LabelledReferenceDescription description = new LabelledReferenceDescription(source, displayObject,

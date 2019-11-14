@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.MemberAccess
 import org.eclipse.n4js.n4JS.Script
@@ -46,8 +47,8 @@ import org.eclipse.n4js.utils.Log
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.XtextResource
 
-import static org.eclipse.n4js.ui.organize.imports.XtextResourceUtils.*
 import static org.eclipse.n4js.N4JSLanguageConstants.EXPORT_DEFAULT_NAME
+import static org.eclipse.n4js.ui.organize.imports.XtextResourceUtils.*
 
 /**
  * Computes imports required by the given resource. In principle removes unused imports, adds missing imports, sorts imports - all in one go.
@@ -254,8 +255,8 @@ public class ImportsComputer {
 		IEObjectDescription ieoDescription, Resource contextResource) {
 
 		// potential match via namespace
-		if (usedName.contains(".")) {
-			val segments = usedName.split("\\.")
+		if (usedName.indexOf(N4JSGlobals.NAMESPACE_ACCESS_DELIMITER) >= 0) {
+			val segments = usedName.split("\\" + N4JSGlobals.NAMESPACE_ACCESS_DELIMITER);
 
 			if (segments.size != 2)
 				return false // does not look like namespace
@@ -292,8 +293,8 @@ public class ImportsComputer {
 			return true
 		
 		// potential match via namespace
-		if (usedName.contains(".")) {
-			val segments = usedName.split("\\.")
+		if (usedName.indexOf(N4JSGlobals.NAMESPACE_ACCESS_DELIMITER) >= 0) {
+			val segments = usedName.split("\\" + N4JSGlobals.NAMESPACE_ACCESS_DELIMITER);
 			// 2 segments, potential namespace access
 			if (segments.size == 2 && (segments.last == qName.lastSegment))
 				return true

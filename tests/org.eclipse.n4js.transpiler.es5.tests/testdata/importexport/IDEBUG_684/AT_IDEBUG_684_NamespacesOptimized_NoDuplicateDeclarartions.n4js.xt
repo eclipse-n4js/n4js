@@ -36,7 +36,7 @@ $makeClass(ASD, N.Error, [], {}, {}, function(instanceProto, staticProto) {
 	var metaClass = new N4Class({
 		name: 'ASD',
 		origin: 'org.eclipse.n4js.transpiler.es5.tests',
-		fqn: 'importexport.IDEBUG_684.AT_IDEBUG_684_NamespacesOptimized_NoDuplicateDeclarartions.ASD',
+		fqn: 'importexport/IDEBUG_684/AT_IDEBUG_684_NamespacesOptimized_NoDuplicateDeclarartions/ASD',
 		n4superType: N.Error.n4type,
 		allImplementedInterfaces: [],
 		ownedMembers: [],

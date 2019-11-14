@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IPath;
 public class WorkspaceWizardValidatorUtils {
 
 	private static final Pattern VALID_FOLDER_NAME_PATTERN = Pattern
-			.compile("[a-zA-z_](([a-zA-z_0-9-])|[a-zA-z_0-9-])*");
+			.compile("[a-zA-Z_.0-9-]+");
 	private static final Pattern NO_BACKSLASH_PATTERN = Pattern.compile("[^\\\\]+");
 
 	/**

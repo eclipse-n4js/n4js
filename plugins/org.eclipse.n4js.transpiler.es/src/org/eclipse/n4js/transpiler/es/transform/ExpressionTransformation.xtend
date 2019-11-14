@@ -231,7 +231,7 @@ class ExpressionTransformation extends Transformation {
 									// avoid optimizing this case for built-in types
 									// (we cannot know for sure the value of the 'fqn' property set in the .js files)
 									if (!N4Scheme.isFromResourceWithN4Scheme(id)) {
-										resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(id)
+										resourceNameComputer.getFullyQualifiedTypeName(id)
 									}
 								default:
 									throw new IllegalStateException() // should not happen (see above)

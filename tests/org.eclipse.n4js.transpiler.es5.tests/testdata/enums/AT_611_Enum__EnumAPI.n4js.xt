@@ -16,12 +16,12 @@
 stdout:
 RED
 RED
-enums.AT_611_Enum__EnumAPI.Color
+enums/AT_611_Enum__EnumAPI/Color
 RED
 --
 US
 2
-enums.AT_611_Enum__EnumAPI.Country
+enums/AT_611_Enum__EnumAPI/Country
 2
 --
 true
