@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -56,17 +56,18 @@ import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 
 import static extension org.eclipse.n4js.ui.utils.ConfigurableCompletionProposalExtensions.*
 import org.eclipse.n4js.utils.ContainerTypesHelper
-import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
-import org.eclipse.n4js.ts.types.util.MemberList
-import org.eclipse.n4js.ts.types.impl.TMethodImpl
 import org.eclipse.n4js.n4JS.Annotation
 import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.util.EDataTypeEList
+import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.n4JS.N4Modifier
-import org.eclipse.n4js.n4JS.impl.AnnotationImpl
+import org.eclipse.n4js.ts.types.util.MemberList
+import org.eclipse.xtext.nodemodel.ICompositeNode
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -89,9 +90,15 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	@Inject
 	private N4JSLabelProvider labelProvider;
-	
+
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
+
+	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
+
+	static final String EMPTY_METHOD_BODY = " {\n\n\t}";
+
+	static final String AUTO_GENERATED_METHOD_BODY = " {\n\t\t// TODO Auto-generated method stub\n\t\t return null\n\t}";
 
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
@@ -183,7 +190,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * </p><p>
 	 * TODO IDE-2227 fix handling of qualified names in content assist or create follow-up task
 	 * </p>
-	 *
+	 * 
 	 * @see AbstractJavaBasedContentProposalProvider
 	 */
 	override protected getProposalFactory(String ruleName, ContentAssistContext contentAssistContext) {
@@ -191,7 +198,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		// prepare URIs of all members of built-in types Object and N4Object to avoid
 		// having to invoke #getEObjectOrProxy() on every IEObjectDescription
 		val builtInTypeScope = BuiltInTypeScope.get(contentAssistContext.resource.resourceSet);
-		val secondaryTypes = #[ builtInTypeScope.objectType, builtInTypeScope.n4ObjectType ];
+		val secondaryTypes = #[builtInTypeScope.objectType, builtInTypeScope.n4ObjectType];
 		val urisOfSecondaryMembers = secondaryTypes.flatMap[ownedMembers].map[EcoreUtil.getURI(it)].toSet;
 
 		val myConverter = new IQualifiedNameConverter.DefaultImpl() // provide a fake implementation using '.' as delimiter like Java
@@ -228,7 +235,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 					result.secondaryMember = urisOfSecondaryMembers.contains(candidate.EObjectURI);
 
 					val bracketInfo = computeProposalBracketInfo(candidate, contentAssistContext);
-					if (bracketInfo!==null) {
+					if (bracketInfo !== null) {
 						result.replacementSuffix = bracketInfo.brackets;
 						result.cursorOffset = bracketInfo.cursorOffset;
 					}
@@ -322,7 +329,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	/**
 	 * If the element is an instance of {@link TClassifier} this method
 	 * returns a user-faced string description of the version information.
-	 *
+	 * 
 	 * Otherwise, this method returns an empty string.
 	 */
 	private def int getTypeVersion(EObject element) {
@@ -364,7 +371,8 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		int cursorOffset;
 	}
 
-	def private ProposalBracketInfo computeProposalBracketInfo(IEObjectDescription proposedDescription, ContentAssistContext contentAssistContext) {
+	def private ProposalBracketInfo computeProposalBracketInfo(IEObjectDescription proposedDescription,
+		ContentAssistContext contentAssistContext) {
 
 		val eClass = proposedDescription.EClass;
 
@@ -374,76 +382,134 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 		return null;
 	}
-	
-	override public void complete_N4FieldDeclaration(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-//		super.complete_N4FieldDeclaration(model, ruleCall, context, acceptor);
-	}	
-	
-	//				val proposalString = mc.inheritedMembers(tclass as TClass).map[].join(" ") + " "
-	override public void complete_LiteralOrComputedPropertyName(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		super.complete_LiteralOrComputedPropertyName(model, ruleCall, context, acceptor);
-		if(model instanceof LiteralOrComputedPropertyName) {
-			val mc = containerTypesHelper.fromContext(model);
+
+	/**
+	 * Produces proposals for overriding inherited methods which are not implemented yet.
+	 */
+	override public void complete_LiteralOrComputedPropertyName(EObject model, RuleCall ruleCall,
+		ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+
+		if (model instanceof LiteralOrComputedPropertyName) {
+			val memberCollector = containerTypesHelper.fromContext(model);
 			val n4classdeclaration = model.eContainer.eContainer;
-			if(n4classdeclaration instanceof N4ClassDeclaration) {
+			if (n4classdeclaration instanceof N4ClassDeclaration) {
 				val tclass = n4classdeclaration.definedType;
-				System.out.println(mc.inheritedMembers(tclass as TClass));
-				var proposalString =""; 
-				for(TMember methodMember: mc.inheritedMembers(tclass as TClass))
-				{
- 					if(containsAnnotation((model.eContainer as N4FieldDeclaration).annotations, "Override") &&
- 					containsDeclarationModifier((model.eContainer as N4FieldDeclaration).declaredModifiers, methodMember.memberAccessModifier.toString))
- 					{
-						proposalString = methodMember.memberAsString	
- 					}
-					else if(!containsAnnotation((model.eContainer as N4FieldDeclaration).annotations, "Override") &&
- 					!containsDeclarationModifier((model.eContainer as N4FieldDeclaration).declaredModifiers, methodMember.memberAccessModifier.toString)) {
-						proposalString = "@Override \n" + methodMember.memberAccessModifier.toString + " " + methodMember.memberAsString	
+				val n4FieldDeclaration = model.eContainer;
+				if (n4FieldDeclaration instanceof N4FieldDeclaration) {
+					val annotations = n4FieldDeclaration.annotations;
+					var node = NodeModelUtils.getNode(model).parent.parent;
+					for (TMember methodMember : memberCollector.inheritedMembers(tclass as TClass)) {
+						val implementedMembers = memberCollector.allMembers(tclass as TClass, false, false, false);
+						if (!methodAlreadyImplemented(implementedMembers, methodMember)) {
+							val TypeRef returnType = getReturnType(methodMember);
+							val EList<N4Modifier> declaredModifiers = getDeclaredModifiers(methodMember);
+							val isStatic = methodMember.declaredStatic;
+							if (!isStatic) {
+								buildMethodCompletionProposal(context, acceptor, node, annotations, declaredModifiers,
+									methodMember, returnType);
+							}
+						}
 					}
-					else if(!containsAnnotation((model.eContainer as N4FieldDeclaration).annotations, "Override")) {
-						proposalString = methodMember.memberAsString
-					}
-					else if(!containsDeclarationModifier((model.eContainer as N4FieldDeclaration).declaredModifiers, methodMember.memberAccessModifier.toString)) {
-						proposalString = methodMember.memberAccessModifier.toString + " " + methodMember.memberAsString
-					}
-					val ICompletionProposal proposal = 
-						createMethodCompletionProposal(proposalString + " {}", methodMember.memberAsString, context);
-					acceptor.accept(proposal);					
 				}
-			}		
+			}
 		}
 	}
-	
-	def createMethodCompletionProposal(String proposal, String validProposal, ContentAssistContext context) {
-		if (isValidProposal(validProposal, context.prefix, context)) {
-			return doCreateProposal(proposal, new StyledString(validProposal), null, getPriorityHelper().getDefaultPriority(), context);
+
+	def private EList<N4Modifier> getDeclaredModifiers(TMember methodMember) {
+		
+		var EList<N4Modifier> declaredModifiers;
+		val n4MethodDeclaration = methodMember.astElement;
+		if (n4MethodDeclaration instanceof N4MethodDeclaration) {
+			declaredModifiers = n4MethodDeclaration.declaredModifiers;
+		} else {
+			declaredModifiers = null;
+		}
+		return declaredModifiers;
+	}
+
+	def private TypeRef getReturnType(TMember methodMember) {
+		
+		var TypeRef returnType;
+		val n4MethodDeclaration = methodMember.astElement;
+		if (n4MethodDeclaration instanceof N4MethodDeclaration) {
+			returnType = n4MethodDeclaration.returnTypeRef;
+		} else {
+			returnType = null;
+		}
+		return returnType;
+	}
+
+	def private buildMethodCompletionProposal(ContentAssistContext context, ICompletionProposalAcceptor acceptor,
+		ICompositeNode node, EList<Annotation> annotations, EList<N4Modifier> declaredModifiers, TMember methodMember,
+		TypeRef returnType) {
+		var String strMemberAccessModifier = "";
+		if (hasAccessModifier(declaredModifiers)) {
+			strMemberAccessModifier = methodMember.memberAccessModifier.toString + " ";
+		}
+		var annotationString = addAnnotations(annotations);
+		var String methodBody;
+		if (returnType === null) {
+			methodBody = EMPTY_METHOD_BODY;
+		} else {
+			methodBody = AUTO_GENERATED_METHOD_BODY;
+		}
+		val proposalString = annotationString + strMemberAccessModifier + methodMember.memberAsString + methodBody;
+		val ICompletionProposal proposal = createMethodCompletionProposal(proposalString, methodMember.memberAsString,
+			context, node.offset, proposalString.length);
+		acceptor.accept(proposal);
+
+	}
+
+	def private createMethodCompletionProposal(String proposal, String methodMemberName, ContentAssistContext context,
+		int offset, int length) {
+		if (isValidProposal(methodMemberName, context.prefix, context)) {
+			return doCreateProposal(proposal, new StyledString(methodMemberName), null, offset, length);
 		}
 		return null;
-		
 	}
-	
-	def private boolean containsAnnotation(EList<Annotation> annotations, String annotation) {
-		for(Annotation a: annotations) {
-			if(a.name.toLowerCase === annotation.toLowerCase) {
-				return true;
+
+	def private String addAnnotations(EList<Annotation> annotations) {
+		var hasOverride = false;
+		var proposalString = ""
+		for (Annotation annotation : annotations) {
+			proposalString += "@" + annotation.name + "\n\t"
+			if (annotation.name.equals(OVERRIDE_ANNOTATION)) {
+				hasOverride = true;
 			}
 		}
-		return false;	
+		if (!hasOverride) {
+			proposalString += "@" + OVERRIDE_ANNOTATION + "\n\t"
+		}
+		return proposalString;
 	}
-	
-	def private boolean containsDeclarationModifier(EList<N4Modifier> modifiers, String modifier) {
-		for(N4Modifier m: modifiers) {
-			if(m.getName().toLowerCase === modifier.toLowerCase) {
-				return true;
+
+	def private boolean hasAccessModifier(EList<N4Modifier> declaredModifiers) {
+		if (declaredModifiers === null) {
+			return false
+		} else {
+			for (N4Modifier modifier : declaredModifiers) {
+				switch (modifier.name()) {
+					case N4Modifier.PUBLIC.name(): return true
+					case N4Modifier.PROJECT.name(): return true
+					case N4Modifier.PROTECTED.name(): return true
+					default: return false
+				}
 			}
 		}
-		return false;	
 	}
-	
-//	def private String createMethodProposalString(EObject model) {
-//		if(model instanceof LiteralOrComputedPropertyName) {
-//			val mc = containerTypesHelper.fromContext(model);
-//			}
-//		return "";
-//	}
+
+	def private boolean methodAlreadyImplemented(MemberList<TMember> implementedMethods, TMember method) {
+		var boolean methodImplemented = false
+		if (implementedMethods === null) {
+			return methodImplemented
+		} else {
+			for (TMember methodMember : implementedMethods) {
+				if (methodMember.memberAsString.equals(method.memberAsString)) {
+					methodImplemented = true
+				}
+			}
+		}
+		return methodImplemented
+	}
+
 }
