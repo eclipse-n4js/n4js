@@ -18,9 +18,9 @@ stdout:
 Ch07_04_Reflection_Meta_Information/ReflectionEnum/E
 Ch07_04_Reflection_Meta_Information/ReflectionEnum/E
 true
-[ E { name: 'L1', value: 'l1' },
-  E { name: 'L2', value: 'L2' },
-  E { name: 'L3', value: 'L3' } ]
+L1 l1
+L2 L2
+L3 L3
 stderr:
 ==>
 --- */
@@ -35,4 +35,4 @@ enum E {
 console.log(N4Type.of(E.L1).fqn)
 console.log(N4EnumType.of(E.L1).fqn)
 console.log(E.n4type.isEnum)
-console.log(E.literals)
+E.literals.forEach(l => console.log(l.name, l.value))
