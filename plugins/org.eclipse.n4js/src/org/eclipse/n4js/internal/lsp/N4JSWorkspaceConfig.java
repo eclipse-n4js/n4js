@@ -10,15 +10,15 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
-
-import com.google.common.collect.FluentIterable;
 
 /**
  * Wrapper around {@link IN4JSCore}.
@@ -37,17 +37,29 @@ public class N4JSWorkspaceConfig implements IWorkspaceConfig {
 
 	@Override
 	public IProjectConfig findProjectByName(String name) {
-		return delegate.findProject(new N4JSProjectName(name)).transform(p -> new N4JSProjectConfig(this, p)).orNull();
+		IN4JSProject project = delegate.findProject(new N4JSProjectName(name)).orNull();
+		if (project != null) {
+			return new N4JSProjectConfig(this, project);
+		}
+		return null;
 	}
 
 	@Override
 	public IProjectConfig findProjectContaining(URI member) {
-		return delegate.findProject(member).transform(p -> new N4JSProjectConfig(this, p)).orNull();
+		IN4JSProject project = delegate.findProject(member).orNull();
+		if (project != null) {
+			return new N4JSProjectConfig(this, project);
+		}
+		return null;
 	}
 
 	@Override
 	public Set<? extends IProjectConfig> getProjects() {
-		return FluentIterable.from(delegate.findAllProjects()).transform(p -> new N4JSProjectConfig(this, p)).toSet();
+		Set<IProjectConfig> pConfigs = new HashSet<>();
+		for (IN4JSProject project : delegate.findAllProjects()) {
+			pConfigs.add(new N4JSProjectConfig(this, project));
+		}
+		return pConfigs;
 	}
 
 }
