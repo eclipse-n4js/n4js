@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.n4ide.spec.tests.N4JSXpectPluginUITest
 
- 	Workspace {
+   	Workspace {
 		JavaProject "N4JSXPECTTests" {
 			Folder "src" {
 				ThisFile {}
@@ -21,20 +21,141 @@
 		}
 	}
 
-   END_SETUP
+END_SETUP
  */
-
+//
 class C1 {
     // XPECT errors --> "Wrong type syntax: Use foo:Type rather than Type foo." at "int"
-    int foo() {}
+    int foo() {return 0;}
 }
 
 class C2 {
-	// XPECT quickFixList  at '<|>int' proposals contain --> "Convert to colon style"
-	int foo() {}
+	// XPECT quickFixList at '<|>int' proposals contain --> "Convert to colon style"
+	int foo() {return 0;}
 }
-
-class C3 {
-    // XPECT quickFix at '<|>int' apply 'Convert to colon style' fileValid --> <|>foo(): int {}
-    int foo() {}
+class C4 {
+	/* XPECT quickFix at '<|>int' apply 'Convert to colon style' fileValid ---
+	(...)
+			int foo(){return 0;}
+		}
+		class C4 {
+	-     /\*T)1*\/int/\*T)2*\/
+	| foo01/\*T)3*\/(/\*T)4*\/)[|: int]/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+	  	}
+	class C5 {
+	      /\*T)1*\/int/\*T)2*\/foo01/\*T)3*\/(/\*T)4*\/)/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+	(...)
+	---
+	*/
+    /*T)1*/int/*T)2*/foo01/*T)3*/(/*T)4*/)/*T)5*/{/*)T6*/return 0;}/*T)7*/
+}
+class C5 {
+	/* XPECT quickFix at '<|>int' apply 'Convert to colon style' fileValid ---
+	(...)
+			/\*T)1*\/int/\*T)2*\/foo01/\*T)3*\/(/\*T)4*\/)/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+		}
+		class C5 {
+	-     /\*T)1*\/int/\*T)2*\/
+	| foo01/\*T)3*\/(/\*T)4*\/)[|: int]/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+	  	}
+	class C6 {
+	      /\*T)1*\/int/\*T)2*\/foo01/\*T)3*\/(/\*T)4*\/)/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+	(...) 
+	---
+	*/
+    /*T)1*/ int /*T)2*/foo01/*T)3*/(/*T)4*/)/*T)5*/{/*)T6*/return 0;}/*T)7*/
+}
+class C6 {
+	/* XPECT quickFix at '<|>int' apply 'Convert to colon style' fileValid ---
+	(...)
+			/\*T)1*\/int/\*T)2*\/foo01/\*T)3*\/(/\*T)4*\/)/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+		}
+		class C6 {
+	-     /\*T)1*\/int/\*T)2*\/
+	| foo01/\*T)3*\/(/\*T)4*\/)[|: int]/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+	  	}
+	class C7 {
+	      /\*T)1*\/int/\*T)2*\/foo01/\*T)3*\/(/\*T)4*\/)/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+	(...)
+	---
+	*/
+    /*T)1*/int/*T)2*/ foo01 /*T)3*/(/*T)4*/)/*T)5*/{/*)T6*/return 0;}/*T)7*/
+}
+class C7 {
+	/* XPECT quickFix at '<|>int' apply 'Convert to colon style' fileValid ---
+	(...)
+			/\*T)1*\/int/\*T)2*\/foo01/\*T)3*\/(/\*T)4*\/)/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+		}
+		class C7 {
+	-     /\*T)1*\/int/\*T)2*\/
+	| foo01/\*T)3*\/(/\*T)4*\/)[|: int]/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+	  	}
+	class C8 {
+		/\*T)1*\/int/\*T)2*\/foo01/\*T)3*\/(/\*T)4*\/)/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+	(...)
+	---
+	*/
+    /*T)1*/int/*T)2*/foo01/*T)3*/ ( /*T)4*/)/*T)5*/{/*)T6*/return 0;}/*T)7*/
+}
+class C8 {
+	/* XPECT quickFix at '<|>int' apply 'Convert to colon style' fileValid ---
+	(...)
+			/\*T)1*\/int/\*T)2*\/foo01/\*T)3*\/(/\*T)4*\/)/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+		}
+		class C8 {
+	-     /\*T)1*\/int/\*T)2*\/
+	| foo01/\*T)3*\/(/\*T)4*\/)[|: int]/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+	  	}
+	class C9 {
+		/\*T)1*\/int/\*T)2*\/foo01/\*T)3
+	(...)
+	---
+	*/
+    /*T)1*/int/*T)2*/foo01/*T)3*/(/*T)4*/ ) /*T)5*/{/*)T6*/return 0;}/*T)7*/
+}
+class C9 {
+	/* XPECT quickFix at '<|>int' apply 'Convert to colon style' fileValid ---
+	(...)
+			/\*T)1*\/int/\*T)2*\/foo01/\*T)3*\/(/\*T)4*\/)/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+		}
+		class C9 {
+			-     /\*T)1*\/int/\*T)2*\/
+	 foo01/\*T)3
+	      *\/(
+	      /\*
+	       * T)4
+	       *\/
+	|      )[|: int]
+	       /\*
+	        * T)5
+	        *\/
+	(...)
+	---
+	*/
+    /*T)1*/int/*T)2*/foo01/*T)3
+    */(
+    /*
+     * T)4
+     */
+     )
+     /*
+      * T)5
+      */
+      { /*
+       )T6 */
+       return 0 /* */  ;}
+       /*T)7*/
+}
+class C10 {
+	/* XPECT quickFix at '<|>int' apply 'Convert to colon style' fileValid ---
+	(...)
+			/\*T)7*\/
+		}
+		class C10 {
+	-     /\*T)1*\/int/\*T)2*\/
+	| foo01/\*T)3*\/(/\*T)4*\/y:String,/\*T)4*\/x:int/\*T)4*\/)[|: int]/\*T)5*\/{/\*)T6*\/return 0;}/\*T)7*\/
+	  	}
+	---
+	*/
+    /*T)1*/int/*T)2*/foo01/*T)3*/(/*T)4*/y:String,/*T)4*/x:int/*T)4*/)/*T)5*/{/*)T6*/return 0;}/*T)7*/
 }
