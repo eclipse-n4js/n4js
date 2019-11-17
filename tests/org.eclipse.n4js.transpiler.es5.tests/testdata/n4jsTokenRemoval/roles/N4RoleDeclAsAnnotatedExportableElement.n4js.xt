@@ -20,13 +20,13 @@ N4Interface {
   annotations: [ N4Annotation { name: 'Observable', details: [] } ],
   name: 'R5',
   fqn:
-   'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedExportableElement.R5',
+   'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/R5',
   n4superType: undefined,
   allImplementedInterfaces:
-   [ 'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedExportableElement.R1',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedExportableElement.R0',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedExportableElement.I1',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedExportableElement.I0' ],
+   [ 'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/R1',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/R0',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/I1',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedExportableElement/I0' ],
   ownedMembers: [],
   consumedMembers: [] }
 stderr:

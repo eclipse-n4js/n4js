@@ -15,9 +15,9 @@
 /* XPECT output ---
 <==
 stdout:
-Ch07_04_Reflection_Meta_Information.ReflectionClassifiers.C
+Ch07_04_Reflection_Meta_Information/ReflectionClassifiers/C
 class
-Ch07_04_Reflection_Meta_Information.ReflectionClassifiers.I
+Ch07_04_Reflection_Meta_Information/ReflectionClassifiers/I
 interface
 stderr:
 ==>

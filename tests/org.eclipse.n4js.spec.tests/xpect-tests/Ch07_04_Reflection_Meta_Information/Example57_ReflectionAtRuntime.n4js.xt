@@ -15,11 +15,11 @@
 /* XPECT output ---
 <==
 stdout:
-Ch07_04_Reflection_Meta_Information.Example57_ReflectionAtRuntime.B
-Ch07_04_Reflection_Meta_Information.Example57_ReflectionAtRuntime.B
-Ch07_04_Reflection_Meta_Information.Example57_ReflectionAtRuntime.A
-Ch07_04_Reflection_Meta_Information.Example57_ReflectionAtRuntime.B
-N4BuiltInClasses.N4Class
+Ch07_04_Reflection_Meta_Information/Example57_ReflectionAtRuntime/B
+Ch07_04_Reflection_Meta_Information/Example57_ReflectionAtRuntime/B
+Ch07_04_Reflection_Meta_Information/Example57_ReflectionAtRuntime/A
+Ch07_04_Reflection_Meta_Information/Example57_ReflectionAtRuntime/B
+N4BuiltInClasses/N4Class
 stderr:
 ==>
 --- */

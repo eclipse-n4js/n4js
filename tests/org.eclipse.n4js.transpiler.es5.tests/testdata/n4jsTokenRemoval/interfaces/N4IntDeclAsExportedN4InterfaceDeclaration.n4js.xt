@@ -20,11 +20,11 @@ N4Interface {
   annotations: [],
   name: 'I3',
   fqn:
-   'n4jsTokenRemoval.interfaces.N4IntDeclAsExportedN4InterfaceDeclaration.I3',
+   'n4jsTokenRemoval/interfaces/N4IntDeclAsExportedN4InterfaceDeclaration/I3',
   n4superType: undefined,
   allImplementedInterfaces:
-   [ 'n4jsTokenRemoval.interfaces.N4IntDeclAsExportedN4InterfaceDeclaration.I1',
-     'n4jsTokenRemoval.interfaces.N4IntDeclAsExportedN4InterfaceDeclaration.I0' ],
+   [ 'n4jsTokenRemoval/interfaces/N4IntDeclAsExportedN4InterfaceDeclaration/I1',
+     'n4jsTokenRemoval/interfaces/N4IntDeclAsExportedN4InterfaceDeclaration/I0' ],
   ownedMembers: [],
   consumedMembers: [] }
 N4Interface {
@@ -32,11 +32,11 @@ N4Interface {
   annotations: [],
   name: 'I4',
   fqn:
-   'n4jsTokenRemoval.interfaces.N4IntDeclAsExportedN4InterfaceDeclaration.I4',
+   'n4jsTokenRemoval/interfaces/N4IntDeclAsExportedN4InterfaceDeclaration/I4',
   n4superType: undefined,
   allImplementedInterfaces:
-   [ 'n4jsTokenRemoval.interfaces.N4IntDeclAsExportedN4InterfaceDeclaration.I1',
-     'n4jsTokenRemoval.interfaces.N4IntDeclAsExportedN4InterfaceDeclaration.I0' ],
+   [ 'n4jsTokenRemoval/interfaces/N4IntDeclAsExportedN4InterfaceDeclaration/I1',
+     'n4jsTokenRemoval/interfaces/N4IntDeclAsExportedN4InterfaceDeclaration/I0' ],
   ownedMembers: [],
   consumedMembers: [] }
 stderr:

@@ -25,6 +25,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.ui.N4JSHierarchicalNameComputerHelper;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilderHelper;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.RegionWithCursor;
 import org.eclipse.xpect.expectation.CommaSeparatedValuesExpectation;
@@ -100,7 +101,8 @@ public class HyperlinkXpectMethod {
 		final StringBuffer sb = new StringBuffer();
 		// append hyperlink text. Only consider the element name and ignore the qualified part.
 		String hyperlinkText = hyperlink.getHyperlinkText();
-		hyperlinkText = hyperlinkText.substring(hyperlinkText.lastIndexOf('.') + 1);
+		hyperlinkText = hyperlinkText.substring(
+				hyperlinkText.lastIndexOf(N4JSHierarchicalNameComputerHelper.DELIMITER) + 1);
 		final EObject target = getTarget(resource, hyperlink);
 
 		if (target != null) {
