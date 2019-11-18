@@ -159,7 +159,6 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 	@Fix(IssueCodes.TYS_INVALID_TYPE_SYNTAX)
 	def transformJavaTypeAnnotationToColonStyle(Issue issue, IssueResolutionAcceptor acceptor) {
-		//TODO #GH-1492
 		acceptor.accept(issue, 'Convert to colon style', 'The method annotation should be in colon style. This quick fix will change the code to colon style.', ImageNames.REORDER) [ context, marker, offset, length, element |
 			if (!(element instanceof ParameterizedTypeRefImpl) ||
 					!((element as ParameterizedTypeRefImpl).eContainer instanceof N4MethodDeclarationImpl)
@@ -181,9 +180,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			// we need to trim since whitespace may be part of the string.
 			// we know that trimming is not the very best solution, since JavaScript allows for
 			// non-Java whitespaces, but in 99% of the cases this would work and it is only a quickfix
-			val bogusNodeText = bogusNode.text;
 			val String stringOfBogusType = NodeModelUtils.getTokenText(bogusNode);
-			val offsetCorrection = bogusNodeText.indexOf(stringOfBogusType);
 
 			val nodeAfterBogus = NodeModelUtils.findLeafNodeAtOffset(motherINode,bogusNode.endOffset);
 			val spaceAfterBogusLength =
@@ -194,8 +191,9 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				}
 				;
 
-			val offsetBogusType = bogusNode.totalOffset + offsetCorrection;
-			val bogusTypeLength = bogusNode.totalLength - offsetCorrection;
+			val offsetBogusType = bogusNode.offset;
+			val bogusTypeLength = stringOfBogusType.length;
+			
 			val offsetRoundBracket = roundBracketNode.totalOffset;
 
 			return #[
