@@ -290,34 +290,6 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseUnaryExpression(UnaryExpression e) {
-			EObject parentExpression = e.eContainer();
-			boolean isInv = true;
-			if (parentExpression instanceof UnaryExpression) {
-				UnaryExpression ue = ((UnaryExpression) parentExpression);
-				isInv = isInv && ue.getOp().equals(UnaryOperator.INV);
-				parentExpression = ue.eContainer();
-			}
-
-			if (parentExpression instanceof RelationalExpression) {
-				RelationalExpression re = (RelationalExpression) parentExpression;
-				boolean isInstanceOf = re.getOp().equals(RelationalOperator.INSTANCEOF);
-
-				if (isInstanceOf) {
-					isInv = isInv && e.getOp().equals(UnaryOperator.INV);
-					if (isInv) {
-						Expression innerExpression = e.getExpression();
-						TypeRef typeRef = ts.tau(
-								innerExpression instanceof UnaryExpression
-										? ((UnaryExpression) innerExpression).getExpression()
-										: innerExpression);
-
-						// Expect anyType if not numeric to turn off expected type errors.
-						boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
-						return isNumber ? numberTypeRef(G) : anyTypeRef(G);
-					}
-				}
-			}
-
 			if (javaScriptVariantHelper.isTypeAware(e)) { // e.g. in N4JS
 				switch (e.getOp()) {
 				case DELETE:
@@ -335,7 +307,7 @@ import com.google.inject.Inject;
 				case NEG:
 					return numberTypeRef(G);
 				case INV:
-					return numberTypeRef(G);
+					return isInstanceOfWithStructuralTyping(e) ? anyTypeRef(G) : numberTypeRef(G);
 				case NOT:
 					return anyTypeRef(G);
 				default:
@@ -353,6 +325,42 @@ import com.google.inject.Inject;
 					return anyTypeRef(G);
 				}
 			}
+		}
+
+		private boolean isInstanceOfWithStructuralTyping(UnaryExpression e) {
+			if (!e.getOp().equals(UnaryOperator.INV)) {
+				return false;
+			}
+
+			EObject parentExpression = e.eContainer();
+			// Check for field structural typing (~~)
+			if (parentExpression instanceof UnaryExpression) {
+				UnaryExpression ue = ((UnaryExpression) parentExpression);
+				if (!ue.getOp().equals(UnaryOperator.INV)) {
+					return false;
+				}
+
+				parentExpression = ue.eContainer();
+			}
+
+			if (parentExpression instanceof RelationalExpression) {
+				RelationalExpression re = (RelationalExpression) parentExpression;
+				if (!re.getOp().equals(RelationalOperator.INSTANCEOF)) {
+					return false;
+				}
+
+				Expression innerExpression = e.getExpression();
+				TypeRef typeRef = ts.tau(
+						innerExpression instanceof UnaryExpression
+								? ((UnaryExpression) innerExpression).getExpression()
+								: innerExpression);
+
+				// Expect anyType if not numeric to turn off expected type errors.
+				boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
+				return !isNumber;
+			}
+
+			return false;
 		}
 
 		@Override
