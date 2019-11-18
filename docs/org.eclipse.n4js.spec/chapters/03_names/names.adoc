@@ -552,6 +552,12 @@ The different forms of module specifiers are only used in import declarations in
 |Complete Type Specifier | MyProject/p/M.C
 |===
 
+Note that the names of projects, folders, and modules (i.e. JS or N4JS files) may include the character `.` (full stop,
+period), as opposed to identifiers which may not contain this character; therefore, in the last case of complete type
+specifier, the last(!) period must be used when splitting the module name `M` from the type name `C`.
+
+
+
 === Name Duplicates
 
 There might be cases where two (or more) scopes created by different entities with the same (simple) name overlap.

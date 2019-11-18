@@ -14,11 +14,11 @@
  /* XPECT  output ~~~
 <==
 stdout:
-spec_chap_06_04.Ex57_Reflection_with_N4Class.B
-spec_chap_06_04.Ex57_Reflection_with_N4Class.B
-spec_chap_06_04.Ex57_Reflection_with_N4Class.A
-spec_chap_06_04.Ex57_Reflection_with_N4Class.B
-N4BuiltInClasses.N4Class
+spec_chap_06_04/Ex57_Reflection_with_N4Class/B
+spec_chap_06_04/Ex57_Reflection_with_N4Class/B
+spec_chap_06_04/Ex57_Reflection_with_N4Class/A
+spec_chap_06_04/Ex57_Reflection_with_N4Class/B
+N4BuiltInClasses/N4Class
 stderr:
 ==>
 ~~~ */

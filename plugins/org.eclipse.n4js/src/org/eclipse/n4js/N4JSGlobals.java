@@ -19,8 +19,11 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.ts.utils.N4TSGlobals;
+import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -148,6 +151,25 @@ public final class N4JSGlobals {
 	 * The name of NPM's package json file.
 	 */
 	public static final String PACKAGE_JSON = "package.json";
+
+	/**
+	 * String used to separate segments in the string representation of a {@link QualifiedName qualified name}.
+	 *
+	 * @see N4JSQualifiedNameConverter#DELIMITER
+	 */
+	public static final String QUALIFIED_NAME_DELIMITER = N4TSGlobals.QUALIFIED_NAME_DELIMITER;
+
+	/**
+	 * Character used to separate the namespace name from the exported element's name when referring to an element via a
+	 * namespace import. For example:
+	 *
+	 * <pre>
+	 * import * as NS from "some/other/module"
+	 *
+	 * let c: NS.OtherClass;
+	 * </pre>
+	 */
+	public static final char NAMESPACE_ACCESS_DELIMITER = N4TSGlobals.NAMESPACE_ACCESS_DELIMITER;
 
 	/**
 	 * All HTML tags.

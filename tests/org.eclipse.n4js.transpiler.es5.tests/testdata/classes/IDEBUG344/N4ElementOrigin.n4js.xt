@@ -13,9 +13,9 @@
 /* XPECT output ---
 <==
 stdout:
-classes.IDEBUG344.N4ElementOrigin.A :: org.eclipse.n4js.transpiler.es5.tests
-classes.IDEBUG344.N4ElementOrigin.I :: org.eclipse.n4js.transpiler.es5.tests
-classes.IDEBUG344.N4ElementOrigin.E :: org.eclipse.n4js.transpiler.es5.tests
+classes/IDEBUG344/N4ElementOrigin/A :: org.eclipse.n4js.transpiler.es5.tests
+classes/IDEBUG344/N4ElementOrigin/I :: org.eclipse.n4js.transpiler.es5.tests
+classes/IDEBUG344/N4ElementOrigin/E :: org.eclipse.n4js.transpiler.es5.tests
 stderr:
 ==>
 --- */

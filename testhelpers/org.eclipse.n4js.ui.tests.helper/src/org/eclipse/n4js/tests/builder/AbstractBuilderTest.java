@@ -17,24 +17,29 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EclipseUIUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsHelper;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.utils.AutobuildUtils;
+import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -76,6 +81,8 @@ public abstract class AbstractBuilderTest {
 	private IResourceSetProvider resourceSetProvider;
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+	@Inject
+	private ProjectTestsHelper projectTestsHelper;
 
 	/**
 	 * Allows to trigger operations on the workspace that are considered to prevent race conditions, e.g. allows to
@@ -287,6 +294,17 @@ public abstract class AbstractBuilderTest {
 	 */
 	protected ResourceSet getResourceSet(IProject project) {
 		return resourceSetProvider.get(project);
+	}
+
+	/**
+	 * Runs the given file with the node.js runner and asserts the actual output to match the given expected output.
+	 */
+	protected void assertCorrectOutput(IFile module, CharSequence expectedOutput) throws ExecutionException {
+		URI moduleURI = URI.createPlatformResourceURI(module.getFullPath().toString(), true);
+		ProcessResult result = projectTestsHelper.runWithNodeRunnerUI(moduleURI);
+		String actualOutput = result.getStdOut().trim();
+		String expectedOutputTrimmed = expectedOutput.toString().trim();
+		assertEquals("incorrect output when running " + module.getName(), expectedOutputTrimmed, actualOutput);
 	}
 
 	/**

@@ -433,8 +433,8 @@ import com.google.common.collect.Multimap;
 		return false;
 	}
 
-	protected static boolean inN4Repo(Path path) {
-		return isBelowFolder(path.toString(), "n4js-n4");
+	protected static boolean inExtendedRepo(Path path) {
+		return isBelowFolder(path.toString(), "n4js-extended");
 	}
 
 	protected boolean containsFileWithName(Path path, String fileName) {

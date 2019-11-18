@@ -19,7 +19,7 @@ N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'I0',
-  fqn: 'n4jsTokenRemoval.interfaces.N4IntDeclAsScriptElement.I0',
+  fqn: 'n4jsTokenRemoval/interfaces/N4IntDeclAsScriptElement/I0',
   n4superType: undefined,
   allImplementedInterfaces: [],
   ownedMembers: [],
@@ -28,21 +28,21 @@ N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'I1',
-  fqn: 'n4jsTokenRemoval.interfaces.N4IntDeclAsScriptElement.I1',
+  fqn: 'n4jsTokenRemoval/interfaces/N4IntDeclAsScriptElement/I1',
   n4superType: undefined,
   allImplementedInterfaces:
-   [ 'n4jsTokenRemoval.interfaces.N4IntDeclAsScriptElement.I0' ],
+   [ 'n4jsTokenRemoval/interfaces/N4IntDeclAsScriptElement/I0' ],
   ownedMembers: [],
   consumedMembers: [] }
 N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'I2',
-  fqn: 'n4jsTokenRemoval.interfaces.N4IntDeclAsScriptElement.I2',
+  fqn: 'n4jsTokenRemoval/interfaces/N4IntDeclAsScriptElement/I2',
   n4superType: undefined,
   allImplementedInterfaces:
-   [ 'n4jsTokenRemoval.interfaces.N4IntDeclAsScriptElement.I1',
-     'n4jsTokenRemoval.interfaces.N4IntDeclAsScriptElement.I0' ],
+   [ 'n4jsTokenRemoval/interfaces/N4IntDeclAsScriptElement/I1',
+     'n4jsTokenRemoval/interfaces/N4IntDeclAsScriptElement/I0' ],
   ownedMembers: [],
   consumedMembers: [] }
 stderr:
