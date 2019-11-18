@@ -175,10 +175,12 @@ Contributors:
 									<sourceFile>${project.build.directory}/${hlc.jar-longname}</sourceFile>
 									<destinationFile>${project.build.directory}/${hlc.jar-shortname}</destinationFile>
 								</fileSet>
+								<!-- uncommented until completely deleted in GH-1554
 								<fileSet>
 									<sourceFile>${project.build.directory}/${hlc.jar-shortname}</sourceFile>
 									<destinationFile>${project.basedir}/../../target/${hlc.jar-shortname}</destinationFile>
 								</fileSet>
+								-->
 							</fileSets>
 						</configuration>
 					</execution>

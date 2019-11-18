@@ -198,9 +198,17 @@ Contributors:
 							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<sourceFile>${project.build.directory}/${cli.jar-longname}</sourceFile>
-							<destinationFile>${project.build.directory}/new_${hlc.jar-shortname}</destinationFile>
 							<overWrite>true</overWrite>
+							<fileSets>
+								<fileSet>
+									<sourceFile>${project.build.directory}/${cli.jar-longname}</sourceFile>
+									<destinationFile>${project.build.directory}/${hlc.jar-shortname}</destinationFile>
+								</fileSet>
+								<fileSet>
+									<sourceFile>${project.build.directory}/${cli.jar-longname}</sourceFile>
+									<destinationFile>${project.basedir}/../../target/${hlc.jar-shortname}</destinationFile>
+								</fileSet>
+							</fileSets>
 						</configuration>
 					</execution>
 				</executions>
