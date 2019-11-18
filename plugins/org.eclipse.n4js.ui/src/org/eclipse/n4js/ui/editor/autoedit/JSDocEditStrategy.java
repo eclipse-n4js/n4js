@@ -74,11 +74,11 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 		}
 
 		String paramName = retAndfparNames.get(1);
-		String returnValue = retAndfparNames.get(0);
+		String returnType = retAndfparNames.get(0);
 		newC.offset = command.offset;
 		newC.text += command.text + indentationString + command.text + indentationString + paramString + paramName
 				+ command.text
-				+ indentationString + returnString + returnValue;
+				+ indentationString + returnString + returnType;
 		newC.cursorOffset = command.offset + newC.text.length();
 		if (stopTerminal == null && atEndOfLineInput(document, command.offset)) {
 			newC.text += command.text + getRightTerminal();
