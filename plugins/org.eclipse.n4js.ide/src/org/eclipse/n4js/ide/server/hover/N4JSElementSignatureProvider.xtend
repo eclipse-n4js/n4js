@@ -31,6 +31,7 @@ import static org.eclipse.n4js.utils.UtilN4.sanitizeForHTML
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.getCorrespondingTypeModelElement
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 
 /**
  */
@@ -42,6 +43,9 @@ class N4JSElementSignatureProvider {
 	def public String get(EObject o) {
 		if (o instanceof LiteralOrComputedPropertyName) {
 			return get(o.eContainer);
+		}
+		else if(o instanceof ParameterizedTypeRef) {
+			return o.declaredType.name;
 		}
 		val id = getIdentifiableElement(o);
 		val label = doGetLabel(id, o);

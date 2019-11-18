@@ -38,6 +38,11 @@ public class N4JSDocletParser extends DocletParser {
 	public final static LineTagWithSimpleTextDefinition TAG_TODO = new LineTagWithSimpleTextDefinition("todo");
 
 	/**
+	 * See marker, introduced for MDN link
+	 */
+	public final static LineTagWithSimpleTextDefinition TAG_SEE = new LineTagWithSimpleTextDefinition("see");
+
+	/**
 	 * Standard inline tags.
 	 */
 	final static AbstractInlineTagDefinition[] DESCRIPTION_INLINE_TAGS = { TAG_CODE, TAG_LINK };
@@ -127,7 +132,7 @@ public class N4JSDocletParser extends DocletParser {
 	 * {@link JSDoc2HoverSerializer} orders them.
 	 */
 	final static AbstractLineTagDefinition[] N4JS_LINE_TAGS = {
-			TAG_SPEC, TAG_PARAM, TAG_RETURN, TAG_AUTHOR, TAG_TODO, TAG_TASK, TAG_REQID,
+			TAG_SPEC, TAG_PARAM, TAG_RETURN, TAG_AUTHOR, TAG_TODO, TAG_SEE, TAG_TASK, TAG_REQID,
 			TAG_API_NOTE,
 			TAG_API_STATE, TAG_SPECFROMDESCR,
 			TAG_TESTEE, TAG_TESTEEFROMTYPE, TAG_TESTEETYPE, TAG_TESTEEMEMBER

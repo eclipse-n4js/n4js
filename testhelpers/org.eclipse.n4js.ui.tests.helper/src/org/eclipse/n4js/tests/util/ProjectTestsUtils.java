@@ -150,7 +150,8 @@ public class ProjectTestsUtils {
 	/**
 	 * Same as {@link #importProject(File, N4JSProjectName)}, but won't enforce the convention that ".project" files
 	 * should be named "_project" in the proband folder. This should only be used as a rare exception when tests import
-	 * projects from Git repositories other than the N4JS or N4JS-N4 source repositories (e.g. for integration tests).
+	 * projects from Git repositories other than the 'n4js' or 'n4js-extended' source repositories (e.g. for integration
+	 * tests).
 	 */
 	public static IProject importProjectFromExternalSource(File probandsFolder, N4JSProjectName projectName,
 			boolean copyIntoWorkspace) throws Exception {
@@ -413,7 +414,9 @@ public class ProjectTestsUtils {
 		return false;
 	}
 
-	/***/
+	/**
+	 * Creates a new N4JS project with src-folder "src".
+	 */
 	public static IProject createJSProject(String projectName)
 			throws CoreException {
 		return createJSProject(projectName, "src", "src-gen", null);

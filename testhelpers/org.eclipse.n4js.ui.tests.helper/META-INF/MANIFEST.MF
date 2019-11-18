@@ -33,6 +33,7 @@ Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.editor.syntaxcoloring,
  org.eclipse.n4js.tests.builder,
  org.eclipse.n4js.tests.defaultPreferences,
+ org.eclipse.n4js.tests.hover,
  org.eclipse.n4js.tests.outline,
  org.eclipse.n4js.tests.util
 Automatic-Module-Name: org.eclipse.n4js.ui.tests.helper
