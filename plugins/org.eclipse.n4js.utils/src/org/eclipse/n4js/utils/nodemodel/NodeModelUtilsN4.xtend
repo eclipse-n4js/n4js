@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EObject
  */
 class NodeModelUtilsN4 {
 
-	def public static INode findKeywordNodeIfSameGrammarRule(ICompositeNode parentNode, String keyword, EObject grammarRule) {
+	def public static INode findKeywordNodeIfSameGrammarRule(ICompositeNode parentNode, String keyword) {
 		val BidiIterable<INode> iterable = parentNode.children;
 		val rs = iterable.findFirst[c|c.isKeyword(keyword)];
 		if (rs !== null) {
@@ -32,7 +32,7 @@ class NodeModelUtilsN4 {
 		}
 		for (INode iNode: iterable) {
 			if (iNode instanceof ICompositeNode) {
-				val retValOfRekursion = findKeywordNodeIfSameGrammarRule(iNode, keyword, grammarRule);
+				val retValOfRekursion = findKeywordNodeIfSameGrammarRule(iNode, keyword);
 				if (retValOfRekursion !== null) {
 					return retValOfRekursion;
 				}

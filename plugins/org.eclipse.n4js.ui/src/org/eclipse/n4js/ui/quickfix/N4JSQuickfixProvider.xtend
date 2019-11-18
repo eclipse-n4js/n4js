@@ -174,7 +174,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 				motherINode = motherINode.parent;
 			}
 
-			val roundBracketNode = NodeModelUtilsN4.findKeywordNodeIfSameGrammarRule((motherINode as ICompositeNode), ')', motherINode.grammarElement)
+			val roundBracketNode = NodeModelUtilsN4.findKeywordNodeIfSameGrammarRule((motherINode as ICompositeNode), ')')
 			val INode bogusNode = NodeModelUtils.findNodesForFeature((motherINode as CompositeNodeWithSemanticElement).semanticElement, N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF).head;
 
 			// we need to trim since whitespace may be part of the string.
