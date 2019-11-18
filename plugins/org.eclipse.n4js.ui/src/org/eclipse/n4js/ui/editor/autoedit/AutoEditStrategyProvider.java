@@ -17,11 +17,18 @@ import static org.eclipse.n4js.ui.editor.syntaxcoloring.TokenTypeToPartitionMapp
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.xtext.ui.editor.autoedit.DefaultAutoEditStrategyProvider;
+import org.eclipse.xtext.ui.editor.autoedit.MultiLineTerminalsEditStrategy;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
+
+import com.google.inject.Inject;
+import com.google.inject.MembersInjector;
 
 /**
  */
 public class AutoEditStrategyProvider extends DefaultAutoEditStrategyProvider {
+
+	@Inject
+	private MembersInjector<MultiLineTerminalsEditStrategy> injector;
 
 	@Override
 	protected void configure(IEditStrategyAcceptor acceptor) {
@@ -38,10 +45,21 @@ public class AutoEditStrategyProvider extends DefaultAutoEditStrategyProvider {
 
 	@Override
 	protected void configureMultilineComments(IEditStrategyAcceptor acceptor) {
+		// IAutoEditStrategy jsdoc = multiLineTerminals.newInstance("/**", " + ", " */");
+
+		MultiLineTerminalsEditStrategy jsdoc = new JSDocEditStrategy("/**", " + ", " */");
+		injector.injectMembers(jsdoc);
+
 		IAutoEditStrategy multiline = multiLineTerminals.newInstance("/*", " * ", " */");
 		IAutoEditStrategy singleline = singleLineTerminals.newInstance("/*", " */", new SupressingMLCommentPredicate());
 
 		acceptor.accept(singleline, IDocument.DEFAULT_CONTENT_TYPE);
+
+		acceptor.accept(jsdoc, IDocument.DEFAULT_CONTENT_TYPE);
+		acceptor.accept(jsdoc, TerminalsTokenTypeToPartitionMapper.COMMENT_PARTITION);
+		acceptor.accept(jsdoc, JS_DOC_PARTITION);
+		acceptor.accept(jsdoc, REG_EX_PARTITION);
+
 		acceptor.accept(multiline, IDocument.DEFAULT_CONTENT_TYPE);
 		acceptor.accept(multiline, TerminalsTokenTypeToPartitionMapper.COMMENT_PARTITION);
 		acceptor.accept(multiline, JS_DOC_PARTITION);
