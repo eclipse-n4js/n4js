@@ -25,9 +25,8 @@ import org.eclipse.emf.ecore.EObject
 class NodeModelUtilsN4 {
 
 	def public static INode findKeywordNodeIfSameGrammarRule(ICompositeNode parentNode, String keyword, EObject grammarRule) {
-//		val grammarRule = parentNode.grammarElement; // noch besser: suche nach name der grammar rule, und zwar"StrictFormalParameters"
 		val BidiIterable<INode> iterable = parentNode.children;
-		val rs = iterable.findFirst[c|c.isKeyword(keyword) /*&& c.grammarElement == grammarRule*/]; //TODO
+		val rs = iterable.findFirst[c|c.isKeyword(keyword)];
 		if (rs !== null) {
 			return rs;
 		}
