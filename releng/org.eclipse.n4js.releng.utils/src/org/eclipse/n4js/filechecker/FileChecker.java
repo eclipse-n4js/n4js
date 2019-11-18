@@ -33,7 +33,7 @@ public class FileChecker extends AbstractFileChecker {
 	/** All folders on this level in the repository must be a valid Eclipse project, e.g. contain ".project" file. */
 	private static final int DEPTH_OF_PROJECTS = MODE == Mode.Xpect ? 1 : 2;
 
-	private static final String[] REPOS = { "n4js", "n4js-n4" }; // FIXME remove all references to "n4js-n4"
+	private static final String[] REPOS = { "n4js", "n4js-extended" }; // FIXME remove all references to "n4js-extended"
 	private static final String[] REPOS_MANDATORY = { "n4js" };
 
 	private static final String[] XSEMANTICS_REPOS = { "xsemantics" };
@@ -522,7 +522,7 @@ public class FileChecker extends AbstractFileChecker {
 
 			// checks for all files
 
-			if (!isRegisteredAsThirdParty && !inN4Repo(path) && !canContainBannedWord(path)) {
+			if (!isRegisteredAsThirdParty && !inExtendedRepo(path) && !canContainBannedWord(path)) {
 				final String bannedWord = containsBannedWord(path, content);
 				if (bannedWord != null) {
 					report.problems.add("must not contain banned word '" + bannedWord + "'");
@@ -583,7 +583,7 @@ public class FileChecker extends AbstractFileChecker {
 	private void checkFilePluginOrFeatureProperties(Path path, String content, Report report) {
 		final String kind = path.getFileName().toString().startsWith("feature.") ? "feature" : "plugin";
 		final String pluginName = path.getName(path.getNameCount() - 2).toString();
-		final String providerName = inN4Repo(path) ? PROVIDER_NAME_N4 : PROVIDER_NAME;
+		final String providerName = inExtendedRepo(path) ? PROVIDER_NAME_N4 : PROVIDER_NAME;
 		if (!content.contains(kind + "Name = " + pluginName)) {
 			report.problems.add("property " + kind + "Name missing or value != name of containing folder");
 		}
@@ -617,7 +617,7 @@ public class FileChecker extends AbstractFileChecker {
 
 	/** Check some required tags in feature.xml files and their values. */
 	private void checkFileFeatureXML(Path path, String content, Report report) {
-		if (inN4Repo(path)) {
+		if (inExtendedRepo(path)) {
 			return; // don't check this in N4 repo
 		}
 		if (!containsPattern(content, PATTERN_FEATURE_TAG_COMPILED)) {
@@ -647,7 +647,7 @@ public class FileChecker extends AbstractFileChecker {
 
 	/** See Section 4.1 "Software User Agreement" at https://www.eclipse.org/legal/guidetolegaldoc.php */
 	private void checkFolderRepositoryRoot(Path path, Report report) {
-		if (inN4Repo(path)) {
+		if (inExtendedRepo(path)) {
 			return; // don't check this in N4 repo
 		}
 		assertContainsFileWithName(path, FILE_NAME__NOTICE_HTML, report);
@@ -663,7 +663,7 @@ public class FileChecker extends AbstractFileChecker {
 		final boolean isFeatureBundle = isBelowFolder(path.toString(), "features")
 				|| containsFileWithName(path, FILE_NAME__FEATURE_XML);
 
-		if (inN4Repo(path)) {
+		if (inExtendedRepo(path)) {
 			if (isFeatureBundle) {
 				// feature bundles
 				// nothing to check here

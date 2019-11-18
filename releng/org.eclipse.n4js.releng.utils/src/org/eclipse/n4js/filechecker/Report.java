@@ -73,9 +73,9 @@ public class Report implements Comparable<Report> {
 		return containsRepoDir;
 	}
 
-	/** Returns true iff the file is located in the N4JS-N4 repository */
-	public boolean isInN4JSN4Repo() {
-		boolean containsRepoDir = path.toString().contains(File.separator + "n4js-n4" + File.separator);
+	/** Returns true iff the file is located in the n4js-extended repository */
+	public boolean isInN4JSExtendedRepo() {
+		boolean containsRepoDir = path.toString().contains(File.separator + "n4js-extended" + File.separator);
 		return containsRepoDir;
 	}
 
