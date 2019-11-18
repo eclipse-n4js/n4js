@@ -19,13 +19,13 @@ N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'R2',
-  fqn: 'n4jsTokenRemoval.roles.N4RoleDeclAsScriptElement.R2',
+  fqn: 'n4jsTokenRemoval/roles/N4RoleDeclAsScriptElement/R2',
   n4superType: undefined,
   allImplementedInterfaces:
-   [ 'n4jsTokenRemoval.roles.N4RoleDeclAsScriptElement.R1',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsScriptElement.R0',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsScriptElement.I1',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsScriptElement.I0' ],
+   [ 'n4jsTokenRemoval/roles/N4RoleDeclAsScriptElement/R1',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsScriptElement/R0',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsScriptElement/I1',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsScriptElement/I0' ],
   ownedMembers: [],
   consumedMembers: [] }
 stderr:

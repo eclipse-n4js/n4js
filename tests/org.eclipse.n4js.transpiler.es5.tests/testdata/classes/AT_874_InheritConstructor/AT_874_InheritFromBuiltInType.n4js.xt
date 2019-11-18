@@ -15,7 +15,7 @@
 <==
 stdout:
 {"prop1":"test"}
-{"origin":"org.eclipse.n4js.transpiler.es5.tests","annotations":[],"name":"B","fqn":"classes.AT_874_InheritConstructor.AT_874_InheritFromBuiltInType.B","n4superType":{"origin":"n4js-runtime","annotations":[],"name":"N4Object","fqn":"N4BuiltInClasses.N4Object","allImplementedInterfaces":[],"ownedMembers":[],"consumedMembers":[]},"allImplementedInterfaces":[],"ownedMembers":[{"annotations":[],"name":"prop1","isStatic":false}],"consumedMembers":[]}
+{"origin":"org.eclipse.n4js.transpiler.es5.tests","annotations":[],"name":"B","fqn":"classes/AT_874_InheritConstructor/AT_874_InheritFromBuiltInType/B","n4superType":{"origin":"n4js-runtime","annotations":[],"name":"N4Object","fqn":"N4BuiltInClasses/N4Object","allImplementedInterfaces":[],"ownedMembers":[],"consumedMembers":[]},"allImplementedInterfaces":[],"ownedMembers":[{"annotations":[],"name":"prop1","isStatic":false}],"consumedMembers":[]}
 stderr:
 ==>
 ~~~ */

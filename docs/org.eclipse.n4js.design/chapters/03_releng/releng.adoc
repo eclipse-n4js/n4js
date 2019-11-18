@@ -285,7 +285,7 @@ For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow t
    Ensure signing and JRE bundling are still working properly. 
 
 
-All the above steps need to be performed in the `n4js-n4` repository, accordingly (e.g. file `N4JS-N4.setup`).
+All the above steps need to be performed in the `n4js-extended` repository, accordingly (e.g. file `N4JS-Extended.setup`).
 
 
 === Update of the embedded JRE
@@ -306,4 +306,4 @@ For updating the embedded JRE inside the N4JS IDE follow these steps:
 .. n4js/builds/org.eclipse.n4js.jre.win32.win32.x86_64/META-INF/MANIFEST.MF
 .. n4js/builds/org.eclipse.n4js.jre.win32.win32.x86_64/META-INF/p2.inf
 . Update the openjdk docker image used as base image in the "FROM" line at the top of all docker files:
-.. n4js-n4/jenkins/docker-build/Dockerfile
+.. n4js-extended/jenkins/docker-build/Dockerfile

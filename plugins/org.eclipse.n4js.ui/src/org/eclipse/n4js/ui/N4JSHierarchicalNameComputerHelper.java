@@ -29,23 +29,29 @@ import org.eclipse.n4js.ts.types.TVariable;
 public class N4JSHierarchicalNameComputerHelper {
 
 	/**
+	 * Character used to delimit the segments of a hierarchical name as computed by method
+	 * {@link #calculateHierarchicalDisplayName(EObject, LabelProvider, boolean)}.
+	 */
+	public static final char DELIMITER = '/';
+
+	/**
 	 * Calculate the hierarchically qualified name of an EObject.
 	 *
 	 * @param eob
-	 *            the EObject to calculate logical name for
+	 *            the EObject to calculate hierarchically name for
 	 * @param labelProvider
 	 *            the label provider that knows how to display EObject instances
 	 *
-	 * @return the hierarchically
+	 * @return the hierarchical name.
 	 */
-	public static String calculateLogicallyQualifiedDisplayName(EObject eob, LabelProvider labelProvider,
+	public static String calculateHierarchicalDisplayName(EObject eob, LabelProvider labelProvider,
 			boolean includeRoot) {
-		// Calculate hierarchical logical name, e.g. C.m
+		// Calculate hierarchical logical name, e.g. C/m
 		String text = labelProvider.getText(eob);
 		EObject currContainer = eob.eContainer();
 		while (currContainer != null) {
 			if (isShowable(currContainer)) {
-				text = labelProvider.getText(currContainer) + "." + text;
+				text = labelProvider.getText(currContainer) + DELIMITER + text;
 			}
 			currContainer = currContainer.eContainer();
 			if (currContainer != null && !includeRoot && currContainer instanceof Script)

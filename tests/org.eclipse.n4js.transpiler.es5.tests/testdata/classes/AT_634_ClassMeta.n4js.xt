@@ -19,12 +19,12 @@ a.constructor.n4type:
     "origin": "org.eclipse.n4js.transpiler.es5.tests",
     "annotations": [],
     "name": "A",
-    "fqn": "classes.AT_634_ClassMeta.A",
+    "fqn": "classes/AT_634_ClassMeta/A",
     "n4superType": {
         "origin": "n4js-runtime",
         "annotations": [],
         "name": "N4Object",
-        "fqn": "N4BuiltInClasses.N4Object",
+        "fqn": "N4BuiltInClasses/N4Object",
         "allImplementedInterfaces": [],
         "ownedMembers": [],
         "consumedMembers": []
@@ -82,12 +82,12 @@ A.n4type:
     "origin": "org.eclipse.n4js.transpiler.es5.tests",
     "annotations": [],
     "name": "A",
-    "fqn": "classes.AT_634_ClassMeta.A",
+    "fqn": "classes/AT_634_ClassMeta/A",
     "n4superType": {
         "origin": "n4js-runtime",
         "annotations": [],
         "name": "N4Object",
-        "fqn": "N4BuiltInClasses.N4Object",
+        "fqn": "N4BuiltInClasses/N4Object",
         "allImplementedInterfaces": [],
         "ownedMembers": [],
         "consumedMembers": []

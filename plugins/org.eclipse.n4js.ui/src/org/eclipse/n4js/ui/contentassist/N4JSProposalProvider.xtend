@@ -155,8 +155,8 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	/**
 	 * <b>TEMPORARY WORK-AROUND</b>
 	 * <p>
-	 * Our proposal provider implementation makes heavy use of some Xtext base implementations intended for Java (esp.
-	 * the abstract base class AbstractJavaBasedContentProposalProvider) which in many places has '.' hard-code as the
+	 * Our proposal provider implementation makes heavy use of some Xtext based implementations intended for Java (esp.
+	 * the abstract base class AbstractJavaBasedContentProposalProvider) which in many places has '.' hard-coded as the
 	 * delimiter of qualified names (e.g. FQNPrefixMatcher). This wasn't a problem as long as we used '.' as delimiter
 	 * in N4JS qualified names, but this was changed to '/' as of GHOLD-162. Thus, the base implementations intended for
 	 * Java now get confused.
@@ -166,7 +166,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * that uses '.' as delimiter.<br>
 	 * However, this <em>will</em> break in case of project/folder names containing '.' (which is valid in Javascript).
 	 * </p><p>
-	 * TODO IDE-2227 fix handling of qualified names in content assist or create follow-up task
+	 * TODO GH-1546 fix handling of qualified names in content assist
 	 * </p>
 	 *
 	 * @see AbstractJavaBasedContentProposalProvider

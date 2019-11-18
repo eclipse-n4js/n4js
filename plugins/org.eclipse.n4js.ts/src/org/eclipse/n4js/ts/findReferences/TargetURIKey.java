@@ -21,6 +21,7 @@ import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.utils.N4TSGlobals;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
@@ -142,7 +143,7 @@ public class TargetURIKey {
 				return true;
 			}
 			// HERE we need to make sure that we use a proper NS delimiter
-			int idx = valueString.lastIndexOf('.');
+			int idx = valueString.lastIndexOf(N4TSGlobals.NAMESPACE_ACCESS_DELIMITER);
 			if (idx > 0) {
 				if (valueStrings.contains(valueString.substring(idx + 1))) {
 					return true;

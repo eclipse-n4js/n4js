@@ -17,7 +17,6 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
@@ -105,18 +104,6 @@ public final class ResourceNameComputer {
 			moduleFQN = moduleFQN.skipFirst(1);
 		}
 		return converter.toString(moduleFQN.append(getSimpleTypeName(type)));
-	}
-
-	/**
-	 * Like {@link #getFullyQualifiedTypeName(Type)}, but uses "." instead of the correct delimiter.
-	 * <p>
-	 * <b>THIS IS ONLY INTENDED FOR LEGACY PURPOSES WHEN CREATING THE QUALIFIED NAMES FOR THE META-DATA (e.g. N4Class in
-	 * transpiler, test catalog)!</b>
-	 * <p>
-	 * TODO IDE-2227 remove legacy support for old FQNs
-	 */
-	def String getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(Type type) {
-		return getFullyQualifiedTypeName(type).replace(N4JSQualifiedNameConverter.DELIMITER, ".");
 	}
 
 	/**

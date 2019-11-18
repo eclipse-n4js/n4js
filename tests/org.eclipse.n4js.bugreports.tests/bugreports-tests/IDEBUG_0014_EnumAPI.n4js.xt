@@ -15,10 +15,10 @@
 stdout:
 RED
 RED
-IDEBUG_0014_EnumAPI.Color
+IDEBUG_0014_EnumAPI/Color
 US
 840
-IDEBUG_0014_EnumAPI.Country
+IDEBUG_0014_EnumAPI/Country
 stderr:
 ==>
 --- */

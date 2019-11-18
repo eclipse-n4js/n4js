@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSResourceValidator
@@ -66,38 +65,6 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	override register(EValidatorRegistrar registrar) {
 		// nop
-	}
-
-	@Check
-	def void checkModuleSpecifier(Script script) {
-		val resType = ResourceType.getResourceType(script.module.eResource);
-		val correctType = resType === ResourceType.N4JS || resType === ResourceType.N4JSD || resType === ResourceType.N4JSX;
-		val moduleQN = script.module.qualifiedName
-
-		// TODO GH-818 work-around: do not complain about file js.cookie.n4jsd:
-		if (moduleQN.equals("js.cookie") || moduleQN.endsWith("/js.cookie")) {
-			return;
-		}
-
-		if (correctType && moduleQN.contains(".")) {
-			val qualifiedName = qualifiedNameConverter.toQualifiedName(moduleQN);
-
-			// Determine which parts of the module specifier contains a dot so that we 
-			// can provide a informative error message
-			val filenameContainsDot = qualifiedName.lastSegment.contains(".");
-			val moduleFoldersContainDot = qualifiedName.skipLast(1).segments.findFirst[s | s.contains(".")] !== null;
-
-			var locationSubject = newArrayList();
-
-			if (filenameContainsDot) { locationSubject.add("filename"); }
-			if (moduleFoldersContainDot) { locationSubject.add("containing folders"); }
-
-			val locationSubjectDescription = locationSubject.join(" and ").toFirstUpper;
-
-			// add the issue to the very beginning of the file with length 0
-			addIssue(IssueCodes.getMessageForMOD_NAME_MUST_NOT_CONTAIN_DOTS(locationSubjectDescription, script.module.qualifiedName),
-				script, 0, 0, IssueCodes.MOD_NAME_MUST_NOT_CONTAIN_DOTS);
-		}
 	}
 
 	/**

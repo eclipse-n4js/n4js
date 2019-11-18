@@ -431,7 +431,7 @@
         new N4Class({
             name: 'N4Object',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Object',
+            fqn: 'N4BuiltInClasses/N4Object',
             n4superType: N4Object.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -443,7 +443,7 @@
         new N4Class({
             name: 'N4Element',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Element',
+            fqn: 'N4BuiltInClasses/N4Element',
             n4superType: N4Object.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -470,7 +470,7 @@
         new N4Class({
             name: 'N4NamedElement',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4NamedElement',
+            fqn: 'N4BuiltInClasses/N4NamedElement',
             n4superType: N4Element.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -485,7 +485,7 @@
         new N4Class({
             name: 'N4Type',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Type',
+            fqn: 'N4BuiltInClasses/N4Type',
             n4superType: N4NamedElement.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -513,7 +513,7 @@
         new N4Class({
             name: 'N4Classifier',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Classifier',
+            fqn: 'N4BuiltInClasses/N4Classifier',
             n4superType: N4Type.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -555,7 +555,7 @@
         new N4Class({
             name: 'N4Class',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Class',
+            fqn: 'N4BuiltInClasses/N4Class',
             n4superType: N4Classifier.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -570,7 +570,7 @@
         new N4Class({
             name: 'N4Interface',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Interface',
+            fqn: 'N4BuiltInClasses/N4Interface',
             n4superType: N4Classifier.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -585,7 +585,7 @@
         new N4Class({
             name: 'N4Member',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Member',
+            fqn: 'N4BuiltInClasses/N4Member',
             n4superType: N4NamedElement.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -603,7 +603,7 @@
         new N4Class({
             name: 'N4Method',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Method',
+            fqn: 'N4BuiltInClasses/N4Method',
             n4superType: N4Member.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -618,7 +618,7 @@
         new N4Class({
             name: 'N4DataField',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4DataField',
+            fqn: 'N4BuiltInClasses/N4DataField',
             n4superType: N4Member.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -630,7 +630,7 @@
         new N4Class({
             name: 'N4Accessor',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Accessor',
+            fqn: 'N4BuiltInClasses/N4Accessor',
             n4superType: N4Member.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -650,7 +650,7 @@
         new N4Class({
             name: 'N4EnumType',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4EnumType',
+            fqn: 'N4BuiltInClasses/N4EnumType',
             n4superType: N4Type.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -665,7 +665,7 @@
         new N4Class({
             name: 'N4Enum',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Enum',
+            fqn: 'N4BuiltInClasses/N4Enum',
             n4superType: undefined,
             allImplementedInterfaces: [],
             annotations: [],
@@ -697,7 +697,7 @@
         new N4Class({
             name: 'N4StringBasedEnumType',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4StringBasedEnumType',
+            fqn: 'N4BuiltInClasses/N4StringBasedEnumType',
             n4superType: N4Type.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -712,7 +712,7 @@
         new N4Class({
             name: 'N4StringBasedEnum',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4StringBasedEnum',
+            fqn: 'N4BuiltInClasses/N4StringBasedEnum',
             n4superType: undefined,
             allImplementedInterfaces: [],
             annotations: [],
@@ -744,7 +744,7 @@
         new N4Class({
             name: 'N4Annotation',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Annotation',
+            fqn: 'N4BuiltInClasses/N4Annotation',
             n4superType: N4Object.n4type,
             allImplementedInterfaces: [],
             annotations: [],
@@ -765,7 +765,7 @@
         new N4Interface({
             name: 'N4Provider',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.N4Provider',
+            fqn: 'N4BuiltInClasses/N4Provider',
             n4superType: undefined,
             allImplementedInterfaces: [],
             annotations: [],
@@ -777,7 +777,7 @@
         new N4Class({
             name: 'N4ApiNotImplementedError',
             origin: 'N4BuiltInClasses',
-            fqn: 'N4BuiltInClasses.N4ApiNotImplementedError',
+            fqn: 'N4BuiltInClasses/N4ApiNotImplementedError',
             n4superType: undefined,
             allImplementedInterfaces: [],
             annotations: [],
@@ -790,7 +790,7 @@
         new N4Interface({
             name: 'MigrationController',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.MigrationController',
+            fqn: 'N4BuiltInClasses/MigrationController',
             n4superType: undefined,
             allImplementedInterfaces: [],
             annotations: [],
@@ -819,7 +819,7 @@
         new N4Interface({
             name: 'MigrationContext',
             origin: 'n4js-runtime',
-            fqn: 'N4BuiltInClasses.MigrationContext',
+            fqn: 'N4BuiltInClasses/MigrationContext',
             n4superType: undefined,
             allImplementedInterfaces: [],
             annotations: [],

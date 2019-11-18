@@ -14,9 +14,9 @@
 /* XPECT output ---
 <==
 stdout:
-IDEBUG_0102_N4ClassUsage.A
-IDEBUG_0102_N4ClassUsage.A
-IDEBUG_0102_N4ClassUsage.A
+IDEBUG_0102_N4ClassUsage/A
+IDEBUG_0102_N4ClassUsage/A
+IDEBUG_0102_N4ClassUsage/A
 stderr:
 ==>
 --- */

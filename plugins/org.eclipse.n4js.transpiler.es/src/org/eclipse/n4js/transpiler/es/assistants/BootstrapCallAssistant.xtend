@@ -450,7 +450,7 @@ class BootstrapCallAssistant extends TransformationAssistant {
 
 
 		val origin = resourceNameComputer.generateProjectDescriptor(state.resource.URI);
-		val fqn = resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(type);
+		val fqn = resourceNameComputer.getFullyQualifiedTypeName(type);
 
 		return _VariableDeclaration("metaClass")=>[
 			expression = _NewExpr(_IdentRef(metaClassSTE), _ObjLit(
@@ -459,7 +459,7 @@ class BootstrapCallAssistant extends TransformationAssistant {
 				"fqn" -> _StringLiteral(fqn),
 				"n4superType" -> n4superType,
 				"allImplementedInterfaces" -> _ArrLit(
-					allImplementedInterfaces.map[resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(it)].map[_StringLiteral(it)]
+					allImplementedInterfaces.map[resourceNameComputer.getFullyQualifiedTypeName(it)].map[_StringLiteral(it)]
 				),
 				"ownedMembers" -> _ArrLit(
 					ownedMembers.map[createMemberDescriptor]

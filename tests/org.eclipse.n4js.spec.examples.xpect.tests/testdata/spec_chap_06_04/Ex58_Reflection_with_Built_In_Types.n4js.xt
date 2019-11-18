@@ -14,10 +14,10 @@
  /* XPECT  output ~~~
 <==
 stdout:
-N4Object.n4type.fqn:      N4BuiltInClasses.N4Object
-N4Class.n4type.fqn:       N4BuiltInClasses.N4Class
-A.n4type.fqn:             spec_chap_06_04.Ex58_Reflection_with_Built_In_Types.A
-A.n4type.n4superType.fqn: N4BuiltInClasses.N4Object
+N4Object.n4type.fqn:      N4BuiltInClasses/N4Object
+N4Class.n4type.fqn:       N4BuiltInClasses/N4Class
+A.n4type.fqn:             spec_chap_06_04/Ex58_Reflection_with_Built_In_Types/A
+A.n4type.n4superType.fqn: N4BuiltInClasses/N4Object
 stderr:
 ==>
 ~~~ */
