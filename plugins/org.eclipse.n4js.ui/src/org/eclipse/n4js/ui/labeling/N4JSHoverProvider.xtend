@@ -27,11 +27,16 @@ import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
+import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.types.TField
+import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider
 import org.eclipse.n4js.ui.internal.N4JSActivator
 import org.eclipse.n4js.ui.labeling.helper.ImageFileNameCalculationHelper
@@ -64,6 +69,10 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	@Inject
 	private N4JSDocletParser docletParser;
 	
+	private static final String MDN_STRING_START = "@see <a href=\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/";
+	
+	private static final String MDN_STRING_END = "\">MDN Documentation</a>";
+	
 
 
 	override protected getFirstLine(EObject o) {
@@ -82,6 +91,7 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 			IdentifierRef: o.id
 			ParameterizedPropertyAccessExpression: o.property
 			LiteralOrComputedPropertyName: o.eContainer
+			ParameterizedTypeRef: o.declaredType
 			default: o
 		}
 		return result;
@@ -96,6 +106,36 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		try {
 			val id = getIdentifiableElement(o);
 			var String jsdocString = super.getDocumentation(id);
+			
+			switch (id) {
+				//Build-In-Type
+				TObjectPrototype: 
+					if(id.isDeclaredProvidedByRuntime) {
+						jsdocString = addMDNLink(id.name, jsdocString);	
+					} 
+				//Property
+				TField: {
+					val type = id.typeRef.declaredType;
+					if(type instanceof TObjectPrototype) {
+						jsdocString = addMDNLink(type.name, jsdocString);
+					}
+				}
+				//Declaration
+				N4FieldDeclaration: {
+					val type = id.declaredTypeRef.declaredType;
+					if(type instanceof TObjectPrototype) {
+						jsdocString = addMDNLink(type.name, jsdocString);
+					}	
+				}	
+				//Method
+				TMethod: {
+					val type = id.eContainer;
+					if(type instanceof TObjectPrototype) {
+						jsdocString = addMDNLink(type.name + "/" + id.name, jsdocString);
+					}
+				}	
+			}
+			
 			if (jsdocString === null) {
 				return null;
 			}
@@ -107,6 +147,15 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 			return "Error generating documentation:  " + ex;
 		}
 	}
+	
+	def private String addMDNLink(String name, String jsdocString) {
+		val mdnString = MDN_STRING_START + name + MDN_STRING_END;
+		if(jsdocString === null) {
+			return mdnString;
+		} else {
+			return jsdocString + "\n\n" + mdnString;
+		}	
+	}	
 
 
 
@@ -149,6 +198,10 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 
 	def private dispatch doHasHover(LiteralOrComputedPropertyName name) {
 		return name.eContainer instanceof N4MemberDeclaration
+	}
+	
+	def private dispatch doHasHover(ParameterizedTypeRef ptr) {
+		return true;
 	}
 
 	override protected getHoverInfo(EObject element, IRegion hoverRegion,
