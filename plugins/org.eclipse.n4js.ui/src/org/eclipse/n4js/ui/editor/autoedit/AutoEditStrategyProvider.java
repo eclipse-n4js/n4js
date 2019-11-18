@@ -45,9 +45,7 @@ public class AutoEditStrategyProvider extends DefaultAutoEditStrategyProvider {
 
 	@Override
 	protected void configureMultilineComments(IEditStrategyAcceptor acceptor) {
-		// IAutoEditStrategy jsdoc = multiLineTerminals.newInstance("/**", " + ", " */");
-
-		MultiLineTerminalsEditStrategy jsdoc = new JSDocEditStrategy("/**", " + ", " */");
+		JSDocEditStrategy jsdoc = new JSDocEditStrategy("/**", " + ", " */");
 		injector.injectMembers(jsdoc);
 
 		IAutoEditStrategy multiline = multiLineTerminals.newInstance("/*", " * ", " */");
