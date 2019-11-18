@@ -578,22 +578,6 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryInternal("$sliceToArrayForDestruct", true);
 	}
 
-	//// $implements
-
-	/** "$implements" - retrieve the internal symbol table entry for the symbol "$implements" */
-	public SymbolTableEntryInternal steFor_$implements() {
-
-		return getSymbolTableEntryInternal("$implements", true);
-	}
-
-	//// $instanceof
-
-	/** "$instanceof" - retrieve the internal symbol table entry for the symbol "$instanceof" */
-	public SymbolTableEntryInternal steFor_$instanceof() {
-
-		return getSymbolTableEntryInternal("$instanceof", true);
-	}
-
 	//// Array
 
 	/** "Array" - retrieve the internal symbol table entry for the symbol "Array" */

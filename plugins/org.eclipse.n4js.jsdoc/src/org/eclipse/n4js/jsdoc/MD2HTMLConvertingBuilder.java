@@ -292,14 +292,15 @@ public class MD2HTMLConvertingBuilder {
 	 * Handles unsorted lists (UL), that is, list items in markdown.
 	 */
 	private void handleUL() {
-		if (!Character.isWhitespace(peek())) {
-			handleChar();
-		}
-
 		if (!bol) {
 			html.append(current);
 			return;
 		}
+
+		if (!Character.isWhitespace(peek())) {
+			handleChar();
+		}
+
 		String mdTag = String.valueOf(current);
 		Block b = closeNestedBlocks(mdTag);
 		if (b == null || depth > b.depth) {

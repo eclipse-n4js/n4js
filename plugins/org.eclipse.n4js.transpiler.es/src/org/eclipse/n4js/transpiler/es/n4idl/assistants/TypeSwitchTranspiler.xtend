@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.transpiler.es.n4idl.assistants
 
-import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
@@ -26,9 +25,7 @@ import org.eclipse.n4js.n4idl.migrations.TypeTypeCondition
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -40,9 +37,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  * given {@link SwitchCondition}. 
  */
 class TypeSwitchTranspiler extends TransformationAssistant {
-	
-	@Inject private ResourceNameComputer resourceNameComputer; 
-	
+
 	/**
 	 * Transforms the given {@link SwitchCondition} to a corresponding IM model {@link Expression}.
 	 * 
@@ -87,13 +82,6 @@ class TypeSwitchTranspiler extends TransformationAssistant {
 	private dispatch def Expression runtimeTypeCheck(TClassifier type, Expression lhs) {
 		val typeSTE = state.steCache.mapOriginal.get(type);
 		return _RelationalExpr(lhs, RelationalOperator.INSTANCEOF, _IdentRef(typeSTE));
-	}
-	
-	private dispatch def Expression runtimeTypeCheck(TInterface tInterface, Expression lhs) {
-		// use N4JS $implements function for instanceof checks with interfaces.
-		val $implementsSTE = steFor_$implements;
-		val fqn = resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(tInterface)
-		_CallExpr(_IdentRef($implementsSTE), lhs, _StringLiteral(fqn))
 	}
 	
 	/** @see {@link #runtimeTypeCheck(TClassifier, Expression) } */

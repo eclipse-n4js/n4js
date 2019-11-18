@@ -27,13 +27,13 @@ fTypeVal N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'Foo',
-  fqn: 'di.compiledMetaInfo.01_DiMetaSimple.Foo',
+  fqn: 'di/compiledMetaInfo/01_DiMetaSimple/Foo',
   n4superType:
    N4Class {
      origin: 'n4js-runtime',
      annotations: [],
      name: 'N4Object',
-     fqn: 'N4BuiltInClasses.N4Object',
+     fqn: 'N4BuiltInClasses/N4Object',
      n4superType: undefined,
      allImplementedInterfaces: [],
      ownedMembers: [],

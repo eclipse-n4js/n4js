@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ts.naming;
 
+import org.eclipse.n4js.ts.utils.N4TSGlobals;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 
 /**
@@ -18,7 +19,7 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter;
 public class N4TSQualifiedNameConverter extends IQualifiedNameConverter.DefaultImpl {
 
 	/** Delimiter used in string representations of fully-qualified names. */
-	public static final String DELIMITER = "/";
+	public static final String DELIMITER = N4TSGlobals.QUALIFIED_NAME_DELIMITER;
 
 	@Override
 	public String getDelimiter() {

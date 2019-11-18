@@ -1,0 +1,187 @@
+/*
+ * Copyright (c) 2019 HAW Hamburg.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   HAW Hamburg - Initial API and implementation
+ */
+
+/*  XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
+
+function foo01(){
+	LBL:{
+		//  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+		break;
+	}
+}
+
+function foo02(){
+	LBL:{
+		//  XPECT noerrors  -->
+		break LBL;
+	}
+}
+
+function foo03(){
+	while(true){
+		//  XPECT noerrors  -->
+		break;
+	}
+}
+
+function foo04(){
+	LBL: while(true){
+		//  XPECT noerrors  -->
+		break LBL;
+	}
+}
+
+function foo05() {
+	var x = 1;
+	do{
+		if(x == 1){
+			//  XPECT noerrors  -->
+			break;
+		}
+	}while(x<2);
+}
+
+function foo06(){
+	for(;;){
+		//  XPECT noerrors  -->
+		break;
+	}
+}
+
+function foo07(){
+	LBL: for(;;){
+		//  XPECT noerrors  -->
+		break LBL;
+	}
+}
+
+function foo08(){
+	var myVariable = 10;
+	switch (myVariable){
+		case 5:
+			//  XPECT noerrors  -->
+			break;
+		default:
+			//  XPECT noerrors  -->
+			break;
+	}
+}
+
+function foo09(){
+	var myVariable = 10;
+	LBL: switch (myVariable){
+		case 5:
+			//  XPECT noerrors  -->
+			break LBL;
+		default:
+			//  XPECT noerrors  -->
+			break LBL;
+	}
+}
+
+function foo10() {
+	//  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+	break;
+}
+
+function foo11() {
+	LBL: if (true) {
+		//  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+		break;
+	}
+}
+
+function foo12() {
+	LBL: try {
+		//  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+		break;
+	} catch (e) {}
+}
+
+"use strict";
+
+function foo13() {
+	LBL: {
+		//  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+		break;
+	}
+}
+
+(function foo14() {
+	LBL: {
+		//  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+		break;
+	}
+});
+
+function foo15() {
+	while(true) {
+		if(true) {
+			//  XPECT noerrors  -->
+			break;
+		}
+	}
+}
+
+function foo16() {
+	while(true)
+		if(true)
+			console.log("Dont delete me.")
+	//  XPECT errors  --> "break statement without enclosing iteration or case block" at "break;"
+	break;
+}
+
+function foo17() {
+	while(true)
+		if(true)
+			//  XPECT noerrors  -->
+			break;
+}
+
+function foo18() {
+	while(true)
+	LBL1: {
+		LBL2: {
+			//  XPECT noerrors  -->
+			break;
+		}
+	}
+}
+
+function foo19() {
+	while(true)
+	LBL1: {
+		LBL2: {
+			//  XPECT noerrors  -->
+			break LBL1;
+		}
+	}
+}
+
+function foo20() {
+	while(true)
+	LBL1: {
+		LBL2: {
+			//  XPECT noerrors  -->
+			break LBL2;
+		}
+	}
+}
+
+function foo21() {
+	LBL: {
+		/*  XPECT errors  ---
+			"Couldn't resolve reference to LabelledStatement 'I_DONT_EXIST'." at "I_DONT_EXIST"
+			"Label must be of an enclosing iteration statement but may not cross function boundaries" at "break I_DONT_EXIST;"
+		---  */
+		break I_DONT_EXIST;
+	}
+}

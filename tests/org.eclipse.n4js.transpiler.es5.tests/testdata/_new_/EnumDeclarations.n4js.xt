@@ -20,12 +20,12 @@ Color { name: 'RED', value: 'RED' }
 RED
 RED
 RED
-_new_.EnumDeclarations.Color
+_new_/EnumDeclarations/Color
 Country { name: 'GB', value: 'Great Britain' }
 GB
 Great Britain
 Great Britain
-_new_.EnumDeclarations.Country
+_new_/EnumDeclarations/Country
 Great Britain
 string
 ========================================

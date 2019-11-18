@@ -20,13 +20,13 @@ N4Interface {
   annotations: [],
   name: 'R2',
   fqn:
-   'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedScriptElement.R2',
+   'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedScriptElement/R2',
   n4superType: undefined,
   allImplementedInterfaces:
-   [ 'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedScriptElement.R1',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedScriptElement.R0',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedScriptElement.I1',
-     'n4jsTokenRemoval.roles.N4RoleDeclAsAnnotatedScriptElement.I0' ],
+   [ 'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedScriptElement/R1',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedScriptElement/R0',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedScriptElement/I1',
+     'n4jsTokenRemoval/roles/N4RoleDeclAsAnnotatedScriptElement/I0' ],
   ownedMembers: [],
   consumedMembers: [] }
 stderr:

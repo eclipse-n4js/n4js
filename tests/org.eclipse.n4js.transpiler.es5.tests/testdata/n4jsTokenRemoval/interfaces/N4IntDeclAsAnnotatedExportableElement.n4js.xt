@@ -20,11 +20,11 @@ N4Interface {
   annotations: [],
   name: 'I5',
   fqn:
-   'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedExportableElement.I5',
+   'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I5',
   n4superType: undefined,
   allImplementedInterfaces:
-   [ 'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedExportableElement.I1',
-     'n4jsTokenRemoval.interfaces.N4IntDeclAsAnnotatedExportableElement.I0' ],
+   [ 'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I1',
+     'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I0' ],
   ownedMembers: [],
   consumedMembers: [] }
 stderr:

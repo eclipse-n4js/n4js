@@ -28,9 +28,11 @@ class annotations
 # has annotation Observable false
 # any annotations with name Observable null
 # any annotations with name Group N4Annotation { name: 'Group', details: [ 'IT' ] }
-# all annotations with name Ignore [ N4Annotation { name: 'Ignore', details: [ 'because of reasons' ] } ]
-# all annotations with name Group [ N4Annotation { name: 'Group', details: [ 'UT' ] },
-  N4Annotation { name: 'Group', details: [ 'IT' ] } ]
+# all annotations with name Ignore
+N4Annotation { name: 'Ignore', details: [ 'because of reasons' ] }
+# all annotations with name Group
+N4Annotation { name: 'Group', details: [ 'UT' ] }
+N4Annotation { name: 'Group', details: [ 'IT' ] }
 # all annotations with name Observable []
 
  member annotations
@@ -78,8 +80,10 @@ console.log('# has annotation Observable', metaClass.hasAnnotation('Observable')
 console.log('# any annotations with name Observable', metaClass.anyAnnotation('Observable'))
 console.log('# any annotations with name Group', metaClass.anyAnnotation('Group'))
 
-console.log('# all annotations with name Ignore', metaClass.allAnnotations('Ignore'))
-console.log('# all annotations with name Group', metaClass.allAnnotations('Group'))
+console.log('# all annotations with name Ignore');
+metaClass.allAnnotations('Ignore').forEach(o => console.log(o))
+console.log('# all annotations with name Group');
+metaClass.allAnnotations('Group').forEach(o => console.log(o));
 console.log('# all annotations with name Observable', metaClass.allAnnotations('Observable'))
 
 

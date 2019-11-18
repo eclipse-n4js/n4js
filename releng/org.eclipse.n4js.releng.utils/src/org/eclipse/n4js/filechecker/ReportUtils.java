@@ -66,8 +66,8 @@ public class ReportUtils {
 	}
 
 	/** Filters the given reports and returns those that are located in the N4JS repository */
-	static public Collection<Report> filterReportsInN4JSN4(Collection<Report> reports) {
-		return filterReports(reports, Report::isInN4JSN4Repo);
+	static public Collection<Report> filterReportsInN4JSExtended(Collection<Report> reports) {
+		return filterReports(reports, Report::isInN4JSExtendedRepo);
 	}
 
 	/** Filters the given reports and returns those that are located in test projects */

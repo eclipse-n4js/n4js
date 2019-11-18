@@ -17,28 +17,28 @@
 stdout:
 N4Object.n4type.name:        N4Object
 N4Object.n4type.origin:      n4js-runtime
-N4Object.n4type.fqn:         N4BuiltInClasses.N4Object
+N4Object.n4type.fqn:         N4BuiltInClasses/N4Object
 N4Class.n4type.name:         N4Class
 N4Class.n4type.origin:       n4js-runtime
-N4Class.n4type.fqn:          N4BuiltInClasses.N4Class
+N4Class.n4type.fqn:          N4BuiltInClasses/N4Class
 A.n4type.name:               A
 A.n4type.origin:             org.eclipse.n4js.spec.tests
-A.n4type.fqn:                Ch07_04_Reflection_Meta_Information.Example58_ReflectionWithBuiltInTypes.A
+A.n4type.fqn:                Ch07_04_Reflection_Meta_Information/Example58_ReflectionWithBuiltInTypes/A
 A.n4type.n4superType.name:   N4Object
 A.n4type.n4superType.origin: n4js-runtime
-A.n4type.n4superType.fqn:    N4BuiltInClasses.N4Object
+A.n4type.n4superType.fqn:    N4BuiltInClasses/N4Object
 C.n4type.name:               C
 C.n4type.origin:             org.eclipse.n4js.spec.tests
-C.n4type.fqn:                Ch07_04_Reflection_Meta_Information.Example58_ReflectionWithBuiltInTypes.C
+C.n4type.fqn:                Ch07_04_Reflection_Meta_Information/Example58_ReflectionWithBuiltInTypes/C
 C.n4type.n4superType.name:   N4Object
 C.n4type.n4superType.origin: n4js-runtime
-C.n4type.n4superType.fqn:    N4BuiltInClasses.N4Object
+C.n4type.n4superType.fqn:    N4BuiltInClasses/N4Object
 D.n4type.name:               D
 D.n4type.origin:             org.eclipse.n4js.spec.tests
-D.n4type.fqn:                Ch07_04_Reflection_Meta_Information.Example58_ReflectionWithBuiltInTypes.D
+D.n4type.fqn:                Ch07_04_Reflection_Meta_Information/Example58_ReflectionWithBuiltInTypes/D
 D.n4type.n4superType.name:   A
 D.n4type.n4superType.origin: org.eclipse.n4js.spec.tests
-D.n4type.n4superType.fqn:    Ch07_04_Reflection_Meta_Information.Example58_ReflectionWithBuiltInTypes.A
+D.n4type.n4superType.fqn:    Ch07_04_Reflection_Meta_Information/Example58_ReflectionWithBuiltInTypes/A
 stderr:
 ==>
 --- */
