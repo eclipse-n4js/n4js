@@ -16,8 +16,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.TopologicalSorter;
@@ -137,12 +139,67 @@ public class XBuildManager {
 
 		List<ProjectDescription> sortedDescriptions = sortByDependencies(projects);
 		List<IResourceDescription.Delta> result = new ArrayList<>();
+
 		for (ProjectDescription description : sortedDescriptions) {
 			String projectName = description.getName();
 			XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
 			XBuildResult partialresult = projectManager.doInitialBuild(indicator);
 			result.addAll(partialresult.getAffectedResources());
 		}
+
+		return result;
+	}
+
+	/**
+	 * Run a full build on the workspace
+	 *
+	 * @return the delta.
+	 */
+	@Deprecated // GH-1552: Experimental parallelization
+	public List<IResourceDescription.Delta> doInitialBuild2(List<ProjectDescription> projects,
+			CancelIndicator indicator) {
+
+		class BuildInitialProjectJob extends ParallelJob<String> {
+			XProjectManager projectManager;
+			List<IResourceDescription.Delta> result;
+
+			BuildInitialProjectJob(XProjectManager projectManager, List<IResourceDescription.Delta> result) {
+				this.projectManager = projectManager;
+				this.result = result;
+			}
+
+			@Override
+			public void runJob() {
+				XBuildResult partialresult = projectManager.doInitialBuild(indicator);
+				result.addAll(partialresult.getAffectedResources());
+			}
+
+			@SuppressWarnings("restriction")
+			@Override
+			public String getID() {
+				return projectManager.getProjectConfig().getName();
+			}
+
+			@Override
+			public Collection<String> getDependencyIDs() {
+				return projectManager.getProjectDescription().getDependencies();
+			}
+		}
+
+		List<ProjectDescription> sortedDescriptions = sortByDependencies(projects);
+		List<IResourceDescription.Delta> result = Collections.synchronizedList(new ArrayList<>());
+		List<BuildInitialProjectJob> jobs = new ArrayList<>();
+
+		for (ProjectDescription description : sortedDescriptions) {
+			String projectName = description.getName();
+			XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
+			BuildInitialProjectJob bpj = new BuildInitialProjectJob(projectManager, result);
+			jobs.add(bpj);
+		}
+
+		ParallelBuildManager parallelBuildManager = new ParallelBuildManager(jobs);
+		parallelBuildManager.run();
+
 		return result;
 	}
 
@@ -166,26 +223,37 @@ public class XBuildManager {
 
 	/** Run the build on the workspace */
 	protected List<IResourceDescription.Delta> internalIncrementalBuild(CancelIndicator cancelIndicator) {
-		Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFiles);
-		Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(deletedFiles);
+		try {
+			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFiles);
+			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(deletedFiles);
 
-		SetView<ProjectDescription> allDescriptions = Sets.union(project2dirty.keySet(), project2deleted.keySet());
-		List<ProjectDescription> sortedDescriptions = sortByDependencies(allDescriptions);
+			SetView<ProjectDescription> allDescriptions = Sets.union(project2dirty.keySet(), project2deleted.keySet());
+			List<ProjectDescription> sortedDescriptions = sortByDependencies(allDescriptions);
 
-		for (ProjectDescription descr : sortedDescriptions) {
-			XProjectManager projectManager = workspaceManager.getProjectManager(descr.getName());
-			Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
-			Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
-			XBuildResult partialResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
-					unreportedDeltas, cancelIndicator);
+			for (ProjectDescription descr : sortedDescriptions) {
+				XProjectManager projectManager = workspaceManager.getProjectManager(descr.getName());
+				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
+				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
+				XBuildResult partialResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
+						unreportedDeltas, cancelIndicator);
 
-			dirtyFiles.removeAll(projectDirty);
-			deletedFiles.removeAll(projectDeleted);
-			mergeWithUnreportedDeltas(partialResult.getAffectedResources());
+				dirtyFiles.removeAll(projectDirty);
+				deletedFiles.removeAll(projectDeleted);
+				mergeWithUnreportedDeltas(partialResult.getAffectedResources());
+			}
+			List<IResourceDescription.Delta> result = unreportedDeltas;
+			unreportedDeltas = new ArrayList<>();
+			return result;
+
+		} catch (CancellationException ce) {
+			throw ce;
+
+		} catch (Exception ce) {
+			// recover
+			dirtyFiles.clear();
+			deletedFiles.clear();
+			throw ce;
 		}
-		List<IResourceDescription.Delta> result = unreportedDeltas;
-		unreportedDeltas = new ArrayList<>();
-		return result;
 	}
 
 	private Map<ProjectDescription, Set<URI>> computeProjectToUriMap(Collection<URI> uris) {

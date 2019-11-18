@@ -76,7 +76,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	private final List<ILanguageServerAccess.IBuildListener> buildListeners = new ArrayList<>();
 
-	private final Map<String, ResourceDescriptionsData> fullIndex = new HashMap<>();
+	// GH-1552: synchronized map
+	private final Map<String, ResourceDescriptionsData> fullIndex = Collections.synchronizedMap(new HashMap<>());
 
 	private final Map<URI, Document> openDocuments = new HashMap<>();
 

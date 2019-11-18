@@ -124,7 +124,11 @@ public class XProjectManager {
 
 		projectStateHolder.updateProjectState(request, result);
 		ResourceDescriptionsData resourceDescriptions = projectStateHolder.getIndexState().getResourceDescriptions();
-		indexProvider.get().put(projectDescription.getName(), resourceDescriptions);
+
+		Map<String, ResourceDescriptionsData> map = indexProvider.get();
+		synchronized (map.keySet()) { // GH-1552: synchronized
+			map.put(projectDescription.getName(), resourceDescriptions);
+		}
 
 		return result;
 	}
@@ -173,8 +177,12 @@ public class XProjectManager {
 			resourceSet = createNewResourceSet(newIndex);
 		} else {
 			ChunkedResourceDescriptions resDescs = ChunkedResourceDescriptions.findInEmfObject(resourceSet);
-			for (Map.Entry<String, ResourceDescriptionsData> entry : indexProvider.get().entrySet()) {
-				resDescs.setContainer(entry.getKey(), entry.getValue());
+
+			Map<String, ResourceDescriptionsData> map = indexProvider.get();
+			synchronized (map.keySet()) { // GH-1552: synchronized
+				for (Map.Entry<String, ResourceDescriptionsData> entry : map.entrySet()) {
+					resDescs.setContainer(entry.getKey(), entry.getValue());
+				}
 			}
 			resDescs.setContainer(projectDescription.getName(), newIndex);
 		}
@@ -186,8 +194,12 @@ public class XProjectManager {
 		XtextResourceSet result = resourceSetProvider.get();
 		projectDescription.attachToEmfObject(result);
 		ProjectConfigAdapter.install(result, projectConfig);
-		ChunkedResourceDescriptions index = new ChunkedResourceDescriptions(indexProvider.get(), result);
-		index.setContainer(projectDescription.getName(), newIndex);
+
+		Map<String, ResourceDescriptionsData> map = indexProvider.get();
+		synchronized (map.keySet()) { // GH-1552: synchronized
+			ChunkedResourceDescriptions index = new ChunkedResourceDescriptions(map, result);
+			index.setContainer(projectDescription.getName(), newIndex);
+		}
 		externalContentSupport.configureResourceSet(result, openedDocumentsContentProvider);
 		return result;
 	}
