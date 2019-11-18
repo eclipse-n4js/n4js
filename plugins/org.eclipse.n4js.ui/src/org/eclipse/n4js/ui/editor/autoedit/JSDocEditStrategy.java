@@ -49,18 +49,19 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 			IRegion stopTerminal) throws BadLocationException {
 		CommandInfo newC = new CommandInfo();
 		newC.isChange = true;
+		List<String> retAndfparNames = null;
 		if (document instanceof N4JSDocument) {
 			// index 0: if set to "void", the method has no return value; fpars start at index 1
-			List<String> retAndfparNames = ((N4JSDocument) document).tryReadOnly((state) -> {
-				Script script = XtextResourceUtils.getScript(state);
+			retAndfparNames = ((N4JSDocument) document).tryReadOnly((xtextResource) -> {
+				Script script = XtextResourceUtils.getScript(xtextResource);
 				ILeafNode node = NodeModelUtils.findLeafNodeAtOffset(NodeModelUtils.findActualNodeFor(script),
 						startTerminal.getOffset());
 				EObject astElement = node.getSemanticElement();
 				List<String> retAndFPars = new ArrayList<>();
 				if (astElement instanceof N4MethodDeclaration) {
 					N4MethodDeclaration methodDecl = (N4MethodDeclaration) astElement;
-					if (methodDecl.getReturnTypeRef() != null) {
-						retAndFPars.add("return");
+					if (methodDecl.getReturnTypeRef() != null) { // TODO evtl. void!
+						retAndFPars.add(methodDecl.getReturnTypeRef().getDeclaredType().getName());
 					} else {
 						retAndFPars.add("void");
 					}
@@ -71,9 +72,13 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 				return retAndFPars;
 			});
 		}
+
+		String paramName = retAndfparNames.get(1);
+		String returnValue = retAndfparNames.get(0);
 		newC.offset = command.offset;
-		newC.text += command.text + indentationString + command.text + indentationString + paramString + command.text
-				+ indentationString + returnString;
+		newC.text += command.text + indentationString + command.text + indentationString + paramString + paramName
+				+ command.text
+				+ indentationString + returnString + returnValue;
 		newC.cursorOffset = command.offset + newC.text.length();
 		if (stopTerminal == null && atEndOfLineInput(document, command.offset)) {
 			newC.text += command.text + getRightTerminal();
