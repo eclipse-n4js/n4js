@@ -9,8 +9,9 @@
   "scripts": {
     "postinstall": "node ./npm-postinstall.js",
     "build": "./npm-build.sh",
-    "test": "eslint . && mocha tests"
+    "test": "mocha -r esm tests"
   },
+  "main": "src-gen/index.js",
   "bin": {
     "n4jsc": "./bin/n4jsc.js"
   },
@@ -21,35 +22,29 @@
     "index.n4jsd"
   ],
   "devDependencies": {
-    "eslint": "^6.2.2",
     "mocha": "^6.2.0"
   },
-  "eslintConfig": {
-    "env": {
-      "es6": true,
-      "node": true,
-      "mocha": true
-    },
-    "extends": "eslint:recommended",
-    "rules": {
-      "strict": "error",
-      "no-trailing-spaces": "error"
-    }
-  },
   "dependencies": {
-    "npmlog": "4.1.2"
+    "esm": "3.2.25",
+    "npmlog": "4.1.2",
+    "n4js-runtime": "^0.1.0",
+    "n4js-runtime-node": "^0.1.0",
+    "n4js-runtime-es2015": "^0.1.0"
   },
   "n4js": {
-    "projectType": "validation",
+    "projectType": "library",
     "vendorId": "org.eclipse.n4js",
     "vendorName": "Eclipse N4JS Project",
-    "output": ".",
+    "output": "src-gen",
     "mainModule": "index",
     "sources": {
       "source": [
-        "."
+        "src"
       ]
     },
-    "requiredRuntimeLibraries": []
+    "requiredRuntimeLibraries": [
+        "n4js-runtime-node",
+        "n4js-runtime-es2015"
+    ]
   }
 }
