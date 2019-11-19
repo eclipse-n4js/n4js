@@ -53,7 +53,7 @@ public class N4jscOptions {
 	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
 	/** Usage information. */
-	public static final String USAGE = "Usage: java -jar n4jsc.jar [GOAL] [DIR(s)] [OPTION(s)]";
+	public static final String USAGE = "Usage: java -jar n4jsc.jar [GOAL] DIR [OPTION(s)]";
 
 	/** Use to specify the required goal for an option. */
 	@Retention(RUNTIME)
@@ -186,14 +186,14 @@ public class N4jscOptions {
 						+ "\n\t compile  Compiles src folders"
 						+ "\n\t clean    Cleans output folders and type index"
 						+ "\n\t lsp      Starts LSP server"
-						+ "\n\t watch    Starts compiler daemon that watches the given directory(s)"
+						+ "\n\t watch    Starts compiler daemon that watches the given directory"
 						+ "\n\t api      Generates API documentation from n4js files"
 						+ "\n\t", //
 				handler = N4jscGoalOptionHandler.class)
 		N4jscGoal goal = N4jscGoal.compile;
 
-		@Argument(metaVar = "DIR(s)", multiValued = true, index = 1, required = false, //
-				usage = "names of either n4js project directory(s)")
+		@Argument(metaVar = "DIR", multiValued = true, index = 1, required = false, //
+				usage = "name of n4js project or workspace directory")
 		List<File> dirs = new ArrayList<>();
 	}
 
