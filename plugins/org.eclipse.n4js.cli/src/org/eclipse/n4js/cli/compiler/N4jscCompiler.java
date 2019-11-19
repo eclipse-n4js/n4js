@@ -13,6 +13,8 @@ package org.eclipse.n4js.cli.compiler;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +31,7 @@ import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
+import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
 import com.google.inject.Injector;
@@ -65,29 +68,23 @@ public class N4jscCompiler {
 	/** Starts the compiler in a blocking fashion */
 	public void start() throws Exception {
 		InitializeParams params = new InitializeParams();
-		List<File> srcs = options.getDirs();
-		File firstDir = null;
-		for (File src : srcs) {
-			if (src.isDirectory()) {
-				firstDir = src;
-				break;
-			}
+		File baseDir = options.getDir();
+		if (baseDir == null) {
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, "No base directory");
 		}
-		if (firstDir != null) {
-			params.setRootUri(firstDir.toURI().toString());
-			languageServer.initialize(params).get();
-			warnIfNoProjectsFound();
-			verbosePrintAllProjects();
 
-			languageServer.initialized(new InitializedParams());
-			languageServer.joinInitBuildFinished();
+		params.setRootUri(baseDir.toURI().toString());
+		languageServer.initialize(params).get();
+		warnIfNoProjectsFound();
+		verbosePrintAllProjects();
 
-			languageServer.shutdown();
-			languageServer.exit();
+		languageServer.initialized(new InitializedParams());
+		languageServer.joinInitBuildFinished();
 
-		} else {
-			throw new N4jscException(N4jscExitCode.ERROR_UNEXPECTED, "No root directory");
-		}
+		languageServer.shutdown();
+		languageServer.exit();
+
+		writeTestCatalog();
 	}
 
 	private void setPersistionOptions() {
@@ -116,6 +113,26 @@ public class N4jscCompiler {
 				N4jscConsole.println("Projects:");
 				N4jscConsole.print("   " + String.join("\n   ", projectNameList));
 			}
+		}
+	}
+
+	private void writeTestCatalog() throws N4jscException {
+		File testCatalogFile = options.getTestCatalog();
+		if (testCatalogFile != null) {
+			Injector injector = N4jscFactory.getOrCreateInjector();
+			TestCatalogSupplier testCatalogSupplier = injector.getInstance(TestCatalogSupplier.class);
+			String catalog = testCatalogSupplier.get(true); // do not include "endpoint" property here
+
+			try (FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
+				fos.write(catalog.getBytes());
+				fos.flush();
+
+			} catch (IOException e) {
+				String msg = "Error while writing test catalog file at: " + testCatalogFile;
+				throw new N4jscException(N4jscExitCode.TEST_CATALOG_ASSEMBLATION_ERROR, msg);
+			}
+
+			N4jscConsole.println("Test catalog written to " + testCatalogFile.toPath());
 		}
 	}
 

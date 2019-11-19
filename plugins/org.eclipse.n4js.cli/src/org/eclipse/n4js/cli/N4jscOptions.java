@@ -274,6 +274,15 @@ public class N4jscOptions {
 		return options.dirs;
 	}
 
+	/** @return given project directory or null */
+	public File getDir() {
+		List<File> dirs = getDirs();
+		if (dirs == null || dirs.isEmpty()) {
+			return null;
+		}
+		return dirs.get(0);
+	}
+
 	/** @return true iff {@code --showSetup} */
 	public boolean isShowSetup() {
 		return options.showSetup;
