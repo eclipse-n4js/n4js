@@ -85,7 +85,7 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 	// (see method ExpressionTransformation#transformOptionalChaining(ExpressionWithTarget))
 	@Check
 	def void checkTaggedTemplateLiteral(TaggedTemplateString tts) {
-		unsupported("tagged template literals", tts, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
+		//unsupported("tagged template literals", tts, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 	}
 
 

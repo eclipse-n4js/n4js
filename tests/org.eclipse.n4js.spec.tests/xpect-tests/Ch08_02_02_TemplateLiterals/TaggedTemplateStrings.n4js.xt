@@ -1,0 +1,88 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+function foo(...args) {
+	console.log('foo called with', args);
+	return "result";
+}
+
+function bar(arg) {
+	console.log('bar called with', arg);
+	return arg;
+}
+
+class C {
+	method(...args) {
+		console.log('C#method called with', args);
+		return "result";
+	}
+}
+
+let c = new C();
+let value;
+
+console.log('======')
+value = foo``;
+console.log('======')
+value = foo`aaa`;
+console.log('======')
+// XPECT nowarnings --> "A reference to method method is created detached from a (correct) this-instance."
+value = c.method`mmm`;
+console.log('======')
+value = foo`${bar('111')}`;
+console.log('======')
+value = foo`aaa ${ bar('111') } bbb ${ bar('222') } ccc`;
+console.log('======')
+value = foo`aaa ${ 1+2+3 } bbb ${ 4+5+6 } ccc`;
+console.log('======')
+value = foo`aaa ${ 1,2,3 } bbb ${ 4,5,6 } ccc`;
+console.log('======')
+for(let b: boolean of [true, false]) {
+	value = (b?foo:null)?.`aaa ${ bar('111') } bbb ${ bar('222') } ccc`;
+	console.log(value);
+	console.log('======')
+}
+
+
+/* XPECT output ---
+<==
+stdout:
+======
+foo called with [ [ '' ] ]
+======
+foo called with [ [ 'aaa' ] ]
+======
+C#method called with [ [ 'mmm' ] ]
+======
+bar called with 111
+foo called with [ [ '', '' ], '111' ]
+======
+bar called with 111
+bar called with 222
+foo called with [ [ 'aaa ', ' bbb ', ' ccc' ], '111', '222' ]
+======
+foo called with [ [ 'aaa ', ' bbb ', ' ccc' ], 6, 15 ]
+======
+foo called with [ [ 'aaa ', ' bbb ', ' ccc' ], 3, 6 ]
+======
+bar called with 111
+bar called with 222
+foo called with [ [ 'aaa ', ' bbb ', ' ccc' ], '111', '222' ]
+result
+======
+undefined
+======
+stderr:
+==>
+--- */

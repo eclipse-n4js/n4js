@@ -2475,6 +2475,13 @@ B.bar();
 --
 
 
+=== Template Literals
+
+Template literals as defined in the ECMAScript 6 specification cite:[ECMA15a], Section 12.2.9 are
+supported in N4JS, including tagged template literals.
+
+
+
 [.language-n4js]
 == ECMAScript 7 Expressions
 
