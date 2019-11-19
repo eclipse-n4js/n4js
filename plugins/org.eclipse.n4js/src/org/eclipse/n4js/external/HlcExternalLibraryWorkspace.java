@@ -118,6 +118,7 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public ProjectDescription getProjectDescription(FileURI location) {
+		// TODO: Can be a problem in LSP use case: missing is invalidation of entries when package.json was changed.
 		if (!projectDescriptionMap.containsKey(location)) {
 			ProjectDescription projectDescription = packageManager.loadProjectDescriptionFromProjectRoot(location);
 			projectDescriptionMap.put(location, projectDescription);
