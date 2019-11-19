@@ -32,7 +32,7 @@ class NodeModelUtilsN4 {
 		}
 		for (INode iNode: iterable) {
 			if (iNode instanceof ICompositeNode) {
-				val retValOfRekursion = findKeywordNodeIfSameGrammarRule(iNode, keyword);
+				val retValOfRekursion = findKeywordNode(iNode, keyword);
 				if (retValOfRekursion !== null) {
 					return retValOfRekursion;
 				}
