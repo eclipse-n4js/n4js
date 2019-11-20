@@ -8,6 +8,7 @@
 package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -325,8 +326,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 *
 	 * @return all project managers.
 	 */
-	public List<XProjectManager> getProjectManagers() {
-		return ImmutableList.copyOf(projectName2ProjectManager.values());
+	public Collection<XProjectManager> getProjectManagers() {
+		return Collections.unmodifiableCollection(projectName2ProjectManager.values());
 	}
 
 	/**
