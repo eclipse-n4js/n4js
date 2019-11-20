@@ -14,6 +14,7 @@
 
 class FancyData {}
 
+const tagBad = "nonsense";
 function tagTrivial() { return null; }
 function tagFlexible(...args: any) { return null; }
 function tagIgnoreExpr(segments: Array<string>) { return null; }
@@ -22,6 +23,7 @@ function tagMissingResult() {}
 function tagFancyResult(): FancyData { return null; }
 
 class C {
+	tagBad = "nonsense";
 	tagTrivial() { return null; }
 	tagFlexible(...args: any) { return null; }
 	tagIgnoreExpr(segments: Array<string>) { return null; }
@@ -31,6 +33,8 @@ class C {
 }
 
 
+// XPECT errors --> "string is not a subtype of {function(Array<string>):any}." at "tagBad"
+tagBad``;
 // XPECT noerrors -->
 tagTrivial``;
 // XPECT noerrors -->
@@ -56,6 +60,8 @@ let result1 = tagFancyResult``;
 
 
 const c = new C();
+// XPECT errors --> "string is not a subtype of {function(Array<string>):any}." at "c.tagBad"
+c.tagBad``;
 // XPECT noerrors -->
 c.tagTrivial``;
 // XPECT noerrors -->
@@ -78,3 +84,9 @@ c.tagSpecific`${42} ${"hi"} ${[1,2,3]}`;
 c.tagMissingResult``;
 // XPECT type of 'result2' --> FancyData
 let result2 = c.tagFancyResult``;
+
+
+// XPECT errors --> "string is not a subtype of {function(Array<string>):any}." at "'result'"
+()=>'result'`ignored`; // this should be parsed as ()=>('result'`ignored`)
+// XPECT noerrors -->
+(()=>'result')`ignored`;
