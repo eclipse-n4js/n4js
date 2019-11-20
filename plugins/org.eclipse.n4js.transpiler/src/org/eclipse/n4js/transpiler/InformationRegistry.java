@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4JS.ExpressionStatement;
-import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
@@ -25,7 +23,6 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant;
 import org.eclipse.n4js.transpiler.utils.ConcreteMembersOrderedForTranspiler;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
@@ -55,13 +52,6 @@ public class InformationRegistry {
 	/**
 	 */
 	private enum Tag {
-
-		/** Tag for elements which should be hoisted. */
-		toHoist,
-
-		/** Tag for expression statements that were originally an initializer expression of a to-be-hoisted variable. */
-		initializerOfHoistedVariable,
-
 		/** Tag for IM nodes that were, originally, an explicit super call. */
 		explicitSuperCall,
 
@@ -70,36 +60,6 @@ public class InformationRegistry {
 
 		/** Tag for members which were filled in by way of static polyfills. */
 		staticlyPolyfilled,
-	}
-
-	/** Tells if the given variable requires hoisting, i.e. the module wrapping transformation should hoist it. */
-	public boolean isToHoist(VariableDeclaration element) {
-		return isTaggedAs(Tag.toHoist, element);
-	}
-
-	/** Tells if the given function requires hoisting, i.e. the module wrapping transformation should hoist it. */
-	public boolean isToHoist(FunctionDeclaration element) {
-		return isTaggedAs(Tag.toHoist, element);
-	}
-
-	/** Marks given variable as requiring hoisting, i.e. module wrapping transformation will hoist it. */
-	public void markAsToHoist(VariableDeclaration element) {
-		tag(Tag.toHoist, element);
-	}
-
-	/** Marks given function as requiring hoisting, i.e. module wrapping transformation will hoist it. */
-	public void markAsToHoist(FunctionDeclaration element) {
-		tag(Tag.toHoist, element);
-	}
-
-	/** Tells if the given expression statement was derived from initializer expression of a to-be-hoisted variable. */
-	public boolean isInitializerOfHoistedVariable(ExpressionStatement element) {
-		return isTaggedAs(Tag.initializerOfHoistedVariable, element);
-	}
-
-	/** Marks given expression statement was being derived from initializer expression of a to-be-hoisted variable. */
-	public void markAsInitializerOfHoistedVariable(ExpressionStatement element) {
-		tag(Tag.initializerOfHoistedVariable, element);
 	}
 
 	/** Tells if the given call expression has been derived from an explicit super call within a constructor. */

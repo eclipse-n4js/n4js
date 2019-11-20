@@ -85,8 +85,6 @@ class InterfaceDeclarationTransformation extends Transformation {
 		replace(ifcDecl, varDecl);
 		val root = varDecl.eContainer.orContainingExportDeclaration;
 		insertAfter(root, fieldDefaults + staticFieldInits + memberDefs + #[makeIfcCall]);
-
-		state.info.markAsToHoist(varDecl);
 	}
 
 	/**

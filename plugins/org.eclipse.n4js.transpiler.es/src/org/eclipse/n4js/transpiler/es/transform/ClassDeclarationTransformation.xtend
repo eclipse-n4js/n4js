@@ -87,9 +87,7 @@ class ClassDeclarationTransformation extends Transformation {
 		replace(classDecl, ctorDecl);
 		insertAfter(ctorDecl.orContainingExportDeclaration, makeClassCall);
 
-		insertAfter( makeClassCall, staticInits );
-
-		state.info.markAsToHoist(ctorDecl);
+		insertAfter(makeClassCall, staticInits);
 	}
 
 	// ################################################################################################################

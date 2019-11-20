@@ -66,7 +66,6 @@ class EnumDeclarationTransformation extends Transformation {
 			var EObject root;
 			if (varOrFunDecl instanceof VariableDeclaration) {
 				replace(enumDecl, varOrFunDecl);
-				state.info.markAsToHoist(varOrFunDecl);
 				root = varOrFunDecl.eContainer.orContainingExportDeclaration;
 			} else if (varOrFunDecl instanceof FunctionDeclaration) {
 				replace(enumDecl, varOrFunDecl);
