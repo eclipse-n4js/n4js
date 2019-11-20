@@ -212,7 +212,7 @@ public final class ASTMetaInfoCache {
 
 	// @formatter:on
 
-	/* package */ void clearTemporaryData() {
+	/* package */ void clearTemporaryPostProcessingData() {
 		forwardProcessedSubTrees.clear();
 		astNodesCurrentlyBeingTyped.clear();
 		postponedSubTrees.clear();

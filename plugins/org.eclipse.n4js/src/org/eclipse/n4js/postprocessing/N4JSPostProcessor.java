@@ -88,7 +88,7 @@ public class N4JSPostProcessor implements PostProcessor {
 				throw th;
 			}
 		} finally {
-			cache.clearTemporaryData();
+			cache.clearTemporaryPostProcessingData();
 		}
 	}
 
