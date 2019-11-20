@@ -71,6 +71,9 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	public void checkFlowGraphs(Script script) {
 		N4JSResource resource = (N4JSResource) script.eResource();
 		ASTFlowInfo flowInfo = resource.getASTMetaInfoCache().getFlowInfo();
+		if (!flowInfo.canPerformBackwardAnalysis()) {
+			return;
+		}
 
 		flowInfo.performBackwardAnalysis(this::checkCancelled);
 
@@ -91,6 +94,8 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 				fValidator.checkResults(this);
 			}
 		}
+
+		flowInfo.reset(); // release memory
 	}
 
 	@Override

@@ -14,5 +14,10 @@ package org.eclipse.n4js.flowgraphs;
  * Marker interface
  */
 public interface FlowAnalyser {
-	// Marker interface
+
+	/** Clear results */
+	default void clean() {
+		// nothing to do
+	}
+
 }
