@@ -14,7 +14,7 @@
 
 function foo(...args) {
 	console.log('foo called with', args);
-	return "result";
+	return (args[0] as Array<string>).join('|') + '||' + args.slice(1).join('|');
 }
 
 function bar(arg) {
@@ -25,7 +25,7 @@ function bar(arg) {
 class C {
 	method(...args) {
 		console.log('C#method called with', args);
-		return "result";
+		return (args[0] as Array<string>).join('|') + '||' + args.slice(1).join('|');
 	}
 }
 
@@ -53,6 +53,9 @@ for(let b: boolean of [true, false]) {
 	console.log(value);
 	console.log('======')
 }
+value = foo`aaa${foo`xxx${bar(111)}yyy`}bbb${foo`xxx${bar(222)}yyy`}ccc`;
+console.log(value);
+console.log('======')
 
 
 /* XPECT output ---
@@ -79,9 +82,16 @@ foo called with [ [ 'aaa ', ' bbb ', ' ccc' ], 3, 6 ]
 bar called with 111
 bar called with 222
 foo called with [ [ 'aaa ', ' bbb ', ' ccc' ], '111', '222' ]
-result
+aaa | bbb | ccc||111|222
 ======
 undefined
+======
+bar called with 111
+foo called with [ [ 'xxx', 'yyy' ], 111 ]
+bar called with 222
+foo called with [ [ 'xxx', 'yyy' ], 222 ]
+foo called with [ [ 'aaa', 'bbb', 'ccc' ], 'xxx|yyy||111', 'xxx|yyy||222' ]
+aaa|bbb|ccc||xxx|yyy||111|xxx|yyy||222
 ======
 stderr:
 ==>
