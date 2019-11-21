@@ -69,14 +69,6 @@ a.constructor.n4type:
 }
 
 
-A: 
-function A() {
-	this.field1 = undefined;
-	this.field2 = undefined;
-	this.field3 = undefined;
-}
-
-
 A.n4type: 
 {
     "origin": "org.eclipse.n4js.transpiler.es5.tests",
@@ -143,5 +135,4 @@ class A {
 }
 var a = new A()
 console.log('a.constructor.n4type: \n' + JSON.stringify(a.constructor.n4type, null, 4) + '\n\n')
-console.log('A: \n' + A + '\n\n')
 console.log('A.n4type: \n' + JSON.stringify(A.n4type, null, 4))

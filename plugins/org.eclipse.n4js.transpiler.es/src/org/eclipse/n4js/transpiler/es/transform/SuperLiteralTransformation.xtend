@@ -87,7 +87,7 @@ class SuperLiteralTransformation extends Transformation {
 			val p = sl.eContainer;
 			if(p instanceof ParameterizedCallExpression) {
 				if(p.target === sl) {
-					transformSuperCall(classDecl, p);
+//					transformSuperCall(classDecl, p);
 				}
 			} else if(p instanceof ParameterizedPropertyAccessExpression_IM) {
 				if(p.target === sl) {

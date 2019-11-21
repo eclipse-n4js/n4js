@@ -48,8 +48,10 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IntLiteral
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
+import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4JSFactory
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -65,6 +67,7 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
+import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.RelationalExpression
 import org.eclipse.n4js.n4JS.RelationalOperator
@@ -586,10 +589,28 @@ public class TranspilerBuilderBlocks
 		return annList;
 	}
 
+	public static def N4GetterDeclaration _N4GetterDecl(LiteralOrComputedPropertyName declaredName, Block body) {
+		val result = N4JSFactory.eINSTANCE.createN4GetterDeclaration;
+		result.declaredName = declaredName;
+		result.body = body;
+		return result;
+	}
+
+	public static def N4SetterDeclaration _N4SetterDecl(LiteralOrComputedPropertyName declaredName, FormalParameter fpar, Block body) {
+		val result = N4JSFactory.eINSTANCE.createN4SetterDeclaration;
+		result.declaredName = declaredName;
+		result.fpar = fpar;
+		result.body = body;
+		return result;
+	}
+
 	public static def N4MethodDeclaration _N4MethodDecl(String name, Statement... statements) {
+		return _N4MethodDecl(_LiteralOrComputedPropertyName(name), _Block(statements.filterNull));
+	}
+	public static def N4MethodDeclaration _N4MethodDecl(LiteralOrComputedPropertyName declaredName, Block body) {
 		val result = N4JSFactory.eINSTANCE.createN4MethodDeclaration;
-		result.declaredName = _LiteralOrComputedPropertyName(name);
-		result.body = _Block(statements.filterNull);
+		result.declaredName = declaredName;
+		result.body = body;
 		return result;
 	}
 
@@ -737,7 +758,15 @@ public class TranspilerBuilderBlocks
 
 	public static def _LiteralOrComputedPropertyName(String name) {
 		val result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName;
+		result.kind = PropertyNameKind.STRING;
 		result.literalName = name;
+		return result;
+	}
+
+	public static def _LiteralOrComputedPropertyName(Expression nameExpr) {
+		val result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName;
+		result.kind = PropertyNameKind.COMPUTED;
+		result.expression = nameExpr;
 		return result;
 	}
 

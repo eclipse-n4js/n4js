@@ -45,6 +45,7 @@ import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4JS.VersionedElement
 import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.transpiler.TransformationAssistant
@@ -400,6 +401,53 @@ class BootstrapCallAssistant extends TransformationAssistant {
 			]
 		);
 	}
+
+def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, SymbolTableEntry superClassSTE) {
+	val symbolObjectSTE = getSymbolTableEntryOriginal(state.G.symbolObjectType, true);
+	val forSTE = getSymbolTableEntryForMember(state.G.symbolObjectType, "for", false, true, true);
+	val hasOwnPropertySTE = getSymbolTableEntryForMember(state.G.objectType, "hasOwnProperty", false, false, true);
+	
+	val $symVarDecl = _VariableDeclaration("$sym", _CallExpr(_PropertyAccessExpr(symbolObjectSTE, forSTE), _StringLiteral("org.eclipse.n4js/reflectionInfo")));
+	val $symSTE = findSymbolTableEntryForElement($symVarDecl, true);
+
+	return _N4GetterDecl(
+		_LiteralOrComputedPropertyName("n4type"), // FIXME use a constant
+		_Block(
+			// const $sym = Symbol.for('org.eclipse.n4js/reflectionInfo');
+			_VariableStatement(VariableStatementKeyword.CONST,
+				$symVarDecl
+			),
+			// if (this.hasOwnProperty($sym)) {
+			//     return this[$sym];
+			// }
+			_IfStmnt(
+				_CallExpr(
+					_PropertyAccessExpr(
+						_ThisLiteral,
+						hasOwnPropertySTE
+					),
+					_IdentRef($symSTE)
+				),
+				_ReturnStmnt(
+					_IndexAccessExpr(_ThisLiteral, _IdentRef($symSTE))
+				)
+			),
+			// return this[$sym] = new N4Class() { ...
+			_VariableStatement(VariableStatementKeyword.CONST,
+				_VariableDeclaration("instanceProto", _Snippet("this.prototype")), // FIXME remove!
+				_VariableDeclaration("staticProto", _ThisLiteral) // FIXME remove!
+			),
+			_ReturnStmnt(
+				_AssignmentExpr(
+					_IndexAccessExpr(_ThisLiteral, _IdentRef($symSTE)),
+					createMetaClassVariable(typeDecl, superClassSTE).expression
+				)
+			)
+		)
+	) => [
+		declaredModifiers += N4Modifier.STATIC
+	];
+}
 
 	def private VariableDeclaration createMetaClassVariable(N4TypeDeclaration typeDecl, SymbolTableEntry superClassSTE) {
 		// var metaClass = new N4Class({

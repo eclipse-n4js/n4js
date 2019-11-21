@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.es.assistants
 
 import com.google.inject.Inject
+import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
@@ -21,11 +22,13 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
+import org.eclipse.n4js.transpiler.im.DelegatingGetterDeclaration
 import org.eclipse.n4js.transpiler.im.DelegatingMember
+import org.eclipse.n4js.transpiler.im.DelegatingMethodDeclaration
+import org.eclipse.n4js.transpiler.im.DelegatingSetterDeclaration
 import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
-import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -36,6 +39,7 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.RecursionGuard
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -122,6 +126,88 @@ class DelegationAssistant extends TransformationAssistant {
 		return result;
 	}
 
+	def public N4MemberDeclaration createOrdinaryMemberForDelegatingMember(DelegatingMember delegator) {
+		val targetNameStr = delegator.delegationTarget.name;
+		val targetName = if (targetNameStr!==null && targetNameStr.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX)) {
+			_LiteralOrComputedPropertyName(typeAssistant.getMemberNameAsSymbol(targetNameStr))
+		} else {
+			_LiteralOrComputedPropertyName(targetNameStr)
+		};
+
+		val body = createBodyForDelegatingMember(delegator);
+
+		return switch(delegator) {
+			DelegatingGetterDeclaration:
+				_N4GetterDecl(targetName, body)
+			DelegatingSetterDeclaration:
+				_N4SetterDecl(targetName, _Fpar("value"), body)
+			DelegatingMethodDeclaration:
+				_N4MethodDecl(targetName, body)
+		};
+	}
+
+	def private Block createBodyForDelegatingMember(DelegatingMember delegator) {
+		val baseSTE = delegator.delegationBaseType;
+		val baseIsInterface = baseSTE?.originalTarget instanceof TInterface;
+
+		val targetAccess = if(baseIsInterface) {
+			val targetName = delegator.delegationTarget.name;
+			val targetIsStatic = delegator.static;
+			val targetIsSymbol = targetName!==null && targetName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
+			val targetSTE = delegator.delegationTarget;
+			
+			val $methodsSTE =  steFor_$methods;
+			val valueSTE = getPropertyDescriptorValueProperty(delegator);
+			if(!targetIsSymbol) {
+				// non-static:
+				//     I.$methods.target.value
+				// static:
+				//     I.target
+				__NSSafe_PropertyAccessExpr(
+					baseSTE,
+					#[
+						if (!targetIsStatic) $methodsSTE,
+						targetSTE,
+						if (!targetIsStatic) valueSTE
+					].filterNull
+				)
+			} else {
+				// non-static:
+				//     I.$methods[Symbol.iterator].value
+				// static:
+				//     I[Symbol.iterator]
+				val indexAccess = _IndexAccessExpr(
+					if (targetIsStatic) __NSSafe_IdentRef(baseSTE) else __NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE),
+					typeAssistant.getMemberNameAsSymbol(targetName) // something like: Symbol.iterator
+				);
+				if (!targetIsStatic) {
+					_PropertyAccessExpr(
+						indexAccess,
+						valueSTE
+					)
+				} else {
+					indexAccess
+				}
+			}
+		} else {
+			val ctorOfClassOfTarget = createAccessToClassConstructor(baseSTE, delegator.delegationSuperClassSteps);
+
+			// based on that constructor expression, now create an expression that evaluates to the member function of
+			// the target member:
+			createAccessToMemberFunction(ctorOfClassOfTarget, false, delegator)
+		};
+
+		return _Block(
+			_ReturnStmnt(_CallExpr(
+				_PropertyAccessExpr(
+					targetAccess,
+					getSymbolTableEntryForMember(state.G.functionType, "apply", false, false, true)
+				),
+				_ThisLiteral,
+				_IdentRef(steFor_arguments)
+			))
+		);
+	}
 
 	/**
 	 * Creates code to establish the actual member delegation for the given delegating member. It returns an expression

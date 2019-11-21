@@ -11,13 +11,15 @@
 package org.eclipse.n4js.transpiler.es.assistants
 
 import com.google.inject.Inject
+import java.util.ArrayList
 import java.util.Collection
 import java.util.LinkedHashSet
+import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
-import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.ModifierUtils
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
@@ -28,6 +30,7 @@ import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.RelationalOperator
 import org.eclipse.n4js.n4JS.Statement
+import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
@@ -55,66 +58,60 @@ class ClassConstructorAssistant extends TransformationAssistant {
 
 
 	/**
-	 * Create the constructor function for classes (as a function declaration).
+	 * Amend the constructor of the given class with implicit functionality (e.g. initialization of instance fields).
+	 * Will create a constructor declaration iff no constructor is defined in the N4JS source code AND an implicit
+	 * constructor is actually required.
 	 */
-	def public FunctionDeclaration createCtorDecl(N4ClassDeclaration classDecl, SymbolTableEntryOriginal superClassSTE) {
+	def public void amendConstructor(N4ClassDeclaration classDecl, SymbolTableEntryOriginal superClassSTE) {
 
-		val funDecl = _FunDecl(classDecl.name);
+		val explicitCtorDecl = classDecl.ownedCtor; // the constructor defined in the N4JS source code or 'null' if none was defined
+		val ctorDecl = explicitCtorDecl ?: _N4MethodDecl(N4JSLanguageConstants.CONSTRUCTOR);
 
 		// -------------------------------------------------
 		// formal parameters
-		val ownedCtor = classDecl.ownedCtor;
-		if(ownedCtor!==null) {
+		if(explicitCtorDecl!==null) {
 			// explicitly defined constructor
-			funDecl.fpars += ownedCtor.fpars
+			// --> nothing to be changed (use fpars from N4JS source code)
 		} else {
-			// no constructor
+			// implicit constructor
 			// --> create fpars using fpars of nearest constructor in hierarchy as template
 			val templateCtor = getNearestConstructorInHierarchy(classDecl);
 			if(templateCtor!==null) {
-				funDecl.fpars += templateCtor.fpars.map[
+				ctorDecl.fpars += templateCtor.fpars.map[
 					val typeRefIM = copyAlienElement(it.typeRef);
 					_Fpar(it.name, it.variadic, typeRefIM, AnnotationDefinition.SPEC.hasAnnotation(it))
 				];
 			}
 		}
 		// within the (maybe newly created) fpars of our ctor, search the @Spec fpar
-		val specFpar = funDecl.fpars.filter[AnnotationDefinition.SPEC.hasAnnotation(it)].head;
+		val specFpar = ctorDecl.fpars.filter[AnnotationDefinition.SPEC.hasAnnotation(it)].head;
 
 		// -------------------------------------------------
 		// body
-		val body = _Block();
-		funDecl.body = body;
+		val body = ctorDecl.body;
 
 		val isDirectSubclassOfError = superClassSTE?.originalTarget===state.G.errorType;
-		val hasExplicitCtor = ownedCtor?.body!==null;
-		val superCallIndex = if(hasExplicitCtor) ownedCtor.superCallIndex else -1;
-		val explicitSuperCall = if(superCallIndex>=0) ownedCtor.body.statements.get(superCallIndex);
+		val superCallIndex = if(explicitCtorDecl?.body!==null) explicitCtorDecl.superCallIndex else -1;
 		val hasExplicitSuperCall = superCallIndex>=0;
+		val explicitSuperCall = if(hasExplicitSuperCall) explicitCtorDecl.body.statements.get(superCallIndex);
 
-		// add preamble
+		var idx = if(hasExplicitSuperCall) superCallIndex + 1 else 0;
+
+		// add/replace/modify super call
 		if(hasExplicitSuperCall) {
-			// we have an ownedCtor with a body AND it has an explicit super call at index 'superCallIdx'
-			// --> add all statements before the super call (but not the super call itself!)
-			body.statements += ownedCtor.body.statements.subList(0, superCallIndex);
+			// keep existing, explicit super call unchanged
+		} else {
+			// no explicitCtorDecl OR no body OR no explicit super call (and no direct subclass of Error)
+			// --> add default super call (if required)
+			if(superClassSTE!==null) {
+				idx = body.statements.insertAt(idx,
+					createDefaultSuperCall(classDecl, superClassSTE, ctorDecl.fpars));
+			}
 		}
-
-		// add super call (either the explicit super call from the source code OR a default super call)
 		if(isDirectSubclassOfError) {
 			// special case: add oddities for sub-classing Error
-			body.statements += createSubclassingErrorOddities(classDecl, funDecl.fpars, explicitSuperCall);
-			if(hasExplicitSuperCall) {
-				ownedCtor.body.statements.remove(0); // discard explicit super call
-			}
-		} else if(hasExplicitSuperCall) {
-			// add explicit super call
-			body.statements += ownedCtor.body.statements.head;
-		} else {
-			// no ownedCtor OR no body OR no explicit super call (and no direct subclass of Error)
-			// --> add default super call (if required)
-			if(classDecl.superClassRef!==null) {
-				body.statements += createDefaultSuperCall(classDecl, superClassSTE, funDecl.fpars);
-			}
+			idx = body.statements.insertAt(idx,
+				createSubclassingErrorOddities(classDecl, ctorDecl.fpars, explicitSuperCall));
 		}
 
 		// if we are in a spec-constructor: prepare a local variable for the spec-object and
@@ -124,28 +121,23 @@ class ClassConstructorAssistant extends TransformationAssistant {
 			// let $specObj = specFpar || {};
 			val specFparSTE = findSymbolTableEntryForElement(specFpar, true);
 			val specObjVarDecl = _VariableDeclaration("$specObj", _OR(_IdentRef(specFparSTE), _ObjLit));
-			body.statements += _VariableStatement(VariableStatementKeyword.CONST, specObjVarDecl);
+			idx = body.statements.insertAt(idx, _VariableStatement(VariableStatementKeyword.CONST, specObjVarDecl));
 
 			specObjSTE = findSymbolTableEntryForElement(specObjVarDecl, true);
 		}
 
-		// add initialization code for fields
-		body.statements += createFieldInitCode(classDecl, specFpar, specObjSTE);
+		// add initialization code for instance fields
+		idx = body.statements.insertAt(idx, createInstanceFieldInitCode(classDecl, specFpar, specObjSTE));
 
 		// add delegation to field initialization functions of all directly implemented interfaces
-		body.statements += createDelegationToFieldInitOfImplementedInterfaces(classDecl, specObjSTE);
+		idx = body.statements.insertAt(idx, createDelegationToFieldInitOfImplementedInterfaces(classDecl, specObjSTE));
 
-		// add main ctor code
-		// (the code following the explicit super call OR the entire body of the explicit ctor if
-		// no explicit super call given)
-		if(hasExplicitCtor) {
-			body.statements += ownedCtor.body.statements;
+		if (ctorDecl.eContainer === null && !ctorDecl.body.statements.empty) {
+			classDecl.ownedMembersRaw.add(0, ctorDecl);
 		}
-
-		return funDecl;
 	}
 
-	def private Statement[] createFieldInitCode(N4ClassDeclaration classDecl, FormalParameter specFpar, SymbolTableEntry specObjSTE) {
+	def private Statement[] createInstanceFieldInitCode(N4ClassDeclaration classDecl, FormalParameter specFpar, SymbolTableEntry specObjSTE) {
 		val allFields = classDecl.ownedFields.filter[!isStatic && !isConsumedFromInterface].toList;
 		if(specFpar!==null) {
 			// we have a spec-parameter -> we are in a spec-style constructor
@@ -323,23 +315,29 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		val constructorSTE = getSymbolTableEntryForMember(state.G.objectType, "constructor", false, false, true);
 		val genericCallSTE = getSymbolTableEntryForMember(state.G.functionType, genericMethodName, false, false, true);
 
-		return _ExprStmnt(_CallExpr()=>[
-			target = __NSSafe_PropertyAccessExpr(superClassSTE, prototypeSTE, constructorSTE, genericCallSTE);
-			arguments += _Argument(_ThisLiteral());
-			if( variadicCase) {
-				val concatSTE = getSymbolTableEntryForMember(state.G.arrayType, "concat", false, false, true);
+val args = new ArrayList(fpars.map[findSymbolTableEntryForElement(it , true)].map[_Argument(_IdentRef(it))]); // WARNING: .toList won't work!
+if(variadicCase) {
+	args.last.spread = true;
+}
 
-				arguments += _Argument(_CallExpr(
-					_PropertyAccessExpr(
-						_ArrLit(fpars.take(fpars.size-1)
-								.map[findSymbolTableEntryForElement(it , true)]
-								.map[_IdentRef(it)]) // target of PropAcc
-								, concatSTE ), // end PropAcc
-					_IdentRef(fpars.last.findSymbolTableEntryForElement(true))
-				)); // end CallExpr
-			} else {
-				arguments += fpars.map[findSymbolTableEntryForElement(it , true)].map[_Argument(_IdentRef(it))];
-			}
+		return _ExprStmnt(_CallExpr()=>[
+			target = _SuperLiteral();//__NSSafe_PropertyAccessExpr(superClassSTE, prototypeSTE, constructorSTE, genericCallSTE);
+arguments += args;
+//			arguments += _Argument(_ThisLiteral());
+//			if( variadicCase) {
+//				val concatSTE = getSymbolTableEntryForMember(state.G.arrayType, "concat", false, false, true);
+//
+//				arguments += _Argument(_CallExpr(
+//					_PropertyAccessExpr(
+//						_ArrLit(fpars.take(fpars.size-1)
+//								.map[findSymbolTableEntryForElement(it , true)]
+//								.map[_IdentRef(it)]) // target of PropAcc
+//								, concatSTE ), // end PropAcc
+//					_IdentRef(fpars.last.findSymbolTableEntryForElement(true))
+//				)); // end CallExpr
+//			} else {
+//				arguments += fpars.map[findSymbolTableEntryForElement(it , true)].map[_Argument(_IdentRef(it))];
+//			}
 		]);
 	}
 
@@ -420,7 +418,8 @@ class ClassConstructorAssistant extends TransformationAssistant {
 				if(stmnt instanceof ExpressionStatement) {
 					val expr = stmnt.expression;
 					if(expr instanceof ParameterizedCallExpression) {
-						if(state.info.isExplicitSuperCall(expr)) {
+						if(expr.target instanceof SuperLiteral
+							|| state.info.isExplicitSuperCall(expr)) {
 							return i;
 						}
 					}
@@ -466,5 +465,15 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		val accessModifier = ModifierUtils.convertToMemberAccessModifier(memberDecl.declaredModifiers,
 			memberDecl.annotations);
 		return accessModifier === MemberAccessModifier.PUBLIC;
+	}
+
+	def private static <T> int insertAt(List<T> list, int index, T element) {
+		list.add(index, element);
+		return index + 1;
+	}
+
+	def private static <T> int insertAt(List<T> list, int index, Collection<? extends T> elements) {
+		list.addAll(index, elements);
+		return index + elements.size();
 	}
 }

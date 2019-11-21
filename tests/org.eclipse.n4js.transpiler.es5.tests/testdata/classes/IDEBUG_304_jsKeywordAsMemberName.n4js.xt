@@ -14,14 +14,14 @@
 /* XPECT output ---
 <==
 stdout:
-[Function: delete___n4] 'instance method renamed'
-[Function: delete____n4] 'instance method not renamed'
-[Function: delete___n4] 'static method renamed'
-[Function: delete____n4] 'static method not renamed'
-[Function: delete___n4] 'default instance method renamed'
+[Function: delete] 'instance method renamed'
+[Function: delete_] 'instance method not renamed'
+[Function: delete] 'static method renamed'
+[Function: delete_] 'static method not renamed'
+[Function: delete] 'default instance method renamed'
 [Function: delete___n4] 'default static method renamed'
-[Function: delete___n4] 'super instance method renamed'
-[Function: delete___n4] 'super static method renamed'
+[Function: delete] 'super instance method renamed'
+[Function: delete] 'super static method renamed'
 logging setter-getter 1
 logging setter-getter 2
 stderr:

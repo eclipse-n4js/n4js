@@ -341,11 +341,7 @@ abstract class DelegatingMember extends N4MemberDeclaration {
 	boolean delegationTargetIsAbstract
 }
 
-class DelegatingGetterDeclaration extends N4GetterDeclaration, DelegatingMember {
-//	/* overridden attribute access to always return the name of the delegation target */
-//	op String getName() { return delegationTarget.name; }
-//	op void setName(String name) { throw new IllegalArgumentException("cannot set name of DelegatingGetterDeclaration; always has name of delegation target"); }
-}
+class DelegatingGetterDeclaration extends N4GetterDeclaration, DelegatingMember {}
 class DelegatingSetterDeclaration extends N4SetterDeclaration, DelegatingMember {}
 class DelegatingMethodDeclaration extends N4MethodDeclaration, DelegatingMember {}
 

@@ -1909,7 +1909,7 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 	 */
 	contains N4MemberDeclaration[] ownedMembersRaw opposite owner
 	/**
-	 * Returns a view on ownedMembersRaw filtering out non-methods.
+	 * Returns a view on ownedMembersRaw filtering out non-members and callable constructors.
  	 */
 	op N4MemberDeclaration[] getOwnedMembers() {
 		val methods = ownedMembersRaw.filter(N4MemberDeclaration).filter[!isCallableConstructor]
