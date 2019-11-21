@@ -224,8 +224,13 @@ public class TranspilerBuilderBlocks
 	}
 
 	public static def ParameterizedCallExpression _CallExpr(Expression target, Expression... arguments) {
+		return _CallExpr(target, false, arguments);
+	}
+
+	public static def ParameterizedCallExpression _CallExpr(Expression target, boolean optionalChaining, Expression... arguments) {
 		val result = N4JSFactory.eINSTANCE.createParameterizedCallExpression;
 		result.target = target;
+		result.optionalChaining = optionalChaining;
 		result.arguments += arguments.filterNull.map[_Argument];
 		return result;
 	}

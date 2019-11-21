@@ -2475,6 +2475,26 @@ B.bar();
 --
 
 
+=== Template Literals
+
+Template literals as defined in Section 12.2.9 of the ECMAScript 6 specification cite:[ECMA15a] are
+supported in N4JS, including tagged template literals.
+
+.Tagged Template Literals
+[req,id=GH-24,version=1]
+--
+1. The tag expression of a tagged template literal containing expression segments `\$\{expr1}` ... `\$\{exprN}`
+   with types $T_1$ ... $T_N$, respectively, must be of type `{function(Array<string>, T1, ..., TN):any}`.
++
+For example, in `tagFn`hello \${'wonderful'} world \${2*21} !!!`` the expression `tagFn` must be of type
+`{function(Array<string>,string,number):any}`.
+2. The inferred type of a tagged template literal with a tag expression of type `{function(Array<string>,T1,...,TN):R}` is $R$.
++
+For example, the inferred type of `(():number=>42)``` is `number`.
+--
+
+
+
 [.language-n4js]
 == ECMAScript 7 Expressions
 

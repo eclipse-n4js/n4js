@@ -1,0 +1,92 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class FancyData {}
+
+const tagBad = "nonsense";
+function tagTrivial() { return null; }
+function tagFlexible(...args: any) { return null; }
+function tagIgnoreExpr(segments: Array<string>) { return null; }
+function tagSpecific(segments: Array<string>, expr1: number, expr2: string, expr3: Array<number>) { return null; }
+function tagMissingResult() {}
+function tagFancyResult(): FancyData { return null; }
+
+class C {
+	tagBad = "nonsense";
+	tagTrivial() { return null; }
+	tagFlexible(...args: any) { return null; }
+	tagIgnoreExpr(segments: Array<string>) { return null; }
+	tagSpecific(segments: Array<string>, expr1: number, expr2: string, expr3: Array<number>) { return null; }
+	tagMissingResult() {}
+	tagFancyResult(): FancyData { return null; }
+}
+
+
+// XPECT errors --> "string is not a subtype of {function(Array<string>):any}." at "tagBad"
+tagBad``;
+// XPECT noerrors -->
+tagTrivial``;
+// XPECT noerrors -->
+tagTrivial`${42}`;
+// XPECT noerrors -->
+tagFlexible``;
+// XPECT noerrors -->
+tagFlexible`${42}`;
+// XPECT noerrors -->
+tagIgnoreExpr``;
+// XPECT noerrors -->
+tagIgnoreExpr`${42}`;
+// XPECT errors --> "{function(Array<string>,number,string,Array<number>):any} is not a subtype of {function(Array<string>):any}." at "tagSpecific"
+tagSpecific``;
+// XPECT errors --> "{function(Array<string>,number,string,Array<number>):any} is not a subtype of {function(Array<string>,int):any}." at "tagSpecific"
+tagSpecific`${42}`;
+// XPECT noerrors -->
+tagSpecific`${42} ${"hi"} ${[1,2,3]}`;
+// XPECT errors --> "{function():void} is not a subtype of {function(Array<string>):any}." at "tagMissingResult"
+tagMissingResult``;
+// XPECT type of 'result1' --> FancyData
+let result1 = tagFancyResult``;
+
+
+const c = new C();
+// XPECT errors --> "string is not a subtype of {function(Array<string>):any}." at "c.tagBad"
+c.tagBad``;
+// XPECT noerrors -->
+c.tagTrivial``;
+// XPECT noerrors -->
+c.tagTrivial`${42}`;
+// XPECT noerrors -->
+c.tagFlexible``;
+// XPECT noerrors -->
+c.tagFlexible`${42}`;
+// XPECT noerrors -->
+c.tagIgnoreExpr``;
+// XPECT noerrors -->
+c.tagIgnoreExpr`${42}`;
+// XPECT errors --> "{function(Array<string>,number,string,Array<number>):any} is not a subtype of {function(Array<string>):any}." at "c.tagSpecific"
+c.tagSpecific``;
+// XPECT errors --> "{function(Array<string>,number,string,Array<number>):any} is not a subtype of {function(Array<string>,int):any}." at "c.tagSpecific"
+c.tagSpecific`${42}`;
+// XPECT noerrors -->
+c.tagSpecific`${42} ${"hi"} ${[1,2,3]}`;
+// XPECT errors --> "{function():void} is not a subtype of {function(Array<string>):any}." at "c.tagMissingResult"
+c.tagMissingResult``;
+// XPECT type of 'result2' --> FancyData
+let result2 = c.tagFancyResult``;
+
+
+// XPECT errors --> "string is not a subtype of {function(Array<string>):any}." at "'result'"
+()=>'result'`ignored`; // this should be parsed as ()=>('result'`ignored`)
+// XPECT noerrors -->
+(()=>'result')`ignored`;

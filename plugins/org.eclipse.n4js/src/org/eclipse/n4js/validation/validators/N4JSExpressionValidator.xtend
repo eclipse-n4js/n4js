@@ -138,6 +138,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.TaggedTemplateString
 
 /**
  */
@@ -310,6 +311,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			UnaryExpression: enclosing.op !== UnaryOperator.TYPEOF
 			EqualityExpression: false
 			ExpressionStatement: false
+			TaggedTemplateString: false // allow something like: new C().method``;
 			default: true
 		}
 		if (!shouldWarn) {
