@@ -161,15 +161,60 @@ function EqualityExpression() {
 
 
 /* FunctionExpression XPECT astOrder ---
-	0: function FunctionExpression() { (function() { }); },
+	0: function FunctionExpression01() { (function() { }); },
 	1: { (function() { }); },
 	2: (function() { });,
 	3: (function() { }),
 	4: function() { },
 	5: { }
 --- */
-function FunctionExpression() {
+function FunctionExpression01() {
 	(function() { });
+}
+
+
+/* FunctionExpression XPECT astOrder ---
+	0: function FunctionExpression02() { (function() { return "result"; }); },
+	1: { (function() { return "result"; }); },
+	2: (function() { return "result"; });,
+	3: (function() { return "result"; }),
+	4: function() { return "result"; },
+	5: { return "result"; },
+	6: return "result";,
+	7: "result"
+--- */
+function FunctionExpression02() {
+	(function() { return "result"; });
+}
+
+
+/* FunctionExpression XPECT astOrder ---
+	0: function FunctionExpression03() { (()=>{ return "result"; }); },
+	1: { (()=>{ return "result"; }); },
+	2: (()=>{ return "result"; });,
+	3: (()=>{ return "result"; }),
+	4: ()=>{ return "result"; },
+	5: return "result";,
+	6: return "result";,
+	7: "result"
+--- */
+function FunctionExpression03() {
+	(()=>{ return "result"; });
+}
+
+
+/* FunctionExpression XPECT astOrder ---
+	0: function FunctionExpression04() { (()=>"result"); },
+	1: { (()=>"result"); },
+	2: (()=>"result");,
+	3: (()=>"result"),
+	4: ()=>"result",
+	5: "result",
+	6: "result",
+	7: "result"
+--- */
+function FunctionExpression04() {
+	(()=>"result");
 }
 
 
@@ -359,10 +404,25 @@ class ClassSuperLiteral {
 	}
 }
 
-function TaggedTemplateString() {
-	// currently unsupported feature
-}
 
+/* TemplateExpression XPECT astOrder ---
+	0: function TaggedTemplateString() { (()=>"result")`a ${"b"} c`; },
+	1: { (()=>"result")`a ${"b"} c`; },
+	2: (()=>"result")`a ${"b"} c`;,
+	3: (()=>"result")`a ${"b"} c`,
+	4: (()=>"result"),
+	5: ()=>"result",
+	6: "result",
+	7: "result",
+	8: "result",
+	9: `a ${"b"} c`,
+	10: `a ${,
+	11: "b",
+	12:  c`
+--- */
+function TaggedTemplateString() {
+	(()=>"result")`a ${"b"} c`;
+}
 
 /* TemplateExpression XPECT astOrder ---
 	0: function TemplateExpression() { `a ${"b"} c`; },

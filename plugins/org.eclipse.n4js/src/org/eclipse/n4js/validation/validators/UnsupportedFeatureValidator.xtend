@@ -24,7 +24,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NewTarget
 import org.eclipse.n4js.n4JS.PropertySpread
-import org.eclipse.n4js.n4JS.TaggedTemplateString
 import org.eclipse.n4js.validation.ASTStructureValidator
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
@@ -78,14 +77,6 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 					exportDecl);
 			}
 		}
-	}
-
-
-	// IMPORTANT: when implementing tagged templates, don't forget to adjust transpilation of optional chaining
-	// (see method ExpressionTransformation#transformOptionalChaining(ExpressionWithTarget))
-	@Check
-	def void checkTaggedTemplateLiteral(TaggedTemplateString tts) {
-		//unsupported("tagged template literals", tts, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 	}
 
 

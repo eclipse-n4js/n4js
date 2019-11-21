@@ -598,8 +598,32 @@ class ClassSuperLiteral {
 }
 
 function TaggedTemplateString() {
+	// TemplateExpression XPECT cfContainer --> FunctionDeclaration::Block
+	/* TemplateExpression XPECT allEdges ---
+		"start" --> ()=>"result",
+		()=>"result" --> (()=>"result"),
+		(()=>"result") --> `a ${,
+		`a ${ --> "b",
+		"b" --> c`,
+		c` --> `a ${"b"} c`,
+		`a ${"b"} c` --> (()=>"result")`a ${"b"} c`,
+		(()=>"result")`a ${"b"} c` --> "end"
+	--- */
+	// TemplateExpression XPECT allBranches --> B0: "start" -> ()=>"result" -> (()=>"result") -> `a ${ -> "b" -> c` -> `a ${"b"} c` -> (()=>"result")`a ${"b"} c` -> "end"
+	// TemplateExpression XPECT allPaths --> "start" -> ()=>"result" -> (()=>"result") -> `a ${ -> "b" -> c` -> `a ${"b"} c` -> (()=>"result")`a ${"b"} c` -> "end"
+	// TemplateExpression backward XPECT allPaths direction 'Backward' --> "end" -> (()=>"result")`a ${"b"} c` -> `a ${"b"} c` ->  c` -> "b" -> `a ${ -> (()=>"result") -> ()=>"result" -> "start"
+	// TemplateExpression XPECT path from '"start"' to '"end"' -->
+	// TemplateExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// TemplateExpression XPECT succs at '"start"' --> ()=>"result"
+	// TemplateExpression XPECT succs at '()=>"result"' --> (()=>"result")
+	// TemplateExpression XPECT succs at '(()=>"result")' --> `a ${
+	// TemplateExpression XPECT succs at '`a ${' --> "b"
+	// TemplateExpression XPECT succs at '"b"' --> c`
+	// TemplateExpression XPECT succs at 'c`' --> `a ${"b"} c`
+	// TemplateExpression XPECT succs at '`a ${"b"} c`' --> (()=>"result")`a ${"b"} c`
+	// TemplateExpression XPECT succs at '(()=>"result")`a ${"b"} c`' --> "end"
 	"start";
-	// currently unsupported feature
+	(()=>"result")`a ${"b"} c`;
 	"end";
 }
 
