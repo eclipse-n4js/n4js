@@ -100,7 +100,7 @@ public class LspServer {
 
 		try (AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open().bind(address);) {
 
-			N4jscConsole.println("Listening for LSP clients...");
+			N4jscConsole.println("Listening for LSP clients on port " + options.getPort() + "...");
 
 			try (AsynchronousSocketChannel socketChannel = serverSocket.accept().get();
 					InputStream in = Channels.newInputStream(socketChannel);

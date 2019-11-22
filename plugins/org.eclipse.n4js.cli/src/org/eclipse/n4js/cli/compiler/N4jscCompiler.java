@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
@@ -34,6 +36,7 @@ import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
+import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
 
 /**
@@ -63,6 +66,7 @@ public class N4jscCompiler {
 
 		setPersistionOptions();
 		this.languageServer.connect(callback);
+		setupWorkspaceBuildActionListener();
 	}
 
 	/** Starts the compiler in a blocking fashion */
@@ -73,6 +77,7 @@ public class N4jscCompiler {
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, "No base directory");
 		}
 
+		Stopwatch compilationTime = Stopwatch.createStarted();
 		params.setRootUri(baseDir.toURI().toString());
 		languageServer.initialize(params).get();
 		warnIfNoProjectsFound();
@@ -84,7 +89,15 @@ public class N4jscCompiler {
 		languageServer.shutdown();
 		languageServer.exit();
 
+		printResults(compilationTime.stop().elapsed());
 		writeTestCatalog();
+	}
+
+	private void setupWorkspaceBuildActionListener() {
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		DefaultBuildRequestFactory buildRequestFactory = injector.getInstance(DefaultBuildRequestFactory.class);
+		buildRequestFactory.setAfterGenerateListener(callback);
+		buildRequestFactory.setAfterDeleteListener(callback);
 	}
 
 	private void setPersistionOptions() {
@@ -114,6 +127,18 @@ public class N4jscCompiler {
 				N4jscConsole.print("   " + String.join("\n   ", projectNameList));
 			}
 		}
+	}
+
+	private void printResults(Duration compilationDuration) {
+		long trsnp = callback.getTranspilationsCount();
+		long deltd = callback.getDeletionsCount();
+		long errs = callback.getErrorsCount();
+		long wrns = callback.getWarningsCount();
+		String durationStr = compilationDuration.toString();
+		String msg = String.format(
+				"Compile results - Transpiled: %d, Deleted: %d, Errors: %d, Warnings: %d, Duration: %s",
+				trsnp, deltd, errs, wrns, durationStr);
+		N4jscConsole.println(msg);
 	}
 
 	private void writeTestCatalog() throws N4jscException {

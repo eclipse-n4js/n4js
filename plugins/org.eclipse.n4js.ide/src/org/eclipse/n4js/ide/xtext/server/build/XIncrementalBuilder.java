@@ -40,8 +40,7 @@ public class XIncrementalBuilder {
 	}
 
 	/** Run the build. */
-	public XBuildResult build(XBuildRequest request,
-			IResourceClusteringPolicy clusteringPolicy) {
+	public XBuildResult build(XBuildRequest request, IResourceClusteringPolicy clusteringPolicy) {
 
 		ResourceDescriptionsData resDescrsCopy = request.getState().getResourceDescriptions().copy();
 		XSource2GeneratedMapping fileMappingsCopy = request.getState().getFileMappings().copy();

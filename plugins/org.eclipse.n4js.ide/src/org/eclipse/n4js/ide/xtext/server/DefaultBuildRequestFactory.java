@@ -16,6 +16,9 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListener;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.validation.Issue;
 
@@ -31,16 +34,60 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	@Inject
 	private IssueAcceptor issueAcceptor;
 
+	@Inject(optional = true) // DefaultAfterValidateListener will be overwritten if defined in a module
+	private AfterValidateListener afterValidateListener = new DefaultAfterValidateListener();
+	@Inject(optional = true)
+	private AfterGenerateListener afterGenerateListener;
+	@Inject(optional = true)
+	private AfterDeleteListener afterDeleteListener;
+
+	class DefaultAfterValidateListener implements AfterValidateListener {
+		@Override
+		public void afterValidate(URI source, Collection<Issue> issues) {
+			issueAcceptor.publishDiagnostics(source, issues);
+		}
+	}
+
 	@Override
 	public XBuildRequest getBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles, List<Delta> externalDeltas) {
 		XBuildRequest result = new XBuildRequest();
 		result.setDirtyFiles(changedFiles);
 		result.setDeletedFiles(deletedFiles);
 		result.setExternalDeltas(externalDeltas);
-		result.setAfterValidateListener((URI uri, Collection<Issue> issues) -> {
-			issueAcceptor.publishDiagnostics(uri, issues);
-		});
+		result.setAfterDeleteListener(afterDeleteListener);
+		result.setAfterValidateListener(afterValidateListener);
+		result.setAfterGenerateListener(afterGenerateListener);
 		return result;
+	}
+
+	/** @return {@link AfterValidateListener} */
+	public AfterValidateListener getAfterValidateListener() {
+		return afterValidateListener;
+	}
+
+	/** Set {@link #afterValidateListener} */
+	public void setAfterValidateListener(AfterValidateListener afterValidateListener) {
+		this.afterValidateListener = afterValidateListener;
+	}
+
+	/** @return {@link AfterGenerateListener} */
+	public AfterGenerateListener getAfterGenerateListener() {
+		return afterGenerateListener;
+	}
+
+	/** Set {@link #afterGenerateListener} */
+	public void setAfterGenerateListener(AfterGenerateListener afterGenerateListener) {
+		this.afterGenerateListener = afterGenerateListener;
+	}
+
+	/** @return {@link AfterDeleteListener} */
+	public AfterDeleteListener getAfterDeleteListener() {
+		return afterDeleteListener;
+	}
+
+	/** Set {@link #afterDeleteListener} */
+	public void setAfterDeleteListener(AfterDeleteListener afterDeleteListener) {
+		this.afterDeleteListener = afterDeleteListener;
 	}
 
 }
