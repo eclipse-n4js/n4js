@@ -25,6 +25,7 @@ import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.resource.IExternalContentSupport;
@@ -476,6 +477,13 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 */
 	public boolean isDocumentOpen(URI uri) {
 		return openDocuments.containsKey(uri);
+	}
+
+	/** @return a workspace relative URI for a given URI */
+	public URI makeWorkspaceRelative(URI uri) {
+		FileURI fileUri = new FileURI(uri);
+		URI relativeUri = fileUri.toURI().deresolve(getBaseDir());
+		return relativeUri;
 	}
 
 }

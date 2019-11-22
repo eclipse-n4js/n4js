@@ -81,9 +81,7 @@ public class InProcessExecuter {
 				N4jscTestLanguageClient callback = (N4jscTestLanguageClient) N4jscFactory.getLanguageClient();
 				cliResult.errors = callback.errors;
 				cliResult.warnings = callback.warnings;
-
-				// save transpiled files
-				cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workspaceRoot.toPath());
+				cliResult.transpiledFiles = callback.transpiledFiles;
 
 				// save projects
 				Injector injector = N4jscFactory.getOrCreateInjector();

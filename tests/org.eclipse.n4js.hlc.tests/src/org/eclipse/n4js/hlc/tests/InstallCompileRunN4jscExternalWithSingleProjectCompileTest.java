@@ -59,7 +59,7 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "Application was created!";
 

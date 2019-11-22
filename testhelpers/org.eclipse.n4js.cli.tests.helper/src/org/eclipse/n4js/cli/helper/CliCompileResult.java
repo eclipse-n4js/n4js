@@ -95,48 +95,38 @@ public class CliCompileResult extends ProcessResult {
 		return new TreeSet<>(warnings.values());
 	}
 
-	/** @return number of all js files in {@code src-gen} folders */
+	/** @return number of all transpiled files */
 	public int getTranspiledFilesCount() {
 		return getTranspiledFiles().size();
 	}
 
-	/** @return list of all js file names in {@code src-gen} folders */
+	/** @return number of all transpiled files in the given directory */
+	public int getTranspiledFilesCount(Path dir) {
+		return getTranspiledFiles(dir).size();
+	}
+
+	/** @return list of all transpiled files */
+	public Collection<File> getTranspiledFiles() {
+		return getTranspiledFiles(null);
+	}
+
+	/** @return list of all transpiled files in the given directory */
+	public Collection<File> getTranspiledFiles(Path dir) {
+		return getFiles(dir, true);
+	}
+
+	/** @return list of all transpiled file names */
 	public Collection<String> getTranspiledFileNames() {
 		return getTranspiledFiles().stream()
 				.map(f -> f.toString())
 				.collect(Collectors.toList());
 	}
 
-	/** @return list of all js files in {@code src-gen} folders */
-	public Collection<File> getTranspiledFiles() {
-		return getJSFiles(null, true, false);
-	}
-
-	/** @return number of all js files */
-	public int getJSFilesCount() {
-		return getJSFiles().size();
-	}
-
-	/** @return number of all js files in the given directory */
-	public int getJSFilesCount(Path dir) {
-		return getJSFiles(dir).size();
-	}
-
-	/** @return list of all js files */
-	public Collection<File> getJSFiles() {
-		return getJSFiles(null, false, false);
-	}
-
-	/** @return list of all js files in the given directory */
-	public Collection<File> getJSFiles(Path dir) {
-		return getJSFiles(dir, false, false);
-	}
-
-	private Collection<File> getJSFiles(Path dir, boolean transpiledOnly, boolean exclusive) {
+	private Collection<File> getFiles(Path dir, boolean includeSubdirs) {
 		if (transpiledFiles.isEmpty()) {
 			return Collections.emptyList();
 		}
-		if (exclusive && dir != null) {
+		if (!includeSubdirs && dir != null) {
 			Collection<File> filesInDir = transpiledFiles.get(dir);
 			return filesInDir;
 		}
@@ -144,30 +134,18 @@ public class CliCompileResult extends ProcessResult {
 		Path start = (dir == null) ? transpiledFiles.firstKey() : dir;
 		Collection<File> filesInDir = new LinkedList<>();
 		Map<Path, HashSet<File>> tailMap = transpiledFiles.tailMap(start);
+
 		for (Iterator<Entry<Path, HashSet<File>>> it = tailMap.entrySet().iterator(); it.hasNext();) {
 			Entry<Path, HashSet<File>> next = it.next();
 			Path curDir = next.getKey();
-			if (!transpiledOnly || pathContainsSrcGen(curDir)) {
-				if (dir == null || curDir.startsWith(dir)) {
-					filesInDir.addAll(next.getValue());
-				} else {
-					break;
-				}
+			if (dir == null || curDir.startsWith(dir)) {
+				filesInDir.addAll(next.getValue());
+			} else {
+				break;
 			}
 		}
 
 		return filesInDir;
-	}
-
-	private boolean pathContainsSrcGen(Path path) {
-		if (path == null || path.getNameCount() == 0) {
-			return false;
-		}
-		Path pathName = path.getName(path.getNameCount() - 1);
-		if ("src-gen".equals(pathName.toString())) {
-			return true;
-		}
-		return pathContainsSrcGen(path.getParent());
 	}
 
 	@Override

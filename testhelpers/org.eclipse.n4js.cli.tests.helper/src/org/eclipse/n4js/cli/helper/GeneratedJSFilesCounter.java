@@ -72,7 +72,8 @@ public class GeneratedJSFilesCounter {
 
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-					if (file.getFileName().toString().endsWith(".js")) {
+					String fName = file.getFileName().toString();
+					if ((fName.endsWith(".js") || fName.endsWith(".jsx")) && pathContainsSrcGen(file)) {
 						TreeMap<Path, HashSet<File>> fileMap = genFilesRef.get();
 						Path directory = file.getParent();
 						if (!fileMap.containsKey(directory)) {
@@ -104,6 +105,17 @@ public class GeneratedJSFilesCounter {
 		}
 
 		return genFilesRef.get();
+	}
+
+	static private boolean pathContainsSrcGen(Path path) {
+		if (path == null || path.getNameCount() == 0) {
+			return false;
+		}
+		Path pathName = path.getName(path.getNameCount() - 1);
+		if ("src-gen".equals(pathName.toString())) {
+			return true;
+		}
+		return pathContainsSrcGen(path.getParent());
 	}
 
 	/**
