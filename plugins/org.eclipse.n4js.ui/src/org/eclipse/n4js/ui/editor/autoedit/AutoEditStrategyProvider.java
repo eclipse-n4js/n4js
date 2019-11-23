@@ -45,17 +45,29 @@ public class AutoEditStrategyProvider extends DefaultAutoEditStrategyProvider {
 
 	@Override
 	protected void configureMultilineComments(IEditStrategyAcceptor acceptor) {
-		JSDocEditStrategy multiline = new JSDocEditStrategy("/**", " * ", " */");
-		injector.injectMembers(multiline);
+		IAutoEditStrategy multiline3AndMoreStars = multiLineTerminals.newInstance("/***", " * ", " */");
+		JSDocEditStrategy multilineJsDoc = new JSDocEditStrategy("/**", " * ", " */");
+		IAutoEditStrategy multiline1Star = multiLineTerminals.newInstance("/*", " * ", " */");
+		injector.injectMembers(multilineJsDoc);
 		IAutoEditStrategy singleline = singleLineTerminals.newInstance("/*", " */", new SupressingMLCommentPredicate());
 
 		acceptor.accept(singleline, IDocument.DEFAULT_CONTENT_TYPE);
-
-		acceptor.accept(multiline, IDocument.DEFAULT_CONTENT_TYPE);
-		acceptor.accept(multiline, TerminalsTokenTypeToPartitionMapper.COMMENT_PARTITION);
-		acceptor.accept(multiline, JS_DOC_PARTITION);
 		acceptor.accept(singleLineTerminals.newInstance("/*", " */"), REG_EX_PARTITION);
-		acceptor.accept(multiline, REG_EX_PARTITION);
+
+		acceptor.accept(multiline3AndMoreStars, IDocument.DEFAULT_CONTENT_TYPE);
+		acceptor.accept(multiline3AndMoreStars, TerminalsTokenTypeToPartitionMapper.COMMENT_PARTITION);
+		acceptor.accept(multiline3AndMoreStars, JS_DOC_PARTITION);
+		acceptor.accept(multiline3AndMoreStars, REG_EX_PARTITION);
+
+		acceptor.accept(multilineJsDoc, IDocument.DEFAULT_CONTENT_TYPE);
+		acceptor.accept(multilineJsDoc, TerminalsTokenTypeToPartitionMapper.COMMENT_PARTITION);
+		acceptor.accept(multilineJsDoc, JS_DOC_PARTITION);
+		acceptor.accept(multilineJsDoc, REG_EX_PARTITION);
+
+		acceptor.accept(multiline1Star, IDocument.DEFAULT_CONTENT_TYPE);
+		acceptor.accept(multiline1Star, TerminalsTokenTypeToPartitionMapper.COMMENT_PARTITION);
+		acceptor.accept(multiline1Star, JS_DOC_PARTITION);
+		acceptor.accept(multiline1Star, REG_EX_PARTITION);
 	}
 
 	@Override
