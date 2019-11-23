@@ -57,7 +57,7 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 						+ retTypeAndfparNames.get(i + 1);
 			}
 		}
-		String returnType = indentationString + RETURNSTR + retTypeAndfparNames.get(0);
+		String returnType = indentationString + RETURNSTR + "{" + retTypeAndfparNames.get(0) + "}";
 		newC.offset = command.offset;
 		newC.text += command.text + indentationString;
 
