@@ -48,19 +48,21 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 	protected CommandInfo handleCursorInFirstLine(IDocument document, DocumentCommand command, IRegion startTerminal,
 			IRegion stopTerminal) throws BadLocationException {
 		CommandInfo newC = new CommandInfo();
-		newC.isChange = true;
 		List<String> retTypeAndfparNames = getRetTypeAndparNamesAsList(document, startTerminal);
 		String paramString = "";
+		String returnType = "";
+		if (retTypeAndfparNames.size() > 0) {
+			returnType = indentationString + RETURNSTR + "{" + retTypeAndfparNames.get(0) + "}";
+		}
 		if (retTypeAndfparNames.size() > 1) {
 			for (int i = 1; i < retTypeAndfparNames.size(); i += 2) {
 				paramString += command.text + indentationString + PARAMSTR + "{" + retTypeAndfparNames.get(i) + "} "
 						+ retTypeAndfparNames.get(i + 1);
 			}
 		}
-		String returnType = indentationString + RETURNSTR + "{" + retTypeAndfparNames.get(0) + "}";
+		newC.isChange = true;
 		newC.offset = command.offset;
 		newC.text += command.text + indentationString;
-
 		newC.cursorOffset = command.offset + newC.text.length();
 		if (stopTerminal == null && atEndOfLineInput(document, command.offset)) {
 			newC.text += command.text + getRightTerminal();
@@ -70,8 +72,11 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 			String string = document.get(command.offset, stopTerminal.getOffset() - command.offset);
 			if (string.trim().length() > 0)
 				newC.text += string.trim();
-			newC.text += paramString
-					+ command.text + returnType + command.text;
+			if (!(retTypeAndfparNames.size() == 0)) {
+				newC.text += paramString + command.text + returnType + command.text;
+			} else {
+				newC.text += command.text;
+			}
 
 			newC.length += string.length();
 		}
