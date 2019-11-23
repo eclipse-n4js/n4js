@@ -30,8 +30,8 @@ import org.eclipse.xtext.ui.editor.autoedit.MultiLineTerminalsEditStrategy;
 
 public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 	private final String indentationString;
-	private final String paramString = "@param ";
-	private final String returnString = "@return ";
+	private final static String PARAMSTR = "@param ";
+	private final static String RETURNSTR = "@return ";
 
 	public JSDocEditStrategy(String leftTerminal, String indentationString, String rightTerminal) {
 		super(leftTerminal, indentationString, rightTerminal, false);
@@ -49,6 +49,30 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 			IRegion stopTerminal) throws BadLocationException {
 		CommandInfo newC = new CommandInfo();
 		newC.isChange = true;
+		List<String> retTypeAndfparNames = getRetTypeAndparNamesasList(document, startTerminal);
+		String paramName = indentationString + PARAMSTR + retTypeAndfparNames.get(0);
+		String returnType = indentationString + RETURNSTR + retTypeAndfparNames.get(1);
+		newC.offset = command.offset;
+		newC.text += command.text + indentationString;
+
+		newC.cursorOffset = command.offset + newC.text.length();
+		if (stopTerminal == null && atEndOfLineInput(document, command.offset)) {
+			newC.text += command.text + getRightTerminal();
+		}
+		if (stopTerminal != null && stopTerminal.getOffset() >= command.offset
+				&& util.isSameLine(document, stopTerminal.getOffset(), command.offset)) {
+			String string = document.get(command.offset, stopTerminal.getOffset() - command.offset);
+			if (string.trim().length() > 0)
+				newC.text += string.trim();
+			newC.text += command.text + paramName
+					+ command.text + returnType + command.text;
+
+			newC.length += string.length();
+		}
+		return newC;
+	}
+
+	private List<String> getRetTypeAndparNamesasList(IDocument document, IRegion startTerminal) {
 		List<String> retAndfparNames = null;
 		if (document instanceof N4JSDocument) {
 			// index 0: if set to "void", the method has no return value; fpars start at index 1
@@ -72,25 +96,6 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 				return retAndFPars;
 			});
 		}
-
-		String paramName = retAndfparNames.get(1);
-		String returnType = retAndfparNames.get(0);
-		newC.offset = command.offset;
-		newC.text += command.text + indentationString + command.text + indentationString + paramString + paramName
-				+ command.text
-				+ indentationString + returnString + returnType;
-		newC.cursorOffset = command.offset + newC.text.length();
-		if (stopTerminal == null && atEndOfLineInput(document, command.offset)) {
-			newC.text += command.text + getRightTerminal();
-		}
-		if (stopTerminal != null && stopTerminal.getOffset() >= command.offset
-				&& util.isSameLine(document, stopTerminal.getOffset(), command.offset)) {
-			String string = document.get(command.offset, stopTerminal.getOffset() - command.offset);
-			if (string.trim().length() > 0)
-				newC.text += string.trim();
-			newC.text += command.text;
-			newC.length += string.length();
-		}
-		return newC;
+		return retAndfparNames;
 	}
 }
