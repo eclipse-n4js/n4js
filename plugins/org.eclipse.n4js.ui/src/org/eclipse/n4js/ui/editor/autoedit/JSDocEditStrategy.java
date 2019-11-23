@@ -49,9 +49,15 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 			IRegion stopTerminal) throws BadLocationException {
 		CommandInfo newC = new CommandInfo();
 		newC.isChange = true;
-		List<String> retTypeAndfparNames = getRetTypeAndparNamesasList(document, startTerminal);
-		String paramName = indentationString + PARAMSTR + retTypeAndfparNames.get(0);
-		String returnType = indentationString + RETURNSTR + retTypeAndfparNames.get(1);
+		List<String> retTypeAndfparNames = getRetTypeAndparNamesAsList(document, startTerminal);
+		String paramString = "";
+		if (retTypeAndfparNames.size() > 1) {
+			for (int i = 1; i < retTypeAndfparNames.size(); i += 2) {
+				paramString += command.text + indentationString + PARAMSTR + "{" + retTypeAndfparNames.get(i) + "} "
+						+ retTypeAndfparNames.get(i + 1);
+			}
+		}
+		String returnType = indentationString + RETURNSTR + retTypeAndfparNames.get(0);
 		newC.offset = command.offset;
 		newC.text += command.text + indentationString;
 
@@ -64,7 +70,7 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 			String string = document.get(command.offset, stopTerminal.getOffset() - command.offset);
 			if (string.trim().length() > 0)
 				newC.text += string.trim();
-			newC.text += command.text + paramName
+			newC.text += paramString
 					+ command.text + returnType + command.text;
 
 			newC.length += string.length();
@@ -72,10 +78,11 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 		return newC;
 	}
 
-	private List<String> getRetTypeAndparNamesasList(IDocument document, IRegion startTerminal) {
+	private List<String> getRetTypeAndparNamesAsList(IDocument document, IRegion startTerminal) {
 		List<String> retAndfparNames = null;
 		if (document instanceof N4JSDocument) {
-			// index 0: if set to "void", the method has no return value; fpars start at index 1
+			// index 0: if set to "void", the method has no return value;
+			// fpars start at index 1 with typename, than name at index 2
 			retAndfparNames = ((N4JSDocument) document).tryReadOnly((xtextResource) -> {
 				Script script = XtextResourceUtils.getScript(xtextResource);
 				ILeafNode node = NodeModelUtils.findLeafNodeAtOffset(NodeModelUtils.findActualNodeFor(script),
@@ -90,6 +97,7 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 						retAndFPars.add("void");
 					}
 					for (FormalParameter fpar : methodDecl.getFpars()) {
+						retAndFPars.add(fpar.getDeclaredTypeRef().getDeclaredType().getName());
 						retAndFPars.add(fpar.getName());
 					}
 				}
