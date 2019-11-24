@@ -164,6 +164,18 @@ class AutoEditPluginUITest extends AbstractCStyleLanguageAutoEditTest {
 		assertState("   /* \n    * |\n    */\n", editor);
 	}
 
+	@Test def void testMLComments_22() throws Exception {
+		val editor = openEditor("   /** |\n");
+		pressKey(editor, '\n');
+		assertState("   /** \n    * |\n    */\n", editor);
+	}
+
+	@Test def void testMLComments_23() throws Exception {
+		val editor = openEditor("   /*** |\n");
+		pressKey(editor, '\n');
+		assertState("   /*** \n    * |\n    */\n", editor);
+	}
+
 	@Test def void testMLCommentsJSDoc_01() throws Exception {
 		val prepBegin = "export public class Star {\n";
 		val prepS = "/**| */\n";
