@@ -164,17 +164,56 @@ class AutoEditPluginUITest extends AbstractCStyleLanguageAutoEditTest {
 		assertState("   /* \n    * |\n    */\n", editor);
 	}
 
-	@Test def void testMLComments_22() throws Exception {
-		val prepBegin = "export public class Sternchen {\n";
-		val	prepS =		"/**| */\n";
-		val prepEnd = 	"public boa(): Sternchen {return null}";
+	@Test def void testMLCommentsJSDoc_01() throws Exception {
+		val prepBegin = "export public class Star {\n";
+		val prepS = "/**| */\n";
+		val prepEnd = "public getStar(): Star {return null}\n}";
 		val editor = openEditor(prepBegin + prepS + prepEnd);
 		pressKey(editor, '\n');
-		val result = prepBegin 
-					+ "/**\n * |\n * @return {Sternchen}\n */\n"
-					+ prepEnd;
+		val result = prepBegin + "/**\n * |\n * @return {Star}\n */\n" + prepEnd;
 		assertState(result, editor);
 	}
+
+	@Test def void testMLCommentsJSDoc_02() throws Exception {
+		val prepBegin = "export public class Star {\n";
+		val prepS = "/**| */\n";
+		val prepEnd = "public getBoolean(): boolean {return false}\n}";
+		val editor = openEditor(prepBegin + prepS + prepEnd);
+		pressKey(editor, '\n');
+		val result = prepBegin + "/**\n * |\n * @return {boolean}\n */\n" + prepEnd;
+		assertState(result, editor);
+	}
+
+	@Test def void testMLCommentsJSDoc_03() throws Exception {
+		val prepBegin = "export public class Star {\n";
+		val prepS = "/**| */\n";
+		val prepEnd = "public doStuff(): void {}\n}";
+		val editor = openEditor(prepBegin + prepS + prepEnd);
+		pressKey(editor, '\n');
+		val result = prepBegin + "/**\n * |\n * @return {void}\n */\n" + prepEnd;
+		assertState(result, editor);
+	}
+
+	@Test def void testMLCommentsJSDoc_04() throws Exception {
+		val prepBegin = "export public class Star {\n";
+		val prepS = "/**| */\n";
+		val prepEnd = "public getBoolean(n:number): boolean {return false}\n}";
+		val editor = openEditor(prepBegin + prepS + prepEnd);
+		pressKey(editor, '\n');
+		val result = prepBegin + "/**\n * |\n * @param {number} n\n * @return {boolean}\n */\n" + prepEnd;
+		assertState(result, editor);
+	}
+
+	@Test def void testMLCommentsJSDoc_05() throws Exception {
+		val prepBegin = "export public class Star {\n";
+		val prepS = "/**| */\n";
+		val prepEnd = "public getBoolean(n:number,s:String): boolean {return false}\n}";
+		val editor = openEditor(prepBegin + prepS + prepEnd);
+		pressKey(editor, '\n');
+		val result = prepBegin + "/**\n * |\n * @param {number} n\n * @param {String} s\n * @return {boolean}\n */\n" + prepEnd;
+		assertState(result, editor);
+	}
+
 	/**  IDEBUG-390 */
 	@Test def void testBug368519() throws Exception {
 
