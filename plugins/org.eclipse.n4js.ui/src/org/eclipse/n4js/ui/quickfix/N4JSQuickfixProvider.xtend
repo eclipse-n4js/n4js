@@ -84,9 +84,7 @@ import org.eclipse.n4js.projectModel.locations.PlatformResourceURI
 import org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl
 import org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl
 import org.eclipse.n4js.utils.nodemodel.NodeModelUtilsN4
-import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.impl.CompositeNodeWithSemanticElement
-import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.n4js.n4JS.N4JSPackage
 
 /**
@@ -157,6 +155,15 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		});
 	}
 
+	/*
+	 * The type annotation must be in colon style.
+	 * If a method declaration has Java-form such as 'int foo() {}', then the following quickfix proposed
+	 * which transforms it to colon style: 'foo(): int {}'
+	 * It searches the bogus return type (which is 'int' in the example above) beginning from the parent node (N4MethodDeclarationImpl)
+	 * of the method declaration.
+	 * The bogus return type removed from the old position.
+	 * A colon followed by the bogus return type added to the right side of the method name.
+	 */
 	@Fix(IssueCodes.TYS_INVALID_TYPE_SYNTAX)
 	def transformJavaTypeAnnotationToColonStyle(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, 'Convert to colon style', 'The method annotation should be in colon style. This quick fix will change the code to colon style.', ImageNames.REORDER) [ context, marker, offset, length, element |
@@ -167,22 +174,22 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			}
 
 			val node = NodeModelUtils.getNode(element)
-			var INode motherINode = node.parent;
-			while (!(motherINode instanceof CompositeNodeWithSemanticElement) ||
-						!(motherINode.semanticElement instanceof N4MethodDeclarationImpl)
+			var parentNode = node.parent;
+			while (!(parentNode instanceof CompositeNodeWithSemanticElement) ||
+						!(parentNode.semanticElement instanceof N4MethodDeclarationImpl)
 			) {
-				motherINode = motherINode.parent;
+				parentNode = parentNode.parent;
 			}
 
-			val roundBracketNode = NodeModelUtilsN4.findKeywordNode((motherINode as ICompositeNode), ')')
-			val INode bogusNode = NodeModelUtils.findNodesForFeature((motherINode as CompositeNodeWithSemanticElement).semanticElement, N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF).head;
+			val roundBracketNode = NodeModelUtilsN4.findKeywordNode(parentNode, ')')
+			val bogusNode = NodeModelUtils.findNodesForFeature((parentNode as CompositeNodeWithSemanticElement).semanticElement, N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF).head;
 
 			// we need to trim since whitespace may be part of the string.
 			// we know that trimming is not the very best solution, since JavaScript allows for
 			// non-Java whitespaces, but in 99% of the cases this would work and it is only a quickfix
-			val String stringOfBogusType = NodeModelUtils.getTokenText(bogusNode);
+			val stringOfBogusType = NodeModelUtils.getTokenText(bogusNode);
 
-			val nodeAfterBogus = NodeModelUtils.findLeafNodeAtOffset(motherINode,bogusNode.endOffset);
+			val nodeAfterBogus = NodeModelUtils.findLeafNodeAtOffset(parentNode,bogusNode.endOffset);
 			val spaceAfterBogusLength =
 				if (nodeAfterBogus !== null && nodeAfterBogus.text.startsWith(" ")) {
 					1

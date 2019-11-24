@@ -16,25 +16,29 @@ import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.util.ITextRegion
 import org.eclipse.xtext.util.TextRegion
-import org.eclipse.xtext.nodemodel.BidiIterable
-import org.eclipse.emf.ecore.EObject
 
 /**
  * Utility methods for dealing with the parse tree, in addition to those in {@link NodeModelUtils}.
  */
 class NodeModelUtilsN4 {
 
+	/*
+	 * Finds recursively a node in the node tree which stands for a keyword (starting from the parentNode)
+	 * @param parentNode The node from which the recursive search begins
+	 * @param keyword Searched keyword
+	 * @returns keywordNode if exists; null otherwise
+	 */
 	def public static INode findKeywordNode(ICompositeNode parentNode, String keyword) {
-		val BidiIterable<INode> iterable = parentNode.children;
-		val rs = iterable.findFirst[c|c.isKeyword(keyword)];
+		val children = parentNode.children;
+		val rs = children.findFirst[c|c.isKeyword(keyword)];
 		if (rs !== null) {
 			return rs;
 		}
-		for (INode iNode: iterable) {
+		for (INode iNode: children) {
 			if (iNode instanceof ICompositeNode) {
-				val retValOfRekursion = findKeywordNode(iNode, keyword);
-				if (retValOfRekursion !== null) {
-					return retValOfRekursion;
+				val retValOfRecursion = findKeywordNode(iNode, keyword);
+				if (retValOfRecursion !== null) {
+					return retValOfRecursion;
 				}
 			}
 		}
