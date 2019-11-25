@@ -1,0 +1,175 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.OverridingContentAssistXpectPluginUITest
+
+ 	Workspace {
+		JavaProject "N4JSXpectTests" {
+			Folder "model" {
+				Folder "proposal" {
+					Folder "contentassist" {
+						ThisFile {}
+					}
+				}
+			}
+			Folder "src-gen" {}
+			File "package.json" { from="../../../package.json" }
+		}
+	}
+
+   END_SETUP
+ */
+ 
+class A {
+	foo() {}
+	public foo1() {}
+	public foo2(p: string) {}
+	public foo3(): String {
+		return null;
+	}
+	public foo4(p: string): String {
+		return null;
+	}
+	public <E> foo5(): E {
+		return null;
+	}
+	public async foo6() {}
+	public static foo7() {}
+	public *gen(p: int) {}
+}
+
+abstract class A1 {
+	public abstract foo6() 
+}
+
+class B extends A {
+/* XPECT contentAssist at 'f<|>' apply 'foo(): void' ---
+<...>
+@Override
+foo(): void {
+
+}
+<...>
+--- */
+f
+}
+
+class B1 extends A {
+/* XPECT contentAssist at 'f<|>' apply 'foo1(): void' ---
+<...>
+@Override
+<...>
+public foo1(): void {
+
+}
+<...>
+--- */
+f
+}
+
+class B2 extends A {
+/* XPECT contentAssist at 'f<|>' apply 'foo2(p: string): void' ---
+<...>
+@Override
+<...>
+public foo2(p: string): void {
+
+}
+<...>
+--- */
+public f
+}
+
+class B3 extends A {
+/* XPECT contentAssist at 'f<|>' apply 'foo3(): String' ---
+<...>
+@Override
+<...>
+public foo3(): String {
+		// TODO Auto-generated method stub
+		return null
+	}
+<...>
+--- */
+public f
+}
+
+class B4 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'foo4(p: string): String' ---
+<...>
+@Override
+<...>
+	public foo4(p: string): String {
+		// TODO Auto-generated method stub
+		return null
+	} 
+<...>
+--- */
+f 
+}
+
+class B5 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'foo5(): E' ---
+<...>
+@Override
+<...>
+	public <E> foo5(): E {
+		// TODO Auto-generated method stub
+		return null
+	} 
+<...>
+--- */
+f 
+}
+
+class B6 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'foo6(): void' ---
+<...>
+@Override
+<...>
+	public async foo6(): void {
+
+	}  
+<...>
+--- */
+public f 
+}
+
+class B7 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'foo7(): void' ---
+<...>
+@Override
+<...>
+	public static foo7(): void {
+
+	} 
+<...>
+--- */
+public f 
+}
+
+class B8 extends A {
+/* XPECT contentAssist at 'g<|>' apply 'gen(p: int): void' ---
+<...>
+@Override
+<...>
+public *gen(p: int): void {
+
+}
+<...>
+--- */
+g
+}
+
