@@ -144,3 +144,26 @@ class C13 {
 	*/
     /*T)C13*/C13/*T)2*/foo01/*T)3*/(C13:/*T)C13*/C13)/*T)C13*/{/*)T6*/return null;}/*T)7*/
 }
+class C14 {
+	/* XPECT quickFix at '<|>Array' apply 'Convert to colon style' fileValid ---
+		(...)
+		      /\*T)C13*\/C13/\*T)2*\/foo01/\*T)3*\/(C13:/\*T)C13*\/C13)/\*T)C13*\/{/\*)T6*\/return null;}/\*T)7*\/
+		  }
+		  class C14 {
+		+ 	foo():
+		| 	Array<String> [foo()|] {return null;}
+		  }
+		  class C15 {
+		      /\*Com1*\/Array</\*Com2*\/String/\*Com3*\/>/\*Com4*\/ foo() {return null;}
+		(...)
+	---
+	*/
+	Array<String> foo() {return null;}
+}
+class C15 {
+    /* XPECT quickFix at '<|>Array' apply 'Convert to colon style' fileValid ---
+        /\*Com1*\/[|/\*Com4*\/ foo():]Array</\*Com2*\/String/\*Com3*\/>[/\*Com4*\/ foo()|] {return null;}
+    ---
+    */
+    /*Com1*/Array</*Com2*/String/*Com3*/>/*Com4*/ foo() {return null;}
+}
