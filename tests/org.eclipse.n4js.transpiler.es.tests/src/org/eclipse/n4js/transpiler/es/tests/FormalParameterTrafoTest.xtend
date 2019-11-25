@@ -11,7 +11,6 @@
 package org.eclipse.n4js.transpiler.es.tests
 
 import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
-import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -123,7 +122,7 @@ class FormalParameterTrafoTest extends AbstractTranspilerTest {
 //		'''
 
 		val F_AST = state.findFirstInAST(MethodDeclaration);
-		val F_IM = state.findFirstInIM(FunctionExpression,[name=="methodF"+N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX]);
+		val F_IM = state.findFirstInIM(MethodDeclaration,[name=="methodF"]);
 
 		// precondition:
 		"Should have 3 paramerters".assertEquals(3, F_AST.fpars.size)
@@ -182,7 +181,7 @@ class FormalParameterTrafoTest extends AbstractTranspilerTest {
 //		'''
 
 		val F_AST = state.findFirstInAST(MethodDeclaration);
-		val F_IM = state.findFirstInIM(FunctionExpression,[name=="methodF"+N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX]);
+		val F_IM = state.findFirstInIM(MethodDeclaration,[name=="methodF"]);
 
 		// precondition:
 		"Should have 3 paramerters".assertEquals(3, F_AST.fpars.size)
@@ -276,7 +275,7 @@ class FormalParameterTrafoTest extends AbstractTranspilerTest {
 //		'''
 
 		val F_AST = state.findFirstInAST(MethodDeclaration);
-		val F_IM = state.findFirstInIM(FunctionExpression,[name=="methodF"+N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX]);
+		val F_IM = state.findFirstInIM(MethodDeclaration,[name=="methodF"]);
 
 		// precondition:
 		"Should have 3 paramerters".assertEquals(3, F_AST.fpars.size)

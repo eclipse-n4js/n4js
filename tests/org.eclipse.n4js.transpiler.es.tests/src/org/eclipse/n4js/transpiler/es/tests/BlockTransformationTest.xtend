@@ -13,9 +13,8 @@ package org.eclipse.n4js.transpiler.es.tests
 import com.google.inject.Inject
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProviderMockProjectSuppressedValidator
-import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.FunctionDeclaration
-import org.eclipse.n4js.n4JS.FunctionExpression
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.Script
@@ -57,7 +56,7 @@ class BlockTransformationTest extends AbstractTranspilerTest {
 
 		val F_AST = state.findFirstInAST(FunctionDeclaration);
 		val F_IM = state.findFirstInIM(FunctionDeclaration,[name=="fetchModule"]);
-		val N_IM = state.findFirstInIM(FunctionExpression,[name=="normalize"+N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX]);
+		val N_IM = state.findFirstInIM(N4MethodDeclaration,[name=="normalize"]);
 
 		// precondition:
 		"Should have 2 parameters".assertEquals(2, F_AST.fpars.size)
