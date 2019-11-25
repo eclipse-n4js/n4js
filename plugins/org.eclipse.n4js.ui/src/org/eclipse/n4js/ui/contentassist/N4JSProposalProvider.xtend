@@ -68,6 +68,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.ts.types.util.MemberList
 import org.eclipse.xtext.nodemodel.ICompositeNode
+import org.eclipse.n4js.ts.types.TFormalParameter
+import org.eclipse.n4js.ts.types.TMethod
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -401,12 +403,10 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 					for (TMember methodMember : memberCollector.inheritedMembers(tclass as TClass)) {
 						val implementedMembers = memberCollector.allMembers(tclass as TClass, false, false, false);
 						if (!methodAlreadyImplemented(implementedMembers, methodMember)) {
-							val TypeRef returnType = getReturnType(methodMember);
 							val EList<N4Modifier> declaredModifiers = getDeclaredModifiers(methodMember);
-							val isStatic = methodMember.declaredStatic;
-							if (!isStatic) {
+							if (!methodMember.declaredFinal) {
 								buildMethodCompletionProposal(context, acceptor, node, annotations, declaredModifiers,
-									methodMember, returnType);
+									methodMember);
 							}
 						}
 					}
@@ -416,7 +416,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	}
 
 	def private EList<N4Modifier> getDeclaredModifiers(TMember methodMember) {
-		
+
 		var EList<N4Modifier> declaredModifiers;
 		val n4MethodDeclaration = methodMember.astElement;
 		if (n4MethodDeclaration instanceof N4MethodDeclaration) {
@@ -427,37 +427,80 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		return declaredModifiers;
 	}
 
-	def private TypeRef getReturnType(TMember methodMember) {
-		
-		var TypeRef returnType;
-		val n4MethodDeclaration = methodMember.astElement;
-		if (n4MethodDeclaration instanceof N4MethodDeclaration) {
-			returnType = n4MethodDeclaration.returnTypeRef;
-		} else {
-			returnType = null;
+	def private String getReturnTypeAsString(TMethod methodMember) {
+
+		val StringBuilder strb = new StringBuilder();
+		if (methodMember.returnTypeRef !== null) {
+			if (methodMember.declaredAsync || methodMember.declaredGenerator) {
+				val returnTypeName = methodMember.returnTypeRef.typeArgs.get(0).declaredType.name;
+				if (returnTypeName.equalsIgnoreCase("undefined")) {
+					strb.append(": ").append("void");
+				} else {
+					strb.append(": ").append(returnTypeName);
+				}
+			} else {
+				strb.append(": ").append(methodMember.returnTypeRef.typeRefAsString);
+			}
 		}
-		return returnType;
+		return strb.toString;
 	}
 
 	def private buildMethodCompletionProposal(ContentAssistContext context, ICompletionProposalAcceptor acceptor,
-		ICompositeNode node, EList<Annotation> annotations, EList<N4Modifier> declaredModifiers, TMember methodMember,
-		TypeRef returnType) {
-		var String strMemberAccessModifier = "";
-		if (hasAccessModifier(declaredModifiers)) {
-			strMemberAccessModifier = methodMember.memberAccessModifier.toString + " ";
-		}
+		ICompositeNode node, EList<Annotation> annotations, EList<N4Modifier> declaredModifiers, TMember methodMember) {
 		var annotationString = addAnnotations(annotations);
 		var String methodBody;
-		if (returnType === null) {
-			methodBody = EMPTY_METHOD_BODY;
-		} else {
-			methodBody = AUTO_GENERATED_METHOD_BODY;
-		}
-		val proposalString = annotationString + strMemberAccessModifier + methodMember.memberAsString + methodBody;
-		val ICompletionProposal proposal = createMethodCompletionProposal(proposalString, methodMember.memberAsString,
-			context, node.offset, proposalString.length);
-		acceptor.accept(proposal);
+		var String methodMemberAsString;
+		if (methodMember instanceof TMethod) {
+			val String returnType = getReturnTypeAsString(methodMember);
+			methodMemberAsString = getMethodMemberAsString(methodMember);
 
+			if (returnType.equalsIgnoreCase(": void")) {
+				methodBody = EMPTY_METHOD_BODY;
+			} else {
+				methodBody = AUTO_GENERATED_METHOD_BODY;
+			}
+
+			val proposalString = getProposalString(methodMember, annotationString, declaredModifiers, methodBody);
+
+			val ICompletionProposal proposal = createMethodCompletionProposal(proposalString, methodMemberAsString,
+				context, node.offset, proposalString.length);
+			acceptor.accept(proposal);
+		}
+	}
+
+	def private getMethodMemberAsString(TMethod methodMember) {
+		val StringBuilder strb = new StringBuilder();
+		strb.append(methodMember.name).append("(").append(methodMember.fpars.map[formalParameterAsString].join(", ")).
+			append(")");
+		if (methodMember.returnTypeRef !== null) {
+			if (methodMember.declaredAsync || methodMember.declaredGenerator) {
+				val returnTypeName = methodMember.returnTypeRef.typeArgs.get(0).declaredType.name;
+				if (returnTypeName.equalsIgnoreCase("undefined")) {
+					strb.append(": ").append("void");
+				} else {
+					strb.append(": ").append(returnTypeName);
+				}
+			} else {
+				strb.append(": ").append(methodMember.returnTypeRef.typeRefAsString);
+			}
+		}
+		if (methodMember.returnValueOptional) strb.append('?');
+		return strb.toString();
+	}
+
+	def private getProposalString(TMethod methodMember, String annotationString, EList<N4Modifier> declaredModifiers,
+		String methodBody) {
+		val StringBuilder strb = new StringBuilder();
+		strb.append(annotationString);
+		if (hasAccessModifier(declaredModifiers)) strb.append(methodMember.memberAccessModifier.toString + " ");
+		if (methodMember.generic)
+			strb.append("<").append(methodMember.typeVars.map[typeAsString].join(",")).append("> ");
+		if (methodMember.declaredStatic) strb.append("static ");
+		if (methodMember.declaredAsync) strb.append("async ");
+		if (methodMember.declaredGenerator) strb.append("*");
+		strb.append(getMethodMemberAsString(methodMember));
+		strb.append(methodBody);
+		return strb.toString();
 	}
 
 	def private createMethodCompletionProposal(String proposal, String methodMemberName, ContentAssistContext context,
