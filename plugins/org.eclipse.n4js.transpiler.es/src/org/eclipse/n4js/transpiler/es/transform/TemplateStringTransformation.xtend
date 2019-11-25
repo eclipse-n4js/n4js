@@ -17,6 +17,7 @@ import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ParameterizedAccess
 import org.eclipse.n4js.n4JS.PrimaryExpression
+import org.eclipse.n4js.n4JS.TaggedTemplateString
 import org.eclipse.n4js.n4JS.TemplateLiteral
 import org.eclipse.n4js.n4JS.TemplateSegment
 import org.eclipse.n4js.transpiler.Transformation
@@ -49,6 +50,35 @@ class TemplateStringTransformation extends Transformation {
 	}
 
 	def private void transformTemplateLiteral(TemplateLiteral template) {
+		val parent = template.eContainer;
+		if (parent instanceof TaggedTemplateString) {
+			transformTaggedTemplateLiteral(parent, template);
+		} else {
+			transformPlainTemplateLiteral(template);
+		}
+	}
+
+	def private void transformTaggedTemplateLiteral(TaggedTemplateString taggedTemplate, TemplateLiteral template) {
+		// (1) collect string segments and expression segments
+		val stringSegments = newArrayList;
+		val expressionSegments = newArrayList;
+		for(segment : Lists.newArrayList(template.segments)) { // avoid concurrent modification
+			if(segment instanceof TemplateSegment) {
+				stringSegments += _StringLiteral(segment.valueAsString, segment.valueAsString.wrapAndQuote);
+			} else {
+				expressionSegments += segment;
+			}
+		}
+		// (2) transform the tagged template literal (invoke the tag function with the segments as arguments)
+		val replacement = _CallExpr(
+			taggedTemplate.target,
+			taggedTemplate.optionalChaining,
+			#[ _ArrLit(stringSegments) ] + expressionSegments.wrapIfRequired
+		);
+		replace(taggedTemplate, replacement);
+	}
+
+	def private void transformPlainTemplateLiteral(TemplateLiteral template) {
 		// (1) transform contained template segments to string literals
 		for(segment : Lists.newArrayList(template.segments)) { // avoid concurrent modification
 			if(segment instanceof TemplateSegment) {

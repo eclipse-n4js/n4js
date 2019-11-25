@@ -9,21 +9,45 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-class T {
-	public n : number;
-	public foo() {}
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+class A {
+    public a: number;
+
+    public f(): void {}
 }
 
-var t : T;
+var a: ~A = { a: 2, f: function () {} };
+let x = 5;
 
-/* XPECT errors ---
-"constructor{T} is not a subtype of number." at "T"
-"number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "~T"
---- */
-t instanceof ~T;
+// XPECT errors --> "instanceof cannot be used with use site structural typing." at "~A"
+a instanceof ~A;
 
-/* XPECT errors ---
-"constructor{T} is not a subtype of number." at "T"
-"number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "~~T"
---- */
-t instanceof ~~T;
+// XPECT errors  --> "instanceof cannot be used with use site structural typing." at "~~A"
+a instanceof ~~A;
+
+// The following tests are only to ensure that existing correct functionality is maintained:
+
+// XPECT errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "--x"
+a instanceof --x;
+
+// XPECT errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "~x"
+a instanceof ~x
+
+// XPECT errors --> "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "~(3 + 4)"
+a instanceof ~(3 + 4)
+
+// This needs to work! XPECT noerrors --> 
+a instanceof A;
+
+// XPECT errors --> "instanceof cannot be used with primitive types." at "number" 
+a instanceof number;
+
+// XPECT errors ---
+// "number is not a subtype of union{Function,type{Object},type{N4Enum}}." at "(-A)"
+// "constructor{A} is not a subtype of number." at "A"
+// ---
+a instanceof (-A);
+
+// XPECT errors --> "constructor{A} is not a subtype of number." at "A"
+1 < ~A;

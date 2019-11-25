@@ -14,6 +14,7 @@ import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.argumentsTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.booleanTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.bottomTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
@@ -28,6 +29,9 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.string
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.voidTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.ecore.EObject;
@@ -59,10 +63,15 @@ import org.eclipse.n4js.n4JS.PostfixExpression;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.PropertySpread;
 import org.eclipse.n4js.n4JS.RelationalExpression;
+import org.eclipse.n4js.n4JS.RelationalOperator;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.ShiftExpression;
 import org.eclipse.n4js.n4JS.SuperLiteral;
+import org.eclipse.n4js.n4JS.TaggedTemplateString;
+import org.eclipse.n4js.n4JS.TemplateLiteral;
+import org.eclipse.n4js.n4JS.TemplateSegment;
 import org.eclipse.n4js.n4JS.UnaryExpression;
+import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
@@ -83,6 +92,7 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
@@ -304,7 +314,7 @@ import com.google.inject.Inject;
 				case NEG:
 					return numberTypeRef(G);
 				case INV:
-					return numberTypeRef(G);
+					return isInstanceOfWithStructuralTyping(e) ? anyTypeRef(G) : numberTypeRef(G);
 				case NOT:
 					return anyTypeRef(G);
 				default:
@@ -322,6 +332,42 @@ import com.google.inject.Inject;
 					return anyTypeRef(G);
 				}
 			}
+		}
+
+		private boolean isInstanceOfWithStructuralTyping(UnaryExpression e) {
+			if (!e.getOp().equals(UnaryOperator.INV)) {
+				return false;
+			}
+
+			EObject parentExpression = e.eContainer();
+			// Check for field structural typing (~~)
+			if (parentExpression instanceof UnaryExpression) {
+				UnaryExpression ue = ((UnaryExpression) parentExpression);
+				if (!ue.getOp().equals(UnaryOperator.INV)) {
+					return false;
+				}
+
+				parentExpression = ue.eContainer();
+			}
+
+			if (parentExpression instanceof RelationalExpression) {
+				RelationalExpression re = (RelationalExpression) parentExpression;
+				if (!re.getOp().equals(RelationalOperator.INSTANCEOF)) {
+					return false;
+				}
+
+				Expression innerExpression = e.getExpression();
+				TypeRef typeRef = ts.tau(
+						innerExpression instanceof UnaryExpression
+								? ((UnaryExpression) innerExpression).getExpression()
+								: innerExpression);
+
+				// Expect anyType if not numeric to turn off expected type errors.
+				boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
+				return !isNumber;
+			}
+
+			return false;
 		}
 
 		@Override
@@ -346,6 +392,25 @@ import com.google.inject.Inject;
 		public TypeRef caseRelationalExpression(RelationalExpression e) {
 			switch (e.getOp()) {
 			case INSTANCEOF:
+				EObject rhs = e.getRhs();
+				if (rhs instanceof UnaryExpression) {
+					UnaryExpression ue = (UnaryExpression) rhs;
+					boolean isInv = ue.getOp().equals(UnaryOperator.INV);
+
+					if (isInv) {
+						Expression innerExpression = ue.getExpression();
+						TypeRef typeRef = ts.tau(
+								innerExpression instanceof UnaryExpression
+										? ((UnaryExpression) innerExpression).getExpression()
+										: innerExpression);
+
+						boolean isNumber = RuleEnvironmentExtensions.isNumeric(G, typeRef);
+						if (!isNumber) {
+							return anyTypeRef(G);
+						}
+					}
+				}
+
 				if (expression == e.getRhs()) {
 					return TypeUtils.createNonSimplifiedUnionType(functionTypeRef(G),
 							TypeUtils.createTypeTypeRef(objectTypeRef(G), false),
@@ -624,6 +689,27 @@ import com.google.inject.Inject;
 			} else {
 				return anyTypeRef(G);
 			}
+		}
+
+		@Override
+		public TypeRef caseTaggedTemplateString(TaggedTemplateString taggedTemplate) {
+			if (expression == taggedTemplate.getTarget()) {
+				final TemplateLiteral template = taggedTemplate.getTemplate();
+				if (template != null) {
+					final List<TypeRef> argumentTypeRefs = new ArrayList<>();
+					// first argument is an Array<string> (containing the string segments)
+					argumentTypeRefs.add(TypeUtils.createTypeRef(arrayType(G), stringTypeRef(G)));
+					// all following arguments are the result of the ${} expression segments
+					for (Expression segment : template.getSegments()) {
+						if (!(segment instanceof TemplateSegment)) {
+							final TypeRef expressionSegmentTypeRef = ts.type(G, segment);
+							argumentTypeRefs.add(expressionSegmentTypeRef);
+						}
+					}
+					return TypeUtils.createFunctionTypeExpression(argumentTypeRefs, anyTypeRef(G));
+				}
+			}
+			return null; // null means: no type expectation
 		}
 
 		@Override

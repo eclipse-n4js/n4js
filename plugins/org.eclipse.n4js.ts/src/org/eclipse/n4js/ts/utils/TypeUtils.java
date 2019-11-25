@@ -727,6 +727,22 @@ public class TypeUtils {
 	}
 
 	/**
+	 * Same as {@link #createFunctionTypeExpression(List, TypeRef)}, but accepting types of parameters instead of
+	 * parameter instances.
+	 */
+	public static FunctionTypeExpression createFunctionTypeExpression(
+			List<TypeRef> fparTypeRefs,
+			TypeRef returnTypeRef) {
+		final List<TFormalParameter> fpars = new ArrayList<>(fparTypeRefs.size());
+		for (TypeRef fparTypeRef : fparTypeRefs) {
+			final TFormalParameter fpar = TypesFactory.eINSTANCE.createTFormalParameter();
+			fpar.setTypeRef(TypeUtils.copyIfContained(fparTypeRef));
+			fpars.add(fpar);
+		}
+		return createFunctionTypeExpression(null, Collections.emptyList(), fpars, returnTypeRef);
+	}
+
+	/**
 	 * Creates a new function type expression with the given attributes, attributes are copied if contained. All
 	 * references are copied if they are already contained.
 	 *

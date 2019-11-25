@@ -138,6 +138,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.TaggedTemplateString
 
 /**
  */
@@ -310,6 +311,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			UnaryExpression: enclosing.op !== UnaryOperator.TYPEOF
 			EqualityExpression: false
 			ExpressionStatement: false
+			TaggedTemplateString: false // allow something like: new C().method``;
 			default: true
 		}
 		if (!shouldWarn) {
@@ -677,9 +679,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkRelationalExpression(RelationalExpression relationalExpression) {
 		if (relationalExpression.rhs !== null && relationalExpression.op === RelationalOperator.INSTANCEOF) {
-			val typeRef = ts.tau(relationalExpression.rhs)
+			val typeRef = ts.tau(relationalExpression.rhs);
+			val G = relationalExpression.newRuleEnvironment;
 			if (typeRef instanceof TypeTypeRef) {
-				val G = relationalExpression.newRuleEnvironment;
 				val staticType = tsh.getStaticType(G, typeRef);
 				if (staticType instanceof TN4Classifier) {
 					if (staticType.typingStrategy !== TypingStrategy.DEFAULT) {
@@ -693,6 +695,20 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 							getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_BUILT_IN_INTERFACES(staticType.name);
 						addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
 							IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_BUILT_IN_INTERFACES);
+					}
+				}
+			}
+			
+			val rhs = relationalExpression.rhs;
+			if (rhs instanceof UnaryExpression) {
+				if (rhs.getOp().equals(UnaryOperator.INV)) {
+					val innerExpression = rhs.expression;
+					val rhsTypeRef = ts.tau((innerExpression instanceof UnaryExpression) ? innerExpression.expression : innerExpression);
+					
+					if (!RuleEnvironmentExtensions.isNumeric(G, rhsTypeRef)) {
+						val message = IssueCodes.getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL();
+						addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
+							IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_USE_SITE_STRUCTURAL);	
 					}
 				}
 			}
