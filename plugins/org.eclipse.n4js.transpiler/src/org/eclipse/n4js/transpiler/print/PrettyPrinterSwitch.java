@@ -236,7 +236,7 @@ import org.eclipse.xtext.EcoreUtil2;
 			write("static ");
 		}
 		write("get ");
-		caseLiteralOrComputedPropertyName(original.getDeclaredName());
+		processPropertyName(original);
 		write("() ");
 		if (original.getDeclaredTypeRef() != null) {
 			processReturnTypeRef(original.getDeclaredTypeRef());
@@ -254,7 +254,7 @@ import org.eclipse.xtext.EcoreUtil2;
 			write("static ");
 		}
 		write("set ");
-		caseLiteralOrComputedPropertyName(original.getDeclaredName());
+		processPropertyName(original);
 		write('(');
 		process(original.getFpar());
 		write(") ");
@@ -278,7 +278,7 @@ import org.eclipse.xtext.EcoreUtil2;
 		if (original.isGenerator()) {
 			write("* ");
 		}
-		caseLiteralOrComputedPropertyName(original.getDeclaredName());
+		processPropertyName(original);
 		write('(');
 		process(original.getFpars(), ", ");
 		write(") ");
@@ -290,6 +290,7 @@ import org.eclipse.xtext.EcoreUtil2;
 		return DONE;
 	}
 
+	// FIXME align methods #processPropertyName() and #caseLiteralOrComputedPropertyName()!!!
 	@Override
 	public Boolean caseLiteralOrComputedPropertyName(LiteralOrComputedPropertyName original) {
 		switch (original.getKind()) {
