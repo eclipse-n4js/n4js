@@ -579,13 +579,13 @@ If more then one option leads to a possible resolution the situation should be c
 
 == AutoEdit
 
-AutoEdit can help you write JSDoc comments. It creates `@param` and `@return` tags and also prefills their type, if it's known.
+AutoEdit can help you write JSDoc comments. It creates `@param` and `@return` tags.
 
-When you create a comment for a method eg. `/\*`, `*/` is appended automatically.
+When you create a comment for a method e.g. `/\*`, `*/` is appended automatically.
 
-If you add another asteriks eg. `/**` and hit enter, AutoEdit will add an asteriks to every new line and create a JSDoc comment based on the method signature. 
+If you add another asterisk e.g. `/**` and hit enter, AutoEdit will add an asterisk to every new line and create a JSDoc comment based on the method signature.
 
-Hitting enter again, will result in another new line with an asteriks at the beginning.
+Hitting enter again, will result in another new line with an asterisk at the beginning.
 
 Given the following (`|` being the current position of your cursor):
 ```
@@ -601,9 +601,9 @@ Hitting enter, will result in:
 class Foo {
   /**
    * |
-   * @param {String} s
-   * @param {boolean} n
-   * @return {boolean} 
+   * @param s
+   * @param n
+   * @return
    */
   bar(s: String, n: boolean): boolean {
     return false;
