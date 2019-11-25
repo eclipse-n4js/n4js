@@ -117,8 +117,7 @@ class SuperLiteralTransformation extends Transformation {
 	}
 
 	/**
-	 * This convenience method allows other transformations to extract the arguments from an explicit super call, i.e.
-	 * from a statement tagged with {@code InformationRegistry$Tag#explicitSuperCall}.
+	 * This convenience method allows other transformations to extract the arguments from an explicit super call.
 	 */
 	def public static Expression[] getArgumentsFromExplicitSuperCall(Statement superCallStmnt) {
 		if(superCallStmnt===null) {
@@ -127,7 +126,9 @@ class SuperLiteralTransformation extends Transformation {
 		if(superCallStmnt instanceof ExpressionStatement) {
 			val expr = superCallStmnt.expression;
 			if(expr instanceof ParameterizedCallExpression) {
-				return expr.arguments.map[expression].drop(1); // need to drop the first argument, i.e. the 'this'
+				if(expr.target instanceof SuperLiteral) {
+					return expr.arguments.map[expression];
+				}
 			}
 		}
 		throw new IllegalArgumentException("explicit super call has an unexpected structure");

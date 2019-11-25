@@ -18,7 +18,7 @@ e.message === some message: true
 e instanceof Error: true
 e instanceof CustomError_001: true
 e has stack trace: true
-e.stack starts with 'Error: some message': true
+e.stack starts with 'CustomError_001: some message': true
 stderr:
 ==>
 --- */
@@ -33,4 +33,4 @@ console.log('e instanceof CustomError_001:', e instanceof CustomError_001);
 // XPECT warnings --> "Unnecessary cast from CustomError_001 to Object" at "e as Object"
 var stack = (e as Object)['stack'];
 console.log('e has stack trace:', undefined !== stack);
-console.log('e.stack starts with \'Error: some message\':', 0 === (stack as String).indexOf('Error: some message'));
+console.log('e.stack starts with \'CustomError_001: some message\':', 0 === (stack as String).indexOf('CustomError_001: some message'));

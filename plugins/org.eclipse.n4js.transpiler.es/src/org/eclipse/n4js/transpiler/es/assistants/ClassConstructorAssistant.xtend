@@ -350,25 +350,31 @@ arguments += args;
 		// this.name = this.constructor.n4type.name;
 		// Object.defineProperty(this, 'stack', { get: function() { return err.stack; }, set: function(value) { err.stack = value; } });
 
-		val firstLine = _VariableStatement(
-			_VariableDeclaration("err", _NewExpr(
-				_IdentRef(ErrorSTE),
-				if(explicitSuperCall!==null) {
-					// if we have an explicit super call, then pass its arguments to "new Error()"
-					SuperLiteralTransformation.getArgumentsFromExplicitSuperCall(explicitSuperCall)
-				} else {
-					// otherwise, pass through the parameters of classDecl's ctor (may be the explicit or implicit ctor)
-					fpars.map[findSymbolTableEntryForElement(it, true)].map[_IdentRef(it)]
-				}
-			))
-		);
-		val remainingLines = _ExprStmnt(_Snippet('''
-			this.message = err.message;
-			this.name = this.constructor.n4type.name;
-			Object.defineProperty(this, 'stack', { get: function() { return err.stack; }, set: function(value) { err.stack = value; } });
-		'''));
-
-		return #[firstLine, remainingLines];
+return #[ _ExprStmnt(_Snippet('''
+	this.name = this.constructor.n4type.name;
+	if (Error.captureStackTrace) {
+		Error.captureStackTrace(this, this.name);
+	}
+''')) ];
+//		val firstLine = _VariableStatement(
+//			_VariableDeclaration("err", _NewExpr(
+//				_IdentRef(ErrorSTE),
+//				if(explicitSuperCall!==null) {
+//					// if we have an explicit super call, then pass its arguments to "new Error()"
+//					SuperLiteralTransformation.getArgumentsFromExplicitSuperCall(explicitSuperCall)
+//				} else {
+//					// otherwise, pass through the parameters of classDecl's ctor (may be the explicit or implicit ctor)
+//					fpars.map[findSymbolTableEntryForElement(it, true)].map[_IdentRef(it)]
+//				}
+//			))
+//		);
+//		val remainingLines = _ExprStmnt(_Snippet('''
+//			this.message = err.message;
+//			this.name = this.constructor.n4type.name;
+//			Object.defineProperty(this, 'stack', { get: function() { return err.stack; }, set: function(value) { err.stack = value; } });
+//		'''));
+//
+//		return #[firstLine, remainingLines];
 	}
 
 	def private Statement[] createDelegationToFieldInitOfImplementedInterfaces(N4ClassDeclaration classDecl, SymbolTableEntry /*nullable*/ specObjSTE ) {
