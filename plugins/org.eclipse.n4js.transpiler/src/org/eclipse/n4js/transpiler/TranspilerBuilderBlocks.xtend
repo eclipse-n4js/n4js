@@ -67,6 +67,7 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
+import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.RelationalExpression
@@ -425,6 +426,13 @@ public class TranspilerBuilderBlocks
 		val result = N4JSFactory.eINSTANCE.createPropertyNameValuePair;
 		result.declaredName = _LiteralOrComputedPropertyName(name);
 		result.expression = value;
+		return result;
+	}
+
+	public static def PropertyGetterDeclaration _PropertyGetterDecl(String name, Statement... stmnts) {
+		val result = N4JSFactory.eINSTANCE.createPropertyGetterDeclaration;
+		result.declaredName = _LiteralOrComputedPropertyName(name);
+		result.body = _Block(stmnts);
 		return result;
 	}
 

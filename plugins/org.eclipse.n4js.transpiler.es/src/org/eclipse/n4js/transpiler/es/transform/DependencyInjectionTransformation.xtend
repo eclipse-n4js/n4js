@@ -11,11 +11,14 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.ObjectLiteral
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
@@ -98,12 +101,34 @@ class DependencyInjectionTransformation extends Transformation {
 			_IdentRef(classSTE),
 			_CallExpr(_PropertyAccessExpr(symbolObjectSTE, forSTE), _StringLiteral(N4JSLanguageConstants.DI_SYMBOL_KEY)),
 			_ObjLit(
-				"value" -> _ObjLit(
+				"value" -> convertTypePropertiesToGetter(_ObjLit(
 					propertiesForDI
-				)
+				))
 			)
 		));
 	}
+
+// support for cyclic dependency injection
+// FIXME clean up
+def private ObjectLiteral convertTypePropertiesToGetter(ObjectLiteral objLit) {
+//	val props = objLit.propertyAssignments;
+//	for (var i=0;i<props.size;i++) {
+//		val prop = props.get(i);
+//		if (prop instanceof PropertyNameValuePair) {
+//			if (prop.name == "type") {
+//				val getter = _PropertyGetterDecl(prop.name, _ExprStmnt(prop.expression));
+//				props.remove(i);
+//				props.add(i, getter);
+//			}
+//		}
+//	}
+	val valueProps = objLit.eAllContents.filter(PropertyNameValuePair).filter[name=="type"].toList;
+	for(valueProp : valueProps) {
+		val getter = _PropertyGetterDecl(valueProp.name, _ReturnStmnt(valueProp.expression));
+		EcoreUtil.replace(valueProp, getter);
+	}
+	return objLit;
+}
 
 	def private Pair<String,Expression>[] createPropertiesForDI(TClass it, N4ClassDeclaration classDecl, SymbolTableEntry superClassSTE) {
 		val result = <Pair<String,Expression>>newArrayList;
