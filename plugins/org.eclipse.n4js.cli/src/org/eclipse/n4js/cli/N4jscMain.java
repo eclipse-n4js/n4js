@@ -55,6 +55,7 @@ public class N4jscMain {
 			} catch (N4jscException e) {
 				throw e;
 			} catch (Exception e) {
+				System.out.println("DEBUG: unknown exception");
 				throw new N4jscException(N4jscExitCode.ERROR_UNEXPECTED, e);
 			}
 

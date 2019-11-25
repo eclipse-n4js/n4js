@@ -384,6 +384,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void exit() {
+		if (shutdownAndExitHandler == null) {
+			System.out.println("shutdownAndExitHandler is null");
+		} else {
+			System.out.println("shutdownAndExitHandler class = " + shutdownAndExitHandler.getClass().getName());
+		}
 		shutdownAndExitHandler.exit();
 	}
 
