@@ -64,11 +64,9 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.ts.types.util.MemberList
 import org.eclipse.xtext.nodemodel.ICompositeNode
-import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TMethod
 
 /**
@@ -100,7 +98,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	static final String EMPTY_METHOD_BODY = " {\n\n\t}";
 
-	static final String AUTO_GENERATED_METHOD_BODY = " {\n\t\t// TODO Auto-generated method stub\n\t\t return null\n\t}";
+	static final String AUTO_GENERATED_METHOD_BODY = " {\n\t\t// TODO Auto-generated method stub\n\t\t" + "return null\n\t}";
 
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
@@ -462,8 +460,11 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 			val proposalString = getProposalString(methodMember, annotationString, declaredModifiers, methodBody);
 
+			val replacementOffset = node.offset; // replace from beginning of node
+			val replacementLength = context.offset-node.offset; // replace from beginning of the node to the current cursor position
+
 			val ICompletionProposal proposal = createMethodCompletionProposal(proposalString, methodMemberAsString,
-				context, node.offset, proposalString.length);
+				context, replacementOffset, replacementLength); 
 			acceptor.accept(proposal);
 		}
 	}

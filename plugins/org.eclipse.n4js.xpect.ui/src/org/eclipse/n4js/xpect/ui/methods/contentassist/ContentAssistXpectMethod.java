@@ -130,6 +130,11 @@ public class ContentAssistXpectMethod {
 		N4ContentAssistProcessorTestBuilder fixture = n4ContentAssistProcessorTestBuilderHelper
 				.createTestBuilderForResource(resource);
 		ICompletionProposal proposal = exactlyMatchingProposal(offset, fixture, selected);
+
+		if (proposal == null) {
+			throw new AssertionError("Proposal '" + selected + "' not found.");
+		}
+
 		String before = resource.getParseResult().getRootNode().getText();
 
 		// apply:
@@ -149,7 +154,12 @@ public class ContentAssistXpectMethod {
 			// sv.selectionProvider.selection = new TextSelection(..)
 		}
 
-		String after = applyProposal(proposal, document);
+		String after;
+		try {
+			after = applyProposal(proposal, document);
+		} catch (Exception ex) {
+			throw new AssertionError("Exception when applying proposal: " + ex.getMessage(), ex);
+		}
 
 		final boolean isMultiLineExpectation = getExpectationString(expectation).contains("\n");
 		if (isMultiLineExpectation) {
@@ -273,7 +283,7 @@ public class ContentAssistXpectMethod {
 	 contentAssistList              at 'a.<|>methodA'       proposals             unordered --> methodA2, methodA
 	 contentAssistList              at 'a.<|>methodA'       display   'methodA2'            --> 'methodA2(): any - A'
 	 contentAssistList kind 'smart' at 'a.<|>methodA'       display   'methodA2'            --> 'methodA2(): any - A'
-
+	
 	                    kind        offset                  checkType  selected    mode
 	                    arg4        arg2                    arg3       arg5        arg6
 	 */
