@@ -167,3 +167,33 @@ class C15 {
     */
     /*Com1*/Array</*Com2*/String/*Com3*/>/*Com4*/ foo() {return null;}
 }
+class C16 {
+	/* XPECT quickFix at '<|>int' apply 'Convert to colon style' fileValid ---
+	public abstract [int|] foo()[|: int] {return 0;}
+    ---
+    */
+	public abstract int foo() {return 0;}
+}
+class C17 {
+/* XPECT quickFix at '<|>Array' apply 'Convert to colon style' fileValid ---
+		(...)
+		public abstract int foo() {return 0;}
+		  }
+		  class C17 {
+		+ 	foo():
+		| 	Array<Array<String>> [foo()|] {return null;}
+		  }
+		  class C18 {
+		      <X extends T> void foo(x: X) { }
+		(...)
+	---
+	*/
+    Array<Array<String>> foo() {return null;}
+}
+class C18 {
+/* XPECT quickFix at '<|>void' apply 'Convert to colon style' fileValid ---
+		<X extends T> [void|] foo(x: X)[|: void] { }
+	---
+	*/
+    <X extends T> void foo(x: X) { }
+}
