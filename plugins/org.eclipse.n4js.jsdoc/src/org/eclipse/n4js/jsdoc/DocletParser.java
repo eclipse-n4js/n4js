@@ -86,7 +86,7 @@ public class DocletParser extends AbstractJSDocParser {
 		while (null != (token = tagTitleTokenizer.nextToken(scanner))) {
 			ITagDefinition tagDefinition = lineTagDictionary.getDefinition(token.token);
 			int lineTagEnd = scanner.findLineTagEnd();
-			scanner.fence(lineTagEnd);
+			scanner.fence(lineTagEnd + 1); // fence is excluing the upper bound
 			if (tagDefinition != null) {
 				TagTitle tagTitle = createTagTitle(token, tagDefinition);
 				LineTag tag = (LineTag) tagDefinition.parse(tagTitle, scanner, descriptionParser);
