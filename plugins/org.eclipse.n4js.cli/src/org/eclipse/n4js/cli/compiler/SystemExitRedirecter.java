@@ -59,7 +59,11 @@ public class SystemExitRedirecter {
 		@Override
 		public void checkExit(int status) {
 			super.checkExit(status);
-			throw new SystemExitException(status);
+			SystemExitException systemExitException = new SystemExitException(status);
+			System.out.println("checkExit");
+			systemExitException.printStackTrace();
+			System.out.println("checkExit throw");
+			throw systemExitException;
 		}
 
 	}

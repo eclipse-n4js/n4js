@@ -97,6 +97,7 @@ public class N4jscCompiler {
 
 		printResults(compilationTime.stop().elapsed());
 		System.out.println("before writeTestCatalog");
+		System.exit(1);
 		writeTestCatalog();
 		System.out.println("after writeTestCatalog");
 	}
