@@ -27,7 +27,7 @@ public class SystemExitRedirecter {
 		}
 		if (name == null || !name.contains("NoExitSecurityManager")) {
 			System.setSecurityManager(new NoExitSecurityManager());
-			name = System.getSecurityManager().getClass().getName();
+			setByMe = true;
 		}
 	}
 
