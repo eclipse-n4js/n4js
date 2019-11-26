@@ -17,6 +17,8 @@ import java.security.Permission;
  */
 public class SystemExitRedirecter {
 
+	static boolean setByMe = false;
+
 	/** Enables redirection */
 	static public void set() {
 		String name = null;
@@ -31,7 +33,9 @@ public class SystemExitRedirecter {
 
 	/** Disables redirection */
 	static public void unset() {
-		System.setSecurityManager(null);
+		if (setByMe) {
+			System.setSecurityManager(null);
+		}
 	}
 
 	static class SystemExitException extends SecurityException {
@@ -66,12 +70,7 @@ public class SystemExitRedirecter {
 		@Override
 		public void checkExit(int status) {
 			super.checkExit(status);
-			SystemExitException systemExitException = new SystemExitException(status);
-			System.out.println("checkExit");
-			systemExitException.printStackTrace();
-			System.err.flush();
-			System.out.println("checkExit throw");
-			throw systemExitException;
+			throw new SystemExitException(status);
 		}
 
 	}
