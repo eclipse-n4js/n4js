@@ -18,12 +18,12 @@ import java.security.Permission;
 public class SystemExitRedirecter {
 
 	/** Enables redirection */
-	public void set() {
+	static public void set() {
 		System.setSecurityManager(new NoExitSecurityManager());
 	}
 
 	/** Disables redirection */
-	public void unset() {
+	static public void unset() {
 		System.setSecurityManager(null);
 	}
 
@@ -62,6 +62,7 @@ public class SystemExitRedirecter {
 			SystemExitException systemExitException = new SystemExitException(status);
 			System.out.println("checkExit");
 			systemExitException.printStackTrace();
+			System.err.flush();
 			System.out.println("checkExit throw");
 			throw systemExitException;
 		}

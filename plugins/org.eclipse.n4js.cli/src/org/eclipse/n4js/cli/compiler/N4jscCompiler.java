@@ -53,14 +53,13 @@ public class N4jscCompiler {
 	static public void start(N4jscOptions options) throws Exception {
 		N4jscCompiler compiler = new N4jscCompiler(options);
 
-		SystemExitRedirecter systemExitRedirecter = new SystemExitRedirecter();
 		try (Measurement m = N4JSDataCollectors.dcCliCompile.getMeasurement(options.toString())) {
-			systemExitRedirecter.set();
+			SystemExitRedirecter.set();
 			System.out.println("before compiler.start()");
 			compiler.start();
 		} finally {
 			System.out.println("before systemExitRedirecter.unset()");
-			systemExitRedirecter.unset();
+			SystemExitRedirecter.unset();
 		}
 	}
 
