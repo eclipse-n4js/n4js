@@ -53,8 +53,14 @@ public class N4jscCompiler {
 	static public void start(N4jscOptions options) throws Exception {
 		N4jscCompiler compiler = new N4jscCompiler(options);
 
+		SystemExitRedirecter systemExitRedirecter = new SystemExitRedirecter();
 		try (Measurement m = N4JSDataCollectors.dcCliCompile.getMeasurement(options.toString())) {
+			systemExitRedirecter.set();
+			System.out.println("before compiler.start()");
 			compiler.start();
+		} finally {
+			System.out.println("before systemExitRedirecter.unset()");
+			systemExitRedirecter.unset();
 		}
 	}
 
@@ -152,6 +158,7 @@ public class N4jscCompiler {
 			System.out.println("before testCatalogSupplier.get(true)");
 			String catalog = testCatalogSupplier.get(true); // do not include "endpoint" property here
 
+			System.out.println("before new FileOutputStream(testCatalogFile)");
 			try (FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
 				System.out.println("before fos.write(catalog.getBytes())");
 				fos.write(catalog.getBytes());
