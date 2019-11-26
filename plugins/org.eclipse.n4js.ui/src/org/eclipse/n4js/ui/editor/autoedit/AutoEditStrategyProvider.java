@@ -45,14 +45,19 @@ public class AutoEditStrategyProvider extends DefaultAutoEditStrategyProvider {
 
 	@Override
 	protected void configureMultilineComments(IEditStrategyAcceptor acceptor) {
+		// To avoid JSDocEditStrategy handling /***+ multiline3andMoreAsterisks instance is added
+		IAutoEditStrategy multiline3andMoreAsterisks = multiLineTerminals.newInstance("/***", " * ", " */");
 		JSDocEditStrategy jsdoc = new JSDocEditStrategy();
 		injector.injectMembers(jsdoc);
-
 		IAutoEditStrategy multiline = multiLineTerminals.newInstance("/*", " * ", " */");
 		IAutoEditStrategy singleline = singleLineTerminals.newInstance("/*", " */", new SupressingMLCommentPredicate());
 
 		acceptor.accept(singleline, IDocument.DEFAULT_CONTENT_TYPE);
 		acceptor.accept(singleLineTerminals.newInstance("/*", " */"), REG_EX_PARTITION);
+
+		acceptor.accept(multiline3andMoreAsterisks, IDocument.DEFAULT_CONTENT_TYPE);
+		acceptor.accept(multiline3andMoreAsterisks, TerminalsTokenTypeToPartitionMapper.COMMENT_PARTITION);
+		acceptor.accept(multiline3andMoreAsterisks, REG_EX_PARTITION);
 
 		acceptor.accept(jsdoc, IDocument.DEFAULT_CONTENT_TYPE);
 		acceptor.accept(jsdoc, TerminalsTokenTypeToPartitionMapper.COMMENT_PARTITION);
