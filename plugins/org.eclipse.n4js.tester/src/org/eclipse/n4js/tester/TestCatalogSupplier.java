@@ -69,7 +69,7 @@ public class TestCatalogSupplier implements Supplier<String> {
 			System.out.println("before objectMapper.writeValueAsString(testCatalogObject)");
 			return objectMapper.writeValueAsString(testCatalogObject);
 
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			throw new RuntimeException("Error while assembling test catalog.", e);
 		}
 	}
