@@ -19,7 +19,14 @@ public class SystemExitRedirecter {
 
 	/** Enables redirection */
 	static public void set() {
-		System.setSecurityManager(new NoExitSecurityManager());
+		String name = null;
+		if (System.getSecurityManager() != null) {
+			name = System.getSecurityManager().getClass().getName();
+		}
+		if (name == null || !name.contains("NoExitSecurityManager")) {
+			System.setSecurityManager(new NoExitSecurityManager());
+			name = System.getSecurityManager().getClass().getName();
+		}
 	}
 
 	/** Disables redirection */

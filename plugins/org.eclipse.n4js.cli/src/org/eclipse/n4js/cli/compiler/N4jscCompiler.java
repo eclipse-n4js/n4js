@@ -58,8 +58,8 @@ public class N4jscCompiler {
 			System.out.println("before compiler.start()");
 			compiler.start();
 		} finally {
-			System.out.println("before systemExitRedirecter.unset()");
-			SystemExitRedirecter.unset();
+			// System.out.println("before systemExitRedirecter.unset()");
+			// SystemExitRedirecter.unset();
 		}
 	}
 

@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
-import org.eclipse.n4js.cli.compiler.SystemExitRedirecter;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.Measurement;
@@ -61,15 +60,12 @@ public class N4jscMain {
 			}
 
 			writePerformanceReportIfRequested(options);
+			System.exit(N4jscExitCode.SUCCESS.getExitCodeValue());
+
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
-			System.out.println("n4jsc exit with error (but code=0).");
-			// System.exit(e.getExitCode());
+			System.exit(e.getExitCode());
 		}
-
-		SystemExitRedirecter.unset();
-		System.out.println("n4jsc exit.");
-		System.exit(N4jscExitCode.SUCCESS.getExitCodeValue());
 	}
 
 	private static N4jscOptions getOptions(String[] args) {
