@@ -24,7 +24,11 @@ import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.impl.VoidTypeImpl;
+import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.ui.editor.N4JSDocument;
 import org.eclipse.n4js.ui.organize.imports.XtextResourceUtils;
 import org.eclipse.xtext.nodemodel.ILeafNode;
@@ -95,13 +99,13 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 	}
 
 	/**
-	 * @returns List<String> otherwise null in case the document is not N4JSDocument or something breaks
+	 *
+	 * @returns List<String> - The first item of the list (index 0) is the return type, the parameter names follow at
+	 *          index 1. In case the document is not N4JSDocument or something breaks it returns null.
 	 */
 	private List<String> getReturnTypeAndParameterNames(IDocument document, IRegion startTerminal) {
 		List<String> retAndfparNames = null;
 		if (document instanceof N4JSDocument) {
-			// index 0: if set to "void", the method has no return value;
-			// fpars start at index 1
 			retAndfparNames = ((N4JSDocument) document).tryReadOnly((xtextResource) -> {
 				Script script = XtextResourceUtils.getScript(xtextResource);
 				ILeafNode node = NodeModelUtils.findLeafNodeAtOffset(NodeModelUtils.findActualNodeFor(script),
@@ -123,6 +127,15 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 		return retAndfparNames;
 	}
 
+	/**
+	 *
+	 * @param retAndFPars
+	 *            - The first element of the list (index 0) marks whether the method has a result (return type) or not.
+	 *            In the first case, "return" is found at index 0, otherwise "void". The parameter names are added after
+	 *            that, i.e. starting at index 1.
+	 * @param methodDecl
+	 *            - The N4MethodDeclaration of the next astElement in relation to the cursor position is expected here.
+	 */
 	private void getRetAndFPars(List<String> retAndFPars, N4MethodDeclaration methodDecl) {
 		if (methodDecl.getReturnTypeRef() != null) {
 			if ((methodDecl.getReturnTypeRef().getDeclaredType() instanceof VoidTypeImpl)) {
@@ -132,8 +145,19 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 				retAndFPars.add("return");
 			}
 		} else {
-			// e.g. constructor returnTypeRef is null in methodDecl
-			retAndFPars.add("void");
+			TFunction tfunction = methodDecl.getDefinedFunction();
+			if (tfunction != null) {
+				TypeRef returnTypeRef = tfunction.getReturnTypeRef();
+				if ((returnTypeRef != null) && !TypeUtils.isVoid(returnTypeRef)
+						&& !(returnTypeRef instanceof DeferredTypeRef)) {
+					retAndFPars.add("return");
+				} else {
+					// e.g. constructor
+					retAndFPars.add("noReturn");
+				}
+			} else {
+				retAndFPars.add("noReturn");
+			}
 		}
 		for (FormalParameter fpar : methodDecl.getFpars()) {
 			retAndFPars.add(fpar.getName());
