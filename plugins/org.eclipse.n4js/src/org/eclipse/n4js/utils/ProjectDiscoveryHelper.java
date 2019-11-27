@@ -90,7 +90,7 @@ public class ProjectDiscoveryHelper {
 
 			if (nodeModulesFolder == null) {
 				// Is neither NPM nor Yarn project
-				LinkedHashSet<Path> standAloneProjects = collectProjects(workspaceRoot, true);
+				LinkedHashSet<Path> standAloneProjects = collectProjects(workspaceRoot, false);
 				allProjectDirs.addAll(standAloneProjects);
 			} else {
 				if (nodeModulesFolder.isYarnWorkspace) {
