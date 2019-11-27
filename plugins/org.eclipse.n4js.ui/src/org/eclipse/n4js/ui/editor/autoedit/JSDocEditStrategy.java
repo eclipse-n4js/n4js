@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TFunction;
@@ -149,7 +150,8 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 			if (tfunction != null) {
 				TypeRef returnTypeRef = tfunction.getReturnTypeRef();
 				if ((returnTypeRef != null) && !TypeUtils.isVoid(returnTypeRef)
-						&& !(returnTypeRef instanceof DeferredTypeRef)) {
+						&& !(returnTypeRef instanceof DeferredTypeRef)
+						&& !(returnTypeRef instanceof BoundThisTypeRef)) {
 					retAndFPars.add("return");
 				} else {
 					// e.g. constructor
