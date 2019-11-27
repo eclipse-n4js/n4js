@@ -86,8 +86,13 @@ echo "  - commit ID of latest published n4js-libs     : $N4JS_LIBS_COMMIT_ID_PUB
 echo "  - commit ID of local n4js-libs                : $N4JS_LIBS_COMMIT_ID_LOCAL"
 if [ "${N4JS_LIBS_COMMIT_ID_LOCAL}" = "${N4JS_LIBS_COMMIT_ID_PUBLIC}" ]; then
     echo "-> commit IDs equal"
-    echo "-> publishing of a new version of n4js-libs *NOT* required"
-    N4JS_LIBS_PUBLISHING_REQUIRED="false"
+    if [ "${FORCE_N4JS_LIBS_PUBLISHING}" = "true" ]; then
+        echo "-> publishing of a new version of n4js-libs not required but *FORCED*, because environment variable FORCE_N4JS_LIBS_PUBLISHING was set to 'true'"
+        N4JS_LIBS_PUBLISHING_REQUIRED="true"
+    else
+        echo "-> publishing of a new version of n4js-libs *NOT* required"
+        N4JS_LIBS_PUBLISHING_REQUIRED="false"
+    fi
 else
     echo "-> commit IDs differ (i.e. changes since last publication)"
     echo "-> publishing of a new version of n4js-libs is required"
