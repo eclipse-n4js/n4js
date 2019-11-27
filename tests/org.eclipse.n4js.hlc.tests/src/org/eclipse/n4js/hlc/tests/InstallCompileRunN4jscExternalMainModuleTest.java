@@ -62,7 +62,7 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractCliCom
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 5, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "express imported\n";
 		expectedString += "jade imported\n";

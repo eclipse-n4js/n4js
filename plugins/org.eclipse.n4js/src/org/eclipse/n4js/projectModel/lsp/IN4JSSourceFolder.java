@@ -10,15 +10,16 @@
  */
 package org.eclipse.n4js.projectModel.lsp;
 
-import org.eclipse.n4js.projectModel.lsp.ex.ISourceFolderEx;
+import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.ISourceFolder;
 
 /**
- * N4JS specific extension to {@link ISourceFolderEx} to ensure that the containing project is a
- * {@link IN4JSProjectConfig}.
+ * N4JS specific extension to {@link ISourceFolder} to ensure that the containing project is a {@link IProjectConfig}.
  */
-public interface IN4JSSourceFolder extends ISourceFolderEx {
+@SuppressWarnings("restriction")
+public interface IN4JSSourceFolder extends ISourceFolder {
 
-	@Override
-	IN4JSProjectConfig getProject();
+	/** @return the parent project */
+	IProjectConfig getProject();
 
 }

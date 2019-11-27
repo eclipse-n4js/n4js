@@ -10,14 +10,24 @@
  */
 package org.eclipse.n4js.cli.helper;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -25,8 +35,13 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class N4jscTestLanguageClient extends N4jscLanguageClient {
+	@Inject
+	XWorkspaceManager workspaceManager;
+
 	Multimap<String, String> errors = HashMultimap.create();
 	Multimap<String, String> warnings = HashMultimap.create();
+	TreeMap<Path, HashSet<File>> transpiledFiles = new TreeMap<>();
+	Set<URI> deletedFiles = new HashSet<>();
 
 	@Override
 	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
@@ -53,6 +68,37 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public void afterDelete(URI file) {
+		deletedFiles.add(file);
+	}
+
+	@Override
+	public void afterGenerate(URI source, URI generated) {
+		super.afterGenerate(source, generated);
+		if (generated.lastSegment().isBlank()) {
+			generated = generated.trimSegments(1);
+		}
+
+		String fileName = generated.lastSegment();
+		if (!fileName.endsWith(N4JSGlobals.JS_FILE_EXTENSION) && !fileName.endsWith(N4JSGlobals.JSX_FILE_EXTENSION)) {
+			return;
+		}
+
+		Path folder = Paths.get(generated.trimSegments(1).toFileString());
+		URI relGenerated = workspaceManager.makeWorkspaceRelative(generated);
+		File relFile = new File(relGenerated.toFileString());
+		if (!transpiledFiles.containsKey(folder)) {
+			transpiledFiles.put(folder, new HashSet<File>());
+		}
+		transpiledFiles.get(folder).add(relFile);
+	}
+
+	@Override
+	public long getDeletionsCount() {
+		return deletedFiles.size();
 	}
 
 }

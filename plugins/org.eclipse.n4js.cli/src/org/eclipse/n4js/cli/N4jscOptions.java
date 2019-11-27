@@ -53,7 +53,7 @@ public class N4jscOptions {
 	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
 	/** Usage information. */
-	public static final String USAGE = "Usage: java -jar n4jsc.jar [GOAL] [DIR(s)] [OPTION(s)]";
+	public static final String USAGE = "Usage: java -jar n4jsc.jar [GOAL] DIR [OPTION(s)]";
 
 	/** Use to specify the required goal for an option. */
 	@Retention(RUNTIME)
@@ -137,10 +137,16 @@ public class N4jscOptions {
 		int maxWarns = 0;
 
 		@Option(name = "--clean", aliases = "-c", //
-				usage = "[compile] output folders are cleaned before compilation.", //
+				usage = "[compile|lsp] output folders are cleaned at start.", //
 				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
-		@GoalRequirements(goals = N4jscGoal.compile)
+		@GoalRequirements(goals = { N4jscGoal.compile, N4jscGoal.lsp })
 		boolean clean = false;
+
+		@Option(name = "--noPersist", aliases = "-np", //
+				usage = "[compile|lsp] disable persisting of type index to disk.", //
+				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+		@GoalRequirements(goals = { N4jscGoal.compile, N4jscGoal.lsp })
+		boolean noPersist = false;
 
 		@Option(name = "--performanceReport", aliases = "-pR", //
 				hidden = true, //
@@ -177,17 +183,17 @@ public class N4jscOptions {
 
 		@Argument(metaVar = "GOAL", multiValued = false, index = 0, required = false, //
 				usage = "Goals are:"
-						+ "\n\t compile  Compiles with given options"
-						+ "\n\t clean    Cleans with given options"
+						+ "\n\t compile  Compiles src folders"
+						+ "\n\t clean    Cleans output folders and type index"
 						+ "\n\t lsp      Starts LSP server"
-						+ "\n\t watch    Starts compiler daemon that watches the given directory(s)"
+						+ "\n\t watch    Starts compiler daemon that watches the given directory"
 						+ "\n\t api      Generates API documentation from n4js files"
 						+ "\n\t", //
 				handler = N4jscGoalOptionHandler.class)
 		N4jscGoal goal = N4jscGoal.compile;
 
-		@Argument(metaVar = "DIR(s)", multiValued = true, index = 1, required = false, //
-				usage = "names of either n4js project directory(s)")
+		@Argument(metaVar = "DIR", multiValued = true, index = 1, required = false, //
+				usage = "name of n4js project or workspace directory")
 		List<File> dirs = new ArrayList<>();
 	}
 
@@ -268,6 +274,15 @@ public class N4jscOptions {
 		return options.dirs;
 	}
 
+	/** @return given project directory or null */
+	public File getDir() {
+		List<File> dirs = getDirs();
+		if (dirs == null || dirs.isEmpty()) {
+			return null;
+		}
+		return dirs.get(0);
+	}
+
 	/** @return true iff {@code --showSetup} */
 	public boolean isShowSetup() {
 		return options.showSetup;
@@ -296,6 +311,11 @@ public class N4jscOptions {
 	/** @return true iff {@code --clean} */
 	public boolean isClean() {
 		return options.clean;
+	}
+
+	/** @return true iff {@code --noPersist} */
+	public boolean isNoPersist() {
+		return options.noPersist;
 	}
 
 	/** @return S of {@code --logFile S} */

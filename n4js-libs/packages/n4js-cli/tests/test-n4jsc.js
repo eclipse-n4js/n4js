@@ -8,18 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-"use strict";
+import * as cli from "../src-gen/index.js";
 
 describe("n4jsc", function() {
-    const cli = require("../index.js");
-
     describe("#call", function() {
         it("calling it should work", function() {
             this.timeout(30000);
-            return cli.n4jsc({
-                help: true,
-                debug: true
-            });
+            return cli.n4jsc("compile", ".", { help: true });
         });
     });
 });

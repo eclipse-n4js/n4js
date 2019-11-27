@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.server;
 
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 
 import com.google.inject.Inject;
 
@@ -19,7 +20,7 @@ import com.google.inject.Inject;
 public class LspLogger {
 
 	@Inject
-	N4JSLanguageServerImpl langServer;
+	XLanguageServerImpl langServer;
 
 	/** */
 	public void log(String messageString) {

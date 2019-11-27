@@ -158,6 +158,7 @@ public class N4JSEclipseModel extends N4JSModel<PlatformResourceURI> {
 			}
 		}
 
+		// FIXME: Does this actually work for the LSP case?
 		if (nestedLocation.isFile()) {
 			SafeURI<?> externalLocation = fromURI(externalLibraryWorkspace, nestedLocation);
 			if (null != externalLocation) {

@@ -9,20 +9,17 @@
  *   NumberFour AG - Initial API and implementation
  */
 import { XUnitReportSpec } from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter"
+import * as n4js_cli from "n4js-cli";
 
 /**
  * All options of the test runner/compilation.
  */
-export default public class ~NodeTestOptions extends XUnitReportSpec {
+export default public class ~NodeTestOptions extends XUnitReportSpec implements n4js_cli.Options {
+
     /**
-     * Scan for N4JS projects in directories.
+     * Enables compiling and generating a test catalog. Root directory of yarn workspace project / npm project.
      */
-    public scan: string[];
-    
-    /**
-     * Project directories.
-     */
-    public projects: string[];
+    public compile: string;
     
     /**
      * Filter for matching test cases.
@@ -30,35 +27,10 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     public filter: string[];
 
     /**
-     * Compiles the given targets, generating a test catalog.
-     */
-    public compile: boolean;
-    
-    /**
-     * Clean the output folder before compiling.
-     */
-    public cleanCompile: boolean;
-
-    /**
-     * Keep compiling - even if errors are encountered.
-     */
-    public keepCompiling: boolean;
-
-    /**
-     * Test catalog (JSON) to be used. If file path, will be written on --compile.
-     */
-    public testCatalog: string;
-
-    /**
      * When compiling, local project test catalog files are written to the targeted
      * project folders under the given path, e.g. test-catalog.json.
      */
     public emitProjectTestCatalogs: string;
-    
-    /**
-     * Installs NPM dependencies using npm or yarn.
-     */
-    public installMissingDependencies: boolean;
     
     /**
      * Library manager .npmrc directory.

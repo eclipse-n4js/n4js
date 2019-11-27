@@ -13,7 +13,10 @@ package org.eclipse.n4js.cli.compiler;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
@@ -24,11 +27,17 @@ import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
-import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
+import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
+import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.xtext.workspace.IProjectConfig;
+
+import com.google.common.base.Stopwatch;
+import com.google.inject.Injector;
 
 /**
  * The entry point for all cli calls with the goal 'compile'
@@ -36,9 +45,9 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 @SuppressWarnings("restriction")
 public class N4jscCompiler {
 	private final N4jscOptions options;
-	private final N4JSLanguageServerImpl languageServer;
+	private final XLanguageServerImpl languageServer;
 	private final N4jscLanguageClient callback;
-	private final N4JSWorkspaceManager workspaceManager;
+	private final XWorkspaceManager workspaceManager;
 
 	/** Starts the compiler in a blocking fashion */
 	static public void start(N4jscOptions options) throws Exception {
@@ -54,34 +63,48 @@ public class N4jscCompiler {
 		this.languageServer = N4jscFactory.getLanguageServer();
 		this.callback = N4jscFactory.getLanguageClient();
 		this.workspaceManager = N4jscFactory.getWorkspaceManager();
+
+		setPersistionOptions();
 		this.languageServer.connect(callback);
+		setupWorkspaceBuildActionListener();
 	}
 
 	/** Starts the compiler in a blocking fashion */
 	public void start() throws Exception {
 		InitializeParams params = new InitializeParams();
-		List<File> srcs = options.getDirs();
-		File firstDir = null;
-		for (File src : srcs) {
-			if (src.isDirectory()) {
-				firstDir = src;
-				break;
-			}
+		File baseDir = options.getDir();
+		if (baseDir == null) {
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, "No base directory");
 		}
-		if (firstDir != null) {
-			params.setRootUri(firstDir.toURI().toString());
-			languageServer.initialize(params).get();
-			warnIfNoProjectsFound();
-			verbosePrintAllProjects();
 
-			languageServer.initialized(new InitializedParams());
+		Stopwatch compilationTime = Stopwatch.createStarted();
+		params.setRootUri(baseDir.toURI().toString());
+		languageServer.initialize(params).get();
+		warnIfNoProjectsFound();
+		verbosePrintAllProjects();
 
-			languageServer.shutdown();
-			languageServer.exit();
+		languageServer.initialized(new InitializedParams());
+		languageServer.joinInitBuildFinished();
 
-		} else {
-			throw new N4jscException(N4jscExitCode.ERROR_UNEXPECTED, "No root directory");
-		}
+		languageServer.shutdown();
+		languageServer.exit();
+
+		printResults(compilationTime.stop().elapsed());
+		writeTestCatalog();
+	}
+
+	private void setupWorkspaceBuildActionListener() {
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		DefaultBuildRequestFactory buildRequestFactory = injector.getInstance(DefaultBuildRequestFactory.class);
+		buildRequestFactory.setAfterGenerateListener(callback);
+		buildRequestFactory.setAfterDeleteListener(callback);
+	}
+
+	private void setPersistionOptions() {
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
+		persisterConfig.setDeleteState(options.isClean());
+		persisterConfig.setWriteToDisk(!options.isNoPersist());
 	}
 
 	private void warnIfNoProjectsFound() {
@@ -103,6 +126,39 @@ public class N4jscCompiler {
 				N4jscConsole.println("Projects:");
 				N4jscConsole.print("   " + String.join("\n   ", projectNameList));
 			}
+		}
+	}
+
+	private void printResults(Duration compilationDuration) {
+		long trsnp = callback.getTranspilationsCount();
+		long deltd = callback.getDeletionsCount();
+		long errs = callback.getErrorsCount();
+		long wrns = callback.getWarningsCount();
+		String durationStr = compilationDuration.toString();
+		String msg = String.format(
+				"Compile results - Transpiled: %d, Deleted: %d, Errors: %d, Warnings: %d, Duration: %s",
+				trsnp, deltd, errs, wrns, durationStr);
+		N4jscConsole.println(msg);
+	}
+
+	private void writeTestCatalog() throws N4jscException {
+		File testCatalogFile = options.getTestCatalog();
+		if (testCatalogFile != null) {
+			Injector injector = N4jscFactory.getOrCreateInjector();
+			TestCatalogSupplier testCatalogSupplier = injector.getInstance(TestCatalogSupplier.class);
+
+			String catalog = testCatalogSupplier.get(true); // do not include "endpoint" property here
+
+			try (FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
+				fos.write(catalog.getBytes());
+				fos.flush();
+
+			} catch (IOException e) {
+				String msg = "Error while writing test catalog file at: " + testCatalogFile;
+				throw new N4jscException(N4jscExitCode.TEST_CATALOG_ASSEMBLATION_ERROR, msg);
+			}
+
+			N4jscConsole.println("Test catalog written to " + testCatalogFile.toPath());
 		}
 	}
 

@@ -8,6 +8,7 @@
 package org.eclipse.n4js.ide.xtext.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,10 +25,12 @@ import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -35,22 +38,22 @@ import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
-import org.eclipse.xtext.xbase.lib.Functions.Function2;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 /**
  * @author Sven Efftinge - Initial contribution and API
  * @since 2.11
  */
 @SuppressWarnings("restriction")
-public class XWorkspaceManager {
+@Singleton
+public class XWorkspaceManager implements DocumentResourceProvider {
 	private static final Logger LOG = Logger.getLogger(XWorkspaceManager.class);
 
 	@Inject
@@ -62,19 +65,21 @@ public class XWorkspaceManager {
 	@Inject
 	private XIProjectDescriptionFactory projectDescriptionFactory;
 
+	@Inject
+	private IssueAcceptor issueAcceptor;
+
 	private XBuildManager buildManager;
 
 	private final Map<String, XProjectManager> projectName2ProjectManager = new HashMap<>();
 
 	private URI baseDir;
 
-	private Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor;
-
 	private IWorkspaceConfig workspaceConfig;
 
 	private final List<ILanguageServerAccess.IBuildListener> buildListeners = new ArrayList<>();
 
-	private final Map<String, ResourceDescriptionsData> fullIndex = new HashMap<>();
+	// GH-1552: synchronized map
+	private final Map<String, ResourceDescriptionsData> fullIndex = Collections.synchronizedMap(new HashMap<>());
 
 	private final Map<URI, Document> openDocuments = new HashMap<>();
 
@@ -130,28 +135,32 @@ public class XWorkspaceManager {
 		this.buildManager = buildManager;
 	}
 
+	/** @return the {@link XBuildManager} */
+	public XBuildManager getBuildManager() {
+		return buildManager;
+	}
+
+	/** @return true iff the given uri is contained in the set of opened documents */
+	public boolean isOpenedFile(URI uri) {
+		return openDocuments.containsKey(uri);
+	}
+
 	/**
 	 * Initialize a workspace at the given location.
 	 *
 	 * @param baseDir
 	 *            the location
-	 * @param issueAcceptor
-	 *            the issue acceptor
-	 * @param cancelIndicator
-	 *            allows to cancel the initialization
 	 */
 	@SuppressWarnings("hiding")
-	public void initialize(URI baseDir, Procedure2<? super URI, ? super Iterable<Issue>> issueAcceptor,
-			CancelIndicator cancelIndicator) {
+	public void initialize(URI baseDir) {
 		this.baseDir = baseDir;
-		this.issueAcceptor = issueAcceptor;
-		refreshWorkspaceConfig(cancelIndicator);
+		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
 	}
 
 	/**
 	 * Refresh the workspace.
 	 */
-	protected void refreshWorkspaceConfig(CancelIndicator cancelIndicator) {
+	public void refreshWorkspaceConfig(CancelIndicator cancelIndicator) {
 		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
 		List<ProjectDescription> newProjects = new ArrayList<>();
 		Set<String> projectNames = projectName2ProjectManager.keySet();
@@ -162,8 +171,8 @@ public class XWorkspaceManager {
 			} else {
 				XProjectManager projectManager = projectManagerProvider.get();
 				ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-				projectManager.initialize(projectDescription, projectConfig, issueAcceptor,
-						openedDocumentsContentProvider, () -> fullIndex, cancelIndicator);
+				projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
+						() -> fullIndex);
 				projectName2ProjectManager.put(projectDescription.getName(), projectManager);
 				newProjects.add(projectDescription);
 			}
@@ -172,7 +181,21 @@ public class XWorkspaceManager {
 			projectName2ProjectManager.remove(deletedProject);
 			fullIndex.remove(deletedProject);
 		}
-		afterBuild(buildManager.doInitialBuild(newProjects, cancelIndicator));
+
+		Stopwatch sw = Stopwatch.createStarted();
+		List<Delta> deltas = buildManager.doInitialBuild(newProjects, cancelIndicator);
+		System.out.println(sw.stop().elapsed());
+		afterBuild(deltas);
+	}
+
+	/** @see XBuildManager#persistProjectState(CancelIndicator) */
+	public void persistProjectState(CancelIndicator indicator) {
+		buildManager.persistProjectState(indicator);
+	}
+
+	/** @return the current base directory {@link URI} */
+	public URI getBaseDir() {
+		return this.baseDir;
 	}
 
 	/**
@@ -180,7 +203,7 @@ public class XWorkspaceManager {
 	 * @throws ResponseErrorException
 	 *             if the workspace is not yet initialized
 	 */
-	protected IWorkspaceConfig getWorkspaceConfig() throws ResponseErrorException {
+	public IWorkspaceConfig getWorkspaceConfig() throws ResponseErrorException {
 		if (workspaceConfig == null) {
 			ResponseError error = new ResponseError(ResponseErrorCode.serverNotInitialized,
 					"Workspace has not been initialized yet.", null);
@@ -198,7 +221,7 @@ public class XWorkspaceManager {
 	}
 
 	/**
-	 * Callback after a build was performend
+	 * Callback after a build was performed
 	 */
 	protected void afterBuild(List<IResourceDescription.Delta> deltas) {
 		for (ILanguageServerAccess.IBuildListener listener : buildListeners) {
@@ -216,12 +239,17 @@ public class XWorkspaceManager {
 	 * @return a build command that can be triggered
 	 */
 	public XBuildable didChangeFiles(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		XBuildManager.XBuildable buildable = buildManager.submit(dirtyFiles, deletedFiles);
+		XBuildManager.XBuildable buildable = buildManager.doIncrementalBuild(dirtyFiles, deletedFiles);
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
 			afterBuild(deltas);
 			return deltas;
 		};
+	}
+
+	/** Clears all issues of the given URI */
+	public void clearIssues(URI uri) {
+		issueAcceptor.publishDiagnostics(uri, Collections.emptyList());
 	}
 
 	/**
@@ -279,7 +307,7 @@ public class XWorkspaceManager {
 	/**
 	 * Find the project that contains the uri.
 	 */
-	protected IProjectConfig getProjectConfig(URI uri) {
+	public IProjectConfig getProjectConfig(URI uri) {
 		return getWorkspaceConfig().findProjectContaining(uri);
 	}
 
@@ -299,8 +327,8 @@ public class XWorkspaceManager {
 	 *
 	 * @return all project managers.
 	 */
-	public List<XProjectManager> getProjectManagers() {
-		return ImmutableList.copyOf(projectName2ProjectManager.values());
+	public Collection<XProjectManager> getProjectManagers() {
+		return Collections.unmodifiableCollection(projectName2ProjectManager.values());
 	}
 
 	/**
@@ -403,28 +431,36 @@ public class XWorkspaceManager {
 		return false;
 	}
 
-	/**
-	 * Find the resource and the document with the given URI and performa a read operation.
-	 */
-	public <T> T doRead(URI uri, Function2<? super Document, ? super XtextResource, ? extends T> work) {
+	@Override
+	public XtextResource getResource(URI uri) {
 		URI resourceURI = uri.trimFragment();
 		XProjectManager projectMnr = getProjectManager(resourceURI);
 		if (projectMnr != null) {
 			XtextResource resource = (XtextResource) projectMnr.getResource(resourceURI);
-			Document doc = getDocument(resource);
-			return work.apply(doc, resource);
+			return resource;
 		}
-		return work.apply(null, null);
+		return null;
 	}
 
-	/**
-	 * Find the document for the given resource.
-	 *
-	 * @param resource
-	 *            the resource.
-	 * @return the document
-	 */
-	protected Document getDocument(XtextResource resource) {
+	@Override
+	public Document getDocument(URI uri) {
+		XtextResource resource = getResource(uri);
+		if (resource == null) {
+			return null;
+		}
+		Document doc = openDocuments.get(resource.getURI());
+		if (doc != null) {
+			return doc;
+		}
+		String text = resource.getParseResult().getRootNode().getText();
+		return new Document(Integer.valueOf(1), text);
+	}
+
+	@Override
+	public Document getDocument(XtextResource resource) {
+		if (resource == null) {
+			return null;
+		}
 		Document doc = openDocuments.get(resource.getURI());
 		if (doc != null) {
 			return doc;
@@ -434,13 +470,20 @@ public class XWorkspaceManager {
 	}
 
 	/**
-	 * Return true if there is a open document with the givne URI.
+	 * Return true if there is a open document with the given URI.
 	 *
 	 * @param uri
 	 *            the URI
 	 */
 	public boolean isDocumentOpen(URI uri) {
 		return openDocuments.containsKey(uri);
+	}
+
+	/** @return a workspace relative URI for a given URI */
+	public URI makeWorkspaceRelative(URI uri) {
+		FileURI fileUri = new FileURI(uri);
+		URI relativeUri = fileUri.toURI().deresolve(getBaseDir());
+		return relativeUri;
 	}
 
 }

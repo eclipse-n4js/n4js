@@ -282,10 +282,8 @@ public class HeadlessHelper {
 					+ "]. Already registered project at " + registeredProjects.get(projectName)
 					+ ", trying to register project at " + projectLocation + ".");
 
-		// duplicate is in new location, so new project with the same name -> stop compilation
-		throw new N4JSCompileException("Duplicate project id [" + projectName
-				+ "]. Already registered project at " + registeredProjectLocation
-				+ ", trying to register project at " + projectLocation + ".");
+		// Return true here causes shadowing of projects with the same name. Will be removed with GH-1314
+		return true;
 	}
 
 	/**

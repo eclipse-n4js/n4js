@@ -66,10 +66,10 @@ Contributors:
 								org.eclipse.jgit,
 								org.apache.sshd.osgi,
 								org.apache.sshd.sftp,
-								com.fasterxml.jackson.core.jackson-core,
+						<!--		com.fasterxml.jackson.core.jackson-core,
 								com.fasterxml.jackson.core.jackson-databind,
 								com.fasterxml.jackson.core.jackson-annotations,
-						<!-- 		org.apache.ant,
+						 		org.apache.ant,
 								org.apache.commons.lang,
 								org.apache.commons.logging,
 								org.eclipse.core.commands,
@@ -168,9 +168,15 @@ Contributors:
 									<includes>
 										<include>**</include>
 									</includes>
-								</filter> 
+								</filter>
 								<filter>
 									<artifact>org.eclipse.n4js:*com.google.inject*</artifact>
+									<includes>
+										<include>**</include>
+									</includes>
+								</filter>
+								<filter>
+									<artifact>org.eclipse.n4js:*jackson-databind*</artifact>
 									<includes>
 										<include>**</include>
 									</includes>
@@ -198,9 +204,17 @@ Contributors:
 							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<sourceFile>${project.build.directory}/${cli.jar-longname}</sourceFile>
-							<destinationFile>${project.build.directory}/new_${hlc.jar-shortname}</destinationFile>
 							<overWrite>true</overWrite>
+							<fileSets>
+								<fileSet>
+									<sourceFile>${project.build.directory}/${cli.jar-longname}</sourceFile>
+									<destinationFile>${project.build.directory}/${hlc.jar-shortname}</destinationFile>
+								</fileSet>
+								<fileSet>
+									<sourceFile>${project.build.directory}/${cli.jar-longname}</sourceFile>
+									<destinationFile>${project.basedir}/../../target/${hlc.jar-shortname}</destinationFile>
+								</fileSet>
+							</fileSets>
 						</configuration>
 					</execution>
 				</executions>

@@ -82,7 +82,7 @@ public class InstallCompileRunN4jscExternalShadowNestedNodeModulesTest extends A
 
 		N4jscOptions options = COMPILE(workspace);
 		CliCompileResult cliResult = n4jsc(options);
-		assertEquals(cliResult.toString(), 2, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "Main.n4js in P\n";
 		expectedString += "#methodOld() in version 2.0.0\n";

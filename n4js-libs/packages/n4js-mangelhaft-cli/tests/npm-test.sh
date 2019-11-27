@@ -13,10 +13,9 @@ set -e
 cd `dirname $0`/TestPrj
 
 ../../bin/n4js-mangelhaft-cli.js \
-    --compile \
+    --compile ../../../.. \
     --xunitReportFile ./build/report.xml \
     --xunitReportName test-report \
     --xunitReportPackage TestPrj \
-    --scan ../../.. \
     . \
     $@

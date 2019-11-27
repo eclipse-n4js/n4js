@@ -181,7 +181,9 @@ public class TestDiscoveryHelper {
 	 */
 	public TestTree collectAllTestsFromWorkspace() {
 		List<URI> testableProjectURIs = new LinkedList<>();
-		for (IN4JSProject project : n4jsCore.findAllProjects()) {
+		Iterable<? extends IN4JSProject> findAllProjects = n4jsCore.findAllProjects();
+
+		for (IN4JSProject project : findAllProjects) {
 			URI location = project.getLocation().toURI();
 			if (project.exists() && isTestable(location)) {
 				testableProjectURIs.add(location);
@@ -324,6 +326,7 @@ public class TestDiscoveryHelper {
 				name += " and " + (locations.size() - 1) + " more";
 			}
 		}
+
 		return new TestTree(sessionId, suites.values(), name);
 	}
 

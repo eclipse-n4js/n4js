@@ -15,6 +15,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,6 +48,8 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Inject
 	private FileBasedExternalPackageManager packageManager;
+
+	private final Map<SafeURI<?>, ProjectDescription> projectDescriptionMap = new HashMap<>();
 
 	@Override
 	public RegisterResult registerProjects(IProgressMonitor monitor, Set<FileURI> toBeUpdated) {
@@ -115,8 +118,12 @@ public class HlcExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
 	public ProjectDescription getProjectDescription(FileURI location) {
-		ProjectDescription projectDescription = packageManager.loadProjectDescriptionFromProjectRoot(location);
-		return projectDescription;
+		// TODO: Can be a problem in LSP use case: missing is invalidation of entries when package.json was changed.
+		if (!projectDescriptionMap.containsKey(location)) {
+			ProjectDescription projectDescription = packageManager.loadProjectDescriptionFromProjectRoot(location);
+			projectDescriptionMap.put(location, projectDescription);
+		}
+		return projectDescriptionMap.get(location);
 	}
 
 	@Override

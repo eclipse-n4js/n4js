@@ -47,7 +47,6 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(Resource context) {
-
 		IN4JSProject project = n4jsCore.findProject(context.getURI()).orNull();
 		return getOutputConfigurations(project);
 	}

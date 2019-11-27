@@ -28,7 +28,10 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.ide.server.N4JSLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
+import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+
+import com.google.inject.Injector;
 
 /**
  *
@@ -44,6 +47,7 @@ public class LspServer {
 
 	private LspServer(N4jscOptions options) {
 		this.options = options;
+		setPersistionOptions();
 	}
 
 	/** Starts the LSP server in a blocking fashion */
@@ -53,7 +57,9 @@ public class LspServer {
 
 		try {
 			while (true) {
-				setupAndRun(threadPool);
+				XLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
+				setupAndRun(threadPool, languageServer);
+				N4jscFactory.resetInjector();
 			}
 
 		} finally {
@@ -61,8 +67,15 @@ public class LspServer {
 		}
 	}
 
-	private void setupAndRun(ExecutorService threadPool) throws InterruptedException, ExecutionException, IOException {
-		N4JSLanguageServerImpl languageServer = N4jscFactory.getLanguageServer();
+	private void setPersistionOptions() {
+		Injector injector = N4jscFactory.getOrCreateInjector();
+		ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
+		persisterConfig.setDeleteState(options.isClean());
+		persisterConfig.setWriteToDisk(!options.isNoPersist());
+	}
+
+	private void setupAndRun(ExecutorService threadPool, XLanguageServerImpl languageServer)
+			throws InterruptedException, ExecutionException, IOException {
 
 		Builder<LanguageClient> lsBuilder = new Builder<LanguageClient>()
 				.setLocalService(languageServer)
@@ -80,14 +93,14 @@ public class LspServer {
 		}
 	}
 
-	private void setupAndRunWithSocket(N4JSLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
+	private void setupAndRunWithSocket(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
 			throws InterruptedException, ExecutionException, IOException {
 
 		InetSocketAddress address = new InetSocketAddress("localhost", options.getPort());
 
 		try (AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open().bind(address);) {
 
-			N4jscConsole.println("Listening for LSP clients...");
+			N4jscConsole.println("Listening for LSP clients on port " + options.getPort() + "...");
 
 			try (AsynchronousSocketChannel socketChannel = serverSocket.accept().get();
 					InputStream in = Channels.newInputStream(socketChannel);
@@ -100,13 +113,13 @@ public class LspServer {
 		}
 	}
 
-	private void setupAndRunWithSystemIO(N4JSLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
+	private void setupAndRunWithSystemIO(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder)
 			throws InterruptedException {
 
 		run(languageServer, lsBuilder, System.in, System.out);
 	}
 
-	private void run(N4JSLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder, InputStream in,
+	private void run(XLanguageServerImpl languageServer, Builder<LanguageClient> lsBuilder, InputStream in,
 			OutputStream out)
 			throws InterruptedException {
 

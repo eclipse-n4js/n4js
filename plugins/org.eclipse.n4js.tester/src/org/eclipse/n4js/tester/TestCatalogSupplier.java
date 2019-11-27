@@ -57,12 +57,19 @@ public class TestCatalogSupplier implements Supplier<String> {
 	 */
 	public String get(boolean suppressEndpointProperty) {
 		try {
+			System.out.println("before getTreeForAllTests()");
 			final TestTree testTree = getTreeForAllTests();
+
+			System.out.println("before treeTransformer.apply(testTree, Collections.emptyMap())");
+
 			final Object testCatalogObject = suppressEndpointProperty
 					? treeTransformer.apply(testTree, Collections.emptyMap())
 					: treeTransformer.apply(testTree);
+
+			System.out.println("before objectMapper.writeValueAsString(testCatalogObject)");
 			return objectMapper.writeValueAsString(testCatalogObject);
-		} catch (final Exception e) {
+
+		} catch (final Throwable e) {
 			throw new RuntimeException("Error while assembling test catalog.", e);
 		}
 	}

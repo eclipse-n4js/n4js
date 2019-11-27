@@ -24,7 +24,7 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 
 /**
- *
+ * Contains both CFG/DFG information and analysis results
  */
 public class ASTFlowInfo {
 	/** Provides results of dead code analysis */
@@ -63,9 +63,22 @@ public class ASTFlowInfo {
 		flowAnalyzer.acceptForwardAnalysers(cancelledChecker, allAnalysers);
 	}
 
+	/** @return true iff the {@link #performBackwardAnalysis(Callable)} is applicable. Call third. */
+	public boolean canPerformBackwardAnalysis() {
+		return N4JSFlowAnalyser.State.forwardsAnalyzed == flowAnalyzer.getState();
+	}
+
 	/** Performs a backward control flow analysis. Call forth. */
 	public void performBackwardAnalysis(Callable<?> cancelledChecker) {
 		flowAnalyzer.acceptBackwardAnalysers(cancelledChecker, allAnalysers);
+	}
+
+	/** Resets all graphs and cleans up state leaving only result */
+	public void reset() {
+		flowAnalyzer.reset();
+		for (FlowAnalyser analyzer : allAnalysers) {
+			analyzer.clean();
+		}
 	}
 
 }

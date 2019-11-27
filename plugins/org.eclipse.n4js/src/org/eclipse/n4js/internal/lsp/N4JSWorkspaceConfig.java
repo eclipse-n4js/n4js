@@ -10,20 +10,21 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.lsp.IN4JSProjectConfig;
-import org.eclipse.n4js.projectModel.lsp.IN4JSWorkspaceConfig;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-
-import com.google.common.collect.FluentIterable;
+import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 /**
  * Wrapper around {@link IN4JSCore}.
  */
-public class N4JSWorkspaceConfig implements IN4JSWorkspaceConfig {
+@SuppressWarnings("restriction")
+public class N4JSWorkspaceConfig implements IWorkspaceConfig {
 
 	private final IN4JSCore delegate;
 
@@ -35,18 +36,30 @@ public class N4JSWorkspaceConfig implements IN4JSWorkspaceConfig {
 	}
 
 	@Override
-	public IN4JSProjectConfig findProjectByName(String name) {
-		return delegate.findProject(new N4JSProjectName(name)).transform(p -> new N4JSProjectConfig(this, p)).orNull();
+	public IProjectConfig findProjectByName(String name) {
+		IN4JSProject project = delegate.findProject(new N4JSProjectName(name)).orNull();
+		if (project != null) {
+			return new N4JSProjectConfig(this, project);
+		}
+		return null;
 	}
 
 	@Override
-	public IN4JSProjectConfig findProjectContaining(URI member) {
-		return delegate.findProject(member).transform(p -> new N4JSProjectConfig(this, p)).orNull();
+	public IProjectConfig findProjectContaining(URI member) {
+		IN4JSProject project = delegate.findProject(member).orNull();
+		if (project != null) {
+			return new N4JSProjectConfig(this, project);
+		}
+		return null;
 	}
 
 	@Override
-	public Set<? extends IN4JSProjectConfig> getProjects() {
-		return FluentIterable.from(delegate.findAllProjects()).transform(p -> new N4JSProjectConfig(this, p)).toSet();
+	public Set<? extends IProjectConfig> getProjects() {
+		Set<IProjectConfig> pConfigs = new HashSet<>();
+		for (IN4JSProject project : delegate.findAllProjects()) {
+			pConfigs.add(new N4JSProjectConfig(this, project));
+		}
+		return pConfigs;
 	}
 
 }

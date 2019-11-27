@@ -7,7 +7,9 @@ const VSCode = require("vscode");
 const VSCodeJRCP = require("vscode-jsonrpc");
 const VSCodeLC = require("vscode-languageclient");
 function activate(context) {
+	console.log("activate");
 	let serverOptions = ()=>{
+		console.log("net.connect");
 		let socket = net.connect({
 			port: 5007
 		});
@@ -22,8 +24,9 @@ function activate(context) {
 			'n4js'
 		],
 		synchronize: {
-			fileEvents: VSCode.workspace.createFileSystemWatcher('**/*.*')
-		}
+			fileEvents: VSCode.workspace.createFileSystemWatcher('{/**/*.+(n4js|n4jsd|n4jsx|n4idl),/**/package.json}')
+		},
+        outputChannelName: 'N4JS Language Server',
 	};
 	let lc = new VSCodeLC.LanguageClient('N4JS Language Server', serverOptions, clientOptions);
 	lc.trace = VSCodeJRCP.Trace.Verbose;

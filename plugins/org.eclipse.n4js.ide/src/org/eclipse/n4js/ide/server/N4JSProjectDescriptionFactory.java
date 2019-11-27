@@ -11,9 +11,9 @@
 package org.eclipse.n4js.ide.server;
 
 import org.eclipse.n4js.ide.xtext.server.XDefaultProjectDescriptionFactory;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.lsp.IN4JSProjectConfig;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -21,7 +21,7 @@ import org.eclipse.xtext.workspace.IProjectConfig;
 import com.google.common.collect.FluentIterable;
 
 /**
- *
+ * Creates {@link ProjectDescription}s for {@link IN4JSProject}s: Adds dependencies.
  */
 @SuppressWarnings("restriction")
 public class N4JSProjectDescriptionFactory extends XDefaultProjectDescriptionFactory {
@@ -29,7 +29,7 @@ public class N4JSProjectDescriptionFactory extends XDefaultProjectDescriptionFac
 	@Override
 	public ProjectDescription getProjectDescription(IProjectConfig config) {
 		ProjectDescription projectDescription = super.getProjectDescription(config);
-		IN4JSProjectConfig casted = (IN4JSProjectConfig) config;
+		N4JSProjectConfig casted = (N4JSProjectConfig) config;
 		IN4JSProject project = casted.toProject();
 		if (project.getProjectType() == ProjectType.PLAINJS) {
 			return projectDescription;
