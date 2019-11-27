@@ -23,15 +23,6 @@ Contributors:
 	<packaging>eclipse-test-plugin</packaging>
 	<description>Test the headless N4js compiler bundled into one jar.</description>
 
-	<dependencies>
-	<!-- pull jar for integration tests on the jar -->
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.hlc</artifactId>
-			<classifier>jar-with-dependencies</classifier>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
 
 	<build>
 		<plugins>
