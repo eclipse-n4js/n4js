@@ -11,7 +11,7 @@ Contributors:
 
 
 # org.eclipse.n4js.hlc.tests
-Integration tests for the ready to use "n4jsc.jar" of module *org.eclipse.n4js.hlc*
+Integration tests for the ready to use "n4jsc.jar" of module *org.eclipse.n4js.ide*
 
 ## Structure
 This is a maven-structured module and not an osgi-bundle. As a consequence there are several differences in the organization:

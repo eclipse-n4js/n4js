@@ -247,38 +247,6 @@ Contributors:
 		<!-- Management of plugins which can be activated by children. -->
 		<pluginManagement>
 			<plugins>
-				<!-- Unpacking of js.engine for test-execution (output-tests) 
-				     + Unpacking of jshint.js for linter test-->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>${maven-dependency-plugin.version}</version>
-					<executions>
-						<execution>
-							<id>copy-n4-cli-jar</id>
-							<!-- disabled by default -->
-							<phase />
-							<goals>
-								<goal>copy</goal>
-							</goals>
-							<configuration>
-								<artifactItems>
-									<artifactItem>
-										<groupId>org.eclipse.n4js</groupId>
-										<artifactId>org.eclipse.n4js.hlc</artifactId>
-										<classifier>jar-with-dependencies</classifier>
-										<type>jar</type>
-										<overWrite>true</overWrite>
-										<outputDirectory>${project.build.directory}/</outputDirectory>
-										<destFileName>${hlc.jar-shortname}</destFileName>
-									</artifactItem>
-								</artifactItems>
-								<overWriteReleases>true</overWriteReleases>
-								<overWriteSnapshots>true</overWriteSnapshots>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
 				<plugin>
 					<!--
 					There are different executions (configurations) defined, that are run one after the other (when they

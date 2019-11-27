@@ -31,10 +31,10 @@ Contributors:
 	</properties>
 
 	<dependencies>
-		<!-- need the jar created in org.eclipse.n4js.hlc -->
+		<!-- need the jar created in org.eclipse.n4js.ide -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>org.eclipse.n4js.hlc</artifactId>
+			<artifactId>org.eclipse.n4js.ide</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
