@@ -6,8 +6,6 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.hlc.tests
 Export-Package: org.eclipse.n4js.hlc.tests
 Require-Bundle: org.eclipse.n4js,
- org.eclipse.n4js.hlc,
- org.eclipse.n4js.hlc.base,
  org.junit,
  org.eclipse.equinox.app,
  com.google.guava,

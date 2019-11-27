@@ -35,7 +35,7 @@ Contributors:
 
 	<build>
 		<plugins>
-			<!-- Copy the executable jar to tools/target folder of this bundle so that the integration tests can use it -->
+			<!-- Copy the executable jar to target/tools folder of this bundle so that the integration tests can use it -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>

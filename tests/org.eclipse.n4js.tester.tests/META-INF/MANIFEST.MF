@@ -7,7 +7,7 @@ Bundle-Vendor: %providerName
 Fragment-Host: org.eclipse.n4js.tester
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.n4js.tester.tests.helper,
+ org.eclipse.n4js.ide,
  org.eclipse.xtend.lib,
- org.junit,
- org.eclipse.n4js.hlc.base
+ org.junit
 Automatic-Module-Name: org.eclipse.n4js.tester.tests

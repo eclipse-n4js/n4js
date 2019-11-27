@@ -8,9 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc.base;
+package org.eclipse.n4js.ide.server;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
@@ -20,10 +19,7 @@ import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
-import org.eclipse.n4js.runner.extension.RunnerRegistry;
-import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
-import org.eclipse.n4js.tester.nodejs.NodeTester.NodeTesterDescriptorProvider;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
@@ -51,16 +47,7 @@ public class HeadlessExtensionRegistrationHelper {
 	private N4IDLSubGenerator n4idlSubGenerator;
 
 	@Inject
-	private RunnerRegistry runnerRegistry;
-
-	@Inject
 	private TesterRegistry testerRegistry;
-
-	@Inject
-	private NodeRunnerDescriptorProvider nodeRunnerDescriptorProvider;
-
-	@Inject
-	private NodeTesterDescriptorProvider nodeTesterDescriptorProvider;
 
 	@Inject
 	private PackageJsonValidatorExtension packageJsonValidatorExtension;
@@ -76,13 +63,6 @@ public class HeadlessExtensionRegistrationHelper {
 	 * case.
 	 */
 	public void registerExtensions() {
-		// Wire registers related to the extension points
-		// in non-OSGI mode extension points are not automatically populated
-		if (!Platform.isRunning()) {
-			runnerRegistry.register(nodeRunnerDescriptorProvider.get());
-			testerRegistry.register(nodeTesterDescriptorProvider.get());
-		}
-
 		// Register file extensions
 		registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
 		registerRunnableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
@@ -108,7 +88,6 @@ public class HeadlessExtensionRegistrationHelper {
 
 	/** Unregister all extensions */
 	public void unregisterExtensions() {
-		runnerRegistry.reset();
 		testerRegistry.reset();
 		n4jsFileExtensionsRegistry.reset();
 		subGeneratorRegistry.reset();

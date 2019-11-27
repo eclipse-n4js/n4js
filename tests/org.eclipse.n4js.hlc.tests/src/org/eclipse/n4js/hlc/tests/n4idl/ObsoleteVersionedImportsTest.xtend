@@ -15,7 +15,6 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Path
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest
-import org.eclipse.n4js.hlc.base.ExitCodeException
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.junit.After
 import org.junit.Before
@@ -51,7 +50,7 @@ public class ObsoleteVersionedImportsTest extends AbstractCliCompileTest {
 	 * Asserts the output to be equal to 'ObsoleteVersionedImports/expectations.log'.
 	 */
 	@Test
-	public def void testNoObsoleteVersionsImported() throws IOException, ExitCodeException {
+	public def void testNoObsoleteVersionsImported() throws IOException {
 		val cliResult = n4jsc(COMPILE(workspace));
 		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
 		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());

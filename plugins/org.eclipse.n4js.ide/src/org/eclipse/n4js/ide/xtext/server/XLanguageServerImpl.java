@@ -91,7 +91,7 @@ import org.eclipse.lsp4j.services.LanguageClientExtensions;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
-import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
+import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
@@ -384,11 +384,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void exit() {
-		if (shutdownAndExitHandler == null) {
-			System.out.println("shutdownAndExitHandler is null");
-		} else {
-			System.out.println("shutdownAndExitHandler class = " + shutdownAndExitHandler.getClass().getName());
-		}
 		shutdownAndExitHandler.exit();
 	}
 

@@ -19,7 +19,6 @@ import java.io.IOException;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.ProcessResult;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -48,14 +47,9 @@ public class N4jscDependentProjectDependenciesTest extends AbstractCliCompileTes
 		FileDeleter.delete(workspace.toPath(), true);
 	}
 
-	/**
-	 * Test failure when compiling without target platform file.
-	 *
-	 * @throws ExitCodeException
-	 *             propagated from compiler in case of issues
-	 */
+	/** Test failure when compiling without target platform file. */
 	@Test
-	public void testSuccessfulCompilationWithInterdependentProjects() throws ExitCodeException {
+	public void testSuccessfulCompilationWithInterdependentProjects() {
 		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
 		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
 

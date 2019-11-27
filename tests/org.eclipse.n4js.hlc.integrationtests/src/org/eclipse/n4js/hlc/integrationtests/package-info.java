@@ -12,7 +12,7 @@
 /**
  * This package contains tests that execute the <code>n4jsc.jar</code> command line tool in a separate operating systems
  * process (cf. {@link java.lang.ProcessBuilder}), as opposed to the tests in <code>org.eclipse.n4js.hlc.tests</code>
- * which directly and programmatically invoke method {@link org.eclipse.n4js.hlc.base.N4jscBase#doMain(String...)} in
- * order to test N4jsc functionality.
+ * which directly and programmatically invoke method {@link org.eclipse.n4js.cli.N4jscMain#main(String...)} in order to
+ * test N4jsc functionality.
  */
 package org.eclipse.n4js.hlc.integrationtests;

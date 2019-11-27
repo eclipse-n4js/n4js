@@ -21,7 +21,6 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.ProcessResult;
-import org.eclipse.n4js.hlc.base.BuildType;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
@@ -53,34 +52,6 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependencies() {
-		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String packages = wsRoot + "/packages";
-		final String fileToRun = packages + "/P3/src-gen/f3.js";
-
-		ProcessResult yarnInstallResult = yarnInstall(workspace.toPath());
-		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
-
-		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 7, cliResult.getTranspiledFilesCount());
-
-		String expectedString = "P1\n";
-		expectedString += "react is not undefined true\n";
-		expectedString += "react-dom is not undefined true\n";
-		expectedString += "imports from libs are different true\n";
-		expectedString += "P2\n";
-		expectedString += "React is not undefined true";
-
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
-		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
-	}
-
-	/**
-	 * Similar to the {@link #testCompileAndRunWithExternalDependencies()} but instead of using
-	 * {@link BuildType#allprojects} with common root, it is using {@link BuildType#projects} with concrete list of
-	 * projects.
-	 */
-	@Test
-	public void testCompileAndRunWithExternalDependencies2() {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String packages = wsRoot + "/packages";
 		final String fileToRun = packages + "/P3/src-gen/f3.js";

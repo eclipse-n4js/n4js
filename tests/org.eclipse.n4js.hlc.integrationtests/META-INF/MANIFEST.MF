@@ -7,8 +7,6 @@ Bundle-SymbolicName: org.eclipse.n4js.hlc.integrationtests
 Export-Package: org.eclipse.n4js.hlc.integrationtests
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.utils,
- org.eclipse.n4js.hlc,
- org.eclipse.n4js.hlc.base,
  org.junit,
  com.google.guava,
  org.apache.log4j,
