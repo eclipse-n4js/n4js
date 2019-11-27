@@ -137,13 +137,9 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 
 	@Override
 	public ResourceSet createResourceSet(Optional<IN4JSProject> contextProject) {
-		System.out.println("before resourceSetProvider.get();");
 		final ResourceSet resourceSet = resourceSetProvider.get();
-		System.out.println("before resourceSet.getLoadOptions().put(PERSISTED_DESCRIPTIONS, TRUE);");
 		resourceSet.getLoadOptions().put(PERSISTED_DESCRIPTIONS, TRUE);
-		System.out.println("before createAllResourcesWorkspace(resourceSet);");
 		createAllResourcesWorkspace(resourceSet);
-		System.out.println("before attachResourceDescriptionsData(resourceSet);");
 		attachResourceDescriptionsData(resourceSet);
 		return resourceSet;
 	}

@@ -152,7 +152,8 @@ class N4JSValidator extends AbstractMessageAdjustingN4JSValidator {
 			} catch (Exception e) {
 				operationCanceledManager.propagateIfCancelException(e);
 				logger.error("Error executing EValidator", e);
-				e.printStackTrace;
+				new RuntimeException(e).printStackTrace();
+
 				state.chain.add(
 					new BasicDiagnostic(Diagnostic.ERROR, state.currentObject.toString(), 0, e.message, #[e, URI]));
 			} finally {

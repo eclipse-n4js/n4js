@@ -54,12 +54,7 @@ public class N4jscCompiler {
 		N4jscCompiler compiler = new N4jscCompiler(options);
 
 		try (Measurement m = N4JSDataCollectors.dcCliCompile.getMeasurement(options.toString())) {
-			SystemExitRedirecter.set();
-			System.out.println("before compiler.start()");
 			compiler.start();
-		} finally {
-			// System.out.println("before systemExitRedirecter.unset()");
-			// SystemExitRedirecter.unset();
 		}
 	}
 
@@ -95,9 +90,7 @@ public class N4jscCompiler {
 		languageServer.exit();
 
 		printResults(compilationTime.stop().elapsed());
-		System.out.println("before writeTestCatalog");
 		writeTestCatalog();
-		System.out.println("after writeTestCatalog");
 	}
 
 	private void setupWorkspaceBuildActionListener() {
@@ -154,12 +147,9 @@ public class N4jscCompiler {
 			Injector injector = N4jscFactory.getOrCreateInjector();
 			TestCatalogSupplier testCatalogSupplier = injector.getInstance(TestCatalogSupplier.class);
 
-			System.out.println("before testCatalogSupplier.get(true)");
 			String catalog = testCatalogSupplier.get(true); // do not include "endpoint" property here
 
-			System.out.println("before new FileOutputStream(testCatalogFile)");
 			try (FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
-				System.out.println("before fos.write(catalog.getBytes())");
 				fos.write(catalog.getBytes());
 				fos.flush();
 

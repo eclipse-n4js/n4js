@@ -168,11 +168,8 @@ public class TestDiscoveryHelper {
 	 *         tree may be empty.
 	 */
 	public TestTree collectTests(final List<URI> uris) {
-		System.out.println("before n4jsCore.createResourceSet(Optional.absent())");
 		final ResourceSet resSet = n4jsCore.createResourceSet(Optional.absent());
-		System.out.println("before n4jsCore.getXtextIndex(resSet)");
 		final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
-		System.out.println("before collectTests(resSet, index, uris).sort()");
 		return collectTests(resSet, index, uris).sort();
 	}
 
@@ -184,15 +181,14 @@ public class TestDiscoveryHelper {
 	 */
 	public TestTree collectAllTestsFromWorkspace() {
 		List<URI> testableProjectURIs = new LinkedList<>();
-		System.out.println("before n4jsCore.findAllProjects()");
 		Iterable<? extends IN4JSProject> findAllProjects = n4jsCore.findAllProjects();
+
 		for (IN4JSProject project : findAllProjects) {
 			URI location = project.getLocation().toURI();
 			if (project.exists() && isTestable(location)) {
 				testableProjectURIs.add(location);
 			}
 		}
-		System.out.println("before collectTests(testableProjectURIs)");
 		TestTree collectedTests = collectTests(testableProjectURIs);
 		return collectedTests;
 	}
@@ -286,7 +282,6 @@ public class TestDiscoveryHelper {
 		// module URI --> module
 		final Map<URI, TModule> moduleUri2Modules = loadModules(testLocationMapping.asMap().keySet(), index, resSet);
 
-		System.out.println("before for (final URI moduleLocation : testLocationMapping.keySet())");
 		for (final URI moduleLocation : testLocationMapping.keySet()) {
 
 			final TModule module = moduleUri2Modules.get(moduleLocation);
@@ -313,7 +308,6 @@ public class TestDiscoveryHelper {
 				}
 			}
 		}
-		System.out.println("before createTestSessionId();");
 
 		// if test cases are selected, name of tree is first test method and number of more tests
 		final ID sessionId = createTestSessionId();
@@ -333,7 +327,6 @@ public class TestDiscoveryHelper {
 			}
 		}
 
-		System.out.println("before new TestTree(sessionId, suites.values(), name)");
 		return new TestTree(sessionId, suites.values(), name);
 	}
 

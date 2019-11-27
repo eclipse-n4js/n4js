@@ -282,7 +282,7 @@ public class HeadlessHelper {
 					+ "]. Already registered project at " + registeredProjects.get(projectName)
 					+ ", trying to register project at " + projectLocation + ".");
 
-		// Shadowing of projects with the same name. Removed with GH-1314
+		// Return true here causes shadowing of projects with the same name. Will be removed with GH-1314
 		return true;
 	}
 

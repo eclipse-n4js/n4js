@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
-import org.eclipse.n4js.cli.compiler.SystemExitRedirecter;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.Measurement;
@@ -56,17 +55,14 @@ public class N4jscMain {
 			} catch (N4jscException e) {
 				throw e;
 			} catch (Exception e) {
-				e.printStackTrace();
 				throw new N4jscException(N4jscExitCode.ERROR_UNEXPECTED, e);
 			}
 
 			writePerformanceReportIfRequested(options);
-			SystemExitRedirecter.unset();
 			System.exit(N4jscExitCode.SUCCESS.getExitCodeValue());
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
-			SystemExitRedirecter.unset();
 			System.exit(e.getExitCode());
 		}
 	}
