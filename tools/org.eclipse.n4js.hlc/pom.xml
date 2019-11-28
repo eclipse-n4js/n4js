@@ -171,6 +171,7 @@ Contributors:
 						<configuration>
 							<overWrite>true</overWrite>
 							<fileSets>
+								<!-- uncommented until completely deleted in GH-1554
 								<fileSet>
 									<sourceFile>${project.build.directory}/${hlc.jar-longname}</sourceFile>
 									<destinationFile>${project.build.directory}/${hlc.jar-shortname}</destinationFile>
@@ -179,6 +180,7 @@ Contributors:
 									<sourceFile>${project.build.directory}/${hlc.jar-shortname}</sourceFile>
 									<destinationFile>${project.basedir}/../../target/${hlc.jar-shortname}</destinationFile>
 								</fileSet>
+								-->
 							</fileSets>
 						</configuration>
 					</execution>
@@ -186,46 +188,6 @@ Contributors:
 			</plugin>
 
 
-
-			<plugin>
-				<!-- Executing the build as part of the integration test in a separate 
-					vm. -->
-				<!-- config-HELP with:: mvn exec:help -Ddetail=true -Dgoal=exec -->
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>it-of-n4js-compiler-command</id>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<systemProperties>
-								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-							</systemProperties>
-						</configuration>
-					</execution>
-				</executions>
-				<configuration>
-					<systemProperties>
-						<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-						<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-					</systemProperties>
-					<executable>java</executable>
-					<arguments>
-						<argument>-jar</argument>
-						<argument>${project.build.directory}/${hlc.jar-shortname}</argument>
-						<argument>--help</argument><!-- this will show helpl only -->
-						<!-- <argument>-projectroot</argument> <argument>${project.build.directory}/test</argument> 
-							<argument>a/b/c/A.n4js</argument> <argument>-version</argument> -->
-					</arguments>
-					<!-- optional -->
-					<!-- <workingDirectory>/tmp</workingDirectory> -->
-					<!-- successCodes>0</successCodes -->
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

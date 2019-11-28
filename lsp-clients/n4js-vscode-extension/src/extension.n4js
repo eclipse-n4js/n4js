@@ -35,8 +35,9 @@ function activate(context: any+ /*VSCode.ExtensionContext*/) {
     let clientOptions = {
         documentSelector: ['n4js'],
         synchronize: {
-            fileEvents: VSCode.workspace.createFileSystemWatcher('**/*.*')
-        }
+            fileEvents: VSCode.workspace.createFileSystemWatcher('{/**/*.+(n4js|n4jsd|n4jsx|n4idl),/**/package.json}')
+        },
+        outputChannelName: 'N4JS Language Server',
     }; 
     
     // Create the language client and start the client.

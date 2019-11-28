@@ -51,7 +51,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 	@Test
 	public void testMainArgsCompileAllKeepCompiling() {
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 19, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 16, cliResult.getTranspiledFilesCount());
 	}
 
 	/** Basic compile and run test. */
@@ -62,7 +62,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 				N4JSGlobals.N4JS_RUNTIME);
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 19, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 16, cliResult.getTranspiledFilesCount());
 
 		Path fileA = proot.toPath().resolve("/P1/src-gen/A.js");
 

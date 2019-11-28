@@ -1,0 +1,14 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+-*P1 [PROJECT]
+-- node_modules
+--- D1 [PROJECT]
+---- node_modules
+----- DD1 [PROJECT]
+
+EXPECT
+- P1
+- P1/node_modules/D1

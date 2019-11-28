@@ -34,14 +34,26 @@ export default public class NodeTestAPI {
     public static async exec(options: NodeTestOptions): void {
         log("options: %O", options);
 
-        const pathToPackageJson = new Map<string, Object+>();
+        let baseDir = options.compile;
+        if (baseDir) { // call n4jsc
+            
+            const n4jscTempDir = await createTempDir();
 
-        // explicit project directories:
-        (options.projects || []).forEach(dir => pathToPackageJson.set(dir, readJsonFile(lib_path.join(dir, PACKAGE_JSON))));
+            if (isHTTP_re.test(options.testCatalog)) { // use temp file
+                options.testCatalog = lib_path.join(n4jscTempDir, "test-catalog.json");
+            } else {
+                options.testCatalog = lib_path.resolve(process.cwd(), options.testCatalog);
+            }
 
-        for (const dir of (options.scan || [])) {
-            for (const p of await lib_fs.readdir(dir)) {
-                const prj = lib_path.join(dir, p);
+            log("compiling", options.testCatalog);
+            await n4js_cli.n4jsc(n4js_cli.Goal.compile, baseDir, options);
+
+            log("generated test catalog:", options.testCatalog);
+
+            const testCatalog: TestInfos = options.emitProjectTestCatalogs ? JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as TestInfos : null;
+            const pathToPackageJson = new Map<string, Object+>();
+            for (const p of await lib_fs.readdir(baseDir)) {
+                const prj = lib_path.join(baseDir, p);
 
                 const packageJsonPath = lib_path.join(prj, PACKAGE_JSON);
                 if (fsSafeAccessSync(packageJsonPath)) {
@@ -51,37 +63,7 @@ export default public class NodeTestAPI {
                     }
                 }
             }
-        }
-
-        const projectDirs = Array.from(pathToPackageJson.keys());
-
-        log("projects:", projectDirs);
-
-        if (options.compile) { // call n4jsc
-            const n4jscTempDir = await createTempDir();
-
-            if (isHTTP_re.test(options.testCatalog)) { // use temp file
-                options.testCatalog = lib_path.join(n4jscTempDir, "test-catalog.json");
-            } else {
-                options.testCatalog = lib_path.resolve(process.cwd(), options.testCatalog);
-            }
-
-            await n4js_cli.n4jsc({
-                buildType: "projects",
-                testCatalogFile: options.testCatalog,
-                nodejsLocation: process.execArgv[0],
-                npmrcRootLocation: options.npmrcRootLocation,
-                installMissingDependencies: options.installMissingDependencies,
-                clean: options.cleanCompile,
-                keepCompiling: options.keepCompiling,
-                verbose: log.enabled,
-                debug: log.enabled
-            }, projectDirs);
-
-            log("generated test catalog:", options.testCatalog);
-
-            const testCatalog: TestInfos = options.emitProjectTestCatalogs ? JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as TestInfos : null;
-
+            
             for (const [dir, packageJson] of pathToPackageJson) {
                 if (testCatalog && options.emitProjectTestCatalogs) {
                     const tests = testCatalog.testDescriptors.filter(test => test.origin === packageJson["name"] as string);

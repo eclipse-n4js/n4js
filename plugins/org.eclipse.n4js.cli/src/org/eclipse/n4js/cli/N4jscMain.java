@@ -59,12 +59,12 @@ public class N4jscMain {
 			}
 
 			writePerformanceReportIfRequested(options);
+			System.exit(N4jscExitCode.SUCCESS.getExitCodeValue());
+
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
 			System.exit(e.getExitCode());
 		}
-
-		System.exit(N4jscExitCode.SUCCESS.getExitCodeValue());
 	}
 
 	private static N4jscOptions getOptions(String[] args) {

@@ -32,56 +32,30 @@ const resolveProject = (p: string): string => {
 };
 
 const nomnomOptions: Object = {
-    scan: {
-        abbr: "s",
-        list: true,
-        metavar: "PATH",
-        transform: resolvePath,
-        help: "Scan for all N4JS projects in directories."
-    },
-    projects: {
-        position: 0,
-        list: true,
-        metavar: "PATH",
-        transform: resolveProject,
-        help: "Project directories or NPM identifiers."
-    },
-    filter: {
-        abbr: "f",
-        list: true,
-        help: "Filter for matching test cases."
-    },
     compile: {
         abbr: "c",
-        flag: true,
-        help: "Compiles the given targets, generating a test catalog."
+        metavar: "PATH",
+        transform: resolvePath,
+        help: "Compiles the given root directory of yarn workspace project / npm project."
     },
-    cleanCompile: {
+    clean: {
         flag: true,
         help: "Clean the output folder before compiling."
-    },
-    keepCompiling: {
-        flag: true,
-        help: "Keep compiling even if errors are encountered."
     },
     testCatalog: {
         default: "http://localhost:9415/n4js/testing/sessions/testcatalog",
         metavar: "URL|PATH|NPM-relpath",
         help: "Test catalog (JSON) to be used. Option --compile will write the file, switches to temp file in case of URL."
     },
+    filter: {
+        abbr: "f",
+        list: true,
+        help: "Filter for matching test cases."
+    },
     emitProjectTestCatalogs: {
         default: "test-catalog-gen.json",
         metavar: "PATH",
         help: "When compiling, local project test catalog files are written to the targeted project folders under the given path."
-    },
-    installMissingDependencies: {
-        flag: true,
-        help: "Installs NPM dependencies using npm or yarn."
-    },
-    npmrcRootLocation: {
-        metavar: "PATH",
-        transform: resolvePath,
-        help: "Library manager .npmrc directory."
     },
     xunitReportFile: {
         metavar: "PATH",

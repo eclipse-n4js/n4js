@@ -33,7 +33,7 @@
 	"name": "P",
 	"version": "0.0.1",
 	"dependencies": {
-		// XPECT errors --> "Project Dep is required in version 1.2.3, but only version 0.0.1 is present." at ""Dep": "1.2.3""
+		// XPECT warnings --> "Project Dep is required in version 1.2.3, but only version 0.0.1 is present." at ""Dep": "1.2.3""
 		"Dep": "1.2.3"
 	},
 	"n4js": {

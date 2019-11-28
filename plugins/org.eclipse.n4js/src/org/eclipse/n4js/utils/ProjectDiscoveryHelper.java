@@ -90,13 +90,14 @@ public class ProjectDiscoveryHelper {
 
 			if (nodeModulesFolder == null) {
 				// Is neither NPM nor Yarn project
-				LinkedHashSet<Path> standAloneProjects = collectProjects(workspaceRoot, true);
+				LinkedHashSet<Path> standAloneProjects = collectProjects(workspaceRoot, false);
 				allProjectDirs.addAll(standAloneProjects);
 			} else {
 				if (nodeModulesFolder.isYarnWorkspace) {
 					// Is Yarn project
 					// use projects referenced in packages
 					Path yarnProjectDir = nodeModulesFolder.nodeModulesFolder.getParentFile().toPath();
+					allProjectDirs.add(yarnProjectDir);
 					allProjectDirs.addAll(collectYarnWorkspaceProjects(yarnProjectDir));
 				} else {
 					// Is NPM project
@@ -139,6 +140,10 @@ public class ProjectDiscoveryHelper {
 			Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+					if (root.equals(dir)) {
+						return FileVisitResult.CONTINUE;
+					}
+
 					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
 						return FileVisitResult.SKIP_SUBTREE;
 					}
@@ -177,7 +182,10 @@ public class ProjectDiscoveryHelper {
 						if (dirName.toString().startsWith("@")) {
 							allProjectDirs.addAll(collectProjects(dir, false));
 						} else {
-							allProjectDirs.add(dir);
+							File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
+							if (pckJson.isFile()) {
+								allProjectDirs.add(dir);
+							}
 						}
 					}
 					return FileVisitResult.CONTINUE;

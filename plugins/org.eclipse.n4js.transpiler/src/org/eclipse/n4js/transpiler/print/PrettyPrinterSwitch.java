@@ -985,6 +985,16 @@ import org.eclipse.xtext.EcoreUtil2;
 	}
 
 	@Override
+	public Boolean caseTaggedTemplateString(TaggedTemplateString original) {
+		process(original.getTarget());
+		if (original.isOptionalChaining()) {
+			write("?.");
+		}
+		process(original.getTemplate());
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseTemplateLiteral(TemplateLiteral original) {
 		final int indentLevelOLD = out.getIndentLevel();
 		try {

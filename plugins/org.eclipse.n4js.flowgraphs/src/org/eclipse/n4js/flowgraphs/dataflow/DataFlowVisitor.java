@@ -76,6 +76,11 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 		return newAssumptionsTmp;
 	}
 
+	@Override
+	public void clean() {
+		allAssumptions.clear();
+	}
+
 	/*
 	 * Methods for client analyses
 	 */

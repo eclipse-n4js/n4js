@@ -18,21 +18,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowComponent;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.cli.helper.ProcessResult;
-import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 
@@ -71,40 +67,19 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		final File n4jsLibsRoot = n4jsLibsRootPath.toFile();
 
 		// step 1: clean
-		println("==== STEP 1/2: cleaning projects under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
+		println("==== STEP 1/2: remove all node_modules folders top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
 				+ "\" in n4js repository:");
-		clean(n4jsLibsRoot);
+		removeNodeModulesFolders(n4jsLibsRoot);
 
 		// step 2: compile projects under top-level folder "n4js-libs"
 		println("==== STEP 2/2: compiling code under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
 				+ "\" in n4js repository:");
-		compile(n4jsLibsRoot);
+		compile(n4jsLibsRootPath);
 
 		println("==== BUILD N4JS-LIBS finished ====");
 	}
 
-	private static void clean(File... foldersContainingProjectFolders) throws IOException {
-		final String foldersContainingProjectsStr = Stream.of(foldersContainingProjectFolders)
-				.map(file -> file.getAbsolutePath())
-				.collect(Collectors.joining(File.pathSeparator));
-
-		// clean projects using the headless builder (to get rid of generated output code, etc.)
-		final String[] args = {
-				"--clean",
-				"--buildType", "allprojects",
-				"--projectlocations", foldersContainingProjectsStr,
-		};
-		println("Running (via #doMain()): n4jsc.jar " + Joiner.on(" ").join(args));
-		try {
-			new N4jscBase().doMain(args);
-		} catch (ExitCodeException e) {
-			println("ERROR: while cleaning the projects, an ExitCodeException is thrown; "
-					+ "code: " + e.getExitCode() + ", "
-					+ "message: " + e.getMessage());
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-
+	private static void removeNodeModulesFolders(File... foldersContainingProjectFolders) throws IOException {
 		// remove all node_modules folders
 		for (File folder : foldersContainingProjectFolders) {
 			List<File> nodeModulesFolders = Files.walk(folder.toPath())
@@ -118,50 +93,18 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		}
 	}
 
-	private static void compile(File... foldersContainingProjectFolders) {
-		final String foldersContainingProjectsStr = Stream.of(foldersContainingProjectFolders)
-				.map(file -> file.getAbsolutePath())
-				.collect(Collectors.joining(File.pathSeparator));
-
-		final String[] args = {
-				"--buildType", "allprojects",
-				"--installMissingDependencies",
-				"--projectlocations", foldersContainingProjectsStr
-		};
-		try {
-			NodeYarnProcessBuilder.additionalEnvironmentVariables.put("NPM_TOKEN", "dummy");
-			new N4jscBase().doMain(args);
-		} catch (ExitCodeException e) {
-			println("ERROR: headless compiler threw ExitCodeException (probably code compiled with errors); "
-					+ "exit code: " + e.getExitCode() + ", "
-					+ "message: " + e.getMessage());
-			e.printStackTrace();
-			Throwable root = Throwables.getRootCause(e);
-			if (root != e) {
-				println("Root cause:");
-				root.printStackTrace();
-			}
-			throw new RuntimeException(e);
-		} finally {
-			NodeYarnProcessBuilder.additionalEnvironmentVariables.clear();
-		}
-	}
-
-	@SuppressWarnings("unused") // used when new n4jsc is ready
-	private static void new_compile(File foldersContainingProjectFolders) {
-		final Path n4jsRootPath = UtilN4.findN4jsRepoRootPath();
-		final Path n4jsLibsRootPath = n4jsRootPath.resolve(N4JSGlobals.N4JS_LIBS_FOLDER_NAME);
-
+	private static void compile(Path n4jsLibsRootPath) {
 		CliCompileResult compileResult = new CliCompileResult();
 		try {
 			CliTools cliTools = new CliTools();
+			cliTools.setIsMirrorSystemOut(true);
 			cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
 
 			ProcessResult installResult = cliTools.yarnInstall(n4jsLibsRootPath);
 			Preconditions.checkState(installResult.getExitCode() == 0, installResult);
 
 			cliTools.callN4jscInprocess(COMPILE(n4jsLibsRootPath.toFile()), false, compileResult);
-			println(compileResult.toString());
+
 			Preconditions.checkState(compileResult.getExitCode() == 0, "Error during n4jsc call");
 			Preconditions.checkState(compileResult.getErrs() == 0, "Errors in compiled sources");
 

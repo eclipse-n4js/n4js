@@ -24,6 +24,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -39,14 +40,33 @@ public class N4JSProject implements IN4JSProject {
 
 	private final N4JSModel<? extends SafeURI<?>> model;
 	private final SafeURI<?> location;
-	private Boolean exists;
 	private final boolean external;
+	private Boolean exists;
 
 	protected N4JSProject(SafeURI<?> location, boolean external,
 			N4JSModel<? extends SafeURI<?>> model) {
 		this.location = location;
-		this.external = external;
 		this.model = model;
+		this.external = isInNodeModulesFolderOrDefault(location, external);
+	}
+
+	private boolean isInNodeModulesFolderOrDefault(SafeURI<?> pLocation, boolean pExternal) {
+		if (pLocation instanceof FileURI) {
+			URI parent = pLocation.getParent().toURI();
+			if (parent.lastSegment().isBlank()) {
+				parent = parent.trimSegments(1);
+			}
+			String lastSegment = parent.lastSegment();
+			if (lastSegment.startsWith("@")) {
+				parent = parent.trimSegments(1);
+				lastSegment = parent.lastSegment();
+			}
+			if (N4JSGlobals.NODE_MODULES.equals(lastSegment)) {
+				return true;
+			}
+		}
+
+		return pExternal;
 	}
 
 	@Override

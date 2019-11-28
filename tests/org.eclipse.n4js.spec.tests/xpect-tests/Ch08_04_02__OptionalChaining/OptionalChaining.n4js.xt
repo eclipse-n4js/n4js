@@ -31,6 +31,7 @@ class MyClass {
 
 	public def: MyClass;
 	public undef: MyClass;
+	public undefTag: (...any)=>string = undefined;
 }
 
 let def: MyClass = new MyClass();
@@ -39,6 +40,9 @@ def.def = def;
 
 let defFn: (...any)=>string = ()=>"return value of defFn";
 let undefFn: (...any)=>string = undefined;
+
+let defTag: (...any)=>string = (...args)=>JSON.stringify(args);
+let undefTag: (...any)=>string = undefined;
 
 let undefObj: Object+ = undefined;
 
@@ -57,6 +61,9 @@ log(undef?.['prop']);
 log(defFn?.());
 log(undefFn?.());
 
+log(defTag?.`value ${'o' + 'f'} template`);
+log(undefTag?.`value ${'o' + 'f'} template`);
+
 
 console.log('======== Short-Circuiting');
 
@@ -64,12 +71,14 @@ function mustNotBeEvaluated(): string { throw new Error("ERROR: this should not 
 
 log(undefObj?.[mustNotBeEvaluated()]);
 log(undefFn?.(mustNotBeEvaluated()));
+log(undefTag?.`${mustNotBeEvaluated()}`);
 
 
 console.log('======== Long Short-Circuiting');
 
 log(undefObj?.undef.undef.undef[mustNotBeEvaluated()]);
 log(undefObj?.undef.undef.undef(mustNotBeEvaluated()));
+log(undef?.undef.undef.undefTag`${mustNotBeEvaluated()}`);
 
 log(def.def?.def.def.def.prop);
 log(def.undef?.def.def.def.prop);
@@ -107,10 +116,14 @@ property value
 undefined
 return value of defFn
 undefined
+[["value "," template"],"of"]
+undefined
 ======== Short-Circuiting
 undefined
 undefined
+undefined
 ======== Long Short-Circuiting
+undefined
 undefined
 undefined
 property value

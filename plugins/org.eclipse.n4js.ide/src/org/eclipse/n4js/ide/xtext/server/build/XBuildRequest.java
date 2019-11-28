@@ -9,9 +9,10 @@ package org.eclipse.n4js.ide.xtext.server.build;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -19,72 +20,20 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure2;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
  * @since 2.9
  */
 public class XBuildRequest {
-	/**
-	 * Callback after a resource was validated.
-	 */
-	public interface XIPostValidationCallback {
-		/**
-		 * @return whether the build can proceed, <code>false</code> if the build should be interrupted
-		 */
-		boolean afterValidate(URI validated, Iterable<Issue> issues);
-	}
-
-	private static class XDefaultValidationCallback implements XBuildRequest.XIPostValidationCallback {
-		private static final Logger LOG = Logger.getLogger(XDefaultValidationCallback.class);
-
-		@Override
-		public boolean afterValidate(URI validated, Iterable<Issue> issues) {
-			for (Issue issue : issues) {
-				Severity severity = issue.getSeverity();
-				if (severity != null) {
-					switch (severity) {
-					case ERROR:
-						XBuildRequest.XDefaultValidationCallback.LOG.error(issue.toString());
-						return false;
-					case WARNING:
-						XBuildRequest.XDefaultValidationCallback.LOG.warn(issue.toString());
-						break;
-					case INFO:
-						XBuildRequest.XDefaultValidationCallback.LOG.info(issue.toString());
-						break;
-					case IGNORE:
-						XBuildRequest.XDefaultValidationCallback.LOG.debug(issue.toString());
-						break;
-					}
-				}
-			}
-			return true;
-		}
-	}
 
 	private URI baseDir;
 
-	private List<URI> dirtyFiles = new ArrayList<>();
+	private Collection<URI> dirtyFiles = new ArrayList<>();
 
-	private List<URI> deletedFiles = new ArrayList<>();
+	private Collection<URI> deletedFiles = new ArrayList<>();
 
-	private List<IResourceDescription.Delta> externalDeltas = new ArrayList<>();
-
-	/**
-	 * Callback after validation, return <code>false</code> will stop the build.
-	 */
-	private XBuildRequest.XIPostValidationCallback afterValidate = new XBuildRequest.XDefaultValidationCallback();
-
-	private Procedure2<? super URI, ? super URI> afterGenerateFile = (source, generated) -> {
-		/* nothing to do */
-	};
-
-	private Procedure1<? super URI> afterDeleteFile = (file) -> {
-		/* nothing to do */
-	};
+	private Collection<IResourceDescription.Delta> externalDeltas = new ArrayList<>();
 
 	private XIndexState state = new XIndexState();
 
@@ -95,6 +44,36 @@ public class XBuildRequest {
 	private XtextResourceSet resourceSet;
 
 	private CancelIndicator cancelIndicator = CancelIndicator.NullImpl;
+
+	private final Map<URI, Collection<Issue>> resultIssues = new LinkedHashMap<>();
+
+	private final Collection<URI> resultDeletedFiles = new ArrayList<>();
+
+	private final Map<URI, URI> resultGeneratedFiles = new LinkedHashMap<>();
+
+	/** Listener for validation events */
+	public static interface AfterValidateListener {
+		/** Called after a source file was validated with the given issues */
+		void afterValidate(URI source, Collection<Issue> issues);
+	}
+
+	/** Listener for generation events */
+	public static interface AfterGenerateListener {
+		/** Called after a generated file was created based on a source file */
+		void afterGenerate(URI source, URI generated);
+	}
+
+	/** Listener for deletion events */
+	public static interface AfterDeleteListener {
+		/** Called after a file was deleted */
+		void afterDelete(URI file);
+	}
+
+	private AfterValidateListener afterValidateListener;
+
+	private AfterGenerateListener afterGenerateListener;
+
+	private AfterDeleteListener afterDeleteListener;
 
 	/**
 	 * Setter for the base directory.
@@ -117,85 +96,129 @@ public class XBuildRequest {
 	/**
 	 * Getter.
 	 */
-	public List<URI> getDirtyFiles() {
+	public Collection<URI> getDirtyFiles() {
 		return this.dirtyFiles;
 	}
 
 	/**
 	 * Setter.
 	 */
-	public void setDirtyFiles(List<URI> dirtyFiles) {
+	public void setDirtyFiles(Collection<URI> dirtyFiles) {
 		this.dirtyFiles = dirtyFiles;
 	}
 
 	/**
 	 * Getter.
 	 */
-	public List<URI> getDeletedFiles() {
+	public Collection<URI> getDeletedFiles() {
 		return this.deletedFiles;
 	}
 
 	/**
 	 * Setter.
 	 */
-	public void setDeletedFiles(List<URI> deletedFiles) {
+	public void setDeletedFiles(Collection<URI> deletedFiles) {
 		this.deletedFiles = deletedFiles;
 	}
 
 	/**
 	 * Getter.
 	 */
-	public List<IResourceDescription.Delta> getExternalDeltas() {
+	public Collection<IResourceDescription.Delta> getExternalDeltas() {
 		return this.externalDeltas;
 	}
 
 	/**
 	 * Setter.
 	 */
-	public void setExternalDeltas(List<IResourceDescription.Delta> externalDeltas) {
+	public void setExternalDeltas(Collection<IResourceDescription.Delta> externalDeltas) {
 		this.externalDeltas = externalDeltas;
 	}
 
 	/**
 	 * Getter.
 	 */
-	public XBuildRequest.XIPostValidationCallback getAfterValidate() {
-		return this.afterValidate;
+	public Map<URI, Collection<Issue>> getResultIssues() {
+		return this.resultIssues;
 	}
 
 	/**
 	 * Setter.
 	 */
-	public void setAfterValidate(XBuildRequest.XIPostValidationCallback afterValidate) {
-		this.afterValidate = afterValidate;
+	public void setResultIssues(URI source, Collection<Issue> issues) {
+		this.resultIssues.put(source, issues);
+		this.afterValidate(source, issues);
+	}
+
+	/** Setter. */
+	public void setAfterValidateListener(AfterValidateListener afterValidateListener) {
+		this.afterValidateListener = afterValidateListener;
+	}
+
+	/** Called each time a new set of issues was added for a validated source file */
+	public void afterValidate(URI source, Collection<Issue> issues) {
+		if (afterValidateListener != null) {
+			afterValidateListener.afterValidate(source, issues);
+		}
 	}
 
 	/**
 	 * Getter.
 	 */
-	public Procedure2<? super URI, ? super URI> getAfterGenerateFile() {
-		return this.afterGenerateFile;
+	public Map<URI, URI> getResultGeneratedFiles() {
+		return this.resultGeneratedFiles;
 	}
 
 	/**
 	 * Setter.
 	 */
-	public void setAfterGenerateFile(Procedure2<? super URI, ? super URI> afterGenerateFile) {
-		this.afterGenerateFile = afterGenerateFile;
+	public void setResultGeneratedFile(URI source, URI generated) {
+		this.resultGeneratedFiles.put(source, generated);
+		afterGenerate(source, generated);
+	}
+
+	/** Setter. */
+	public void setAfterGenerateListener(AfterGenerateListener afterGenerateListener) {
+		this.afterGenerateListener = afterGenerateListener;
+	}
+
+	/** Called each time a new set of issues was added for a validated source file */
+	public void afterGenerate(URI source, URI generated) {
+		if (afterGenerateListener != null) {
+			afterGenerateListener.afterGenerate(source, generated);
+		}
 	}
 
 	/**
 	 * Getter.
 	 */
-	public Procedure1<? super URI> getAfterDeleteFile() {
-		return this.afterDeleteFile;
+	public Collection<URI> getResultDeleteFiles() {
+		return this.resultDeletedFiles;
 	}
 
 	/**
 	 * Setter.
 	 */
-	public void setAfterDeleteFile(Procedure1<? super URI> afterDeleteFile) {
-		this.afterDeleteFile = afterDeleteFile;
+	public void setResultDeleteFile(URI file) {
+		this.resultDeletedFiles.add(file);
+		afterDelete(file);
+	}
+
+	/** Setter. */
+	public void setAfterDeleteListener(AfterDeleteListener afterDeleteListener) {
+		this.afterDeleteListener = afterDeleteListener;
+	}
+
+	/** Called each time a file was deleted */
+	public void afterDelete(URI file) {
+		if (afterDeleteListener != null) {
+			afterDeleteListener.afterDelete(file);
+		}
+	}
+
+	/** @return true iff the builder should perform generation on the given source file */
+	public boolean shouldGenerate(URI source) {
+		return !containsErrors(source);
 	}
 
 	/**
@@ -266,5 +289,26 @@ public class XBuildRequest {
 	 */
 	public void setCancelIndicator(CancelIndicator cancelIndicator) {
 		this.cancelIndicator = cancelIndicator;
+	}
+
+	/** @return true iff the given source has issues of severity ERROR */
+	protected boolean containsErrors(URI source) {
+		Collection<Issue> issues = this.resultIssues.get(source);
+		for (Issue issue : issues) {
+			Severity severity = issue.getSeverity();
+			if (severity != null) {
+				switch (severity) {
+				case ERROR:
+					return true;
+				case WARNING:
+					break;
+				case INFO:
+					break;
+				case IGNORE:
+					break;
+				}
+			}
+		}
+		return false;
 	}
 }

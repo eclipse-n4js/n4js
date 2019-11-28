@@ -52,7 +52,7 @@ public class N4jscScopedProjectTest extends AbstractCliCompileTest {
 	@Test
 	public void testNpmScopes() {
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 8, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 12, cliResult.getTranspiledFilesCount());
 
 		String srcFolder = proot + "/XClient/src-gen/";
 		String testFile1 = srcFolder + "ClientModule1.js";

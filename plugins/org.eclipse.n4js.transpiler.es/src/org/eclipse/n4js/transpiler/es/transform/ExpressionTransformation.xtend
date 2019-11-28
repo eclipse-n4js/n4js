@@ -19,7 +19,6 @@ import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionWithTarget
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
-import org.eclipse.n4js.n4JS.TaggedTemplateString
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.transpiler.Transformation
@@ -287,12 +286,6 @@ class ExpressionTransformation extends Transformation {
 	def private boolean transformOptionalChaining(ExpressionWithTarget exprWithTarget) {
 		if (!exprWithTarget.optionalChaining) {
 			return false;
-		}
-		if (exprWithTarget instanceof TaggedTemplateString) {
-			// We should never get here, because use of tagged templates will create a validation error
-			// ("unsupported feature") and thus transpiler won't be invoked for such code; this exception
-			// is intended only to help the person who will implement tagged template strings in the future.
-			throw new UnsupportedOperationException("optional chaining for tagged templates is not supported yet");
 		}
 
 		val target = exprWithTarget.target;

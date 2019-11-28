@@ -10,15 +10,15 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.lsp.IN4JSProjectConfig;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
-
-import com.google.common.collect.FluentIterable;
+import org.eclipse.xtext.util.IAcceptor;
+import org.eclipse.xtext.util.IFileSystemScanner;
 
 /**
  * Wrapper around {@link IN4JSSourceContainer}.
@@ -26,18 +26,18 @@ import com.google.common.collect.FluentIterable;
 public class N4JSSourceFolder implements IN4JSSourceFolder {
 
 	private final IN4JSSourceContainer delegate;
-	private final IN4JSProjectConfig project;
+	private final N4JSProjectConfig project;
 
 	/**
 	 * Constructor
 	 */
-	public N4JSSourceFolder(IN4JSProjectConfig project, IN4JSSourceContainer delegate) {
+	public N4JSSourceFolder(N4JSProjectConfig project, IN4JSSourceContainer delegate) {
 		this.project = project;
 		this.delegate = delegate;
 	}
 
 	@Override
-	public IN4JSProjectConfig getProject() {
+	public N4JSProjectConfig getProject() {
 		return project;
 	}
 
@@ -51,24 +51,23 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 		return delegate.getLocation().withTrailingPathDelimiter().toURI();
 	}
 
+	/**
+	 * Excludes all files in the folder {@link N4JSGlobals#NODE_MODULES}
+	 *
+	 * @return a list of all URIs that are passed to the acceptor of {@link IFileSystemScanner#scan(URI, IAcceptor)}
+	 */
 	@Override
-	public boolean contains(URI uri) {
-		URI path = getPath();
-		uri = uri.hasTrailingPathSeparator() ? uri : uri.appendSegment("");
-		if (!uri.toFileString().startsWith(path.toFileString())) {
-			return false;
-		}
-		URI relUri = uri.deresolve(path);
-		if (relUri.segmentCount() > 0) {
-			boolean uriInsideNodeModules = relUri.segment(0).equals(N4JSGlobals.NODE_MODULES);
-			return !uriInsideNodeModules;
-		}
-		return true;
-	}
+	public List<URI> getAllResources(IFileSystemScanner scanner) {
+		List<URI> uris = new ArrayList<>();
+		URI projectBase = getPath();
+		scanner.scan(projectBase, (uri) -> {
+			URI relativeUri = uri.deresolve(projectBase);
+			if (relativeUri.segmentCount() > 0 && !relativeUri.segment(0).equals(N4JSGlobals.NODE_MODULES)) {
+				uris.add(uri);
+			}
+		});
 
-	@Override
-	public List<URI> getAllResources() {
-		return FluentIterable.from(delegate).toList();
+		return uris;
 	}
 
 }

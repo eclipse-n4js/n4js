@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli.compiler;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
@@ -20,6 +21,8 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
+import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListener;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -28,7 +31,11 @@ import com.google.inject.Singleton;
  * Overrides the lsp {@link LanguageClient} callback when used as a CLI utility
  */
 @Singleton
-public class N4jscLanguageClient implements LanguageClient {
+public class N4jscLanguageClient implements LanguageClient, AfterGenerateListener, AfterDeleteListener {
+	private long trnspCount = 0;
+	private long delCount = 0;
+	private long errCount = 0;
+	private long wrnCount = 0;
 
 	/***/
 	@Inject
@@ -50,6 +57,16 @@ public class N4jscLanguageClient implements LanguageClient {
 		N4jscConsole.println(issueSerializer.uri(diagnostics.getUri()));
 		for (Diagnostic diag : issueList) {
 			N4jscConsole.println(issueSerializer.diagnostics(diag));
+			switch (diag.getSeverity()) {
+			case Error:
+				errCount++;
+				break;
+			case Warning:
+				wrnCount++;
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -67,7 +84,36 @@ public class N4jscLanguageClient implements LanguageClient {
 	@Override
 	public void logMessage(MessageParams message) {
 		N4jscConsole.println(message.getMessage());
+	}
 
+	@Override
+	public void afterDelete(URI file) {
+		delCount++;
+	}
+
+	@Override
+	public void afterGenerate(URI source, URI generated) {
+		trnspCount++;
+	}
+
+	/** @return number of warnings */
+	public long getWarningsCount() {
+		return wrnCount;
+	}
+
+	/** @return number of errors */
+	public long getErrorsCount() {
+		return errCount;
+	}
+
+	/** @return number of files that were deleted */
+	public long getDeletionsCount() {
+		return delCount;
+	}
+
+	/** @return number of files that were generated/transpiled */
+	public long getTranspilationsCount() {
+		return trnspCount;
 	}
 
 }

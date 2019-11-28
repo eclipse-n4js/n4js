@@ -536,8 +536,12 @@ import com.google.inject.Inject;
 		}
 
 		@Override
-		public TypeRef caseTaggedTemplateString(TaggedTemplateString object) {
-			return stringTypeRef(G);
+		public TypeRef caseTaggedTemplateString(TaggedTemplateString taggedTemplate) {
+			final TypeRef tagTypeRef = ts.type(G, taggedTemplate.getTarget());
+			if (tagTypeRef instanceof FunctionTypeExprOrRef) {
+				return ((FunctionTypeExprOrRef) tagTypeRef).getReturnTypeRef();
+			}
+			return unknown();
 		}
 
 		@Override

@@ -61,7 +61,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 7, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "P1\n";
 		expectedString += "react is not undefined true\n";
@@ -89,7 +89,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 		assertEquals(yarnInstallResult.toString(), 0, yarnInstallResult.getExitCode());
 
 		CliCompileResult cliResult = n4jsc(COMPILE(workspace));
-		assertEquals(cliResult.toString(), 3, cliResult.getTranspiledFilesCount());
+		assertEquals(cliResult.toString(), 7, cliResult.getTranspiledFilesCount());
 
 		String expectedString = "P1\n";
 		expectedString += "react is not undefined true\n";

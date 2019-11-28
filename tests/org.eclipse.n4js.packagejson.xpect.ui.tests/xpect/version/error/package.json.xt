@@ -36,6 +36,8 @@
 	"dependencies": {
 		/* XPECT errors ---
 			"Only zero or one comparator allowed." at ">"
+		--- */
+		/* XPECT warnings ---
 			"Project one is required in version ><11.0.0, but only version 11.0.0 is present." at ""one": "> <11.0.0""
 		--- */
 		"one": "> <11.0.0",

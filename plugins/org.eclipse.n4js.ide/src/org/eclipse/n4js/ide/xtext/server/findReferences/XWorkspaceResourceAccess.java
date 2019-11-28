@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.Exceptions;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
@@ -36,16 +37,15 @@ public class XWorkspaceResourceAccess implements IReferenceFinder.IResourceAcces
 
 	@Override
 	public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
-		return this.workspaceManager.doRead(targetURI, (document, resource) -> {
-			if (resource == null) {
-				return null;
-			}
-			try {
-				return work.exec(resource.getResourceSet());
-			} catch (Exception e) {
-				return Exceptions.throwUncheckedException(e);
-			}
-		});
+		XtextResource resource = workspaceManager.getResource(targetURI);
+		if (resource == null) {
+			return null;
+		}
+		try {
+			return work.exec(resource.getResourceSet());
+		} catch (Exception e) {
+			return Exceptions.throwUncheckedException(e);
+		}
 	}
 
 }

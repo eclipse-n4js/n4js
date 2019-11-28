@@ -92,21 +92,21 @@ public class TargetURIKey {
 		}
 
 		private void addFQNs(EObject object) {
+			QualifiedName fullyQualifiedName = null;
 			if (object instanceof TMember || object instanceof TEnumLiteral) {
 				Type t = EcoreUtil2.getContainerOfType(object.eContainer(), Type.class);
-				typesOrModulesToFind.add(qualifiedNameProvider.getFullyQualifiedName(t));
+				fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(t);
 			} else if (object instanceof Type) {
-				typesOrModulesToFind.add(qualifiedNameProvider.getFullyQualifiedName(object));
+				fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(object);
 			} else if (object instanceof TModule) {
-				typesOrModulesToFind.add(qualifiedNameProvider.getFullyQualifiedName(object));
+				fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(object);
+			} else if (object instanceof IdentifiableElement) {
+				TModule containingModule = ((IdentifiableElement) object).getContainingModule();
+				fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(containingModule);
 			}
 
-			if (object instanceof IdentifiableElement) {
-				TModule containingModule = ((IdentifiableElement) object).getContainingModule();
-				QualifiedName fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(containingModule);
-				if (fullyQualifiedName != null) { // remove this when GH-733 is fixed
-					typesOrModulesToFind.add(fullyQualifiedName);
-				}
+			if (fullyQualifiedName != null) { // remove this when GH-733 is fixed
+				typesOrModulesToFind.add(fullyQualifiedName);
 			}
 		}
 

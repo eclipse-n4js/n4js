@@ -31,18 +31,33 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 
+import com.google.common.base.Preconditions;
+
 /**
  * Facade for all control and data flow related methods.
  */
 public class N4JSFlowAnalyser {
 	static private final Logger logger = Logger.getLogger(N4JSFlowAnalyser.class);
 
+	private State state = State.init;
 	private Callable<?> cancelledChecker;
 	private FlowGraph cfg;
 	private SymbolFactory symbolFactory;
 	private DirectPathAnalyses dpa;
 	private GraphVisitorAnalysis gva;
 	private SuccessorPredecessorAnalysis spa;
+
+	/** State of instances of {@link N4JSFlowAnalyser} */
+	static public enum State {
+		/** Init state */
+		init,
+		/** State after creating the CFG */
+		graphsCreated,
+		/** State after performing forward analysis */
+		forwardsAnalyzed,
+		/** State after performing backwards analysis */
+		backwardsAnalyzed
+	}
 
 	/** Constructor */
 	public N4JSFlowAnalyser() {
@@ -65,6 +80,7 @@ public class N4JSFlowAnalyser {
 	 * Never completes abruptly, i.e. throws an exception.
 	 */
 	public void createGraphs(Script script) {
+		Preconditions.checkState(state == State.init);
 		Objects.requireNonNull(script);
 		String uriString = script.eResource().getURI().toString();
 
@@ -76,6 +92,8 @@ public class N4JSFlowAnalyser {
 			dpa = new DirectPathAnalyses(cfg);
 			gva = new GraphVisitorAnalysis(this, cfg);
 			spa = new SuccessorPredecessorAnalysis(cfg);
+
+			state = State.graphsCreated;
 		}
 	}
 
@@ -208,12 +226,16 @@ public class N4JSFlowAnalyser {
 	 * supported. This analysis must be performed before {@link #acceptBackwardAnalysers(FlowAnalyser...)} is invoked.
 	 */
 	public void acceptForwardAnalysers(FlowAnalyser... flowAnalysers) {
+		Preconditions.checkState(state == State.graphsCreated);
+
 		String name = cfg.getScriptName();
 		try (Measurement m1 = N4JSDataCollectors.dcFlowGraphs.getMeasurement("flowGraphs_" + name);
 				Measurement m2 = N4JSDataCollectors.dcPerformAnalyses.getMeasurement("performAnalysis_" + name);
 				Measurement m3 = N4JSDataCollectors.dcForwardAnalyses.getMeasurement("Forward_" + name);) {
 
 			gva.forwardAnalysis(flowAnalysers);
+
+			state = State.forwardsAnalyzed;
 		}
 	}
 
@@ -234,12 +256,16 @@ public class N4JSFlowAnalyser {
 	 * performed.
 	 */
 	public void acceptBackwardAnalysers(FlowAnalyser... flowAnalysers) {
+		Preconditions.checkState(state == State.forwardsAnalyzed);
+
 		String name = cfg.getScriptName();
 		try (Measurement m1 = N4JSDataCollectors.dcFlowGraphs.getMeasurement("flowGraphs_" + name);
 				Measurement m2 = N4JSDataCollectors.dcPerformAnalyses.getMeasurement("performAnalysis_" + name);
 				Measurement m3 = N4JSDataCollectors.dcBackwardAnalyses.getMeasurement("Backward_" + name);) {
 
 			gva.backwardAnalysis(flowAnalysers);
+
+			state = State.backwardsAnalyzed;
 		}
 	}
 
@@ -265,6 +291,22 @@ public class N4JSFlowAnalyser {
 	 */
 	public Collection<ControlFlowElement> getAllContainers() {
 		return cfg.getAllContainers();
+	}
+
+	/** Resets all cached data of the CFG */
+	public void reset() {
+		symbolFactory = null;
+		cfg = null;
+		dpa = null;
+		gva = null;
+		spa = null;
+
+		state = State.init;
+	}
+
+	/** @return true iff forward analysis was performed and not {@link #reset()} called */
+	public State getState() {
+		return state;
 	}
 
 }
