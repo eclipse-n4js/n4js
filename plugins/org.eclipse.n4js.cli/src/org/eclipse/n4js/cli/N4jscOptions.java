@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -372,7 +373,12 @@ public class N4jscOptions {
 		out.println(N4jscOptions.USAGE);
 
 		N4JSCmdLineParser parserWithDefault = new N4JSCmdLineParser(new Options());
+
+		// switch to English locale because args4j will use the user locale for some words like "Vorgabe"
+		Locale curLocale = Locale.getDefault();
+		Locale.setDefault(new Locale("en"));
 		parserWithDefault.printUsage(out);
+		Locale.setDefault(curLocale);
 	}
 
 	/** @return a string that lists all relevant settings of n4jsc.jar */
