@@ -23,7 +23,7 @@ import org.eclipse.xtext.nodemodel.ILeafNode
  */
 class NodeModelUtilsN4 {
 
-	/*
+	/**
 	 * Finds recursively a node in the node tree which stands for a keyword (starting from the parentNode)
 	 * @param parentNode The node from which the recursive search begins
 	 * @param keyword Searched keyword
@@ -70,7 +70,14 @@ class NodeModelUtilsN4 {
 		return if (ge instanceof Keyword) keyword.equalsIgnoreCase(ge.value) else false;
 	}
 
-	def public static String getFullTextOfBogusType(INode node) {
+	/**
+	 * This method converts a node to text.
+	 *
+	 * Only hidden tokens (whitespaces/comments) before and after non-hidden tokens are deleted.
+	 *
+	 * See {@link NodeModelUtils#getTokenText(INode node)}
+	 */
+	def public static String getTokenTextWithHiddenTokens(INode node) {
 		if (node instanceof ILeafNode) {
 			return node.getText();
 		} else {
