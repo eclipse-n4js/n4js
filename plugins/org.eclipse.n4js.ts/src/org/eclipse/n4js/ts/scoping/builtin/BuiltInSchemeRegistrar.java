@@ -38,7 +38,13 @@ public class BuiltInSchemeRegistrar implements N4Scheme {
 	 * resources.
 	 */
 	public void registerScheme(ResourceSet resourceSet) {
-		registerScheme(resourceSet, classLoader);
+		// tell EMF to resolve a classpath URI which actually has not been a classpath URI (but a SCHEME/n4js
+		// URI):
+		URIConverter converter = resourceSet.getURIConverter();
+		if (registerScheme(converter, classLoader)) {
+			ExecutionEnvironmentDescriptor descriptor = new ExecutionEnvironmentDescriptor(resourceSet);
+			register(resourceSet, descriptor);
+		}
 	}
 
 	/**
@@ -47,23 +53,6 @@ public class BuiltInSchemeRegistrar implements N4Scheme {
 	protected void register(ResourceSet resourceSet, ExecutionEnvironmentDescriptor descriptor) {
 		BuiltInTypeScope typeScope = new BuiltInTypeScope(descriptor);
 		BuiltInTypeScopeAccess.registerBuiltInTypeScope(typeScope, resourceSet);
-	}
-
-	/**
-	 * Configure the resourceSet such that it understands the n4js scheme. Use the given classLoader to lookup the
-	 * resources.
-	 *
-	 * @param classLoader
-	 *            the classLoader to use.
-	 */
-	public void registerScheme(ResourceSet resourceSet, @SuppressWarnings("hiding") ClassLoader classLoader) {
-		// tell EMF to resolve a classpath URI which actually has not been a classpath URI (but a SCHEME/n4js
-		// URI):
-		URIConverter converter = resourceSet.getURIConverter();
-		if (registerScheme(converter, classLoader)) {
-			ExecutionEnvironmentDescriptor descriptor = new ExecutionEnvironmentDescriptor(resourceSet, classLoader);
-			register(resourceSet, descriptor);
-		}
 	}
 
 	/**
