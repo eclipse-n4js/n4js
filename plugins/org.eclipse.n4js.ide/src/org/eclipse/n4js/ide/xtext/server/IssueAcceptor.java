@@ -116,10 +116,14 @@ public class IssueAcceptor {
 			end = new Position(n4jsIssue.getLineNumberEnd(), n4jsIssue.getColumnEnd());
 		} else {
 			URI uri = issue.getUriToProblem();
+			Document doc = null;
 			if (uri != null) {
-				Document doc = workspaceManager.getDocument(uri);
+				doc = workspaceManager.getDocument(uri);
+			}
+			if (doc != null) {
 				end = doc.getPosition(issue.getOffset() + issue.getLength());
-			} else {
+			}
+			if (end == null) {
 				end = new Position(start.getLine(), start.getCharacter() + 1);
 			}
 		}
