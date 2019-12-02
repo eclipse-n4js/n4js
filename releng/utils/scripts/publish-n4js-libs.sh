@@ -67,11 +67,9 @@ cd n4js-libs
 echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
 
-echo "==== STEP 0/8: add .npmrc publish token"
-
 echo "==== STEP 1/8: check preconditions"
-# check NPM_TOKEN
 if [ "$DESTINATION" != "local" ]; then
+    # check NPM_TOKEN
     if [ -z "$NPM_TOKEN" ]; then
         echo "Publishing to 'public' or 'staging' requires the environment variable NPM_TOKEN to be set but it has not been set!"
         exit -1
