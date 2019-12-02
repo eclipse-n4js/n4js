@@ -72,7 +72,11 @@ export public async function n4jsc(goal: Goal, dir: string, options: Options+ =)
                 args.push(String(value));
             }
         }
-        
+
+        if (log.enabled) {
+            args.push("--verbose");
+        }
+
         log("calling n4jsc:", args);
 
         spawn("java", args, {
