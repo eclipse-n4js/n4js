@@ -28,11 +28,11 @@ public class IssueSerializer {
 
 	/** @return user string for an issue */
 	public String diagnostics(Diagnostic diagnostic) {
-		String s = "   ";
-		s += "[" + diagnostic.getSeverity() + "]";
-		s += " (" + diagnostic.getRange().getStart().getLine();
-		s += ":" + diagnostic.getRange().getStart().getCharacter();
-		s += "): " + diagnostic.getMessage();
+		String position = String.format("(%d:%d)",
+				diagnostic.getRange().getStart().getLine(),
+				diagnostic.getRange().getStart().getCharacter());
+
+		String s = String.format("  %-7s %-8s: %s", diagnostic.getSeverity(), position, diagnostic.getMessage());
 		return s;
 	}
 
