@@ -29,32 +29,66 @@
  */
  
 class A {
-	foo() {}
-	public foo1() {}
-	public foo2(p: string) {}
-	public foo3(): String {
+	fooSimple() {}
+	public foo1AccessModifier() {}
+	public foo2FormalParameter(p: string) {}
+	public foo3WithReturn(): String {
 		return null;
 	}
-	public foo4(p: string): String {
+	public foo4FParAndReturn(p: string): String {
 		return null;
 	}
-	public <E> foo5(): E {
+	public <E> foo5Generic(): E {
 		return null;
 	}
-	public async foo6() {}
-	public static foo7() {}
+	public async foo6Async() {}
+	public static foo7Static() {}
 	public *gen(p: int) {}
+	public unionTypeMethod(): string | int {
+		return null;
+	}
+	public intersectionTypeMethod(): string & int {
+		return null;
+	}
+	protected iterable2ReturnTypeMethod(): [string, int] {
+		return null;
+	}
+	protected iterable3ReturnTypeMethod(): [string, int, string] {
+		return null;
+	}
+	public foo8MultiParamAndReturn(p1: string, p2: int): String {
+		return null;
+	}
+	public fooArray(p: string): Array<string> {
+		return null;
+	}
+	public fooVariadic(...p: string): string {
+        return null;
+    }
 }
 
 abstract class A1 {
-	public abstract foo6() 
+	public abstract foo1Abstract() 
 }
 
 class B extends A {
-/* XPECT contentAssist at 'f<|>' apply 'foo(): void' ---
+/* XPECT contentAssist at 'f<|>' apply 'fooSimple(): void' ---
 <...>
 @Override
-foo(): void {
+fooSimple(): void {
+
+}
+<...>
+--- */
+f
+}
+
+abstract class B0 extends A1 {
+/* XPECT contentAssist at 'f<|>' apply 'foo1Abstract(): void' ---
+<...>
+@Override
+<...>
+public foo1Abstract(): void {
 
 }
 <...>
@@ -63,11 +97,11 @@ f
 }
 
 class B1 extends A {
-/* XPECT contentAssist at 'f<|>' apply 'foo1(): void' ---
+/* XPECT contentAssist at 'f<|>' apply 'foo1AccessModifier(): void' ---
 <...>
 @Override
 <...>
-public foo1(): void {
+public foo1AccessModifier(): void {
 
 }
 <...>
@@ -76,11 +110,11 @@ f
 }
 
 class B2 extends A {
-/* XPECT contentAssist at 'f<|>' apply 'foo2(p: string): void' ---
+/* XPECT contentAssist at 'f<|>' apply 'foo2FormalParameter(p: string): void' ---
 <...>
 @Override
 <...>
-public foo2(p: string): void {
+public foo2FormalParameter(p: string): void {
 
 }
 <...>
@@ -89,13 +123,13 @@ public f
 }
 
 class B3 extends A {
-/* XPECT contentAssist at 'f<|>' apply 'foo3(): String' ---
+/* XPECT contentAssist at 'f<|>' apply 'foo3WithReturn(): String' ---
 <...>
 @Override
 <...>
-public foo3(): String {
+public foo3WithReturn(): String {
 		// TODO Auto-generated method stub
-		return null
+		return super.foo3WithReturn();
 	}
 <...>
 --- */
@@ -104,14 +138,14 @@ public f
 
 class B4 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'foo4(p: string): String' ---
+/* XPECT contentAssist at 'f<|>' apply 'foo4FParAndReturn(p: string): String' ---
 <...>
 @Override
 <...>
-	public foo4(p: string): String {
+	public foo4FParAndReturn(p: string): String {
 		// TODO Auto-generated method stub
-		return null
-	} 
+		return super.foo4FParAndReturn(p);
+	}  
 <...>
 --- */
 f 
@@ -119,13 +153,13 @@ f
 
 class B5 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'foo5(): E' ---
+/* XPECT contentAssist at 'f<|>' apply 'foo5Generic(): E' ---
 <...>
 @Override
 <...>
-	public <E> foo5(): E {
+	public <E> foo5Generic(): E {
 		// TODO Auto-generated method stub
-		return null
+		return super.foo5Generic();
 	} 
 <...>
 --- */
@@ -134,11 +168,11 @@ f
 
 class B6 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'foo6(): void' ---
+/* XPECT contentAssist at 'f<|>' apply 'foo6Async(): void' ---
 <...>
 @Override
 <...>
-	public async foo6(): void {
+	public async foo6Async(): void {
 
 	}  
 <...>
@@ -148,11 +182,11 @@ public f
 
 class B7 extends A { 
 @Override
-/* XPECT contentAssist at 'f<|>' apply 'foo7(): void' ---
+/* XPECT contentAssist at 'f<|>' apply 'foo7Static(): void' ---
 <...>
 @Override
 <...>
-	public static foo7(): void {
+	public static foo7Static(): void {
 
 	} 
 <...>
@@ -160,7 +194,22 @@ class B7 extends A {
 public f 
 }
 
-class B8 extends A {
+class B8 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'foo8MultiParamAndReturn(p1: string, p2: int): String' ---
+<...>
+@Override
+<...>
+	public foo8MultiParamAndReturn(p1: string, p2: int): String {
+		// TODO Auto-generated method stub
+		return super.foo8MultiParamAndReturn(p1, p2);
+	}  
+<...>
+--- */
+f 
+}
+
+class B9 extends A {
 /* XPECT contentAssist at 'g<|>' apply 'gen(p: int): void' ---
 <...>
 @Override
@@ -173,3 +222,102 @@ public *gen(p: int): void {
 g
 }
 
+class B10 extends A {
+/* XPECT contentAssist at 'u<|>' apply 'unionTypeMethod(): string | int' ---
+<...>
+@Override
+<...>
+public unionTypeMethod(): string | int {
+		// TODO Auto-generated method stub
+		return super.unionTypeMethod();
+	}
+<...>
+--- */
+u
+}
+
+class B11 extends A {
+/* XPECT contentAssist at 'i<|>' apply 'intersectionTypeMethod(): string & int' ---
+<...>
+@Override
+<...>
+public intersectionTypeMethod(): string & int {
+		// TODO Auto-generated method stub
+		return super.intersectionTypeMethod();
+	}
+<...>
+--- */
+i
+}
+
+class B12 extends A {
+/* XPECT contentAssist at 'i<|>' apply 'iterable2ReturnTypeMethod(): [string, int]' ---
+<...>
+@Override
+<...>
+protected iterable2ReturnTypeMethod(): [string, int] {
+		// TODO Auto-generated method stub
+		return super.iterable2ReturnTypeMethod();
+	}
+<...>
+--- */
+i
+}
+
+class B13 extends A {
+/* XPECT contentAssist at 'i<|>' apply 'iterable3ReturnTypeMethod(): [string, int, string]' ---
+<...>
+@Override
+<...>
+protected iterable3ReturnTypeMethod(): [string, int, string] {
+		// TODO Auto-generated method stub
+		return super.iterable3ReturnTypeMethod();
+	}
+<...>
+--- */
+i
+}
+
+class B14 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'fooArray(p: string): Array<string>' ---
+<...>
+@Override
+<...>
+	public fooArray(p: string): Array<string> {
+		// TODO Auto-generated method stub
+		return super.fooArray(p);
+	}  
+<...>
+--- */
+f 
+}
+
+class B15OverrideBuiltInMethod extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'freeze(obj: T): T' ---
+<...>
+@Override
+<...>
+	public static <T extends Object> freeze(obj: T): T {
+		// TODO Auto-generated method stub
+		return super.freeze(obj);
+	}  
+<...>
+--- */
+f 
+}
+
+class B16 extends A {
+/* XPECT contentAssist at 'f<|>' apply 'fooVariadic(...p: string): string' ---
+<...>
+@Override
+<...>
+	public fooVariadic(...p: string): string {
+		// TODO Auto-generated method stub
+		return null;
+	}
+<...>
+--- */
+f
+}

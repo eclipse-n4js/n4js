@@ -90,6 +90,9 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	@Inject
 	private N4JSLabelProvider labelProvider;
+	
+	@Inject
+	private N4JSMethodProposalHelper methodProposalHelper;
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
@@ -382,6 +385,7 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 		return null;
 	}
+<<<<<<< HEAD
 
 	/**
 	 * Produces proposals for overriding inherited methods which are not implemented yet.
@@ -557,3 +561,10 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	}
 
 }
+=======
+	
+	override public void complete_LiteralOrComputedPropertyName(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		methodProposalHelper.complete_Method(model, ruleCall, context, acceptor);	
+	}
+}
+>>>>>>> 0e2cec452 (Added some documentation. Added some tests. Generated methods with a)
