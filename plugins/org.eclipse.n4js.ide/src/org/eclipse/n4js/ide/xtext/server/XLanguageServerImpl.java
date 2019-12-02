@@ -345,10 +345,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				() -> {
 					try {
 						workspaceManager.refreshWorkspaceConfig(CancelIndicator.NullImpl);
+						initBuildFinished.complete(null);
 					} catch (Throwable t) {
 						t.printStackTrace();
-					} finally {
-						initBuildFinished.complete(null);
+						initBuildFinished.completeExceptionally(t);
 					}
 					return null;
 				},
@@ -384,11 +384,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void exit() {
-		if (shutdownAndExitHandler == null) {
-			System.out.println("shutdownAndExitHandler is null");
-		} else {
-			System.out.println("shutdownAndExitHandler class = " + shutdownAndExitHandler.getClass().getName());
-		}
 		shutdownAndExitHandler.exit();
 	}
 
