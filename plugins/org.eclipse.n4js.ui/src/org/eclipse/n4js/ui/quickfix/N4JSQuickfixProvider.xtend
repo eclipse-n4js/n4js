@@ -183,7 +183,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			val roundBracketNode = NodeModelUtilsN4.findKeywordNode(parentNode, ')')
 			val bogusNode = NodeModelUtils.findNodesForFeature((parentNode as CompositeNodeWithSemanticElement).semanticElement, N4JSPackage.Literals.TYPED_ELEMENT__BOGUS_TYPE_REF).head;
 
-			val stringOfBogusType = NodeModelUtilsN4.getFullTextOfBogusType(bogusNode);
+			val stringOfBogusType = NodeModelUtilsN4.getTokenTextWithHiddenTokens(bogusNode);
 
 			val nodeAfterBogus = NodeModelUtils.findLeafNodeAtOffset(parentNode,bogusNode.endOffset);
 			val spaceAfterBogusLength =
