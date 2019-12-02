@@ -11,11 +11,5 @@ Contributors:
 -->
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-        point="org.eclipse.xtext.ui.shared.sharedStateContributingModule">
-     <module
-           class="org.eclipse.n4js.environments.ContributingModule">
-     </module>
-  </extension>
 
 </plugin>
