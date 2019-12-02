@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2019 NumberFour AG.
+ * Copyright (c) 2019 HAW Hamburg.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *   NumberFour AG - Initial API and implementation
+ *   Philip Aguilar Bremer, Max Neuwirt; HAW Hamburg
  */
 package org.eclipse.n4js.ui.contentassist
 
@@ -14,10 +14,8 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
-import org.eclipse.n4js.n4JS.Annotation
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
-import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.ts.types.util.MemberList
 import org.eclipse.n4js.ts.types.TMethod
@@ -33,23 +31,37 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.jface.text.contentassist.ICompletionProposal
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.jface.viewers.StyledString
+import org.eclipse.n4js.ts.types.TAnnotation
+import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
+import org.eclipse.xtext.ui.editor.contentassist.AbstractCompletionProposalFactory
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 
 /**
- * 
+ * A helper class that proposes methods to be overwritten based on the prefix typed so far
+ * when pressing the combination CTRL + space.
+ * If only one method matches the prefix, it will be completed automatically.
+ * Otherwise, you can choose from a proposal list and confirm your choice with Enter.
  */
-class N4JSMethodProposalProvider extends AbstractN4JSProposalProvider {
-	
+class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
+
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
-	
+
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
+	
+	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
 
 	static final String EMPTY_METHOD_BODY = " {\n\n\t}";
 
-	static final String AUTO_GENERATED_METHOD_BODY = " {\n\t\t// TODO Auto-generated method stub\n\t\t" +
-		"return null\n\t}";
-	
-	override public void complete_LiteralOrComputedPropertyName(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+	static final String AUTO_GENERATED_METHOD_BODY = " {\n\t\t// TODO Auto-generated method stub\n\t\t";
+
+	/**
+	 * This method activates the Content Assist to propose and complete methods inherited by a superclass
+	 * based on a specific prefix. 
+	 */
+	public def complete_Method(EObject model, RuleCall ruleCall, ContentAssistContext context,
+		ICompletionProposalAcceptor acceptor) {
 		if (model instanceof N4FieldDeclaration) {
 			val memberCollector = containerTypesHelper.fromContext(model);
 			val n4classdeclaration = model.eContainer;
@@ -79,52 +91,55 @@ class N4JSMethodProposalProvider extends AbstractN4JSProposalProvider {
 	protected def void completeMethodDeclarationFromField(N4FieldDeclaration n4FieldDeclaration, INode node,
 		ContainerTypesHelper.MemberCollector memberCollector, Type tclass, ContentAssistContext context,
 		ICompletionProposalAcceptor acceptor) {
-		val annotations = n4FieldDeclaration.annotations;
 
 		for (TMember methodMember : memberCollector.inheritedMembers(tclass as TClass)) {
 			val implementedMembers = memberCollector.allMembers(tclass as TClass, false, false, false);
 			if (!methodAlreadyImplemented(implementedMembers, methodMember)) {
-				val EList<N4Modifier> declaredModifiers = getDeclaredModifiers(methodMember);
-				if (!methodMember.declaredFinal) {
-					buildMethodCompletionProposal(context, acceptor, node, annotations, declaredModifiers,
+				if (!methodMember.declaredFinal && !methodMember.name.equals("constructor")) {
+					val annotations = methodMember.annotations;
+					buildMethodCompletionProposal(context, acceptor, node, annotations,
 						methodMember);
 				}
 			}
 		}
 	}
 
-	def private EList<N4Modifier> getDeclaredModifiers(TMember methodMember) {
-
-		var EList<N4Modifier> declaredModifiers;
-		val n4MethodDeclaration = methodMember.astElement;
-		if (n4MethodDeclaration instanceof N4MethodDeclaration) {
-			declaredModifiers = n4MethodDeclaration.declaredModifiers;
-		} else {
-			declaredModifiers = null;
-		}
-		return declaredModifiers;
-	}
-
+	//FIXME: If an UnionTypeExpression/IntersectionExpression/IterableTypeExpression 
+	//is a type argument of a ParameterizedTypeRef it won't be recognized
 	def private String getReturnTypeAsString(TMethod methodMember) {
 
 		val StringBuilder strb = new StringBuilder();
 		if (methodMember.returnTypeRef !== null) {
+			var returnTypeRef = methodMember.returnTypeRef;
 			if (methodMember.declaredAsync || methodMember.declaredGenerator) {
-				val returnTypeName = methodMember.returnTypeRef.typeArgs.get(0).declaredType.name;
+				val returnTypeName = returnTypeRef.typeArgs.get(0).declaredType.name;
 				if (returnTypeName.equalsIgnoreCase("undefined")) {
 					strb.append(": ").append("void");
 				} else {
 					strb.append(": ").append(returnTypeName);
 				}
+			} else if (returnTypeRef instanceof UnionTypeExpression) {
+				var typeRefs = returnTypeRef.typeRefs;
+				strb.append(": ").append(typeRefs.map[declaredType.name].join(" | "));
+			} else if (returnTypeRef instanceof IntersectionTypeExpression) {
+				var typeRefs = returnTypeRef.typeRefs;
+				strb.append(": ").append(typeRefs.map[declaredType.name].join(" & "));
+			} else if (returnTypeRef instanceof ParameterizedTypeRef) {
+				if(returnTypeRef.isIterableTypeExpression) {
+					var typeArgs = returnTypeRef.typeArgs;
+					strb.append(": [").append(typeArgs.map[declaredType.name].join(", ")).append("]");
+				} else {
+					strb.append(": ").append(returnTypeRef.typeRefAsString);
+				}
 			} else {
-				strb.append(": ").append(methodMember.returnTypeRef.typeRefAsString);
+				strb.append(": ").append(returnTypeRef.typeRefAsString);
 			}
 		}
 		return strb.toString;
 	}
 
 	def private buildMethodCompletionProposal(ContentAssistContext context, ICompletionProposalAcceptor acceptor,
-		INode node, EList<Annotation> annotations, EList<N4Modifier> declaredModifiers, TMember methodMember) {
+		INode node, EList<TAnnotation> annotations, TMember methodMember) {
 		var annotationString = addAnnotations(annotations);
 		var String methodBody;
 		var String methodMemberAsString;
@@ -135,10 +150,22 @@ class N4JSMethodProposalProvider extends AbstractN4JSProposalProvider {
 			if (returnType.equalsIgnoreCase(": void")) {
 				methodBody = EMPTY_METHOD_BODY;
 			} else {
-				methodBody = AUTO_GENERATED_METHOD_BODY;
+				val StringBuilder strb = new StringBuilder();
+				strb.append(methodMember.fpars.map[name].join(", "))
+				var String methodReturnBody;
+				if (!methodMember.fpars.isNullOrEmpty &&
+					!methodMember.fpars.get(methodMember.fpars.length - 1).variadic) {
+					methodReturnBody = "return super." + methodMember.name + "(" + strb.toString() + ");\n\t}";
+				} else if (!methodMember.fpars.isNullOrEmpty &&
+					methodMember.fpars.get(methodMember.fpars.length - 1).variadic) {
+					methodReturnBody = "return null;\n\t}";
+				} else {
+					methodReturnBody = "return super." + methodMember.name + "();\n\t}";
+				}
+				methodBody = AUTO_GENERATED_METHOD_BODY + methodReturnBody;
 			}
 
-			val proposalString = getProposalString(methodMember, annotationString, declaredModifiers, methodBody);
+			val proposalString = getProposalString(methodMember, annotationString, methodBody);
 			var replacementOffset = node.offset; // replace from beginning of node;
 			if (!(context.currentModel instanceof LiteralOrComputedPropertyName)) {
 				val semanticElement = node.semanticElement;
@@ -159,31 +186,37 @@ class N4JSMethodProposalProvider extends AbstractN4JSProposalProvider {
 		val StringBuilder strb = new StringBuilder();
 		strb.append(methodMember.name).append("(").append(methodMember.fpars.map[formalParameterAsString].join(", ")).
 			append(")");
-		if (methodMember.returnTypeRef !== null) {
-			if (methodMember.declaredAsync || methodMember.declaredGenerator) {
-				val returnTypeName = methodMember.returnTypeRef.typeArgs.get(0).declaredType.name;
-				if (returnTypeName.equalsIgnoreCase("undefined")) {
-					strb.append(": ").append("void");
-				} else {
-					strb.append(": ").append(returnTypeName);
-				}
-			} else {
-				strb.append(": ").append(methodMember.returnTypeRef.typeRefAsString);
-			}
-		}
+		strb.append(getReturnTypeAsString(methodMember));
 		if (methodMember.returnValueOptional) strb.append('?');
 		return strb.toString();
 	}
 
-	def private getProposalString(TMethod methodMember, String annotationString, EList<N4Modifier> declaredModifiers,
+	def private boolean isAccessInternal(TMethod methodMember) {
+		var String accessModifier = methodMember.memberAccessModifier.toString;
+		return (accessModifier.length >= 8) && accessModifier.substring(accessModifier.length - 8, accessModifier.length).equals("Internal");
+	}
+	
+	def private String getAccessModifier(TMethod methodMember) {
+		var String accessModifier = methodMember.memberAccessModifier.toString;
+		if(isAccessInternal(methodMember)) {
+			//remove appended "Internal" keyword, which is appended to the access modifier
+			return methodMember.memberAccessModifier.toString().substring(0, accessModifier.length - 8);
+		} else {
+			return methodMember.memberAccessModifier.toString();
+		}
+	}
+
+	def private getProposalString(TMethod methodMember, String annotString,
 		String methodBody) {
 		val StringBuilder strb = new StringBuilder();
+		var annotationString = annotString;
+		if(isAccessInternal(methodMember)) annotationString = "@" + INTERNAL_ANNOTATION + "\n\t" + annotationString;
 		strb.append(annotationString);
-		if (hasAccessModifier(declaredModifiers)) strb.append(methodMember.memberAccessModifier.toString + " ");
-		if (methodMember.generic)
-			strb.append("<").append(methodMember.typeVars.map[typeAsString].join(",")).append("> ");
+		if (showAccessModifier(methodMember)) strb.append(getAccessModifier(methodMember) + " ");
 		if (methodMember.declaredStatic) strb.append("static ");
 		if (methodMember.declaredAsync) strb.append("async ");
+		if (methodMember.generic)
+			strb.append("<").append(methodMember.typeVars.map[typeAsString].join(",")).append("> ");
 		if (methodMember.declaredGenerator) strb.append("*");
 		strb.append(getMethodMemberAsString(methodMember));
 		strb.append(methodBody);
@@ -198,12 +231,10 @@ class N4JSMethodProposalProvider extends AbstractN4JSProposalProvider {
 		return null;
 	}
 
-	def private String addAnnotations(EList<Annotation> annotations) {
+	def private String addAnnotations(EList<TAnnotation> annotations) {
 		var hasOverride = false;
 		var proposalString = ""
-		for (Annotation
-
-annotation : annotations) {
+		for (TAnnotation annotation : annotations) {
 			proposalString += "@" + annotation.name + "\n\t"
 			if (annotation.name.equals(OVERRIDE_ANNOTATION)) {
 				hasOverride = true;
@@ -215,19 +246,8 @@ annotation : annotations) {
 		return proposalString;
 	}
 
-	def private boolean hasAccessModifier(EList<N4Modifier> declaredModifiers) {
-		if (declaredModifiers === null) {
-			return false
-		} else {
-			for (N4Modifier modifier : declaredModifiers) {
-				switch (modifier.name()) {
-					case N4Modifier.PUBLIC.name(): return true
-					case N4Modifier.PROJECT.name(): return true
-					case N4Modifier.PROTECTED.name(): return true
-					default: return false
-				}
-			}
-		}
+	def private boolean showAccessModifier(TMethod methodMember) {
+		return !getAccessModifier(methodMember).equalsIgnoreCase(N4Modifier.PROJECT.name());
 	}
 
 	def private boolean methodAlreadyImplemented(MemberList<TMember> implementedMethods, TMember method) {
@@ -243,5 +263,4 @@ annotation : annotations) {
 		}
 		return methodImplemented
 	}
-
 }

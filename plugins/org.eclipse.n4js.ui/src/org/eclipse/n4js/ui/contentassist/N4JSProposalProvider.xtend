@@ -77,6 +77,9 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	@Inject
 	private N4JSLabelProvider labelProvider;
+	
+	@Inject
+	private N4JSMethodProposalHelper methodProposalHelper;
 
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 		ICompletionProposalAcceptor acceptor) {
@@ -359,5 +362,9 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 		}
 
 		return null;
+	}
+	
+	override public void complete_LiteralOrComputedPropertyName(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		methodProposalHelper.complete_Method(model, ruleCall, context, acceptor);	
 	}
 }
