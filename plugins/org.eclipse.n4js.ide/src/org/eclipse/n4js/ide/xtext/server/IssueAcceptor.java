@@ -109,19 +109,29 @@ public class IssueAcceptor {
 		result.setMessage(issue.getMessage());
 		result.setSeverity(toDiagnosticSeverity(issue.getSeverity()));
 
-		Position start = new Position(issue.getLineNumber(), issue.getColumn());
+		Position start = new Position(toInt(issue.getLineNumber()), toInt(issue.getColumn()));
 		Position end = null;
 		if (issue instanceof N4JSIssue) {
 			N4JSIssue n4jsIssue = (N4JSIssue) issue;
 			end = new Position(n4jsIssue.getLineNumberEnd(), n4jsIssue.getColumnEnd());
 		} else {
 			URI uri = issue.getUriToProblem();
-			Document doc = workspaceManager.getDocument(uri);
-			end = doc.getPosition(issue.getOffset() + issue.getLength());
+			if (uri != null) {
+				Document doc = workspaceManager.getDocument(uri);
+				end = doc.getPosition(issue.getOffset() + issue.getLength());
+			} else {
+				end = new Position(start.getLine(), start.getCharacter() + 1);
+			}
 		}
 
 		result.setRange(new Range(start, end));
 		return result;
+	}
+
+	// TODO: Remove this function when org.eclipse.xtext.validation.Issue.IssueImpl#lineNumber and #column are
+	// initialized with '0'
+	static private int toInt(Integer integer) {
+		return integer == null ? 0 : (int) integer;
 	}
 
 	/**
