@@ -257,7 +257,7 @@ public class PackageJsonHyperlinkHelperExtension implements IJSONHyperlinkHelper
 		if (project == null) {
 			for (Pair<FileURI, ProjectDescription> pair : extWS.getProjectsIncludingUnnecessary()) {
 				String name = pair.getSecond().getProjectName();
-				if (Objects.equal(projectName, name)) {
+				if (name != null && Objects.equal(projectName, new N4JSProjectName(name))) {
 					rootLocation = pair.getFirst();
 				}
 			}

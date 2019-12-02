@@ -23,9 +23,11 @@ import org.eclipse.xtext.resource.ClassloaderClasspathUriResolver;
 import org.eclipse.xtext.resource.ClasspathUriUtil;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  */
+@Singleton
 public class BuiltInSchemeRegistrar implements N4Scheme {
 
 	private static final URI SAMPLE_URI = URI.createURI(SCHEME + ":/unnecessary");
@@ -37,22 +39,30 @@ public class BuiltInSchemeRegistrar implements N4Scheme {
 	 * Configure the resourceSet such that it understands the n4js scheme. Use the injected classLoader to lookup
 	 * resources.
 	 */
-	public void registerScheme(ResourceSet resourceSet) {
+	public void registerScheme(ResourceSet builtInSchemeResourceSet) {
 		// tell EMF to resolve a classpath URI which actually has not been a classpath URI (but a SCHEME/n4js
 		// URI):
-		URIConverter converter = resourceSet.getURIConverter();
+		URIConverter converter = builtInSchemeResourceSet.getURIConverter();
 		if (registerScheme(converter, classLoader)) {
-			ExecutionEnvironmentDescriptor descriptor = new ExecutionEnvironmentDescriptor(resourceSet);
-			register(resourceSet, descriptor);
+			ExecutionEnvironmentDescriptor descriptor = new ExecutionEnvironmentDescriptor(builtInSchemeResourceSet);
+			register(builtInSchemeResourceSet, descriptor);
 		}
+	}
+
+	/**
+	 * Cache the scopes on the target resource set based on the shared scopes of the builtInSchemeResourceSet.
+	 */
+	public void registerScopes(ResourceSet targetResourceSet, ResourceSet builtInSchemeResourceSet) {
+		BuiltInTypeScope typeScope = BuiltInTypeScope.get(builtInSchemeResourceSet);
+		BuiltInTypeScopeAccess.registerBuiltInTypeScope(typeScope, targetResourceSet);
 	}
 
 	/**
 	 * Register all well defined scopes at the resource set.
 	 */
-	protected void register(ResourceSet resourceSet, ExecutionEnvironmentDescriptor descriptor) {
+	protected void register(ResourceSet builtInSchemeResourceSet, ExecutionEnvironmentDescriptor descriptor) {
 		BuiltInTypeScope typeScope = new BuiltInTypeScope(descriptor);
-		BuiltInTypeScopeAccess.registerBuiltInTypeScope(typeScope, resourceSet);
+		BuiltInTypeScopeAccess.registerBuiltInTypeScope(typeScope, builtInSchemeResourceSet);
 	}
 
 	/**
