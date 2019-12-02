@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TMember;
@@ -50,15 +51,21 @@ public class FindReferenceHelper {
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	/** @return all references to the given declaration. Respect editor states. */
-	public List<EObject> findReferences(EObject declaration) {
+	public List<EObject> findReferences(EObject declaration, ResourceSet resourceSet) {
 		declaration = getDeclaration(declaration);
 		TargetURIs targets = getTargets(declaration);
-		Resource eResource = declaration.eResource();
-		SimpleResourceAccess resourceAccess = new SimpleResourceAccess(eResource.getResourceSet());
-		IResourceDescriptions index = resourceDescriptionsProvider.getResourceDescriptions(eResource);
+		SimpleResourceAccess resourceAccess = new SimpleResourceAccess(resourceSet);
+		IResourceDescriptions index = resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
 		ReferenceAcceptor acceptor = new ReferenceAcceptor();
 
 		referenceFinder.findAllReferences(targets, resourceAccess, index, acceptor, null);
+
+		ResourceSet maybeBuiltInResourceSet = declaration.eResource().getResourceSet();
+		if (maybeBuiltInResourceSet != resourceSet) {
+			resourceAccess = new SimpleResourceAccess(maybeBuiltInResourceSet);
+			index = resourceDescriptionsProvider.getResourceDescriptions(maybeBuiltInResourceSet);
+			referenceFinder.findAllReferences(targets, resourceAccess, index, acceptor, null);
+		}
 
 		return acceptor.results;
 	}
