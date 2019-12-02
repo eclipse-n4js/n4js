@@ -13,7 +13,8 @@
 
 import {resolve as pathResolve} from "path";
 import {spawn} from "child_process";
-
+import debug from "debug";
+const log = debug("n4js-cli");
 
 @StringBased
 export public enum Goal {
@@ -44,9 +45,12 @@ export public interface ~Options {
 /**
  * Calls n4jsc with the given set of arguments, e.g.
  *
+ * "port": "1234"
  * "clean": true
  *
- * Any stdout/stderr will be piped as is.
+ * Any stdout/stderr will be logged as is.
+ *
+ * Call `n4jsc -h` for more details.
  *
  * Returns a promise.
  */
@@ -57,18 +61,20 @@ export public async function n4jsc(goal: Goal, dir: string, options: Options+ =)
 
         for (const [key, value] Object.entries(options)) {
             if (optionsFieldNames.has(key)) {
-                const isBool = typeof value === "boolean";
-                if (isBool && !value) {
-                    continue; // skip
-                }
-                args.push((key.length > 1 ? "--" : "-") + key);
-                if (!isBool) {
-                    args.push(value);
-                }
+                log("unrecognized option:", key, value);
+                continue;
+            }
+            const isBool = typeof value === "boolean";
+            if (isBool && !value) {
+                continue; // skip
+            }
+            args.push((key.length > 1 ? "--" : "-") + key);
+            if (!isBool) {
+                args.push(value);
             }
         }
         
-        console.log("Call n4jsc with args: " + args);
+        log("Calling n4jsc:", args);
 
         spawn("java", args, {
             stdio: "inherit",
