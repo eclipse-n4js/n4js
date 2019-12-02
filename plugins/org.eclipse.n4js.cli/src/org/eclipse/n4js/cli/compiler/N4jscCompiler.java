@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
@@ -89,7 +88,7 @@ public class N4jscCompiler {
 		languageServer.shutdown();
 		languageServer.exit();
 
-		printResults(compilationTime.stop().elapsed());
+		printResults(compilationTime.stop());
 		writeTestCatalog();
 	}
 
@@ -129,12 +128,12 @@ public class N4jscCompiler {
 		}
 	}
 
-	private void printResults(Duration compilationDuration) {
+	private void printResults(Stopwatch elapsedTime) {
 		long trsnp = callback.getTranspilationsCount();
 		long deltd = callback.getDeletionsCount();
 		long errs = callback.getErrorsCount();
 		long wrns = callback.getWarningsCount();
-		String durationStr = compilationDuration.toString();
+		String durationStr = elapsedTime.toString();
 		String msg = String.format(
 				"Compile results - Transpiled: %d, Deleted: %d, Errors: %d, Warnings: %d, Duration: %s",
 				trsnp, deltd, errs, wrns, durationStr);
