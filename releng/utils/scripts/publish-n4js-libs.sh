@@ -67,6 +67,11 @@ cd n4js-libs
 echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
 
+echo "==== STEP 0/8: add .npmrc publish token"
+echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> .npmrc
+echo '//localhost:4873/:_authToken=${NPM_TOKEN}' >> .npmrc
+echo '//localhost:4874/:_authToken=${NPM_TOKEN}' >> .npmrc
+
 echo "==== STEP 1/8: check preconditions"
 # check NPM_TOKEN
 if [ "$DESTINATION" = "local" ]; then
