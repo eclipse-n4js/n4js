@@ -18,6 +18,7 @@ import org.eclipse.n4js.ts.ui.navigation.ContributionAwareResourceSetWithBuiltIn
 import org.eclipse.n4js.ts.ui.navigation.EffectiveRegistrarProvider;
 import org.eclipse.xtext.ui.resource.IResourceSetInitializer;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapperContribution;
+import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.inject.Binder;
@@ -25,6 +26,8 @@ import com.google.inject.Module;
 import com.google.inject.PrivateModule;
 
 /**
+ * Registers a {@link BuiltinSchemeUriMapperContribution} and a {@link BuiltInSchemeResourceSetInitializer} to be
+ * available via a {@link ISharedStateContributionRegistry}.
  */
 public class ContributingModule implements Module {
 
@@ -33,6 +36,12 @@ public class ContributingModule implements Module {
 		binder.install(new PrivateModule() {
 			@Override
 			protected void configure() {
+				// we bind the internally required services of the two exposed bindings
+				// in a private module. This is to avoid them being available via
+				// ISharedStateContributionRegistry.getContributedInstances
+				//
+				// This is effectively a means to encapsulate the implementation details and hide
+				// them from the globally available services
 				bind(IStorage2UriMapperContribution.class).to(BuiltinSchemeUriMapperContribution.class);
 				bind(IResourceSetInitializer.class).to(BuiltInSchemeResourceSetInitializer.class);
 				bind(EffectiveRegistrarProvider.class);
@@ -42,6 +51,7 @@ public class ContributingModule implements Module {
 				bind(UriExtensions.class);
 				bind(ClassLoader.class).toInstance(getClass().getClassLoader());
 
+				// Here we expose the two services that are supposed to be publicly available.
 				expose(IResourceSetInitializer.class);
 				expose(IStorage2UriMapperContribution.class);
 			}
