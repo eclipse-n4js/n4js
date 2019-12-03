@@ -159,9 +159,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	/**
 	 * Refresh the workspace.
 	 */
-	public void refreshWorkspaceConfig(CancelIndicator cancelIndicator) {
+	public void refreshWorkspaceConfig() {
 		setWorkspaceConfig(workspaceConfigFactory.getWorkspaceConfig(baseDir));
-		List<ProjectDescription> newProjects = new ArrayList<>();
 		Set<String> projectNames = projectName2ProjectManager.keySet();
 		Set<String> remainingProjectNames = new HashSet<>(projectNames);
 		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
@@ -173,16 +172,17 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 				projectManager.initialize(projectDescription, projectConfig, openedDocumentsContentProvider,
 						() -> fullIndex);
 				projectName2ProjectManager.put(projectDescription.getName(), projectManager);
-				newProjects.add(projectDescription);
 			}
 		}
 		for (String deletedProject : remainingProjectNames) {
 			projectName2ProjectManager.remove(deletedProject);
 			fullIndex.remove(deletedProject);
 		}
+	}
 
-		List<Delta> deltas = buildManager.doInitialBuild(newProjects, cancelIndicator);
-		afterBuild(deltas);
+	/** Cleans all projects in the workspace */
+	public void clean(CancelIndicator cancelIndicator) {
+		buildManager.doClean(cancelIndicator);
 	}
 
 	/** @see XBuildManager#persistProjectState(CancelIndicator) */
@@ -247,6 +247,22 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	/** Clears all issues of the given URI */
 	public void clearIssues(URI uri) {
 		issueAcceptor.publishDiagnostics(uri, Collections.emptyList());
+	}
+
+	/**
+	 * Perform a build on all given projects
+	 *
+	 * @param cancelIndicator
+	 *            cancellation support
+	 */
+	public void doInitialBuild(CancelIndicator cancelIndicator) {
+		List<ProjectDescription> newProjects = new ArrayList<>();
+		for (IProjectConfig projectConfig : getWorkspaceConfig().getProjects()) {
+			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
+			newProjects.add(projectDescription);
+		}
+		List<Delta> deltas = buildManager.doInitialBuild(newProjects, cancelIndicator);
+		afterBuild(deltas);
 	}
 
 	/**

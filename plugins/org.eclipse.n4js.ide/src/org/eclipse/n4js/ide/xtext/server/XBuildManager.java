@@ -215,6 +215,13 @@ public class XBuildManager {
 		return this::internalIncrementalBuild;
 	}
 
+	/** Performs a clean operation in all projects */
+	public void doClean(CancelIndicator cancelIndicator) {
+		for (XProjectManager projectManager : workspaceManager.getProjectManagers()) {
+			projectManager.doClean(cancelIndicator);
+		}
+	}
+
 	/** Update the contents of the given set. */
 	protected void queue(Set<URI> files, Collection<URI> toRemove, Collection<URI> toAdd) {
 		files.removeAll(toRemove);

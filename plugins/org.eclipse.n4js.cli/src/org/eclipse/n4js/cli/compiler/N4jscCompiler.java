@@ -25,6 +25,7 @@ import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
+import org.eclipse.n4js.cli.N4jscGoal;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
@@ -48,7 +49,7 @@ public class N4jscCompiler {
 	private final N4jscLanguageClient callback;
 	private final XWorkspaceManager workspaceManager;
 
-	/** Starts the compiler in a blocking fashion */
+	/** Starts the compiler for goal COMPILE in a blocking fashion */
 	static public void start(N4jscOptions options) throws Exception {
 		N4jscCompiler compiler = new N4jscCompiler(options);
 
@@ -82,8 +83,15 @@ public class N4jscCompiler {
 		warnIfNoProjectsFound();
 		verbosePrintAllProjects();
 
-		languageServer.initialized(new InitializedParams());
-		languageServer.joinInitBuildFinished();
+		if (options.getGoal() == N4jscGoal.clean || options.isClean()) {
+			languageServer.clean();
+			languageServer.joinCleanFinished();
+		}
+
+		if (options.getGoal() == N4jscGoal.compile) {
+			languageServer.initialized(new InitializedParams());
+			languageServer.joinInitBuildFinished();
+		}
 
 		languageServer.shutdown();
 		languageServer.exit();
