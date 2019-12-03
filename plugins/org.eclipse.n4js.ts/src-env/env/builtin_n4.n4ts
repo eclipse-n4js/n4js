@@ -264,7 +264,7 @@ public final class N4Accessor extends N4Member {
  */
 public final class N4EnumType extends N4Type {
 	/**
-	 * Returns true if this N4Clasifier describes an N4-enumeration declaration.
+	 * Returns true if this N4Classifier describes an N4-enumeration declaration.
 	 */
 	/* @Override */
 	public get isEnum(): boolean
@@ -365,7 +365,7 @@ public class N4Object extends Object {
  */
 public final class N4StringBasedEnumType extends N4Type {
 	/**
-	 * Returns true if this N4Clasifier describes an N4-enumeration declaration.
+	 * Returns true if this N4Classifier describes an N4-enumeration declaration.
 	 */
 	/* @Override */
 	public get isEnum(): boolean
@@ -458,7 +458,7 @@ public class N4ApiNotImplementedError extends Error {  }
 public interface ~N4Provider<out T> {
 
 	/**
-	 * Provides and returns with fully constructed and injected instance of type <tt>T</tt>.
+	 * Provides and returns a fully constructed and injected instance of type <tt>T</tt>.
 	 */
 	public abstract get(): T
 }

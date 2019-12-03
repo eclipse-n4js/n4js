@@ -36,7 +36,7 @@ const nomnomOptions: Object = {
         abbr: "c",
         metavar: "PATH",
         transform: resolvePath,
-        help: "Compiles the given root directory of yarn workspace project / npm project."
+        help: "Compiles the given yarn workspace project / npm project."
     },
     clean: {
         flag: true,
@@ -92,7 +92,7 @@ const nomnomHelp = `Runs N4JS mangelhaft testing.
 By default n4js-mangelhaft will retrieve the test catalog from a running IDE and just runs the tests.
 On CI systems, you may want to compile and run the tests in one go:
 
-$ n4js-mangelhaft --compile --xunitReportFile ./jenkins/reports.xml --scan ./projects
+$ n4js-mangelhaft --compile ./project --xunitReportFile ./jenkins/reports.xml
 
 In case of a failure the tool uses exit code 1 for compilation problems, and exit code 8 for failed tests.
 `;

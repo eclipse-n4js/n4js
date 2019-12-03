@@ -345,10 +345,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				() -> {
 					try {
 						workspaceManager.refreshWorkspaceConfig(CancelIndicator.NullImpl);
+						initBuildFinished.complete(null);
 					} catch (Throwable t) {
 						t.printStackTrace();
-					} finally {
-						initBuildFinished.complete(null);
+						initBuildFinished.completeExceptionally(t);
 					}
 					return null;
 				},

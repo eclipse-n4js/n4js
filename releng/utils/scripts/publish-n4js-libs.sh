@@ -68,16 +68,13 @@ echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
 
 echo "==== STEP 1/8: check preconditions"
-# check NPM_TOKEN
-if [ "$DESTINATION" = "local" ]; then
-    echo "Publishing to local -> setting environment variable NPM_TOKEN to a dummy value"
-    export NPM_TOKEN=dummy
-else
+if [ "$DESTINATION" != "local" ]; then
+    # check NPM_TOKEN
     if [ -z "$NPM_TOKEN" ]; then
         echo "Publishing to 'public' or 'staging' requires the environment variable NPM_TOKEN to be set but it has not been set!"
         exit -1
     fi
-    echo "Environment variable NPM_TOKEN is set to: $NPM_TOKEN"
+    echo "Environment variable NPM_TOKEN is set."
 fi
 # check consistency of dist-tag and pre-release segment (does not apply when publishing to 'local')
 if [ "$DESTINATION" != "local" ]; then
@@ -104,6 +101,13 @@ rm -rf $(find . -type d -name "node_modules")
 git checkout HEAD -- .
 # obtain commit ID of folder 'n4js-libs' in the local git working copy:
 N4JS_LIBS_COMMIT_ID_LOCAL=`git log -1 --format="%H" -- .`
+# prepare .npmrc for credentials
+if [ "$DESTINATION" != "local" ]; then
+    # we made sure above that NPM_TOKEN is set
+    echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> .npmrc
+    echo '//localhost:4873/:_authToken=${NPM_TOKEN}' >> .npmrc
+    echo '//localhost:4874/:_authToken=${NPM_TOKEN}' >> .npmrc
+fi
 
 echo "==== STEP 3/8: install dependencies and prepare npm task scripts"
 yarn install

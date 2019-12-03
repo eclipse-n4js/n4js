@@ -36,6 +36,7 @@ Export-Package: org.eclipse.n4js.fileextensions,
  org.eclipse.n4js.utils.validation,
  org.eclipse.n4js.utils.validation.impl,
  org.eclipse.n4js.utils.validation.util,
+ org.eclipse.n4js.xtext.resourceset,
  org.eclipse.n4js.xtext.scoping,
  org.eclipse.n4js.xtext.serializer
 Bundle-Vendor: %providerName

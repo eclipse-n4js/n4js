@@ -38,7 +38,9 @@ import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.HlcExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.scoping.builtin.ScopeRegistrar;
 import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.ui.containers.CompositeStorage2UriMapperContribution;
 import org.eclipse.n4js.ui.containers.N4JSExternalLibraryStorage2UriMapperContribution;
@@ -55,7 +57,6 @@ import org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider;
 import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.quickfix.N4JSQuickfixProvider;
-import org.eclipse.n4js.ui.scoping.builtin.ScopeInitializer;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerModificationStrategyProvider;
@@ -80,7 +81,6 @@ import org.eclipse.xtext.resource.impl.LiveShadowedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.resource.impl.ResourceSetBasedResourceDescriptions;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
-import org.eclipse.xtext.ui.resource.IResourceSetInitializer;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapperContribution;
 import org.eclipse.xtext.ui.shared.contribution.IEagerContribution;
 import org.eclipse.xtext.util.UriExtensions;
@@ -168,7 +168,6 @@ public class ContributingModule implements Module {
 		binder.bind(IEagerContribution.class).to(ProjectDescriptionLoadListener.class);
 		binder.bind(ProjectDescriptionLoadListener.Strategy.class).to(N4JSProjectDependencyStrategy.class);
 		binder.bind(N4JSProjectDependencyStrategy.class);
-		binder.bind(IResourceSetInitializer.class).to(ScopeInitializer.class);
 		binder.bind(ClassLoader.class).toInstance(getClass().getClassLoader());
 
 		binder.bind(WorkingSetManagerBrokerImpl.class);
@@ -225,5 +224,7 @@ public class ContributingModule implements Module {
 			return N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS)
 					.getInstance(N4JSQuickfixProvider.class);
 		});
+
+		binder.bind(BuiltInSchemeRegistrar.class).to(ScopeRegistrar.class);
 	}
 }
