@@ -10,14 +10,13 @@
  */
 package org.eclipse.n4js.cli.compiler;
 
-import static java.util.stream.Collectors.toList;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -142,16 +141,33 @@ public class N4jscCompiler {
 	}
 
 	private void verbosePrintAllProjects() {
-		if (options.isVerbose()) {
-			Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
-			if (!projects.isEmpty()) {
-				Path workspace = options.getDirs().get(0).toPath();
-				List<String> projectNameList = projects.stream()
-						.map(p -> p.getName() + " at " + Path.of(p.getPath().toFileString()).relativize(workspace))
-						.collect(toList());
+		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
+		int maxPrjNameLength = projects.stream()
+				.filter(p -> p.getName() != null)
+				.mapToInt(p -> p.getName().length())
+				.max().orElse(10);
+		String prjNameWithPadding = "%-" + maxPrjNameLength + "s";
 
-				LOG.info("Projects: \n   " + String.join("\n   ", projectNameList));
+		if (!projects.isEmpty()) {
+			Path workspace = options.getDirs().get(0).toPath();
+
+			SortedMap<String, String> projectNameList = new TreeMap<>();
+			for (IProjectConfig prj : projects) {
+				String prjName = prj.getName() == null ? "[no_name]" : prj.getName();
+				String locationStr = null;
+				if (prj.getPath() == null) {
+					locationStr = "[no_location]";
+				} else {
+					locationStr = workspace.relativize(Path.of(prj.getPath().toFileString())).toString();
+					if (locationStr.isBlank()) {
+						locationStr = ".";
+					}
+				}
+				String outputLine = String.format(prjNameWithPadding + " at %s", prjName, locationStr);
+				projectNameList.put(locationStr, outputLine);
 			}
+
+			LOG.info(projects.size() + " projects: \n   " + String.join("\n   ", projectNameList.values()));
 		}
 	}
 

@@ -13,8 +13,10 @@ package org.eclipse.n4js.cli;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
+import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.Measurement;
@@ -25,6 +27,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
  * Entry point of n4jsc compiler
  */
 public class N4jscMain {
+	private static final Logger LOG = LogManager.getLogger(N4jscCompiler.class);
 
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {
@@ -40,11 +43,6 @@ public class N4jscMain {
 		// debug before help, shortcut for check-settings without running
 		if (options.isShowSetup()) {
 			N4jscConsole.println(options.toSettingsString());
-		}
-		if (!options.isVerbose()) {
-			// Reconfigure Logging to be quiet:
-			Logger.getRootLogger().removeAllAppenders();
-			Logger.getRootLogger().addAppender(new NullAppender());
 		}
 
 		try {
@@ -76,10 +74,14 @@ public class N4jscMain {
 		try {
 			try {
 				options.read(args);
-			} finally {
-				if (options.isVerbose()) {
-					N4jscConsole.println(options.toCallString());
+
+				if (!options.isVerbose()) {
+					// Reconfigure Logging to be quiet:
+					Logger.getRootLogger().removeAllAppenders();
+					Logger.getRootLogger().addAppender(new NullAppender());
 				}
+			} finally {
+				LOG.info("Called with: " + options.toCallString());
 			}
 
 			N4jscOptionsValidater.validate(options);
