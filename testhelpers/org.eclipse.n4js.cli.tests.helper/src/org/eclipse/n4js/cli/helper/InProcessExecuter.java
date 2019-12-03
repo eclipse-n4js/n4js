@@ -82,6 +82,7 @@ public class InProcessExecuter {
 				cliResult.errors = callback.errors;
 				cliResult.warnings = callback.warnings;
 				cliResult.transpiledFiles = callback.transpiledFiles;
+				cliResult.deletedFilesCount = callback.getDeletionsCount();
 
 				// save projects
 				Injector injector = N4jscFactory.getOrCreateInjector();

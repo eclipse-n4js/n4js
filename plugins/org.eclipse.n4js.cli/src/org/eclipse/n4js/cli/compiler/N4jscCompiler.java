@@ -107,12 +107,12 @@ public class N4jscCompiler {
 		languageServer.clean();
 		languageServer.joinCleanFinished();
 		printCleanResults(compilationTime.stop());
-		callback.resetCounters();
 	}
 
 	private void performCompile() {
 		if (options.isClean()) {
 			performClean();
+			callback.resetCounters();
 		}
 		Stopwatch compilationTime = Stopwatch.createStarted();
 		languageServer.initialized(new InitializedParams());
