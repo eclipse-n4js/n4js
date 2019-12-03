@@ -27,22 +27,6 @@
         });
     }
 
-    /** Call context is prototype object. */
-    function mixinDefaultMethod(method) {
-        var name = method && method.name;
-        if (name && !(name in this) && !method.isStatic && method.jsFunction) {
-            this[name] = method.jsFunction.value;
-        }
-    }
-    /** Call context is prototype object. */
-    function mixinDefaultMethods(iface) {
-        var n4type = iface && iface.n4type;
-        if (n4type) {
-            n4type.ownedMembers.forEach(mixinDefaultMethod, this);
-            n4type.consumedMembers.forEach(mixinDefaultMethod, this);
-        }
-    }
-
     /**
      * Setup a constructor function to work as a class.
      *
@@ -61,7 +45,6 @@
         Object.defineProperties(ctor, staticMethods);
 
         var proto = Object.create(superCtor.prototype, instanceMethods);
-        implementedInterfaces.forEach(mixinDefaultMethods, proto);
         Object.defineProperty(proto, "constructor", {
             value: ctor
         });
