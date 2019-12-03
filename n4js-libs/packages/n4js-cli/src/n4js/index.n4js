@@ -22,7 +22,7 @@ export public enum Goal {
     watch
 }
 
-export public interface ~Options {
+export public interface Options {
     public version?: boolean;
     public help?: boolean;
     /** Clean the output folder before compiling. */
@@ -52,7 +52,7 @@ export public interface ~Options {
  *
  * Returns a promise.
  */
-export public async function n4jsc(goal: Goal, dir: string, options: Options+ =) {
+export public async function n4jsc(goal: Goal, dir: string, options: ~Options+ =) {
     return new Promise<int, int>((resolve, reject) => {
         log("goal=%s dir=%s options: %O", goal, dir, options);
         const args = ["-jar", pathResolve(__dirname, "..", "bin", "n4jsc.jar"), goal, dir];
