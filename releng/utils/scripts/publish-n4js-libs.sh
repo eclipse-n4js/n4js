@@ -68,16 +68,16 @@ echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
 
 echo "==== STEP 1/8: check preconditions"
-# check NPM_TOKEN
-if [ "$DESTINATION" = "local" ]; then
-    echo "Publishing to local -> setting environment variable NPM_TOKEN to a dummy value"
-    export NPM_TOKEN=dummy
-else
+if [ "$DESTINATION" != "local" ]; then
+    # check NPM_TOKEN
     if [ -z "$NPM_TOKEN" ]; then
         echo "Publishing to 'public' or 'staging' requires the environment variable NPM_TOKEN to be set but it has not been set!"
         exit -1
     fi
-    echo "Environment variable NPM_TOKEN is set to: $NPM_TOKEN"
+    echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> .npmrc
+    echo '//localhost:4873/:_authToken=${NPM_TOKEN}' >> .npmrc
+    echo '//localhost:4874/:_authToken=${NPM_TOKEN}' >> .npmrc
+    echo "Environment variable NPM_TOKEN is set."
 fi
 # check consistency of dist-tag and pre-release segment (does not apply when publishing to 'local')
 if [ "$DESTINATION" != "local" ]; then
