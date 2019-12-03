@@ -59,14 +59,6 @@ public class FindReferenceHelper {
 		ReferenceAcceptor acceptor = new ReferenceAcceptor();
 
 		referenceFinder.findAllReferences(targets, resourceAccess, index, acceptor, null);
-
-		ResourceSet maybeBuiltInResourceSet = declaration.eResource().getResourceSet();
-		if (maybeBuiltInResourceSet != resourceSet) {
-			resourceAccess = new SimpleResourceAccess(maybeBuiltInResourceSet);
-			index = resourceDescriptionsProvider.getResourceDescriptions(maybeBuiltInResourceSet);
-			referenceFinder.findAllReferences(targets, resourceAccess, index, acceptor, null);
-		}
-
 		return acceptor.results;
 	}
 
