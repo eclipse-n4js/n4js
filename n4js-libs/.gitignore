@@ -22,3 +22,5 @@ node_modules/
 npm-debug.log
 .npm-version
 .npm-log
+.n4js.projectstate
+

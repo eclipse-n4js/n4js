@@ -26,10 +26,10 @@ if (jarPath) {
     }
 
     // minimal dep just against wget
-    if (/^https?:\/\//.test(jarPath)) {
+    if (/^https?:\/\//i.test(jarPath)) {
         const stream = lib_fs.createWriteStream(outPath);
         const download = (url) => {
-            require(/^http:\/\//.test(url) ? "http" : "https").get(url, resp => {
+            require(/^http:\/\//i.test(url) ? "http" : "https").get(url, resp => {
                 if (Math.trunc(resp.statusCode /100) === 3 && resp.headers.location) { // redirect
                     download(resp.headers.location);
                 } else {
