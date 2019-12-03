@@ -67,8 +67,8 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		final File n4jsLibsRoot = n4jsLibsRootPath.toFile();
 
 		// step 1: clean
-		println("==== STEP 1/2: remove all node_modules folders top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
-				+ "\" in n4js repository:");
+		println("==== STEP 1/2: remove all node_modules folders below top-level folder \""
+				+ N4JSGlobals.N4JS_LIBS_FOLDER_NAME + "\" in n4js repository:");
 		removeNodeModulesFolders(n4jsLibsRoot);
 
 		// step 2: compile projects under top-level folder "n4js-libs"
