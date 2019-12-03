@@ -19,13 +19,14 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializedParams;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
-import org.eclipse.n4js.cli.N4jscGoal;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
@@ -44,6 +45,8 @@ import com.google.inject.Injector;
  */
 @SuppressWarnings("restriction")
 public class N4jscCompiler {
+	private static final Logger LOG = LogManager.getLogger(N4jscCompiler.class);
+
 	private final N4jscOptions options;
 	private final XLanguageServerImpl languageServer;
 	private final N4jscLanguageClient callback;
@@ -77,27 +80,44 @@ public class N4jscCompiler {
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, "No base directory");
 		}
 
-		Stopwatch compilationTime = Stopwatch.createStarted();
 		params.setRootUri(baseDir.toURI().toString());
 		languageServer.initialize(params).get();
 		warnIfNoProjectsFound();
 		verbosePrintAllProjects();
 
-		if (options.getGoal() == N4jscGoal.clean || options.isClean()) {
-			languageServer.clean();
-			languageServer.joinCleanFinished();
-		}
-
-		if (options.getGoal() == N4jscGoal.compile) {
-			languageServer.initialized(new InitializedParams());
-			languageServer.joinInitBuildFinished();
+		switch (options.getGoal()) {
+		case clean:
+			performClean();
+			break;
+		case compile:
+			performCompile();
+			break;
+		default:
+			break;
 		}
 
 		languageServer.shutdown();
 		languageServer.exit();
 
-		printResults(compilationTime.stop());
 		writeTestCatalog();
+	}
+
+	private void performClean() {
+		Stopwatch compilationTime = Stopwatch.createStarted();
+		languageServer.clean();
+		languageServer.joinCleanFinished();
+		printCleanResults(compilationTime.stop());
+		callback.resetCounters();
+	}
+
+	private void performCompile() {
+		if (options.isClean()) {
+			performClean();
+		}
+		Stopwatch compilationTime = Stopwatch.createStarted();
+		languageServer.initialized(new InitializedParams());
+		languageServer.joinInitBuildFinished();
+		printCompileResults(compilationTime.stop());
 	}
 
 	private void setupWorkspaceBuildActionListener() {
@@ -130,13 +150,19 @@ public class N4jscCompiler {
 						.map(p -> p.getName() + " at " + Path.of(p.getPath().toFileString()).relativize(workspace))
 						.collect(toList());
 
-				N4jscConsole.println("Projects:");
-				N4jscConsole.print("   " + String.join("\n   ", projectNameList));
+				LOG.info("Projects: \n   " + String.join("\n   ", projectNameList));
 			}
 		}
 	}
 
-	private void printResults(Stopwatch elapsedTime) {
+	private void printCleanResults(Stopwatch elapsedTime) {
+		long deltd = callback.getDeletionsCount();
+		String durationStr = elapsedTime.toString();
+		String msg = String.format("Clean results - Deleted: %d, Duration: %s", deltd, durationStr);
+		N4jscConsole.println(msg);
+	}
+
+	private void printCompileResults(Stopwatch elapsedTime) {
 		long trsnp = callback.getTranspilationsCount();
 		long deltd = callback.getDeletionsCount();
 		long errs = callback.getErrorsCount();

@@ -195,9 +195,12 @@ public class XProjectManager {
 				deleteFileOrFolder(request, childFildes[i]);
 			}
 		}
+		boolean wasFile = file.isFile();
 		file.delete();
-		URI fileUri = URI.createFileURI(file.getAbsolutePath());
-		request.afterDelete(fileUri);
+		if (wasFile) {
+			URI fileUri = URI.createFileURI(file.getAbsolutePath());
+			request.afterDelete(fileUri);
+		}
 	}
 
 	/** Report an issue. */
