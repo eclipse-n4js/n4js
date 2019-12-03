@@ -11,13 +11,29 @@
 package org.eclipse.n4js.scoping.builtin;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.scoping.builtin.ExecutionEnvironmentDescriptor;
 
+import com.google.inject.Singleton;
+
 /**
  */
+@Singleton
 public class ScopeRegistrar extends BuiltInSchemeRegistrar {
+
+	/**
+	 * Cache the scopes on the target resource set based on the shared scopes of the builtInSchemeResourceSet.
+	 */
+	@Override
+	public void registerScopes(ResourceSet targetResourceSet, ResourceSet builtInSchemeResourceSet) {
+		super.registerScopes(targetResourceSet, builtInSchemeResourceSet);
+
+		GlobalObjectScope globalObjectScope = GlobalObjectScope.get(builtInSchemeResourceSet);
+		GlobalObjectScopeAccess.registerGlobalObjectScope(globalObjectScope, targetResourceSet);
+
+		VirtualBaseTypeScope virtualBaseTypeScope = VirtualBaseTypeScope.get(builtInSchemeResourceSet);
+		VirtualBaseTypeScopeAccess.registerVirtualBaseTypeScope(virtualBaseTypeScope, targetResourceSet);
+	}
 
 	@Override
 	protected void register(ResourceSet resourceSet, ExecutionEnvironmentDescriptor descriptor) {

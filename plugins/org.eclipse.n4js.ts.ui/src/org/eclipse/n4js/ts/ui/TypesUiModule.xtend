@@ -24,6 +24,7 @@ import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory
 import org.eclipse.xtext.ui.shared.Access
+import org.eclipse.n4js.ts.scoping.builtin.BasicResourceSetProvider
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -36,6 +37,13 @@ class TypesUiModule extends AbstractTypesUiModule {
 	 */
 	def Class<? extends XtextResourceSet> bindXtextResourceSet() {
 		return SynchronizedXtextResourceSet;
+	}
+
+	/** 
+	 * Bind a resource set that knows about the builtin scheme.
+	 */
+	def Class<? extends Provider<? extends SynchronizedXtextResourceSet>> provideXtextResourceSet() {
+		return BasicResourceSetProvider
 	}
 
 	/**
