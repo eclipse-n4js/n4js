@@ -23,6 +23,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.n4js.transpiler.AbstractTranspiler
 
 /**
  * Transformation to clean up imports:
@@ -37,16 +38,20 @@ class SanitizeImportsTransformation extends Transformation {
 	}
 
 	override assertPreConditions() {
-		assertTrue("requires a fully resolved script", state.im.flaggedUsageMarkingFinished);
+		if (AbstractTranspiler.DEBUG_PERFORM_ASSERTIONS) {
+			assertTrue("requires a fully resolved script", state.im.flaggedUsageMarkingFinished);
+		}
 	}
 
 	override assertPostConditions() {
-		// no import with flag used in code = false contained.
-		val unusedImports = EcoreUtil2.getAllContentsOfType( state.im, ImportSpecifier ).filter[!isUsed].toList;
-		assertTrue( "There should not be any unused import."
-			+" Unused="+ Joiner.on(",").join(unusedImports)
-			, unusedImports.size === 0
-		);
+		if (AbstractTranspiler.DEBUG_PERFORM_ASSERTIONS) {
+			// no import with flag used in code = false contained.
+			val unusedImports = EcoreUtil2.getAllContentsOfType( state.im, ImportSpecifier ).filter[!isUsed].toList;
+			assertTrue( "There should not be any unused import."
+				+" Unused="+ Joiner.on(",").join(unusedImports)
+				, unusedImports.size === 0
+			);
+		}
 	}
 
 	override transform() {

@@ -48,6 +48,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.transpiler.AbstractTranspiler
 
 /**
  * Transforms ES6 destructuring patterns into equivalent ES5 code. If the target engine supports ES6 destructuring
@@ -169,8 +170,10 @@ class DestructuringTransformation extends Transformation {
 			if(!stmnt.varDeclsOrBindings.empty) {
 				// something like: for( var [a,b] of [ [1,2], [3,4] ] ) {}
 
-				assertTrue("there should be exactly one VariableBinding in stmnt.varDeclsOrBindings",
-					stmnt.varDeclsOrBindings.size===1 && stmnt.varDeclsOrBindings.get(0) instanceof VariableBinding);
+				if (AbstractTranspiler.DEBUG_PERFORM_ASSERTIONS) {
+					assertTrue("there should be exactly one VariableBinding in stmnt.varDeclsOrBindings",
+						stmnt.varDeclsOrBindings.size===1 && stmnt.varDeclsOrBindings.get(0) instanceof VariableBinding);					
+				}
 
 				val rootNode = DestructNode.unify(stmnt.varDeclsOrBindings.head as VariableBinding);
 				traverse(helperVars, simpleAssignments, rootNode, _IdentRef(iterVarSTE), null);  // fparname = null since we do not generate any function.
@@ -267,9 +270,10 @@ class DestructuringTransformation extends Transformation {
 		val currHelperVarDecl = _VariableDeclaration(currHelperVarName);
 		helperVars += currHelperVarDecl;
 		val SymbolTableEntry currHelperVarSTE = findSymbolTableEntryForElement(currHelperVarDecl, true);
-		assertTrue("", currHelperVarSTE.getVariableDeclarationFromSTE === currHelperVarDecl);
-		assertTrue("", currHelperVarSTE.elementsOfThisName.contains(currHelperVarDecl));
-
+		if (AbstractTranspiler.DEBUG_PERFORM_ASSERTIONS) {
+			assertTrue("", currHelperVarSTE.getVariableDeclarationFromSTE === currHelperVarDecl);
+			assertTrue("", currHelperVarSTE.elementsOfThisName.contains(currHelperVarDecl));
+		}
 		var $sliceToArrayForDestructSTE = steFor_$sliceToArrayForDestruct;
 
 		if(isRest) {

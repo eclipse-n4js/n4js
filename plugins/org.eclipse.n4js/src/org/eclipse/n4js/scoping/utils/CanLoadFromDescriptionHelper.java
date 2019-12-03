@@ -243,4 +243,11 @@ public class CanLoadFromDescriptionHelper {
 		return Optional.ofNullable(description).flatMap(UserdataMapper::readDependenciesFromDescription);
 	}
 
+	/**
+	 * Create a resource in the context of the given resource set.
+	 */
+	public Resource createResource(ResourceSet resourceSet, URI resourceURI) {
+		return resourceSet.createResource(resourceURI);
+	}
+
 }
