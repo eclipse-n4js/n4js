@@ -40,7 +40,7 @@ import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
 
 /**
- * The entry point for all cli calls with the goal 'compile'
+ * The entry point for all cli calls with the goals 'compile' and 'clean'
  */
 @SuppressWarnings("restriction")
 public class N4jscCompiler {
@@ -51,7 +51,7 @@ public class N4jscCompiler {
 	private final N4jscLanguageClient callback;
 	private final XWorkspaceManager workspaceManager;
 
-	/** Starts the compiler for goal COMPILE in a blocking fashion */
+	/** Starts the compiler for goal COMPILE or CLEAN in a blocking fashion */
 	static public void start(N4jscOptions options) throws Exception {
 		N4jscCompiler compiler = new N4jscCompiler(options);
 

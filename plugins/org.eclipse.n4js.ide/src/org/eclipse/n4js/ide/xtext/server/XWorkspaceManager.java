@@ -250,7 +250,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	}
 
 	/**
-	 * Perform a build on all given projects
+	 * Perform a build on all projects
 	 *
 	 * @param cancelIndicator
 	 *            cancellation support

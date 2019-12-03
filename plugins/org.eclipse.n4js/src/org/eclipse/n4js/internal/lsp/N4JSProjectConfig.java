@@ -121,8 +121,8 @@ public class N4JSProjectConfig implements IProjectConfig {
 	}
 
 	/**
-	 * Projects are indexed only if they either have '.' as the output path or if they are located in node_modules
-	 * folders.
+	 * Projects are indexed but not transpiled if they have '.' as the output path or if they are located in
+	 * node_modules folders.
 	 *
 	 * @return true iff this project should be indexed only
 	 */

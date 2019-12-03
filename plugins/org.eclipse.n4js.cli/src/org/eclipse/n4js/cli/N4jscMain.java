@@ -45,6 +45,12 @@ public class N4jscMain {
 			N4jscConsole.println(options.toSettingsString());
 		}
 
+		if (!options.isVerbose()) {
+			// Reconfigure Logging to be quiet:
+			Logger.getRootLogger().removeAllAppenders();
+			Logger.getRootLogger().addAppender(new NullAppender());
+		}
+
 		try {
 			try (Measurement m = N4JSDataCollectors.dcCli.getMeasurement(N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME)) {
 
@@ -75,13 +81,10 @@ public class N4jscMain {
 			try {
 				options.read(args);
 
-				if (!options.isVerbose()) {
-					// Reconfigure Logging to be quiet:
-					Logger.getRootLogger().removeAllAppenders();
-					Logger.getRootLogger().addAppender(new NullAppender());
-				}
 			} finally {
-				LOG.info("Called with: " + options.toCallString());
+				if (options.isVerbose()) { // check #isVerbose() since log4j is still active
+					LOG.info("Called with: " + options.toCallString());
+				}
 			}
 
 			N4jscOptionsValidater.validate(options);
