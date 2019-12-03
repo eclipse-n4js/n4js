@@ -46,8 +46,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -66,7 +64,6 @@ import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -259,9 +256,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private N4JSScopingDiagnostician scopingDiagnostician;
 
 	@Inject
-	private BuiltInSchemeRegistrar registrar;
-
-	@Inject
 	private IN4JSCore n4jsCore;
 
 	@Inject
@@ -352,17 +346,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	public boolean isReconciled() {
 		final TModule module = getModule();
 		return module != null && module.isReconciled();
-	}
-
-	@Override
-	protected URIConverter getURIConverter() {
-		return getResourceSet() == null ? createNewURIConverter() : getResourceSet().getURIConverter();
-	}
-
-	private URIConverter createNewURIConverter() {
-		URIConverter result = new ExtensibleURIConverterImpl();
-		registrar.registerScheme(result);
-		return result;
 	}
 
 	@Override

@@ -10,19 +10,18 @@
  */
 package org.eclipse.n4js.ts
 
+import com.google.inject.Provider
 import org.eclipse.n4js.ts.conversions.TypesValueConverterService
 import org.eclipse.n4js.ts.naming.N4TSQualifiedNameConverter
-import org.eclipse.n4js.ts.resource.BuiltInSchemeAwareResource
 import org.eclipse.n4js.ts.resource.TypesResourceDescriptionStrategy
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypesGlobalScopeProvider
-import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme
+import org.eclipse.n4js.ts.scoping.builtin.ConfiguredResourceSetProvider
 import org.eclipse.xtext.conversion.IValueConverterService
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy
-import org.eclipse.xtext.resource.XtextResourceSet
+import org.eclipse.xtext.resource.SynchronizedXtextResourceSet
 import org.eclipse.xtext.scoping.IGlobalScopeProvider
 import org.eclipse.xtext.service.DefaultRuntimeModule
 
@@ -56,8 +55,8 @@ class TypesRuntimeModule extends AbstractTypesRuntimeModule {
 	/**
 	 * Bind a resource set that knows about the builtin scheme.
 	 */
-	override Class<? extends XtextResourceSet> bindXtextResourceSet() {
-		return ResourceSetWithBuiltInScheme;
+	def Class<? extends Provider<? extends SynchronizedXtextResourceSet>> provideConfiguredXtextResourceSet() {
+		return ConfiguredResourceSetProvider;
 	}
 
 	/**
@@ -69,11 +68,5 @@ class TypesRuntimeModule extends AbstractTypesRuntimeModule {
 
 	override Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
 		return N4TSQualifiedNameProvider;
-	}
-
-
-	/***/
-	def Class<? extends LazyLinkingResource> bindBuiltInSchemeAwareResource() {
-		return BuiltInSchemeAwareResource;
 	}
 }

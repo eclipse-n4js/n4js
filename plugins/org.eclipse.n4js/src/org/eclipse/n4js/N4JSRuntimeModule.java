@@ -57,7 +57,7 @@ import org.eclipse.n4js.scoping.builtin.ScopeRegistrar;
 import org.eclipse.n4js.scoping.imports.ImportedElementsMap;
 import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
-import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme;
+import org.eclipse.n4js.ts.scoping.builtin.ConfiguredResourceSetProvider;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
@@ -92,8 +92,8 @@ import org.eclipse.xtext.preferences.IPreferenceValuesProvider;
 import org.eclipse.xtext.resource.DescriptionUtils;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.serializer.ISerializer;
@@ -346,9 +346,11 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 		return N4JSHiddenTokenHelper.class;
 	}
 
-	@Override
-	public Class<? extends XtextResourceSet> bindXtextResourceSet() {
-		return ResourceSetWithBuiltInScheme.class;
+	/**
+	 * Bind a resource set that knows about the builtin scheme.
+	 */
+	public Class<? extends Provider<? extends SynchronizedXtextResourceSet>> provideConfiguredXtextResourceSet() {
+		return ConfiguredResourceSetProvider.class;
 	}
 
 	/**

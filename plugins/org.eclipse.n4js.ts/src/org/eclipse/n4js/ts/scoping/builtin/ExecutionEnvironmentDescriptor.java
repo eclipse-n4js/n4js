@@ -22,15 +22,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 public class ExecutionEnvironmentDescriptor {
 
 	private final ResourceSet resourceSet;
-	@SuppressWarnings("unused")
-	private final ClassLoader classLoader;
 
 	/**
-	 * Creates a new descriptor that loads its well defined content using the given classLoader.
+	 * Creates a new descriptor that loads its well defined content.
 	 */
-	public ExecutionEnvironmentDescriptor(ResourceSet resourceSet, ClassLoader classLoader) {
+	public ExecutionEnvironmentDescriptor(ResourceSet resourceSet) {
 		this.resourceSet = resourceSet;
-		this.classLoader = classLoader;
 	}
 
 	/**
