@@ -460,6 +460,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		return script != null && module != null && isASTProxy(script) && !module.eIsProxy();
 	}
 
+	@Override
+	public IParseResult getParseResult() {
+		if (!aboutToBeUnloaded && isLoadedFromDescription()) {
+			getContents().get(0);
+		}
+		return super.getParseResult();
+	}
+
 	/**
 	 * Adds just a check, that a not loaded resource is not allowed to be saved.
 	 */
