@@ -41,7 +41,6 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -182,9 +181,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			fullIndex.remove(deletedProject);
 		}
 
-		Stopwatch sw = Stopwatch.createStarted();
 		List<Delta> deltas = buildManager.doInitialBuild(newProjects, cancelIndicator);
-		System.out.println(sw.stop().elapsed());
 		afterBuild(deltas);
 	}
 

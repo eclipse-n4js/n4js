@@ -93,10 +93,10 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 
 		IssueLocation locationData = getLocationData(diagnostic);
 		if (locationData != null) {
-			issue.setLineNumber(locationData.lineNumber);
-			issue.setColumn(locationData.column);
-			issue.setOffset(locationData.offset);
-			issue.setLength(locationData.length);
+			issue.setLineNumber(toInt(locationData.lineNumber));
+			issue.setColumn(toInt(locationData.column));
+			issue.setOffset(toInt(locationData.offset));
+			issue.setLength(toInt(locationData.length));
 			// START: Changes here
 			if (locationData instanceof N4JSIssueLocation) {
 				N4JSIssueLocation n4jsLocationData = (N4JSIssueLocation) locationData;
@@ -126,6 +126,10 @@ public class N4JSDiagnosticConverter extends DiagnosticConverterImpl {
 		// marker.put(IMarker.PRIORITY, Integer.valueOf(IMarker.PRIORITY_LOW));
 		acceptor.accept(issue);
 		// END: Following copied from super method
+	}
+
+	static int toInt(Integer integer) {
+		return integer == null ? 0 : (int) integer;
 	}
 
 	@Override

@@ -63,6 +63,9 @@ public class N4jscMain {
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
+			if (options.isVerbose()) {
+				e.printStackTrace();
+			}
 			System.exit(e.getExitCode());
 		}
 	}
