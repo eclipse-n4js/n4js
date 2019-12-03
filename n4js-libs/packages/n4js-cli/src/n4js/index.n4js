@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2019 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,11 +9,10 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/*eslint-disable no-console */
-
 import {resolve as pathResolve} from "path";
 import {spawn} from "child_process";
-
+import debug from "debug";
+const log = debug("n4js-cli");
 
 @StringBased
 export public enum Goal {
@@ -23,7 +22,7 @@ export public enum Goal {
     watch
 }
 
-export public interface Options {
+export public interface ~Options {
     public version?: boolean;
     public help?: boolean;
     /** Clean the output folder before compiling. */
@@ -53,22 +52,32 @@ export public interface Options {
  *
  * Returns a promise.
  */
-export public async function n4jsc(goal: Goal, dir: string, options: ~Options+ =) {
+export public async function n4jsc(goal: Goal, dir: string, options: Options+ =) {
     return new Promise<int, int>((resolve, reject) => {
+        log("goal=%s dir=%s options: %O", goal, dir, options);
         const args = ["-jar", pathResolve(__dirname, "..", "bin", "n4jsc.jar"), goal, dir];
-        const optionsFieldNames = Options.n4type.dataFields().map((value, index, traversedObject) => {return value.name;});
+        const optionsFieldNames = new Set<string>(Options.n4type.dataFields().map(f => f.name));
 
-        for (const key of Object.keys(options)) {
-            if (optionsFieldNames.indexOf(key) >= 0) {
-                const value = options[key] as string;
-                args.push((key.length > 1 ? "--" : "-") + key);
-                if (typeof value !== "boolean") {
-                    args.push(value);
-                }
+        for (const [key, value] of Object.entries(options)) {
+            if (!optionsFieldNames.has(key)) {
+                log("unknown option:", key, value);
+                continue;
+            }
+            const isBool = typeof value === "boolean";
+            if (isBool && !value) {
+                continue; // skip
+            }
+            args.push((key.length > 1 ? "--" : "-") + key);
+            if (!isBool) {
+                args.push(String(value));
             }
         }
-        
-        console.log("Call n4jsc with args: " + args);
+
+        if (log.enabled) {
+            args.push("--verbose");
+        }
+
+        log("calling n4jsc:", args);
 
         spawn("java", args, {
             stdio: "inherit",
