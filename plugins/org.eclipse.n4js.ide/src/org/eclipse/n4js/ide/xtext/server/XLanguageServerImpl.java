@@ -1149,30 +1149,31 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void afterBuild(List<IResourceDescription.Delta> deltas) {
-		FluentIterable.from(deltas).filter(it -> it.getNew() != null).transform(it -> it.getUri().toString()).forEach(
-				it -> {
-					access.doRead(it, ctx -> {
-						if (ctx.isDocumentOpen()) {
-							if (ctx.getResource() instanceof XtextResource) {
-								XtextResource resource = ((XtextResource) ctx.getResource());
-								IColoringService coloringService = resource.getResourceServiceProvider()
-										.get(IColoringService.class);
-								if (coloringService != null && client instanceof LanguageClientExtensions) {
-									Document doc = ctx.getDocument();
-									List<? extends ColoringInformation> coloringInfos = coloringService
-											.getColoring(resource, doc);
-									if (!IterableExtensions.isNullOrEmpty(coloringInfos)) {
-										String uri = resource.getURI().toString();
-										((LanguageClientExtensions) client)
-												.updateColoring(new ColoringParams(uri, coloringInfos));
+		FluentIterable.from(deltas).filter(it -> it.getNew() != null && workspaceManager.isDocumentOpen(it.getUri()))
+				.transform(it -> it.getUri().toString()).forEach(
+						it -> {
+							access.doRead(it, ctx -> {
+								if (ctx.isDocumentOpen()) {
+									if (ctx.getResource() instanceof XtextResource) {
+										XtextResource resource = ((XtextResource) ctx.getResource());
+										IColoringService coloringService = resource.getResourceServiceProvider()
+												.get(IColoringService.class);
+										if (coloringService != null && client instanceof LanguageClientExtensions) {
+											Document doc = ctx.getDocument();
+											List<? extends ColoringInformation> coloringInfos = coloringService
+													.getColoring(resource, doc);
+											if (!IterableExtensions.isNullOrEmpty(coloringInfos)) {
+												String uri = resource.getURI().toString();
+												((LanguageClientExtensions) client)
+														.updateColoring(new ColoringParams(uri, coloringInfos));
+											}
+										}
 									}
 								}
-							}
-						}
-						semanticHighlightingRegistry.update(ctx);
-						return null;
-					});
-				});
+								semanticHighlightingRegistry.update(ctx);
+								return null;
+							});
+						});
 	}
 
 	/**

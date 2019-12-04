@@ -42,12 +42,14 @@ public final class IssuesProvider implements Provider<List<Issue>> {
 	private final Resource r;
 	private final OperationCanceledManager operationCanceledManager;
 	private final CancelIndicator ci;
+	private final CheckMode checkMode;
 
 	@SuppressWarnings("javadoc")
-	public IssuesProvider(IResourceValidator resourceValidator, Resource res,
+	public IssuesProvider(IResourceValidator resourceValidator, Resource res, CheckMode checkMode,
 			OperationCanceledManager operationCanceledManager, CancelIndicator ci) {
 		this.rv = resourceValidator;
 		this.r = res;
+		this.checkMode = checkMode;
 		this.operationCanceledManager = operationCanceledManager;
 		this.ci = ci;
 	}
@@ -71,7 +73,7 @@ public final class IssuesProvider implements Provider<List<Issue>> {
 				: N4JSDataCollectors.dcValidations;
 		List<Issue> issues;
 		try (Measurement m = dc.getMeasurement("validation");) {
-			issues = rv.validate(r, CheckMode.ALL, ci);
+			issues = rv.validate(r, checkMode, ci);
 		}
 		if (!issues.contains(null)) {
 			operationCanceledManager.checkCanceled(ci);

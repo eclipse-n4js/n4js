@@ -32,6 +32,7 @@ import org.eclipse.xtext.resource.FileExtensionProvider
 import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
+import org.eclipse.xtext.validation.CheckMode
 
 /**
  * Helper class to create and cache image descriptions as triggered by
@@ -164,15 +165,15 @@ class ImageDescriptionHelper {
 	 */
 	def private IssueSummary getOrElseUpdateSummary(EObject eo, CancelIndicator cancelIndicator) {
 		val res = eo.eResource
-		synchronized(cache) {
-			val issues = cache.getOrElseUpdateIssues(resourceValidator, res, cancelIndicator)
+		val summary = cache.get("ImageDescriptionHelper-IssueSummary", res) [|
+			val issues = resourceValidator.validate(res, CheckMode.ALL, cancelIndicator);
 			if ((null === issues) || cancelIndicator.isCanceled) {
 				// due to cancellation the list of issues may be incomplete, thus don't store in the cache
 				return IssueSummary.EMPTY_SUMMARY
-			}
-			val summary = cache.get("ImageDescriptionHelper-IssueSummary", res, [| IssueSummary.create(issues)])
-			return summary
-		}
+			} 
+			return IssueSummary.create(issues)
+		]
+		return summary
 	}
 
 	/**

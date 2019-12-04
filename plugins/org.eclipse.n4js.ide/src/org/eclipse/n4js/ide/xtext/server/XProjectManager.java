@@ -84,6 +84,16 @@ public class XProjectManager {
 	@Inject
 	protected OperationCanceledManager operationCanceledManager;
 
+	/**
+	 * The map for this project's resource set.
+	 */
+	@Inject
+	protected ProjectUriResourceMap uriResourceMap;
+
+	/** The workspace manager */
+	@Inject
+	protected XWorkspaceManager workspaceManager;
+
 	private URI baseDir;
 
 	private Provider<Map<String, ResourceDescriptionsData>> indexProvider;
@@ -95,6 +105,8 @@ public class XProjectManager {
 	private ProjectDescription projectDescription;
 
 	private IProjectConfig projectConfig;
+
+	private boolean mustWriteProjectState = false;
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
@@ -113,13 +125,20 @@ public class XProjectManager {
 	/** Initial build reads the project state and resolves changes. */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
 		Set<URI> changedSources = projectStateHolder.readProjectState(projectConfig);
-
+		// TODO distinguish between changed sources and deleted sources
 		XBuildResult result = doIncrementalBuild(changedSources, Collections.emptySet(),
 				Collections.emptyList(), cancelIndicator);
 
-		if (!changedSources.isEmpty()) {
-			projectStateHolder.writeProjectState(projectConfig);
+		// clear the resource set to release memory
+		boolean wasDeliver = resourceSet.eDeliver();
+		try {
+			resourceSet.eSetDeliver(false);
+			resourceSet.getResources().clear();
+		} finally {
+			resourceSet.eSetDeliver(wasDeliver);
 		}
+
+		persistProjectState();
 		return result;
 	}
 
@@ -127,9 +146,9 @@ public class XProjectManager {
 	public XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
 
-		URI persistanceFile = projectStateHolder.getPersistenceFile(projectConfig);
-		dirtyFiles.remove(persistanceFile);
-		deletedFiles.remove(persistanceFile);
+		URI persistenceFile = projectStateHolder.getPersistenceFile(projectConfig);
+		dirtyFiles.remove(persistenceFile);
+		deletedFiles.remove(persistenceFile);
 
 		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
 		resourceSet = request.getResourceSet(); // resourceSet is already used during the build via #getResource(URI)
@@ -143,7 +162,7 @@ public class XProjectManager {
 		synchronized (map.keySet()) { // GH-1552: synchronized
 			map.put(projectDescription.getName(), resourceDescriptions);
 		}
-
+		mustWriteProjectState |= !result.getAffectedResources().isEmpty();
 		return result;
 	}
 
@@ -215,7 +234,10 @@ public class XProjectManager {
 
 	/** Writes the current index, file hashes and validation issues to disk */
 	public void persistProjectState() {
-		projectStateHolder.writeProjectState(projectConfig);
+		if (mustWriteProjectState) {
+			projectStateHolder.writeProjectState(projectConfig);
+			mustWriteProjectState = false;
+		}
 	}
 
 	/** Creates a new build request for this project. */
@@ -262,8 +284,10 @@ public class XProjectManager {
 	/** Create and configure a new resource set for this project. */
 	protected XtextResourceSet createNewResourceSet(ResourceDescriptionsData newIndex) {
 		XtextResourceSet result = resourceSetProvider.get();
+		result.setURIResourceMap(uriResourceMap);
 		projectDescription.attachToEmfObject(result);
 		ProjectConfigAdapter.install(result, projectConfig);
+		attachWorkspaceResourceLocator(result);
 
 		Map<String, ResourceDescriptionsData> map = indexProvider.get();
 		synchronized (map.keySet()) { // GH-1552: synchronized
@@ -272,6 +296,10 @@ public class XProjectManager {
 		}
 		externalContentSupport.configureResourceSet(result, openedDocumentsContentProvider);
 		return result;
+	}
+
+	private WorkspaceAwareResourceLocator attachWorkspaceResourceLocator(XtextResourceSet result) {
+		return new WorkspaceAwareResourceLocator(result, workspaceManager);
 	}
 
 	/** Get the resource with the given URI. */

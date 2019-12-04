@@ -28,6 +28,7 @@ import org.eclipse.xtext.service.OperationCanceledError;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
+import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
@@ -81,11 +82,14 @@ public class N4JSCache extends OnChangeEvictingCache {
 	 * Other threads besides those for outline view and transpiler could in principle access the cache. However that's a
 	 * situation that's pre-existent to the just described sharing between outline and transpiler.
 	 */
-	public synchronized List<Issue> getOrElseUpdateIssues(IResourceValidator resourceValidator, Resource res,
+	public List<Issue> getOrElseUpdateIssues(
+			IResourceValidator resourceValidator,
+			Resource res,
+			CheckMode checkMode,
 			CancelIndicator monitor) {
 		try {
-			List<Issue> issues = get("N4JS-IDE-AllIssues", res,
-					new IssuesProvider(resourceValidator, res, operationCanceledManager, monitor));
+			List<Issue> issues = get("N4JS-IDE-AllIssues" + checkMode, res,
+					new IssuesProvider(resourceValidator, res, checkMode, operationCanceledManager, monitor));
 			return issues;
 		} catch (OperationCanceledError oce) {
 			// observation: the cache remains unchanged, to avoid cache corruption.

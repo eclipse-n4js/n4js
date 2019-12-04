@@ -83,7 +83,7 @@ public class ProjectStatePersister {
 	 * - #vs times:
 	 * 	- source URI
 	 * 	- Number #vi of issues of source
-	 * 	- #vi times a validation issue
+	 * 	- #vi times a validation issue as per {@link N4JSIssue#writeExternal(ObjectOutput) N4JSIssue.writeExternal}
 	 * </pre>
 	 */
 	private static final int VERSION_1 = 1;
@@ -112,7 +112,6 @@ public class ProjectStatePersister {
 		try {
 			File file = getDataFile(project);
 			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
-
 				writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state, files, validationIssues);
 
 			} catch (IOException e) {
@@ -183,16 +182,16 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private void writeValidationIssues(Map<URI, ? extends Collection<Issue>> validationIssues, ObjectOutput ouput)
+	private void writeValidationIssues(Map<URI, ? extends Collection<Issue>> validationIssues, ObjectOutput output)
 			throws IOException {
 
 		int numberSources = validationIssues.size();
-		ouput.writeInt(numberSources);
+		output.writeInt(numberSources);
 		for (Map.Entry<URI, ? extends Collection<Issue>> srcIssues : validationIssues.entrySet()) {
 			URI source = srcIssues.getKey();
 			Collection<Issue> issues = srcIssues.getValue();
 
-			ouput.writeUTF(source.toString());
+			output.writeUTF(source.toString());
 
 			Collection<N4JSIssue> n4Issues = new ArrayList<>();
 			for (Issue issue : issues) {
@@ -202,9 +201,9 @@ public class ProjectStatePersister {
 			}
 
 			int numberIssues = n4Issues.size();
-			ouput.writeInt(numberIssues);
+			output.writeInt(numberIssues);
 			for (N4JSIssue issue : n4Issues) {
-				ouput.writeObject(issue);
+				issue.writeExternal(output);
 			}
 		}
 	}
@@ -325,7 +324,8 @@ public class ProjectStatePersister {
 			int numberOfIssues = input.readInt();
 			while (numberOfIssues > 0) {
 				numberOfIssues--;
-				N4JSIssue issue = (N4JSIssue) input.readObject();
+				N4JSIssue issue = new N4JSIssue();
+				issue.readExternal(input);
 				validationIssues.get(source).add(issue);
 			}
 		}

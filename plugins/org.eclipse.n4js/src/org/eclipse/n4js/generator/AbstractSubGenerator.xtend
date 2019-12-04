@@ -44,6 +44,7 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
+import org.eclipse.xtext.validation.CheckMode
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
@@ -207,7 +208,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * If validation was canceled before finishing, don't assume absence of errors.
 	 */
 	private def boolean hasNoErrors(Resource input, CancelIndicator monitor) {
-		val issues = cache.getOrElseUpdateIssues(resVal, input, monitor)
+		val issues = resVal.validate(input, CheckMode.ALL, monitor);
 		if (null === issues) {
 			// Cancellation occurred likely before all validations completed, thus can't assume absence of errors.
 			// Cancellation may result in exit via normal control-flow (this case) or via exceptional control-flow (see exception handler below)
