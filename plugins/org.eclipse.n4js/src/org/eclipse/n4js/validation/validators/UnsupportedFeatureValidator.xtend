@@ -17,7 +17,6 @@ import org.eclipse.n4js.n4JS.BindingPattern
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.FormalParameter
-import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4JSPackage
@@ -45,14 +44,6 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	override register(EValidatorRegistrar registrar) {
 		// nop
-	}
-
-
-	@Check
-	def void checkEmptyImport(ImportDeclaration importDecl) {
-		if(importDecl.importSpecifiers.empty) {
-			unsupported("empty import", importDecl);
-		}
 	}
 
 

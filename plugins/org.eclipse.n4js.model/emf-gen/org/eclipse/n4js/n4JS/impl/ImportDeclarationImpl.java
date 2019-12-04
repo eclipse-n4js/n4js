@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -277,6 +279,16 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
+	public boolean isBare() {
+		return this.getImportSpecifiers().isEmpty();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
@@ -384,6 +396,20 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return moduleSpecifierForm != MODULE_SPECIFIER_FORM_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.IMPORT_DECLARATION___IS_BARE:
+				return isBare();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

@@ -10,14 +10,14 @@
  */
 package org.eclipse.n4js.ui.organize.imports
 
-import org.eclipse.n4js.n4JS.ImportDeclaration
-import org.eclipse.n4js.n4JS.ImportSpecifier
-import org.eclipse.n4js.n4JS.NamedImportSpecifier
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import java.util.Collections
 import java.util.Comparator
 import java.util.List
 import org.eclipse.emf.common.util.EList
+import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.NamedImportSpecifier
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 
 /**
  * Provides methods for import declarations sorting.
@@ -27,10 +27,43 @@ class ImportsSorter {
 	/**
 	 * Sorting a List of import declarations (mixed content Named / Namespace)
 	 * Order is: First all Named imports, then all Namespace imports.
+	 * Exception: bare imports must not change their order among themselves or relative to
+	 * any other kind of import.
 	 */
 	final static def sortByImport(List<ImportDeclaration> declarations) {
+		// Group given declarations into "bare import groups" of which each such
+		// group contains 0 or 1 bare import together with all non-bare imports
+		// that precede this bare import up to the previous bare import.
+		// E.g.
+		// I1, I2, B1, I3, I4, B2, I5, I6
+		// will lead to groups:
+		// #0: I1, I2, B1
+		// #1: I3, I4, B2
+		// #2: I5, I6
+		val decl2BareImportGroup = newHashMap;
+		var bareImportCounter = 0;
+		for (decl : declarations) {
+			decl2BareImportGroup.put(decl, bareImportCounter);
+			if (decl.bare) {
+				bareImportCounter++;
+			}
+		}
+
+		// perform actual sorting
 		declarations.sort(new Comparator<ImportDeclaration>() {
 			override compare(ImportDeclaration o1, ImportDeclaration o2) {
+				// 1) sort by bare import group
+				val cmpBareImportGroup = Integer.compare(decl2BareImportGroup.get(o1), decl2BareImportGroup.get(o2));
+				if (cmpBareImportGroup !== 0) {
+					return cmpBareImportGroup;
+				}
+				// within each bare import group:
+				// 2) sort by "bareness" (i.e. within each bare import group, the single bare import should always come last)
+				val cmpBareness = Boolean.compare(o1.bare, o2.bare);
+				if (cmpBareness !== 0) {
+					return cmpBareness;
+				}
+				// 3) sort by names ...
 				switch ( o1.importSpecifiers.get(0) ) {
 					NamespaceImportSpecifier: {
 						if (o2.importSpecifiers.get(0) instanceof NamespaceImportSpecifier) {
