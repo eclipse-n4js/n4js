@@ -24,7 +24,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.ParallelBuildManager.ParallelJob;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.xtext.diagnostics.Severity;
-import org.eclipse.xtext.ide.server.TopologicalSorter;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
@@ -35,7 +34,6 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
@@ -125,7 +123,7 @@ public class XBuildManager {
 	private XWorkspaceManager workspaceManager;
 
 	@Inject
-	private Provider<TopologicalSorter> sorterProvider;
+	private XTopologicalSorter topoSorter;
 
 	private final LinkedHashSet<URI> dirtyFiles = new LinkedHashSet<>();
 
@@ -302,23 +300,21 @@ public class XBuildManager {
 
 	/** Get a sorted list of projects to be build. */
 	protected List<ProjectDescription> sortByDependencies(Iterable<ProjectDescription> projectDescriptions) {
-		List<ProjectDescription> sortedProjectDescriptions = sorterProvider.get()
-				.sortByDependencies(projectDescriptions, (it) -> {
-					XProjectManager projectManager = workspaceManager.getProjectManager(it.getName());
-					reportDependencyCycle(projectManager);
-				});
+		List<ProjectDescription> sortedProjectDescriptions = topoSorter.sortByDependencies(projectDescriptions,
+				this::reportDependencyCycle);
 
-		String output = "Build projects in order:\n  ";
-		output += String.join("\n  ", IterableExtensions.map(sortedProjectDescriptions, pd -> pd.toString()));
+		String output = "Project build order:\n  ";
+		output += String.join("\n  ", IterableExtensions.map(sortedProjectDescriptions, pd -> pd.getName()));
 		LOG.info(output);
 
 		return sortedProjectDescriptions;
 	}
 
 	/** Report cycle. */
-	protected void reportDependencyCycle(XProjectManager manager) {
+	protected void reportDependencyCycle(ProjectDescription prjDescription) {
+		XProjectManager projectManager = workspaceManager.getProjectManager(prjDescription.getName());
 		String msg = "Project has cyclic dependencies";
-		manager.reportProjectIssue(msg, XBuildManager.CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
+		projectManager.reportProjectIssue(msg, XBuildManager.CYCLIC_PROJECT_DEPENDENCIES, Severity.ERROR);
 	}
 
 	/** Setter. */
