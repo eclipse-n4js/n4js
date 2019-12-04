@@ -12,10 +12,8 @@ package org.eclipse.n4js.ide.xtext.server;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +27,7 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -58,15 +57,19 @@ public class ProjectStateHolder {
 	@Inject
 	protected ProjectStatePersisterConfig persistConfig;
 
+	/** Used to filter the traversed resources */
+	@Inject
+	protected IResourceServiceProvider.Registry resourceServiceProviders;
+
 	private XIndexState indexState = new XIndexState();
 
-	private Map<URI, HashedFileContent> hashFileMap = new HashMap<>();
+	private Map<URI, HashedFileContent> uriToHashedFileContents = new HashMap<>();
 
 	private final Map<URI, Collection<Issue>> validationIssues = new HashMap<>();
 
 	/** Clears type index of this project. */
 	public void doClear() {
-		hashFileMap.clear();
+		uriToHashedFileContents.clear();
 		setIndexState(new XIndexState());
 		validationIssues.clear();
 	}
@@ -82,8 +85,8 @@ public class ProjectStateHolder {
 
 	/** Persists the project state to disk */
 	public void writeProjectState(IProjectConfig projectConfig) {
-		if (persistConfig.isWriteToDisk(projectConfig) && !hashFileMap.isEmpty()) {
-			Collection<HashedFileContent> hashFileContents = hashFileMap.values();
+		if (persistConfig.isWriteToDisk(projectConfig) && !uriToHashedFileContents.isEmpty()) {
+			Collection<HashedFileContent> hashFileContents = uriToHashedFileContents.values();
 			projectStatePersister.writeProjectState(projectConfig, indexState, hashFileContents, validationIssues);
 		}
 	}
@@ -93,28 +96,38 @@ public class ProjectStateHolder {
 	 *
 	 * @return set of all source URIs with modified contents
 	 */
-	public Set<URI> readProjectState(IProjectConfig projectConfig) {
+	public ResourceChangeSet readProjectState(IProjectConfig projectConfig) {
 		if (persistConfig.isDeleteState(projectConfig)) {
 			deletePersistenceFile(projectConfig);
 		}
 
-		Set<URI> changedSources = new HashSet<>();
+		ResourceChangeSet result = new ResourceChangeSet();
 		doClear();
 
 		PersistedState persistedState = projectStatePersister.readProjectState(projectConfig);
 		if (persistedState != null) {
-
 			for (HashedFileContent hfc : persistedState.fileHashs.values()) {
-				URI uri = hfc.getUri();
-				if (isSourceUnchanged(hfc, persistedState)) {
-					hashFileMap.put(uri, hfc);
-				} else {
-					persistedState.indexState.getFileMappings().deleteSource(uri);
-					persistedState.validationIssues.remove(uri);
+				URI previouslyExistingFile = hfc.getUri();
+				switch (getSourceChangeKind(hfc, persistedState)) {
+				case UNCHANGED: {
+					uriToHashedFileContents.put(previouslyExistingFile, hfc);
+					break;
+				}
+				case CHANGED: {
+					result.getModified().add(previouslyExistingFile);
+					persistedState.validationIssues.remove(previouslyExistingFile);
+					break;
+				}
+				case DELETED: {
+					result.getDeleted().add(previouslyExistingFile);
+					persistedState.validationIssues.remove(previouslyExistingFile);
+					break;
+				}
 				}
 			}
 			setIndexState(persistedState.indexState);
 			mergeValidationIssues(persistedState.validationIssues);
+			// TODO this reports outdated issues - incremental changes may render old issues wrong
 			reportValidationIssues(persistedState.validationIssues);
 		}
 
@@ -122,18 +135,20 @@ public class ProjectStateHolder {
 		for (ISourceFolder srcFolder : projectConfig.getSourceFolders()) {
 			List<URI> allSourceFolderUris = srcFolder.getAllResources(fileSystemScanner);
 			for (URI srcFolderUri : allSourceFolderUris) {
-				if (!allIndexedUris.contains(srcFolderUri)) {
-					changedSources.add(srcFolderUri);
+				if (!srcFolderUri.hasTrailingPathSeparator() && !allIndexedUris.contains(srcFolderUri)) {
+					if (resourceServiceProviders.getResourceServiceProvider(srcFolderUri) != null) {
+						result.getModified().add(srcFolderUri);
+					}
 				}
 			}
 		}
 
-		return changedSources;
+		return result;
 	}
 
 	/** Updates the index state, file hashes and validation issues */
 	public void updateProjectState(XBuildRequest request, XBuildResult result) {
-		HashMap<URI, HashedFileContent> newFileContents = new HashMap<>(hashFileMap);
+		HashMap<URI, HashedFileContent> newFileContents = new HashMap<>(uriToHashedFileContents);
 		for (Delta delta : result.getAffectedResources()) {
 			URI uri = delta.getUri();
 			storeHash(newFileContents, uri);
@@ -144,16 +159,24 @@ public class ProjectStateHolder {
 
 		setIndexState(result.getIndexState());
 		mergeValidationIssues(request.getResultIssues());
-		hashFileMap = newFileContents;
+		uriToHashedFileContents = newFileContents;
 	}
 
-	private boolean isSourceUnchanged(HashedFileContent hfc, PersistedState persistedState) {
+	enum SourceChangeKind {
+		UNCHANGED, CHANGED, DELETED
+	}
+
+	private SourceChangeKind getSourceChangeKind(HashedFileContent hfc, PersistedState persistedState) {
 		URI sourceUri = hfc.getUri();
 		long loadedHash = hfc.getHash();
 
 		HashedFileContent newHash = doHash(sourceUri);
-		if (newHash == null || loadedHash != newHash.getHash()) {
-			return false;
+		if (newHash == null) {
+			return SourceChangeKind.DELETED;
+		}
+
+		if (loadedHash != newHash.getHash()) {
+			return SourceChangeKind.CHANGED;
 		}
 
 		XSource2GeneratedMapping sourceFileMappings = persistedState.indexState.getFileMappings();
@@ -163,20 +186,22 @@ public class ProjectStateHolder {
 			if (genFingerprint != null) {
 				HashedFileContent generatedHash = doHash(generated);
 				if (generatedHash == null || generatedHash.getHash() != genFingerprint.getHash()) {
-					return false;
+					return SourceChangeKind.CHANGED;
 				}
 			}
 		}
-
-		return true;
+		return SourceChangeKind.UNCHANGED;
 	}
 
 	private HashedFileContent doHash(URI uri) {
 		try {
-			File srcFile = new File(new java.net.URI(uri.toString()));
+			File srcFile = new File(uri.path());
+			if (!srcFile.isFile()) {
+				return null;
+			}
 			HashedFileContent generatedTargetContent = new HashedFileContent(uri, srcFile);
 			return generatedTargetContent;
-		} catch (IOException | URISyntaxException e) {
+		} catch (IOException e) {
 			return null;
 		}
 	}

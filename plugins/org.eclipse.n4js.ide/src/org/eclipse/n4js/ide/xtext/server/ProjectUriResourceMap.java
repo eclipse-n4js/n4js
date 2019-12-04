@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,13 +21,16 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ForwardingCollection;
+import com.google.common.collect.ForwardingIterator;
 import com.google.common.collect.ForwardingMap;
+import com.google.common.collect.Iterators;
 import com.google.inject.Inject;
 
 /**
- * A project specific map of resources per URI. It acts as a mere filter to the {@link WorkspaceUriResourceMap} such that
- * an invocation of {@link #clear()} does not wipe out the entire map contents but only the resources from the current
- * project.
+ * A project specific map of resources per URI. It acts as a mere filter to the {@link WorkspaceUriResourceMap} such
+ * that an invocation of {@link #clear()} does not wipe out the entire map contents but only the resources from the
+ * current project.
  */
 public class ProjectUriResourceMap extends ForwardingMap<URI, Resource> {
 
@@ -79,7 +83,43 @@ public class ProjectUriResourceMap extends ForwardingMap<URI, Resource> {
 		if (localContents.isEmpty()) {
 			return Collections.emptyList();
 		}
-		return Collections2.filter(super.values(), resource -> localContents.contains(resource.getURI()));
+		// Nasty ... we have to support values().iterator().remove()
+		Collection<Resource> base = super.values();
+		Collection<Resource> delegate = Collections2.filter(base,
+				resource -> localContents.contains(resource.getURI()));
+		return new ForwardingCollection<>() {
+
+			@Override
+			protected Collection<Resource> delegate() {
+				return delegate;
+			}
+
+			@Override
+			public Iterator<Resource> iterator() {
+				Iterator<URI> delegateIterator = localContents.iterator();
+				Iterator<Resource> resourceIterator = Iterators.transform(delegateIterator, globalMap::get);
+				return new ForwardingIterator<>() {
+
+					private URI prev = null;
+
+					@Override
+					protected Iterator<Resource> delegate() {
+						return resourceIterator;
+					}
+
+					public Resource next() {
+						Resource result = super.next();
+						prev = result.getURI();
+						return result;
+					}
+
+					public void remove() {
+						super.remove();
+						globalMap.remove(prev);
+					}
+				};
+			}
+		};
 	}
 
 }

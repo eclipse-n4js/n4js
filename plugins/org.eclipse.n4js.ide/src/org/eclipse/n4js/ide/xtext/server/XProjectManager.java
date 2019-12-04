@@ -124,9 +124,8 @@ public class XProjectManager {
 
 	/** Initial build reads the project state and resolves changes. */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
-		Set<URI> changedSources = projectStateHolder.readProjectState(projectConfig);
-		// TODO distinguish between changed sources and deleted sources
-		XBuildResult result = doIncrementalBuild(changedSources, Collections.emptySet(),
+		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
+		XBuildResult result = doIncrementalBuild(changeSet.getModified(), changeSet.getDeleted(),
 				Collections.emptyList(), cancelIndicator);
 
 		// clear the resource set to release memory
