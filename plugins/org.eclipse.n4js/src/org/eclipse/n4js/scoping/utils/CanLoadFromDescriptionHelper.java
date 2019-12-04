@@ -244,9 +244,19 @@ public class CanLoadFromDescriptionHelper {
 	}
 
 	/**
-	 * Create a resource in the context of the given resource set.
+	 * Create a resource in the context of the given resource set. This is only necessary when working with
+	 * {@link UserDataAwareScope} where we don't use {@link ResourceSet#getResource(URI, boolean) getResource} but
+	 * {@link ResourceSet#createResource(URI) createResource} to implement a custom semantics with
+	 * {@link N4JSResource#loadFromDescription(IResourceDescription)}.
+	 *
+	 * It is not a generic replacement for all clients of the resource set.
 	 */
 	public Resource createResource(ResourceSet resourceSet, URI resourceURI) {
+		/*
+		 * Implementation note: In LSP we need to redirect the request to create a resource to a well defined resource
+		 * set. LSP associates projects to resource sets and we have to make sure that we do not create resources in the
+		 * wrong project context. Therefore this method if overridden for LSP.
+		 */
 		return resourceSet.createResource(resourceURI);
 	}
 
