@@ -120,8 +120,18 @@ public class N4JSProjectConfig implements IProjectConfig {
 		return workspace;
 	}
 
-	/** @return true iff this project should be indexed only */
+	/**
+	 * Projects are indexed but not transpiled if they have '.' as the output path or if they are located in
+	 * node_modules folders.
+	 *
+	 * @return true iff this project should be indexed only
+	 */
 	public boolean indexOnly() {
+		String outputPath = delegate.getOutputPath();
+		if (".".equals(outputPath)) {
+			return true;
+		}
+
 		URI projectBase = getPath();
 		String lastSegment = projectBase.lastSegment();
 		if (lastSegment == null || lastSegment.isBlank()) {
@@ -137,8 +147,12 @@ public class N4JSProjectConfig implements IProjectConfig {
 			// index only true for npm libraries
 			return true;
 		}
-
 		return false;
+	}
+
+	/** @return true iff the output folder of this project can be cleaned */
+	public boolean canClean() {
+		return !indexOnly();
 	}
 
 }

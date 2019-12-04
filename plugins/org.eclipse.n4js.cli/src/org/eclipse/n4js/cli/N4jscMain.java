@@ -13,8 +13,10 @@ package org.eclipse.n4js.cli;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
+import org.eclipse.n4js.cli.compiler.N4jscCompiler;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorCSVExporter;
 import org.eclipse.n4js.smith.Measurement;
@@ -25,6 +27,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
  * Entry point of n4jsc compiler
  */
 public class N4jscMain {
+	private static final Logger LOG = LogManager.getLogger(N4jscCompiler.class);
 
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {
@@ -41,6 +44,7 @@ public class N4jscMain {
 		if (options.isShowSetup()) {
 			N4jscConsole.println(options.toSettingsString());
 		}
+
 		if (!options.isVerbose()) {
 			// Reconfigure Logging to be quiet:
 			Logger.getRootLogger().removeAllAppenders();
@@ -76,9 +80,10 @@ public class N4jscMain {
 		try {
 			try {
 				options.read(args);
+
 			} finally {
-				if (options.isVerbose()) {
-					N4jscConsole.println(options.toCallString());
+				if (options.isVerbose()) { // check #isVerbose() since log4j is still active
+					LOG.info("Called with: " + options.toCallString());
 				}
 			}
 

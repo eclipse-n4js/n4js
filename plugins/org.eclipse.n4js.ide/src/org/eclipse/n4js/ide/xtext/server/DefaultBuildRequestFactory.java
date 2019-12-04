@@ -48,15 +48,21 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 		}
 	}
 
-	@Override
-	public XBuildRequest getBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles, List<Delta> externalDeltas) {
+	/** Create the build request. */
+	public XBuildRequest getBuildRequest() {
 		XBuildRequest result = new XBuildRequest();
-		result.setDirtyFiles(changedFiles);
-		result.setDeletedFiles(deletedFiles);
-		result.setExternalDeltas(externalDeltas);
 		result.setAfterDeleteListener(afterDeleteListener);
 		result.setAfterValidateListener(afterValidateListener);
 		result.setAfterGenerateListener(afterGenerateListener);
+		return result;
+	}
+
+	@Override
+	public XBuildRequest getBuildRequest(Set<URI> changedFiles, Set<URI> deletedFiles, List<Delta> externalDeltas) {
+		XBuildRequest result = getBuildRequest();
+		result.setDirtyFiles(changedFiles);
+		result.setDeletedFiles(deletedFiles);
+		result.setExternalDeltas(externalDeltas);
 		return result;
 	}
 

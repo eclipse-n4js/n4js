@@ -26,7 +26,7 @@ public class N4jscBackend {
 
 	/** Runs the cli goal {@code clean} with the given options */
 	public void goalClean(N4jscOptions options) throws Exception {
-		throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
+		N4jscCompiler.start(options);
 	}
 
 	/** Runs the cli goal {@code lsp} with the given options */

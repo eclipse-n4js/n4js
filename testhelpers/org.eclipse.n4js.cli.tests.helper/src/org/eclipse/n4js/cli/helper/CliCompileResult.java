@@ -40,6 +40,7 @@ import com.google.common.collect.Multimap;
  */
 public class CliCompileResult extends ProcessResult {
 	final N4jscVariant n4jscVariant;
+	long deletedFilesCount;
 	Map<String, String> projects = new LinkedHashMap<>();
 	Multimap<String, String> errors = HashMultimap.create();
 	Multimap<String, String> warnings = HashMultimap.create();
@@ -68,6 +69,11 @@ public class CliCompileResult extends ProcessResult {
 	/** @return number of all warnings */
 	public int getWrns() {
 		return getWrnMsgs().size();
+	}
+
+	/** @return number of all files that have been deleted */
+	public long getDeletedFilesCount() {
+		return deletedFilesCount;
 	}
 
 	/** @return map of all projects and their locations */

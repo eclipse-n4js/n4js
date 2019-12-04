@@ -10,15 +10,16 @@
  */
 package org.eclipse.n4js.cli.compiler;
 
-import static java.util.stream.Collectors.toList;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializedParams;
 import org.eclipse.n4js.cli.N4jscConsole;
@@ -39,16 +40,18 @@ import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
 
 /**
- * The entry point for all cli calls with the goal 'compile'
+ * The entry point for all cli calls with the goals 'compile' and 'clean'
  */
 @SuppressWarnings("restriction")
 public class N4jscCompiler {
+	private static final Logger LOG = LogManager.getLogger(N4jscCompiler.class);
+
 	private final N4jscOptions options;
 	private final XLanguageServerImpl languageServer;
 	private final N4jscLanguageClient callback;
 	private final XWorkspaceManager workspaceManager;
 
-	/** Starts the compiler in a blocking fashion */
+	/** Starts the compiler for goal COMPILE or CLEAN in a blocking fashion */
 	static public void start(N4jscOptions options) throws Exception {
 		N4jscCompiler compiler = new N4jscCompiler(options);
 
@@ -76,20 +79,44 @@ public class N4jscCompiler {
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, "No base directory");
 		}
 
-		Stopwatch compilationTime = Stopwatch.createStarted();
 		params.setRootUri(baseDir.toURI().toString());
 		languageServer.initialize(params).get();
 		warnIfNoProjectsFound();
 		verbosePrintAllProjects();
 
-		languageServer.initialized(new InitializedParams());
-		languageServer.joinInitBuildFinished();
+		switch (options.getGoal()) {
+		case clean:
+			performClean();
+			break;
+		case compile:
+			performCompile();
+			break;
+		default:
+			break;
+		}
 
 		languageServer.shutdown();
 		languageServer.exit();
 
-		printResults(compilationTime.stop());
 		writeTestCatalog();
+	}
+
+	private void performClean() {
+		Stopwatch compilationTime = Stopwatch.createStarted();
+		languageServer.clean();
+		languageServer.joinCleanFinished();
+		printCleanResults(compilationTime.stop());
+	}
+
+	private void performCompile() {
+		if (options.isClean()) {
+			performClean();
+			callback.resetCounters();
+		}
+		Stopwatch compilationTime = Stopwatch.createStarted();
+		languageServer.initialized(new InitializedParams());
+		languageServer.joinInitBuildFinished();
+		printCompileResults(compilationTime.stop());
 	}
 
 	private void setupWorkspaceBuildActionListener() {
@@ -114,21 +141,44 @@ public class N4jscCompiler {
 	}
 
 	private void verbosePrintAllProjects() {
-		if (options.isVerbose()) {
-			Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
-			if (!projects.isEmpty()) {
-				Path workspace = options.getDirs().get(0).toPath();
-				List<String> projectNameList = projects.stream()
-						.map(p -> p.getName() + " at " + Path.of(p.getPath().toFileString()).relativize(workspace))
-						.collect(toList());
+		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
+		int maxPrjNameLength = projects.stream()
+				.filter(p -> p.getName() != null)
+				.mapToInt(p -> p.getName().length())
+				.max().orElse(10);
+		String prjNameWithPadding = "%-" + maxPrjNameLength + "s";
 
-				N4jscConsole.println("Projects:");
-				N4jscConsole.print("   " + String.join("\n   ", projectNameList));
+		if (!projects.isEmpty()) {
+			Path workspace = options.getDirs().get(0).toPath();
+
+			SortedMap<String, String> projectNameList = new TreeMap<>();
+			for (IProjectConfig prj : projects) {
+				String prjName = prj.getName() == null ? "[no_name]" : prj.getName();
+				String locationStr = null;
+				if (prj.getPath() == null) {
+					locationStr = "[no_location]";
+				} else {
+					locationStr = workspace.relativize(Path.of(prj.getPath().toFileString())).toString();
+					if (locationStr.isBlank()) {
+						locationStr = ".";
+					}
+				}
+				String outputLine = String.format(prjNameWithPadding + " at %s", prjName, locationStr);
+				projectNameList.put(locationStr, outputLine);
 			}
+
+			LOG.info(projects.size() + " projects: \n   " + String.join("\n   ", projectNameList.values()));
 		}
 	}
 
-	private void printResults(Stopwatch elapsedTime) {
+	private void printCleanResults(Stopwatch elapsedTime) {
+		long deltd = callback.getDeletionsCount();
+		String durationStr = elapsedTime.toString();
+		String msg = String.format("Clean results - Deleted: %d, Duration: %s", deltd, durationStr);
+		N4jscConsole.println(msg);
+	}
+
+	private void printCompileResults(Stopwatch elapsedTime) {
 		long trsnp = callback.getTranspilationsCount();
 		long deltd = callback.getDeletionsCount();
 		long errs = callback.getErrorsCount();
