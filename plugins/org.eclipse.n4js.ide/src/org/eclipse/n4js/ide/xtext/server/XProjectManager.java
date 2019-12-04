@@ -106,6 +106,8 @@ public class XProjectManager {
 
 	private IProjectConfig projectConfig;
 
+	private boolean mustWriteProjectState = false;
+
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
 	public void initialize(ProjectDescription description, IProjectConfig projectConfig,
@@ -136,9 +138,7 @@ public class XProjectManager {
 			resourceSet.eSetDeliver(wasDeliver);
 		}
 
-		if (!changedSources.isEmpty()) {
-			projectStateHolder.writeProjectState(projectConfig);
-		}
+		persistProjectState();
 		return result;
 	}
 
@@ -162,7 +162,7 @@ public class XProjectManager {
 		synchronized (map.keySet()) { // GH-1552: synchronized
 			map.put(projectDescription.getName(), resourceDescriptions);
 		}
-
+		mustWriteProjectState |= !result.getAffectedResources().isEmpty();
 		return result;
 	}
 
@@ -234,7 +234,10 @@ public class XProjectManager {
 
 	/** Writes the current index, file hashes and validation issues to disk */
 	public void persistProjectState() {
-		projectStateHolder.writeProjectState(projectConfig);
+		if (mustWriteProjectState) {
+			projectStateHolder.writeProjectState(projectConfig);
+			mustWriteProjectState = false;
+		}
 	}
 
 	/** Creates a new build request for this project. */
@@ -296,7 +299,7 @@ public class XProjectManager {
 	}
 
 	private WorkspaceAwareResourceLocator attachWorkspaceResourceLocator(XtextResourceSet result) {
-		return new WorkspaceAwareResourceLocator(result, this);
+		return new WorkspaceAwareResourceLocator(result, workspaceManager);
 	}
 
 	/** Get the resource with the given URI. */

@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
-import java.util.Map;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -22,27 +20,24 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
  */
 public class WorkspaceAwareResourceLocator extends ResourceLocator {
 
-	private final XProjectManager projectManager;
-	private final Map<URI, Resource> allResources;
+	private final XWorkspaceManager workspaceManager;
 
 	/**
 	 * Standard constructor
 	 */
-	public WorkspaceAwareResourceLocator(ResourceSetImpl resourceSet, XProjectManager projectManager) {
+	public WorkspaceAwareResourceLocator(ResourceSetImpl resourceSet, XWorkspaceManager workspaceManager) {
 		super(resourceSet);
-		this.projectManager = projectManager;
-		this.allResources = resourceSet.getURIResourceMap();
+		this.workspaceManager = workspaceManager;
 	}
 
-	@SuppressWarnings("hiding")
 	@Override
 	public Resource getResource(URI uri, boolean loadOnDemand) {
-		Resource candidate = allResources.get(uri);
+		Resource candidate = resourceSet.getURIResourceMap().get(uri);
 		if (candidate != null) {
 			return candidate;
 		}
-		XProjectManager projectManager = this.projectManager.workspaceManager.getProjectManager(uri);
-		if (projectManager == this.projectManager || projectManager == null) {
+		XProjectManager projectManager = this.workspaceManager.getProjectManager(uri);
+		if (projectManager == null || projectManager.getResourceSet() == resourceSet) {
 			return basicGetResource(uri, loadOnDemand);
 		}
 		return projectManager.getResourceSet().getResource(uri, loadOnDemand);
