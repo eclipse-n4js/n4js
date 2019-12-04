@@ -10,22 +10,20 @@
  */
 package org.eclipse.n4js.tester;
 
-import static com.google.common.base.Optional.absent;
-import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
-import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.valueOf;
 import static java.util.UUID.randomUUID;
 import static org.eclipse.n4js.AnnotationDefinition.TEST_METHOD;
 import static org.eclipse.xtext.EcoreUtil2.getContainerOfType;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -41,7 +39,6 @@ import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestCase;
@@ -55,6 +52,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ResourceNameComputer;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -170,7 +168,7 @@ public class TestDiscoveryHelper {
 	public TestTree collectTests(final List<URI> uris) {
 		final ResourceSet resSet = n4jsCore.createResourceSet(Optional.absent());
 		final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
-		return collectTests(resSet, index, uris).sort();
+		return collectTests(resSet, index, uris);
 	}
 
 	/**
@@ -180,7 +178,7 @@ public class TestDiscoveryHelper {
 	 * @return a test tree representing all test cases in the workspace.
 	 */
 	public TestTree collectAllTestsFromWorkspace() {
-		List<URI> testableProjectURIs = new LinkedList<>();
+		List<URI> testableProjectURIs = new ArrayList<>();
 		Iterable<? extends IN4JSProject> findAllProjects = n4jsCore.findAllProjects();
 
 		for (IN4JSProject project : findAllProjects) {
@@ -205,8 +203,8 @@ public class TestDiscoveryHelper {
 	 */
 	private List<URI> collectDistinctTestLocations(final IResourceDescriptions index, final ResourceSet resSet,
 			List<URI> locations) {
-		return newArrayList(
-				newHashSet(locations.stream().flatMap(loc -> collectTestLocations(index, resSet, loc)).iterator()));
+		return locations.stream().flatMap(loc -> collectTestLocations(index, resSet, loc)).distinct()
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -327,7 +325,7 @@ public class TestDiscoveryHelper {
 			}
 		}
 
-		return new TestTree(sessionId, suites.values(), name);
+		return new TestTree(sessionId, suites.values(), name).sort();
 	}
 
 	private void collectTestSuiteAndTestCaseForMethod(final URI uri, final TModule module,
@@ -436,7 +434,7 @@ public class TestDiscoveryHelper {
 	}
 
 	private Iterable<TMethod> getAllTestMethodsOfClass(final TClass cls) {
-		final TModule module = N4JSResource.getModule(cls.eResource());
+		final TModule module = EcoreUtil2.getContainerOfType(cls, TModule.class);
 		return from(containerTypesHelper.fromContext(module).allMembers(cls, false, false)).filter(TMethod.class)
 				.filter(m -> isTestMethod(m));
 	}
@@ -487,20 +485,20 @@ public class TestDiscoveryHelper {
 		}
 
 		// Otherwise load class and all its inherited methods from supertypes as well.
-		final TClass clazz = loadTClass(resSet, objDesc).orNull();
+		final TClass clazz = loadTClass(resSet, objDesc);
 		// Exported and has at least one test method (including the ancestor types)
 		return null != clazz && clazz.isExported() && getAllTestMethodsOfClass(clazz).iterator().hasNext();
 	}
 
-	private Optional<TClass> loadTClass(final ResourceSet resSet, final IEObjectDescription objDesc) {
+	private TClass loadTClass(final ResourceSet resSet, final IEObjectDescription objDesc) {
 		if (T_CLASS.isSuperTypeOf(objDesc.getEClass())) {
 			final EObject objectOrProxy = objDesc.getEObjectOrProxy();
 			final EObject object = objectOrProxy.eIsProxy() ? EcoreUtil.resolve(objectOrProxy, resSet) : objectOrProxy;
 			if (!object.eIsProxy()) {
-				return fromNullable((TClass) object);
+				return (TClass) object;
 			}
 		}
-		return absent();
+		return null;
 	}
 
 	private static boolean isTestMethod(final TMember member) {

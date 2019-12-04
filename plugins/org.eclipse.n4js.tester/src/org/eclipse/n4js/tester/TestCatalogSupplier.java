@@ -21,8 +21,8 @@ import com.google.common.base.Supplier;
 import com.google.inject.Inject;
 
 /**
- * Service for supplying the the test catalog based on all tests available available in the ({@link IN4JSCore N4JS core}
- * based) workspace. The content of the provided test catalog depends on the built state of the workspace.
+ * Service for supplying the test catalog based on all tests available in the ({@link IN4JSCore N4JS core} based)
+ * workspace. The content of the provided test catalog depends on the built state of the workspace.
  * <p>
  * By default, i.e. when method {@link #get()} is invoked, the generated JSON will include a top-level property
  * "endpoint" with a URL pointing to the Jetty server for test reporting. Method {@link #get(boolean)} may be used to
