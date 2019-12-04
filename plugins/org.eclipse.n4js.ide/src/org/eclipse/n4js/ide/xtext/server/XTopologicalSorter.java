@@ -38,42 +38,39 @@ public class XTopologicalSorter {
 		}
 	}
 
-	private Consumer<ProjectDescription> cyclicAcceptor;
-	private SortedMap<String, Entry> name2entry;
-	private LinkedHashSet<ProjectDescription> result;
-
 	public List<ProjectDescription> sortByDependencies(Iterable<ProjectDescription> descriptions,
 			Consumer<ProjectDescription> cyclicAcceptor) {
 
-		this.cyclicAcceptor = cyclicAcceptor;
-		this.name2entry = new TreeMap<>();
-		this.result = new LinkedHashSet();
+		SortedMap<String, Entry> name2entry = new TreeMap<>();
+		LinkedHashSet<ProjectDescription> result = new LinkedHashSet();
 
 		for (ProjectDescription pd : descriptions) {
 			name2entry.put(pd.getName(), new Entry(pd));
 		}
 
 		for (Entry entry : name2entry.values()) {
-			visit(entry);
+			visit(cyclicAcceptor, name2entry, entry, result);
 		}
 
 		return new ArrayList<>(result);
 	}
 
-	protected boolean visit(Entry entry) {
+	protected boolean visit(Consumer<ProjectDescription> cyclicAcceptor, SortedMap<String, Entry> name2entry,
+			Entry entry, LinkedHashSet<ProjectDescription> result) {
+
 		if (!result.contains(entry.description) && !entry.cyclic) {
 			if (entry.marked) {
-				markCyclic(entry);
+				markCyclic(cyclicAcceptor, entry);
 				return false;
 			}
 			entry.marked = true;
-			List<String> dependencies = entry.description.getDependencies();
+			List<String> dependencies = new ArrayList<>(entry.description.getDependencies());
 			Collections.sort(dependencies);
 
 			for (String depName : dependencies) {
 				Entry depEntry = name2entry.get(depName);
-				if (depEntry != null && !visit(depEntry)) {
-					markCyclic(entry);
+				if (depEntry != null && !visit(cyclicAcceptor, name2entry, depEntry, result)) {
+					markCyclic(cyclicAcceptor, entry);
 					return false;
 				}
 			}
@@ -83,10 +80,10 @@ public class XTopologicalSorter {
 		return true;
 	}
 
-	protected void markCyclic(Entry it) {
-		if (!it.cyclic) {
-			it.cyclic = true;
-			cyclicAcceptor.accept(it.description);
+	protected void markCyclic(Consumer<ProjectDescription> cyclicAcceptor, Entry entry) {
+		if (!entry.cyclic) {
+			entry.cyclic = true;
+			cyclicAcceptor.accept(entry.description);
 		}
 	}
 }

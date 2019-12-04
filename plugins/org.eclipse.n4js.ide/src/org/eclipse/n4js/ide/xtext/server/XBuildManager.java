@@ -301,7 +301,7 @@ public class XBuildManager {
 	/** Get a sorted list of projects to be build. */
 	protected List<ProjectDescription> sortByDependencies(Iterable<ProjectDescription> projectDescriptions) {
 		List<ProjectDescription> sortedProjectDescriptions = topoSorter.sortByDependencies(projectDescriptions,
-				(pd) -> reportDependencyCycle(pd));
+				this::reportDependencyCycle);
 
 		String output = "Project build order:\n  ";
 		output += String.join("\n  ", IterableExtensions.map(sortedProjectDescriptions, pd -> pd.getName()));
