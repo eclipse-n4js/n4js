@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -166,18 +167,27 @@ public class TestDiscoveryHelper {
 	 *         tree may be empty.
 	 */
 	public TestTree collectTests(final List<URI> uris) {
-		final ResourceSet resSet = n4jsCore.createResourceSet(Optional.absent());
-		final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
-		return collectTests(resSet, index, uris);
+		final ResourceSet resSet = newResourceSet();
+		return collectTests(any -> resSet, uris);
+	}
+
+	/**
+	 * @return a new resource set.
+	 */
+	ResourceSet newResourceSet() {
+		return n4jsCore.createResourceSet(Optional.absent());
 	}
 
 	/**
 	 * Collects all test cases from the underlying (N4JS core-based) workspace and returns with a new test tree instance
 	 * representing those test cases.
 	 *
+	 * @param resourceSetAccess
+	 *            the accessor for the resource set
+	 *
 	 * @return a test tree representing all test cases in the workspace.
 	 */
-	public TestTree collectAllTestsFromWorkspace() {
+	public TestTree collectAllTestsFromWorkspace(Function<? super URI, ? extends ResourceSet> resourceSetAccess) {
 		List<URI> testableProjectURIs = new ArrayList<>();
 		Iterable<? extends IN4JSProject> findAllProjects = n4jsCore.findAllProjects();
 
@@ -187,7 +197,7 @@ public class TestDiscoveryHelper {
 				testableProjectURIs.add(location);
 			}
 		}
-		TestTree collectedTests = collectTests(testableProjectURIs);
+		TestTree collectedTests = collectTests(resourceSetAccess, testableProjectURIs);
 		return collectedTests;
 	}
 
@@ -196,20 +206,19 @@ public class TestDiscoveryHelper {
 	}
 
 	/**
-	 * Most clients should use method {@link #collectTests(List)} instead.
-	 * <p>
 	 * Low-level method to collect all test modules, i.e. N4JS files containing classes containing at least one method
 	 * annotated with &#64;Test, as {@link IResourceDescription}s.
 	 */
-	private List<URI> collectDistinctTestLocations(final IResourceDescriptions index, final ResourceSet resSet,
+	private List<URI> collectDistinctTestLocations(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
 			List<URI> locations) {
-		return locations.stream().flatMap(loc -> collectTestLocations(index, resSet, loc)).distinct()
-				.collect(Collectors.toList());
+		return locations.stream().flatMap(loc -> {
+			ResourceSet resSet = resourceSetAccess.apply(loc);
+			IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
+			return collectTestLocations(index, resSet, loc);
+		}).distinct().collect(Collectors.toList());
 	}
 
 	/**
-	 * Most clients should use method {@link #collectTests(List)} instead!
-	 * <p>
 	 * Low-level method to collect all test modules, i.e. N4JS files containing classes containing at least one method
 	 * annotated with &#64;Test, as {@link IResourceDescription}s.
 	 */
@@ -267,18 +276,33 @@ public class TestDiscoveryHelper {
 		return Stream.empty();
 	}
 
-	private TestTree collectTests(final ResourceSet resSet, final IResourceDescriptions index,
+	/**
+	 * Collects all test methods available at the given location and returns a {@link TestTree} in which each test
+	 * method is represented by a {@link TestCase}. The location may point to an N4JS project or a folder or file within
+	 * an N4JS project.
+	 *
+	 * @param resourceSetAccess
+	 *            the accessor for the resource set
+	 *
+	 * @param locations
+	 *            the locations referencing to a resource. Can be an N4JS project, or a folder or a file within an N4JS
+	 *            project.
+	 * @return The test tree representing one or more test cases. Never returns with {@code null}, but the returned test
+	 *         tree may be empty.
+	 */
+	private TestTree collectTests(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
 			final List<URI> locations) {
 
 		// create test cases (aggregated in test suites)
 		final Map<String, TestSuite> suites = new LinkedHashMap<>();
 
 		// create MultiMap from trimmed(!) URI -> original URIs for this prefix URI
-		final List<URI> testLocations = collectDistinctTestLocations(index, resSet, locations);
+		final List<URI> testLocations = collectDistinctTestLocations(resourceSetAccess, locations);
 		// module URI --> test case URIs
 		final HashMultimap<URI, URI> testLocationMapping = createTestLocationMapping(testLocations);
 		// module URI --> module
-		final Map<URI, TModule> moduleUri2Modules = loadModules(testLocationMapping.asMap().keySet(), index, resSet);
+		final Map<URI, TModule> moduleUri2Modules = loadModules(testLocationMapping.asMap().keySet(),
+				resourceSetAccess);
 
 		for (final URI moduleLocation : testLocationMapping.keySet()) {
 
@@ -409,11 +433,13 @@ public class TestDiscoveryHelper {
 		return classStr;
 	}
 
-	private Map<URI, TModule> loadModules(final Iterable<URI> moduleUris, final IResourceDescriptions index,
-			final ResourceSet resSet) {
+	private Map<URI, TModule> loadModules(final Iterable<URI> moduleUris,
+			Function<? super URI, ? extends ResourceSet> resourceSetAccess) {
 
 		final Map<URI, TModule> uri2Modules = newHashMap();
 		for (final URI moduleUri : moduleUris) {
+			ResourceSet resSet = resourceSetAccess.apply(moduleUri);
+			IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
 			final IResourceDescription resDesc = index.getResourceDescription(moduleUri);
 			uri2Modules.put(moduleUri, n4jsCore.loadModuleFromIndex(resSet, resDesc, false));
 		}
