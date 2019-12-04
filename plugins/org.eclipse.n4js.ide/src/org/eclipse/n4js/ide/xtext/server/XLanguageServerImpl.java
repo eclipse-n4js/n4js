@@ -185,7 +185,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	private final CompletableFuture<InitializedParams> clientInitialized = new CompletableFuture<>();
 
-	private final CompletableFuture<InitializedParams> initBuildFinished = new CompletableFuture<>();
+	private final CompletableFuture<?> initBuildFinished = new CompletableFuture<>();
+
+	private final CompletableFuture<?> initCleanFinished = new CompletableFuture<>();
 
 	private XWorkspaceResourceAccess resourceAccess;
 
@@ -242,6 +244,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		access.addBuildListener(this);
 
 		workspaceManager.initialize(baseDir);
+		workspaceManager.refreshWorkspaceConfig();
+
 		initializeResult = new InitializeResult();
 		initializeResult.setCapabilities(createServerCapabilities(params));
 
@@ -344,7 +348,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		requestManager.runWrite(
 				() -> {
 					try {
-						workspaceManager.refreshWorkspaceConfig(CancelIndicator.NullImpl);
+						workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
 						initBuildFinished.complete(null);
 					} catch (Throwable t) {
 						t.printStackTrace();
@@ -389,6 +393,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<Object> shutdown() {
+		clientInitialized.complete(null);
+		initBuildFinished.complete(null);
 		shutdownAndExitHandler.shutdown();
 		workspaceManager.persistProjectState(CancelIndicator.NullImpl);
 		return CompletableFuture.completedFuture(new Object());
@@ -495,6 +501,22 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		}
 	}
 
+	/** Deletes all generated files and clears the type index. */
+	public void clean() {
+		requestManager.runWrite(() -> {
+
+			try {
+				workspaceManager.clean(CancelIndicator.NullImpl);
+				initCleanFinished.complete(null);
+			} catch (Throwable t) {
+				t.printStackTrace();
+				initCleanFinished.completeExceptionally(t);
+			}
+
+			return null;
+		}, (a, b) -> null);
+	}
+
 	/**
 	 * Compute a buildable and run the build in a write action
 	 *
@@ -508,7 +530,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	@Override
 	public void didChangeConfiguration(DidChangeConfigurationParams params) {
 		requestManager.runWrite(() -> {
-			workspaceManager.refreshWorkspaceConfig(CancelIndicator.NullImpl);
+			workspaceManager.refreshWorkspaceConfig();
+			workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
 			return null;
 		}, (a, b) -> null);
 	}
@@ -1231,5 +1254,10 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/** Blocks until the first build (i.e. the initial build) was finished building */
 	public void joinInitBuildFinished() {
 		initBuildFinished.join();
+	}
+
+	/** Blocks until the first clean was finished */
+	public void joinCleanFinished() {
+		initCleanFinished.join();
 	}
 }

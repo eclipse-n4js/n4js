@@ -7,6 +7,8 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +23,15 @@ import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.xtext.diagnostics.Severity;
+import org.eclipse.xtext.generator.OutputConfiguration;
+import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.Issue;
@@ -71,6 +76,14 @@ public class XProjectManager {
 	@Inject
 	protected ProjectStateHolder projectStateHolder;
 
+	/** Holds information about the output settings, e.g. the output directory */
+	@Inject
+	protected OutputConfigurationProvider outputConfigProvider;
+
+	/** Checks whether the current action was cancelled */
+	@Inject
+	protected OperationCanceledManager operationCanceledManager;
+
 	private URI baseDir;
 
 	private Provider<Map<String, ResourceDescriptionsData>> indexProvider;
@@ -94,6 +107,7 @@ public class XProjectManager {
 		this.baseDir = projectConfig.getPath();
 		this.openedDocumentsContentProvider = openedDocumentsContentProvider;
 		this.indexProvider = indexProvider;
+		this.resourceSet = createNewResourceSet(new XIndexState().getResourceDescriptions());
 	}
 
 	/** Initial build reads the project state and resolves changes. */
@@ -131,6 +145,62 @@ public class XProjectManager {
 		}
 
 		return result;
+	}
+
+	/** Deletes the contents of the output directory */
+	public void doClean(CancelIndicator cancelIndicator) {
+		projectStateHolder.deletePersistenceFile(projectConfig);
+
+		if (projectConfig instanceof N4JSProjectConfig) {
+			// TODO: merge N4JSProjectConfig#canClean() to IProjectConfig
+			N4JSProjectConfig n4pc = (N4JSProjectConfig) projectConfig;
+			if (!n4pc.canClean()) {
+				return;
+			}
+		}
+
+		XBuildRequest request = buildRequestFactory.getBuildRequest();
+		for (File outputDirectory : getOutputDirectories()) {
+			File[] childFildes = outputDirectory.listFiles();
+			if (childFildes != null) {
+				for (int i = 0; i < childFildes.length; i++) {
+					deleteFileOrFolder(request, childFildes[i]);
+				}
+			}
+
+			operationCanceledManager.checkCanceled(cancelIndicator);
+		}
+	}
+
+	/** @return list of output directories of this project */
+	public List<File> getOutputDirectories() {
+		List<File> outputDirs = new ArrayList<>();
+		Set<OutputConfiguration> outputConfigurations = outputConfigProvider.getOutputConfigurations(resourceSet);
+		URI projectBaseUri = projectConfig.getPath();
+		for (OutputConfiguration outputConf : outputConfigurations) {
+			for (String outputDirName : outputConf.getOutputDirectories()) {
+				URI outputUri = projectBaseUri.appendSegment(outputDirName);
+				File outputDirectory = new File(outputUri.toFileString());
+				outputDirs.add(outputDirectory);
+			}
+		}
+		return outputDirs;
+	}
+
+	/** Deletes the given file recursively */
+	protected void deleteFileOrFolder(XBuildRequest request, File file) {
+		if (file.isDirectory()) {
+			File[] childFildes = file.listFiles();
+			for (int i = 0; i < childFildes.length; i++) {
+				deleteFileOrFolder(request, childFildes[i]);
+			}
+		}
+		boolean wasFile = file.isFile();
+		file.delete();
+		if (wasFile) {
+			URI fileUri = URI.createFileURI(file.getAbsolutePath());
+			request.afterDelete(fileUri);
+		}
 	}
 
 	/** Report an issue. */

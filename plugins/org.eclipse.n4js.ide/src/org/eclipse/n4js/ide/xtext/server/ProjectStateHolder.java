@@ -25,8 +25,8 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersister.PersistedState;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
-import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
+import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.IFileSystemScanner;
@@ -82,7 +82,7 @@ public class ProjectStateHolder {
 
 	/** Persists the project state to disk */
 	public void writeProjectState(IProjectConfig projectConfig) {
-		if (persistConfig.isWriteToDisk(projectConfig)) {
+		if (persistConfig.isWriteToDisk(projectConfig) && !hashFileMap.isEmpty()) {
 			Collection<HashedFileContent> hashFileContents = hashFileMap.values();
 			projectStatePersister.writeProjectState(projectConfig, indexState, hashFileContents, validationIssues);
 		}
