@@ -460,11 +460,21 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		return script != null && module != null && isASTProxy(script) && !module.eIsProxy();
 	}
 
+	/**
+	 * If this resource was loaded from description and some code want to access the parse result, load it on demand.
+	 */
 	@Override
 	public IParseResult getParseResult() {
 		if (!aboutToBeUnloaded && isLoadedFromDescription()) {
 			getContents().get(0);
 		}
+		return basicGetParseResult();
+	}
+
+	/**
+	 * Plain access to the parse result without lazy loading.
+	 */
+	public IParseResult basicGetParseResult() {
 		return super.getParseResult();
 	}
 
@@ -1216,6 +1226,24 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			//
 			return builder.toSegmentSequence().toString();
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Overridden to make sure that we do not initialize a resource just to compute the root URI fragment for the parse
+	 * result.
+	 */
+	@Override
+	protected String getURIFragmentRootSegment(EObject eObject) {
+		if (unloadingContents == null) {
+			IParseResult parseResult = basicGetParseResult();
+			if (parseResult != null && eObject == parseResult.getRootASTElement()) {
+				return "0";
+			}
+		}
+		List<EObject> lookupList = unloadingContents != null ? unloadingContents : getContents();
+		return lookupList.size() > 1 ? Integer.toString(lookupList.indexOf(eObject)) : "";
 	}
 
 	/**

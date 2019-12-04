@@ -48,9 +48,13 @@ import com.google.inject.Inject;
  */
 public abstract class AbstractTranspiler {
 
+	/** */
 	public static final boolean DEBUG_DUMP_STATE = false;
+	/** */
 	public static final boolean DEBUG_DRAW_STATE = false;
+	/** */
 	public static final boolean DEBUG_PERFORM_ASSERTIONS = false;
+	/** */
 	public static final boolean DEBUG_PERFORM_VALIDATIONS = false;
 
 	@Inject

@@ -41,7 +41,6 @@ class EnumAccessTransformation extends Transformation {
 
 
 	override assertPreConditions() {
-		member_StringBasedEnum_literals = state.G.n4StringBasedEnumType.findOwnedMember("literals", false, true);
 		assertNotNull("member of built-in type not found: StringBasedEnum#literals", member_StringBasedEnum_literals);
 	}
 
@@ -49,6 +48,7 @@ class EnumAccessTransformation extends Transformation {
 	}
 
 	override analyze() {
+		member_StringBasedEnum_literals = state.G.n4StringBasedEnumType.findOwnedMember("literals", false, true);
 	}
 
 	override transform() {

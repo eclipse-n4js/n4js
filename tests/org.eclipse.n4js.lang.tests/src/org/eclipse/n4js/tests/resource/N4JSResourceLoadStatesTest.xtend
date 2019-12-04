@@ -285,10 +285,10 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		assertNotNull(info);
 		switch(info.parseResult) {
 			case NULL: {
-				assertNull("in state " + state + " parse result should be null", res.parseResult);
+				assertNull("in state " + state + " parse result should be null", res.basicGetParseResult);
 			}
 			case AVAILABLE: {
-				assertNotNull("in state " + state + " parse result should be available", res.parseResult);
+				assertNotNull("in state " + state + " parse result should be available", res.basicGetParseResult);
 			}
 			default: {
 				throw new IllegalStateException("unknown literal: " + info.parseResult);
@@ -364,7 +364,7 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 				info.reconciled, res.reconciled);
 		}
 	}
-
+	
 	def private boolean containsDeferredTypeRef(EObject root) {
 		return !root.eAllContents.filter(DeferredTypeRef).empty;
 	}
