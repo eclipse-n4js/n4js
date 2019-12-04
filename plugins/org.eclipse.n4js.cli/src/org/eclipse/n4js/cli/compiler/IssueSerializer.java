@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli.compiler;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 
 import com.google.inject.Inject;
@@ -28,12 +29,30 @@ public class IssueSerializer {
 
 	/** @return user string for an issue */
 	public String diagnostics(Diagnostic diagnostic) {
-		String position = String.format("(%d:%d)",
+		String position = String.format("%d:%d",
 				diagnostic.getRange().getStart().getLine(),
 				diagnostic.getRange().getStart().getCharacter());
 
-		String s = String.format("  %-7s %-8s: %s", diagnostic.getSeverity(), position, diagnostic.getMessage());
+		String s = String.format("  %s %-8s %s",
+				getShortSeverity(diagnostic.getSeverity()),
+				position,
+				diagnostic.getMessage());
+
 		return s;
+	}
+
+	private String getShortSeverity(DiagnosticSeverity severity) {
+		switch (severity) {
+		case Error:
+			return "ERR";
+		case Warning:
+			return "WRN";
+		case Information:
+			return "INF";
+		case Hint:
+			return "HNT";
+		}
+		return "???";
 	}
 
 	/** @return user string for a file in the workspace */
