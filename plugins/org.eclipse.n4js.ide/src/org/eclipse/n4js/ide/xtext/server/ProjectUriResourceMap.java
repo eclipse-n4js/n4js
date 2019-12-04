@@ -24,13 +24,13 @@ import com.google.common.collect.ForwardingMap;
 import com.google.inject.Inject;
 
 /**
- * A project specific map of resources per URI. It acts as a mere filter to the {@link GlobalUriResourceMap} such that
+ * A project specific map of resources per URI. It acts as a mere filter to the {@link WorkspaceUriResourceMap} such that
  * an invocation of {@link #clear()} does not wipe out the entire map contents but only the resources from the current
  * project.
  */
-public class UriResourceMap extends ForwardingMap<URI, Resource> {
+public class ProjectUriResourceMap extends ForwardingMap<URI, Resource> {
 
-	private final GlobalUriResourceMap globalMap;
+	private final WorkspaceUriResourceMap globalMap;
 
 	private final Set<URI> localContents;
 
@@ -38,7 +38,7 @@ public class UriResourceMap extends ForwardingMap<URI, Resource> {
 	 * Standard constructor
 	 */
 	@Inject
-	public UriResourceMap(GlobalUriResourceMap globalMap) {
+	public ProjectUriResourceMap(WorkspaceUriResourceMap globalMap) {
 		this.globalMap = globalMap;
 		this.localContents = new HashSet<>();
 	}

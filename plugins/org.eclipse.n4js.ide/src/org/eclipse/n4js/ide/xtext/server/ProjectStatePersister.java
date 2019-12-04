@@ -83,7 +83,7 @@ public class ProjectStatePersister {
 	 * - #vs times:
 	 * 	- source URI
 	 * 	- Number #vi of issues of source
-	 * 	- #vi times a validation issue per N4JSIssue.writeExternal
+	 * 	- #vi times a validation issue as per {@link N4JSIssue#writeExternal(ObjectOutput) N4JSIssue.writeExternal}
 	 * </pre>
 	 */
 	private static final int VERSION_1 = 1;

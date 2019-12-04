@@ -22,6 +22,6 @@ import com.google.inject.Singleton;
  * workspace.
  */
 @Singleton
-public class GlobalUriResourceMap extends HashMap<URI, Resource> {
+public class WorkspaceUriResourceMap extends HashMap<URI, Resource> {
 	// nothing to do
 }

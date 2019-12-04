@@ -88,7 +88,7 @@ public class XProjectManager {
 	 * The map for this project's resource set.
 	 */
 	@Inject
-	protected UriResourceMap uriResourceMap;
+	protected ProjectUriResourceMap uriResourceMap;
 
 	/** The workspace manager */
 	@Inject
