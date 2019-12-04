@@ -364,7 +364,7 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 				info.reconciled, res.reconciled);
 		}
 	}
-	
+
 	def private boolean containsDeferredTypeRef(EObject root) {
 		return !root.eAllContents.filter(DeferredTypeRef).empty;
 	}
