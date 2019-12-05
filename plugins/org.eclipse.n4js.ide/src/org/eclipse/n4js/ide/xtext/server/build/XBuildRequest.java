@@ -150,27 +150,6 @@ public class XBuildRequest {
 		this.afterValidate(source, issues);
 	}
 
-	/**
-	 * Getter.
-	 */
-	public AfterValidateListener getAfterValidateListener() {
-		return afterValidateListener;
-	}
-
-	/**
-	 * Getter.
-	 */
-	public AfterDeleteListener getAfterDeleteListener() {
-		return afterDeleteListener;
-	}
-
-	/**
-	 * Getter.
-	 */
-	public AfterGenerateListener getAfterGenerateListener() {
-		return afterGenerateListener;
-	}
-
 	/** Setter. */
 	public void setAfterValidateListener(AfterValidateListener afterValidateListener) {
 		this.afterValidateListener = afterValidateListener;

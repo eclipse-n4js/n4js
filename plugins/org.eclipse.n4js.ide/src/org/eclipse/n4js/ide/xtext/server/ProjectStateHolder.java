@@ -67,7 +67,7 @@ public class ProjectStateHolder {
 
 	/*
 	 * Implementation note: We use a sorted map to report the issues in a stable order. The values of the the map are
-	 * sorted by line number, offset and message
+	 * sorted by offset and message and severity
 	 */
 	private final Multimap<URI, Issue> validationIssues = TreeMultimap.create(uriComparator, issueComparator);
 
@@ -85,7 +85,7 @@ public class ProjectStateHolder {
 			}).thenComparingInt(URI::segmentCount);
 
 	private static final Comparator<Issue> issueComparator = Comparator.comparing(Issue::getOffset)
-			.thenComparing(Issue::getMessage);
+			.thenComparing(Issue::getMessage).thenComparing(Issue::getSeverity).thenComparing(Issue::hashCode);
 
 	/** Clears type index of this project. */
 	public void doClear() {

@@ -155,6 +155,7 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 			for (int i = 0; i < dataLength; i++) {
 				data[i] = in.readUTF();
 			}
+			this.setData(data);
 		}
 	}
 
