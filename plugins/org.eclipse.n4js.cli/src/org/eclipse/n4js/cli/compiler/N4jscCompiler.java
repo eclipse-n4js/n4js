@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.SortedMap;
@@ -202,7 +203,7 @@ public class N4jscCompiler {
 					true); // do not include "endpoint" property here
 
 			try (OutputStream os = new BufferedOutputStream(new FileOutputStream(testCatalogFile))) {
-				os.write(catalog.getBytes("UTF-8"));
+				os.write(catalog.getBytes(StandardCharsets.UTF_8));
 				os.flush();
 
 			} catch (IOException e) {

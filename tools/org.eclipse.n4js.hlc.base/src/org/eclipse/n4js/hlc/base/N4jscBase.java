@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -896,7 +897,7 @@ public class N4jscBase implements IApplication {
 		if (null != testCatalogFile) {
 			final String catalog = testCatalogSupplier.get(true); // do not include "endpoint" property here
 			try (final OutputStream os = new BufferedOutputStream(new FileOutputStream(testCatalogFile))) {
-				os.write(catalog.getBytes("UTF-8"));
+				os.write(catalog.getBytes(StandardCharsets.UTF_8));
 				os.flush();
 			} catch (IOException e) {
 				System.out.println("Error while writing test catalog file at: " + testCatalogFile);
