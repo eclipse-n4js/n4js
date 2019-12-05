@@ -18,11 +18,14 @@ import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_MODULE_TO_RUN_NOT
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -893,9 +896,9 @@ public class N4jscBase implements IApplication {
 	private void writeTestCatalog() throws ExitCodeException {
 		if (null != testCatalogFile) {
 			final String catalog = testCatalogSupplier.get(true); // do not include "endpoint" property here
-			try (final FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
-				fos.write(catalog.getBytes());
-				fos.flush();
+			try (final OutputStream os = new BufferedOutputStream(new FileOutputStream(testCatalogFile))) {
+				os.write(catalog.getBytes(StandardCharsets.UTF_8));
+				os.flush();
 			} catch (IOException e) {
 				System.out.println("Error while writing test catalog file at: " + testCatalogFile);
 				throw new ExitCodeException(EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
