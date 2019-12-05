@@ -9,10 +9,12 @@ package org.eclipse.n4js.ide.xtext.server;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -106,7 +108,7 @@ public class XProjectManager {
 
 	private IProjectConfig projectConfig;
 
-	private boolean mustWriteProjectState = false;
+	private boolean persistedProjectStateOutdated = false;
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
@@ -125,8 +127,22 @@ public class XProjectManager {
 	/** Initial build reads the project state and resolves changes. */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
 		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
-		XBuildResult result = doIncrementalBuild(changeSet.getModified(), changeSet.getDeleted(),
-				Collections.emptyList(), cancelIndicator);
+		XBuildResult result = doIncrementalBuild(
+				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), cancelIndicator,
+				buildRequest -> {
+					// during initial build, we do not want to notify about any issues sind it is
+					// done at the end of the project for the deserialized issues and the new issues
+					// altogether.
+					buildRequest.setAfterValidateListener(null);
+					return buildRequest;
+				});
+
+		Map<URI, Collection<Issue>> validationIssues = projectStateHolder.getValidationIssues();
+		for (Map.Entry<URI, Collection<Issue>> locationToIssues : validationIssues.entrySet()) {
+			URI location = locationToIssues.getKey();
+			Collection<Issue> issues = locationToIssues.getValue();
+			issueAcceptor.publishDiagnostics(location, issues);
+		}
 
 		// clear the resource set to release memory
 		boolean wasDeliver = resourceSet.eDeliver();
@@ -144,12 +160,18 @@ public class XProjectManager {
 	/** Build this project. */
 	public XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
+		return doIncrementalBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator, Function.identity());
+	}
 
+	private XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
+			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator,
+			Function<? super XBuildRequest, ? extends XBuildRequest> buildRequestModification) {
 		URI persistenceFile = projectStateHolder.getPersistenceFile(projectConfig);
 		dirtyFiles.remove(persistenceFile);
 		deletedFiles.remove(persistenceFile);
 
 		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
+		request = buildRequestModification.apply(request);
 		resourceSet = request.getResourceSet(); // resourceSet is already used during the build via #getResource(URI)
 
 		XBuildResult result = incrementalBuilder.build(request);
@@ -161,7 +183,7 @@ public class XProjectManager {
 		synchronized (map.keySet()) { // GH-1552: synchronized
 			map.put(projectDescription.getName(), resourceDescriptions);
 		}
-		mustWriteProjectState |= !result.getAffectedResources().isEmpty();
+		persistedProjectStateOutdated |= !result.getAffectedResources().isEmpty();
 		return result;
 	}
 
@@ -233,9 +255,9 @@ public class XProjectManager {
 
 	/** Writes the current index, file hashes and validation issues to disk */
 	public void persistProjectState() {
-		if (mustWriteProjectState) {
+		if (persistedProjectStateOutdated) {
 			projectStateHolder.writeProjectState(projectConfig);
-			mustWriteProjectState = false;
+			persistedProjectStateOutdated = false;
 		}
 	}
 

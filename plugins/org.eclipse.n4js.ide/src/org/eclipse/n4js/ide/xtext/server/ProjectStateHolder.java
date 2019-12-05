@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.xtext.server;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +34,9 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+import com.google.common.collect.TreeMultimap;
 import com.google.inject.Inject;
 
 /**
@@ -49,10 +53,6 @@ public class ProjectStateHolder {
 	@Inject
 	protected IFileSystemScanner fileSystemScanner;
 
-	/** Publishes issues to lsp client */
-	@Inject
-	protected IssueAcceptor issueAcceptor;
-
 	/** Holds configuration about project persisting */
 	@Inject
 	protected ProjectStatePersisterConfig persistConfig;
@@ -65,7 +65,27 @@ public class ProjectStateHolder {
 
 	private Map<URI, HashedFileContent> uriToHashedFileContents = new HashMap<>();
 
-	private final Map<URI, Collection<Issue>> validationIssues = new HashMap<>();
+	/*
+	 * Implementation note: We use a sorted map to report the issues in a stable order. The values of the the map are
+	 * sorted by line number, offset and message
+	 */
+	private final Multimap<URI, Issue> validationIssues = TreeMultimap.create(uriComparator, issueComparator);
+
+	private static final Comparator<URI> uriComparator = Comparator.comparing(URI::scheme)
+			.thenComparing((left, right) -> {
+				for (int i = 0, max = Math.min(left.segmentCount(), right.segmentCount()); i < max; i++) {
+					String leftSegment = left.segment(i);
+					String rightSegment = right.segment(i);
+					int segmentCompareResult = leftSegment.compareTo(rightSegment);
+					if (segmentCompareResult != 0) {
+						return segmentCompareResult;
+					}
+				}
+				return 0;
+			}).thenComparingInt(URI::segmentCount);
+
+	private static final Comparator<Issue> issueComparator = Comparator.comparing(Issue::getOffset)
+			.thenComparing(Issue::getMessage);
 
 	/** Clears type index of this project. */
 	public void doClear() {
@@ -87,8 +107,15 @@ public class ProjectStateHolder {
 	public void writeProjectState(IProjectConfig projectConfig) {
 		if (persistConfig.isWriteToDisk(projectConfig) && !uriToHashedFileContents.isEmpty()) {
 			Collection<HashedFileContent> hashFileContents = uriToHashedFileContents.values();
-			projectStatePersister.writeProjectState(projectConfig, indexState, hashFileContents, validationIssues);
+			projectStatePersister.writeProjectState(projectConfig, indexState, hashFileContents, getValidationIssues());
 		}
+	}
+
+	/**
+	 * Return the validation issues as an unmodifiable map.
+	 */
+	public Map<URI, Collection<Issue>> getValidationIssues() {
+		return Multimaps.unmodifiableMultimap(validationIssues).asMap();
 	}
 
 	/**
@@ -127,8 +154,6 @@ public class ProjectStateHolder {
 			}
 			setIndexState(persistedState.indexState);
 			mergeValidationIssues(persistedState.validationIssues);
-			// TODO this reports outdated issues - incremental changes may render old issues wrong
-			reportValidationIssues(persistedState.validationIssues);
 		}
 
 		Set<URI> allIndexedUris = indexState.getResourceDescriptions().getAllURIs();
@@ -180,14 +205,11 @@ public class ProjectStateHolder {
 		}
 
 		XSource2GeneratedMapping sourceFileMappings = persistedState.indexState.getFileMappings();
-		List<URI> prevGenerated = sourceFileMappings.getGenerated(sourceUri);
-		for (URI generated : prevGenerated) {
-			HashedFileContent genFingerprint = persistedState.fileHashs.get(generated);
-			if (genFingerprint != null) {
-				HashedFileContent generatedHash = doHash(generated);
-				if (generatedHash == null || generatedHash.getHash() != genFingerprint.getHash()) {
-					return SourceChangeKind.CHANGED;
-				}
+		List<URI> allPrevGenerated = sourceFileMappings.getGenerated(sourceUri);
+		for (URI prevGenerated : allPrevGenerated) {
+			File prevGeneratedFile = new File(prevGenerated.path());
+			if (!prevGeneratedFile.isFile()) {
+				return SourceChangeKind.CHANGED;
 			}
 		}
 		return SourceChangeKind.UNCHANGED;
@@ -213,14 +235,6 @@ public class ProjectStateHolder {
 		}
 	}
 
-	private void reportValidationIssues(Map<URI, ? extends Collection<Issue>> valIssues) {
-		for (Map.Entry<URI, ? extends Collection<Issue>> srcIssues : valIssues.entrySet()) {
-			URI source = srcIssues.getKey();
-			Collection<Issue> issues = srcIssues.getValue();
-			issueAcceptor.publishDiagnostics(source, issues);
-		}
-	}
-
 	/** @return the file the project state is stored to */
 	public URI getPersistenceFile(IProjectConfig projectConfig) {
 		URI persistanceFile = projectStatePersister.getFileName(projectConfig);
@@ -242,12 +256,7 @@ public class ProjectStateHolder {
 		for (Iterator<Entry<URI, Collection<Issue>>> iter = issueMap.entrySet().iterator(); iter.hasNext();) {
 			Entry<URI, Collection<Issue>> entry = iter.next();
 			URI source = entry.getKey();
-			Collection<Issue> issues = entry.getValue();
-			if (issues.isEmpty()) {
-				validationIssues.remove(source);
-			} else {
-				validationIssues.put(source, issues);
-			}
+			validationIssues.replaceValues(source, entry.getValue());
 		}
 	}
 }

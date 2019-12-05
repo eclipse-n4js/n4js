@@ -98,29 +98,7 @@ public class XStatefulIncrementalBuilder {
 
 			for (URI source : request.getDeletedFiles()) {
 				request.setResultIssues(source, Collections.emptyList());
-
-				Map<URI, String> outputConfigMap = newSource2GeneratedMapping
-						.deleteSourceAndGetOutputConfigs(source);
-				IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(source);
-				IContextualOutputConfigurationProvider2 outputConfigurationProvider = serviceProvider
-						.get(IContextualOutputConfigurationProvider2.class);
-				XtextResourceSet resourceSet = request.getResourceSet();
-				Set<OutputConfiguration> outputConfigs = outputConfigurationProvider
-						.getOutputConfigurations(resourceSet);
-
-				for (URI generated : outputConfigMap.keySet()) {
-					String configName = outputConfigMap.get(generated);
-					OutputConfiguration config = FluentIterable.from(outputConfigs)
-							.firstMatch(oc -> oc.getName().equals(configName)).orNull();
-					if (config != null && config.isCleanUpDerivedResources()) {
-						try {
-							resourceSet.getURIConverter().delete(generated, CollectionLiterals.emptyMap());
-							request.setResultDeleteFile(generated);
-						} catch (IOException e) {
-							Exceptions.sneakyThrow(e);
-						}
-					}
-				}
+				removeGeneratedFiles(source, newSource2GeneratedMapping);
 			}
 
 			XIndexer.XIndexResult result = indexer.computeAndIndexAffected(request, context);
@@ -153,6 +131,31 @@ public class XStatefulIncrementalBuilder {
 		return new XBuildResult(this.request.getState(), resolvedDeltas);
 	}
 
+	private void removeGeneratedFiles(URI source, XSource2GeneratedMapping source2GeneratedMapping) {
+		Map<URI, String> outputConfigMap = source2GeneratedMapping
+				.deleteSourceAndGetOutputConfigs(source);
+		IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(source);
+		IContextualOutputConfigurationProvider2 outputConfigurationProvider = serviceProvider
+				.get(IContextualOutputConfigurationProvider2.class);
+		XtextResourceSet resourceSet = request.getResourceSet();
+		Set<OutputConfiguration> outputConfigs = outputConfigurationProvider
+				.getOutputConfigurations(resourceSet);
+
+		for (URI generated : outputConfigMap.keySet()) {
+			String configName = outputConfigMap.get(generated);
+			OutputConfiguration config = FluentIterable.from(outputConfigs)
+					.firstMatch(oc -> oc.getName().equals(configName)).orNull();
+			if (config != null && config.isCleanUpDerivedResources()) {
+				try {
+					resourceSet.getURIConverter().delete(generated, CollectionLiterals.emptyMap());
+					request.setResultDeleteFile(generated);
+				} catch (IOException e) {
+					Exceptions.sneakyThrow(e);
+				}
+			}
+		}
+	}
+
 	private Delta buildClustured(Resource resource,
 			XSource2GeneratedMapping newSource2GeneratedMapping,
 			XIndexer.XIndexResult result) {
@@ -183,6 +186,8 @@ public class XStatefulIncrementalBuilder {
 			if (proceedGenerate) {
 				operationCanceledManager.checkCanceled(cancelIndicator);
 				generate(resource, newSource2GeneratedMapping);
+			} else {
+				removeGeneratedFiles(resource.getURI(), newSource2GeneratedMapping);
 			}
 		}
 
