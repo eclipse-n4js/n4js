@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.integrationtests;
+package org.eclipse.n4js.ide.jartests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * The tests in this class test n4js-cli npm.
  */
-public class CliJarWithVerdaccioTest extends AbstractCliJarTest {
+public class CliJarWithVerdaccioJarTest extends AbstractCliJarTest {
 	private static final int PORT = 4873;
 	private static final String LOCALHOST = "localhost";
 	private static final String PROJECT_NAME = "PSingleTestNpm";
@@ -38,7 +38,7 @@ public class CliJarWithVerdaccioTest extends AbstractCliJarTest {
 	private static final Path PROJECT = Path.of(TARGET, WORKSPACE_FOLDER, PACKAGES, PROJECT_NAME);
 
 	/***/
-	public CliJarWithVerdaccioTest() {
+	public CliJarWithVerdaccioJarTest() {
 		super("fixture");
 	}
 

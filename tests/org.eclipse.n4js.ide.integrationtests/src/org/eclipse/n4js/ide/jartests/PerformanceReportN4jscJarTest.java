@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.integrationtests;
+package org.eclipse.n4js.ide.jartests;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.eclipse.n4js.smith.N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME;

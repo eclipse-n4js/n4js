@@ -18,8 +18,8 @@ Contributors:
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>org.eclipse.n4js.ide.integrationtests</artifactId>
-	<name>org.eclipse.n4js.ide.integrationtests</name>
+	<artifactId>org.eclipse.n4js.ide.jartests</artifactId>
+	<name>org.eclipse.n4js.ide.jartests</name>
 	<packaging>eclipse-test-plugin</packaging>
 	<description>Test the headless N4js compiler bundled into one jar.</description>
 

@@ -111,7 +111,7 @@ Contributors:
 		<!-- *************************************** Headless Tools Tests -->
 		<module>org.eclipse.n4js.cli.tests</module>
 		<module>org.eclipse.n4js.ide.tests</module>
-		<module>org.eclipse.n4js.ide.integrationtests</module>
+		<module>org.eclipse.n4js.ide.jartests</module>
 
 		<!-- *************************************** n4jsx Tests -->
 		<module>org.eclipse.n4js.n4jsx.lang.tests</module>

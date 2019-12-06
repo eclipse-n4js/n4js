@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.integrationtests;
+package org.eclipse.n4js.ide.jartests;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
@@ -28,11 +28,11 @@ import org.junit.Test;
 /**
  * IMPORTANT: for info on how to run this test locally, see {@link AbstractCliJarTest}!
  */
-public class IncompleteApiImplementationTest extends AbstractCliJarTest {
+public class IncompleteApiImplementationJarTest extends AbstractCliJarTest {
 
 	/***/
-	public IncompleteApiImplementationTest() {
-		super("IncompleteApiImplementationTest");
+	public IncompleteApiImplementationJarTest() {
+		super("IncompleteApiImplementationJarTest");
 	}
 
 	/**
