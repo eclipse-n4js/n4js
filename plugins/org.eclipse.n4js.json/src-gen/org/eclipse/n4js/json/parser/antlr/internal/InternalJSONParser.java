@@ -277,75 +277,65 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleJSONObject"
-    // InternalJSON.g:123:1: ruleJSONObject returns [EObject current=null] : ( (otherlv_0= '{' ( (lv_nameValuePairs_1_0= ruleNameValuePair ) ) (otherlv_2= ',' ( (lv_nameValuePairs_3_0= ruleNameValuePair ) ) )* otherlv_4= '}' ) | ( () otherlv_6= '{' otherlv_7= '}' ) ) ;
+    // InternalJSON.g:123:1: ruleJSONObject returns [EObject current=null] : ( () otherlv_1= '{' ( ( (lv_nameValuePairs_2_0= ruleNameValuePair ) ) (otherlv_3= ',' ( (lv_nameValuePairs_4_0= ruleNameValuePair ) ) )* )? otherlv_5= '}' ) ;
     public final EObject ruleJSONObject() throws RecognitionException {
         EObject current = null;
 
-        Token otherlv_0=null;
-        Token otherlv_2=null;
-        Token otherlv_4=null;
-        Token otherlv_6=null;
-        Token otherlv_7=null;
-        EObject lv_nameValuePairs_1_0 = null;
+        Token otherlv_1=null;
+        Token otherlv_3=null;
+        Token otherlv_5=null;
+        EObject lv_nameValuePairs_2_0 = null;
 
-        EObject lv_nameValuePairs_3_0 = null;
+        EObject lv_nameValuePairs_4_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalJSON.g:129:2: ( ( (otherlv_0= '{' ( (lv_nameValuePairs_1_0= ruleNameValuePair ) ) (otherlv_2= ',' ( (lv_nameValuePairs_3_0= ruleNameValuePair ) ) )* otherlv_4= '}' ) | ( () otherlv_6= '{' otherlv_7= '}' ) ) )
-            // InternalJSON.g:130:2: ( (otherlv_0= '{' ( (lv_nameValuePairs_1_0= ruleNameValuePair ) ) (otherlv_2= ',' ( (lv_nameValuePairs_3_0= ruleNameValuePair ) ) )* otherlv_4= '}' ) | ( () otherlv_6= '{' otherlv_7= '}' ) )
+            // InternalJSON.g:129:2: ( ( () otherlv_1= '{' ( ( (lv_nameValuePairs_2_0= ruleNameValuePair ) ) (otherlv_3= ',' ( (lv_nameValuePairs_4_0= ruleNameValuePair ) ) )* )? otherlv_5= '}' ) )
+            // InternalJSON.g:130:2: ( () otherlv_1= '{' ( ( (lv_nameValuePairs_2_0= ruleNameValuePair ) ) (otherlv_3= ',' ( (lv_nameValuePairs_4_0= ruleNameValuePair ) ) )* )? otherlv_5= '}' )
             {
-            // InternalJSON.g:130:2: ( (otherlv_0= '{' ( (lv_nameValuePairs_1_0= ruleNameValuePair ) ) (otherlv_2= ',' ( (lv_nameValuePairs_3_0= ruleNameValuePair ) ) )* otherlv_4= '}' ) | ( () otherlv_6= '{' otherlv_7= '}' ) )
+            // InternalJSON.g:130:2: ( () otherlv_1= '{' ( ( (lv_nameValuePairs_2_0= ruleNameValuePair ) ) (otherlv_3= ',' ( (lv_nameValuePairs_4_0= ruleNameValuePair ) ) )* )? otherlv_5= '}' )
+            // InternalJSON.g:131:3: () otherlv_1= '{' ( ( (lv_nameValuePairs_2_0= ruleNameValuePair ) ) (otherlv_3= ',' ( (lv_nameValuePairs_4_0= ruleNameValuePair ) ) )* )? otherlv_5= '}'
+            {
+            // InternalJSON.g:131:3: ()
+            // InternalJSON.g:132:4: 
+            {
+
+            				current = forceCreateModelElement(
+            					grammarAccess.getJSONObjectAccess().getJSONObjectAction_0(),
+            					current);
+            			
+
+            }
+
+            otherlv_1=(Token)match(input,32,FOLLOW_3); 
+
+            			newLeafNode(otherlv_1, grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_1());
+            		
+            // InternalJSON.g:142:3: ( ( (lv_nameValuePairs_2_0= ruleNameValuePair ) ) (otherlv_3= ',' ( (lv_nameValuePairs_4_0= ruleNameValuePair ) ) )* )?
             int alt3=2;
             int LA3_0 = input.LA(1);
 
-            if ( (LA3_0==32) ) {
-                int LA3_1 = input.LA(2);
-
-                if ( (LA3_1==RULE_STRING) ) {
-                    alt3=1;
-                }
-                else if ( (LA3_1==34) ) {
-                    alt3=2;
-                }
-                else {
-                    NoViableAltException nvae =
-                        new NoViableAltException("", 3, 1, input);
-
-                    throw nvae;
-                }
-            }
-            else {
-                NoViableAltException nvae =
-                    new NoViableAltException("", 3, 0, input);
-
-                throw nvae;
+            if ( (LA3_0==RULE_STRING) ) {
+                alt3=1;
             }
             switch (alt3) {
                 case 1 :
-                    // InternalJSON.g:131:3: (otherlv_0= '{' ( (lv_nameValuePairs_1_0= ruleNameValuePair ) ) (otherlv_2= ',' ( (lv_nameValuePairs_3_0= ruleNameValuePair ) ) )* otherlv_4= '}' )
+                    // InternalJSON.g:143:4: ( (lv_nameValuePairs_2_0= ruleNameValuePair ) ) (otherlv_3= ',' ( (lv_nameValuePairs_4_0= ruleNameValuePair ) ) )*
                     {
-                    // InternalJSON.g:131:3: (otherlv_0= '{' ( (lv_nameValuePairs_1_0= ruleNameValuePair ) ) (otherlv_2= ',' ( (lv_nameValuePairs_3_0= ruleNameValuePair ) ) )* otherlv_4= '}' )
-                    // InternalJSON.g:132:4: otherlv_0= '{' ( (lv_nameValuePairs_1_0= ruleNameValuePair ) ) (otherlv_2= ',' ( (lv_nameValuePairs_3_0= ruleNameValuePair ) ) )* otherlv_4= '}'
+                    // InternalJSON.g:143:4: ( (lv_nameValuePairs_2_0= ruleNameValuePair ) )
+                    // InternalJSON.g:144:5: (lv_nameValuePairs_2_0= ruleNameValuePair )
                     {
-                    otherlv_0=(Token)match(input,32,FOLLOW_3); 
-
-                    				newLeafNode(otherlv_0, grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_0_0());
-                    			
-                    // InternalJSON.g:136:4: ( (lv_nameValuePairs_1_0= ruleNameValuePair ) )
-                    // InternalJSON.g:137:5: (lv_nameValuePairs_1_0= ruleNameValuePair )
-                    {
-                    // InternalJSON.g:137:5: (lv_nameValuePairs_1_0= ruleNameValuePair )
-                    // InternalJSON.g:138:6: lv_nameValuePairs_1_0= ruleNameValuePair
+                    // InternalJSON.g:144:5: (lv_nameValuePairs_2_0= ruleNameValuePair )
+                    // InternalJSON.g:145:6: lv_nameValuePairs_2_0= ruleNameValuePair
                     {
 
-                    						newCompositeNode(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_0_1_0());
+                    						newCompositeNode(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_2_0_0());
                     					
                     pushFollow(FOLLOW_4);
-                    lv_nameValuePairs_1_0=ruleNameValuePair();
+                    lv_nameValuePairs_2_0=ruleNameValuePair();
 
                     state._fsp--;
 
@@ -356,7 +346,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     						add(
                     							current,
                     							"nameValuePairs",
-                    							lv_nameValuePairs_1_0,
+                    							lv_nameValuePairs_2_0,
                     							"org.eclipse.n4js.json.JSON.NameValuePair");
                     						afterParserOrEnumRuleCall();
                     					
@@ -366,7 +356,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalJSON.g:155:4: (otherlv_2= ',' ( (lv_nameValuePairs_3_0= ruleNameValuePair ) ) )*
+                    // InternalJSON.g:162:4: (otherlv_3= ',' ( (lv_nameValuePairs_4_0= ruleNameValuePair ) ) )*
                     loop2:
                     do {
                         int alt2=2;
@@ -379,23 +369,23 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
                         switch (alt2) {
                     	case 1 :
-                    	    // InternalJSON.g:156:5: otherlv_2= ',' ( (lv_nameValuePairs_3_0= ruleNameValuePair ) )
+                    	    // InternalJSON.g:163:5: otherlv_3= ',' ( (lv_nameValuePairs_4_0= ruleNameValuePair ) )
                     	    {
-                    	    otherlv_2=(Token)match(input,33,FOLLOW_3); 
+                    	    otherlv_3=(Token)match(input,33,FOLLOW_5); 
 
-                    	    					newLeafNode(otherlv_2, grammarAccess.getJSONObjectAccess().getCommaKeyword_0_2_0());
+                    	    					newLeafNode(otherlv_3, grammarAccess.getJSONObjectAccess().getCommaKeyword_2_1_0());
                     	    				
-                    	    // InternalJSON.g:160:5: ( (lv_nameValuePairs_3_0= ruleNameValuePair ) )
-                    	    // InternalJSON.g:161:6: (lv_nameValuePairs_3_0= ruleNameValuePair )
+                    	    // InternalJSON.g:167:5: ( (lv_nameValuePairs_4_0= ruleNameValuePair ) )
+                    	    // InternalJSON.g:168:6: (lv_nameValuePairs_4_0= ruleNameValuePair )
                     	    {
-                    	    // InternalJSON.g:161:6: (lv_nameValuePairs_3_0= ruleNameValuePair )
-                    	    // InternalJSON.g:162:7: lv_nameValuePairs_3_0= ruleNameValuePair
+                    	    // InternalJSON.g:168:6: (lv_nameValuePairs_4_0= ruleNameValuePair )
+                    	    // InternalJSON.g:169:7: lv_nameValuePairs_4_0= ruleNameValuePair
                     	    {
 
-                    	    							newCompositeNode(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_0_2_1_0());
+                    	    							newCompositeNode(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_2_1_1_0());
                     	    						
                     	    pushFollow(FOLLOW_4);
-                    	    lv_nameValuePairs_3_0=ruleNameValuePair();
+                    	    lv_nameValuePairs_4_0=ruleNameValuePair();
 
                     	    state._fsp--;
 
@@ -406,7 +396,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     	    							add(
                     	    								current,
                     	    								"nameValuePairs",
-                    	    								lv_nameValuePairs_3_0,
+                    	    								lv_nameValuePairs_4_0,
                     	    								"org.eclipse.n4js.json.JSON.NameValuePair");
                     	    							afterParserOrEnumRuleCall();
                     	    						
@@ -425,47 +415,16 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                         }
                     } while (true);
 
-                    otherlv_4=(Token)match(input,34,FOLLOW_2); 
-
-                    				newLeafNode(otherlv_4, grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_0_3());
-                    			
-
-                    }
-
 
                     }
                     break;
-                case 2 :
-                    // InternalJSON.g:186:3: ( () otherlv_6= '{' otherlv_7= '}' )
-                    {
-                    // InternalJSON.g:186:3: ( () otherlv_6= '{' otherlv_7= '}' )
-                    // InternalJSON.g:187:4: () otherlv_6= '{' otherlv_7= '}'
-                    {
-                    // InternalJSON.g:187:4: ()
-                    // InternalJSON.g:188:5: 
-                    {
 
-                    					current = forceCreateModelElement(
-                    						grammarAccess.getJSONObjectAccess().getJSONObjectAction_1_0(),
-                    						current);
-                    				
+            }
 
-                    }
+            otherlv_5=(Token)match(input,34,FOLLOW_2); 
 
-                    otherlv_6=(Token)match(input,32,FOLLOW_5); 
-
-                    				newLeafNode(otherlv_6, grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_1_1());
-                    			
-                    otherlv_7=(Token)match(input,34,FOLLOW_2); 
-
-                    				newLeafNode(otherlv_7, grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_1_2());
-                    			
-
-                    }
-
-
-                    }
-                    break;
+            			newLeafNode(otherlv_5, grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_3());
+            		
 
             }
 
@@ -489,7 +448,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleNameValuePair"
-    // InternalJSON.g:207:1: entryRuleNameValuePair returns [EObject current=null] : iv_ruleNameValuePair= ruleNameValuePair EOF ;
+    // InternalJSON.g:196:1: entryRuleNameValuePair returns [EObject current=null] : iv_ruleNameValuePair= ruleNameValuePair EOF ;
     public final EObject entryRuleNameValuePair() throws RecognitionException {
         EObject current = null;
 
@@ -497,8 +456,8 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalJSON.g:207:54: (iv_ruleNameValuePair= ruleNameValuePair EOF )
-            // InternalJSON.g:208:2: iv_ruleNameValuePair= ruleNameValuePair EOF
+            // InternalJSON.g:196:54: (iv_ruleNameValuePair= ruleNameValuePair EOF )
+            // InternalJSON.g:197:2: iv_ruleNameValuePair= ruleNameValuePair EOF
             {
              newCompositeNode(grammarAccess.getNameValuePairRule()); 
             pushFollow(FOLLOW_1);
@@ -525,7 +484,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleNameValuePair"
-    // InternalJSON.g:214:1: ruleNameValuePair returns [EObject current=null] : ( ( (lv_name_0_0= RULE_STRING ) ) otherlv_1= ':' ( (lv_value_2_0= ruleJSONValue ) ) ) ;
+    // InternalJSON.g:203:1: ruleNameValuePair returns [EObject current=null] : ( ( (lv_name_0_0= RULE_STRING ) ) otherlv_1= ':' ( (lv_value_2_0= ruleJSONValue ) ) ) ;
     public final EObject ruleNameValuePair() throws RecognitionException {
         EObject current = null;
 
@@ -538,17 +497,17 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalJSON.g:220:2: ( ( ( (lv_name_0_0= RULE_STRING ) ) otherlv_1= ':' ( (lv_value_2_0= ruleJSONValue ) ) ) )
-            // InternalJSON.g:221:2: ( ( (lv_name_0_0= RULE_STRING ) ) otherlv_1= ':' ( (lv_value_2_0= ruleJSONValue ) ) )
+            // InternalJSON.g:209:2: ( ( ( (lv_name_0_0= RULE_STRING ) ) otherlv_1= ':' ( (lv_value_2_0= ruleJSONValue ) ) ) )
+            // InternalJSON.g:210:2: ( ( (lv_name_0_0= RULE_STRING ) ) otherlv_1= ':' ( (lv_value_2_0= ruleJSONValue ) ) )
             {
-            // InternalJSON.g:221:2: ( ( (lv_name_0_0= RULE_STRING ) ) otherlv_1= ':' ( (lv_value_2_0= ruleJSONValue ) ) )
-            // InternalJSON.g:222:3: ( (lv_name_0_0= RULE_STRING ) ) otherlv_1= ':' ( (lv_value_2_0= ruleJSONValue ) )
+            // InternalJSON.g:210:2: ( ( (lv_name_0_0= RULE_STRING ) ) otherlv_1= ':' ( (lv_value_2_0= ruleJSONValue ) ) )
+            // InternalJSON.g:211:3: ( (lv_name_0_0= RULE_STRING ) ) otherlv_1= ':' ( (lv_value_2_0= ruleJSONValue ) )
             {
-            // InternalJSON.g:222:3: ( (lv_name_0_0= RULE_STRING ) )
-            // InternalJSON.g:223:4: (lv_name_0_0= RULE_STRING )
+            // InternalJSON.g:211:3: ( (lv_name_0_0= RULE_STRING ) )
+            // InternalJSON.g:212:4: (lv_name_0_0= RULE_STRING )
             {
-            // InternalJSON.g:223:4: (lv_name_0_0= RULE_STRING )
-            // InternalJSON.g:224:5: lv_name_0_0= RULE_STRING
+            // InternalJSON.g:212:4: (lv_name_0_0= RULE_STRING )
+            // InternalJSON.g:213:5: lv_name_0_0= RULE_STRING
             {
             lv_name_0_0=(Token)match(input,RULE_STRING,FOLLOW_6); 
 
@@ -574,11 +533,11 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getNameValuePairAccess().getColonKeyword_1());
             		
-            // InternalJSON.g:244:3: ( (lv_value_2_0= ruleJSONValue ) )
-            // InternalJSON.g:245:4: (lv_value_2_0= ruleJSONValue )
+            // InternalJSON.g:233:3: ( (lv_value_2_0= ruleJSONValue ) )
+            // InternalJSON.g:234:4: (lv_value_2_0= ruleJSONValue )
             {
-            // InternalJSON.g:245:4: (lv_value_2_0= ruleJSONValue )
-            // InternalJSON.g:246:5: lv_value_2_0= ruleJSONValue
+            // InternalJSON.g:234:4: (lv_value_2_0= ruleJSONValue )
+            // InternalJSON.g:235:5: lv_value_2_0= ruleJSONValue
             {
 
             					newCompositeNode(grammarAccess.getNameValuePairAccess().getValueJSONValueParserRuleCall_2_0());
@@ -628,7 +587,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleJSONArray"
-    // InternalJSON.g:267:1: entryRuleJSONArray returns [EObject current=null] : iv_ruleJSONArray= ruleJSONArray EOF ;
+    // InternalJSON.g:256:1: entryRuleJSONArray returns [EObject current=null] : iv_ruleJSONArray= ruleJSONArray EOF ;
     public final EObject entryRuleJSONArray() throws RecognitionException {
         EObject current = null;
 
@@ -636,8 +595,8 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalJSON.g:267:50: (iv_ruleJSONArray= ruleJSONArray EOF )
-            // InternalJSON.g:268:2: iv_ruleJSONArray= ruleJSONArray EOF
+            // InternalJSON.g:256:50: (iv_ruleJSONArray= ruleJSONArray EOF )
+            // InternalJSON.g:257:2: iv_ruleJSONArray= ruleJSONArray EOF
             {
              newCompositeNode(grammarAccess.getJSONArrayRule()); 
             pushFollow(FOLLOW_1);
@@ -664,75 +623,65 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleJSONArray"
-    // InternalJSON.g:274:1: ruleJSONArray returns [EObject current=null] : ( (otherlv_0= '[' ( (lv_elements_1_0= ruleJSONValue ) ) (otherlv_2= ',' ( (lv_elements_3_0= ruleJSONValue ) ) )* otherlv_4= ']' ) | ( () otherlv_6= '[' otherlv_7= ']' ) ) ;
+    // InternalJSON.g:263:1: ruleJSONArray returns [EObject current=null] : ( () otherlv_1= '[' ( ( (lv_elements_2_0= ruleJSONValue ) ) (otherlv_3= ',' ( (lv_elements_4_0= ruleJSONValue ) ) )* )? otherlv_5= ']' ) ;
     public final EObject ruleJSONArray() throws RecognitionException {
         EObject current = null;
 
-        Token otherlv_0=null;
-        Token otherlv_2=null;
-        Token otherlv_4=null;
-        Token otherlv_6=null;
-        Token otherlv_7=null;
-        EObject lv_elements_1_0 = null;
+        Token otherlv_1=null;
+        Token otherlv_3=null;
+        Token otherlv_5=null;
+        EObject lv_elements_2_0 = null;
 
-        EObject lv_elements_3_0 = null;
+        EObject lv_elements_4_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalJSON.g:280:2: ( ( (otherlv_0= '[' ( (lv_elements_1_0= ruleJSONValue ) ) (otherlv_2= ',' ( (lv_elements_3_0= ruleJSONValue ) ) )* otherlv_4= ']' ) | ( () otherlv_6= '[' otherlv_7= ']' ) ) )
-            // InternalJSON.g:281:2: ( (otherlv_0= '[' ( (lv_elements_1_0= ruleJSONValue ) ) (otherlv_2= ',' ( (lv_elements_3_0= ruleJSONValue ) ) )* otherlv_4= ']' ) | ( () otherlv_6= '[' otherlv_7= ']' ) )
+            // InternalJSON.g:269:2: ( ( () otherlv_1= '[' ( ( (lv_elements_2_0= ruleJSONValue ) ) (otherlv_3= ',' ( (lv_elements_4_0= ruleJSONValue ) ) )* )? otherlv_5= ']' ) )
+            // InternalJSON.g:270:2: ( () otherlv_1= '[' ( ( (lv_elements_2_0= ruleJSONValue ) ) (otherlv_3= ',' ( (lv_elements_4_0= ruleJSONValue ) ) )* )? otherlv_5= ']' )
             {
-            // InternalJSON.g:281:2: ( (otherlv_0= '[' ( (lv_elements_1_0= ruleJSONValue ) ) (otherlv_2= ',' ( (lv_elements_3_0= ruleJSONValue ) ) )* otherlv_4= ']' ) | ( () otherlv_6= '[' otherlv_7= ']' ) )
+            // InternalJSON.g:270:2: ( () otherlv_1= '[' ( ( (lv_elements_2_0= ruleJSONValue ) ) (otherlv_3= ',' ( (lv_elements_4_0= ruleJSONValue ) ) )* )? otherlv_5= ']' )
+            // InternalJSON.g:271:3: () otherlv_1= '[' ( ( (lv_elements_2_0= ruleJSONValue ) ) (otherlv_3= ',' ( (lv_elements_4_0= ruleJSONValue ) ) )* )? otherlv_5= ']'
+            {
+            // InternalJSON.g:271:3: ()
+            // InternalJSON.g:272:4: 
+            {
+
+            				current = forceCreateModelElement(
+            					grammarAccess.getJSONArrayAccess().getJSONArrayAction_0(),
+            					current);
+            			
+
+            }
+
+            otherlv_1=(Token)match(input,36,FOLLOW_8); 
+
+            			newLeafNode(otherlv_1, grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_1());
+            		
+            // InternalJSON.g:282:3: ( ( (lv_elements_2_0= ruleJSONValue ) ) (otherlv_3= ',' ( (lv_elements_4_0= ruleJSONValue ) ) )* )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
-            if ( (LA5_0==36) ) {
-                int LA5_1 = input.LA(2);
-
-                if ( ((LA5_1>=RULE_STRING && LA5_1<=RULE_NUMBER)||LA5_1==32||LA5_1==36||(LA5_1>=38 && LA5_1<=40)) ) {
-                    alt5=1;
-                }
-                else if ( (LA5_1==37) ) {
-                    alt5=2;
-                }
-                else {
-                    NoViableAltException nvae =
-                        new NoViableAltException("", 5, 1, input);
-
-                    throw nvae;
-                }
-            }
-            else {
-                NoViableAltException nvae =
-                    new NoViableAltException("", 5, 0, input);
-
-                throw nvae;
+            if ( ((LA5_0>=RULE_STRING && LA5_0<=RULE_NUMBER)||LA5_0==32||LA5_0==36||(LA5_0>=38 && LA5_0<=40)) ) {
+                alt5=1;
             }
             switch (alt5) {
                 case 1 :
-                    // InternalJSON.g:282:3: (otherlv_0= '[' ( (lv_elements_1_0= ruleJSONValue ) ) (otherlv_2= ',' ( (lv_elements_3_0= ruleJSONValue ) ) )* otherlv_4= ']' )
+                    // InternalJSON.g:283:4: ( (lv_elements_2_0= ruleJSONValue ) ) (otherlv_3= ',' ( (lv_elements_4_0= ruleJSONValue ) ) )*
                     {
-                    // InternalJSON.g:282:3: (otherlv_0= '[' ( (lv_elements_1_0= ruleJSONValue ) ) (otherlv_2= ',' ( (lv_elements_3_0= ruleJSONValue ) ) )* otherlv_4= ']' )
-                    // InternalJSON.g:283:4: otherlv_0= '[' ( (lv_elements_1_0= ruleJSONValue ) ) (otherlv_2= ',' ( (lv_elements_3_0= ruleJSONValue ) ) )* otherlv_4= ']'
+                    // InternalJSON.g:283:4: ( (lv_elements_2_0= ruleJSONValue ) )
+                    // InternalJSON.g:284:5: (lv_elements_2_0= ruleJSONValue )
                     {
-                    otherlv_0=(Token)match(input,36,FOLLOW_7); 
-
-                    				newLeafNode(otherlv_0, grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_0_0());
-                    			
-                    // InternalJSON.g:287:4: ( (lv_elements_1_0= ruleJSONValue ) )
-                    // InternalJSON.g:288:5: (lv_elements_1_0= ruleJSONValue )
-                    {
-                    // InternalJSON.g:288:5: (lv_elements_1_0= ruleJSONValue )
-                    // InternalJSON.g:289:6: lv_elements_1_0= ruleJSONValue
+                    // InternalJSON.g:284:5: (lv_elements_2_0= ruleJSONValue )
+                    // InternalJSON.g:285:6: lv_elements_2_0= ruleJSONValue
                     {
 
-                    						newCompositeNode(grammarAccess.getJSONArrayAccess().getElementsJSONValueParserRuleCall_0_1_0());
+                    						newCompositeNode(grammarAccess.getJSONArrayAccess().getElementsJSONValueParserRuleCall_2_0_0());
                     					
-                    pushFollow(FOLLOW_8);
-                    lv_elements_1_0=ruleJSONValue();
+                    pushFollow(FOLLOW_9);
+                    lv_elements_2_0=ruleJSONValue();
 
                     state._fsp--;
 
@@ -743,7 +692,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     						add(
                     							current,
                     							"elements",
-                    							lv_elements_1_0,
+                    							lv_elements_2_0,
                     							"org.eclipse.n4js.json.JSON.JSONValue");
                     						afterParserOrEnumRuleCall();
                     					
@@ -753,7 +702,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalJSON.g:306:4: (otherlv_2= ',' ( (lv_elements_3_0= ruleJSONValue ) ) )*
+                    // InternalJSON.g:302:4: (otherlv_3= ',' ( (lv_elements_4_0= ruleJSONValue ) ) )*
                     loop4:
                     do {
                         int alt4=2;
@@ -766,23 +715,23 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
                         switch (alt4) {
                     	case 1 :
-                    	    // InternalJSON.g:307:5: otherlv_2= ',' ( (lv_elements_3_0= ruleJSONValue ) )
+                    	    // InternalJSON.g:303:5: otherlv_3= ',' ( (lv_elements_4_0= ruleJSONValue ) )
                     	    {
-                    	    otherlv_2=(Token)match(input,33,FOLLOW_7); 
+                    	    otherlv_3=(Token)match(input,33,FOLLOW_7); 
 
-                    	    					newLeafNode(otherlv_2, grammarAccess.getJSONArrayAccess().getCommaKeyword_0_2_0());
+                    	    					newLeafNode(otherlv_3, grammarAccess.getJSONArrayAccess().getCommaKeyword_2_1_0());
                     	    				
-                    	    // InternalJSON.g:311:5: ( (lv_elements_3_0= ruleJSONValue ) )
-                    	    // InternalJSON.g:312:6: (lv_elements_3_0= ruleJSONValue )
+                    	    // InternalJSON.g:307:5: ( (lv_elements_4_0= ruleJSONValue ) )
+                    	    // InternalJSON.g:308:6: (lv_elements_4_0= ruleJSONValue )
                     	    {
-                    	    // InternalJSON.g:312:6: (lv_elements_3_0= ruleJSONValue )
-                    	    // InternalJSON.g:313:7: lv_elements_3_0= ruleJSONValue
+                    	    // InternalJSON.g:308:6: (lv_elements_4_0= ruleJSONValue )
+                    	    // InternalJSON.g:309:7: lv_elements_4_0= ruleJSONValue
                     	    {
 
-                    	    							newCompositeNode(grammarAccess.getJSONArrayAccess().getElementsJSONValueParserRuleCall_0_2_1_0());
+                    	    							newCompositeNode(grammarAccess.getJSONArrayAccess().getElementsJSONValueParserRuleCall_2_1_1_0());
                     	    						
-                    	    pushFollow(FOLLOW_8);
-                    	    lv_elements_3_0=ruleJSONValue();
+                    	    pushFollow(FOLLOW_9);
+                    	    lv_elements_4_0=ruleJSONValue();
 
                     	    state._fsp--;
 
@@ -793,7 +742,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     	    							add(
                     	    								current,
                     	    								"elements",
-                    	    								lv_elements_3_0,
+                    	    								lv_elements_4_0,
                     	    								"org.eclipse.n4js.json.JSON.JSONValue");
                     	    							afterParserOrEnumRuleCall();
                     	    						
@@ -812,47 +761,16 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                         }
                     } while (true);
 
-                    otherlv_4=(Token)match(input,37,FOLLOW_2); 
-
-                    				newLeafNode(otherlv_4, grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_0_3());
-                    			
-
-                    }
-
 
                     }
                     break;
-                case 2 :
-                    // InternalJSON.g:337:3: ( () otherlv_6= '[' otherlv_7= ']' )
-                    {
-                    // InternalJSON.g:337:3: ( () otherlv_6= '[' otherlv_7= ']' )
-                    // InternalJSON.g:338:4: () otherlv_6= '[' otherlv_7= ']'
-                    {
-                    // InternalJSON.g:338:4: ()
-                    // InternalJSON.g:339:5: 
-                    {
 
-                    					current = forceCreateModelElement(
-                    						grammarAccess.getJSONArrayAccess().getJSONArrayAction_1_0(),
-                    						current);
-                    				
+            }
 
-                    }
+            otherlv_5=(Token)match(input,37,FOLLOW_2); 
 
-                    otherlv_6=(Token)match(input,36,FOLLOW_9); 
-
-                    				newLeafNode(otherlv_6, grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_1_1());
-                    			
-                    otherlv_7=(Token)match(input,37,FOLLOW_2); 
-
-                    				newLeafNode(otherlv_7, grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_1_2());
-                    			
-
-                    }
-
-
-                    }
-                    break;
+            			newLeafNode(otherlv_5, grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_3());
+            		
 
             }
 
@@ -876,7 +794,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleJSONValue"
-    // InternalJSON.g:358:1: entryRuleJSONValue returns [EObject current=null] : iv_ruleJSONValue= ruleJSONValue EOF ;
+    // InternalJSON.g:336:1: entryRuleJSONValue returns [EObject current=null] : iv_ruleJSONValue= ruleJSONValue EOF ;
     public final EObject entryRuleJSONValue() throws RecognitionException {
         EObject current = null;
 
@@ -884,8 +802,8 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalJSON.g:358:50: (iv_ruleJSONValue= ruleJSONValue EOF )
-            // InternalJSON.g:359:2: iv_ruleJSONValue= ruleJSONValue EOF
+            // InternalJSON.g:336:50: (iv_ruleJSONValue= ruleJSONValue EOF )
+            // InternalJSON.g:337:2: iv_ruleJSONValue= ruleJSONValue EOF
             {
              newCompositeNode(grammarAccess.getJSONValueRule()); 
             pushFollow(FOLLOW_1);
@@ -912,7 +830,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleJSONValue"
-    // InternalJSON.g:365:1: ruleJSONValue returns [EObject current=null] : (this_JSONObject_0= ruleJSONObject | this_JSONArray_1= ruleJSONArray | this_JSONStringLiteral_2= ruleJSONStringLiteral | this_JSONNumericLiteral_3= ruleJSONNumericLiteral | this_JSONNullLiteral_4= ruleJSONNullLiteral | this_JSONBooleanLiteral_5= ruleJSONBooleanLiteral ) ;
+    // InternalJSON.g:343:1: ruleJSONValue returns [EObject current=null] : (this_JSONObject_0= ruleJSONObject | this_JSONArray_1= ruleJSONArray | this_JSONStringLiteral_2= ruleJSONStringLiteral | this_JSONNumericLiteral_3= ruleJSONNumericLiteral | this_JSONNullLiteral_4= ruleJSONNullLiteral | this_JSONBooleanLiteral_5= ruleJSONBooleanLiteral ) ;
     public final EObject ruleJSONValue() throws RecognitionException {
         EObject current = null;
 
@@ -933,10 +851,10 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalJSON.g:371:2: ( (this_JSONObject_0= ruleJSONObject | this_JSONArray_1= ruleJSONArray | this_JSONStringLiteral_2= ruleJSONStringLiteral | this_JSONNumericLiteral_3= ruleJSONNumericLiteral | this_JSONNullLiteral_4= ruleJSONNullLiteral | this_JSONBooleanLiteral_5= ruleJSONBooleanLiteral ) )
-            // InternalJSON.g:372:2: (this_JSONObject_0= ruleJSONObject | this_JSONArray_1= ruleJSONArray | this_JSONStringLiteral_2= ruleJSONStringLiteral | this_JSONNumericLiteral_3= ruleJSONNumericLiteral | this_JSONNullLiteral_4= ruleJSONNullLiteral | this_JSONBooleanLiteral_5= ruleJSONBooleanLiteral )
+            // InternalJSON.g:349:2: ( (this_JSONObject_0= ruleJSONObject | this_JSONArray_1= ruleJSONArray | this_JSONStringLiteral_2= ruleJSONStringLiteral | this_JSONNumericLiteral_3= ruleJSONNumericLiteral | this_JSONNullLiteral_4= ruleJSONNullLiteral | this_JSONBooleanLiteral_5= ruleJSONBooleanLiteral ) )
+            // InternalJSON.g:350:2: (this_JSONObject_0= ruleJSONObject | this_JSONArray_1= ruleJSONArray | this_JSONStringLiteral_2= ruleJSONStringLiteral | this_JSONNumericLiteral_3= ruleJSONNumericLiteral | this_JSONNullLiteral_4= ruleJSONNullLiteral | this_JSONBooleanLiteral_5= ruleJSONBooleanLiteral )
             {
-            // InternalJSON.g:372:2: (this_JSONObject_0= ruleJSONObject | this_JSONArray_1= ruleJSONArray | this_JSONStringLiteral_2= ruleJSONStringLiteral | this_JSONNumericLiteral_3= ruleJSONNumericLiteral | this_JSONNullLiteral_4= ruleJSONNullLiteral | this_JSONBooleanLiteral_5= ruleJSONBooleanLiteral )
+            // InternalJSON.g:350:2: (this_JSONObject_0= ruleJSONObject | this_JSONArray_1= ruleJSONArray | this_JSONStringLiteral_2= ruleJSONStringLiteral | this_JSONNumericLiteral_3= ruleJSONNumericLiteral | this_JSONNullLiteral_4= ruleJSONNullLiteral | this_JSONBooleanLiteral_5= ruleJSONBooleanLiteral )
             int alt6=6;
             switch ( input.LA(1) ) {
             case 32:
@@ -979,7 +897,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
             switch (alt6) {
                 case 1 :
-                    // InternalJSON.g:373:3: this_JSONObject_0= ruleJSONObject
+                    // InternalJSON.g:351:3: this_JSONObject_0= ruleJSONObject
                     {
 
                     			newCompositeNode(grammarAccess.getJSONValueAccess().getJSONObjectParserRuleCall_0());
@@ -997,7 +915,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalJSON.g:382:3: this_JSONArray_1= ruleJSONArray
+                    // InternalJSON.g:360:3: this_JSONArray_1= ruleJSONArray
                     {
 
                     			newCompositeNode(grammarAccess.getJSONValueAccess().getJSONArrayParserRuleCall_1());
@@ -1015,7 +933,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalJSON.g:391:3: this_JSONStringLiteral_2= ruleJSONStringLiteral
+                    // InternalJSON.g:369:3: this_JSONStringLiteral_2= ruleJSONStringLiteral
                     {
 
                     			newCompositeNode(grammarAccess.getJSONValueAccess().getJSONStringLiteralParserRuleCall_2());
@@ -1033,7 +951,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalJSON.g:400:3: this_JSONNumericLiteral_3= ruleJSONNumericLiteral
+                    // InternalJSON.g:378:3: this_JSONNumericLiteral_3= ruleJSONNumericLiteral
                     {
 
                     			newCompositeNode(grammarAccess.getJSONValueAccess().getJSONNumericLiteralParserRuleCall_3());
@@ -1051,7 +969,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalJSON.g:409:3: this_JSONNullLiteral_4= ruleJSONNullLiteral
+                    // InternalJSON.g:387:3: this_JSONNullLiteral_4= ruleJSONNullLiteral
                     {
 
                     			newCompositeNode(grammarAccess.getJSONValueAccess().getJSONNullLiteralParserRuleCall_4());
@@ -1069,7 +987,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalJSON.g:418:3: this_JSONBooleanLiteral_5= ruleJSONBooleanLiteral
+                    // InternalJSON.g:396:3: this_JSONBooleanLiteral_5= ruleJSONBooleanLiteral
                     {
 
                     			newCompositeNode(grammarAccess.getJSONValueAccess().getJSONBooleanLiteralParserRuleCall_5());
@@ -1109,7 +1027,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleJSONStringLiteral"
-    // InternalJSON.g:430:1: entryRuleJSONStringLiteral returns [EObject current=null] : iv_ruleJSONStringLiteral= ruleJSONStringLiteral EOF ;
+    // InternalJSON.g:408:1: entryRuleJSONStringLiteral returns [EObject current=null] : iv_ruleJSONStringLiteral= ruleJSONStringLiteral EOF ;
     public final EObject entryRuleJSONStringLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -1117,8 +1035,8 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalJSON.g:430:58: (iv_ruleJSONStringLiteral= ruleJSONStringLiteral EOF )
-            // InternalJSON.g:431:2: iv_ruleJSONStringLiteral= ruleJSONStringLiteral EOF
+            // InternalJSON.g:408:58: (iv_ruleJSONStringLiteral= ruleJSONStringLiteral EOF )
+            // InternalJSON.g:409:2: iv_ruleJSONStringLiteral= ruleJSONStringLiteral EOF
             {
              newCompositeNode(grammarAccess.getJSONStringLiteralRule()); 
             pushFollow(FOLLOW_1);
@@ -1145,7 +1063,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleJSONStringLiteral"
-    // InternalJSON.g:437:1: ruleJSONStringLiteral returns [EObject current=null] : ( (lv_value_0_0= RULE_STRING ) ) ;
+    // InternalJSON.g:415:1: ruleJSONStringLiteral returns [EObject current=null] : ( (lv_value_0_0= RULE_STRING ) ) ;
     public final EObject ruleJSONStringLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -1155,14 +1073,14 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalJSON.g:443:2: ( ( (lv_value_0_0= RULE_STRING ) ) )
-            // InternalJSON.g:444:2: ( (lv_value_0_0= RULE_STRING ) )
+            // InternalJSON.g:421:2: ( ( (lv_value_0_0= RULE_STRING ) ) )
+            // InternalJSON.g:422:2: ( (lv_value_0_0= RULE_STRING ) )
             {
-            // InternalJSON.g:444:2: ( (lv_value_0_0= RULE_STRING ) )
-            // InternalJSON.g:445:3: (lv_value_0_0= RULE_STRING )
+            // InternalJSON.g:422:2: ( (lv_value_0_0= RULE_STRING ) )
+            // InternalJSON.g:423:3: (lv_value_0_0= RULE_STRING )
             {
-            // InternalJSON.g:445:3: (lv_value_0_0= RULE_STRING )
-            // InternalJSON.g:446:4: lv_value_0_0= RULE_STRING
+            // InternalJSON.g:423:3: (lv_value_0_0= RULE_STRING )
+            // InternalJSON.g:424:4: lv_value_0_0= RULE_STRING
             {
             lv_value_0_0=(Token)match(input,RULE_STRING,FOLLOW_2); 
 
@@ -1204,7 +1122,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleJSONNumericLiteral"
-    // InternalJSON.g:465:1: entryRuleJSONNumericLiteral returns [EObject current=null] : iv_ruleJSONNumericLiteral= ruleJSONNumericLiteral EOF ;
+    // InternalJSON.g:443:1: entryRuleJSONNumericLiteral returns [EObject current=null] : iv_ruleJSONNumericLiteral= ruleJSONNumericLiteral EOF ;
     public final EObject entryRuleJSONNumericLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -1212,8 +1130,8 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalJSON.g:465:59: (iv_ruleJSONNumericLiteral= ruleJSONNumericLiteral EOF )
-            // InternalJSON.g:466:2: iv_ruleJSONNumericLiteral= ruleJSONNumericLiteral EOF
+            // InternalJSON.g:443:59: (iv_ruleJSONNumericLiteral= ruleJSONNumericLiteral EOF )
+            // InternalJSON.g:444:2: iv_ruleJSONNumericLiteral= ruleJSONNumericLiteral EOF
             {
              newCompositeNode(grammarAccess.getJSONNumericLiteralRule()); 
             pushFollow(FOLLOW_1);
@@ -1240,7 +1158,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleJSONNumericLiteral"
-    // InternalJSON.g:472:1: ruleJSONNumericLiteral returns [EObject current=null] : ( (lv_value_0_0= RULE_NUMBER ) ) ;
+    // InternalJSON.g:450:1: ruleJSONNumericLiteral returns [EObject current=null] : ( (lv_value_0_0= RULE_NUMBER ) ) ;
     public final EObject ruleJSONNumericLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -1250,14 +1168,14 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalJSON.g:478:2: ( ( (lv_value_0_0= RULE_NUMBER ) ) )
-            // InternalJSON.g:479:2: ( (lv_value_0_0= RULE_NUMBER ) )
+            // InternalJSON.g:456:2: ( ( (lv_value_0_0= RULE_NUMBER ) ) )
+            // InternalJSON.g:457:2: ( (lv_value_0_0= RULE_NUMBER ) )
             {
-            // InternalJSON.g:479:2: ( (lv_value_0_0= RULE_NUMBER ) )
-            // InternalJSON.g:480:3: (lv_value_0_0= RULE_NUMBER )
+            // InternalJSON.g:457:2: ( (lv_value_0_0= RULE_NUMBER ) )
+            // InternalJSON.g:458:3: (lv_value_0_0= RULE_NUMBER )
             {
-            // InternalJSON.g:480:3: (lv_value_0_0= RULE_NUMBER )
-            // InternalJSON.g:481:4: lv_value_0_0= RULE_NUMBER
+            // InternalJSON.g:458:3: (lv_value_0_0= RULE_NUMBER )
+            // InternalJSON.g:459:4: lv_value_0_0= RULE_NUMBER
             {
             lv_value_0_0=(Token)match(input,RULE_NUMBER,FOLLOW_2); 
 
@@ -1299,7 +1217,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleJSONBooleanLiteral"
-    // InternalJSON.g:500:1: entryRuleJSONBooleanLiteral returns [EObject current=null] : iv_ruleJSONBooleanLiteral= ruleJSONBooleanLiteral EOF ;
+    // InternalJSON.g:478:1: entryRuleJSONBooleanLiteral returns [EObject current=null] : iv_ruleJSONBooleanLiteral= ruleJSONBooleanLiteral EOF ;
     public final EObject entryRuleJSONBooleanLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -1307,8 +1225,8 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalJSON.g:500:59: (iv_ruleJSONBooleanLiteral= ruleJSONBooleanLiteral EOF )
-            // InternalJSON.g:501:2: iv_ruleJSONBooleanLiteral= ruleJSONBooleanLiteral EOF
+            // InternalJSON.g:478:59: (iv_ruleJSONBooleanLiteral= ruleJSONBooleanLiteral EOF )
+            // InternalJSON.g:479:2: iv_ruleJSONBooleanLiteral= ruleJSONBooleanLiteral EOF
             {
              newCompositeNode(grammarAccess.getJSONBooleanLiteralRule()); 
             pushFollow(FOLLOW_1);
@@ -1335,7 +1253,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleJSONBooleanLiteral"
-    // InternalJSON.g:507:1: ruleJSONBooleanLiteral returns [EObject current=null] : ( () ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' ) ) ;
+    // InternalJSON.g:485:1: ruleJSONBooleanLiteral returns [EObject current=null] : ( () ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' ) ) ;
     public final EObject ruleJSONBooleanLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -1346,14 +1264,14 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalJSON.g:513:2: ( ( () ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' ) ) )
-            // InternalJSON.g:514:2: ( () ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' ) )
+            // InternalJSON.g:491:2: ( ( () ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' ) ) )
+            // InternalJSON.g:492:2: ( () ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' ) )
             {
-            // InternalJSON.g:514:2: ( () ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' ) )
-            // InternalJSON.g:515:3: () ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' )
+            // InternalJSON.g:492:2: ( () ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' ) )
+            // InternalJSON.g:493:3: () ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' )
             {
-            // InternalJSON.g:515:3: ()
-            // InternalJSON.g:516:4: 
+            // InternalJSON.g:493:3: ()
+            // InternalJSON.g:494:4: 
             {
 
             				current = forceCreateModelElement(
@@ -1363,7 +1281,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalJSON.g:522:3: ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' )
+            // InternalJSON.g:500:3: ( ( (lv_booleanValue_1_0= 'true' ) ) | otherlv_2= 'false' )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -1381,13 +1299,13 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
             }
             switch (alt7) {
                 case 1 :
-                    // InternalJSON.g:523:4: ( (lv_booleanValue_1_0= 'true' ) )
+                    // InternalJSON.g:501:4: ( (lv_booleanValue_1_0= 'true' ) )
                     {
-                    // InternalJSON.g:523:4: ( (lv_booleanValue_1_0= 'true' ) )
-                    // InternalJSON.g:524:5: (lv_booleanValue_1_0= 'true' )
+                    // InternalJSON.g:501:4: ( (lv_booleanValue_1_0= 'true' ) )
+                    // InternalJSON.g:502:5: (lv_booleanValue_1_0= 'true' )
                     {
-                    // InternalJSON.g:524:5: (lv_booleanValue_1_0= 'true' )
-                    // InternalJSON.g:525:6: lv_booleanValue_1_0= 'true'
+                    // InternalJSON.g:502:5: (lv_booleanValue_1_0= 'true' )
+                    // InternalJSON.g:503:6: lv_booleanValue_1_0= 'true'
                     {
                     lv_booleanValue_1_0=(Token)match(input,38,FOLLOW_2); 
 
@@ -1409,7 +1327,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalJSON.g:538:4: otherlv_2= 'false'
+                    // InternalJSON.g:516:4: otherlv_2= 'false'
                     {
                     otherlv_2=(Token)match(input,39,FOLLOW_2); 
 
@@ -1444,7 +1362,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleJSONNullLiteral"
-    // InternalJSON.g:547:1: entryRuleJSONNullLiteral returns [EObject current=null] : iv_ruleJSONNullLiteral= ruleJSONNullLiteral EOF ;
+    // InternalJSON.g:525:1: entryRuleJSONNullLiteral returns [EObject current=null] : iv_ruleJSONNullLiteral= ruleJSONNullLiteral EOF ;
     public final EObject entryRuleJSONNullLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -1452,8 +1370,8 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalJSON.g:547:56: (iv_ruleJSONNullLiteral= ruleJSONNullLiteral EOF )
-            // InternalJSON.g:548:2: iv_ruleJSONNullLiteral= ruleJSONNullLiteral EOF
+            // InternalJSON.g:525:56: (iv_ruleJSONNullLiteral= ruleJSONNullLiteral EOF )
+            // InternalJSON.g:526:2: iv_ruleJSONNullLiteral= ruleJSONNullLiteral EOF
             {
              newCompositeNode(grammarAccess.getJSONNullLiteralRule()); 
             pushFollow(FOLLOW_1);
@@ -1480,7 +1398,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleJSONNullLiteral"
-    // InternalJSON.g:554:1: ruleJSONNullLiteral returns [EObject current=null] : ( () otherlv_1= 'null' ) ;
+    // InternalJSON.g:532:1: ruleJSONNullLiteral returns [EObject current=null] : ( () otherlv_1= 'null' ) ;
     public final EObject ruleJSONNullLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -1490,14 +1408,14 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalJSON.g:560:2: ( ( () otherlv_1= 'null' ) )
-            // InternalJSON.g:561:2: ( () otherlv_1= 'null' )
+            // InternalJSON.g:538:2: ( ( () otherlv_1= 'null' ) )
+            // InternalJSON.g:539:2: ( () otherlv_1= 'null' )
             {
-            // InternalJSON.g:561:2: ( () otherlv_1= 'null' )
-            // InternalJSON.g:562:3: () otherlv_1= 'null'
+            // InternalJSON.g:539:2: ( () otherlv_1= 'null' )
+            // InternalJSON.g:540:3: () otherlv_1= 'null'
             {
-            // InternalJSON.g:562:3: ()
-            // InternalJSON.g:563:4: 
+            // InternalJSON.g:540:3: ()
+            // InternalJSON.g:541:4: 
             {
 
             				current = forceCreateModelElement(
@@ -1539,12 +1457,12 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
 
     public static final BitSet FOLLOW_1 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_2 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0000000400000010L});
     public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000600000000L});
-    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000400000000L});
+    public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x0000000800000000L});
     public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x000001D100000030L});
-    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x0000002200000000L});
-    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000002000000000L});
+    public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x000001F100000030L});
+    public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0000002200000000L});
 
 }
