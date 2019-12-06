@@ -145,33 +145,35 @@ public class N4jscCompiler {
 	}
 
 	private void verbosePrintAllProjects() {
-		Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
-		int maxPrjNameLength = projects.stream()
-				.filter(p -> p.getName() != null)
-				.mapToInt(p -> p.getName().length())
-				.max().orElse(10);
-		String prjNameWithPadding = "%-" + maxPrjNameLength + "s";
+		if (LOG.isInfoEnabled()) {
+			Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
+			int maxPrjNameLength = projects.stream()
+					.filter(p -> p.getName() != null)
+					.mapToInt(p -> p.getName().length())
+					.max().orElse(10);
+			String prjNameWithPadding = "%-" + maxPrjNameLength + "s";
 
-		if (!projects.isEmpty()) {
-			Path workspace = options.getDirs().get(0).toPath();
+			if (!projects.isEmpty()) {
+				Path workspace = options.getDirs().get(0).toPath();
 
-			SortedMap<String, String> projectNameList = new TreeMap<>();
-			for (IProjectConfig prj : projects) {
-				String prjName = prj.getName() == null ? "[no_name]" : prj.getName();
-				String locationStr = null;
-				if (prj.getPath() == null) {
-					locationStr = "[no_location]";
-				} else {
-					locationStr = workspace.relativize(Path.of(prj.getPath().toFileString())).toString();
-					if (locationStr.isBlank()) {
-						locationStr = ".";
+				SortedMap<String, String> projectNameList = new TreeMap<>();
+				for (IProjectConfig prj : projects) {
+					String prjName = prj.getName() == null ? "[no_name]" : prj.getName();
+					String locationStr = null;
+					if (prj.getPath() == null) {
+						locationStr = "[no_location]";
+					} else {
+						locationStr = workspace.relativize(Path.of(prj.getPath().toFileString())).toString();
+						if (locationStr.isBlank()) {
+							locationStr = ".";
+						}
 					}
+					String outputLine = String.format(prjNameWithPadding + " at %s", prjName, locationStr);
+					projectNameList.put(locationStr, outputLine);
 				}
-				String outputLine = String.format(prjNameWithPadding + " at %s", prjName, locationStr);
-				projectNameList.put(locationStr, outputLine);
-			}
 
-			LOG.info(projects.size() + " projects: \n   " + String.join("\n   ", projectNameList.values()));
+				LOG.info(projects.size() + " projects: \n   " + String.join("\n   ", projectNameList.values()));
+			}
 		}
 	}
 
