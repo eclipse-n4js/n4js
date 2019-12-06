@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.eclipse.n4js</groupId>
+		<artifactId>org.eclipse.n4js.tests</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>org.eclipse.n4js.ide.integrationtests</artifactId>
+	<name>org.eclipse.n4js.ide.integrationtests</name>
+	<packaging>eclipse-test-plugin</packaging>
+	<description>Test the headless N4js compiler bundled into one jar.</description>
+
+
+	<build>
+		<plugins>
+			<!-- Copy the executable jar to target/tools folder of this bundle so that the integration tests can use it -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>${maven-dependency-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.eclipse.n4js</groupId>
+									<artifactId>org.eclipse.n4js.cli</artifactId>
+									<classifier>jar-with-dependencies</classifier>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/</outputDirectory>
+									<destFileName>${hlc.jar-shortname}</destFileName>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/tools</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<localRepositoryDirectory>${project.build.directory}/localyDownloadedMvnRepo</localRepositoryDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${jdk-version}</source>
+					<target>${jdk-version}</target>
+					<release>${jdk-version}</release>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-verifier-plugin</artifactId>
+				<version>${maven-verifier-plugin.version}</version>
+				<configuration>
+					<verificationFile>verifier/verifications-test.xml</verificationFile>
+				</configuration>
+				<executions>
+					<execution>
+						<id>main</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<systemProperties>
+								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+							</systemProperties>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven-antrun-plugin.version}</version>
+				<executions>
+					<!-- Stop test verdaccio -->
+					<execution>
+						<id>stop-verdaccio</id>
+						<phase>${internal_stopVerdaccioPhase}</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<exec executable="docker" spawn="false">
+									<arg value="rm"/>
+									<arg value="-f"/>
+									<arg value="n4js-test-verdaccio"/>
+								</exec>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>execute-hlc-integration-tests</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+			 <plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>${maven-failsafe-plugin.version}</version>
+					<configuration>
+						<testSourceDirectory>${project.basedir}/src</testSourceDirectory>
+						<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
+						<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
+						<includes>
+							<include>**/*JarTest.java</include>
+							<include>**/*CliTest.java</include>
+						</includes>
+					</configuration>
+					<executions>
+						<execution>
+							<id>integration-test</id>
+							<goals>
+								<goal>integration-test</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>verify</id>
+							<goals>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			 </plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

@@ -47,7 +47,7 @@ In order to make sure that the npms work correctly with the `n4js` product, we n
 WARNING: The NPMs are currently published using NumberFour's internal build infrastructure in combination with extended integration tests. This needs to be changed in the future!
 
 This section describes how integration tests can use local npm registry during the test.
-All integration tests that require a local npm registry should be placed in the bundle `org.eclipse.n4js.hlc.integrationtests`
+All integration tests that require a local npm registry should be placed in the bundle `org.eclipse.n4js.ide.integrationtests`
 
 .How the publishing steps are embedded in Maven phases
 [.center]
@@ -60,10 +60,10 @@ During the maven build, three projects `org.eclipse.n4js.external.libraries.upda
 
 * During the _verify_ phase of the `org.eclipse.n4js.product.build` build, the Maven `exec-maven` plugin calls the script `n4js/releng/utils/scripts/publish-n4js-libs.sh` to publish the npms in the n4js-lib to the _staging npm registry_. The URL of this staging npm registry must be configured before triggering maven build via the environment variable `NPM_STAGING_REGISTRY`. Note that the staging npm registry lives beyond the life of `n4js-inhouse` 's maven build and holds npms that are needed by the integration tests in the n4js-extended's build.
 
-* During the _pre-integration-test_ phase of the `org.eclipse.n4js.hlc.integrationtests` bundle, the Maven `antrun` plugin starts a _verdaccio_ docker container local npm registry at `http://localhost:4873` via docker. Also in the very same phase, the Maven plugin `exec-maven` calls the script `n4js/releng/utils/scripts/publish-n4js-libs.sh` to publish the npms in the n4js-lib folder to the local registry `http://localhost:4873`. The list of published npms is identical to that list above. Note that the npms are published with the `dist-tag` _test_.
+* During the _pre-integration-test_ phase of the `org.eclipse.n4js.ide.integrationtests` bundle, the Maven `antrun` plugin starts a _verdaccio_ docker container local npm registry at `http://localhost:4873` via docker. Also in the very same phase, the Maven plugin `exec-maven` calls the script `n4js/releng/utils/scripts/publish-n4js-libs.sh` to publish the npms in the n4js-lib folder to the local registry `http://localhost:4873`. The list of published npms is identical to that list above. Note that the npms are published with the `dist-tag` _test_.
 
-* During the _integration-test_ phase of `org.eclipse.n4js.hlc.integrationtests`, the Maven `failsafe` plugin executes the integration tests. Here, the integration tests can pull the required npms from the local registry populated during the _pre-integration-test_ above.
+* During the _integration-test_ phase of `org.eclipse.n4js.ide.integrationtests`, the Maven `failsafe` plugin executes the integration tests. Here, the integration tests can pull the required npms from the local registry populated during the _pre-integration-test_ above.
 
-* In the _pre-integration-test_ phase of `org.eclipse.n4js.hlc.integrationtests`, the Maven `antrun` plugins removes the  _verdaccio_ docker container.
+* In the _pre-integration-test_ phase of `org.eclipse.n4js.ide.integrationtests`, the Maven `antrun` plugins removes the  _verdaccio_ docker container.
 
 
