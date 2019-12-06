@@ -20,9 +20,9 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,10 +32,11 @@ import java.util.zip.GZIPOutputStream;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl.EObjectInputStream;
-import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl.EObjectOutputStream;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
@@ -126,6 +127,7 @@ public class ProjectStatePersister {
 				writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state, files, validationIssues);
 
 			} catch (IOException e) {
+				e.printStackTrace();
 				if (file.isFile()) {
 					file.delete();
 				}
@@ -169,90 +171,68 @@ public class ProjectStatePersister {
 
 	private void writeResourceDescriptions(XIndexState state, ObjectOutputStream output) throws IOException {
 		ResourceDescriptionsData resourceDescriptionData = state.getResourceDescriptions();
-		CustomEObjectOutputStream eObjectOutputStream = new CustomEObjectOutputStream(output);
-		eObjectOutputStream.writeCompressedInt(resourceDescriptionData.getAllURIs().size());
+		output.writeInt(resourceDescriptionData.getAllURIs().size());
 		for (IResourceDescription description : resourceDescriptionData.getAllResourceDescriptions()) {
 			if (description instanceof SerializableResourceDescription) {
-				writeResourceDescription((SerializableResourceDescription) description, eObjectOutputStream);
+				writeResourceDescription((SerializableResourceDescription) description, output);
 			} else {
 				throw new IOException("Unexpected type: " + description.getClass().getName());
 			}
 		}
-		eObjectOutputStream.flush();
 	}
 
-	static class CustomEObjectOutputStream extends EObjectOutputStream {
-
-		public CustomEObjectOutputStream(OutputStream outputStream) throws IOException {
-			super(outputStream, Collections.emptyMap());
-		}
-
-		@Override
-		protected void writeSignature() throws IOException {
-			// skip
-		}
-
-		@Override
-		protected void writeVersion() throws IOException {
-			// skip
-		}
-
-		@Override
-		protected EClassData writeEClass(EClass eClass) throws IOException {
-			// make visible
-			return super.writeEClass(eClass);
-		}
-
-		@Override
-		protected EStructuralFeatureData writeEStructuralFeature(EStructuralFeature eStructuralFeature)
-				throws IOException {
-			// make visible
-			return super.writeEStructuralFeature(eStructuralFeature);
-		}
-	}
-
-	private void writeResourceDescription(SerializableResourceDescription description, CustomEObjectOutputStream output)
+	private void writeResourceDescription(SerializableResourceDescription description, ObjectOutputStream output)
 			throws IOException {
 		// description.writeExternal(output);
 		// relies on writeObject which is very slow
 
-		output.writeURI(description.getURI());
+		output.writeUTF(description.getURI().toString());
 		{
 			List<SerializableEObjectDescription> objects = description.getDescriptions();
-			output.writeCompressedInt(objects.size());
+			output.writeInt(objects.size());
 			for (SerializableEObjectDescription object : objects) {
-				output.writeURI(object.getEObjectURI());
-				output.writeEClass(object.getEClass());
-				object.getQualifiedName().writeToStream(output);
+				output.writeUTF(object.getEObjectURI().toString());
+				output.writeUTF(EcoreUtil.getURI(object.getEClass()).toString());
+				QualifiedName qn = object.getQualifiedName();
+				writeQualifiedName(qn, output);
 				Map<String, String> userData = object.getUserData();
 				if (userData != null) {
-					output.writeCompressedInt(userData.size());
+					output.writeInt(userData.size());
 					for (Map.Entry<String, String> entry : userData.entrySet()) {
-						output.writeString(entry.getKey());
-						output.writeString(entry.getValue());
+						output.writeUTF(entry.getKey());
+						byte[] valueAsBytes = entry.getValue().getBytes(StandardCharsets.UTF_16);
+						output.writeInt(valueAsBytes.length);
+						output.write(valueAsBytes);
 					}
 				} else {
-					output.writeCompressedInt(0);
+					output.writeInt(0);
 				}
 			}
 		}
 		{
 			List<SerializableReferenceDescription> references = description.getReferences();
-			output.writeCompressedInt(references.size());
+			output.writeInt(references.size());
 			for (SerializableReferenceDescription reference : references) {
-				output.writeURI(reference.getSourceEObjectUri());
-				output.writeURI(reference.getTargetEObjectUri());
-				output.writeURI(reference.getContainerEObjectURI());
-				output.writeEStructuralFeature(reference.getEReference());
-				output.writeCompressedInt(reference.getIndexInList() + 1);
+				output.writeUTF(reference.getSourceEObjectUri().toString());
+				output.writeUTF(reference.getTargetEObjectUri().toString());
+				output.writeUTF(reference.getContainerEObjectURI().toString());
+				output.writeUTF(EcoreUtil.getURI(reference.getEReference()).toString());
+				output.writeInt(reference.getIndexInList());
 			}
 		}
 		{
 			List<QualifiedName> importedNames = IterableExtensions.toList(description.getImportedNames());
-			output.writeCompressedInt(importedNames.size());
+			output.writeInt(importedNames.size());
 			for (QualifiedName importedName : importedNames) {
-				importedName.writeToStream(output);
+				writeQualifiedName(importedName, output);
 			}
+		}
+	}
+
+	private void writeQualifiedName(QualifiedName qualifiedName, ObjectOutputStream output) throws IOException {
+		output.writeInt(qualifiedName.getSegmentCount());
+		for (int i = 0, max = qualifiedName.getSegmentCount(); i < max; i++) {
+			output.writeUTF(qualifiedName.getSegment(i));
 		}
 	}
 
@@ -318,8 +298,8 @@ public class ProjectStatePersister {
 					file.delete();
 				}
 			}
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -363,65 +343,54 @@ public class ProjectStatePersister {
 		}
 	}
 
-	static class CustomEObjectInputStream extends EObjectInputStream {
-
-		public CustomEObjectInputStream(InputStream outputStream) throws IOException {
-			super(outputStream, Collections.emptyMap());
-		}
-
-		@Override
-		protected void readSignature() throws IOException {
-			// skip
-		}
-
-		@Override
-		protected void readVersion() throws IOException {
-			version = Version.VERSION_1_0;
-		}
-
-		protected EClass doReadEClass() throws IOException {
-			return readEClass().eClass;
-		}
-
-		protected EReference doReadEReference() throws IOException {
-			return (EReference) readEStructuralFeature().eStructuralFeature;
-		}
-	}
-
 	private ResourceDescriptionsData readResourceDescriptions(ObjectInputStream input)
 			throws IOException {
 
 		List<IResourceDescription> descriptions = new ArrayList<>();
-		CustomEObjectInputStream eObjectInput = new CustomEObjectInputStream(input);
-		int size = eObjectInput.readCompressedInt();
+		int size = input.readInt();
 		while (size > 0) {
 			size--;
-			descriptions.add(readResourceDescription(eObjectInput));
+			descriptions.add(readResourceDescription(input));
 		}
 
 		ResourceDescriptionsData resourceDescriptionsData = new ResourceDescriptionsData(descriptions);
 		return resourceDescriptionsData;
 	}
 
-	private SerializableResourceDescription readResourceDescription(CustomEObjectInputStream input)
+	private ENamedElement readEcoreElement(ObjectInputStream input) throws IOException {
+		URI uri = URI.createURI(input.readUTF());
+		EPackage ePackage = EPackage.Registry.INSTANCE.getEPackage(uri.trimFragment().toString());
+		if (ePackage != null) {
+			Resource resource = ePackage.eResource();
+			return (ENamedElement) resource.getEObject(uri.fragment());
+		}
+		return null;
+	}
+
+	private SerializableResourceDescription readResourceDescription(ObjectInputStream input)
 			throws IOException {
 		SerializableResourceDescription description = new SerializableResourceDescription();
 
-		description.setURI(input.readURI());
+		description.setURI(URI.createURI(input.readUTF()));
 		{
 			List<SerializableEObjectDescription> objects = new ArrayList<>();
-			int size = input.readCompressedInt();
+			int size = input.readInt();
 			while (size > 0) {
 				size--;
 				SerializableEObjectDescription object = new SerializableEObjectDescription();
-				object.setEObjectURI(input.readURI());
-				object.setEClass(input.doReadEClass());
-				object.setQualifiedName(QualifiedName.createFromStream(input));
-				int userDataSize = input.readCompressedInt();
+				object.setEObjectURI(URI.createURI(input.readUTF()));
+				object.setEClass((EClass) readEcoreElement(input));
+				object.setQualifiedName(readQualifiedName(input));
+				int userDataSize = input.readInt();
 				HashMap<String, String> userData = new HashMap<>();
 				while (userDataSize > 0) {
 					userDataSize--;
-					userData.put(input.readString(), input.readString());
+					String key = input.readUTF();
+					int valueLength = input.readInt();
+					byte[] valueAsBytes = new byte[valueLength];
+					input.readFully(valueAsBytes, 0, valueLength);
+					String value = new String(valueAsBytes, StandardCharsets.UTF_16);
+					userData.put(key, value);
 				}
 				object.setUserData(userData);
 				objects.add(object);
@@ -430,30 +399,40 @@ public class ProjectStatePersister {
 		}
 		{
 			List<SerializableReferenceDescription> references = new ArrayList<>();
-			int size = input.readCompressedInt();
+			int size = input.readInt();
 			while (size > 0) {
 				size--;
 				SerializableReferenceDescription reference = new SerializableReferenceDescription();
-				reference.setSourceEObjectUri(input.readURI());
-				reference.setTargetEObjectUri(input.readURI());
-				reference.setContainerEObjectURI(input.readURI());
-				reference.setEReference(input.doReadEReference());
-				reference.setIndexInList(input.readCompressedInt() - 1);
+				reference.setSourceEObjectUri(URI.createURI(input.readUTF()));
+				reference.setTargetEObjectUri(URI.createURI(input.readUTF()));
+				reference.setContainerEObjectURI(URI.createURI(input.readUTF()));
+				reference.setEReference((EReference) readEcoreElement(input));
+				reference.setIndexInList(input.readInt() - 1);
 				references.add(reference);
 			}
 			description.setReferences(references);
 		}
 		{
 			List<QualifiedName> importedNames = new ArrayList<>();
-			int size = input.readCompressedInt();
+			int size = input.readInt();
 			while (size > 0) {
 				size--;
-				importedNames.add(QualifiedName.createFromStream(input));
+				importedNames.add(readQualifiedName(input));
 			}
 			description.setImportedNames(importedNames);
 		}
 
 		return description;
+	}
+
+	private QualifiedName readQualifiedName(ObjectInputStream input) throws IOException {
+		int size = input.readInt();
+		QualifiedName.Builder builder = new QualifiedName.Builder(size);
+		while (size > 0) {
+			size--;
+			builder.add(input.readUTF());
+		}
+		return builder.build();
 	}
 
 	private XSource2GeneratedMapping readFileMappings(ObjectInputStream input)
