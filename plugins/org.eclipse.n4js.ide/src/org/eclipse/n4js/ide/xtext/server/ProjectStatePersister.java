@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,17 +31,26 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl.EObjectInputStream;
+import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl.EObjectOutputStream;
 import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.build.Source2GeneratedMapping;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.resource.persistence.SerializableEObjectDescription;
+import org.eclipse.xtext.resource.persistence.SerializableReferenceDescription;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.io.Files;
 
@@ -159,13 +169,89 @@ public class ProjectStatePersister {
 
 	private void writeResourceDescriptions(XIndexState state, ObjectOutputStream output) throws IOException {
 		ResourceDescriptionsData resourceDescriptionData = state.getResourceDescriptions();
-		output.writeInt(resourceDescriptionData.getAllURIs().size());
-
+		CustomEObjectOutputStream eObjectOutputStream = new CustomEObjectOutputStream(output);
+		eObjectOutputStream.writeCompressedInt(resourceDescriptionData.getAllURIs().size());
 		for (IResourceDescription description : resourceDescriptionData.getAllResourceDescriptions()) {
 			if (description instanceof SerializableResourceDescription) {
-				((SerializableResourceDescription) description).writeExternal(output);
+				writeResourceDescription((SerializableResourceDescription) description, eObjectOutputStream);
 			} else {
 				throw new IOException("Unexpected type: " + description.getClass().getName());
+			}
+		}
+		eObjectOutputStream.flush();
+	}
+
+	static class CustomEObjectOutputStream extends EObjectOutputStream {
+
+		public CustomEObjectOutputStream(OutputStream outputStream) throws IOException {
+			super(outputStream, Collections.emptyMap());
+		}
+
+		@Override
+		protected void writeSignature() throws IOException {
+			// skip
+		}
+
+		@Override
+		protected void writeVersion() throws IOException {
+			// skip
+		}
+
+		@Override
+		protected EClassData writeEClass(EClass eClass) throws IOException {
+			// make visible
+			return super.writeEClass(eClass);
+		}
+
+		@Override
+		protected EStructuralFeatureData writeEStructuralFeature(EStructuralFeature eStructuralFeature)
+				throws IOException {
+			// make visible
+			return super.writeEStructuralFeature(eStructuralFeature);
+		}
+	}
+
+	private void writeResourceDescription(SerializableResourceDescription description, CustomEObjectOutputStream output)
+			throws IOException {
+		// description.writeExternal(output);
+		// relies on writeObject which is very slow
+
+		output.writeURI(description.getURI());
+		{
+			List<SerializableEObjectDescription> objects = description.getDescriptions();
+			output.writeCompressedInt(objects.size());
+			for (SerializableEObjectDescription object : objects) {
+				output.writeURI(object.getEObjectURI());
+				output.writeEClass(object.getEClass());
+				object.getQualifiedName().writeToStream(output);
+				Map<String, String> userData = object.getUserData();
+				if (userData != null) {
+					output.writeCompressedInt(userData.size());
+					for (Map.Entry<String, String> entry : userData.entrySet()) {
+						output.writeString(entry.getKey());
+						output.writeString(entry.getValue());
+					}
+				} else {
+					output.writeCompressedInt(0);
+				}
+			}
+		}
+		{
+			List<SerializableReferenceDescription> references = description.getReferences();
+			output.writeCompressedInt(references.size());
+			for (SerializableReferenceDescription reference : references) {
+				output.writeURI(reference.getSourceEObjectUri());
+				output.writeURI(reference.getTargetEObjectUri());
+				output.writeURI(reference.getContainerEObjectURI());
+				output.writeEStructuralFeature(reference.getEReference());
+				output.writeCompressedInt(reference.getIndexInList() + 1);
+			}
+		}
+		{
+			List<QualifiedName> importedNames = IterableExtensions.toList(description.getImportedNames());
+			output.writeCompressedInt(importedNames.size());
+			for (QualifiedName importedName : importedNames) {
+				importedName.writeToStream(output);
 			}
 		}
 	}
@@ -277,20 +363,97 @@ public class ProjectStatePersister {
 		}
 	}
 
+	static class CustomEObjectInputStream extends EObjectInputStream {
+
+		public CustomEObjectInputStream(InputStream outputStream) throws IOException {
+			super(outputStream, Collections.emptyMap());
+		}
+
+		@Override
+		protected void readSignature() throws IOException {
+			// skip
+		}
+
+		@Override
+		protected void readVersion() throws IOException {
+			version = Version.VERSION_1_0;
+		}
+
+		protected EClass doReadEClass() throws IOException {
+			return readEClass().eClass;
+		}
+
+		protected EReference doReadEReference() throws IOException {
+			return (EReference) readEStructuralFeature().eStructuralFeature;
+		}
+	}
+
 	private ResourceDescriptionsData readResourceDescriptions(ObjectInputStream input)
-			throws IOException, ClassNotFoundException {
+			throws IOException {
 
 		List<IResourceDescription> descriptions = new ArrayList<>();
-		int size = input.readInt();
+		CustomEObjectInputStream eObjectInput = new CustomEObjectInputStream(input);
+		int size = eObjectInput.readCompressedInt();
 		while (size > 0) {
 			size--;
-			SerializableResourceDescription description = new SerializableResourceDescription();
-			description.readExternal(input);
-			descriptions.add(description);
+			descriptions.add(readResourceDescription(eObjectInput));
 		}
 
 		ResourceDescriptionsData resourceDescriptionsData = new ResourceDescriptionsData(descriptions);
 		return resourceDescriptionsData;
+	}
+
+	private SerializableResourceDescription readResourceDescription(CustomEObjectInputStream input)
+			throws IOException {
+		SerializableResourceDescription description = new SerializableResourceDescription();
+
+		description.setURI(input.readURI());
+		{
+			List<SerializableEObjectDescription> objects = new ArrayList<>();
+			int size = input.readCompressedInt();
+			while (size > 0) {
+				size--;
+				SerializableEObjectDescription object = new SerializableEObjectDescription();
+				object.setEObjectURI(input.readURI());
+				object.setEClass(input.doReadEClass());
+				object.setQualifiedName(QualifiedName.createFromStream(input));
+				int userDataSize = input.readCompressedInt();
+				HashMap<String, String> userData = new HashMap<>();
+				while (userDataSize > 0) {
+					userDataSize--;
+					userData.put(input.readString(), input.readString());
+				}
+				object.setUserData(userData);
+				objects.add(object);
+			}
+			description.setDescriptions(objects);
+		}
+		{
+			List<SerializableReferenceDescription> references = new ArrayList<>();
+			int size = input.readCompressedInt();
+			while (size > 0) {
+				size--;
+				SerializableReferenceDescription reference = new SerializableReferenceDescription();
+				reference.setSourceEObjectUri(input.readURI());
+				reference.setTargetEObjectUri(input.readURI());
+				reference.setContainerEObjectURI(input.readURI());
+				reference.setEReference(input.doReadEReference());
+				reference.setIndexInList(input.readCompressedInt() - 1);
+				references.add(reference);
+			}
+			description.setReferences(references);
+		}
+		{
+			List<QualifiedName> importedNames = new ArrayList<>();
+			int size = input.readCompressedInt();
+			while (size > 0) {
+				size--;
+				importedNames.add(QualifiedName.createFromStream(input));
+			}
+			description.setImportedNames(importedNames);
+		}
+
+		return description;
 	}
 
 	private XSource2GeneratedMapping readFileMappings(ObjectInputStream input)
