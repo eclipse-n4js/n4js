@@ -67,25 +67,18 @@ public class ProjectStateHolder {
 
 	/*
 	 * Implementation note: We use a sorted map to report the issues in a stable order. The values of the the map are
-	 * sorted by offset and message and severity
+	 * sorted by offset and severity and message.
+	 *
+	 * URI (keys in the multimap) are sorted according to their location in the file system. Turns out that the string
+	 * represenation yields the same result as a comparion per path segment.
+	 *
+	 * The sort order will look like this: /a/b, /a/b/c, /a/b/d, /a/c, /aa
 	 */
-	private final Multimap<URI, Issue> validationIssues = TreeMultimap.create(uriComparator, issueComparator);
-
-	private static final Comparator<URI> uriComparator = Comparator.comparing(URI::scheme)
-			.thenComparing((left, right) -> {
-				for (int i = 0, max = Math.min(left.segmentCount(), right.segmentCount()); i < max; i++) {
-					String leftSegment = left.segment(i);
-					String rightSegment = right.segment(i);
-					int segmentCompareResult = leftSegment.compareTo(rightSegment);
-					if (segmentCompareResult != 0) {
-						return segmentCompareResult;
-					}
-				}
-				return 0;
-			}).thenComparingInt(URI::segmentCount);
+	private final Multimap<URI, Issue> validationIssues = TreeMultimap.create(Comparator.comparing(URI::toString),
+			issueComparator);
 
 	private static final Comparator<Issue> issueComparator = Comparator.comparing(Issue::getOffset)
-			.thenComparing(Issue::getMessage).thenComparing(Issue::getSeverity).thenComparing(Issue::hashCode);
+			.thenComparing(Issue::getSeverity).thenComparing(Issue::getMessage).thenComparing(Issue::hashCode);
 
 	/** Clears type index of this project. */
 	public void doClear() {

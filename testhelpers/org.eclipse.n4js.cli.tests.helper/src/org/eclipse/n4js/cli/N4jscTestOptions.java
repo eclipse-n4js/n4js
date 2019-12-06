@@ -33,7 +33,14 @@ public class N4jscTestOptions extends N4jscOptions {
 	 * @return a new instance of {@link N4jscTestOptions} with goal compile
 	 */
 	static public N4jscTestOptions COMPILE(File... files) {
-		return COMPILE(Arrays.asList(files));
+		return COMPILE(true, Arrays.asList(files));
+	}
+
+	/**
+	 * @return a new instance of {@link N4jscTestOptions} with goal compile
+	 */
+	static public N4jscTestOptions COMPILE(boolean cleanNoPersist, File... files) {
+		return COMPILE(cleanNoPersist, Arrays.asList(files));
 	}
 
 	/**
@@ -42,9 +49,20 @@ public class N4jscTestOptions extends N4jscOptions {
 	 * @return a new instance of {@link N4jscTestOptions} with goal compile
 	 */
 	static public N4jscTestOptions COMPILE(List<File> files) {
+		return COMPILE(true, files);
+	}
+
+	/**
+	 * @return a new instance of {@link N4jscTestOptions} with goal compile
+	 */
+	static public N4jscTestOptions COMPILE(boolean cleanNoPersist, List<File> files) {
 		N4jscTestOptions instance = new N4jscTestOptions();
 		instance.options.goal = N4jscGoal.compile;
-		return instance.f(files).clean().noPersist();
+		instance.f(files);
+		if (cleanNoPersist) {
+			instance.clean().noPersist();
+		}
+		return instance;
 	}
 
 	/** @return a new instance of {@link N4jscTestOptions} with goal clean */

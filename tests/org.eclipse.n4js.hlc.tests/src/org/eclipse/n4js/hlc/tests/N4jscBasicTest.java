@@ -38,6 +38,9 @@ import com.google.common.base.Joiner;
  * Basic tests for N4jsc, testing various situations in which compiler exits with errors.
  */
 public class N4jscBasicTest extends AbstractCliCompileTest {
+
+	static final boolean DONT_CLEAN = false;
+
 	File workspace;
 	File proot;
 
@@ -83,9 +86,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
 				N4JSGlobals.N4JS_RUNTIME);
 
-		N4jscTestOptions compileOptions = COMPILE(workspace);
-		compileOptions.getDefinedOptions().remove("--noPersist");
-		compileOptions.getDefinedOptions().remove("--clean");
+		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
 		CliCompileResult firstRun = n4jsc(compileOptions);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
@@ -104,9 +105,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
 				N4JSGlobals.N4JS_RUNTIME);
 
-		N4jscTestOptions compileOptions = COMPILE(workspace);
-		compileOptions.getDefinedOptions().remove("--noPersist");
-		compileOptions.getDefinedOptions().remove("--clean");
+		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
 		CliCompileResult firstRun = n4jsc(compileOptions);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
@@ -136,9 +135,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
 				N4JSGlobals.N4JS_RUNTIME);
 
-		N4jscTestOptions compileOptions = COMPILE(workspace);
-		compileOptions.getDefinedOptions().remove("--noPersist");
-		compileOptions.getDefinedOptions().remove("--clean");
+		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
 		CliCompileResult firstRun = n4jsc(compileOptions);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
@@ -166,9 +163,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
 				N4JSGlobals.N4JS_RUNTIME);
 
-		N4jscTestOptions compileOptions = COMPILE(workspace);
-		compileOptions.getDefinedOptions().remove("--noPersist");
-		compileOptions.getDefinedOptions().remove("--clean");
+		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
 		CliCompileResult firstRun = n4jsc(compileOptions);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
@@ -196,9 +191,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
 				N4JSGlobals.N4JS_RUNTIME);
 
-		N4jscTestOptions compileOptions = COMPILE(workspace);
-		compileOptions.getDefinedOptions().remove("--noPersist");
-		compileOptions.getDefinedOptions().remove("--clean");
+		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
 		CliCompileResult firstRun = n4jsc(compileOptions);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
@@ -225,9 +218,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 		N4CliHelper.copyN4jsLibsToLocation(workspace.toPath().resolve(N4JSGlobals.NODE_MODULES),
 				N4JSGlobals.N4JS_RUNTIME);
 
-		N4jscTestOptions compileOptions = COMPILE(workspace);
-		compileOptions.getDefinedOptions().remove("--noPersist");
-		compileOptions.getDefinedOptions().remove("--clean");
+		N4jscTestOptions compileOptions = COMPILE(DONT_CLEAN, workspace);
 
 		CliCompileResult firstRun = n4jsc(compileOptions);
 		assertEquals(firstRun.toString(), 16, firstRun.getTranspiledFilesCount());
