@@ -199,11 +199,7 @@ public class ProjectStatePersister {
 					output.writeInt(userData.size());
 					for (Map.Entry<String, String> entry : userData.entrySet()) {
 						output.writeUTF(entry.getKey());
-						String value = entry.getValue();
-						output.writeInt(value.length());
-						for (int i = 0, max = value.length(); i < max; i++) {
-							output.write(value.charAt(i));
-						}
+						writeUserDataValue(entry.getValue(), output);
 					}
 				} else {
 					output.writeInt(0);
@@ -226,6 +222,28 @@ public class ProjectStatePersister {
 			output.writeInt(importedNames.size());
 			for (QualifiedName importedName : importedNames) {
 				writeQualifiedName(importedName, output);
+			}
+		}
+	}
+
+	private void writeUserDataValue(String value, ObjectOutputStream output) throws IOException {
+		int length = value.length();
+		output.writeInt(length);
+		if (buffer == null || buffer.length < length) {
+			buffer = new char[length];
+		}
+		value.getChars(0, length, buffer, 0);
+		LOOP: for (int i = 0; i < length; ++i) {
+			char character = buffer[i];
+			if (character == 0 || character > 0xFF) {
+				output.writeByte((byte) 0);
+				output.writeChar(character);
+				while (++i < length) {
+					output.writeChar(buffer[i]);
+				}
+				break LOOP;
+			} else {
+				output.writeByte((byte) character);
 			}
 		}
 	}
@@ -295,6 +313,7 @@ public class ProjectStatePersister {
 					}
 				}
 			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
 				if (file.isFile()) {
 					file.delete();
 				}
@@ -387,11 +406,7 @@ public class ProjectStatePersister {
 				while (userDataSize > 0) {
 					userDataSize--;
 					String key = input.readUTF();
-					char[] value = new char[input.readInt()];
-					for (int i = 0, max = value.length; i < max; i++) {
-						value[i] = input.readChar();
-					}
-					userData.put(key, String.copyValueOf(value));
+					userData.put(key, readUserDataValue(input));
 				}
 				object.setUserData(userData);
 				objects.add(object);
@@ -424,6 +439,31 @@ public class ProjectStatePersister {
 		}
 
 		return description;
+	}
+
+	char[] buffer = null;
+
+	private String readUserDataValue(ObjectInputStream input) throws IOException {
+		int length = input.readInt();
+		if (length == -1) {
+			return null;
+		} else {
+			if (buffer == null || buffer.length < length) {
+				buffer = new char[length];
+			}
+			LOOP: for (int i = 0; i < length; ++i) {
+				byte value = input.readByte();
+				if (value == 0) {
+					do {
+						buffer[i] = input.readChar();
+					} while (++i < length);
+					break LOOP;
+				} else {
+					buffer[i] = (char) (value & 0xFF);
+				}
+			}
+			return new String(buffer, 0, length);
+		}
 	}
 
 	private QualifiedName readQualifiedName(ObjectInputStream input) throws IOException {
