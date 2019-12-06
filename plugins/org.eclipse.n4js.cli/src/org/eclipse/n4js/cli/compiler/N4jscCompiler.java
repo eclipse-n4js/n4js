@@ -57,7 +57,6 @@ public class N4jscCompiler {
 	/** Starts the compiler for goal COMPILE or CLEAN in a blocking fashion */
 	static public void start(N4jscOptions options) throws Exception {
 		N4jscCompiler compiler = new N4jscCompiler(options);
-
 		try (Measurement m = N4JSDataCollectors.dcCliCompile.getMeasurement(options.toString())) {
 			compiler.start();
 		}
@@ -83,7 +82,9 @@ public class N4jscCompiler {
 		}
 
 		params.setRootUri(baseDir.toURI().toString());
+		Stopwatch sw = Stopwatch.createStarted();
 		languageServer.initialize(params).get();
+		System.out.println("initialize " + sw);
 		warnIfNoProjectsFound();
 		verbosePrintAllProjects();
 

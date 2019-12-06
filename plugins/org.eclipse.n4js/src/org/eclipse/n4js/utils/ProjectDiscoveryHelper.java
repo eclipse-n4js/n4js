@@ -16,14 +16,19 @@ import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -85,20 +90,21 @@ public class ProjectDiscoveryHelper {
 	public LinkedHashSet<Path> collectAllProjectDirs(Path... workspaceRoots) {
 		LinkedHashSet<Path> allProjectDirs = new LinkedHashSet<>();
 
+		Map<File, List<String>> workspacesCache = new HashMap<>();
 		for (Path workspaceRoot : workspaceRoots) {
-			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(workspaceRoot);
+			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(workspaceRoot,
+					workspacesCache);
 
 			if (nodeModulesFolder == null) {
 				// Is neither NPM nor Yarn project
-				LinkedHashSet<Path> standAloneProjects = collectProjects(workspaceRoot, false);
-				allProjectDirs.addAll(standAloneProjects);
+				collectProjects(workspaceRoot, false, workspacesCache, allProjectDirs);
 			} else {
 				if (nodeModulesFolder.isYarnWorkspace) {
 					// Is Yarn project
 					// use projects referenced in packages
 					Path yarnProjectDir = nodeModulesFolder.nodeModulesFolder.getParentFile().toPath();
 					allProjectDirs.add(yarnProjectDir);
-					allProjectDirs.addAll(collectYarnWorkspaceProjects(yarnProjectDir));
+					collectYarnWorkspaceProjects(yarnProjectDir, workspacesCache, allProjectDirs);
 				} else {
 					// Is NPM project
 					// given directory is a stand-alone npm project
@@ -108,36 +114,33 @@ public class ProjectDiscoveryHelper {
 		}
 
 		List<Path> nodeModulesFolders = nodeModulesDiscoveryHelper.findNodeModulesFolders(allProjectDirs);
-		for (Path nmFolder : nodeModulesFolders) {
-			LinkedHashSet<Path> dependencies = collectProjects(nmFolder, true);
-			allProjectDirs.addAll(dependencies);
+
+		for (Path nmFolder : new LinkedHashSet<>(nodeModulesFolders)) {
+			collectProjects(nmFolder, true, workspacesCache, allProjectDirs);
 		}
 
 		return allProjectDirs;
 	}
 
-	private LinkedHashSet<Path> collectYarnWorkspaceProjects(Path yarnProjectRoot) {
-		LinkedHashSet<Path> allProjectDirs = new LinkedHashSet<>();
-		FileURI uri = new FileURI(yarnProjectRoot.toFile());
-		List<String> workspaces = projectDescriptionLoader.loadWorkspacesFromProjectDescriptionAtLocation(uri);
+	private void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<File, List<String>> workspacesCache,
+			Set<Path> projects) {
+		List<String> workspaces = workspacesCache.computeIfAbsent(yarnProjectRoot.toFile(),
+				f -> projectDescriptionLoader.loadWorkspacesFromProjectDescriptionAtLocation(new FileURI(f)));
 
 		for (String workspaceGlob : workspaces) {
-			LinkedHashSet<Path> projects = collectGlobMatches(workspaceGlob, yarnProjectRoot);
-			allProjectDirs.addAll(projects);
+			collectGlobMatches(workspaceGlob, yarnProjectRoot, workspacesCache, projects);
 		}
-
-		return allProjectDirs;
 	}
 
-	private LinkedHashSet<Path> collectProjects(Path root, boolean includeSubtree) {
-		LinkedHashSet<Path> allProjectDirs = new LinkedHashSet<>();
+	private void collectProjects(Path root, boolean includeSubtree, Map<File, List<String>> workspacesCache,
+			Set<Path> allProjectDirs) {
 		if (!root.toFile().isDirectory()) {
-			return allProjectDirs;
+			return;
 		}
 
 		final FileVisitResult defaultReturn = includeSubtree ? CONTINUE : SKIP_SUBTREE;
 		try {
-			Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+			Files.walkFileTree(root, EnumSet.noneOf(FileVisitOption.class), 2, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 					if (root.equals(dir)) {
@@ -150,8 +153,9 @@ public class ProjectDiscoveryHelper {
 
 					File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
 					if (pckJson.isFile()) {
-						if (nodeModulesDiscoveryHelper.isYarnWorkspaceRoot(dir.toFile())) {
-							allProjectDirs.addAll(collectYarnWorkspaceProjects(dir));
+						if (!root.endsWith(N4JSGlobals.NODE_MODULES)
+								&& nodeModulesDiscoveryHelper.isYarnWorkspaceRoot(dir.toFile())) {
+							collectYarnWorkspaceProjects(dir, workspacesCache, allProjectDirs);
 						} else {
 							allProjectDirs.add(dir);
 						}
@@ -164,23 +168,23 @@ public class ProjectDiscoveryHelper {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		return allProjectDirs;
 	}
 
-	private LinkedHashSet<Path> collectGlobMatches(String glob, Path location) {
-		final LinkedHashSet<Path> allProjectDirs = new LinkedHashSet<>();
-		final PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
+	private void collectGlobMatches(String glob, Path location, Map<File, List<String>> workspacesCache,
+			Set<Path> allProjectDirs) {
 
+		PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + location.resolve(glob));
 		try {
 			Files.walkFileTree(location, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-					Path relDir = location.relativize(dir);
-					if (pathMatcher.matches(relDir)) {
+					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
+						return FileVisitResult.SKIP_SUBTREE;
+					}
+					if (pathMatcher.matches(dir)) {
 						Path dirName = dir.getName(dir.getNameCount() - 1);
 						if (dirName.toString().startsWith("@")) {
-							allProjectDirs.addAll(collectProjects(dir, false));
+							collectProjects(dir, false, workspacesCache, allProjectDirs);
 						} else {
 							File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
 							if (pckJson.isFile()) {
@@ -188,6 +192,7 @@ public class ProjectDiscoveryHelper {
 							}
 						}
 					}
+
 					return FileVisitResult.CONTINUE;
 				}
 
@@ -199,8 +204,6 @@ public class ProjectDiscoveryHelper {
 		} catch (IOException e) {
 			// ignore
 		}
-
-		return allProjectDirs;
 	}
 
 }

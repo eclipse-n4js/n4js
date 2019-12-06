@@ -53,7 +53,7 @@ public abstract class AbstractTranspiler {
 	/** */
 	public static final boolean DEBUG_DRAW_STATE = false;
 	/** */
-	public static final boolean DEBUG_PERFORM_ASSERTIONS = false;
+	public static final boolean DEBUG_PERFORM_ASSERTIONS = Boolean.FALSE;
 	/** */
 	public static final boolean DEBUG_PERFORM_VALIDATIONS = false;
 

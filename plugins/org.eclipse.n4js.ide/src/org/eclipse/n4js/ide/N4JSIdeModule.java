@@ -28,6 +28,7 @@ import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.xtext.server.XProjectManager;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -37,6 +38,7 @@ import org.eclipse.xtext.ide.server.concurrent.RequestManager;
 import org.eclipse.xtext.ide.server.hover.HoverService;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
+import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
 
 /**
@@ -111,6 +113,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends RequestManager> bindRequestManager() {
 		return N4JSRequestManager.class;
+	}
+
+	public Class<? extends IFileSystemScanner> bindFileSystemScanner() {
+		return FileSystemScanner.class;
 	}
 
 }

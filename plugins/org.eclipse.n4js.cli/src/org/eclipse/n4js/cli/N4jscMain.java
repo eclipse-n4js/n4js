@@ -23,6 +23,8 @@ import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
+import com.google.common.base.Stopwatch;
+
 /**
  * Entry point of n4jsc compiler
  */
@@ -32,6 +34,7 @@ public class N4jscMain {
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {
 
+		Stopwatch sw = Stopwatch.createStarted();
 		final N4jscOptions options = getOptions(args);
 
 		// inform user about data collection
@@ -53,9 +56,7 @@ public class N4jscMain {
 
 		try {
 			try (Measurement m = N4JSDataCollectors.dcCli.getMeasurement(N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME)) {
-
 				performGoal(options);
-
 			} catch (N4jscException e) {
 				throw e;
 			} catch (Exception e) {
@@ -63,6 +64,7 @@ public class N4jscMain {
 			}
 
 			writePerformanceReportIfRequested(options);
+			System.out.println(sw);
 			System.exit(N4jscExitCode.SUCCESS.getExitCodeValue());
 
 		} catch (N4jscException e) {
@@ -70,6 +72,7 @@ public class N4jscMain {
 			if (options.isVerbose()) {
 				e.printStackTrace();
 			}
+			System.out.println(sw);
 			System.exit(e.getExitCode());
 		}
 	}

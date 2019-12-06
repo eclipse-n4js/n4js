@@ -134,6 +134,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -243,8 +244,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		access.addBuildListener(this);
 
+		Stopwatch sw = Stopwatch.createStarted();
 		workspaceManager.initialize(baseDir);
+		System.out.println("workspaceManager.initialize " + sw);
+		sw = Stopwatch.createStarted();
 		workspaceManager.refreshWorkspaceConfig();
+		System.out.println("workspaceManager.refreshWorkspaceConfig " + sw);
 
 		initializeResult = new InitializeResult();
 		initializeResult.setCapabilities(createServerCapabilities(params));
