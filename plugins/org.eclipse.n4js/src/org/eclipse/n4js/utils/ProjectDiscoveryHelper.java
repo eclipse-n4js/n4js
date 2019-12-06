@@ -138,9 +138,18 @@ public class ProjectDiscoveryHelper {
 			return;
 		}
 
-		final FileVisitResult defaultReturn = includeSubtree ? CONTINUE : SKIP_SUBTREE;
+		FileVisitResult defaultReturn;
+		int depth;
+		if (includeSubtree) {
+			defaultReturn = CONTINUE;
+			depth = Integer.MAX_VALUE;
+		} else {
+			defaultReturn = SKIP_SUBTREE;
+			depth = 2;
+		}
 		try {
-			Files.walkFileTree(root, EnumSet.noneOf(FileVisitOption.class), 2, new SimpleFileVisitor<Path>() {
+			EnumSet<FileVisitOption> none = EnumSet.noneOf(FileVisitOption.class);
+			Files.walkFileTree(root, none, depth, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 					if (root.equals(dir)) {
@@ -202,7 +211,7 @@ public class ProjectDiscoveryHelper {
 				}
 			});
 		} catch (IOException e) {
-			// ignore
+			e.printStackTrace();
 		}
 	}
 
