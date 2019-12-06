@@ -25,10 +25,12 @@ import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
  */
+@Singleton
 public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider {
 
 	@Inject

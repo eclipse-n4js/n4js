@@ -19,6 +19,7 @@ import java.util.Objects;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.validation.CheckType;
+import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.validation.Issue.IssueImpl;
 
 /**
@@ -42,6 +43,33 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		this.setUriToProblem(null);
 		this.setSeverity(Severity.IGNORE);
 		this.setType(CheckType.FAST);
+	}
+
+	/**
+	 * Copy constructor
+	 */
+	public N4JSIssue(Issue copyFrom) {
+		this();
+		if (copyFrom.getOffset() != null)
+			this.setOffset(copyFrom.getOffset());
+		if (copyFrom.getLength() != null)
+			this.setLength(copyFrom.getLength());
+		if (copyFrom.getColumn() != null)
+			this.setColumn(copyFrom.getColumn());
+		if (copyFrom.getLineNumber() != null)
+			this.setLineNumber(copyFrom.getLineNumber());
+		if (copyFrom.getCode() != null)
+			this.setCode(copyFrom.getCode());
+		if (copyFrom.getMessage() != null)
+			this.setMessage(copyFrom.getMessage());
+		if (copyFrom.getUriToProblem() != null)
+			this.setUriToProblem(copyFrom.getUriToProblem());
+		if (copyFrom.getSeverity() != null)
+			this.setSeverity(copyFrom.getSeverity());
+		if (copyFrom.getType() != null)
+			this.setType(copyFrom.getType());
+		if (copyFrom.getData() != null)
+			this.setData(copyFrom.getData());
 	}
 
 	/** @return line of end of issue */
@@ -86,6 +114,16 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		CheckType checkType = this.getType();
 		int checkTypeKey = checkType == null ? 0 : checkType.ordinal() + 1;
 		out.writeInt(checkTypeKey);
+
+		String[] data = getData();
+		if (data == null) {
+			out.writeInt(0);
+		} else {
+			out.writeInt(data.length);
+			for (String s : data) {
+				out.writeUTF(s);
+			}
+		}
 	}
 
 	@Override
@@ -110,6 +148,15 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		int checkTypeKey = in.readInt();
 		CheckType checkType = checkTypeFromKey(checkTypeKey);
 		this.setType(checkType);
+
+		int dataLength = in.readInt();
+		if (dataLength > 0) {
+			String[] data = new String[dataLength];
+			for (int i = 0; i < dataLength; i++) {
+				data[i] = in.readUTF();
+			}
+			this.setData(data);
+		}
 	}
 
 	private static final Severity[] severities = Severity.values();

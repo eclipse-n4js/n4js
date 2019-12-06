@@ -33,6 +33,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.validation.N4JSIssue;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.build.Source2GeneratedMapping;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -197,6 +198,8 @@ public class ProjectStatePersister {
 			for (Issue issue : issues) {
 				if (issue instanceof N4JSIssue) {
 					n4Issues.add((N4JSIssue) issue);
+				} else {
+					n4Issues.add(new N4JSIssue(issue));
 				}
 			}
 
@@ -342,7 +345,6 @@ public class ProjectStatePersister {
 	/** @return the file URI of the persisted index */
 	public URI getFileName(IProjectConfig project) {
 		URI rootPath = project.getPath();
-		URI fileName = rootPath.appendSegment(FILENAME);
-		return fileName;
+		return new FileURI(rootPath).appendSegment(FILENAME).toURI();
 	}
 }
