@@ -17,6 +17,7 @@ import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
+import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
@@ -54,9 +55,11 @@ public class N4IDLVersionedImportsTransformation extends Transformation {
 
 	@Override
 	public void assertPostConditions() {
-		assertTrue("There should not be any more implicitly versioned imports in the IM.",
-				EcoreUtil2.getAllContentsOfType(getState().im, VersionedNamedImportSpecifier_IM.class)
-						.stream().noneMatch(VersionedNamedImportSpecifier_IM::isVersionedTypeImport));
+		if (AbstractTranspiler.DEBUG_PERFORM_ASSERTIONS) {
+			assertTrue("There should not be any more implicitly versioned imports in the IM.",
+					EcoreUtil2.getAllContentsOfType(getState().im, VersionedNamedImportSpecifier_IM.class)
+							.stream().noneMatch(VersionedNamedImportSpecifier_IM::isVersionedTypeImport));
+		}
 	}
 
 	@Override

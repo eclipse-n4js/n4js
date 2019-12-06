@@ -20,11 +20,15 @@ import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.validation.N4JSDiagnosticConverter;
+import org.eclipse.n4js.ide.xtext.server.DefaultBuildRequestFactory;
+import org.eclipse.n4js.ide.xtext.server.IBuildRequestFactory;
+import org.eclipse.n4js.ide.xtext.server.WorkspaceAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager;
 import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.xtext.server.XProjectManager;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
@@ -53,8 +57,16 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return XWorkspaceManager.class;
 	}
 
+	public Class<? extends IBuildRequestFactory> bindBuildRequestFactory() {
+		return DefaultBuildRequestFactory.class;
+	}
+
 	public Class<? extends XIWorkspaceConfigFactory> bindXIWorkspaceConfigFactory() {
 		return FileBasedWorkspaceInitializer.class;
+	}
+
+	public Class<? extends CanLoadFromDescriptionHelper> bindCanLoadFromDescriptionHelper() {
+		return WorkspaceAwareCanLoadFromDescriptionHelper.class;
 	}
 
 	public Class<? extends XProjectManager> bindXProjectManager() {

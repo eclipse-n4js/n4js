@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.cli.compiler;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.SortedMap;
@@ -196,11 +199,12 @@ public class N4jscCompiler {
 			Injector injector = N4jscFactory.getOrCreateInjector();
 			TestCatalogSupplier testCatalogSupplier = injector.getInstance(TestCatalogSupplier.class);
 
-			String catalog = testCatalogSupplier.get(true); // do not include "endpoint" property here
+			String catalog = testCatalogSupplier.get((uri) -> workspaceManager.getProjectManager(uri).getResourceSet(),
+					true); // do not include "endpoint" property here
 
-			try (FileOutputStream fos = new FileOutputStream(testCatalogFile)) {
-				fos.write(catalog.getBytes());
-				fos.flush();
+			try (OutputStream os = new BufferedOutputStream(new FileOutputStream(testCatalogFile))) {
+				os.write(catalog.getBytes(StandardCharsets.UTF_8));
+				os.flush();
 
 			} catch (IOException e) {
 				String msg = "Error while writing test catalog file at: " + testCatalogFile;

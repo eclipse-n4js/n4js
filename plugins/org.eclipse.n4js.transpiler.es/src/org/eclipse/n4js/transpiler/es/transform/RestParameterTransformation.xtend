@@ -18,6 +18,7 @@ import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import org.eclipse.n4js.transpiler.AbstractTranspiler
 
 /**
  * Transforms ES2015 rest parameters to an ES5 equivalent.
@@ -44,10 +45,12 @@ class RestParameterTransformation extends Transformation {
 	}
 
 	override assertPostConditions() {
-		// as a result of this transformation no rest parameter should be found in the entire model.
-		val allFormalParameter = EcoreUtil2.eAllOfType(state.im, FormalParameter);
-		val stillVariadic = allFormalParameter.filter[it.isVariadic].toList;
-		assertTrue("no rest parameter should be in the model.", stillVariadic.size === 0);
+		if (AbstractTranspiler.DEBUG_PERFORM_ASSERTIONS) {
+			// as a result of this transformation no rest parameter should be found in the entire model.
+			val allFormalParameter = EcoreUtil2.eAllOfType(state.im, FormalParameter);
+			val stillVariadic = allFormalParameter.filter[it.isVariadic].toList;
+			assertTrue("no rest parameter should be in the model.", stillVariadic.size === 0);
+		}
 	}
 
 

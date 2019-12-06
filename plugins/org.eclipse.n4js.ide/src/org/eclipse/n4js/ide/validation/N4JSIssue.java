@@ -25,7 +25,7 @@ import org.eclipse.xtext.validation.Issue.IssueImpl;
  * GH-1537
  */
 public class N4JSIssue extends IssueImpl implements Externalizable {
-	private static final String NULL = "NULL";
+	private static final String NULL = "";
 	private int lineNumberEnd;
 	private int columnEnd;
 
@@ -80,12 +80,12 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		out.writeUTF(uriToProblemStr);
 
 		Severity severity = this.getSeverity();
-		String severityStr = uriToProblem == null ? NULL : severity.name();
-		out.writeUTF(severityStr);
+		int severityKey = severity == null ? 0 : severity.ordinal() + 1;
+		out.writeInt(severityKey);
 
 		CheckType checkType = this.getType();
-		String checkTypeStr = checkType == null ? NULL : checkType.name();
-		out.writeUTF(checkTypeStr);
+		int checkTypeKey = checkType == null ? 0 : checkType.ordinal() + 1;
+		out.writeInt(checkTypeKey);
 	}
 
 	@Override
@@ -103,13 +103,35 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		URI uriToProblem = NULL.equals(uriToProblemStr) ? null : URI.createURI(uriToProblemStr);
 		this.setUriToProblem(uriToProblem);
 
-		String severityStr = in.readUTF();
-		Severity severity = NULL.equals(severityStr) ? null : Severity.valueOf(severityStr);
+		int severityKey = in.readInt();
+		Severity severity = severityFromKey(severityKey);
 		this.setSeverity(severity);
 
-		String checkTypeStr = in.readUTF();
-		CheckType checkType = NULL.equals(checkTypeStr) ? null : CheckType.valueOf(checkTypeStr);
+		int checkTypeKey = in.readInt();
+		CheckType checkType = checkTypeFromKey(checkTypeKey);
 		this.setType(checkType);
+	}
+
+	private static final Severity[] severities = Severity.values();
+
+	private static Severity severityFromKey(int severityKey) {
+		switch (severityKey) {
+		case 0:
+			return null;
+		default:
+			return severities[severityKey - 1];
+		}
+	}
+
+	private static final CheckType[] checkTypes = CheckType.values();
+
+	private static CheckType checkTypeFromKey(int checkTypeKey) {
+		switch (checkTypeKey) {
+		case 0:
+			return null;
+		default:
+			return checkTypes[checkTypeKey - 1];
+		}
 	}
 
 	@Override
