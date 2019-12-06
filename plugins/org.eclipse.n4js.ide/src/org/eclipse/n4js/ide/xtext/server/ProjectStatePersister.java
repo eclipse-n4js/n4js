@@ -20,7 +20,6 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -200,9 +199,11 @@ public class ProjectStatePersister {
 					output.writeInt(userData.size());
 					for (Map.Entry<String, String> entry : userData.entrySet()) {
 						output.writeUTF(entry.getKey());
-						byte[] valueAsBytes = entry.getValue().getBytes(StandardCharsets.UTF_16);
-						output.writeInt(valueAsBytes.length);
-						output.write(valueAsBytes);
+						String value = entry.getValue();
+						output.writeInt(value.length());
+						for (int i = 0, max = value.length(); i < max; i++) {
+							output.write(value.charAt(i));
+						}
 					}
 				} else {
 					output.writeInt(0);
@@ -386,11 +387,11 @@ public class ProjectStatePersister {
 				while (userDataSize > 0) {
 					userDataSize--;
 					String key = input.readUTF();
-					int valueLength = input.readInt();
-					byte[] valueAsBytes = new byte[valueLength];
-					input.readFully(valueAsBytes, 0, valueLength);
-					String value = new String(valueAsBytes, StandardCharsets.UTF_16);
-					userData.put(key, value);
+					char[] value = new char[input.readInt()];
+					for (int i = 0, max = value.length; i < max; i++) {
+						value[i] = input.readChar();
+					}
+					userData.put(key, String.copyValueOf(value));
 				}
 				object.setUserData(userData);
 				objects.add(object);
