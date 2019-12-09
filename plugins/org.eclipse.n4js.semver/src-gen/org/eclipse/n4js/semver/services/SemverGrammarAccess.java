@@ -51,8 +51,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//// This grammar of SemVer 2.0.0 is an adapted version of the BNF found at:
 		////  https://docs.npmjs.com/misc/semver
 		//NPMVersionRequirement:
-		//	WS?
-		//	VersionRangeSetRequirement
+		//	WS? VersionRangeSetRequirement
 		//	| (=> LocalPathVersionRequirement
 		//	| (=> URLVersionRequirement
 		//	| GitHubVersionRequirement
@@ -329,18 +328,19 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cWSTerminalRuleCall_1_1_2 = (RuleCall)cGroup_1_1.eContents().get(2);
 		private final Assignment cRangesAssignment_1_1_3 = (Assignment)cGroup_1_1.eContents().get(3);
 		private final RuleCall cRangesVersionRangeParserRuleCall_1_1_3_0 = (RuleCall)cRangesAssignment_1_1_3.eContents().get(0);
+		private final RuleCall cWSTerminalRuleCall_1_2 = (RuleCall)cGroup_1.eContents().get(2);
 		
 		//VersionRangeSetRequirement:
-		//	{VersionRangeSetRequirement} (ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)*)?;
+		//	{VersionRangeSetRequirement} (ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)* WS?)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{VersionRangeSetRequirement} (ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)*)?
+		//{VersionRangeSetRequirement} (ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)* WS?)?
 		public Group getGroup() { return cGroup; }
 		
 		//{VersionRangeSetRequirement}
 		public Action getVersionRangeSetRequirementAction_0() { return cVersionRangeSetRequirementAction_0; }
 		
-		//(ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)*)?
+		//(ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)* WS?)?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//ranges+=VersionRange
@@ -366,6 +366,9 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//VersionRange
 		public RuleCall getRangesVersionRangeParserRuleCall_1_1_3_0() { return cRangesVersionRangeParserRuleCall_1_1_3_0; }
+		
+		//WS?
+		public RuleCall getWSTerminalRuleCall_1_2() { return cWSTerminalRuleCall_1_2; }
 	}
 	public class VersionRangeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.VersionRange");
@@ -1418,8 +1421,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	//// This grammar of SemVer 2.0.0 is an adapted version of the BNF found at:
 	////  https://docs.npmjs.com/misc/semver
 	//NPMVersionRequirement:
-	//	WS?
-	//	VersionRangeSetRequirement
+	//	WS? VersionRangeSetRequirement
 	//	| (=> LocalPathVersionRequirement
 	//	| (=> URLVersionRequirement
 	//	| GitHubVersionRequirement
@@ -1498,7 +1500,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//VersionRangeSetRequirement:
-	//	{VersionRangeSetRequirement} (ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)*)?;
+	//	{VersionRangeSetRequirement} (ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)* WS?)?;
 	public VersionRangeSetRequirementElements getVersionRangeSetRequirementAccess() {
 		return pVersionRangeSetRequirement;
 	}

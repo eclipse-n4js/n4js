@@ -630,6 +630,12 @@ ruleVersionRangeSetRequirement returns [EObject current=null]
 					)
 				)
 			)*
+			(
+				this_WS_6=RULE_WS
+				{
+					newLeafNode(this_WS_6, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2());
+				}
+			)?
 		)?
 	)
 ;

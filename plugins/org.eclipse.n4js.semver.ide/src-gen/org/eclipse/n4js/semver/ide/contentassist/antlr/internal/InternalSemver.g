@@ -2328,6 +2328,7 @@ rule__VersionRangeSetRequirement__Group_1__1
 	}
 :
 	rule__VersionRangeSetRequirement__Group_1__1__Impl
+	rule__VersionRangeSetRequirement__Group_1__2
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -2342,6 +2343,32 @@ rule__VersionRangeSetRequirement__Group_1__1__Impl
 	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1_1()); }
 	(rule__VersionRangeSetRequirement__Group_1_1__0)*
 	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1_1()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__VersionRangeSetRequirement__Group_1__2
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__VersionRangeSetRequirement__Group_1__2__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__VersionRangeSetRequirement__Group_1__2__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2()); }
+	(RULE_WS)?
+	{ after(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2()); }
 )
 ;
 finally {

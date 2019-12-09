@@ -32,6 +32,7 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_SimpleVersion_WSTerminalRuleCall_0_1_q;
 	protected AbstractElementAlias match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_q;
 	protected AbstractElementAlias match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q;
+	protected AbstractElementAlias match_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_q;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
@@ -41,6 +42,7 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_SimpleVersion_WSTerminalRuleCall_0_1_q = new TokenAlias(false, true, grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_0_1());
 		match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_q = new TokenAlias(false, true, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_0());
 		match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q = new TokenAlias(false, true, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_2());
+		match_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_q = new TokenAlias(false, true, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2());
 	}
 	
 	@Override
@@ -128,6 +130,8 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q.equals(syntax))
 				emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_q.equals(syntax))
+				emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
@@ -192,6 +196,17 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     ranges+=VersionRange WS? '||' (ambiguity) ranges+=VersionRange
 	 */
 	protected void emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     WS?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     ranges+=VersionRange (ambiguity) (rule end)
+	 */
+	protected void emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

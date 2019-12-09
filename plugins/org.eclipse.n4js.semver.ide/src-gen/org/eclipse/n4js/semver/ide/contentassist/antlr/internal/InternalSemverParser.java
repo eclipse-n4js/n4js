@@ -8302,17 +8302,22 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__Group_1__1"
-    // InternalSemver.g:2325:1: rule__VersionRangeSetRequirement__Group_1__1 : rule__VersionRangeSetRequirement__Group_1__1__Impl ;
+    // InternalSemver.g:2325:1: rule__VersionRangeSetRequirement__Group_1__1 : rule__VersionRangeSetRequirement__Group_1__1__Impl rule__VersionRangeSetRequirement__Group_1__2 ;
     public final void rule__VersionRangeSetRequirement__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2329:1: ( rule__VersionRangeSetRequirement__Group_1__1__Impl )
-            // InternalSemver.g:2330:2: rule__VersionRangeSetRequirement__Group_1__1__Impl
+            // InternalSemver.g:2329:1: ( rule__VersionRangeSetRequirement__Group_1__1__Impl rule__VersionRangeSetRequirement__Group_1__2 )
+            // InternalSemver.g:2330:2: rule__VersionRangeSetRequirement__Group_1__1__Impl rule__VersionRangeSetRequirement__Group_1__2
             {
-            pushFollow(FOLLOW_2);
+            pushFollow(FOLLOW_14);
             rule__VersionRangeSetRequirement__Group_1__1__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+            pushFollow(FOLLOW_2);
+            rule__VersionRangeSetRequirement__Group_1__2();
 
             state._fsp--;
             if (state.failed) return ;
@@ -8335,35 +8340,44 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__Group_1__1__Impl"
-    // InternalSemver.g:2336:1: rule__VersionRangeSetRequirement__Group_1__1__Impl : ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* ) ;
+    // InternalSemver.g:2337:1: rule__VersionRangeSetRequirement__Group_1__1__Impl : ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* ) ;
     public final void rule__VersionRangeSetRequirement__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2340:1: ( ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* ) )
-            // InternalSemver.g:2341:1: ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* )
+            // InternalSemver.g:2341:1: ( ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* ) )
+            // InternalSemver.g:2342:1: ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* )
             {
-            // InternalSemver.g:2341:1: ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* )
-            // InternalSemver.g:2342:2: ( rule__VersionRangeSetRequirement__Group_1_1__0 )*
+            // InternalSemver.g:2342:1: ( ( rule__VersionRangeSetRequirement__Group_1_1__0 )* )
+            // InternalSemver.g:2343:2: ( rule__VersionRangeSetRequirement__Group_1_1__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeSetRequirementAccess().getGroup_1_1()); 
             }
-            // InternalSemver.g:2343:2: ( rule__VersionRangeSetRequirement__Group_1_1__0 )*
+            // InternalSemver.g:2344:2: ( rule__VersionRangeSetRequirement__Group_1_1__0 )*
             loop32:
             do {
                 int alt32=2;
                 int LA32_0 = input.LA(1);
 
-                if ( (LA32_0==RULE_WS||LA32_0==50) ) {
+                if ( (LA32_0==RULE_WS) ) {
+                    int LA32_1 = input.LA(2);
+
+                    if ( (LA32_1==50) ) {
+                        alt32=1;
+                    }
+
+
+                }
+                else if ( (LA32_0==50) ) {
                     alt32=1;
                 }
 
 
                 switch (alt32) {
             	case 1 :
-            	    // InternalSemver.g:2343:3: rule__VersionRangeSetRequirement__Group_1_1__0
+            	    // InternalSemver.g:2344:3: rule__VersionRangeSetRequirement__Group_1_1__0
             	    {
             	    pushFollow(FOLLOW_15);
             	    rule__VersionRangeSetRequirement__Group_1_1__0();
@@ -8403,15 +8417,106 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__VersionRangeSetRequirement__Group_1__1__Impl"
 
 
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1__2"
+    // InternalSemver.g:2352:1: rule__VersionRangeSetRequirement__Group_1__2 : rule__VersionRangeSetRequirement__Group_1__2__Impl ;
+    public final void rule__VersionRangeSetRequirement__Group_1__2() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalSemver.g:2356:1: ( rule__VersionRangeSetRequirement__Group_1__2__Impl )
+            // InternalSemver.g:2357:2: rule__VersionRangeSetRequirement__Group_1__2__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__VersionRangeSetRequirement__Group_1__2__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1__2"
+
+
+    // $ANTLR start "rule__VersionRangeSetRequirement__Group_1__2__Impl"
+    // InternalSemver.g:2363:1: rule__VersionRangeSetRequirement__Group_1__2__Impl : ( ( RULE_WS )? ) ;
+    public final void rule__VersionRangeSetRequirement__Group_1__2__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalSemver.g:2367:1: ( ( ( RULE_WS )? ) )
+            // InternalSemver.g:2368:1: ( ( RULE_WS )? )
+            {
+            // InternalSemver.g:2368:1: ( ( RULE_WS )? )
+            // InternalSemver.g:2369:2: ( RULE_WS )?
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2()); 
+            }
+            // InternalSemver.g:2370:2: ( RULE_WS )?
+            int alt33=2;
+            int LA33_0 = input.LA(1);
+
+            if ( (LA33_0==RULE_WS) ) {
+                alt33=1;
+            }
+            switch (alt33) {
+                case 1 :
+                    // InternalSemver.g:2370:3: RULE_WS
+                    {
+                    match(input,RULE_WS,FOLLOW_2); if (state.failed) return ;
+
+                    }
+                    break;
+
+            }
+
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__VersionRangeSetRequirement__Group_1__2__Impl"
+
+
     // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__0"
-    // InternalSemver.g:2352:1: rule__VersionRangeSetRequirement__Group_1_1__0 : rule__VersionRangeSetRequirement__Group_1_1__0__Impl rule__VersionRangeSetRequirement__Group_1_1__1 ;
+    // InternalSemver.g:2379:1: rule__VersionRangeSetRequirement__Group_1_1__0 : rule__VersionRangeSetRequirement__Group_1_1__0__Impl rule__VersionRangeSetRequirement__Group_1_1__1 ;
     public final void rule__VersionRangeSetRequirement__Group_1_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2356:1: ( rule__VersionRangeSetRequirement__Group_1_1__0__Impl rule__VersionRangeSetRequirement__Group_1_1__1 )
-            // InternalSemver.g:2357:2: rule__VersionRangeSetRequirement__Group_1_1__0__Impl rule__VersionRangeSetRequirement__Group_1_1__1
+            // InternalSemver.g:2383:1: ( rule__VersionRangeSetRequirement__Group_1_1__0__Impl rule__VersionRangeSetRequirement__Group_1_1__1 )
+            // InternalSemver.g:2384:2: rule__VersionRangeSetRequirement__Group_1_1__0__Impl rule__VersionRangeSetRequirement__Group_1_1__1
             {
             pushFollow(FOLLOW_14);
             rule__VersionRangeSetRequirement__Group_1_1__0__Impl();
@@ -8442,31 +8547,31 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__0__Impl"
-    // InternalSemver.g:2364:1: rule__VersionRangeSetRequirement__Group_1_1__0__Impl : ( ( RULE_WS )? ) ;
+    // InternalSemver.g:2391:1: rule__VersionRangeSetRequirement__Group_1_1__0__Impl : ( ( RULE_WS )? ) ;
     public final void rule__VersionRangeSetRequirement__Group_1_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2368:1: ( ( ( RULE_WS )? ) )
-            // InternalSemver.g:2369:1: ( ( RULE_WS )? )
+            // InternalSemver.g:2395:1: ( ( ( RULE_WS )? ) )
+            // InternalSemver.g:2396:1: ( ( RULE_WS )? )
             {
-            // InternalSemver.g:2369:1: ( ( RULE_WS )? )
-            // InternalSemver.g:2370:2: ( RULE_WS )?
+            // InternalSemver.g:2396:1: ( ( RULE_WS )? )
+            // InternalSemver.g:2397:2: ( RULE_WS )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_0()); 
             }
-            // InternalSemver.g:2371:2: ( RULE_WS )?
-            int alt33=2;
-            int LA33_0 = input.LA(1);
+            // InternalSemver.g:2398:2: ( RULE_WS )?
+            int alt34=2;
+            int LA34_0 = input.LA(1);
 
-            if ( (LA33_0==RULE_WS) ) {
-                alt33=1;
+            if ( (LA34_0==RULE_WS) ) {
+                alt34=1;
             }
-            switch (alt33) {
+            switch (alt34) {
                 case 1 :
-                    // InternalSemver.g:2371:3: RULE_WS
+                    // InternalSemver.g:2398:3: RULE_WS
                     {
                     match(input,RULE_WS,FOLLOW_2); if (state.failed) return ;
 
@@ -8500,14 +8605,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__1"
-    // InternalSemver.g:2379:1: rule__VersionRangeSetRequirement__Group_1_1__1 : rule__VersionRangeSetRequirement__Group_1_1__1__Impl rule__VersionRangeSetRequirement__Group_1_1__2 ;
+    // InternalSemver.g:2406:1: rule__VersionRangeSetRequirement__Group_1_1__1 : rule__VersionRangeSetRequirement__Group_1_1__1__Impl rule__VersionRangeSetRequirement__Group_1_1__2 ;
     public final void rule__VersionRangeSetRequirement__Group_1_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2383:1: ( rule__VersionRangeSetRequirement__Group_1_1__1__Impl rule__VersionRangeSetRequirement__Group_1_1__2 )
-            // InternalSemver.g:2384:2: rule__VersionRangeSetRequirement__Group_1_1__1__Impl rule__VersionRangeSetRequirement__Group_1_1__2
+            // InternalSemver.g:2410:1: ( rule__VersionRangeSetRequirement__Group_1_1__1__Impl rule__VersionRangeSetRequirement__Group_1_1__2 )
+            // InternalSemver.g:2411:2: rule__VersionRangeSetRequirement__Group_1_1__1__Impl rule__VersionRangeSetRequirement__Group_1_1__2
             {
             pushFollow(FOLLOW_16);
             rule__VersionRangeSetRequirement__Group_1_1__1__Impl();
@@ -8538,17 +8643,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__1__Impl"
-    // InternalSemver.g:2391:1: rule__VersionRangeSetRequirement__Group_1_1__1__Impl : ( '||' ) ;
+    // InternalSemver.g:2418:1: rule__VersionRangeSetRequirement__Group_1_1__1__Impl : ( '||' ) ;
     public final void rule__VersionRangeSetRequirement__Group_1_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2395:1: ( ( '||' ) )
-            // InternalSemver.g:2396:1: ( '||' )
+            // InternalSemver.g:2422:1: ( ( '||' ) )
+            // InternalSemver.g:2423:1: ( '||' )
             {
-            // InternalSemver.g:2396:1: ( '||' )
-            // InternalSemver.g:2397:2: '||'
+            // InternalSemver.g:2423:1: ( '||' )
+            // InternalSemver.g:2424:2: '||'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeSetRequirementAccess().getVerticalLineVerticalLineKeyword_1_1_1()); 
@@ -8579,14 +8684,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__2"
-    // InternalSemver.g:2406:1: rule__VersionRangeSetRequirement__Group_1_1__2 : rule__VersionRangeSetRequirement__Group_1_1__2__Impl rule__VersionRangeSetRequirement__Group_1_1__3 ;
+    // InternalSemver.g:2433:1: rule__VersionRangeSetRequirement__Group_1_1__2 : rule__VersionRangeSetRequirement__Group_1_1__2__Impl rule__VersionRangeSetRequirement__Group_1_1__3 ;
     public final void rule__VersionRangeSetRequirement__Group_1_1__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2410:1: ( rule__VersionRangeSetRequirement__Group_1_1__2__Impl rule__VersionRangeSetRequirement__Group_1_1__3 )
-            // InternalSemver.g:2411:2: rule__VersionRangeSetRequirement__Group_1_1__2__Impl rule__VersionRangeSetRequirement__Group_1_1__3
+            // InternalSemver.g:2437:1: ( rule__VersionRangeSetRequirement__Group_1_1__2__Impl rule__VersionRangeSetRequirement__Group_1_1__3 )
+            // InternalSemver.g:2438:2: rule__VersionRangeSetRequirement__Group_1_1__2__Impl rule__VersionRangeSetRequirement__Group_1_1__3
             {
             pushFollow(FOLLOW_16);
             rule__VersionRangeSetRequirement__Group_1_1__2__Impl();
@@ -8617,31 +8722,31 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__2__Impl"
-    // InternalSemver.g:2418:1: rule__VersionRangeSetRequirement__Group_1_1__2__Impl : ( ( RULE_WS )? ) ;
+    // InternalSemver.g:2445:1: rule__VersionRangeSetRequirement__Group_1_1__2__Impl : ( ( RULE_WS )? ) ;
     public final void rule__VersionRangeSetRequirement__Group_1_1__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2422:1: ( ( ( RULE_WS )? ) )
-            // InternalSemver.g:2423:1: ( ( RULE_WS )? )
+            // InternalSemver.g:2449:1: ( ( ( RULE_WS )? ) )
+            // InternalSemver.g:2450:1: ( ( RULE_WS )? )
             {
-            // InternalSemver.g:2423:1: ( ( RULE_WS )? )
-            // InternalSemver.g:2424:2: ( RULE_WS )?
+            // InternalSemver.g:2450:1: ( ( RULE_WS )? )
+            // InternalSemver.g:2451:2: ( RULE_WS )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_2()); 
             }
-            // InternalSemver.g:2425:2: ( RULE_WS )?
-            int alt34=2;
-            int LA34_0 = input.LA(1);
+            // InternalSemver.g:2452:2: ( RULE_WS )?
+            int alt35=2;
+            int LA35_0 = input.LA(1);
 
-            if ( (LA34_0==RULE_WS) ) {
-                alt34=1;
+            if ( (LA35_0==RULE_WS) ) {
+                alt35=1;
             }
-            switch (alt34) {
+            switch (alt35) {
                 case 1 :
-                    // InternalSemver.g:2425:3: RULE_WS
+                    // InternalSemver.g:2452:3: RULE_WS
                     {
                     match(input,RULE_WS,FOLLOW_2); if (state.failed) return ;
 
@@ -8675,14 +8780,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__3"
-    // InternalSemver.g:2433:1: rule__VersionRangeSetRequirement__Group_1_1__3 : rule__VersionRangeSetRequirement__Group_1_1__3__Impl ;
+    // InternalSemver.g:2460:1: rule__VersionRangeSetRequirement__Group_1_1__3 : rule__VersionRangeSetRequirement__Group_1_1__3__Impl ;
     public final void rule__VersionRangeSetRequirement__Group_1_1__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2437:1: ( rule__VersionRangeSetRequirement__Group_1_1__3__Impl )
-            // InternalSemver.g:2438:2: rule__VersionRangeSetRequirement__Group_1_1__3__Impl
+            // InternalSemver.g:2464:1: ( rule__VersionRangeSetRequirement__Group_1_1__3__Impl )
+            // InternalSemver.g:2465:2: rule__VersionRangeSetRequirement__Group_1_1__3__Impl
             {
             pushFollow(FOLLOW_2);
             rule__VersionRangeSetRequirement__Group_1_1__3__Impl();
@@ -8708,23 +8813,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__Group_1_1__3__Impl"
-    // InternalSemver.g:2444:1: rule__VersionRangeSetRequirement__Group_1_1__3__Impl : ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) ) ;
+    // InternalSemver.g:2471:1: rule__VersionRangeSetRequirement__Group_1_1__3__Impl : ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) ) ;
     public final void rule__VersionRangeSetRequirement__Group_1_1__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2448:1: ( ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) ) )
-            // InternalSemver.g:2449:1: ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) )
+            // InternalSemver.g:2475:1: ( ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) ) )
+            // InternalSemver.g:2476:1: ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) )
             {
-            // InternalSemver.g:2449:1: ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) )
-            // InternalSemver.g:2450:2: ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 )
+            // InternalSemver.g:2476:1: ( ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 ) )
+            // InternalSemver.g:2477:2: ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesAssignment_1_1_3()); 
             }
-            // InternalSemver.g:2451:2: ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 )
-            // InternalSemver.g:2451:3: rule__VersionRangeSetRequirement__RangesAssignment_1_1_3
+            // InternalSemver.g:2478:2: ( rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 )
+            // InternalSemver.g:2478:3: rule__VersionRangeSetRequirement__RangesAssignment_1_1_3
             {
             pushFollow(FOLLOW_2);
             rule__VersionRangeSetRequirement__RangesAssignment_1_1_3();
@@ -8759,14 +8864,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__0"
-    // InternalSemver.g:2460:1: rule__HyphenVersionRange__Group__0 : rule__HyphenVersionRange__Group__0__Impl rule__HyphenVersionRange__Group__1 ;
+    // InternalSemver.g:2487:1: rule__HyphenVersionRange__Group__0 : rule__HyphenVersionRange__Group__0__Impl rule__HyphenVersionRange__Group__1 ;
     public final void rule__HyphenVersionRange__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2464:1: ( rule__HyphenVersionRange__Group__0__Impl rule__HyphenVersionRange__Group__1 )
-            // InternalSemver.g:2465:2: rule__HyphenVersionRange__Group__0__Impl rule__HyphenVersionRange__Group__1
+            // InternalSemver.g:2491:1: ( rule__HyphenVersionRange__Group__0__Impl rule__HyphenVersionRange__Group__1 )
+            // InternalSemver.g:2492:2: rule__HyphenVersionRange__Group__0__Impl rule__HyphenVersionRange__Group__1
             {
             pushFollow(FOLLOW_4);
             rule__HyphenVersionRange__Group__0__Impl();
@@ -8797,23 +8902,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__0__Impl"
-    // InternalSemver.g:2472:1: rule__HyphenVersionRange__Group__0__Impl : ( () ) ;
+    // InternalSemver.g:2499:1: rule__HyphenVersionRange__Group__0__Impl : ( () ) ;
     public final void rule__HyphenVersionRange__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2476:1: ( ( () ) )
-            // InternalSemver.g:2477:1: ( () )
+            // InternalSemver.g:2503:1: ( ( () ) )
+            // InternalSemver.g:2504:1: ( () )
             {
-            // InternalSemver.g:2477:1: ( () )
-            // InternalSemver.g:2478:2: ()
+            // InternalSemver.g:2504:1: ( () )
+            // InternalSemver.g:2505:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getHyphenVersionRangeAccess().getHyphenVersionRangeAction_0()); 
             }
-            // InternalSemver.g:2479:2: ()
-            // InternalSemver.g:2479:3: 
+            // InternalSemver.g:2506:2: ()
+            // InternalSemver.g:2506:3: 
             {
             }
 
@@ -8838,14 +8943,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__1"
-    // InternalSemver.g:2487:1: rule__HyphenVersionRange__Group__1 : rule__HyphenVersionRange__Group__1__Impl rule__HyphenVersionRange__Group__2 ;
+    // InternalSemver.g:2514:1: rule__HyphenVersionRange__Group__1 : rule__HyphenVersionRange__Group__1__Impl rule__HyphenVersionRange__Group__2 ;
     public final void rule__HyphenVersionRange__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2491:1: ( rule__HyphenVersionRange__Group__1__Impl rule__HyphenVersionRange__Group__2 )
-            // InternalSemver.g:2492:2: rule__HyphenVersionRange__Group__1__Impl rule__HyphenVersionRange__Group__2
+            // InternalSemver.g:2518:1: ( rule__HyphenVersionRange__Group__1__Impl rule__HyphenVersionRange__Group__2 )
+            // InternalSemver.g:2519:2: rule__HyphenVersionRange__Group__1__Impl rule__HyphenVersionRange__Group__2
             {
             pushFollow(FOLLOW_5);
             rule__HyphenVersionRange__Group__1__Impl();
@@ -8876,23 +8981,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__1__Impl"
-    // InternalSemver.g:2499:1: rule__HyphenVersionRange__Group__1__Impl : ( ( rule__HyphenVersionRange__FromAssignment_1 ) ) ;
+    // InternalSemver.g:2526:1: rule__HyphenVersionRange__Group__1__Impl : ( ( rule__HyphenVersionRange__FromAssignment_1 ) ) ;
     public final void rule__HyphenVersionRange__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2503:1: ( ( ( rule__HyphenVersionRange__FromAssignment_1 ) ) )
-            // InternalSemver.g:2504:1: ( ( rule__HyphenVersionRange__FromAssignment_1 ) )
+            // InternalSemver.g:2530:1: ( ( ( rule__HyphenVersionRange__FromAssignment_1 ) ) )
+            // InternalSemver.g:2531:1: ( ( rule__HyphenVersionRange__FromAssignment_1 ) )
             {
-            // InternalSemver.g:2504:1: ( ( rule__HyphenVersionRange__FromAssignment_1 ) )
-            // InternalSemver.g:2505:2: ( rule__HyphenVersionRange__FromAssignment_1 )
+            // InternalSemver.g:2531:1: ( ( rule__HyphenVersionRange__FromAssignment_1 ) )
+            // InternalSemver.g:2532:2: ( rule__HyphenVersionRange__FromAssignment_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getHyphenVersionRangeAccess().getFromAssignment_1()); 
             }
-            // InternalSemver.g:2506:2: ( rule__HyphenVersionRange__FromAssignment_1 )
-            // InternalSemver.g:2506:3: rule__HyphenVersionRange__FromAssignment_1
+            // InternalSemver.g:2533:2: ( rule__HyphenVersionRange__FromAssignment_1 )
+            // InternalSemver.g:2533:3: rule__HyphenVersionRange__FromAssignment_1
             {
             pushFollow(FOLLOW_2);
             rule__HyphenVersionRange__FromAssignment_1();
@@ -8927,14 +9032,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__2"
-    // InternalSemver.g:2514:1: rule__HyphenVersionRange__Group__2 : rule__HyphenVersionRange__Group__2__Impl rule__HyphenVersionRange__Group__3 ;
+    // InternalSemver.g:2541:1: rule__HyphenVersionRange__Group__2 : rule__HyphenVersionRange__Group__2__Impl rule__HyphenVersionRange__Group__3 ;
     public final void rule__HyphenVersionRange__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2518:1: ( rule__HyphenVersionRange__Group__2__Impl rule__HyphenVersionRange__Group__3 )
-            // InternalSemver.g:2519:2: rule__HyphenVersionRange__Group__2__Impl rule__HyphenVersionRange__Group__3
+            // InternalSemver.g:2545:1: ( rule__HyphenVersionRange__Group__2__Impl rule__HyphenVersionRange__Group__3 )
+            // InternalSemver.g:2546:2: rule__HyphenVersionRange__Group__2__Impl rule__HyphenVersionRange__Group__3
             {
             pushFollow(FOLLOW_17);
             rule__HyphenVersionRange__Group__2__Impl();
@@ -8965,17 +9070,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__2__Impl"
-    // InternalSemver.g:2526:1: rule__HyphenVersionRange__Group__2__Impl : ( RULE_WS ) ;
+    // InternalSemver.g:2553:1: rule__HyphenVersionRange__Group__2__Impl : ( RULE_WS ) ;
     public final void rule__HyphenVersionRange__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2530:1: ( ( RULE_WS ) )
-            // InternalSemver.g:2531:1: ( RULE_WS )
+            // InternalSemver.g:2557:1: ( ( RULE_WS ) )
+            // InternalSemver.g:2558:1: ( RULE_WS )
             {
-            // InternalSemver.g:2531:1: ( RULE_WS )
-            // InternalSemver.g:2532:2: RULE_WS
+            // InternalSemver.g:2558:1: ( RULE_WS )
+            // InternalSemver.g:2559:2: RULE_WS
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getHyphenVersionRangeAccess().getWSTerminalRuleCall_2()); 
@@ -9006,14 +9111,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__3"
-    // InternalSemver.g:2541:1: rule__HyphenVersionRange__Group__3 : rule__HyphenVersionRange__Group__3__Impl rule__HyphenVersionRange__Group__4 ;
+    // InternalSemver.g:2568:1: rule__HyphenVersionRange__Group__3 : rule__HyphenVersionRange__Group__3__Impl rule__HyphenVersionRange__Group__4 ;
     public final void rule__HyphenVersionRange__Group__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2545:1: ( rule__HyphenVersionRange__Group__3__Impl rule__HyphenVersionRange__Group__4 )
-            // InternalSemver.g:2546:2: rule__HyphenVersionRange__Group__3__Impl rule__HyphenVersionRange__Group__4
+            // InternalSemver.g:2572:1: ( rule__HyphenVersionRange__Group__3__Impl rule__HyphenVersionRange__Group__4 )
+            // InternalSemver.g:2573:2: rule__HyphenVersionRange__Group__3__Impl rule__HyphenVersionRange__Group__4
             {
             pushFollow(FOLLOW_5);
             rule__HyphenVersionRange__Group__3__Impl();
@@ -9044,17 +9149,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__3__Impl"
-    // InternalSemver.g:2553:1: rule__HyphenVersionRange__Group__3__Impl : ( '-' ) ;
+    // InternalSemver.g:2580:1: rule__HyphenVersionRange__Group__3__Impl : ( '-' ) ;
     public final void rule__HyphenVersionRange__Group__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2557:1: ( ( '-' ) )
-            // InternalSemver.g:2558:1: ( '-' )
+            // InternalSemver.g:2584:1: ( ( '-' ) )
+            // InternalSemver.g:2585:1: ( '-' )
             {
-            // InternalSemver.g:2558:1: ( '-' )
-            // InternalSemver.g:2559:2: '-'
+            // InternalSemver.g:2585:1: ( '-' )
+            // InternalSemver.g:2586:2: '-'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getHyphenVersionRangeAccess().getHyphenMinusKeyword_3()); 
@@ -9085,14 +9190,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__4"
-    // InternalSemver.g:2568:1: rule__HyphenVersionRange__Group__4 : rule__HyphenVersionRange__Group__4__Impl rule__HyphenVersionRange__Group__5 ;
+    // InternalSemver.g:2595:1: rule__HyphenVersionRange__Group__4 : rule__HyphenVersionRange__Group__4__Impl rule__HyphenVersionRange__Group__5 ;
     public final void rule__HyphenVersionRange__Group__4() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2572:1: ( rule__HyphenVersionRange__Group__4__Impl rule__HyphenVersionRange__Group__5 )
-            // InternalSemver.g:2573:2: rule__HyphenVersionRange__Group__4__Impl rule__HyphenVersionRange__Group__5
+            // InternalSemver.g:2599:1: ( rule__HyphenVersionRange__Group__4__Impl rule__HyphenVersionRange__Group__5 )
+            // InternalSemver.g:2600:2: rule__HyphenVersionRange__Group__4__Impl rule__HyphenVersionRange__Group__5
             {
             pushFollow(FOLLOW_4);
             rule__HyphenVersionRange__Group__4__Impl();
@@ -9123,17 +9228,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__4__Impl"
-    // InternalSemver.g:2580:1: rule__HyphenVersionRange__Group__4__Impl : ( RULE_WS ) ;
+    // InternalSemver.g:2607:1: rule__HyphenVersionRange__Group__4__Impl : ( RULE_WS ) ;
     public final void rule__HyphenVersionRange__Group__4__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2584:1: ( ( RULE_WS ) )
-            // InternalSemver.g:2585:1: ( RULE_WS )
+            // InternalSemver.g:2611:1: ( ( RULE_WS ) )
+            // InternalSemver.g:2612:1: ( RULE_WS )
             {
-            // InternalSemver.g:2585:1: ( RULE_WS )
-            // InternalSemver.g:2586:2: RULE_WS
+            // InternalSemver.g:2612:1: ( RULE_WS )
+            // InternalSemver.g:2613:2: RULE_WS
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getHyphenVersionRangeAccess().getWSTerminalRuleCall_4()); 
@@ -9164,14 +9269,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__5"
-    // InternalSemver.g:2595:1: rule__HyphenVersionRange__Group__5 : rule__HyphenVersionRange__Group__5__Impl ;
+    // InternalSemver.g:2622:1: rule__HyphenVersionRange__Group__5 : rule__HyphenVersionRange__Group__5__Impl ;
     public final void rule__HyphenVersionRange__Group__5() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2599:1: ( rule__HyphenVersionRange__Group__5__Impl )
-            // InternalSemver.g:2600:2: rule__HyphenVersionRange__Group__5__Impl
+            // InternalSemver.g:2626:1: ( rule__HyphenVersionRange__Group__5__Impl )
+            // InternalSemver.g:2627:2: rule__HyphenVersionRange__Group__5__Impl
             {
             pushFollow(FOLLOW_2);
             rule__HyphenVersionRange__Group__5__Impl();
@@ -9197,23 +9302,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__Group__5__Impl"
-    // InternalSemver.g:2606:1: rule__HyphenVersionRange__Group__5__Impl : ( ( rule__HyphenVersionRange__ToAssignment_5 ) ) ;
+    // InternalSemver.g:2633:1: rule__HyphenVersionRange__Group__5__Impl : ( ( rule__HyphenVersionRange__ToAssignment_5 ) ) ;
     public final void rule__HyphenVersionRange__Group__5__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2610:1: ( ( ( rule__HyphenVersionRange__ToAssignment_5 ) ) )
-            // InternalSemver.g:2611:1: ( ( rule__HyphenVersionRange__ToAssignment_5 ) )
+            // InternalSemver.g:2637:1: ( ( ( rule__HyphenVersionRange__ToAssignment_5 ) ) )
+            // InternalSemver.g:2638:1: ( ( rule__HyphenVersionRange__ToAssignment_5 ) )
             {
-            // InternalSemver.g:2611:1: ( ( rule__HyphenVersionRange__ToAssignment_5 ) )
-            // InternalSemver.g:2612:2: ( rule__HyphenVersionRange__ToAssignment_5 )
+            // InternalSemver.g:2638:1: ( ( rule__HyphenVersionRange__ToAssignment_5 ) )
+            // InternalSemver.g:2639:2: ( rule__HyphenVersionRange__ToAssignment_5 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getHyphenVersionRangeAccess().getToAssignment_5()); 
             }
-            // InternalSemver.g:2613:2: ( rule__HyphenVersionRange__ToAssignment_5 )
-            // InternalSemver.g:2613:3: rule__HyphenVersionRange__ToAssignment_5
+            // InternalSemver.g:2640:2: ( rule__HyphenVersionRange__ToAssignment_5 )
+            // InternalSemver.g:2640:3: rule__HyphenVersionRange__ToAssignment_5
             {
             pushFollow(FOLLOW_2);
             rule__HyphenVersionRange__ToAssignment_5();
@@ -9248,14 +9353,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__Group__0"
-    // InternalSemver.g:2622:1: rule__VersionRangeContraint__Group__0 : rule__VersionRangeContraint__Group__0__Impl rule__VersionRangeContraint__Group__1 ;
+    // InternalSemver.g:2649:1: rule__VersionRangeContraint__Group__0 : rule__VersionRangeContraint__Group__0__Impl rule__VersionRangeContraint__Group__1 ;
     public final void rule__VersionRangeContraint__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2626:1: ( rule__VersionRangeContraint__Group__0__Impl rule__VersionRangeContraint__Group__1 )
-            // InternalSemver.g:2627:2: rule__VersionRangeContraint__Group__0__Impl rule__VersionRangeContraint__Group__1
+            // InternalSemver.g:2653:1: ( rule__VersionRangeContraint__Group__0__Impl rule__VersionRangeContraint__Group__1 )
+            // InternalSemver.g:2654:2: rule__VersionRangeContraint__Group__0__Impl rule__VersionRangeContraint__Group__1
             {
             pushFollow(FOLLOW_4);
             rule__VersionRangeContraint__Group__0__Impl();
@@ -9286,23 +9391,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__Group__0__Impl"
-    // InternalSemver.g:2634:1: rule__VersionRangeContraint__Group__0__Impl : ( () ) ;
+    // InternalSemver.g:2661:1: rule__VersionRangeContraint__Group__0__Impl : ( () ) ;
     public final void rule__VersionRangeContraint__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2638:1: ( ( () ) )
-            // InternalSemver.g:2639:1: ( () )
+            // InternalSemver.g:2665:1: ( ( () ) )
+            // InternalSemver.g:2666:1: ( () )
             {
-            // InternalSemver.g:2639:1: ( () )
-            // InternalSemver.g:2640:2: ()
+            // InternalSemver.g:2666:1: ( () )
+            // InternalSemver.g:2667:2: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeContraintAccess().getVersionRangeConstraintAction_0()); 
             }
-            // InternalSemver.g:2641:2: ()
-            // InternalSemver.g:2641:3: 
+            // InternalSemver.g:2668:2: ()
+            // InternalSemver.g:2668:3: 
             {
             }
 
@@ -9327,14 +9432,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__Group__1"
-    // InternalSemver.g:2649:1: rule__VersionRangeContraint__Group__1 : rule__VersionRangeContraint__Group__1__Impl rule__VersionRangeContraint__Group__2 ;
+    // InternalSemver.g:2676:1: rule__VersionRangeContraint__Group__1 : rule__VersionRangeContraint__Group__1__Impl rule__VersionRangeContraint__Group__2 ;
     public final void rule__VersionRangeContraint__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2653:1: ( rule__VersionRangeContraint__Group__1__Impl rule__VersionRangeContraint__Group__2 )
-            // InternalSemver.g:2654:2: rule__VersionRangeContraint__Group__1__Impl rule__VersionRangeContraint__Group__2
+            // InternalSemver.g:2680:1: ( rule__VersionRangeContraint__Group__1__Impl rule__VersionRangeContraint__Group__2 )
+            // InternalSemver.g:2681:2: rule__VersionRangeContraint__Group__1__Impl rule__VersionRangeContraint__Group__2
             {
             pushFollow(FOLLOW_5);
             rule__VersionRangeContraint__Group__1__Impl();
@@ -9365,23 +9470,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__Group__1__Impl"
-    // InternalSemver.g:2661:1: rule__VersionRangeContraint__Group__1__Impl : ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 ) ) ;
+    // InternalSemver.g:2688:1: rule__VersionRangeContraint__Group__1__Impl : ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 ) ) ;
     public final void rule__VersionRangeContraint__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2665:1: ( ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 ) ) )
-            // InternalSemver.g:2666:1: ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 ) )
+            // InternalSemver.g:2692:1: ( ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 ) ) )
+            // InternalSemver.g:2693:1: ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 ) )
             {
-            // InternalSemver.g:2666:1: ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 ) )
-            // InternalSemver.g:2667:2: ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 )
+            // InternalSemver.g:2693:1: ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 ) )
+            // InternalSemver.g:2694:2: ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeContraintAccess().getVersionConstraintsAssignment_1()); 
             }
-            // InternalSemver.g:2668:2: ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 )
-            // InternalSemver.g:2668:3: rule__VersionRangeContraint__VersionConstraintsAssignment_1
+            // InternalSemver.g:2695:2: ( rule__VersionRangeContraint__VersionConstraintsAssignment_1 )
+            // InternalSemver.g:2695:3: rule__VersionRangeContraint__VersionConstraintsAssignment_1
             {
             pushFollow(FOLLOW_2);
             rule__VersionRangeContraint__VersionConstraintsAssignment_1();
@@ -9416,14 +9521,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__Group__2"
-    // InternalSemver.g:2676:1: rule__VersionRangeContraint__Group__2 : rule__VersionRangeContraint__Group__2__Impl ;
+    // InternalSemver.g:2703:1: rule__VersionRangeContraint__Group__2 : rule__VersionRangeContraint__Group__2__Impl ;
     public final void rule__VersionRangeContraint__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2680:1: ( rule__VersionRangeContraint__Group__2__Impl )
-            // InternalSemver.g:2681:2: rule__VersionRangeContraint__Group__2__Impl
+            // InternalSemver.g:2707:1: ( rule__VersionRangeContraint__Group__2__Impl )
+            // InternalSemver.g:2708:2: rule__VersionRangeContraint__Group__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__VersionRangeContraint__Group__2__Impl();
@@ -9449,41 +9554,41 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__Group__2__Impl"
-    // InternalSemver.g:2687:1: rule__VersionRangeContraint__Group__2__Impl : ( ( rule__VersionRangeContraint__Group_2__0 )* ) ;
+    // InternalSemver.g:2714:1: rule__VersionRangeContraint__Group__2__Impl : ( ( rule__VersionRangeContraint__Group_2__0 )* ) ;
     public final void rule__VersionRangeContraint__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2691:1: ( ( ( rule__VersionRangeContraint__Group_2__0 )* ) )
-            // InternalSemver.g:2692:1: ( ( rule__VersionRangeContraint__Group_2__0 )* )
+            // InternalSemver.g:2718:1: ( ( ( rule__VersionRangeContraint__Group_2__0 )* ) )
+            // InternalSemver.g:2719:1: ( ( rule__VersionRangeContraint__Group_2__0 )* )
             {
-            // InternalSemver.g:2692:1: ( ( rule__VersionRangeContraint__Group_2__0 )* )
-            // InternalSemver.g:2693:2: ( rule__VersionRangeContraint__Group_2__0 )*
+            // InternalSemver.g:2719:1: ( ( rule__VersionRangeContraint__Group_2__0 )* )
+            // InternalSemver.g:2720:2: ( rule__VersionRangeContraint__Group_2__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeContraintAccess().getGroup_2()); 
             }
-            // InternalSemver.g:2694:2: ( rule__VersionRangeContraint__Group_2__0 )*
-            loop35:
+            // InternalSemver.g:2721:2: ( rule__VersionRangeContraint__Group_2__0 )*
+            loop36:
             do {
-                int alt35=2;
-                int LA35_0 = input.LA(1);
+                int alt36=2;
+                int LA36_0 = input.LA(1);
 
-                if ( (LA35_0==RULE_WS) ) {
-                    int LA35_2 = input.LA(2);
+                if ( (LA36_0==RULE_WS) ) {
+                    int LA36_2 = input.LA(2);
 
-                    if ( ((LA35_2>=RULE_DIGITS && LA35_2<=RULE_LETTER_V)||(LA35_2>=42 && LA35_2<=48)) ) {
-                        alt35=1;
+                    if ( ((LA36_2>=RULE_DIGITS && LA36_2<=RULE_LETTER_V)||(LA36_2>=42 && LA36_2<=48)) ) {
+                        alt36=1;
                     }
 
 
                 }
 
 
-                switch (alt35) {
+                switch (alt36) {
             	case 1 :
-            	    // InternalSemver.g:2694:3: rule__VersionRangeContraint__Group_2__0
+            	    // InternalSemver.g:2721:3: rule__VersionRangeContraint__Group_2__0
             	    {
             	    pushFollow(FOLLOW_18);
             	    rule__VersionRangeContraint__Group_2__0();
@@ -9495,7 +9600,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop35;
+            	    break loop36;
                 }
             } while (true);
 
@@ -9524,14 +9629,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__Group_2__0"
-    // InternalSemver.g:2703:1: rule__VersionRangeContraint__Group_2__0 : rule__VersionRangeContraint__Group_2__0__Impl rule__VersionRangeContraint__Group_2__1 ;
+    // InternalSemver.g:2730:1: rule__VersionRangeContraint__Group_2__0 : rule__VersionRangeContraint__Group_2__0__Impl rule__VersionRangeContraint__Group_2__1 ;
     public final void rule__VersionRangeContraint__Group_2__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2707:1: ( rule__VersionRangeContraint__Group_2__0__Impl rule__VersionRangeContraint__Group_2__1 )
-            // InternalSemver.g:2708:2: rule__VersionRangeContraint__Group_2__0__Impl rule__VersionRangeContraint__Group_2__1
+            // InternalSemver.g:2734:1: ( rule__VersionRangeContraint__Group_2__0__Impl rule__VersionRangeContraint__Group_2__1 )
+            // InternalSemver.g:2735:2: rule__VersionRangeContraint__Group_2__0__Impl rule__VersionRangeContraint__Group_2__1
             {
             pushFollow(FOLLOW_4);
             rule__VersionRangeContraint__Group_2__0__Impl();
@@ -9562,17 +9667,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__Group_2__0__Impl"
-    // InternalSemver.g:2715:1: rule__VersionRangeContraint__Group_2__0__Impl : ( RULE_WS ) ;
+    // InternalSemver.g:2742:1: rule__VersionRangeContraint__Group_2__0__Impl : ( RULE_WS ) ;
     public final void rule__VersionRangeContraint__Group_2__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2719:1: ( ( RULE_WS ) )
-            // InternalSemver.g:2720:1: ( RULE_WS )
+            // InternalSemver.g:2746:1: ( ( RULE_WS ) )
+            // InternalSemver.g:2747:1: ( RULE_WS )
             {
-            // InternalSemver.g:2720:1: ( RULE_WS )
-            // InternalSemver.g:2721:2: RULE_WS
+            // InternalSemver.g:2747:1: ( RULE_WS )
+            // InternalSemver.g:2748:2: RULE_WS
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeContraintAccess().getWSTerminalRuleCall_2_0()); 
@@ -9603,14 +9708,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__Group_2__1"
-    // InternalSemver.g:2730:1: rule__VersionRangeContraint__Group_2__1 : rule__VersionRangeContraint__Group_2__1__Impl ;
+    // InternalSemver.g:2757:1: rule__VersionRangeContraint__Group_2__1 : rule__VersionRangeContraint__Group_2__1__Impl ;
     public final void rule__VersionRangeContraint__Group_2__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2734:1: ( rule__VersionRangeContraint__Group_2__1__Impl )
-            // InternalSemver.g:2735:2: rule__VersionRangeContraint__Group_2__1__Impl
+            // InternalSemver.g:2761:1: ( rule__VersionRangeContraint__Group_2__1__Impl )
+            // InternalSemver.g:2762:2: rule__VersionRangeContraint__Group_2__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__VersionRangeContraint__Group_2__1__Impl();
@@ -9636,23 +9741,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__Group_2__1__Impl"
-    // InternalSemver.g:2741:1: rule__VersionRangeContraint__Group_2__1__Impl : ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 ) ) ;
+    // InternalSemver.g:2768:1: rule__VersionRangeContraint__Group_2__1__Impl : ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 ) ) ;
     public final void rule__VersionRangeContraint__Group_2__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2745:1: ( ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 ) ) )
-            // InternalSemver.g:2746:1: ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 ) )
+            // InternalSemver.g:2772:1: ( ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 ) ) )
+            // InternalSemver.g:2773:1: ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 ) )
             {
-            // InternalSemver.g:2746:1: ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 ) )
-            // InternalSemver.g:2747:2: ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 )
+            // InternalSemver.g:2773:1: ( ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 ) )
+            // InternalSemver.g:2774:2: ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeContraintAccess().getVersionConstraintsAssignment_2_1()); 
             }
-            // InternalSemver.g:2748:2: ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 )
-            // InternalSemver.g:2748:3: rule__VersionRangeContraint__VersionConstraintsAssignment_2_1
+            // InternalSemver.g:2775:2: ( rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 )
+            // InternalSemver.g:2775:3: rule__VersionRangeContraint__VersionConstraintsAssignment_2_1
             {
             pushFollow(FOLLOW_2);
             rule__VersionRangeContraint__VersionConstraintsAssignment_2_1();
@@ -9687,14 +9792,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__Group__0"
-    // InternalSemver.g:2757:1: rule__SimpleVersion__Group__0 : rule__SimpleVersion__Group__0__Impl rule__SimpleVersion__Group__1 ;
+    // InternalSemver.g:2784:1: rule__SimpleVersion__Group__0 : rule__SimpleVersion__Group__0__Impl rule__SimpleVersion__Group__1 ;
     public final void rule__SimpleVersion__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2761:1: ( rule__SimpleVersion__Group__0__Impl rule__SimpleVersion__Group__1 )
-            // InternalSemver.g:2762:2: rule__SimpleVersion__Group__0__Impl rule__SimpleVersion__Group__1
+            // InternalSemver.g:2788:1: ( rule__SimpleVersion__Group__0__Impl rule__SimpleVersion__Group__1 )
+            // InternalSemver.g:2789:2: rule__SimpleVersion__Group__0__Impl rule__SimpleVersion__Group__1
             {
             pushFollow(FOLLOW_4);
             rule__SimpleVersion__Group__0__Impl();
@@ -9725,35 +9830,35 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__Group__0__Impl"
-    // InternalSemver.g:2769:1: rule__SimpleVersion__Group__0__Impl : ( ( rule__SimpleVersion__Group_0__0 )* ) ;
+    // InternalSemver.g:2796:1: rule__SimpleVersion__Group__0__Impl : ( ( rule__SimpleVersion__Group_0__0 )* ) ;
     public final void rule__SimpleVersion__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2773:1: ( ( ( rule__SimpleVersion__Group_0__0 )* ) )
-            // InternalSemver.g:2774:1: ( ( rule__SimpleVersion__Group_0__0 )* )
+            // InternalSemver.g:2800:1: ( ( ( rule__SimpleVersion__Group_0__0 )* ) )
+            // InternalSemver.g:2801:1: ( ( rule__SimpleVersion__Group_0__0 )* )
             {
-            // InternalSemver.g:2774:1: ( ( rule__SimpleVersion__Group_0__0 )* )
-            // InternalSemver.g:2775:2: ( rule__SimpleVersion__Group_0__0 )*
+            // InternalSemver.g:2801:1: ( ( rule__SimpleVersion__Group_0__0 )* )
+            // InternalSemver.g:2802:2: ( rule__SimpleVersion__Group_0__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleVersionAccess().getGroup_0()); 
             }
-            // InternalSemver.g:2776:2: ( rule__SimpleVersion__Group_0__0 )*
-            loop36:
+            // InternalSemver.g:2803:2: ( rule__SimpleVersion__Group_0__0 )*
+            loop37:
             do {
-                int alt36=2;
-                int LA36_0 = input.LA(1);
+                int alt37=2;
+                int LA37_0 = input.LA(1);
 
-                if ( ((LA36_0>=42 && LA36_0<=48)) ) {
-                    alt36=1;
+                if ( ((LA37_0>=42 && LA37_0<=48)) ) {
+                    alt37=1;
                 }
 
 
-                switch (alt36) {
+                switch (alt37) {
             	case 1 :
-            	    // InternalSemver.g:2776:3: rule__SimpleVersion__Group_0__0
+            	    // InternalSemver.g:2803:3: rule__SimpleVersion__Group_0__0
             	    {
             	    pushFollow(FOLLOW_19);
             	    rule__SimpleVersion__Group_0__0();
@@ -9765,7 +9870,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop36;
+            	    break loop37;
                 }
             } while (true);
 
@@ -9794,14 +9899,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__Group__1"
-    // InternalSemver.g:2784:1: rule__SimpleVersion__Group__1 : rule__SimpleVersion__Group__1__Impl rule__SimpleVersion__Group__2 ;
+    // InternalSemver.g:2811:1: rule__SimpleVersion__Group__1 : rule__SimpleVersion__Group__1__Impl rule__SimpleVersion__Group__2 ;
     public final void rule__SimpleVersion__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2788:1: ( rule__SimpleVersion__Group__1__Impl rule__SimpleVersion__Group__2 )
-            // InternalSemver.g:2789:2: rule__SimpleVersion__Group__1__Impl rule__SimpleVersion__Group__2
+            // InternalSemver.g:2815:1: ( rule__SimpleVersion__Group__1__Impl rule__SimpleVersion__Group__2 )
+            // InternalSemver.g:2816:2: rule__SimpleVersion__Group__1__Impl rule__SimpleVersion__Group__2
             {
             pushFollow(FOLLOW_4);
             rule__SimpleVersion__Group__1__Impl();
@@ -9832,31 +9937,31 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__Group__1__Impl"
-    // InternalSemver.g:2796:1: rule__SimpleVersion__Group__1__Impl : ( ( rule__SimpleVersion__WithLetterVAssignment_1 )? ) ;
+    // InternalSemver.g:2823:1: rule__SimpleVersion__Group__1__Impl : ( ( rule__SimpleVersion__WithLetterVAssignment_1 )? ) ;
     public final void rule__SimpleVersion__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2800:1: ( ( ( rule__SimpleVersion__WithLetterVAssignment_1 )? ) )
-            // InternalSemver.g:2801:1: ( ( rule__SimpleVersion__WithLetterVAssignment_1 )? )
+            // InternalSemver.g:2827:1: ( ( ( rule__SimpleVersion__WithLetterVAssignment_1 )? ) )
+            // InternalSemver.g:2828:1: ( ( rule__SimpleVersion__WithLetterVAssignment_1 )? )
             {
-            // InternalSemver.g:2801:1: ( ( rule__SimpleVersion__WithLetterVAssignment_1 )? )
-            // InternalSemver.g:2802:2: ( rule__SimpleVersion__WithLetterVAssignment_1 )?
+            // InternalSemver.g:2828:1: ( ( rule__SimpleVersion__WithLetterVAssignment_1 )? )
+            // InternalSemver.g:2829:2: ( rule__SimpleVersion__WithLetterVAssignment_1 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleVersionAccess().getWithLetterVAssignment_1()); 
             }
-            // InternalSemver.g:2803:2: ( rule__SimpleVersion__WithLetterVAssignment_1 )?
-            int alt37=2;
-            int LA37_0 = input.LA(1);
+            // InternalSemver.g:2830:2: ( rule__SimpleVersion__WithLetterVAssignment_1 )?
+            int alt38=2;
+            int LA38_0 = input.LA(1);
 
-            if ( (LA37_0==RULE_LETTER_V) ) {
-                alt37=1;
+            if ( (LA38_0==RULE_LETTER_V) ) {
+                alt38=1;
             }
-            switch (alt37) {
+            switch (alt38) {
                 case 1 :
-                    // InternalSemver.g:2803:3: rule__SimpleVersion__WithLetterVAssignment_1
+                    // InternalSemver.g:2830:3: rule__SimpleVersion__WithLetterVAssignment_1
                     {
                     pushFollow(FOLLOW_2);
                     rule__SimpleVersion__WithLetterVAssignment_1();
@@ -9894,14 +9999,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__Group__2"
-    // InternalSemver.g:2811:1: rule__SimpleVersion__Group__2 : rule__SimpleVersion__Group__2__Impl ;
+    // InternalSemver.g:2838:1: rule__SimpleVersion__Group__2 : rule__SimpleVersion__Group__2__Impl ;
     public final void rule__SimpleVersion__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2815:1: ( rule__SimpleVersion__Group__2__Impl )
-            // InternalSemver.g:2816:2: rule__SimpleVersion__Group__2__Impl
+            // InternalSemver.g:2842:1: ( rule__SimpleVersion__Group__2__Impl )
+            // InternalSemver.g:2843:2: rule__SimpleVersion__Group__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__SimpleVersion__Group__2__Impl();
@@ -9927,23 +10032,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__Group__2__Impl"
-    // InternalSemver.g:2822:1: rule__SimpleVersion__Group__2__Impl : ( ( rule__SimpleVersion__NumberAssignment_2 ) ) ;
+    // InternalSemver.g:2849:1: rule__SimpleVersion__Group__2__Impl : ( ( rule__SimpleVersion__NumberAssignment_2 ) ) ;
     public final void rule__SimpleVersion__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2826:1: ( ( ( rule__SimpleVersion__NumberAssignment_2 ) ) )
-            // InternalSemver.g:2827:1: ( ( rule__SimpleVersion__NumberAssignment_2 ) )
+            // InternalSemver.g:2853:1: ( ( ( rule__SimpleVersion__NumberAssignment_2 ) ) )
+            // InternalSemver.g:2854:1: ( ( rule__SimpleVersion__NumberAssignment_2 ) )
             {
-            // InternalSemver.g:2827:1: ( ( rule__SimpleVersion__NumberAssignment_2 ) )
-            // InternalSemver.g:2828:2: ( rule__SimpleVersion__NumberAssignment_2 )
+            // InternalSemver.g:2854:1: ( ( rule__SimpleVersion__NumberAssignment_2 ) )
+            // InternalSemver.g:2855:2: ( rule__SimpleVersion__NumberAssignment_2 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleVersionAccess().getNumberAssignment_2()); 
             }
-            // InternalSemver.g:2829:2: ( rule__SimpleVersion__NumberAssignment_2 )
-            // InternalSemver.g:2829:3: rule__SimpleVersion__NumberAssignment_2
+            // InternalSemver.g:2856:2: ( rule__SimpleVersion__NumberAssignment_2 )
+            // InternalSemver.g:2856:3: rule__SimpleVersion__NumberAssignment_2
             {
             pushFollow(FOLLOW_2);
             rule__SimpleVersion__NumberAssignment_2();
@@ -9978,14 +10083,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__Group_0__0"
-    // InternalSemver.g:2838:1: rule__SimpleVersion__Group_0__0 : rule__SimpleVersion__Group_0__0__Impl rule__SimpleVersion__Group_0__1 ;
+    // InternalSemver.g:2865:1: rule__SimpleVersion__Group_0__0 : rule__SimpleVersion__Group_0__0__Impl rule__SimpleVersion__Group_0__1 ;
     public final void rule__SimpleVersion__Group_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2842:1: ( rule__SimpleVersion__Group_0__0__Impl rule__SimpleVersion__Group_0__1 )
-            // InternalSemver.g:2843:2: rule__SimpleVersion__Group_0__0__Impl rule__SimpleVersion__Group_0__1
+            // InternalSemver.g:2869:1: ( rule__SimpleVersion__Group_0__0__Impl rule__SimpleVersion__Group_0__1 )
+            // InternalSemver.g:2870:2: rule__SimpleVersion__Group_0__0__Impl rule__SimpleVersion__Group_0__1
             {
             pushFollow(FOLLOW_5);
             rule__SimpleVersion__Group_0__0__Impl();
@@ -10016,23 +10121,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__Group_0__0__Impl"
-    // InternalSemver.g:2850:1: rule__SimpleVersion__Group_0__0__Impl : ( ( rule__SimpleVersion__ComparatorsAssignment_0_0 ) ) ;
+    // InternalSemver.g:2877:1: rule__SimpleVersion__Group_0__0__Impl : ( ( rule__SimpleVersion__ComparatorsAssignment_0_0 ) ) ;
     public final void rule__SimpleVersion__Group_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2854:1: ( ( ( rule__SimpleVersion__ComparatorsAssignment_0_0 ) ) )
-            // InternalSemver.g:2855:1: ( ( rule__SimpleVersion__ComparatorsAssignment_0_0 ) )
+            // InternalSemver.g:2881:1: ( ( ( rule__SimpleVersion__ComparatorsAssignment_0_0 ) ) )
+            // InternalSemver.g:2882:1: ( ( rule__SimpleVersion__ComparatorsAssignment_0_0 ) )
             {
-            // InternalSemver.g:2855:1: ( ( rule__SimpleVersion__ComparatorsAssignment_0_0 ) )
-            // InternalSemver.g:2856:2: ( rule__SimpleVersion__ComparatorsAssignment_0_0 )
+            // InternalSemver.g:2882:1: ( ( rule__SimpleVersion__ComparatorsAssignment_0_0 ) )
+            // InternalSemver.g:2883:2: ( rule__SimpleVersion__ComparatorsAssignment_0_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleVersionAccess().getComparatorsAssignment_0_0()); 
             }
-            // InternalSemver.g:2857:2: ( rule__SimpleVersion__ComparatorsAssignment_0_0 )
-            // InternalSemver.g:2857:3: rule__SimpleVersion__ComparatorsAssignment_0_0
+            // InternalSemver.g:2884:2: ( rule__SimpleVersion__ComparatorsAssignment_0_0 )
+            // InternalSemver.g:2884:3: rule__SimpleVersion__ComparatorsAssignment_0_0
             {
             pushFollow(FOLLOW_2);
             rule__SimpleVersion__ComparatorsAssignment_0_0();
@@ -10067,14 +10172,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__Group_0__1"
-    // InternalSemver.g:2865:1: rule__SimpleVersion__Group_0__1 : rule__SimpleVersion__Group_0__1__Impl ;
+    // InternalSemver.g:2892:1: rule__SimpleVersion__Group_0__1 : rule__SimpleVersion__Group_0__1__Impl ;
     public final void rule__SimpleVersion__Group_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2869:1: ( rule__SimpleVersion__Group_0__1__Impl )
-            // InternalSemver.g:2870:2: rule__SimpleVersion__Group_0__1__Impl
+            // InternalSemver.g:2896:1: ( rule__SimpleVersion__Group_0__1__Impl )
+            // InternalSemver.g:2897:2: rule__SimpleVersion__Group_0__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__SimpleVersion__Group_0__1__Impl();
@@ -10100,31 +10205,31 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__Group_0__1__Impl"
-    // InternalSemver.g:2876:1: rule__SimpleVersion__Group_0__1__Impl : ( ( RULE_WS )? ) ;
+    // InternalSemver.g:2903:1: rule__SimpleVersion__Group_0__1__Impl : ( ( RULE_WS )? ) ;
     public final void rule__SimpleVersion__Group_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2880:1: ( ( ( RULE_WS )? ) )
-            // InternalSemver.g:2881:1: ( ( RULE_WS )? )
+            // InternalSemver.g:2907:1: ( ( ( RULE_WS )? ) )
+            // InternalSemver.g:2908:1: ( ( RULE_WS )? )
             {
-            // InternalSemver.g:2881:1: ( ( RULE_WS )? )
-            // InternalSemver.g:2882:2: ( RULE_WS )?
+            // InternalSemver.g:2908:1: ( ( RULE_WS )? )
+            // InternalSemver.g:2909:2: ( RULE_WS )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_0_1()); 
             }
-            // InternalSemver.g:2883:2: ( RULE_WS )?
-            int alt38=2;
-            int LA38_0 = input.LA(1);
+            // InternalSemver.g:2910:2: ( RULE_WS )?
+            int alt39=2;
+            int LA39_0 = input.LA(1);
 
-            if ( (LA38_0==RULE_WS) ) {
-                alt38=1;
+            if ( (LA39_0==RULE_WS) ) {
+                alt39=1;
             }
-            switch (alt38) {
+            switch (alt39) {
                 case 1 :
-                    // InternalSemver.g:2883:3: RULE_WS
+                    // InternalSemver.g:2910:3: RULE_WS
                     {
                     match(input,RULE_WS,FOLLOW_2); if (state.failed) return ;
 
@@ -10158,14 +10263,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group__0"
-    // InternalSemver.g:2892:1: rule__VersionNumber__Group__0 : rule__VersionNumber__Group__0__Impl rule__VersionNumber__Group__1 ;
+    // InternalSemver.g:2919:1: rule__VersionNumber__Group__0 : rule__VersionNumber__Group__0__Impl rule__VersionNumber__Group__1 ;
     public final void rule__VersionNumber__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2896:1: ( rule__VersionNumber__Group__0__Impl rule__VersionNumber__Group__1 )
-            // InternalSemver.g:2897:2: rule__VersionNumber__Group__0__Impl rule__VersionNumber__Group__1
+            // InternalSemver.g:2923:1: ( rule__VersionNumber__Group__0__Impl rule__VersionNumber__Group__1 )
+            // InternalSemver.g:2924:2: rule__VersionNumber__Group__0__Impl rule__VersionNumber__Group__1
             {
             pushFollow(FOLLOW_20);
             rule__VersionNumber__Group__0__Impl();
@@ -10196,23 +10301,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group__0__Impl"
-    // InternalSemver.g:2904:1: rule__VersionNumber__Group__0__Impl : ( ( rule__VersionNumber__MajorAssignment_0 ) ) ;
+    // InternalSemver.g:2931:1: rule__VersionNumber__Group__0__Impl : ( ( rule__VersionNumber__MajorAssignment_0 ) ) ;
     public final void rule__VersionNumber__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2908:1: ( ( ( rule__VersionNumber__MajorAssignment_0 ) ) )
-            // InternalSemver.g:2909:1: ( ( rule__VersionNumber__MajorAssignment_0 ) )
+            // InternalSemver.g:2935:1: ( ( ( rule__VersionNumber__MajorAssignment_0 ) ) )
+            // InternalSemver.g:2936:1: ( ( rule__VersionNumber__MajorAssignment_0 ) )
             {
-            // InternalSemver.g:2909:1: ( ( rule__VersionNumber__MajorAssignment_0 ) )
-            // InternalSemver.g:2910:2: ( rule__VersionNumber__MajorAssignment_0 )
+            // InternalSemver.g:2936:1: ( ( rule__VersionNumber__MajorAssignment_0 ) )
+            // InternalSemver.g:2937:2: ( rule__VersionNumber__MajorAssignment_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getMajorAssignment_0()); 
             }
-            // InternalSemver.g:2911:2: ( rule__VersionNumber__MajorAssignment_0 )
-            // InternalSemver.g:2911:3: rule__VersionNumber__MajorAssignment_0
+            // InternalSemver.g:2938:2: ( rule__VersionNumber__MajorAssignment_0 )
+            // InternalSemver.g:2938:3: rule__VersionNumber__MajorAssignment_0
             {
             pushFollow(FOLLOW_2);
             rule__VersionNumber__MajorAssignment_0();
@@ -10247,14 +10352,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group__1"
-    // InternalSemver.g:2919:1: rule__VersionNumber__Group__1 : rule__VersionNumber__Group__1__Impl rule__VersionNumber__Group__2 ;
+    // InternalSemver.g:2946:1: rule__VersionNumber__Group__1 : rule__VersionNumber__Group__1__Impl rule__VersionNumber__Group__2 ;
     public final void rule__VersionNumber__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2923:1: ( rule__VersionNumber__Group__1__Impl rule__VersionNumber__Group__2 )
-            // InternalSemver.g:2924:2: rule__VersionNumber__Group__1__Impl rule__VersionNumber__Group__2
+            // InternalSemver.g:2950:1: ( rule__VersionNumber__Group__1__Impl rule__VersionNumber__Group__2 )
+            // InternalSemver.g:2951:2: rule__VersionNumber__Group__1__Impl rule__VersionNumber__Group__2
             {
             pushFollow(FOLLOW_20);
             rule__VersionNumber__Group__1__Impl();
@@ -10285,31 +10390,31 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group__1__Impl"
-    // InternalSemver.g:2931:1: rule__VersionNumber__Group__1__Impl : ( ( rule__VersionNumber__Group_1__0 )? ) ;
+    // InternalSemver.g:2958:1: rule__VersionNumber__Group__1__Impl : ( ( rule__VersionNumber__Group_1__0 )? ) ;
     public final void rule__VersionNumber__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2935:1: ( ( ( rule__VersionNumber__Group_1__0 )? ) )
-            // InternalSemver.g:2936:1: ( ( rule__VersionNumber__Group_1__0 )? )
+            // InternalSemver.g:2962:1: ( ( ( rule__VersionNumber__Group_1__0 )? ) )
+            // InternalSemver.g:2963:1: ( ( rule__VersionNumber__Group_1__0 )? )
             {
-            // InternalSemver.g:2936:1: ( ( rule__VersionNumber__Group_1__0 )? )
-            // InternalSemver.g:2937:2: ( rule__VersionNumber__Group_1__0 )?
+            // InternalSemver.g:2963:1: ( ( rule__VersionNumber__Group_1__0 )? )
+            // InternalSemver.g:2964:2: ( rule__VersionNumber__Group_1__0 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getGroup_1()); 
             }
-            // InternalSemver.g:2938:2: ( rule__VersionNumber__Group_1__0 )?
-            int alt39=2;
-            int LA39_0 = input.LA(1);
+            // InternalSemver.g:2965:2: ( rule__VersionNumber__Group_1__0 )?
+            int alt40=2;
+            int LA40_0 = input.LA(1);
 
-            if ( (LA39_0==36) ) {
-                alt39=1;
+            if ( (LA40_0==36) ) {
+                alt40=1;
             }
-            switch (alt39) {
+            switch (alt40) {
                 case 1 :
-                    // InternalSemver.g:2938:3: rule__VersionNumber__Group_1__0
+                    // InternalSemver.g:2965:3: rule__VersionNumber__Group_1__0
                     {
                     pushFollow(FOLLOW_2);
                     rule__VersionNumber__Group_1__0();
@@ -10347,14 +10452,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group__2"
-    // InternalSemver.g:2946:1: rule__VersionNumber__Group__2 : rule__VersionNumber__Group__2__Impl ;
+    // InternalSemver.g:2973:1: rule__VersionNumber__Group__2 : rule__VersionNumber__Group__2__Impl ;
     public final void rule__VersionNumber__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2950:1: ( rule__VersionNumber__Group__2__Impl )
-            // InternalSemver.g:2951:2: rule__VersionNumber__Group__2__Impl
+            // InternalSemver.g:2977:1: ( rule__VersionNumber__Group__2__Impl )
+            // InternalSemver.g:2978:2: rule__VersionNumber__Group__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__VersionNumber__Group__2__Impl();
@@ -10380,31 +10485,31 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group__2__Impl"
-    // InternalSemver.g:2957:1: rule__VersionNumber__Group__2__Impl : ( ( rule__VersionNumber__QualifierAssignment_2 )? ) ;
+    // InternalSemver.g:2984:1: rule__VersionNumber__Group__2__Impl : ( ( rule__VersionNumber__QualifierAssignment_2 )? ) ;
     public final void rule__VersionNumber__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2961:1: ( ( ( rule__VersionNumber__QualifierAssignment_2 )? ) )
-            // InternalSemver.g:2962:1: ( ( rule__VersionNumber__QualifierAssignment_2 )? )
+            // InternalSemver.g:2988:1: ( ( ( rule__VersionNumber__QualifierAssignment_2 )? ) )
+            // InternalSemver.g:2989:1: ( ( rule__VersionNumber__QualifierAssignment_2 )? )
             {
-            // InternalSemver.g:2962:1: ( ( rule__VersionNumber__QualifierAssignment_2 )? )
-            // InternalSemver.g:2963:2: ( rule__VersionNumber__QualifierAssignment_2 )?
+            // InternalSemver.g:2989:1: ( ( rule__VersionNumber__QualifierAssignment_2 )? )
+            // InternalSemver.g:2990:2: ( rule__VersionNumber__QualifierAssignment_2 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getQualifierAssignment_2()); 
             }
-            // InternalSemver.g:2964:2: ( rule__VersionNumber__QualifierAssignment_2 )?
-            int alt40=2;
-            int LA40_0 = input.LA(1);
+            // InternalSemver.g:2991:2: ( rule__VersionNumber__QualifierAssignment_2 )?
+            int alt41=2;
+            int LA41_0 = input.LA(1);
 
-            if ( (LA40_0==38||LA40_0==40) ) {
-                alt40=1;
+            if ( (LA41_0==38||LA41_0==40) ) {
+                alt41=1;
             }
-            switch (alt40) {
+            switch (alt41) {
                 case 1 :
-                    // InternalSemver.g:2964:3: rule__VersionNumber__QualifierAssignment_2
+                    // InternalSemver.g:2991:3: rule__VersionNumber__QualifierAssignment_2
                     {
                     pushFollow(FOLLOW_2);
                     rule__VersionNumber__QualifierAssignment_2();
@@ -10442,14 +10547,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1__0"
-    // InternalSemver.g:2973:1: rule__VersionNumber__Group_1__0 : rule__VersionNumber__Group_1__0__Impl rule__VersionNumber__Group_1__1 ;
+    // InternalSemver.g:3000:1: rule__VersionNumber__Group_1__0 : rule__VersionNumber__Group_1__0__Impl rule__VersionNumber__Group_1__1 ;
     public final void rule__VersionNumber__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2977:1: ( rule__VersionNumber__Group_1__0__Impl rule__VersionNumber__Group_1__1 )
-            // InternalSemver.g:2978:2: rule__VersionNumber__Group_1__0__Impl rule__VersionNumber__Group_1__1
+            // InternalSemver.g:3004:1: ( rule__VersionNumber__Group_1__0__Impl rule__VersionNumber__Group_1__1 )
+            // InternalSemver.g:3005:2: rule__VersionNumber__Group_1__0__Impl rule__VersionNumber__Group_1__1
             {
             pushFollow(FOLLOW_4);
             rule__VersionNumber__Group_1__0__Impl();
@@ -10480,17 +10585,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1__0__Impl"
-    // InternalSemver.g:2985:1: rule__VersionNumber__Group_1__0__Impl : ( '.' ) ;
+    // InternalSemver.g:3012:1: rule__VersionNumber__Group_1__0__Impl : ( '.' ) ;
     public final void rule__VersionNumber__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:2989:1: ( ( '.' ) )
-            // InternalSemver.g:2990:1: ( '.' )
+            // InternalSemver.g:3016:1: ( ( '.' ) )
+            // InternalSemver.g:3017:1: ( '.' )
             {
-            // InternalSemver.g:2990:1: ( '.' )
-            // InternalSemver.g:2991:2: '.'
+            // InternalSemver.g:3017:1: ( '.' )
+            // InternalSemver.g:3018:2: '.'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getFullStopKeyword_1_0()); 
@@ -10521,14 +10626,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1__1"
-    // InternalSemver.g:3000:1: rule__VersionNumber__Group_1__1 : rule__VersionNumber__Group_1__1__Impl rule__VersionNumber__Group_1__2 ;
+    // InternalSemver.g:3027:1: rule__VersionNumber__Group_1__1 : rule__VersionNumber__Group_1__1__Impl rule__VersionNumber__Group_1__2 ;
     public final void rule__VersionNumber__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3004:1: ( rule__VersionNumber__Group_1__1__Impl rule__VersionNumber__Group_1__2 )
-            // InternalSemver.g:3005:2: rule__VersionNumber__Group_1__1__Impl rule__VersionNumber__Group_1__2
+            // InternalSemver.g:3031:1: ( rule__VersionNumber__Group_1__1__Impl rule__VersionNumber__Group_1__2 )
+            // InternalSemver.g:3032:2: rule__VersionNumber__Group_1__1__Impl rule__VersionNumber__Group_1__2
             {
             pushFollow(FOLLOW_21);
             rule__VersionNumber__Group_1__1__Impl();
@@ -10559,23 +10664,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1__1__Impl"
-    // InternalSemver.g:3012:1: rule__VersionNumber__Group_1__1__Impl : ( ( rule__VersionNumber__MinorAssignment_1_1 ) ) ;
+    // InternalSemver.g:3039:1: rule__VersionNumber__Group_1__1__Impl : ( ( rule__VersionNumber__MinorAssignment_1_1 ) ) ;
     public final void rule__VersionNumber__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3016:1: ( ( ( rule__VersionNumber__MinorAssignment_1_1 ) ) )
-            // InternalSemver.g:3017:1: ( ( rule__VersionNumber__MinorAssignment_1_1 ) )
+            // InternalSemver.g:3043:1: ( ( ( rule__VersionNumber__MinorAssignment_1_1 ) ) )
+            // InternalSemver.g:3044:1: ( ( rule__VersionNumber__MinorAssignment_1_1 ) )
             {
-            // InternalSemver.g:3017:1: ( ( rule__VersionNumber__MinorAssignment_1_1 ) )
-            // InternalSemver.g:3018:2: ( rule__VersionNumber__MinorAssignment_1_1 )
+            // InternalSemver.g:3044:1: ( ( rule__VersionNumber__MinorAssignment_1_1 ) )
+            // InternalSemver.g:3045:2: ( rule__VersionNumber__MinorAssignment_1_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getMinorAssignment_1_1()); 
             }
-            // InternalSemver.g:3019:2: ( rule__VersionNumber__MinorAssignment_1_1 )
-            // InternalSemver.g:3019:3: rule__VersionNumber__MinorAssignment_1_1
+            // InternalSemver.g:3046:2: ( rule__VersionNumber__MinorAssignment_1_1 )
+            // InternalSemver.g:3046:3: rule__VersionNumber__MinorAssignment_1_1
             {
             pushFollow(FOLLOW_2);
             rule__VersionNumber__MinorAssignment_1_1();
@@ -10610,14 +10715,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1__2"
-    // InternalSemver.g:3027:1: rule__VersionNumber__Group_1__2 : rule__VersionNumber__Group_1__2__Impl ;
+    // InternalSemver.g:3054:1: rule__VersionNumber__Group_1__2 : rule__VersionNumber__Group_1__2__Impl ;
     public final void rule__VersionNumber__Group_1__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3031:1: ( rule__VersionNumber__Group_1__2__Impl )
-            // InternalSemver.g:3032:2: rule__VersionNumber__Group_1__2__Impl
+            // InternalSemver.g:3058:1: ( rule__VersionNumber__Group_1__2__Impl )
+            // InternalSemver.g:3059:2: rule__VersionNumber__Group_1__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__VersionNumber__Group_1__2__Impl();
@@ -10643,31 +10748,31 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1__2__Impl"
-    // InternalSemver.g:3038:1: rule__VersionNumber__Group_1__2__Impl : ( ( rule__VersionNumber__Group_1_2__0 )? ) ;
+    // InternalSemver.g:3065:1: rule__VersionNumber__Group_1__2__Impl : ( ( rule__VersionNumber__Group_1_2__0 )? ) ;
     public final void rule__VersionNumber__Group_1__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3042:1: ( ( ( rule__VersionNumber__Group_1_2__0 )? ) )
-            // InternalSemver.g:3043:1: ( ( rule__VersionNumber__Group_1_2__0 )? )
+            // InternalSemver.g:3069:1: ( ( ( rule__VersionNumber__Group_1_2__0 )? ) )
+            // InternalSemver.g:3070:1: ( ( rule__VersionNumber__Group_1_2__0 )? )
             {
-            // InternalSemver.g:3043:1: ( ( rule__VersionNumber__Group_1_2__0 )? )
-            // InternalSemver.g:3044:2: ( rule__VersionNumber__Group_1_2__0 )?
+            // InternalSemver.g:3070:1: ( ( rule__VersionNumber__Group_1_2__0 )? )
+            // InternalSemver.g:3071:2: ( rule__VersionNumber__Group_1_2__0 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getGroup_1_2()); 
             }
-            // InternalSemver.g:3045:2: ( rule__VersionNumber__Group_1_2__0 )?
-            int alt41=2;
-            int LA41_0 = input.LA(1);
+            // InternalSemver.g:3072:2: ( rule__VersionNumber__Group_1_2__0 )?
+            int alt42=2;
+            int LA42_0 = input.LA(1);
 
-            if ( (LA41_0==36) ) {
-                alt41=1;
+            if ( (LA42_0==36) ) {
+                alt42=1;
             }
-            switch (alt41) {
+            switch (alt42) {
                 case 1 :
-                    // InternalSemver.g:3045:3: rule__VersionNumber__Group_1_2__0
+                    // InternalSemver.g:3072:3: rule__VersionNumber__Group_1_2__0
                     {
                     pushFollow(FOLLOW_2);
                     rule__VersionNumber__Group_1_2__0();
@@ -10705,14 +10810,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1_2__0"
-    // InternalSemver.g:3054:1: rule__VersionNumber__Group_1_2__0 : rule__VersionNumber__Group_1_2__0__Impl rule__VersionNumber__Group_1_2__1 ;
+    // InternalSemver.g:3081:1: rule__VersionNumber__Group_1_2__0 : rule__VersionNumber__Group_1_2__0__Impl rule__VersionNumber__Group_1_2__1 ;
     public final void rule__VersionNumber__Group_1_2__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3058:1: ( rule__VersionNumber__Group_1_2__0__Impl rule__VersionNumber__Group_1_2__1 )
-            // InternalSemver.g:3059:2: rule__VersionNumber__Group_1_2__0__Impl rule__VersionNumber__Group_1_2__1
+            // InternalSemver.g:3085:1: ( rule__VersionNumber__Group_1_2__0__Impl rule__VersionNumber__Group_1_2__1 )
+            // InternalSemver.g:3086:2: rule__VersionNumber__Group_1_2__0__Impl rule__VersionNumber__Group_1_2__1
             {
             pushFollow(FOLLOW_4);
             rule__VersionNumber__Group_1_2__0__Impl();
@@ -10743,17 +10848,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1_2__0__Impl"
-    // InternalSemver.g:3066:1: rule__VersionNumber__Group_1_2__0__Impl : ( '.' ) ;
+    // InternalSemver.g:3093:1: rule__VersionNumber__Group_1_2__0__Impl : ( '.' ) ;
     public final void rule__VersionNumber__Group_1_2__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3070:1: ( ( '.' ) )
-            // InternalSemver.g:3071:1: ( '.' )
+            // InternalSemver.g:3097:1: ( ( '.' ) )
+            // InternalSemver.g:3098:1: ( '.' )
             {
-            // InternalSemver.g:3071:1: ( '.' )
-            // InternalSemver.g:3072:2: '.'
+            // InternalSemver.g:3098:1: ( '.' )
+            // InternalSemver.g:3099:2: '.'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getFullStopKeyword_1_2_0()); 
@@ -10784,14 +10889,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1_2__1"
-    // InternalSemver.g:3081:1: rule__VersionNumber__Group_1_2__1 : rule__VersionNumber__Group_1_2__1__Impl rule__VersionNumber__Group_1_2__2 ;
+    // InternalSemver.g:3108:1: rule__VersionNumber__Group_1_2__1 : rule__VersionNumber__Group_1_2__1__Impl rule__VersionNumber__Group_1_2__2 ;
     public final void rule__VersionNumber__Group_1_2__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3085:1: ( rule__VersionNumber__Group_1_2__1__Impl rule__VersionNumber__Group_1_2__2 )
-            // InternalSemver.g:3086:2: rule__VersionNumber__Group_1_2__1__Impl rule__VersionNumber__Group_1_2__2
+            // InternalSemver.g:3112:1: ( rule__VersionNumber__Group_1_2__1__Impl rule__VersionNumber__Group_1_2__2 )
+            // InternalSemver.g:3113:2: rule__VersionNumber__Group_1_2__1__Impl rule__VersionNumber__Group_1_2__2
             {
             pushFollow(FOLLOW_21);
             rule__VersionNumber__Group_1_2__1__Impl();
@@ -10822,23 +10927,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1_2__1__Impl"
-    // InternalSemver.g:3093:1: rule__VersionNumber__Group_1_2__1__Impl : ( ( rule__VersionNumber__PatchAssignment_1_2_1 ) ) ;
+    // InternalSemver.g:3120:1: rule__VersionNumber__Group_1_2__1__Impl : ( ( rule__VersionNumber__PatchAssignment_1_2_1 ) ) ;
     public final void rule__VersionNumber__Group_1_2__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3097:1: ( ( ( rule__VersionNumber__PatchAssignment_1_2_1 ) ) )
-            // InternalSemver.g:3098:1: ( ( rule__VersionNumber__PatchAssignment_1_2_1 ) )
+            // InternalSemver.g:3124:1: ( ( ( rule__VersionNumber__PatchAssignment_1_2_1 ) ) )
+            // InternalSemver.g:3125:1: ( ( rule__VersionNumber__PatchAssignment_1_2_1 ) )
             {
-            // InternalSemver.g:3098:1: ( ( rule__VersionNumber__PatchAssignment_1_2_1 ) )
-            // InternalSemver.g:3099:2: ( rule__VersionNumber__PatchAssignment_1_2_1 )
+            // InternalSemver.g:3125:1: ( ( rule__VersionNumber__PatchAssignment_1_2_1 ) )
+            // InternalSemver.g:3126:2: ( rule__VersionNumber__PatchAssignment_1_2_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getPatchAssignment_1_2_1()); 
             }
-            // InternalSemver.g:3100:2: ( rule__VersionNumber__PatchAssignment_1_2_1 )
-            // InternalSemver.g:3100:3: rule__VersionNumber__PatchAssignment_1_2_1
+            // InternalSemver.g:3127:2: ( rule__VersionNumber__PatchAssignment_1_2_1 )
+            // InternalSemver.g:3127:3: rule__VersionNumber__PatchAssignment_1_2_1
             {
             pushFollow(FOLLOW_2);
             rule__VersionNumber__PatchAssignment_1_2_1();
@@ -10873,14 +10978,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1_2__2"
-    // InternalSemver.g:3108:1: rule__VersionNumber__Group_1_2__2 : rule__VersionNumber__Group_1_2__2__Impl ;
+    // InternalSemver.g:3135:1: rule__VersionNumber__Group_1_2__2 : rule__VersionNumber__Group_1_2__2__Impl ;
     public final void rule__VersionNumber__Group_1_2__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3112:1: ( rule__VersionNumber__Group_1_2__2__Impl )
-            // InternalSemver.g:3113:2: rule__VersionNumber__Group_1_2__2__Impl
+            // InternalSemver.g:3139:1: ( rule__VersionNumber__Group_1_2__2__Impl )
+            // InternalSemver.g:3140:2: rule__VersionNumber__Group_1_2__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__VersionNumber__Group_1_2__2__Impl();
@@ -10906,35 +11011,35 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1_2__2__Impl"
-    // InternalSemver.g:3119:1: rule__VersionNumber__Group_1_2__2__Impl : ( ( rule__VersionNumber__Group_1_2_2__0 )* ) ;
+    // InternalSemver.g:3146:1: rule__VersionNumber__Group_1_2__2__Impl : ( ( rule__VersionNumber__Group_1_2_2__0 )* ) ;
     public final void rule__VersionNumber__Group_1_2__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3123:1: ( ( ( rule__VersionNumber__Group_1_2_2__0 )* ) )
-            // InternalSemver.g:3124:1: ( ( rule__VersionNumber__Group_1_2_2__0 )* )
+            // InternalSemver.g:3150:1: ( ( ( rule__VersionNumber__Group_1_2_2__0 )* ) )
+            // InternalSemver.g:3151:1: ( ( rule__VersionNumber__Group_1_2_2__0 )* )
             {
-            // InternalSemver.g:3124:1: ( ( rule__VersionNumber__Group_1_2_2__0 )* )
-            // InternalSemver.g:3125:2: ( rule__VersionNumber__Group_1_2_2__0 )*
+            // InternalSemver.g:3151:1: ( ( rule__VersionNumber__Group_1_2_2__0 )* )
+            // InternalSemver.g:3152:2: ( rule__VersionNumber__Group_1_2_2__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getGroup_1_2_2()); 
             }
-            // InternalSemver.g:3126:2: ( rule__VersionNumber__Group_1_2_2__0 )*
-            loop42:
+            // InternalSemver.g:3153:2: ( rule__VersionNumber__Group_1_2_2__0 )*
+            loop43:
             do {
-                int alt42=2;
-                int LA42_0 = input.LA(1);
+                int alt43=2;
+                int LA43_0 = input.LA(1);
 
-                if ( (LA42_0==36) ) {
-                    alt42=1;
+                if ( (LA43_0==36) ) {
+                    alt43=1;
                 }
 
 
-                switch (alt42) {
+                switch (alt43) {
             	case 1 :
-            	    // InternalSemver.g:3126:3: rule__VersionNumber__Group_1_2_2__0
+            	    // InternalSemver.g:3153:3: rule__VersionNumber__Group_1_2_2__0
             	    {
             	    pushFollow(FOLLOW_22);
             	    rule__VersionNumber__Group_1_2_2__0();
@@ -10946,7 +11051,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop42;
+            	    break loop43;
                 }
             } while (true);
 
@@ -10975,14 +11080,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1_2_2__0"
-    // InternalSemver.g:3135:1: rule__VersionNumber__Group_1_2_2__0 : rule__VersionNumber__Group_1_2_2__0__Impl rule__VersionNumber__Group_1_2_2__1 ;
+    // InternalSemver.g:3162:1: rule__VersionNumber__Group_1_2_2__0 : rule__VersionNumber__Group_1_2_2__0__Impl rule__VersionNumber__Group_1_2_2__1 ;
     public final void rule__VersionNumber__Group_1_2_2__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3139:1: ( rule__VersionNumber__Group_1_2_2__0__Impl rule__VersionNumber__Group_1_2_2__1 )
-            // InternalSemver.g:3140:2: rule__VersionNumber__Group_1_2_2__0__Impl rule__VersionNumber__Group_1_2_2__1
+            // InternalSemver.g:3166:1: ( rule__VersionNumber__Group_1_2_2__0__Impl rule__VersionNumber__Group_1_2_2__1 )
+            // InternalSemver.g:3167:2: rule__VersionNumber__Group_1_2_2__0__Impl rule__VersionNumber__Group_1_2_2__1
             {
             pushFollow(FOLLOW_4);
             rule__VersionNumber__Group_1_2_2__0__Impl();
@@ -11013,17 +11118,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1_2_2__0__Impl"
-    // InternalSemver.g:3147:1: rule__VersionNumber__Group_1_2_2__0__Impl : ( '.' ) ;
+    // InternalSemver.g:3174:1: rule__VersionNumber__Group_1_2_2__0__Impl : ( '.' ) ;
     public final void rule__VersionNumber__Group_1_2_2__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3151:1: ( ( '.' ) )
-            // InternalSemver.g:3152:1: ( '.' )
+            // InternalSemver.g:3178:1: ( ( '.' ) )
+            // InternalSemver.g:3179:1: ( '.' )
             {
-            // InternalSemver.g:3152:1: ( '.' )
-            // InternalSemver.g:3153:2: '.'
+            // InternalSemver.g:3179:1: ( '.' )
+            // InternalSemver.g:3180:2: '.'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getFullStopKeyword_1_2_2_0()); 
@@ -11054,14 +11159,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1_2_2__1"
-    // InternalSemver.g:3162:1: rule__VersionNumber__Group_1_2_2__1 : rule__VersionNumber__Group_1_2_2__1__Impl ;
+    // InternalSemver.g:3189:1: rule__VersionNumber__Group_1_2_2__1 : rule__VersionNumber__Group_1_2_2__1__Impl ;
     public final void rule__VersionNumber__Group_1_2_2__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3166:1: ( rule__VersionNumber__Group_1_2_2__1__Impl )
-            // InternalSemver.g:3167:2: rule__VersionNumber__Group_1_2_2__1__Impl
+            // InternalSemver.g:3193:1: ( rule__VersionNumber__Group_1_2_2__1__Impl )
+            // InternalSemver.g:3194:2: rule__VersionNumber__Group_1_2_2__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__VersionNumber__Group_1_2_2__1__Impl();
@@ -11087,23 +11192,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__Group_1_2_2__1__Impl"
-    // InternalSemver.g:3173:1: rule__VersionNumber__Group_1_2_2__1__Impl : ( ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 ) ) ;
+    // InternalSemver.g:3200:1: rule__VersionNumber__Group_1_2_2__1__Impl : ( ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 ) ) ;
     public final void rule__VersionNumber__Group_1_2_2__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3177:1: ( ( ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 ) ) )
-            // InternalSemver.g:3178:1: ( ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 ) )
+            // InternalSemver.g:3204:1: ( ( ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 ) ) )
+            // InternalSemver.g:3205:1: ( ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 ) )
             {
-            // InternalSemver.g:3178:1: ( ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 ) )
-            // InternalSemver.g:3179:2: ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 )
+            // InternalSemver.g:3205:1: ( ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 ) )
+            // InternalSemver.g:3206:2: ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getExtendedAssignment_1_2_2_1()); 
             }
-            // InternalSemver.g:3180:2: ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 )
-            // InternalSemver.g:3180:3: rule__VersionNumber__ExtendedAssignment_1_2_2_1
+            // InternalSemver.g:3207:2: ( rule__VersionNumber__ExtendedAssignment_1_2_2_1 )
+            // InternalSemver.g:3207:3: rule__VersionNumber__ExtendedAssignment_1_2_2_1
             {
             pushFollow(FOLLOW_2);
             rule__VersionNumber__ExtendedAssignment_1_2_2_1();
@@ -11138,14 +11243,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_0__0"
-    // InternalSemver.g:3189:1: rule__Qualifier__Group_0__0 : rule__Qualifier__Group_0__0__Impl rule__Qualifier__Group_0__1 ;
+    // InternalSemver.g:3216:1: rule__Qualifier__Group_0__0 : rule__Qualifier__Group_0__0__Impl rule__Qualifier__Group_0__1 ;
     public final void rule__Qualifier__Group_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3193:1: ( rule__Qualifier__Group_0__0__Impl rule__Qualifier__Group_0__1 )
-            // InternalSemver.g:3194:2: rule__Qualifier__Group_0__0__Impl rule__Qualifier__Group_0__1
+            // InternalSemver.g:3220:1: ( rule__Qualifier__Group_0__0__Impl rule__Qualifier__Group_0__1 )
+            // InternalSemver.g:3221:2: rule__Qualifier__Group_0__0__Impl rule__Qualifier__Group_0__1
             {
             pushFollow(FOLLOW_11);
             rule__Qualifier__Group_0__0__Impl();
@@ -11176,17 +11281,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_0__0__Impl"
-    // InternalSemver.g:3201:1: rule__Qualifier__Group_0__0__Impl : ( '-' ) ;
+    // InternalSemver.g:3228:1: rule__Qualifier__Group_0__0__Impl : ( '-' ) ;
     public final void rule__Qualifier__Group_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3205:1: ( ( '-' ) )
-            // InternalSemver.g:3206:1: ( '-' )
+            // InternalSemver.g:3232:1: ( ( '-' ) )
+            // InternalSemver.g:3233:1: ( '-' )
             {
-            // InternalSemver.g:3206:1: ( '-' )
-            // InternalSemver.g:3207:2: '-'
+            // InternalSemver.g:3233:1: ( '-' )
+            // InternalSemver.g:3234:2: '-'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierAccess().getHyphenMinusKeyword_0_0()); 
@@ -11217,14 +11322,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_0__1"
-    // InternalSemver.g:3216:1: rule__Qualifier__Group_0__1 : rule__Qualifier__Group_0__1__Impl rule__Qualifier__Group_0__2 ;
+    // InternalSemver.g:3243:1: rule__Qualifier__Group_0__1 : rule__Qualifier__Group_0__1__Impl rule__Qualifier__Group_0__2 ;
     public final void rule__Qualifier__Group_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3220:1: ( rule__Qualifier__Group_0__1__Impl rule__Qualifier__Group_0__2 )
-            // InternalSemver.g:3221:2: rule__Qualifier__Group_0__1__Impl rule__Qualifier__Group_0__2
+            // InternalSemver.g:3247:1: ( rule__Qualifier__Group_0__1__Impl rule__Qualifier__Group_0__2 )
+            // InternalSemver.g:3248:2: rule__Qualifier__Group_0__1__Impl rule__Qualifier__Group_0__2
             {
             pushFollow(FOLLOW_23);
             rule__Qualifier__Group_0__1__Impl();
@@ -11255,23 +11360,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_0__1__Impl"
-    // InternalSemver.g:3228:1: rule__Qualifier__Group_0__1__Impl : ( ( rule__Qualifier__PreReleaseAssignment_0_1 ) ) ;
+    // InternalSemver.g:3255:1: rule__Qualifier__Group_0__1__Impl : ( ( rule__Qualifier__PreReleaseAssignment_0_1 ) ) ;
     public final void rule__Qualifier__Group_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3232:1: ( ( ( rule__Qualifier__PreReleaseAssignment_0_1 ) ) )
-            // InternalSemver.g:3233:1: ( ( rule__Qualifier__PreReleaseAssignment_0_1 ) )
+            // InternalSemver.g:3259:1: ( ( ( rule__Qualifier__PreReleaseAssignment_0_1 ) ) )
+            // InternalSemver.g:3260:1: ( ( rule__Qualifier__PreReleaseAssignment_0_1 ) )
             {
-            // InternalSemver.g:3233:1: ( ( rule__Qualifier__PreReleaseAssignment_0_1 ) )
-            // InternalSemver.g:3234:2: ( rule__Qualifier__PreReleaseAssignment_0_1 )
+            // InternalSemver.g:3260:1: ( ( rule__Qualifier__PreReleaseAssignment_0_1 ) )
+            // InternalSemver.g:3261:2: ( rule__Qualifier__PreReleaseAssignment_0_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierAccess().getPreReleaseAssignment_0_1()); 
             }
-            // InternalSemver.g:3235:2: ( rule__Qualifier__PreReleaseAssignment_0_1 )
-            // InternalSemver.g:3235:3: rule__Qualifier__PreReleaseAssignment_0_1
+            // InternalSemver.g:3262:2: ( rule__Qualifier__PreReleaseAssignment_0_1 )
+            // InternalSemver.g:3262:3: rule__Qualifier__PreReleaseAssignment_0_1
             {
             pushFollow(FOLLOW_2);
             rule__Qualifier__PreReleaseAssignment_0_1();
@@ -11306,14 +11411,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_0__2"
-    // InternalSemver.g:3243:1: rule__Qualifier__Group_0__2 : rule__Qualifier__Group_0__2__Impl ;
+    // InternalSemver.g:3270:1: rule__Qualifier__Group_0__2 : rule__Qualifier__Group_0__2__Impl ;
     public final void rule__Qualifier__Group_0__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3247:1: ( rule__Qualifier__Group_0__2__Impl )
-            // InternalSemver.g:3248:2: rule__Qualifier__Group_0__2__Impl
+            // InternalSemver.g:3274:1: ( rule__Qualifier__Group_0__2__Impl )
+            // InternalSemver.g:3275:2: rule__Qualifier__Group_0__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Qualifier__Group_0__2__Impl();
@@ -11339,31 +11444,31 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_0__2__Impl"
-    // InternalSemver.g:3254:1: rule__Qualifier__Group_0__2__Impl : ( ( rule__Qualifier__Group_0_2__0 )? ) ;
+    // InternalSemver.g:3281:1: rule__Qualifier__Group_0__2__Impl : ( ( rule__Qualifier__Group_0_2__0 )? ) ;
     public final void rule__Qualifier__Group_0__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3258:1: ( ( ( rule__Qualifier__Group_0_2__0 )? ) )
-            // InternalSemver.g:3259:1: ( ( rule__Qualifier__Group_0_2__0 )? )
+            // InternalSemver.g:3285:1: ( ( ( rule__Qualifier__Group_0_2__0 )? ) )
+            // InternalSemver.g:3286:1: ( ( rule__Qualifier__Group_0_2__0 )? )
             {
-            // InternalSemver.g:3259:1: ( ( rule__Qualifier__Group_0_2__0 )? )
-            // InternalSemver.g:3260:2: ( rule__Qualifier__Group_0_2__0 )?
+            // InternalSemver.g:3286:1: ( ( rule__Qualifier__Group_0_2__0 )? )
+            // InternalSemver.g:3287:2: ( rule__Qualifier__Group_0_2__0 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierAccess().getGroup_0_2()); 
             }
-            // InternalSemver.g:3261:2: ( rule__Qualifier__Group_0_2__0 )?
-            int alt43=2;
-            int LA43_0 = input.LA(1);
+            // InternalSemver.g:3288:2: ( rule__Qualifier__Group_0_2__0 )?
+            int alt44=2;
+            int LA44_0 = input.LA(1);
 
-            if ( (LA43_0==40) ) {
-                alt43=1;
+            if ( (LA44_0==40) ) {
+                alt44=1;
             }
-            switch (alt43) {
+            switch (alt44) {
                 case 1 :
-                    // InternalSemver.g:3261:3: rule__Qualifier__Group_0_2__0
+                    // InternalSemver.g:3288:3: rule__Qualifier__Group_0_2__0
                     {
                     pushFollow(FOLLOW_2);
                     rule__Qualifier__Group_0_2__0();
@@ -11401,14 +11506,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_0_2__0"
-    // InternalSemver.g:3270:1: rule__Qualifier__Group_0_2__0 : rule__Qualifier__Group_0_2__0__Impl rule__Qualifier__Group_0_2__1 ;
+    // InternalSemver.g:3297:1: rule__Qualifier__Group_0_2__0 : rule__Qualifier__Group_0_2__0__Impl rule__Qualifier__Group_0_2__1 ;
     public final void rule__Qualifier__Group_0_2__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3274:1: ( rule__Qualifier__Group_0_2__0__Impl rule__Qualifier__Group_0_2__1 )
-            // InternalSemver.g:3275:2: rule__Qualifier__Group_0_2__0__Impl rule__Qualifier__Group_0_2__1
+            // InternalSemver.g:3301:1: ( rule__Qualifier__Group_0_2__0__Impl rule__Qualifier__Group_0_2__1 )
+            // InternalSemver.g:3302:2: rule__Qualifier__Group_0_2__0__Impl rule__Qualifier__Group_0_2__1
             {
             pushFollow(FOLLOW_11);
             rule__Qualifier__Group_0_2__0__Impl();
@@ -11439,17 +11544,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_0_2__0__Impl"
-    // InternalSemver.g:3282:1: rule__Qualifier__Group_0_2__0__Impl : ( '+' ) ;
+    // InternalSemver.g:3309:1: rule__Qualifier__Group_0_2__0__Impl : ( '+' ) ;
     public final void rule__Qualifier__Group_0_2__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3286:1: ( ( '+' ) )
-            // InternalSemver.g:3287:1: ( '+' )
+            // InternalSemver.g:3313:1: ( ( '+' ) )
+            // InternalSemver.g:3314:1: ( '+' )
             {
-            // InternalSemver.g:3287:1: ( '+' )
-            // InternalSemver.g:3288:2: '+'
+            // InternalSemver.g:3314:1: ( '+' )
+            // InternalSemver.g:3315:2: '+'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierAccess().getPlusSignKeyword_0_2_0()); 
@@ -11480,14 +11585,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_0_2__1"
-    // InternalSemver.g:3297:1: rule__Qualifier__Group_0_2__1 : rule__Qualifier__Group_0_2__1__Impl ;
+    // InternalSemver.g:3324:1: rule__Qualifier__Group_0_2__1 : rule__Qualifier__Group_0_2__1__Impl ;
     public final void rule__Qualifier__Group_0_2__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3301:1: ( rule__Qualifier__Group_0_2__1__Impl )
-            // InternalSemver.g:3302:2: rule__Qualifier__Group_0_2__1__Impl
+            // InternalSemver.g:3328:1: ( rule__Qualifier__Group_0_2__1__Impl )
+            // InternalSemver.g:3329:2: rule__Qualifier__Group_0_2__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Qualifier__Group_0_2__1__Impl();
@@ -11513,23 +11618,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_0_2__1__Impl"
-    // InternalSemver.g:3308:1: rule__Qualifier__Group_0_2__1__Impl : ( ( rule__Qualifier__BuildMetadataAssignment_0_2_1 ) ) ;
+    // InternalSemver.g:3335:1: rule__Qualifier__Group_0_2__1__Impl : ( ( rule__Qualifier__BuildMetadataAssignment_0_2_1 ) ) ;
     public final void rule__Qualifier__Group_0_2__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3312:1: ( ( ( rule__Qualifier__BuildMetadataAssignment_0_2_1 ) ) )
-            // InternalSemver.g:3313:1: ( ( rule__Qualifier__BuildMetadataAssignment_0_2_1 ) )
+            // InternalSemver.g:3339:1: ( ( ( rule__Qualifier__BuildMetadataAssignment_0_2_1 ) ) )
+            // InternalSemver.g:3340:1: ( ( rule__Qualifier__BuildMetadataAssignment_0_2_1 ) )
             {
-            // InternalSemver.g:3313:1: ( ( rule__Qualifier__BuildMetadataAssignment_0_2_1 ) )
-            // InternalSemver.g:3314:2: ( rule__Qualifier__BuildMetadataAssignment_0_2_1 )
+            // InternalSemver.g:3340:1: ( ( rule__Qualifier__BuildMetadataAssignment_0_2_1 ) )
+            // InternalSemver.g:3341:2: ( rule__Qualifier__BuildMetadataAssignment_0_2_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierAccess().getBuildMetadataAssignment_0_2_1()); 
             }
-            // InternalSemver.g:3315:2: ( rule__Qualifier__BuildMetadataAssignment_0_2_1 )
-            // InternalSemver.g:3315:3: rule__Qualifier__BuildMetadataAssignment_0_2_1
+            // InternalSemver.g:3342:2: ( rule__Qualifier__BuildMetadataAssignment_0_2_1 )
+            // InternalSemver.g:3342:3: rule__Qualifier__BuildMetadataAssignment_0_2_1
             {
             pushFollow(FOLLOW_2);
             rule__Qualifier__BuildMetadataAssignment_0_2_1();
@@ -11564,14 +11669,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_1__0"
-    // InternalSemver.g:3324:1: rule__Qualifier__Group_1__0 : rule__Qualifier__Group_1__0__Impl rule__Qualifier__Group_1__1 ;
+    // InternalSemver.g:3351:1: rule__Qualifier__Group_1__0 : rule__Qualifier__Group_1__0__Impl rule__Qualifier__Group_1__1 ;
     public final void rule__Qualifier__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3328:1: ( rule__Qualifier__Group_1__0__Impl rule__Qualifier__Group_1__1 )
-            // InternalSemver.g:3329:2: rule__Qualifier__Group_1__0__Impl rule__Qualifier__Group_1__1
+            // InternalSemver.g:3355:1: ( rule__Qualifier__Group_1__0__Impl rule__Qualifier__Group_1__1 )
+            // InternalSemver.g:3356:2: rule__Qualifier__Group_1__0__Impl rule__Qualifier__Group_1__1
             {
             pushFollow(FOLLOW_11);
             rule__Qualifier__Group_1__0__Impl();
@@ -11602,17 +11707,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_1__0__Impl"
-    // InternalSemver.g:3336:1: rule__Qualifier__Group_1__0__Impl : ( '+' ) ;
+    // InternalSemver.g:3363:1: rule__Qualifier__Group_1__0__Impl : ( '+' ) ;
     public final void rule__Qualifier__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3340:1: ( ( '+' ) )
-            // InternalSemver.g:3341:1: ( '+' )
+            // InternalSemver.g:3367:1: ( ( '+' ) )
+            // InternalSemver.g:3368:1: ( '+' )
             {
-            // InternalSemver.g:3341:1: ( '+' )
-            // InternalSemver.g:3342:2: '+'
+            // InternalSemver.g:3368:1: ( '+' )
+            // InternalSemver.g:3369:2: '+'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierAccess().getPlusSignKeyword_1_0()); 
@@ -11643,14 +11748,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_1__1"
-    // InternalSemver.g:3351:1: rule__Qualifier__Group_1__1 : rule__Qualifier__Group_1__1__Impl ;
+    // InternalSemver.g:3378:1: rule__Qualifier__Group_1__1 : rule__Qualifier__Group_1__1__Impl ;
     public final void rule__Qualifier__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3355:1: ( rule__Qualifier__Group_1__1__Impl )
-            // InternalSemver.g:3356:2: rule__Qualifier__Group_1__1__Impl
+            // InternalSemver.g:3382:1: ( rule__Qualifier__Group_1__1__Impl )
+            // InternalSemver.g:3383:2: rule__Qualifier__Group_1__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__Qualifier__Group_1__1__Impl();
@@ -11676,23 +11781,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__Group_1__1__Impl"
-    // InternalSemver.g:3362:1: rule__Qualifier__Group_1__1__Impl : ( ( rule__Qualifier__BuildMetadataAssignment_1_1 ) ) ;
+    // InternalSemver.g:3389:1: rule__Qualifier__Group_1__1__Impl : ( ( rule__Qualifier__BuildMetadataAssignment_1_1 ) ) ;
     public final void rule__Qualifier__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3366:1: ( ( ( rule__Qualifier__BuildMetadataAssignment_1_1 ) ) )
-            // InternalSemver.g:3367:1: ( ( rule__Qualifier__BuildMetadataAssignment_1_1 ) )
+            // InternalSemver.g:3393:1: ( ( ( rule__Qualifier__BuildMetadataAssignment_1_1 ) ) )
+            // InternalSemver.g:3394:1: ( ( rule__Qualifier__BuildMetadataAssignment_1_1 ) )
             {
-            // InternalSemver.g:3367:1: ( ( rule__Qualifier__BuildMetadataAssignment_1_1 ) )
-            // InternalSemver.g:3368:2: ( rule__Qualifier__BuildMetadataAssignment_1_1 )
+            // InternalSemver.g:3394:1: ( ( rule__Qualifier__BuildMetadataAssignment_1_1 ) )
+            // InternalSemver.g:3395:2: ( rule__Qualifier__BuildMetadataAssignment_1_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierAccess().getBuildMetadataAssignment_1_1()); 
             }
-            // InternalSemver.g:3369:2: ( rule__Qualifier__BuildMetadataAssignment_1_1 )
-            // InternalSemver.g:3369:3: rule__Qualifier__BuildMetadataAssignment_1_1
+            // InternalSemver.g:3396:2: ( rule__Qualifier__BuildMetadataAssignment_1_1 )
+            // InternalSemver.g:3396:3: rule__Qualifier__BuildMetadataAssignment_1_1
             {
             pushFollow(FOLLOW_2);
             rule__Qualifier__BuildMetadataAssignment_1_1();
@@ -11727,14 +11832,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QualifierTag__Group__0"
-    // InternalSemver.g:3378:1: rule__QualifierTag__Group__0 : rule__QualifierTag__Group__0__Impl rule__QualifierTag__Group__1 ;
+    // InternalSemver.g:3405:1: rule__QualifierTag__Group__0 : rule__QualifierTag__Group__0__Impl rule__QualifierTag__Group__1 ;
     public final void rule__QualifierTag__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3382:1: ( rule__QualifierTag__Group__0__Impl rule__QualifierTag__Group__1 )
-            // InternalSemver.g:3383:2: rule__QualifierTag__Group__0__Impl rule__QualifierTag__Group__1
+            // InternalSemver.g:3409:1: ( rule__QualifierTag__Group__0__Impl rule__QualifierTag__Group__1 )
+            // InternalSemver.g:3410:2: rule__QualifierTag__Group__0__Impl rule__QualifierTag__Group__1
             {
             pushFollow(FOLLOW_21);
             rule__QualifierTag__Group__0__Impl();
@@ -11765,23 +11870,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QualifierTag__Group__0__Impl"
-    // InternalSemver.g:3390:1: rule__QualifierTag__Group__0__Impl : ( ( rule__QualifierTag__PartsAssignment_0 ) ) ;
+    // InternalSemver.g:3417:1: rule__QualifierTag__Group__0__Impl : ( ( rule__QualifierTag__PartsAssignment_0 ) ) ;
     public final void rule__QualifierTag__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3394:1: ( ( ( rule__QualifierTag__PartsAssignment_0 ) ) )
-            // InternalSemver.g:3395:1: ( ( rule__QualifierTag__PartsAssignment_0 ) )
+            // InternalSemver.g:3421:1: ( ( ( rule__QualifierTag__PartsAssignment_0 ) ) )
+            // InternalSemver.g:3422:1: ( ( rule__QualifierTag__PartsAssignment_0 ) )
             {
-            // InternalSemver.g:3395:1: ( ( rule__QualifierTag__PartsAssignment_0 ) )
-            // InternalSemver.g:3396:2: ( rule__QualifierTag__PartsAssignment_0 )
+            // InternalSemver.g:3422:1: ( ( rule__QualifierTag__PartsAssignment_0 ) )
+            // InternalSemver.g:3423:2: ( rule__QualifierTag__PartsAssignment_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierTagAccess().getPartsAssignment_0()); 
             }
-            // InternalSemver.g:3397:2: ( rule__QualifierTag__PartsAssignment_0 )
-            // InternalSemver.g:3397:3: rule__QualifierTag__PartsAssignment_0
+            // InternalSemver.g:3424:2: ( rule__QualifierTag__PartsAssignment_0 )
+            // InternalSemver.g:3424:3: rule__QualifierTag__PartsAssignment_0
             {
             pushFollow(FOLLOW_2);
             rule__QualifierTag__PartsAssignment_0();
@@ -11816,14 +11921,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QualifierTag__Group__1"
-    // InternalSemver.g:3405:1: rule__QualifierTag__Group__1 : rule__QualifierTag__Group__1__Impl ;
+    // InternalSemver.g:3432:1: rule__QualifierTag__Group__1 : rule__QualifierTag__Group__1__Impl ;
     public final void rule__QualifierTag__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3409:1: ( rule__QualifierTag__Group__1__Impl )
-            // InternalSemver.g:3410:2: rule__QualifierTag__Group__1__Impl
+            // InternalSemver.g:3436:1: ( rule__QualifierTag__Group__1__Impl )
+            // InternalSemver.g:3437:2: rule__QualifierTag__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__QualifierTag__Group__1__Impl();
@@ -11849,35 +11954,35 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QualifierTag__Group__1__Impl"
-    // InternalSemver.g:3416:1: rule__QualifierTag__Group__1__Impl : ( ( rule__QualifierTag__Group_1__0 )* ) ;
+    // InternalSemver.g:3443:1: rule__QualifierTag__Group__1__Impl : ( ( rule__QualifierTag__Group_1__0 )* ) ;
     public final void rule__QualifierTag__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3420:1: ( ( ( rule__QualifierTag__Group_1__0 )* ) )
-            // InternalSemver.g:3421:1: ( ( rule__QualifierTag__Group_1__0 )* )
+            // InternalSemver.g:3447:1: ( ( ( rule__QualifierTag__Group_1__0 )* ) )
+            // InternalSemver.g:3448:1: ( ( rule__QualifierTag__Group_1__0 )* )
             {
-            // InternalSemver.g:3421:1: ( ( rule__QualifierTag__Group_1__0 )* )
-            // InternalSemver.g:3422:2: ( rule__QualifierTag__Group_1__0 )*
+            // InternalSemver.g:3448:1: ( ( rule__QualifierTag__Group_1__0 )* )
+            // InternalSemver.g:3449:2: ( rule__QualifierTag__Group_1__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierTagAccess().getGroup_1()); 
             }
-            // InternalSemver.g:3423:2: ( rule__QualifierTag__Group_1__0 )*
-            loop44:
+            // InternalSemver.g:3450:2: ( rule__QualifierTag__Group_1__0 )*
+            loop45:
             do {
-                int alt44=2;
-                int LA44_0 = input.LA(1);
+                int alt45=2;
+                int LA45_0 = input.LA(1);
 
-                if ( (LA44_0==36) ) {
-                    alt44=1;
+                if ( (LA45_0==36) ) {
+                    alt45=1;
                 }
 
 
-                switch (alt44) {
+                switch (alt45) {
             	case 1 :
-            	    // InternalSemver.g:3423:3: rule__QualifierTag__Group_1__0
+            	    // InternalSemver.g:3450:3: rule__QualifierTag__Group_1__0
             	    {
             	    pushFollow(FOLLOW_22);
             	    rule__QualifierTag__Group_1__0();
@@ -11889,7 +11994,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop44;
+            	    break loop45;
                 }
             } while (true);
 
@@ -11918,14 +12023,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QualifierTag__Group_1__0"
-    // InternalSemver.g:3432:1: rule__QualifierTag__Group_1__0 : rule__QualifierTag__Group_1__0__Impl rule__QualifierTag__Group_1__1 ;
+    // InternalSemver.g:3459:1: rule__QualifierTag__Group_1__0 : rule__QualifierTag__Group_1__0__Impl rule__QualifierTag__Group_1__1 ;
     public final void rule__QualifierTag__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3436:1: ( rule__QualifierTag__Group_1__0__Impl rule__QualifierTag__Group_1__1 )
-            // InternalSemver.g:3437:2: rule__QualifierTag__Group_1__0__Impl rule__QualifierTag__Group_1__1
+            // InternalSemver.g:3463:1: ( rule__QualifierTag__Group_1__0__Impl rule__QualifierTag__Group_1__1 )
+            // InternalSemver.g:3464:2: rule__QualifierTag__Group_1__0__Impl rule__QualifierTag__Group_1__1
             {
             pushFollow(FOLLOW_11);
             rule__QualifierTag__Group_1__0__Impl();
@@ -11956,17 +12061,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QualifierTag__Group_1__0__Impl"
-    // InternalSemver.g:3444:1: rule__QualifierTag__Group_1__0__Impl : ( '.' ) ;
+    // InternalSemver.g:3471:1: rule__QualifierTag__Group_1__0__Impl : ( '.' ) ;
     public final void rule__QualifierTag__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3448:1: ( ( '.' ) )
-            // InternalSemver.g:3449:1: ( '.' )
+            // InternalSemver.g:3475:1: ( ( '.' ) )
+            // InternalSemver.g:3476:1: ( '.' )
             {
-            // InternalSemver.g:3449:1: ( '.' )
-            // InternalSemver.g:3450:2: '.'
+            // InternalSemver.g:3476:1: ( '.' )
+            // InternalSemver.g:3477:2: '.'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierTagAccess().getFullStopKeyword_1_0()); 
@@ -11997,14 +12102,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QualifierTag__Group_1__1"
-    // InternalSemver.g:3459:1: rule__QualifierTag__Group_1__1 : rule__QualifierTag__Group_1__1__Impl ;
+    // InternalSemver.g:3486:1: rule__QualifierTag__Group_1__1 : rule__QualifierTag__Group_1__1__Impl ;
     public final void rule__QualifierTag__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3463:1: ( rule__QualifierTag__Group_1__1__Impl )
-            // InternalSemver.g:3464:2: rule__QualifierTag__Group_1__1__Impl
+            // InternalSemver.g:3490:1: ( rule__QualifierTag__Group_1__1__Impl )
+            // InternalSemver.g:3491:2: rule__QualifierTag__Group_1__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__QualifierTag__Group_1__1__Impl();
@@ -12030,23 +12135,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QualifierTag__Group_1__1__Impl"
-    // InternalSemver.g:3470:1: rule__QualifierTag__Group_1__1__Impl : ( ( rule__QualifierTag__PartsAssignment_1_1 ) ) ;
+    // InternalSemver.g:3497:1: rule__QualifierTag__Group_1__1__Impl : ( ( rule__QualifierTag__PartsAssignment_1_1 ) ) ;
     public final void rule__QualifierTag__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3474:1: ( ( ( rule__QualifierTag__PartsAssignment_1_1 ) ) )
-            // InternalSemver.g:3475:1: ( ( rule__QualifierTag__PartsAssignment_1_1 ) )
+            // InternalSemver.g:3501:1: ( ( ( rule__QualifierTag__PartsAssignment_1_1 ) ) )
+            // InternalSemver.g:3502:1: ( ( rule__QualifierTag__PartsAssignment_1_1 ) )
             {
-            // InternalSemver.g:3475:1: ( ( rule__QualifierTag__PartsAssignment_1_1 ) )
-            // InternalSemver.g:3476:2: ( rule__QualifierTag__PartsAssignment_1_1 )
+            // InternalSemver.g:3502:1: ( ( rule__QualifierTag__PartsAssignment_1_1 ) )
+            // InternalSemver.g:3503:2: ( rule__QualifierTag__PartsAssignment_1_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierTagAccess().getPartsAssignment_1_1()); 
             }
-            // InternalSemver.g:3477:2: ( rule__QualifierTag__PartsAssignment_1_1 )
-            // InternalSemver.g:3477:3: rule__QualifierTag__PartsAssignment_1_1
+            // InternalSemver.g:3504:2: ( rule__QualifierTag__PartsAssignment_1_1 )
+            // InternalSemver.g:3504:3: rule__QualifierTag__PartsAssignment_1_1
             {
             pushFollow(FOLLOW_2);
             rule__QualifierTag__PartsAssignment_1_1();
@@ -12081,14 +12186,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__FILE_TAG__Group__0"
-    // InternalSemver.g:3486:1: rule__FILE_TAG__Group__0 : rule__FILE_TAG__Group__0__Impl rule__FILE_TAG__Group__1 ;
+    // InternalSemver.g:3513:1: rule__FILE_TAG__Group__0 : rule__FILE_TAG__Group__0__Impl rule__FILE_TAG__Group__1 ;
     public final void rule__FILE_TAG__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3490:1: ( rule__FILE_TAG__Group__0__Impl rule__FILE_TAG__Group__1 )
-            // InternalSemver.g:3491:2: rule__FILE_TAG__Group__0__Impl rule__FILE_TAG__Group__1
+            // InternalSemver.g:3517:1: ( rule__FILE_TAG__Group__0__Impl rule__FILE_TAG__Group__1 )
+            // InternalSemver.g:3518:2: rule__FILE_TAG__Group__0__Impl rule__FILE_TAG__Group__1
             {
             pushFollow(FOLLOW_24);
             rule__FILE_TAG__Group__0__Impl();
@@ -12119,17 +12224,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__FILE_TAG__Group__0__Impl"
-    // InternalSemver.g:3498:1: rule__FILE_TAG__Group__0__Impl : ( RULE_LETTER_F ) ;
+    // InternalSemver.g:3525:1: rule__FILE_TAG__Group__0__Impl : ( RULE_LETTER_F ) ;
     public final void rule__FILE_TAG__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3502:1: ( ( RULE_LETTER_F ) )
-            // InternalSemver.g:3503:1: ( RULE_LETTER_F )
+            // InternalSemver.g:3529:1: ( ( RULE_LETTER_F ) )
+            // InternalSemver.g:3530:1: ( RULE_LETTER_F )
             {
-            // InternalSemver.g:3503:1: ( RULE_LETTER_F )
-            // InternalSemver.g:3504:2: RULE_LETTER_F
+            // InternalSemver.g:3530:1: ( RULE_LETTER_F )
+            // InternalSemver.g:3531:2: RULE_LETTER_F
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getFILE_TAGAccess().getLETTER_FTerminalRuleCall_0()); 
@@ -12160,14 +12265,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__FILE_TAG__Group__1"
-    // InternalSemver.g:3513:1: rule__FILE_TAG__Group__1 : rule__FILE_TAG__Group__1__Impl rule__FILE_TAG__Group__2 ;
+    // InternalSemver.g:3540:1: rule__FILE_TAG__Group__1 : rule__FILE_TAG__Group__1__Impl rule__FILE_TAG__Group__2 ;
     public final void rule__FILE_TAG__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3517:1: ( rule__FILE_TAG__Group__1__Impl rule__FILE_TAG__Group__2 )
-            // InternalSemver.g:3518:2: rule__FILE_TAG__Group__1__Impl rule__FILE_TAG__Group__2
+            // InternalSemver.g:3544:1: ( rule__FILE_TAG__Group__1__Impl rule__FILE_TAG__Group__2 )
+            // InternalSemver.g:3545:2: rule__FILE_TAG__Group__1__Impl rule__FILE_TAG__Group__2
             {
             pushFollow(FOLLOW_25);
             rule__FILE_TAG__Group__1__Impl();
@@ -12198,17 +12303,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__FILE_TAG__Group__1__Impl"
-    // InternalSemver.g:3525:1: rule__FILE_TAG__Group__1__Impl : ( RULE_LETTER_I ) ;
+    // InternalSemver.g:3552:1: rule__FILE_TAG__Group__1__Impl : ( RULE_LETTER_I ) ;
     public final void rule__FILE_TAG__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3529:1: ( ( RULE_LETTER_I ) )
-            // InternalSemver.g:3530:1: ( RULE_LETTER_I )
+            // InternalSemver.g:3556:1: ( ( RULE_LETTER_I ) )
+            // InternalSemver.g:3557:1: ( RULE_LETTER_I )
             {
-            // InternalSemver.g:3530:1: ( RULE_LETTER_I )
-            // InternalSemver.g:3531:2: RULE_LETTER_I
+            // InternalSemver.g:3557:1: ( RULE_LETTER_I )
+            // InternalSemver.g:3558:2: RULE_LETTER_I
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getFILE_TAGAccess().getLETTER_ITerminalRuleCall_1()); 
@@ -12239,14 +12344,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__FILE_TAG__Group__2"
-    // InternalSemver.g:3540:1: rule__FILE_TAG__Group__2 : rule__FILE_TAG__Group__2__Impl rule__FILE_TAG__Group__3 ;
+    // InternalSemver.g:3567:1: rule__FILE_TAG__Group__2 : rule__FILE_TAG__Group__2__Impl rule__FILE_TAG__Group__3 ;
     public final void rule__FILE_TAG__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3544:1: ( rule__FILE_TAG__Group__2__Impl rule__FILE_TAG__Group__3 )
-            // InternalSemver.g:3545:2: rule__FILE_TAG__Group__2__Impl rule__FILE_TAG__Group__3
+            // InternalSemver.g:3571:1: ( rule__FILE_TAG__Group__2__Impl rule__FILE_TAG__Group__3 )
+            // InternalSemver.g:3572:2: rule__FILE_TAG__Group__2__Impl rule__FILE_TAG__Group__3
             {
             pushFollow(FOLLOW_26);
             rule__FILE_TAG__Group__2__Impl();
@@ -12277,17 +12382,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__FILE_TAG__Group__2__Impl"
-    // InternalSemver.g:3552:1: rule__FILE_TAG__Group__2__Impl : ( RULE_LETTER_L ) ;
+    // InternalSemver.g:3579:1: rule__FILE_TAG__Group__2__Impl : ( RULE_LETTER_L ) ;
     public final void rule__FILE_TAG__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3556:1: ( ( RULE_LETTER_L ) )
-            // InternalSemver.g:3557:1: ( RULE_LETTER_L )
+            // InternalSemver.g:3583:1: ( ( RULE_LETTER_L ) )
+            // InternalSemver.g:3584:1: ( RULE_LETTER_L )
             {
-            // InternalSemver.g:3557:1: ( RULE_LETTER_L )
-            // InternalSemver.g:3558:2: RULE_LETTER_L
+            // InternalSemver.g:3584:1: ( RULE_LETTER_L )
+            // InternalSemver.g:3585:2: RULE_LETTER_L
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getFILE_TAGAccess().getLETTER_LTerminalRuleCall_2()); 
@@ -12318,14 +12423,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__FILE_TAG__Group__3"
-    // InternalSemver.g:3567:1: rule__FILE_TAG__Group__3 : rule__FILE_TAG__Group__3__Impl rule__FILE_TAG__Group__4 ;
+    // InternalSemver.g:3594:1: rule__FILE_TAG__Group__3 : rule__FILE_TAG__Group__3__Impl rule__FILE_TAG__Group__4 ;
     public final void rule__FILE_TAG__Group__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3571:1: ( rule__FILE_TAG__Group__3__Impl rule__FILE_TAG__Group__4 )
-            // InternalSemver.g:3572:2: rule__FILE_TAG__Group__3__Impl rule__FILE_TAG__Group__4
+            // InternalSemver.g:3598:1: ( rule__FILE_TAG__Group__3__Impl rule__FILE_TAG__Group__4 )
+            // InternalSemver.g:3599:2: rule__FILE_TAG__Group__3__Impl rule__FILE_TAG__Group__4
             {
             pushFollow(FOLLOW_7);
             rule__FILE_TAG__Group__3__Impl();
@@ -12356,17 +12461,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__FILE_TAG__Group__3__Impl"
-    // InternalSemver.g:3579:1: rule__FILE_TAG__Group__3__Impl : ( RULE_LETTER_E ) ;
+    // InternalSemver.g:3606:1: rule__FILE_TAG__Group__3__Impl : ( RULE_LETTER_E ) ;
     public final void rule__FILE_TAG__Group__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3583:1: ( ( RULE_LETTER_E ) )
-            // InternalSemver.g:3584:1: ( RULE_LETTER_E )
+            // InternalSemver.g:3610:1: ( ( RULE_LETTER_E ) )
+            // InternalSemver.g:3611:1: ( RULE_LETTER_E )
             {
-            // InternalSemver.g:3584:1: ( RULE_LETTER_E )
-            // InternalSemver.g:3585:2: RULE_LETTER_E
+            // InternalSemver.g:3611:1: ( RULE_LETTER_E )
+            // InternalSemver.g:3612:2: RULE_LETTER_E
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getFILE_TAGAccess().getLETTER_ETerminalRuleCall_3()); 
@@ -12397,14 +12502,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__FILE_TAG__Group__4"
-    // InternalSemver.g:3594:1: rule__FILE_TAG__Group__4 : rule__FILE_TAG__Group__4__Impl ;
+    // InternalSemver.g:3621:1: rule__FILE_TAG__Group__4 : rule__FILE_TAG__Group__4__Impl ;
     public final void rule__FILE_TAG__Group__4() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3598:1: ( rule__FILE_TAG__Group__4__Impl )
-            // InternalSemver.g:3599:2: rule__FILE_TAG__Group__4__Impl
+            // InternalSemver.g:3625:1: ( rule__FILE_TAG__Group__4__Impl )
+            // InternalSemver.g:3626:2: rule__FILE_TAG__Group__4__Impl
             {
             pushFollow(FOLLOW_2);
             rule__FILE_TAG__Group__4__Impl();
@@ -12430,17 +12535,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__FILE_TAG__Group__4__Impl"
-    // InternalSemver.g:3605:1: rule__FILE_TAG__Group__4__Impl : ( ':' ) ;
+    // InternalSemver.g:3632:1: rule__FILE_TAG__Group__4__Impl : ( ':' ) ;
     public final void rule__FILE_TAG__Group__4__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3609:1: ( ( ':' ) )
-            // InternalSemver.g:3610:1: ( ':' )
+            // InternalSemver.g:3636:1: ( ( ':' ) )
+            // InternalSemver.g:3637:1: ( ':' )
             {
-            // InternalSemver.g:3610:1: ( ':' )
-            // InternalSemver.g:3611:2: ':'
+            // InternalSemver.g:3637:1: ( ':' )
+            // InternalSemver.g:3638:2: ':'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getFILE_TAGAccess().getColonKeyword_4()); 
@@ -12471,14 +12576,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__0"
-    // InternalSemver.g:3621:1: rule__SEMVER_TAG__Group__0 : rule__SEMVER_TAG__Group__0__Impl rule__SEMVER_TAG__Group__1 ;
+    // InternalSemver.g:3648:1: rule__SEMVER_TAG__Group__0 : rule__SEMVER_TAG__Group__0__Impl rule__SEMVER_TAG__Group__1 ;
     public final void rule__SEMVER_TAG__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3625:1: ( rule__SEMVER_TAG__Group__0__Impl rule__SEMVER_TAG__Group__1 )
-            // InternalSemver.g:3626:2: rule__SEMVER_TAG__Group__0__Impl rule__SEMVER_TAG__Group__1
+            // InternalSemver.g:3652:1: ( rule__SEMVER_TAG__Group__0__Impl rule__SEMVER_TAG__Group__1 )
+            // InternalSemver.g:3653:2: rule__SEMVER_TAG__Group__0__Impl rule__SEMVER_TAG__Group__1
             {
             pushFollow(FOLLOW_26);
             rule__SEMVER_TAG__Group__0__Impl();
@@ -12509,17 +12614,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__0__Impl"
-    // InternalSemver.g:3633:1: rule__SEMVER_TAG__Group__0__Impl : ( RULE_LETTER_S ) ;
+    // InternalSemver.g:3660:1: rule__SEMVER_TAG__Group__0__Impl : ( RULE_LETTER_S ) ;
     public final void rule__SEMVER_TAG__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3637:1: ( ( RULE_LETTER_S ) )
-            // InternalSemver.g:3638:1: ( RULE_LETTER_S )
+            // InternalSemver.g:3664:1: ( ( RULE_LETTER_S ) )
+            // InternalSemver.g:3665:1: ( RULE_LETTER_S )
             {
-            // InternalSemver.g:3638:1: ( RULE_LETTER_S )
-            // InternalSemver.g:3639:2: RULE_LETTER_S
+            // InternalSemver.g:3665:1: ( RULE_LETTER_S )
+            // InternalSemver.g:3666:2: RULE_LETTER_S
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSEMVER_TAGAccess().getLETTER_STerminalRuleCall_0()); 
@@ -12550,14 +12655,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__1"
-    // InternalSemver.g:3648:1: rule__SEMVER_TAG__Group__1 : rule__SEMVER_TAG__Group__1__Impl rule__SEMVER_TAG__Group__2 ;
+    // InternalSemver.g:3675:1: rule__SEMVER_TAG__Group__1 : rule__SEMVER_TAG__Group__1__Impl rule__SEMVER_TAG__Group__2 ;
     public final void rule__SEMVER_TAG__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3652:1: ( rule__SEMVER_TAG__Group__1__Impl rule__SEMVER_TAG__Group__2 )
-            // InternalSemver.g:3653:2: rule__SEMVER_TAG__Group__1__Impl rule__SEMVER_TAG__Group__2
+            // InternalSemver.g:3679:1: ( rule__SEMVER_TAG__Group__1__Impl rule__SEMVER_TAG__Group__2 )
+            // InternalSemver.g:3680:2: rule__SEMVER_TAG__Group__1__Impl rule__SEMVER_TAG__Group__2
             {
             pushFollow(FOLLOW_27);
             rule__SEMVER_TAG__Group__1__Impl();
@@ -12588,17 +12693,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__1__Impl"
-    // InternalSemver.g:3660:1: rule__SEMVER_TAG__Group__1__Impl : ( RULE_LETTER_E ) ;
+    // InternalSemver.g:3687:1: rule__SEMVER_TAG__Group__1__Impl : ( RULE_LETTER_E ) ;
     public final void rule__SEMVER_TAG__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3664:1: ( ( RULE_LETTER_E ) )
-            // InternalSemver.g:3665:1: ( RULE_LETTER_E )
+            // InternalSemver.g:3691:1: ( ( RULE_LETTER_E ) )
+            // InternalSemver.g:3692:1: ( RULE_LETTER_E )
             {
-            // InternalSemver.g:3665:1: ( RULE_LETTER_E )
-            // InternalSemver.g:3666:2: RULE_LETTER_E
+            // InternalSemver.g:3692:1: ( RULE_LETTER_E )
+            // InternalSemver.g:3693:2: RULE_LETTER_E
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSEMVER_TAGAccess().getLETTER_ETerminalRuleCall_1()); 
@@ -12629,14 +12734,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__2"
-    // InternalSemver.g:3675:1: rule__SEMVER_TAG__Group__2 : rule__SEMVER_TAG__Group__2__Impl rule__SEMVER_TAG__Group__3 ;
+    // InternalSemver.g:3702:1: rule__SEMVER_TAG__Group__2 : rule__SEMVER_TAG__Group__2__Impl rule__SEMVER_TAG__Group__3 ;
     public final void rule__SEMVER_TAG__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3679:1: ( rule__SEMVER_TAG__Group__2__Impl rule__SEMVER_TAG__Group__3 )
-            // InternalSemver.g:3680:2: rule__SEMVER_TAG__Group__2__Impl rule__SEMVER_TAG__Group__3
+            // InternalSemver.g:3706:1: ( rule__SEMVER_TAG__Group__2__Impl rule__SEMVER_TAG__Group__3 )
+            // InternalSemver.g:3707:2: rule__SEMVER_TAG__Group__2__Impl rule__SEMVER_TAG__Group__3
             {
             pushFollow(FOLLOW_28);
             rule__SEMVER_TAG__Group__2__Impl();
@@ -12667,17 +12772,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__2__Impl"
-    // InternalSemver.g:3687:1: rule__SEMVER_TAG__Group__2__Impl : ( RULE_LETTER_M ) ;
+    // InternalSemver.g:3714:1: rule__SEMVER_TAG__Group__2__Impl : ( RULE_LETTER_M ) ;
     public final void rule__SEMVER_TAG__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3691:1: ( ( RULE_LETTER_M ) )
-            // InternalSemver.g:3692:1: ( RULE_LETTER_M )
+            // InternalSemver.g:3718:1: ( ( RULE_LETTER_M ) )
+            // InternalSemver.g:3719:1: ( RULE_LETTER_M )
             {
-            // InternalSemver.g:3692:1: ( RULE_LETTER_M )
-            // InternalSemver.g:3693:2: RULE_LETTER_M
+            // InternalSemver.g:3719:1: ( RULE_LETTER_M )
+            // InternalSemver.g:3720:2: RULE_LETTER_M
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSEMVER_TAGAccess().getLETTER_MTerminalRuleCall_2()); 
@@ -12708,14 +12813,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__3"
-    // InternalSemver.g:3702:1: rule__SEMVER_TAG__Group__3 : rule__SEMVER_TAG__Group__3__Impl rule__SEMVER_TAG__Group__4 ;
+    // InternalSemver.g:3729:1: rule__SEMVER_TAG__Group__3 : rule__SEMVER_TAG__Group__3__Impl rule__SEMVER_TAG__Group__4 ;
     public final void rule__SEMVER_TAG__Group__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3706:1: ( rule__SEMVER_TAG__Group__3__Impl rule__SEMVER_TAG__Group__4 )
-            // InternalSemver.g:3707:2: rule__SEMVER_TAG__Group__3__Impl rule__SEMVER_TAG__Group__4
+            // InternalSemver.g:3733:1: ( rule__SEMVER_TAG__Group__3__Impl rule__SEMVER_TAG__Group__4 )
+            // InternalSemver.g:3734:2: rule__SEMVER_TAG__Group__3__Impl rule__SEMVER_TAG__Group__4
             {
             pushFollow(FOLLOW_26);
             rule__SEMVER_TAG__Group__3__Impl();
@@ -12746,17 +12851,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__3__Impl"
-    // InternalSemver.g:3714:1: rule__SEMVER_TAG__Group__3__Impl : ( RULE_LETTER_V ) ;
+    // InternalSemver.g:3741:1: rule__SEMVER_TAG__Group__3__Impl : ( RULE_LETTER_V ) ;
     public final void rule__SEMVER_TAG__Group__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3718:1: ( ( RULE_LETTER_V ) )
-            // InternalSemver.g:3719:1: ( RULE_LETTER_V )
+            // InternalSemver.g:3745:1: ( ( RULE_LETTER_V ) )
+            // InternalSemver.g:3746:1: ( RULE_LETTER_V )
             {
-            // InternalSemver.g:3719:1: ( RULE_LETTER_V )
-            // InternalSemver.g:3720:2: RULE_LETTER_V
+            // InternalSemver.g:3746:1: ( RULE_LETTER_V )
+            // InternalSemver.g:3747:2: RULE_LETTER_V
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSEMVER_TAGAccess().getLETTER_VTerminalRuleCall_3()); 
@@ -12787,14 +12892,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__4"
-    // InternalSemver.g:3729:1: rule__SEMVER_TAG__Group__4 : rule__SEMVER_TAG__Group__4__Impl rule__SEMVER_TAG__Group__5 ;
+    // InternalSemver.g:3756:1: rule__SEMVER_TAG__Group__4 : rule__SEMVER_TAG__Group__4__Impl rule__SEMVER_TAG__Group__5 ;
     public final void rule__SEMVER_TAG__Group__4() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3733:1: ( rule__SEMVER_TAG__Group__4__Impl rule__SEMVER_TAG__Group__5 )
-            // InternalSemver.g:3734:2: rule__SEMVER_TAG__Group__4__Impl rule__SEMVER_TAG__Group__5
+            // InternalSemver.g:3760:1: ( rule__SEMVER_TAG__Group__4__Impl rule__SEMVER_TAG__Group__5 )
+            // InternalSemver.g:3761:2: rule__SEMVER_TAG__Group__4__Impl rule__SEMVER_TAG__Group__5
             {
             pushFollow(FOLLOW_29);
             rule__SEMVER_TAG__Group__4__Impl();
@@ -12825,17 +12930,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__4__Impl"
-    // InternalSemver.g:3741:1: rule__SEMVER_TAG__Group__4__Impl : ( RULE_LETTER_E ) ;
+    // InternalSemver.g:3768:1: rule__SEMVER_TAG__Group__4__Impl : ( RULE_LETTER_E ) ;
     public final void rule__SEMVER_TAG__Group__4__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3745:1: ( ( RULE_LETTER_E ) )
-            // InternalSemver.g:3746:1: ( RULE_LETTER_E )
+            // InternalSemver.g:3772:1: ( ( RULE_LETTER_E ) )
+            // InternalSemver.g:3773:1: ( RULE_LETTER_E )
             {
-            // InternalSemver.g:3746:1: ( RULE_LETTER_E )
-            // InternalSemver.g:3747:2: RULE_LETTER_E
+            // InternalSemver.g:3773:1: ( RULE_LETTER_E )
+            // InternalSemver.g:3774:2: RULE_LETTER_E
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSEMVER_TAGAccess().getLETTER_ETerminalRuleCall_4()); 
@@ -12866,14 +12971,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__5"
-    // InternalSemver.g:3756:1: rule__SEMVER_TAG__Group__5 : rule__SEMVER_TAG__Group__5__Impl rule__SEMVER_TAG__Group__6 ;
+    // InternalSemver.g:3783:1: rule__SEMVER_TAG__Group__5 : rule__SEMVER_TAG__Group__5__Impl rule__SEMVER_TAG__Group__6 ;
     public final void rule__SEMVER_TAG__Group__5() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3760:1: ( rule__SEMVER_TAG__Group__5__Impl rule__SEMVER_TAG__Group__6 )
-            // InternalSemver.g:3761:2: rule__SEMVER_TAG__Group__5__Impl rule__SEMVER_TAG__Group__6
+            // InternalSemver.g:3787:1: ( rule__SEMVER_TAG__Group__5__Impl rule__SEMVER_TAG__Group__6 )
+            // InternalSemver.g:3788:2: rule__SEMVER_TAG__Group__5__Impl rule__SEMVER_TAG__Group__6
             {
             pushFollow(FOLLOW_7);
             rule__SEMVER_TAG__Group__5__Impl();
@@ -12904,17 +13009,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__5__Impl"
-    // InternalSemver.g:3768:1: rule__SEMVER_TAG__Group__5__Impl : ( RULE_LETTER_R ) ;
+    // InternalSemver.g:3795:1: rule__SEMVER_TAG__Group__5__Impl : ( RULE_LETTER_R ) ;
     public final void rule__SEMVER_TAG__Group__5__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3772:1: ( ( RULE_LETTER_R ) )
-            // InternalSemver.g:3773:1: ( RULE_LETTER_R )
+            // InternalSemver.g:3799:1: ( ( RULE_LETTER_R ) )
+            // InternalSemver.g:3800:1: ( RULE_LETTER_R )
             {
-            // InternalSemver.g:3773:1: ( RULE_LETTER_R )
-            // InternalSemver.g:3774:2: RULE_LETTER_R
+            // InternalSemver.g:3800:1: ( RULE_LETTER_R )
+            // InternalSemver.g:3801:2: RULE_LETTER_R
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSEMVER_TAGAccess().getLETTER_RTerminalRuleCall_5()); 
@@ -12945,14 +13050,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__6"
-    // InternalSemver.g:3783:1: rule__SEMVER_TAG__Group__6 : rule__SEMVER_TAG__Group__6__Impl ;
+    // InternalSemver.g:3810:1: rule__SEMVER_TAG__Group__6 : rule__SEMVER_TAG__Group__6__Impl ;
     public final void rule__SEMVER_TAG__Group__6() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3787:1: ( rule__SEMVER_TAG__Group__6__Impl )
-            // InternalSemver.g:3788:2: rule__SEMVER_TAG__Group__6__Impl
+            // InternalSemver.g:3814:1: ( rule__SEMVER_TAG__Group__6__Impl )
+            // InternalSemver.g:3815:2: rule__SEMVER_TAG__Group__6__Impl
             {
             pushFollow(FOLLOW_2);
             rule__SEMVER_TAG__Group__6__Impl();
@@ -12978,17 +13083,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SEMVER_TAG__Group__6__Impl"
-    // InternalSemver.g:3794:1: rule__SEMVER_TAG__Group__6__Impl : ( ':' ) ;
+    // InternalSemver.g:3821:1: rule__SEMVER_TAG__Group__6__Impl : ( ':' ) ;
     public final void rule__SEMVER_TAG__Group__6__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3798:1: ( ( ':' ) )
-            // InternalSemver.g:3799:1: ( ':' )
+            // InternalSemver.g:3825:1: ( ( ':' ) )
+            // InternalSemver.g:3826:1: ( ':' )
             {
-            // InternalSemver.g:3799:1: ( ':' )
-            // InternalSemver.g:3800:2: ':'
+            // InternalSemver.g:3826:1: ( ':' )
+            // InternalSemver.g:3827:2: ':'
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSEMVER_TAGAccess().getColonKeyword_6()); 
@@ -13019,14 +13124,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_PROTOCOL__Group__0"
-    // InternalSemver.g:3810:1: rule__URL_PROTOCOL__Group__0 : rule__URL_PROTOCOL__Group__0__Impl rule__URL_PROTOCOL__Group__1 ;
+    // InternalSemver.g:3837:1: rule__URL_PROTOCOL__Group__0 : rule__URL_PROTOCOL__Group__0__Impl rule__URL_PROTOCOL__Group__1 ;
     public final void rule__URL_PROTOCOL__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3814:1: ( rule__URL_PROTOCOL__Group__0__Impl rule__URL_PROTOCOL__Group__1 )
-            // InternalSemver.g:3815:2: rule__URL_PROTOCOL__Group__0__Impl rule__URL_PROTOCOL__Group__1
+            // InternalSemver.g:3841:1: ( rule__URL_PROTOCOL__Group__0__Impl rule__URL_PROTOCOL__Group__1 )
+            // InternalSemver.g:3842:2: rule__URL_PROTOCOL__Group__0__Impl rule__URL_PROTOCOL__Group__1
             {
             pushFollow(FOLLOW_30);
             rule__URL_PROTOCOL__Group__0__Impl();
@@ -13057,17 +13162,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_PROTOCOL__Group__0__Impl"
-    // InternalSemver.g:3822:1: rule__URL_PROTOCOL__Group__0__Impl : ( ruleLETTER_NO_VX ) ;
+    // InternalSemver.g:3849:1: rule__URL_PROTOCOL__Group__0__Impl : ( ruleLETTER_NO_VX ) ;
     public final void rule__URL_PROTOCOL__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3826:1: ( ( ruleLETTER_NO_VX ) )
-            // InternalSemver.g:3827:1: ( ruleLETTER_NO_VX )
+            // InternalSemver.g:3853:1: ( ( ruleLETTER_NO_VX ) )
+            // InternalSemver.g:3854:1: ( ruleLETTER_NO_VX )
             {
-            // InternalSemver.g:3827:1: ( ruleLETTER_NO_VX )
-            // InternalSemver.g:3828:2: ruleLETTER_NO_VX
+            // InternalSemver.g:3854:1: ( ruleLETTER_NO_VX )
+            // InternalSemver.g:3855:2: ruleLETTER_NO_VX
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURL_PROTOCOLAccess().getLETTER_NO_VXParserRuleCall_0()); 
@@ -13102,14 +13207,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_PROTOCOL__Group__1"
-    // InternalSemver.g:3837:1: rule__URL_PROTOCOL__Group__1 : rule__URL_PROTOCOL__Group__1__Impl ;
+    // InternalSemver.g:3864:1: rule__URL_PROTOCOL__Group__1 : rule__URL_PROTOCOL__Group__1__Impl ;
     public final void rule__URL_PROTOCOL__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3841:1: ( rule__URL_PROTOCOL__Group__1__Impl )
-            // InternalSemver.g:3842:2: rule__URL_PROTOCOL__Group__1__Impl
+            // InternalSemver.g:3868:1: ( rule__URL_PROTOCOL__Group__1__Impl )
+            // InternalSemver.g:3869:2: rule__URL_PROTOCOL__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__URL_PROTOCOL__Group__1__Impl();
@@ -13135,26 +13240,26 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_PROTOCOL__Group__1__Impl"
-    // InternalSemver.g:3848:1: rule__URL_PROTOCOL__Group__1__Impl : ( ( ( rule__URL_PROTOCOL__Alternatives_1 ) ) ( ( rule__URL_PROTOCOL__Alternatives_1 )* ) ) ;
+    // InternalSemver.g:3875:1: rule__URL_PROTOCOL__Group__1__Impl : ( ( ( rule__URL_PROTOCOL__Alternatives_1 ) ) ( ( rule__URL_PROTOCOL__Alternatives_1 )* ) ) ;
     public final void rule__URL_PROTOCOL__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3852:1: ( ( ( ( rule__URL_PROTOCOL__Alternatives_1 ) ) ( ( rule__URL_PROTOCOL__Alternatives_1 )* ) ) )
-            // InternalSemver.g:3853:1: ( ( ( rule__URL_PROTOCOL__Alternatives_1 ) ) ( ( rule__URL_PROTOCOL__Alternatives_1 )* ) )
+            // InternalSemver.g:3879:1: ( ( ( ( rule__URL_PROTOCOL__Alternatives_1 ) ) ( ( rule__URL_PROTOCOL__Alternatives_1 )* ) ) )
+            // InternalSemver.g:3880:1: ( ( ( rule__URL_PROTOCOL__Alternatives_1 ) ) ( ( rule__URL_PROTOCOL__Alternatives_1 )* ) )
             {
-            // InternalSemver.g:3853:1: ( ( ( rule__URL_PROTOCOL__Alternatives_1 ) ) ( ( rule__URL_PROTOCOL__Alternatives_1 )* ) )
-            // InternalSemver.g:3854:2: ( ( rule__URL_PROTOCOL__Alternatives_1 ) ) ( ( rule__URL_PROTOCOL__Alternatives_1 )* )
+            // InternalSemver.g:3880:1: ( ( ( rule__URL_PROTOCOL__Alternatives_1 ) ) ( ( rule__URL_PROTOCOL__Alternatives_1 )* ) )
+            // InternalSemver.g:3881:2: ( ( rule__URL_PROTOCOL__Alternatives_1 ) ) ( ( rule__URL_PROTOCOL__Alternatives_1 )* )
             {
-            // InternalSemver.g:3854:2: ( ( rule__URL_PROTOCOL__Alternatives_1 ) )
-            // InternalSemver.g:3855:3: ( rule__URL_PROTOCOL__Alternatives_1 )
+            // InternalSemver.g:3881:2: ( ( rule__URL_PROTOCOL__Alternatives_1 ) )
+            // InternalSemver.g:3882:3: ( rule__URL_PROTOCOL__Alternatives_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURL_PROTOCOLAccess().getAlternatives_1()); 
             }
-            // InternalSemver.g:3856:3: ( rule__URL_PROTOCOL__Alternatives_1 )
-            // InternalSemver.g:3856:4: rule__URL_PROTOCOL__Alternatives_1
+            // InternalSemver.g:3883:3: ( rule__URL_PROTOCOL__Alternatives_1 )
+            // InternalSemver.g:3883:4: rule__URL_PROTOCOL__Alternatives_1
             {
             pushFollow(FOLLOW_31);
             rule__URL_PROTOCOL__Alternatives_1();
@@ -13170,26 +13275,26 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
             }
 
-            // InternalSemver.g:3859:2: ( ( rule__URL_PROTOCOL__Alternatives_1 )* )
-            // InternalSemver.g:3860:3: ( rule__URL_PROTOCOL__Alternatives_1 )*
+            // InternalSemver.g:3886:2: ( ( rule__URL_PROTOCOL__Alternatives_1 )* )
+            // InternalSemver.g:3887:3: ( rule__URL_PROTOCOL__Alternatives_1 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURL_PROTOCOLAccess().getAlternatives_1()); 
             }
-            // InternalSemver.g:3861:3: ( rule__URL_PROTOCOL__Alternatives_1 )*
-            loop45:
+            // InternalSemver.g:3888:3: ( rule__URL_PROTOCOL__Alternatives_1 )*
+            loop46:
             do {
-                int alt45=2;
-                int LA45_0 = input.LA(1);
+                int alt46=2;
+                int LA46_0 = input.LA(1);
 
-                if ( (LA45_0==RULE_LETTER_X||(LA45_0>=RULE_LETTER_V && LA45_0<=RULE_LETTER_OTHER)||LA45_0==40) ) {
-                    alt45=1;
+                if ( (LA46_0==RULE_LETTER_X||(LA46_0>=RULE_LETTER_V && LA46_0<=RULE_LETTER_OTHER)||LA46_0==40) ) {
+                    alt46=1;
                 }
 
 
-                switch (alt45) {
+                switch (alt46) {
             	case 1 :
-            	    // InternalSemver.g:3861:4: rule__URL_PROTOCOL__Alternatives_1
+            	    // InternalSemver.g:3888:4: rule__URL_PROTOCOL__Alternatives_1
             	    {
             	    pushFollow(FOLLOW_31);
             	    rule__URL_PROTOCOL__Alternatives_1();
@@ -13201,7 +13306,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop45;
+            	    break loop46;
                 }
             } while (true);
 
@@ -13233,14 +13338,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL__Group__0"
-    // InternalSemver.g:3871:1: rule__URL__Group__0 : rule__URL__Group__0__Impl rule__URL__Group__1 ;
+    // InternalSemver.g:3898:1: rule__URL__Group__0 : rule__URL__Group__0__Impl rule__URL__Group__1 ;
     public final void rule__URL__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3875:1: ( rule__URL__Group__0__Impl rule__URL__Group__1 )
-            // InternalSemver.g:3876:2: rule__URL__Group__0__Impl rule__URL__Group__1
+            // InternalSemver.g:3902:1: ( rule__URL__Group__0__Impl rule__URL__Group__1 )
+            // InternalSemver.g:3903:2: rule__URL__Group__0__Impl rule__URL__Group__1
             {
             pushFollow(FOLLOW_8);
             rule__URL__Group__0__Impl();
@@ -13271,35 +13376,35 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL__Group__0__Impl"
-    // InternalSemver.g:3883:1: rule__URL__Group__0__Impl : ( ( rule__URL__Alternatives_0 )* ) ;
+    // InternalSemver.g:3910:1: rule__URL__Group__0__Impl : ( ( rule__URL__Alternatives_0 )* ) ;
     public final void rule__URL__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3887:1: ( ( ( rule__URL__Alternatives_0 )* ) )
-            // InternalSemver.g:3888:1: ( ( rule__URL__Alternatives_0 )* )
+            // InternalSemver.g:3914:1: ( ( ( rule__URL__Alternatives_0 )* ) )
+            // InternalSemver.g:3915:1: ( ( rule__URL__Alternatives_0 )* )
             {
-            // InternalSemver.g:3888:1: ( ( rule__URL__Alternatives_0 )* )
-            // InternalSemver.g:3889:2: ( rule__URL__Alternatives_0 )*
+            // InternalSemver.g:3915:1: ( ( rule__URL__Alternatives_0 )* )
+            // InternalSemver.g:3916:2: ( rule__URL__Alternatives_0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURLAccess().getAlternatives_0()); 
             }
-            // InternalSemver.g:3890:2: ( rule__URL__Alternatives_0 )*
-            loop46:
+            // InternalSemver.g:3917:2: ( rule__URL__Alternatives_0 )*
+            loop47:
             do {
-                int alt46=2;
-                int LA46_0 = input.LA(1);
+                int alt47=2;
+                int LA47_0 = input.LA(1);
 
-                if ( ((LA46_0>=RULE_DIGITS && LA46_0<=RULE_LETTER_X)||(LA46_0>=RULE_LETTER_V && LA46_0<=RULE_LETTER_OTHER)||(LA46_0>=38 && LA46_0<=39)) ) {
-                    alt46=1;
+                if ( ((LA47_0>=RULE_DIGITS && LA47_0<=RULE_LETTER_X)||(LA47_0>=RULE_LETTER_V && LA47_0<=RULE_LETTER_OTHER)||(LA47_0>=38 && LA47_0<=39)) ) {
+                    alt47=1;
                 }
 
 
-                switch (alt46) {
+                switch (alt47) {
             	case 1 :
-            	    // InternalSemver.g:3890:3: rule__URL__Alternatives_0
+            	    // InternalSemver.g:3917:3: rule__URL__Alternatives_0
             	    {
             	    pushFollow(FOLLOW_3);
             	    rule__URL__Alternatives_0();
@@ -13311,7 +13416,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop46;
+            	    break loop47;
                 }
             } while (true);
 
@@ -13340,14 +13445,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL__Group__1"
-    // InternalSemver.g:3898:1: rule__URL__Group__1 : rule__URL__Group__1__Impl rule__URL__Group__2 ;
+    // InternalSemver.g:3925:1: rule__URL__Group__1 : rule__URL__Group__1__Impl rule__URL__Group__2 ;
     public final void rule__URL__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3902:1: ( rule__URL__Group__1__Impl rule__URL__Group__2 )
-            // InternalSemver.g:3903:2: rule__URL__Group__1__Impl rule__URL__Group__2
+            // InternalSemver.g:3929:1: ( rule__URL__Group__1__Impl rule__URL__Group__2 )
+            // InternalSemver.g:3930:2: rule__URL__Group__1__Impl rule__URL__Group__2
             {
             pushFollow(FOLLOW_8);
             rule__URL__Group__1__Impl();
@@ -13378,23 +13483,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL__Group__1__Impl"
-    // InternalSemver.g:3910:1: rule__URL__Group__1__Impl : ( ( rule__URL__Alternatives_1 ) ) ;
+    // InternalSemver.g:3937:1: rule__URL__Group__1__Impl : ( ( rule__URL__Alternatives_1 ) ) ;
     public final void rule__URL__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3914:1: ( ( ( rule__URL__Alternatives_1 ) ) )
-            // InternalSemver.g:3915:1: ( ( rule__URL__Alternatives_1 ) )
+            // InternalSemver.g:3941:1: ( ( ( rule__URL__Alternatives_1 ) ) )
+            // InternalSemver.g:3942:1: ( ( rule__URL__Alternatives_1 ) )
             {
-            // InternalSemver.g:3915:1: ( ( rule__URL__Alternatives_1 ) )
-            // InternalSemver.g:3916:2: ( rule__URL__Alternatives_1 )
+            // InternalSemver.g:3942:1: ( ( rule__URL__Alternatives_1 ) )
+            // InternalSemver.g:3943:2: ( rule__URL__Alternatives_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURLAccess().getAlternatives_1()); 
             }
-            // InternalSemver.g:3917:2: ( rule__URL__Alternatives_1 )
-            // InternalSemver.g:3917:3: rule__URL__Alternatives_1
+            // InternalSemver.g:3944:2: ( rule__URL__Alternatives_1 )
+            // InternalSemver.g:3944:3: rule__URL__Alternatives_1
             {
             pushFollow(FOLLOW_2);
             rule__URL__Alternatives_1();
@@ -13429,14 +13534,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL__Group__2"
-    // InternalSemver.g:3925:1: rule__URL__Group__2 : rule__URL__Group__2__Impl ;
+    // InternalSemver.g:3952:1: rule__URL__Group__2 : rule__URL__Group__2__Impl ;
     public final void rule__URL__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3929:1: ( rule__URL__Group__2__Impl )
-            // InternalSemver.g:3930:2: rule__URL__Group__2__Impl
+            // InternalSemver.g:3956:1: ( rule__URL__Group__2__Impl )
+            // InternalSemver.g:3957:2: rule__URL__Group__2__Impl
             {
             pushFollow(FOLLOW_2);
             rule__URL__Group__2__Impl();
@@ -13462,35 +13567,35 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL__Group__2__Impl"
-    // InternalSemver.g:3936:1: rule__URL__Group__2__Impl : ( ( rule__URL__Alternatives_2 )* ) ;
+    // InternalSemver.g:3963:1: rule__URL__Group__2__Impl : ( ( rule__URL__Alternatives_2 )* ) ;
     public final void rule__URL__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3940:1: ( ( ( rule__URL__Alternatives_2 )* ) )
-            // InternalSemver.g:3941:1: ( ( rule__URL__Alternatives_2 )* )
+            // InternalSemver.g:3967:1: ( ( ( rule__URL__Alternatives_2 )* ) )
+            // InternalSemver.g:3968:1: ( ( rule__URL__Alternatives_2 )* )
             {
-            // InternalSemver.g:3941:1: ( ( rule__URL__Alternatives_2 )* )
-            // InternalSemver.g:3942:2: ( rule__URL__Alternatives_2 )*
+            // InternalSemver.g:3968:1: ( ( rule__URL__Alternatives_2 )* )
+            // InternalSemver.g:3969:2: ( rule__URL__Alternatives_2 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURLAccess().getAlternatives_2()); 
             }
-            // InternalSemver.g:3943:2: ( rule__URL__Alternatives_2 )*
-            loop47:
+            // InternalSemver.g:3970:2: ( rule__URL__Alternatives_2 )*
+            loop48:
             do {
-                int alt47=2;
-                int LA47_0 = input.LA(1);
+                int alt48=2;
+                int LA48_0 = input.LA(1);
 
-                if ( ((LA47_0>=RULE_DIGITS && LA47_0<=RULE_LETTER_X)||(LA47_0>=RULE_LETTER_V && LA47_0<=RULE_LETTER_OTHER)||(LA47_0>=35 && LA47_0<=39)||LA47_0==41) ) {
-                    alt47=1;
+                if ( ((LA48_0>=RULE_DIGITS && LA48_0<=RULE_LETTER_X)||(LA48_0>=RULE_LETTER_V && LA48_0<=RULE_LETTER_OTHER)||(LA48_0>=35 && LA48_0<=39)||LA48_0==41) ) {
+                    alt48=1;
                 }
 
 
-                switch (alt47) {
+                switch (alt48) {
             	case 1 :
-            	    // InternalSemver.g:3943:3: rule__URL__Alternatives_2
+            	    // InternalSemver.g:3970:3: rule__URL__Alternatives_2
             	    {
             	    pushFollow(FOLLOW_32);
             	    rule__URL__Alternatives_2();
@@ -13502,7 +13607,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop47;
+            	    break loop48;
                 }
             } while (true);
 
@@ -13531,14 +13636,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_NO_VX__Group__0"
-    // InternalSemver.g:3952:1: rule__URL_NO_VX__Group__0 : rule__URL_NO_VX__Group__0__Impl rule__URL_NO_VX__Group__1 ;
+    // InternalSemver.g:3979:1: rule__URL_NO_VX__Group__0 : rule__URL_NO_VX__Group__0__Impl rule__URL_NO_VX__Group__1 ;
     public final void rule__URL_NO_VX__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3956:1: ( rule__URL_NO_VX__Group__0__Impl rule__URL_NO_VX__Group__1 )
-            // InternalSemver.g:3957:2: rule__URL_NO_VX__Group__0__Impl rule__URL_NO_VX__Group__1
+            // InternalSemver.g:3983:1: ( rule__URL_NO_VX__Group__0__Impl rule__URL_NO_VX__Group__1 )
+            // InternalSemver.g:3984:2: rule__URL_NO_VX__Group__0__Impl rule__URL_NO_VX__Group__1
             {
             pushFollow(FOLLOW_8);
             rule__URL_NO_VX__Group__0__Impl();
@@ -13569,23 +13674,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_NO_VX__Group__0__Impl"
-    // InternalSemver.g:3964:1: rule__URL_NO_VX__Group__0__Impl : ( ( rule__URL_NO_VX__Alternatives_0 ) ) ;
+    // InternalSemver.g:3991:1: rule__URL_NO_VX__Group__0__Impl : ( ( rule__URL_NO_VX__Alternatives_0 ) ) ;
     public final void rule__URL_NO_VX__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3968:1: ( ( ( rule__URL_NO_VX__Alternatives_0 ) ) )
-            // InternalSemver.g:3969:1: ( ( rule__URL_NO_VX__Alternatives_0 ) )
+            // InternalSemver.g:3995:1: ( ( ( rule__URL_NO_VX__Alternatives_0 ) ) )
+            // InternalSemver.g:3996:1: ( ( rule__URL_NO_VX__Alternatives_0 ) )
             {
-            // InternalSemver.g:3969:1: ( ( rule__URL_NO_VX__Alternatives_0 ) )
-            // InternalSemver.g:3970:2: ( rule__URL_NO_VX__Alternatives_0 )
+            // InternalSemver.g:3996:1: ( ( rule__URL_NO_VX__Alternatives_0 ) )
+            // InternalSemver.g:3997:2: ( rule__URL_NO_VX__Alternatives_0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURL_NO_VXAccess().getAlternatives_0()); 
             }
-            // InternalSemver.g:3971:2: ( rule__URL_NO_VX__Alternatives_0 )
-            // InternalSemver.g:3971:3: rule__URL_NO_VX__Alternatives_0
+            // InternalSemver.g:3998:2: ( rule__URL_NO_VX__Alternatives_0 )
+            // InternalSemver.g:3998:3: rule__URL_NO_VX__Alternatives_0
             {
             pushFollow(FOLLOW_2);
             rule__URL_NO_VX__Alternatives_0();
@@ -13620,14 +13725,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_NO_VX__Group__1"
-    // InternalSemver.g:3979:1: rule__URL_NO_VX__Group__1 : rule__URL_NO_VX__Group__1__Impl rule__URL_NO_VX__Group__2 ;
+    // InternalSemver.g:4006:1: rule__URL_NO_VX__Group__1 : rule__URL_NO_VX__Group__1__Impl rule__URL_NO_VX__Group__2 ;
     public final void rule__URL_NO_VX__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3983:1: ( rule__URL_NO_VX__Group__1__Impl rule__URL_NO_VX__Group__2 )
-            // InternalSemver.g:3984:2: rule__URL_NO_VX__Group__1__Impl rule__URL_NO_VX__Group__2
+            // InternalSemver.g:4010:1: ( rule__URL_NO_VX__Group__1__Impl rule__URL_NO_VX__Group__2 )
+            // InternalSemver.g:4011:2: rule__URL_NO_VX__Group__1__Impl rule__URL_NO_VX__Group__2
             {
             pushFollow(FOLLOW_8);
             rule__URL_NO_VX__Group__1__Impl();
@@ -13658,35 +13763,35 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_NO_VX__Group__1__Impl"
-    // InternalSemver.g:3991:1: rule__URL_NO_VX__Group__1__Impl : ( ( rule__URL_NO_VX__Alternatives_1 )* ) ;
+    // InternalSemver.g:4018:1: rule__URL_NO_VX__Group__1__Impl : ( ( rule__URL_NO_VX__Alternatives_1 )* ) ;
     public final void rule__URL_NO_VX__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:3995:1: ( ( ( rule__URL_NO_VX__Alternatives_1 )* ) )
-            // InternalSemver.g:3996:1: ( ( rule__URL_NO_VX__Alternatives_1 )* )
+            // InternalSemver.g:4022:1: ( ( ( rule__URL_NO_VX__Alternatives_1 )* ) )
+            // InternalSemver.g:4023:1: ( ( rule__URL_NO_VX__Alternatives_1 )* )
             {
-            // InternalSemver.g:3996:1: ( ( rule__URL_NO_VX__Alternatives_1 )* )
-            // InternalSemver.g:3997:2: ( rule__URL_NO_VX__Alternatives_1 )*
+            // InternalSemver.g:4023:1: ( ( rule__URL_NO_VX__Alternatives_1 )* )
+            // InternalSemver.g:4024:2: ( rule__URL_NO_VX__Alternatives_1 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURL_NO_VXAccess().getAlternatives_1()); 
             }
-            // InternalSemver.g:3998:2: ( rule__URL_NO_VX__Alternatives_1 )*
-            loop48:
+            // InternalSemver.g:4025:2: ( rule__URL_NO_VX__Alternatives_1 )*
+            loop49:
             do {
-                int alt48=2;
-                int LA48_0 = input.LA(1);
+                int alt49=2;
+                int LA49_0 = input.LA(1);
 
-                if ( ((LA48_0>=RULE_DIGITS && LA48_0<=RULE_LETTER_X)||(LA48_0>=RULE_LETTER_V && LA48_0<=RULE_LETTER_OTHER)||(LA48_0>=38 && LA48_0<=39)) ) {
-                    alt48=1;
+                if ( ((LA49_0>=RULE_DIGITS && LA49_0<=RULE_LETTER_X)||(LA49_0>=RULE_LETTER_V && LA49_0<=RULE_LETTER_OTHER)||(LA49_0>=38 && LA49_0<=39)) ) {
+                    alt49=1;
                 }
 
 
-                switch (alt48) {
+                switch (alt49) {
             	case 1 :
-            	    // InternalSemver.g:3998:3: rule__URL_NO_VX__Alternatives_1
+            	    // InternalSemver.g:4025:3: rule__URL_NO_VX__Alternatives_1
             	    {
             	    pushFollow(FOLLOW_3);
             	    rule__URL_NO_VX__Alternatives_1();
@@ -13698,7 +13803,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop48;
+            	    break loop49;
                 }
             } while (true);
 
@@ -13727,14 +13832,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_NO_VX__Group__2"
-    // InternalSemver.g:4006:1: rule__URL_NO_VX__Group__2 : rule__URL_NO_VX__Group__2__Impl rule__URL_NO_VX__Group__3 ;
+    // InternalSemver.g:4033:1: rule__URL_NO_VX__Group__2 : rule__URL_NO_VX__Group__2__Impl rule__URL_NO_VX__Group__3 ;
     public final void rule__URL_NO_VX__Group__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4010:1: ( rule__URL_NO_VX__Group__2__Impl rule__URL_NO_VX__Group__3 )
-            // InternalSemver.g:4011:2: rule__URL_NO_VX__Group__2__Impl rule__URL_NO_VX__Group__3
+            // InternalSemver.g:4037:1: ( rule__URL_NO_VX__Group__2__Impl rule__URL_NO_VX__Group__3 )
+            // InternalSemver.g:4038:2: rule__URL_NO_VX__Group__2__Impl rule__URL_NO_VX__Group__3
             {
             pushFollow(FOLLOW_8);
             rule__URL_NO_VX__Group__2__Impl();
@@ -13765,23 +13870,23 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_NO_VX__Group__2__Impl"
-    // InternalSemver.g:4018:1: rule__URL_NO_VX__Group__2__Impl : ( ( rule__URL_NO_VX__Alternatives_2 ) ) ;
+    // InternalSemver.g:4045:1: rule__URL_NO_VX__Group__2__Impl : ( ( rule__URL_NO_VX__Alternatives_2 ) ) ;
     public final void rule__URL_NO_VX__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4022:1: ( ( ( rule__URL_NO_VX__Alternatives_2 ) ) )
-            // InternalSemver.g:4023:1: ( ( rule__URL_NO_VX__Alternatives_2 ) )
+            // InternalSemver.g:4049:1: ( ( ( rule__URL_NO_VX__Alternatives_2 ) ) )
+            // InternalSemver.g:4050:1: ( ( rule__URL_NO_VX__Alternatives_2 ) )
             {
-            // InternalSemver.g:4023:1: ( ( rule__URL_NO_VX__Alternatives_2 ) )
-            // InternalSemver.g:4024:2: ( rule__URL_NO_VX__Alternatives_2 )
+            // InternalSemver.g:4050:1: ( ( rule__URL_NO_VX__Alternatives_2 ) )
+            // InternalSemver.g:4051:2: ( rule__URL_NO_VX__Alternatives_2 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURL_NO_VXAccess().getAlternatives_2()); 
             }
-            // InternalSemver.g:4025:2: ( rule__URL_NO_VX__Alternatives_2 )
-            // InternalSemver.g:4025:3: rule__URL_NO_VX__Alternatives_2
+            // InternalSemver.g:4052:2: ( rule__URL_NO_VX__Alternatives_2 )
+            // InternalSemver.g:4052:3: rule__URL_NO_VX__Alternatives_2
             {
             pushFollow(FOLLOW_2);
             rule__URL_NO_VX__Alternatives_2();
@@ -13816,14 +13921,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_NO_VX__Group__3"
-    // InternalSemver.g:4033:1: rule__URL_NO_VX__Group__3 : rule__URL_NO_VX__Group__3__Impl ;
+    // InternalSemver.g:4060:1: rule__URL_NO_VX__Group__3 : rule__URL_NO_VX__Group__3__Impl ;
     public final void rule__URL_NO_VX__Group__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4037:1: ( rule__URL_NO_VX__Group__3__Impl )
-            // InternalSemver.g:4038:2: rule__URL_NO_VX__Group__3__Impl
+            // InternalSemver.g:4064:1: ( rule__URL_NO_VX__Group__3__Impl )
+            // InternalSemver.g:4065:2: rule__URL_NO_VX__Group__3__Impl
             {
             pushFollow(FOLLOW_2);
             rule__URL_NO_VX__Group__3__Impl();
@@ -13849,35 +13954,35 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URL_NO_VX__Group__3__Impl"
-    // InternalSemver.g:4044:1: rule__URL_NO_VX__Group__3__Impl : ( ( rule__URL_NO_VX__Alternatives_3 )* ) ;
+    // InternalSemver.g:4071:1: rule__URL_NO_VX__Group__3__Impl : ( ( rule__URL_NO_VX__Alternatives_3 )* ) ;
     public final void rule__URL_NO_VX__Group__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4048:1: ( ( ( rule__URL_NO_VX__Alternatives_3 )* ) )
-            // InternalSemver.g:4049:1: ( ( rule__URL_NO_VX__Alternatives_3 )* )
+            // InternalSemver.g:4075:1: ( ( ( rule__URL_NO_VX__Alternatives_3 )* ) )
+            // InternalSemver.g:4076:1: ( ( rule__URL_NO_VX__Alternatives_3 )* )
             {
-            // InternalSemver.g:4049:1: ( ( rule__URL_NO_VX__Alternatives_3 )* )
-            // InternalSemver.g:4050:2: ( rule__URL_NO_VX__Alternatives_3 )*
+            // InternalSemver.g:4076:1: ( ( rule__URL_NO_VX__Alternatives_3 )* )
+            // InternalSemver.g:4077:2: ( rule__URL_NO_VX__Alternatives_3 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURL_NO_VXAccess().getAlternatives_3()); 
             }
-            // InternalSemver.g:4051:2: ( rule__URL_NO_VX__Alternatives_3 )*
-            loop49:
+            // InternalSemver.g:4078:2: ( rule__URL_NO_VX__Alternatives_3 )*
+            loop50:
             do {
-                int alt49=2;
-                int LA49_0 = input.LA(1);
+                int alt50=2;
+                int LA50_0 = input.LA(1);
 
-                if ( ((LA49_0>=RULE_DIGITS && LA49_0<=RULE_LETTER_X)||(LA49_0>=RULE_LETTER_V && LA49_0<=RULE_LETTER_OTHER)||(LA49_0>=35 && LA49_0<=39)||LA49_0==41) ) {
-                    alt49=1;
+                if ( ((LA50_0>=RULE_DIGITS && LA50_0<=RULE_LETTER_X)||(LA50_0>=RULE_LETTER_V && LA50_0<=RULE_LETTER_OTHER)||(LA50_0>=35 && LA50_0<=39)||LA50_0==41) ) {
+                    alt50=1;
                 }
 
 
-                switch (alt49) {
+                switch (alt50) {
             	case 1 :
-            	    // InternalSemver.g:4051:3: rule__URL_NO_VX__Alternatives_3
+            	    // InternalSemver.g:4078:3: rule__URL_NO_VX__Alternatives_3
             	    {
             	    pushFollow(FOLLOW_32);
             	    rule__URL_NO_VX__Alternatives_3();
@@ -13889,7 +13994,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop49;
+            	    break loop50;
                 }
             } while (true);
 
@@ -13918,14 +14023,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TAG__Group__0"
-    // InternalSemver.g:4060:1: rule__TAG__Group__0 : rule__TAG__Group__0__Impl rule__TAG__Group__1 ;
+    // InternalSemver.g:4087:1: rule__TAG__Group__0 : rule__TAG__Group__0__Impl rule__TAG__Group__1 ;
     public final void rule__TAG__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4064:1: ( rule__TAG__Group__0__Impl rule__TAG__Group__1 )
-            // InternalSemver.g:4065:2: rule__TAG__Group__0__Impl rule__TAG__Group__1
+            // InternalSemver.g:4091:1: ( rule__TAG__Group__0__Impl rule__TAG__Group__1 )
+            // InternalSemver.g:4092:2: rule__TAG__Group__0__Impl rule__TAG__Group__1
             {
             pushFollow(FOLLOW_6);
             rule__TAG__Group__0__Impl();
@@ -13956,17 +14061,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TAG__Group__0__Impl"
-    // InternalSemver.g:4072:1: rule__TAG__Group__0__Impl : ( ruleLETTER_NO_VX ) ;
+    // InternalSemver.g:4099:1: rule__TAG__Group__0__Impl : ( ruleLETTER_NO_VX ) ;
     public final void rule__TAG__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4076:1: ( ( ruleLETTER_NO_VX ) )
-            // InternalSemver.g:4077:1: ( ruleLETTER_NO_VX )
+            // InternalSemver.g:4103:1: ( ( ruleLETTER_NO_VX ) )
+            // InternalSemver.g:4104:1: ( ruleLETTER_NO_VX )
             {
-            // InternalSemver.g:4077:1: ( ruleLETTER_NO_VX )
-            // InternalSemver.g:4078:2: ruleLETTER_NO_VX
+            // InternalSemver.g:4104:1: ( ruleLETTER_NO_VX )
+            // InternalSemver.g:4105:2: ruleLETTER_NO_VX
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTAGAccess().getLETTER_NO_VXParserRuleCall_0()); 
@@ -14001,14 +14106,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TAG__Group__1"
-    // InternalSemver.g:4087:1: rule__TAG__Group__1 : rule__TAG__Group__1__Impl ;
+    // InternalSemver.g:4114:1: rule__TAG__Group__1 : rule__TAG__Group__1__Impl ;
     public final void rule__TAG__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4091:1: ( rule__TAG__Group__1__Impl )
-            // InternalSemver.g:4092:2: rule__TAG__Group__1__Impl
+            // InternalSemver.g:4118:1: ( rule__TAG__Group__1__Impl )
+            // InternalSemver.g:4119:2: rule__TAG__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__TAG__Group__1__Impl();
@@ -14034,26 +14139,26 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TAG__Group__1__Impl"
-    // InternalSemver.g:4098:1: rule__TAG__Group__1__Impl : ( ( ( rule__TAG__Alternatives_1 ) ) ( ( rule__TAG__Alternatives_1 )* ) ) ;
+    // InternalSemver.g:4125:1: rule__TAG__Group__1__Impl : ( ( ( rule__TAG__Alternatives_1 ) ) ( ( rule__TAG__Alternatives_1 )* ) ) ;
     public final void rule__TAG__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4102:1: ( ( ( ( rule__TAG__Alternatives_1 ) ) ( ( rule__TAG__Alternatives_1 )* ) ) )
-            // InternalSemver.g:4103:1: ( ( ( rule__TAG__Alternatives_1 ) ) ( ( rule__TAG__Alternatives_1 )* ) )
+            // InternalSemver.g:4129:1: ( ( ( ( rule__TAG__Alternatives_1 ) ) ( ( rule__TAG__Alternatives_1 )* ) ) )
+            // InternalSemver.g:4130:1: ( ( ( rule__TAG__Alternatives_1 ) ) ( ( rule__TAG__Alternatives_1 )* ) )
             {
-            // InternalSemver.g:4103:1: ( ( ( rule__TAG__Alternatives_1 ) ) ( ( rule__TAG__Alternatives_1 )* ) )
-            // InternalSemver.g:4104:2: ( ( rule__TAG__Alternatives_1 ) ) ( ( rule__TAG__Alternatives_1 )* )
+            // InternalSemver.g:4130:1: ( ( ( rule__TAG__Alternatives_1 ) ) ( ( rule__TAG__Alternatives_1 )* ) )
+            // InternalSemver.g:4131:2: ( ( rule__TAG__Alternatives_1 ) ) ( ( rule__TAG__Alternatives_1 )* )
             {
-            // InternalSemver.g:4104:2: ( ( rule__TAG__Alternatives_1 ) )
-            // InternalSemver.g:4105:3: ( rule__TAG__Alternatives_1 )
+            // InternalSemver.g:4131:2: ( ( rule__TAG__Alternatives_1 ) )
+            // InternalSemver.g:4132:3: ( rule__TAG__Alternatives_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTAGAccess().getAlternatives_1()); 
             }
-            // InternalSemver.g:4106:3: ( rule__TAG__Alternatives_1 )
-            // InternalSemver.g:4106:4: rule__TAG__Alternatives_1
+            // InternalSemver.g:4133:3: ( rule__TAG__Alternatives_1 )
+            // InternalSemver.g:4133:4: rule__TAG__Alternatives_1
             {
             pushFollow(FOLLOW_3);
             rule__TAG__Alternatives_1();
@@ -14069,26 +14174,26 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
             }
 
-            // InternalSemver.g:4109:2: ( ( rule__TAG__Alternatives_1 )* )
-            // InternalSemver.g:4110:3: ( rule__TAG__Alternatives_1 )*
+            // InternalSemver.g:4136:2: ( ( rule__TAG__Alternatives_1 )* )
+            // InternalSemver.g:4137:3: ( rule__TAG__Alternatives_1 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTAGAccess().getAlternatives_1()); 
             }
-            // InternalSemver.g:4111:3: ( rule__TAG__Alternatives_1 )*
-            loop50:
+            // InternalSemver.g:4138:3: ( rule__TAG__Alternatives_1 )*
+            loop51:
             do {
-                int alt50=2;
-                int LA50_0 = input.LA(1);
+                int alt51=2;
+                int LA51_0 = input.LA(1);
 
-                if ( ((LA50_0>=RULE_DIGITS && LA50_0<=RULE_LETTER_X)||(LA50_0>=RULE_LETTER_V && LA50_0<=RULE_LETTER_OTHER)||LA50_0==38) ) {
-                    alt50=1;
+                if ( ((LA51_0>=RULE_DIGITS && LA51_0<=RULE_LETTER_X)||(LA51_0>=RULE_LETTER_V && LA51_0<=RULE_LETTER_OTHER)||LA51_0==38) ) {
+                    alt51=1;
                 }
 
 
-                switch (alt50) {
+                switch (alt51) {
             	case 1 :
-            	    // InternalSemver.g:4111:4: rule__TAG__Alternatives_1
+            	    // InternalSemver.g:4138:4: rule__TAG__Alternatives_1
             	    {
             	    pushFollow(FOLLOW_3);
             	    rule__TAG__Alternatives_1();
@@ -14100,7 +14205,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop50;
+            	    break loop51;
                 }
             } while (true);
 
@@ -14132,14 +14237,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0"
-    // InternalSemver.g:4121:1: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0 : rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1 ;
+    // InternalSemver.g:4148:1: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0 : rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1 ;
     public final void rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4125:1: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1 )
-            // InternalSemver.g:4126:2: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1
+            // InternalSemver.g:4152:1: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1 )
+            // InternalSemver.g:4153:2: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1
             {
             pushFollow(FOLLOW_6);
             rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl();
@@ -14170,17 +14275,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl"
-    // InternalSemver.g:4133:1: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl : ( RULE_DIGITS ) ;
+    // InternalSemver.g:4160:1: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl : ( RULE_DIGITS ) ;
     public final void rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4137:1: ( ( RULE_DIGITS ) )
-            // InternalSemver.g:4138:1: ( RULE_DIGITS )
+            // InternalSemver.g:4164:1: ( ( RULE_DIGITS ) )
+            // InternalSemver.g:4165:1: ( RULE_DIGITS )
             {
-            // InternalSemver.g:4138:1: ( RULE_DIGITS )
-            // InternalSemver.g:4139:2: RULE_DIGITS
+            // InternalSemver.g:4165:1: ( RULE_DIGITS )
+            // InternalSemver.g:4166:2: RULE_DIGITS
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getDIGITSTerminalRuleCall_0()); 
@@ -14211,14 +14316,14 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1"
-    // InternalSemver.g:4148:1: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1 : rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl ;
+    // InternalSemver.g:4175:1: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1 : rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl ;
     public final void rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4152:1: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl )
-            // InternalSemver.g:4153:2: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl
+            // InternalSemver.g:4179:1: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl )
+            // InternalSemver.g:4180:2: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl
             {
             pushFollow(FOLLOW_2);
             rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl();
@@ -14244,26 +14349,26 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl"
-    // InternalSemver.g:4159:1: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl : ( ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) ) ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* ) ) ;
+    // InternalSemver.g:4186:1: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl : ( ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) ) ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* ) ) ;
     public final void rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4163:1: ( ( ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) ) ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* ) ) )
-            // InternalSemver.g:4164:1: ( ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) ) ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* ) )
+            // InternalSemver.g:4190:1: ( ( ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) ) ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* ) ) )
+            // InternalSemver.g:4191:1: ( ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) ) ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* ) )
             {
-            // InternalSemver.g:4164:1: ( ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) ) ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* ) )
-            // InternalSemver.g:4165:2: ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) ) ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* )
+            // InternalSemver.g:4191:1: ( ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) ) ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* ) )
+            // InternalSemver.g:4192:2: ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) ) ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* )
             {
-            // InternalSemver.g:4165:2: ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) )
-            // InternalSemver.g:4166:3: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )
+            // InternalSemver.g:4192:2: ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 ) )
+            // InternalSemver.g:4193:3: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getAlternatives_1()); 
             }
-            // InternalSemver.g:4167:3: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )
-            // InternalSemver.g:4167:4: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1
+            // InternalSemver.g:4194:3: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )
+            // InternalSemver.g:4194:4: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1
             {
             pushFollow(FOLLOW_3);
             rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1();
@@ -14279,26 +14384,26 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
             }
 
-            // InternalSemver.g:4170:2: ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* )
-            // InternalSemver.g:4171:3: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )*
+            // InternalSemver.g:4197:2: ( ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )* )
+            // InternalSemver.g:4198:3: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getALPHA_NUMERIC_CHARS_START_WITH_DIGITSAccess().getAlternatives_1()); 
             }
-            // InternalSemver.g:4172:3: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )*
-            loop51:
+            // InternalSemver.g:4199:3: ( rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1 )*
+            loop52:
             do {
-                int alt51=2;
-                int LA51_0 = input.LA(1);
+                int alt52=2;
+                int LA52_0 = input.LA(1);
 
-                if ( ((LA51_0>=RULE_DIGITS && LA51_0<=RULE_LETTER_X)||(LA51_0>=RULE_LETTER_V && LA51_0<=RULE_LETTER_OTHER)||LA51_0==38) ) {
-                    alt51=1;
+                if ( ((LA52_0>=RULE_DIGITS && LA52_0<=RULE_LETTER_X)||(LA52_0>=RULE_LETTER_V && LA52_0<=RULE_LETTER_OTHER)||LA52_0==38) ) {
+                    alt52=1;
                 }
 
 
-                switch (alt51) {
+                switch (alt52) {
             	case 1 :
-            	    // InternalSemver.g:4172:4: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1
+            	    // InternalSemver.g:4199:4: rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1
             	    {
             	    pushFollow(FOLLOW_3);
             	    rule__ALPHA_NUMERIC_CHARS_START_WITH_DIGITS__Alternatives_1();
@@ -14310,7 +14415,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop51;
+            	    break loop52;
                 }
             } while (true);
 
@@ -14342,17 +14447,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__LocalPathVersionRequirement__LocalPathAssignment_1"
-    // InternalSemver.g:4182:1: rule__LocalPathVersionRequirement__LocalPathAssignment_1 : ( rulePATH ) ;
+    // InternalSemver.g:4209:1: rule__LocalPathVersionRequirement__LocalPathAssignment_1 : ( rulePATH ) ;
     public final void rule__LocalPathVersionRequirement__LocalPathAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4186:1: ( ( rulePATH ) )
-            // InternalSemver.g:4187:2: ( rulePATH )
+            // InternalSemver.g:4213:1: ( ( rulePATH ) )
+            // InternalSemver.g:4214:2: ( rulePATH )
             {
-            // InternalSemver.g:4187:2: ( rulePATH )
-            // InternalSemver.g:4188:3: rulePATH
+            // InternalSemver.g:4214:2: ( rulePATH )
+            // InternalSemver.g:4215:3: rulePATH
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getLocalPathVersionRequirementAccess().getLocalPathPATHParserRuleCall_1_0()); 
@@ -14387,17 +14492,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URLVersionRequirement__ProtocolAssignment_0"
-    // InternalSemver.g:4197:1: rule__URLVersionRequirement__ProtocolAssignment_0 : ( ruleURL_PROTOCOL ) ;
+    // InternalSemver.g:4224:1: rule__URLVersionRequirement__ProtocolAssignment_0 : ( ruleURL_PROTOCOL ) ;
     public final void rule__URLVersionRequirement__ProtocolAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4201:1: ( ( ruleURL_PROTOCOL ) )
-            // InternalSemver.g:4202:2: ( ruleURL_PROTOCOL )
+            // InternalSemver.g:4228:1: ( ( ruleURL_PROTOCOL ) )
+            // InternalSemver.g:4229:2: ( ruleURL_PROTOCOL )
             {
-            // InternalSemver.g:4202:2: ( ruleURL_PROTOCOL )
-            // InternalSemver.g:4203:3: ruleURL_PROTOCOL
+            // InternalSemver.g:4229:2: ( ruleURL_PROTOCOL )
+            // InternalSemver.g:4230:3: ruleURL_PROTOCOL
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURLVersionRequirementAccess().getProtocolURL_PROTOCOLParserRuleCall_0_0()); 
@@ -14432,17 +14537,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URLVersionRequirement__UrlAssignment_2"
-    // InternalSemver.g:4212:1: rule__URLVersionRequirement__UrlAssignment_2 : ( ruleURL ) ;
+    // InternalSemver.g:4239:1: rule__URLVersionRequirement__UrlAssignment_2 : ( ruleURL ) ;
     public final void rule__URLVersionRequirement__UrlAssignment_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4216:1: ( ( ruleURL ) )
-            // InternalSemver.g:4217:2: ( ruleURL )
+            // InternalSemver.g:4243:1: ( ( ruleURL ) )
+            // InternalSemver.g:4244:2: ( ruleURL )
             {
-            // InternalSemver.g:4217:2: ( ruleURL )
-            // InternalSemver.g:4218:3: ruleURL
+            // InternalSemver.g:4244:2: ( ruleURL )
+            // InternalSemver.g:4245:3: ruleURL
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURLVersionRequirementAccess().getUrlURLParserRuleCall_2_0()); 
@@ -14477,17 +14582,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URLVersionRequirement__VersionSpecifierAssignment_3_1"
-    // InternalSemver.g:4227:1: rule__URLVersionRequirement__VersionSpecifierAssignment_3_1 : ( ruleURLVersionSpecifier ) ;
+    // InternalSemver.g:4254:1: rule__URLVersionRequirement__VersionSpecifierAssignment_3_1 : ( ruleURLVersionSpecifier ) ;
     public final void rule__URLVersionRequirement__VersionSpecifierAssignment_3_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4231:1: ( ( ruleURLVersionSpecifier ) )
-            // InternalSemver.g:4232:2: ( ruleURLVersionSpecifier )
+            // InternalSemver.g:4258:1: ( ( ruleURLVersionSpecifier ) )
+            // InternalSemver.g:4259:2: ( ruleURLVersionSpecifier )
             {
-            // InternalSemver.g:4232:2: ( ruleURLVersionSpecifier )
-            // InternalSemver.g:4233:3: ruleURLVersionSpecifier
+            // InternalSemver.g:4259:2: ( ruleURLVersionSpecifier )
+            // InternalSemver.g:4260:3: ruleURLVersionSpecifier
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURLVersionRequirementAccess().getVersionSpecifierURLVersionSpecifierParserRuleCall_3_1_0()); 
@@ -14522,17 +14627,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URLVersionSpecifier__CommitISHAssignment_1_1"
-    // InternalSemver.g:4242:1: rule__URLVersionSpecifier__CommitISHAssignment_1_1 : ( ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) ;
+    // InternalSemver.g:4269:1: rule__URLVersionSpecifier__CommitISHAssignment_1_1 : ( ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) ;
     public final void rule__URLVersionSpecifier__CommitISHAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4246:1: ( ( ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) )
-            // InternalSemver.g:4247:2: ( ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS )
+            // InternalSemver.g:4273:1: ( ( ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS ) )
+            // InternalSemver.g:4274:2: ( ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS )
             {
-            // InternalSemver.g:4247:2: ( ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS )
-            // InternalSemver.g:4248:3: ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS
+            // InternalSemver.g:4274:2: ( ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS )
+            // InternalSemver.g:4275:3: ruleALPHA_NUMERIC_CHARS_START_WITH_DIGITS
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURLVersionSpecifierAccess().getCommitISHALPHA_NUMERIC_CHARS_START_WITH_DIGITSParserRuleCall_1_1_0()); 
@@ -14567,17 +14672,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URLVersionSpecifier__CommitISHAssignment_2_1"
-    // InternalSemver.g:4257:1: rule__URLVersionSpecifier__CommitISHAssignment_2_1 : ( ruleALPHA_NUMERIC_CHARS ) ;
+    // InternalSemver.g:4284:1: rule__URLVersionSpecifier__CommitISHAssignment_2_1 : ( ruleALPHA_NUMERIC_CHARS ) ;
     public final void rule__URLVersionSpecifier__CommitISHAssignment_2_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4261:1: ( ( ruleALPHA_NUMERIC_CHARS ) )
-            // InternalSemver.g:4262:2: ( ruleALPHA_NUMERIC_CHARS )
+            // InternalSemver.g:4288:1: ( ( ruleALPHA_NUMERIC_CHARS ) )
+            // InternalSemver.g:4289:2: ( ruleALPHA_NUMERIC_CHARS )
             {
-            // InternalSemver.g:4262:2: ( ruleALPHA_NUMERIC_CHARS )
-            // InternalSemver.g:4263:3: ruleALPHA_NUMERIC_CHARS
+            // InternalSemver.g:4289:2: ( ruleALPHA_NUMERIC_CHARS )
+            // InternalSemver.g:4290:3: ruleALPHA_NUMERIC_CHARS
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURLVersionSpecifierAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_2_1_0()); 
@@ -14612,17 +14717,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URLSemver__WithSemverTagAssignment_1"
-    // InternalSemver.g:4272:1: rule__URLSemver__WithSemverTagAssignment_1 : ( ruleSEMVER_TAG ) ;
+    // InternalSemver.g:4299:1: rule__URLSemver__WithSemverTagAssignment_1 : ( ruleSEMVER_TAG ) ;
     public final void rule__URLSemver__WithSemverTagAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4276:1: ( ( ruleSEMVER_TAG ) )
-            // InternalSemver.g:4277:2: ( ruleSEMVER_TAG )
+            // InternalSemver.g:4303:1: ( ( ruleSEMVER_TAG ) )
+            // InternalSemver.g:4304:2: ( ruleSEMVER_TAG )
             {
-            // InternalSemver.g:4277:2: ( ruleSEMVER_TAG )
-            // InternalSemver.g:4278:3: ruleSEMVER_TAG
+            // InternalSemver.g:4304:2: ( ruleSEMVER_TAG )
+            // InternalSemver.g:4305:3: ruleSEMVER_TAG
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURLSemverAccess().getWithSemverTagSEMVER_TAGParserRuleCall_1_0()); 
@@ -14657,17 +14762,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__URLSemver__SimpleVersionAssignment_2"
-    // InternalSemver.g:4287:1: rule__URLSemver__SimpleVersionAssignment_2 : ( ruleSimpleVersion ) ;
+    // InternalSemver.g:4314:1: rule__URLSemver__SimpleVersionAssignment_2 : ( ruleSimpleVersion ) ;
     public final void rule__URLSemver__SimpleVersionAssignment_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4291:1: ( ( ruleSimpleVersion ) )
-            // InternalSemver.g:4292:2: ( ruleSimpleVersion )
+            // InternalSemver.g:4318:1: ( ( ruleSimpleVersion ) )
+            // InternalSemver.g:4319:2: ( ruleSimpleVersion )
             {
-            // InternalSemver.g:4292:2: ( ruleSimpleVersion )
-            // InternalSemver.g:4293:3: ruleSimpleVersion
+            // InternalSemver.g:4319:2: ( ruleSimpleVersion )
+            // InternalSemver.g:4320:3: ruleSimpleVersion
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getURLSemverAccess().getSimpleVersionSimpleVersionParserRuleCall_2_0()); 
@@ -14702,17 +14807,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagVersionRequirement__TagNameAssignment"
-    // InternalSemver.g:4302:1: rule__TagVersionRequirement__TagNameAssignment : ( ruleTAG ) ;
+    // InternalSemver.g:4329:1: rule__TagVersionRequirement__TagNameAssignment : ( ruleTAG ) ;
     public final void rule__TagVersionRequirement__TagNameAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4306:1: ( ( ruleTAG ) )
-            // InternalSemver.g:4307:2: ( ruleTAG )
+            // InternalSemver.g:4333:1: ( ( ruleTAG ) )
+            // InternalSemver.g:4334:2: ( ruleTAG )
             {
-            // InternalSemver.g:4307:2: ( ruleTAG )
-            // InternalSemver.g:4308:3: ruleTAG
+            // InternalSemver.g:4334:2: ( ruleTAG )
+            // InternalSemver.g:4335:3: ruleTAG
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTagVersionRequirementAccess().getTagNameTAGParserRuleCall_0()); 
@@ -14747,17 +14852,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__GitHubVersionRequirement__GithubUrlAssignment_0"
-    // InternalSemver.g:4317:1: rule__GitHubVersionRequirement__GithubUrlAssignment_0 : ( ruleURL_NO_VX ) ;
+    // InternalSemver.g:4344:1: rule__GitHubVersionRequirement__GithubUrlAssignment_0 : ( ruleURL_NO_VX ) ;
     public final void rule__GitHubVersionRequirement__GithubUrlAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4321:1: ( ( ruleURL_NO_VX ) )
-            // InternalSemver.g:4322:2: ( ruleURL_NO_VX )
+            // InternalSemver.g:4348:1: ( ( ruleURL_NO_VX ) )
+            // InternalSemver.g:4349:2: ( ruleURL_NO_VX )
             {
-            // InternalSemver.g:4322:2: ( ruleURL_NO_VX )
-            // InternalSemver.g:4323:3: ruleURL_NO_VX
+            // InternalSemver.g:4349:2: ( ruleURL_NO_VX )
+            // InternalSemver.g:4350:3: ruleURL_NO_VX
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGitHubVersionRequirementAccess().getGithubUrlURL_NO_VXParserRuleCall_0_0()); 
@@ -14792,17 +14897,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__GitHubVersionRequirement__CommitISHAssignment_1_1"
-    // InternalSemver.g:4332:1: rule__GitHubVersionRequirement__CommitISHAssignment_1_1 : ( ruleALPHA_NUMERIC_CHARS ) ;
+    // InternalSemver.g:4359:1: rule__GitHubVersionRequirement__CommitISHAssignment_1_1 : ( ruleALPHA_NUMERIC_CHARS ) ;
     public final void rule__GitHubVersionRequirement__CommitISHAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4336:1: ( ( ruleALPHA_NUMERIC_CHARS ) )
-            // InternalSemver.g:4337:2: ( ruleALPHA_NUMERIC_CHARS )
+            // InternalSemver.g:4363:1: ( ( ruleALPHA_NUMERIC_CHARS ) )
+            // InternalSemver.g:4364:2: ( ruleALPHA_NUMERIC_CHARS )
             {
-            // InternalSemver.g:4337:2: ( ruleALPHA_NUMERIC_CHARS )
-            // InternalSemver.g:4338:3: ruleALPHA_NUMERIC_CHARS
+            // InternalSemver.g:4364:2: ( ruleALPHA_NUMERIC_CHARS )
+            // InternalSemver.g:4365:3: ruleALPHA_NUMERIC_CHARS
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getGitHubVersionRequirementAccess().getCommitISHALPHA_NUMERIC_CHARSParserRuleCall_1_1_0()); 
@@ -14837,17 +14942,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__RangesAssignment_1_0"
-    // InternalSemver.g:4347:1: rule__VersionRangeSetRequirement__RangesAssignment_1_0 : ( ruleVersionRange ) ;
+    // InternalSemver.g:4374:1: rule__VersionRangeSetRequirement__RangesAssignment_1_0 : ( ruleVersionRange ) ;
     public final void rule__VersionRangeSetRequirement__RangesAssignment_1_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4351:1: ( ( ruleVersionRange ) )
-            // InternalSemver.g:4352:2: ( ruleVersionRange )
+            // InternalSemver.g:4378:1: ( ( ruleVersionRange ) )
+            // InternalSemver.g:4379:2: ( ruleVersionRange )
             {
-            // InternalSemver.g:4352:2: ( ruleVersionRange )
-            // InternalSemver.g:4353:3: ruleVersionRange
+            // InternalSemver.g:4379:2: ( ruleVersionRange )
+            // InternalSemver.g:4380:3: ruleVersionRange
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_0_0()); 
@@ -14882,17 +14987,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeSetRequirement__RangesAssignment_1_1_3"
-    // InternalSemver.g:4362:1: rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 : ( ruleVersionRange ) ;
+    // InternalSemver.g:4389:1: rule__VersionRangeSetRequirement__RangesAssignment_1_1_3 : ( ruleVersionRange ) ;
     public final void rule__VersionRangeSetRequirement__RangesAssignment_1_1_3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4366:1: ( ( ruleVersionRange ) )
-            // InternalSemver.g:4367:2: ( ruleVersionRange )
+            // InternalSemver.g:4393:1: ( ( ruleVersionRange ) )
+            // InternalSemver.g:4394:2: ( ruleVersionRange )
             {
-            // InternalSemver.g:4367:2: ( ruleVersionRange )
-            // InternalSemver.g:4368:3: ruleVersionRange
+            // InternalSemver.g:4394:2: ( ruleVersionRange )
+            // InternalSemver.g:4395:3: ruleVersionRange
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeSetRequirementAccess().getRangesVersionRangeParserRuleCall_1_1_3_0()); 
@@ -14927,17 +15032,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__FromAssignment_1"
-    // InternalSemver.g:4377:1: rule__HyphenVersionRange__FromAssignment_1 : ( ruleVersionNumber ) ;
+    // InternalSemver.g:4404:1: rule__HyphenVersionRange__FromAssignment_1 : ( ruleVersionNumber ) ;
     public final void rule__HyphenVersionRange__FromAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4381:1: ( ( ruleVersionNumber ) )
-            // InternalSemver.g:4382:2: ( ruleVersionNumber )
+            // InternalSemver.g:4408:1: ( ( ruleVersionNumber ) )
+            // InternalSemver.g:4409:2: ( ruleVersionNumber )
             {
-            // InternalSemver.g:4382:2: ( ruleVersionNumber )
-            // InternalSemver.g:4383:3: ruleVersionNumber
+            // InternalSemver.g:4409:2: ( ruleVersionNumber )
+            // InternalSemver.g:4410:3: ruleVersionNumber
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getHyphenVersionRangeAccess().getFromVersionNumberParserRuleCall_1_0()); 
@@ -14972,17 +15077,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__HyphenVersionRange__ToAssignment_5"
-    // InternalSemver.g:4392:1: rule__HyphenVersionRange__ToAssignment_5 : ( ruleVersionNumber ) ;
+    // InternalSemver.g:4419:1: rule__HyphenVersionRange__ToAssignment_5 : ( ruleVersionNumber ) ;
     public final void rule__HyphenVersionRange__ToAssignment_5() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4396:1: ( ( ruleVersionNumber ) )
-            // InternalSemver.g:4397:2: ( ruleVersionNumber )
+            // InternalSemver.g:4423:1: ( ( ruleVersionNumber ) )
+            // InternalSemver.g:4424:2: ( ruleVersionNumber )
             {
-            // InternalSemver.g:4397:2: ( ruleVersionNumber )
-            // InternalSemver.g:4398:3: ruleVersionNumber
+            // InternalSemver.g:4424:2: ( ruleVersionNumber )
+            // InternalSemver.g:4425:3: ruleVersionNumber
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getHyphenVersionRangeAccess().getToVersionNumberParserRuleCall_5_0()); 
@@ -15017,17 +15122,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__VersionConstraintsAssignment_1"
-    // InternalSemver.g:4407:1: rule__VersionRangeContraint__VersionConstraintsAssignment_1 : ( ruleSimpleVersion ) ;
+    // InternalSemver.g:4434:1: rule__VersionRangeContraint__VersionConstraintsAssignment_1 : ( ruleSimpleVersion ) ;
     public final void rule__VersionRangeContraint__VersionConstraintsAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4411:1: ( ( ruleSimpleVersion ) )
-            // InternalSemver.g:4412:2: ( ruleSimpleVersion )
+            // InternalSemver.g:4438:1: ( ( ruleSimpleVersion ) )
+            // InternalSemver.g:4439:2: ( ruleSimpleVersion )
             {
-            // InternalSemver.g:4412:2: ( ruleSimpleVersion )
-            // InternalSemver.g:4413:3: ruleSimpleVersion
+            // InternalSemver.g:4439:2: ( ruleSimpleVersion )
+            // InternalSemver.g:4440:3: ruleSimpleVersion
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeContraintAccess().getVersionConstraintsSimpleVersionParserRuleCall_1_0()); 
@@ -15062,17 +15167,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRangeContraint__VersionConstraintsAssignment_2_1"
-    // InternalSemver.g:4422:1: rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 : ( ruleSimpleVersion ) ;
+    // InternalSemver.g:4449:1: rule__VersionRangeContraint__VersionConstraintsAssignment_2_1 : ( ruleSimpleVersion ) ;
     public final void rule__VersionRangeContraint__VersionConstraintsAssignment_2_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4426:1: ( ( ruleSimpleVersion ) )
-            // InternalSemver.g:4427:2: ( ruleSimpleVersion )
+            // InternalSemver.g:4453:1: ( ( ruleSimpleVersion ) )
+            // InternalSemver.g:4454:2: ( ruleSimpleVersion )
             {
-            // InternalSemver.g:4427:2: ( ruleSimpleVersion )
-            // InternalSemver.g:4428:3: ruleSimpleVersion
+            // InternalSemver.g:4454:2: ( ruleSimpleVersion )
+            // InternalSemver.g:4455:3: ruleSimpleVersion
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionRangeContraintAccess().getVersionConstraintsSimpleVersionParserRuleCall_2_1_0()); 
@@ -15107,17 +15212,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__ComparatorsAssignment_0_0"
-    // InternalSemver.g:4437:1: rule__SimpleVersion__ComparatorsAssignment_0_0 : ( ruleVersionComparator ) ;
+    // InternalSemver.g:4464:1: rule__SimpleVersion__ComparatorsAssignment_0_0 : ( ruleVersionComparator ) ;
     public final void rule__SimpleVersion__ComparatorsAssignment_0_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4441:1: ( ( ruleVersionComparator ) )
-            // InternalSemver.g:4442:2: ( ruleVersionComparator )
+            // InternalSemver.g:4468:1: ( ( ruleVersionComparator ) )
+            // InternalSemver.g:4469:2: ( ruleVersionComparator )
             {
-            // InternalSemver.g:4442:2: ( ruleVersionComparator )
-            // InternalSemver.g:4443:3: ruleVersionComparator
+            // InternalSemver.g:4469:2: ( ruleVersionComparator )
+            // InternalSemver.g:4470:3: ruleVersionComparator
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleVersionAccess().getComparatorsVersionComparatorEnumRuleCall_0_0_0()); 
@@ -15152,17 +15257,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__WithLetterVAssignment_1"
-    // InternalSemver.g:4452:1: rule__SimpleVersion__WithLetterVAssignment_1 : ( RULE_LETTER_V ) ;
+    // InternalSemver.g:4479:1: rule__SimpleVersion__WithLetterVAssignment_1 : ( RULE_LETTER_V ) ;
     public final void rule__SimpleVersion__WithLetterVAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4456:1: ( ( RULE_LETTER_V ) )
-            // InternalSemver.g:4457:2: ( RULE_LETTER_V )
+            // InternalSemver.g:4483:1: ( ( RULE_LETTER_V ) )
+            // InternalSemver.g:4484:2: ( RULE_LETTER_V )
             {
-            // InternalSemver.g:4457:2: ( RULE_LETTER_V )
-            // InternalSemver.g:4458:3: RULE_LETTER_V
+            // InternalSemver.g:4484:2: ( RULE_LETTER_V )
+            // InternalSemver.g:4485:3: RULE_LETTER_V
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleVersionAccess().getWithLetterVLETTER_VTerminalRuleCall_1_0()); 
@@ -15193,17 +15298,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SimpleVersion__NumberAssignment_2"
-    // InternalSemver.g:4467:1: rule__SimpleVersion__NumberAssignment_2 : ( ruleVersionNumber ) ;
+    // InternalSemver.g:4494:1: rule__SimpleVersion__NumberAssignment_2 : ( ruleVersionNumber ) ;
     public final void rule__SimpleVersion__NumberAssignment_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4471:1: ( ( ruleVersionNumber ) )
-            // InternalSemver.g:4472:2: ( ruleVersionNumber )
+            // InternalSemver.g:4498:1: ( ( ruleVersionNumber ) )
+            // InternalSemver.g:4499:2: ( ruleVersionNumber )
             {
-            // InternalSemver.g:4472:2: ( ruleVersionNumber )
-            // InternalSemver.g:4473:3: ruleVersionNumber
+            // InternalSemver.g:4499:2: ( ruleVersionNumber )
+            // InternalSemver.g:4500:3: ruleVersionNumber
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getSimpleVersionAccess().getNumberVersionNumberParserRuleCall_2_0()); 
@@ -15238,17 +15343,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__MajorAssignment_0"
-    // InternalSemver.g:4482:1: rule__VersionNumber__MajorAssignment_0 : ( ruleVersionPart ) ;
+    // InternalSemver.g:4509:1: rule__VersionNumber__MajorAssignment_0 : ( ruleVersionPart ) ;
     public final void rule__VersionNumber__MajorAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4486:1: ( ( ruleVersionPart ) )
-            // InternalSemver.g:4487:2: ( ruleVersionPart )
+            // InternalSemver.g:4513:1: ( ( ruleVersionPart ) )
+            // InternalSemver.g:4514:2: ( ruleVersionPart )
             {
-            // InternalSemver.g:4487:2: ( ruleVersionPart )
-            // InternalSemver.g:4488:3: ruleVersionPart
+            // InternalSemver.g:4514:2: ( ruleVersionPart )
+            // InternalSemver.g:4515:3: ruleVersionPart
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getMajorVersionPartParserRuleCall_0_0()); 
@@ -15283,17 +15388,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__MinorAssignment_1_1"
-    // InternalSemver.g:4497:1: rule__VersionNumber__MinorAssignment_1_1 : ( ruleVersionPart ) ;
+    // InternalSemver.g:4524:1: rule__VersionNumber__MinorAssignment_1_1 : ( ruleVersionPart ) ;
     public final void rule__VersionNumber__MinorAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4501:1: ( ( ruleVersionPart ) )
-            // InternalSemver.g:4502:2: ( ruleVersionPart )
+            // InternalSemver.g:4528:1: ( ( ruleVersionPart ) )
+            // InternalSemver.g:4529:2: ( ruleVersionPart )
             {
-            // InternalSemver.g:4502:2: ( ruleVersionPart )
-            // InternalSemver.g:4503:3: ruleVersionPart
+            // InternalSemver.g:4529:2: ( ruleVersionPart )
+            // InternalSemver.g:4530:3: ruleVersionPart
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getMinorVersionPartParserRuleCall_1_1_0()); 
@@ -15328,17 +15433,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__PatchAssignment_1_2_1"
-    // InternalSemver.g:4512:1: rule__VersionNumber__PatchAssignment_1_2_1 : ( ruleVersionPart ) ;
+    // InternalSemver.g:4539:1: rule__VersionNumber__PatchAssignment_1_2_1 : ( ruleVersionPart ) ;
     public final void rule__VersionNumber__PatchAssignment_1_2_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4516:1: ( ( ruleVersionPart ) )
-            // InternalSemver.g:4517:2: ( ruleVersionPart )
+            // InternalSemver.g:4543:1: ( ( ruleVersionPart ) )
+            // InternalSemver.g:4544:2: ( ruleVersionPart )
             {
-            // InternalSemver.g:4517:2: ( ruleVersionPart )
-            // InternalSemver.g:4518:3: ruleVersionPart
+            // InternalSemver.g:4544:2: ( ruleVersionPart )
+            // InternalSemver.g:4545:3: ruleVersionPart
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getPatchVersionPartParserRuleCall_1_2_1_0()); 
@@ -15373,17 +15478,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__ExtendedAssignment_1_2_2_1"
-    // InternalSemver.g:4527:1: rule__VersionNumber__ExtendedAssignment_1_2_2_1 : ( ruleVersionPart ) ;
+    // InternalSemver.g:4554:1: rule__VersionNumber__ExtendedAssignment_1_2_2_1 : ( ruleVersionPart ) ;
     public final void rule__VersionNumber__ExtendedAssignment_1_2_2_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4531:1: ( ( ruleVersionPart ) )
-            // InternalSemver.g:4532:2: ( ruleVersionPart )
+            // InternalSemver.g:4558:1: ( ( ruleVersionPart ) )
+            // InternalSemver.g:4559:2: ( ruleVersionPart )
             {
-            // InternalSemver.g:4532:2: ( ruleVersionPart )
-            // InternalSemver.g:4533:3: ruleVersionPart
+            // InternalSemver.g:4559:2: ( ruleVersionPart )
+            // InternalSemver.g:4560:3: ruleVersionPart
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getExtendedVersionPartParserRuleCall_1_2_2_1_0()); 
@@ -15418,17 +15523,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionNumber__QualifierAssignment_2"
-    // InternalSemver.g:4542:1: rule__VersionNumber__QualifierAssignment_2 : ( ruleQualifier ) ;
+    // InternalSemver.g:4569:1: rule__VersionNumber__QualifierAssignment_2 : ( ruleQualifier ) ;
     public final void rule__VersionNumber__QualifierAssignment_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4546:1: ( ( ruleQualifier ) )
-            // InternalSemver.g:4547:2: ( ruleQualifier )
+            // InternalSemver.g:4573:1: ( ( ruleQualifier ) )
+            // InternalSemver.g:4574:2: ( ruleQualifier )
             {
-            // InternalSemver.g:4547:2: ( ruleQualifier )
-            // InternalSemver.g:4548:3: ruleQualifier
+            // InternalSemver.g:4574:2: ( ruleQualifier )
+            // InternalSemver.g:4575:3: ruleQualifier
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionNumberAccess().getQualifierQualifierParserRuleCall_2_0()); 
@@ -15463,17 +15568,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionPart__WildcardAssignment_0"
-    // InternalSemver.g:4557:1: rule__VersionPart__WildcardAssignment_0 : ( ruleWILDCARD ) ;
+    // InternalSemver.g:4584:1: rule__VersionPart__WildcardAssignment_0 : ( ruleWILDCARD ) ;
     public final void rule__VersionPart__WildcardAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4561:1: ( ( ruleWILDCARD ) )
-            // InternalSemver.g:4562:2: ( ruleWILDCARD )
+            // InternalSemver.g:4588:1: ( ( ruleWILDCARD ) )
+            // InternalSemver.g:4589:2: ( ruleWILDCARD )
             {
-            // InternalSemver.g:4562:2: ( ruleWILDCARD )
-            // InternalSemver.g:4563:3: ruleWILDCARD
+            // InternalSemver.g:4589:2: ( ruleWILDCARD )
+            // InternalSemver.g:4590:3: ruleWILDCARD
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionPartAccess().getWildcardWILDCARDParserRuleCall_0_0()); 
@@ -15508,17 +15613,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionPart__NumberRawAssignment_1"
-    // InternalSemver.g:4572:1: rule__VersionPart__NumberRawAssignment_1 : ( RULE_DIGITS ) ;
+    // InternalSemver.g:4599:1: rule__VersionPart__NumberRawAssignment_1 : ( RULE_DIGITS ) ;
     public final void rule__VersionPart__NumberRawAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4576:1: ( ( RULE_DIGITS ) )
-            // InternalSemver.g:4577:2: ( RULE_DIGITS )
+            // InternalSemver.g:4603:1: ( ( RULE_DIGITS ) )
+            // InternalSemver.g:4604:2: ( RULE_DIGITS )
             {
-            // InternalSemver.g:4577:2: ( RULE_DIGITS )
-            // InternalSemver.g:4578:3: RULE_DIGITS
+            // InternalSemver.g:4604:2: ( RULE_DIGITS )
+            // InternalSemver.g:4605:3: RULE_DIGITS
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getVersionPartAccess().getNumberRawDIGITSTerminalRuleCall_1_0()); 
@@ -15549,17 +15654,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__PreReleaseAssignment_0_1"
-    // InternalSemver.g:4587:1: rule__Qualifier__PreReleaseAssignment_0_1 : ( ruleQualifierTag ) ;
+    // InternalSemver.g:4614:1: rule__Qualifier__PreReleaseAssignment_0_1 : ( ruleQualifierTag ) ;
     public final void rule__Qualifier__PreReleaseAssignment_0_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4591:1: ( ( ruleQualifierTag ) )
-            // InternalSemver.g:4592:2: ( ruleQualifierTag )
+            // InternalSemver.g:4618:1: ( ( ruleQualifierTag ) )
+            // InternalSemver.g:4619:2: ( ruleQualifierTag )
             {
-            // InternalSemver.g:4592:2: ( ruleQualifierTag )
-            // InternalSemver.g:4593:3: ruleQualifierTag
+            // InternalSemver.g:4619:2: ( ruleQualifierTag )
+            // InternalSemver.g:4620:3: ruleQualifierTag
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierAccess().getPreReleaseQualifierTagParserRuleCall_0_1_0()); 
@@ -15594,17 +15699,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__BuildMetadataAssignment_0_2_1"
-    // InternalSemver.g:4602:1: rule__Qualifier__BuildMetadataAssignment_0_2_1 : ( ruleQualifierTag ) ;
+    // InternalSemver.g:4629:1: rule__Qualifier__BuildMetadataAssignment_0_2_1 : ( ruleQualifierTag ) ;
     public final void rule__Qualifier__BuildMetadataAssignment_0_2_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4606:1: ( ( ruleQualifierTag ) )
-            // InternalSemver.g:4607:2: ( ruleQualifierTag )
+            // InternalSemver.g:4633:1: ( ( ruleQualifierTag ) )
+            // InternalSemver.g:4634:2: ( ruleQualifierTag )
             {
-            // InternalSemver.g:4607:2: ( ruleQualifierTag )
-            // InternalSemver.g:4608:3: ruleQualifierTag
+            // InternalSemver.g:4634:2: ( ruleQualifierTag )
+            // InternalSemver.g:4635:3: ruleQualifierTag
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierAccess().getBuildMetadataQualifierTagParserRuleCall_0_2_1_0()); 
@@ -15639,17 +15744,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Qualifier__BuildMetadataAssignment_1_1"
-    // InternalSemver.g:4617:1: rule__Qualifier__BuildMetadataAssignment_1_1 : ( ruleQualifierTag ) ;
+    // InternalSemver.g:4644:1: rule__Qualifier__BuildMetadataAssignment_1_1 : ( ruleQualifierTag ) ;
     public final void rule__Qualifier__BuildMetadataAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4621:1: ( ( ruleQualifierTag ) )
-            // InternalSemver.g:4622:2: ( ruleQualifierTag )
+            // InternalSemver.g:4648:1: ( ( ruleQualifierTag ) )
+            // InternalSemver.g:4649:2: ( ruleQualifierTag )
             {
-            // InternalSemver.g:4622:2: ( ruleQualifierTag )
-            // InternalSemver.g:4623:3: ruleQualifierTag
+            // InternalSemver.g:4649:2: ( ruleQualifierTag )
+            // InternalSemver.g:4650:3: ruleQualifierTag
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierAccess().getBuildMetadataQualifierTagParserRuleCall_1_1_0()); 
@@ -15684,17 +15789,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QualifierTag__PartsAssignment_0"
-    // InternalSemver.g:4632:1: rule__QualifierTag__PartsAssignment_0 : ( ruleALPHA_NUMERIC_CHARS ) ;
+    // InternalSemver.g:4659:1: rule__QualifierTag__PartsAssignment_0 : ( ruleALPHA_NUMERIC_CHARS ) ;
     public final void rule__QualifierTag__PartsAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4636:1: ( ( ruleALPHA_NUMERIC_CHARS ) )
-            // InternalSemver.g:4637:2: ( ruleALPHA_NUMERIC_CHARS )
+            // InternalSemver.g:4663:1: ( ( ruleALPHA_NUMERIC_CHARS ) )
+            // InternalSemver.g:4664:2: ( ruleALPHA_NUMERIC_CHARS )
             {
-            // InternalSemver.g:4637:2: ( ruleALPHA_NUMERIC_CHARS )
-            // InternalSemver.g:4638:3: ruleALPHA_NUMERIC_CHARS
+            // InternalSemver.g:4664:2: ( ruleALPHA_NUMERIC_CHARS )
+            // InternalSemver.g:4665:3: ruleALPHA_NUMERIC_CHARS
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierTagAccess().getPartsALPHA_NUMERIC_CHARSParserRuleCall_0_0()); 
@@ -15729,17 +15834,17 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QualifierTag__PartsAssignment_1_1"
-    // InternalSemver.g:4647:1: rule__QualifierTag__PartsAssignment_1_1 : ( ruleALPHA_NUMERIC_CHARS ) ;
+    // InternalSemver.g:4674:1: rule__QualifierTag__PartsAssignment_1_1 : ( ruleALPHA_NUMERIC_CHARS ) ;
     public final void rule__QualifierTag__PartsAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalSemver.g:4651:1: ( ( ruleALPHA_NUMERIC_CHARS ) )
-            // InternalSemver.g:4652:2: ( ruleALPHA_NUMERIC_CHARS )
+            // InternalSemver.g:4678:1: ( ( ruleALPHA_NUMERIC_CHARS ) )
+            // InternalSemver.g:4679:2: ( ruleALPHA_NUMERIC_CHARS )
             {
-            // InternalSemver.g:4652:2: ( ruleALPHA_NUMERIC_CHARS )
-            // InternalSemver.g:4653:3: ruleALPHA_NUMERIC_CHARS
+            // InternalSemver.g:4679:2: ( ruleALPHA_NUMERIC_CHARS )
+            // InternalSemver.g:4680:3: ruleALPHA_NUMERIC_CHARS
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQualifierTagAccess().getPartsALPHA_NUMERIC_CHARSParserRuleCall_1_1_0()); 
@@ -15955,7 +16060,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
     static final String dfa_3s = "\1\10\1\4\1\uffff\4\4\20\0\1\uffff";
     static final String dfa_4s = "\1\47\1\51\1\uffff\3\51\1\61\20\0\1\uffff";
     static final String dfa_5s = "\2\uffff\1\2\24\uffff\1\1";
-    static final String dfa_6s = "\7\uffff\1\15\1\10\1\5\1\14\1\17\1\12\1\0\1\3\1\16\1\11\1\13\1\6\1\7\1\1\1\4\1\2\1\uffff}>";
+    static final String dfa_6s = "\7\uffff\1\0\1\13\1\16\1\10\1\12\1\4\1\1\1\3\1\15\1\17\1\11\1\14\1\5\1\6\1\2\1\7\1\uffff}>";
     static final String[] dfa_7s = {
             "\3\2\1\1\4\2\26\uffff\2\2",
             "\2\2\1\uffff\5\2\1\3\3\2\23\uffff\7\2",
@@ -16012,6 +16117,21 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
+                        int LA4_7 = input.LA(1);
+
+                         
+                        int index4_7 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred4_InternalSemver()) ) {s = 23;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index4_7);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
                         int LA4_13 = input.LA(1);
 
                          
@@ -16026,26 +16146,11 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
                         input.seek(index4_13);
                         if ( s>=0 ) return s;
                         break;
-                    case 1 : 
-                        int LA4_20 = input.LA(1);
-
-                         
-                        int index4_20 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred4_InternalSemver()) ) {s = 23;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index4_20);
-                        if ( s>=0 ) return s;
-                        break;
                     case 2 : 
-                        int LA4_22 = input.LA(1);
+                        int LA4_21 = input.LA(1);
 
                          
-                        int index4_22 = input.index();
+                        int index4_21 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred4_InternalSemver()) ) {s = 23;}
@@ -16053,7 +16158,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index4_22);
+                        input.seek(index4_21);
                         if ( s>=0 ) return s;
                         break;
                     case 3 : 
@@ -16072,96 +16177,6 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
                         if ( s>=0 ) return s;
                         break;
                     case 4 : 
-                        int LA4_21 = input.LA(1);
-
-                         
-                        int index4_21 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred4_InternalSemver()) ) {s = 23;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index4_21);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
-                        int LA4_9 = input.LA(1);
-
-                         
-                        int index4_9 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred4_InternalSemver()) ) {s = 23;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index4_9);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 6 : 
-                        int LA4_18 = input.LA(1);
-
-                         
-                        int index4_18 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred4_InternalSemver()) ) {s = 23;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index4_18);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 7 : 
-                        int LA4_19 = input.LA(1);
-
-                         
-                        int index4_19 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred4_InternalSemver()) ) {s = 23;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index4_19);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 8 : 
-                        int LA4_8 = input.LA(1);
-
-                         
-                        int index4_8 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred4_InternalSemver()) ) {s = 23;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index4_8);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 9 : 
-                        int LA4_16 = input.LA(1);
-
-                         
-                        int index4_16 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred4_InternalSemver()) ) {s = 23;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index4_16);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 10 : 
                         int LA4_12 = input.LA(1);
 
                          
@@ -16176,11 +16191,11 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
                         input.seek(index4_12);
                         if ( s>=0 ) return s;
                         break;
-                    case 11 : 
-                        int LA4_17 = input.LA(1);
+                    case 5 : 
+                        int LA4_19 = input.LA(1);
 
                          
-                        int index4_17 = input.index();
+                        int index4_19 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred4_InternalSemver()) ) {s = 23;}
@@ -16188,10 +16203,40 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index4_17);
+                        input.seek(index4_19);
                         if ( s>=0 ) return s;
                         break;
-                    case 12 : 
+                    case 6 : 
+                        int LA4_20 = input.LA(1);
+
+                         
+                        int index4_20 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred4_InternalSemver()) ) {s = 23;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index4_20);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 7 : 
+                        int LA4_22 = input.LA(1);
+
+                         
+                        int index4_22 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred4_InternalSemver()) ) {s = 23;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index4_22);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 8 : 
                         int LA4_10 = input.LA(1);
 
                          
@@ -16206,11 +16251,11 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
                         input.seek(index4_10);
                         if ( s>=0 ) return s;
                         break;
-                    case 13 : 
-                        int LA4_7 = input.LA(1);
+                    case 9 : 
+                        int LA4_17 = input.LA(1);
 
                          
-                        int index4_7 = input.index();
+                        int index4_17 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred4_InternalSemver()) ) {s = 23;}
@@ -16218,25 +16263,10 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
                         else if ( (true) ) {s = 2;}
 
                          
-                        input.seek(index4_7);
+                        input.seek(index4_17);
                         if ( s>=0 ) return s;
                         break;
-                    case 14 : 
-                        int LA4_15 = input.LA(1);
-
-                         
-                        int index4_15 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred4_InternalSemver()) ) {s = 23;}
-
-                        else if ( (true) ) {s = 2;}
-
-                         
-                        input.seek(index4_15);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 15 : 
+                    case 10 : 
                         int LA4_11 = input.LA(1);
 
                          
@@ -16251,6 +16281,81 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
                         input.seek(index4_11);
                         if ( s>=0 ) return s;
                         break;
+                    case 11 : 
+                        int LA4_8 = input.LA(1);
+
+                         
+                        int index4_8 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred4_InternalSemver()) ) {s = 23;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index4_8);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 12 : 
+                        int LA4_18 = input.LA(1);
+
+                         
+                        int index4_18 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred4_InternalSemver()) ) {s = 23;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index4_18);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 13 : 
+                        int LA4_15 = input.LA(1);
+
+                         
+                        int index4_15 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred4_InternalSemver()) ) {s = 23;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index4_15);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 14 : 
+                        int LA4_9 = input.LA(1);
+
+                         
+                        int index4_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred4_InternalSemver()) ) {s = 23;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index4_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 15 : 
+                        int LA4_16 = input.LA(1);
+
+                         
+                        int index4_16 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred4_InternalSemver()) ) {s = 23;}
+
+                        else if ( (true) ) {s = 2;}
+
+                         
+                        input.seek(index4_16);
+                        if ( s>=0 ) return s;
+                        break;
             }
             if (state.backtracking>0) {state.failed=true; return -1;}
             NoViableAltException nvae =
@@ -16260,78 +16365,78 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
         }
     }
     static final String dfa_8s = "\102\uffff";
-    static final String dfa_9s = "\12\uffff\12\44\1\uffff\2\44\1\11\14\44\1\uffff\12\44\17\11\4\uffff";
-    static final String dfa_10s = "\1\10\10\4\1\uffff\12\4\1\uffff\17\4\1\uffff\31\4\4\0";
-    static final String dfa_11s = "\1\47\10\51\1\uffff\12\51\1\uffff\2\51\1\61\14\51\1\uffff\12\51\17\61\4\0";
-    static final String dfa_12s = "\11\uffff\1\2\12\uffff\1\1\17\uffff\1\3\35\uffff";
-    static final String dfa_13s = "\76\uffff\1\3\1\0\1\1\1\2}>";
+    static final String dfa_9s = "\12\uffff\14\43\1\uffff\14\43\1\uffff\1\11\12\43\2\11\4\uffff\15\11";
+    static final String dfa_10s = "\1\10\10\4\1\uffff\14\4\1\uffff\14\4\1\uffff\15\4\4\0\15\4";
+    static final String dfa_11s = "\1\47\10\51\1\uffff\14\51\1\uffff\14\51\1\uffff\1\61\12\51\2\61\4\0\15\61";
+    static final String dfa_12s = "\11\uffff\1\2\14\uffff\1\1\14\uffff\1\3\36\uffff";
+    static final String dfa_13s = "\61\uffff\1\2\1\3\1\0\1\1\15\uffff}>";
     static final String[] dfa_14s = {
             "\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\26\uffff\2\11",
-            "\1\26\1\13\1\uffff\1\12\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\23\uffff\3\11\1\25\1\11\1\24\1\11",
-            "\1\26\1\13\1\uffff\1\12\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\23\uffff\3\11\1\25\1\11\1\24\1\11",
-            "\1\26\1\13\1\uffff\1\12\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\23\uffff\3\11\1\25\1\11\1\24\1\11",
-            "\1\26\1\13\1\uffff\1\12\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\23\uffff\3\11\1\25\1\11\1\24\1\11",
-            "\1\26\1\13\1\uffff\1\12\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\23\uffff\3\11\1\25\1\11\1\24\1\11",
-            "\1\26\1\13\1\uffff\1\12\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\23\uffff\3\11\1\25\1\11\1\24\1\11",
-            "\1\26\1\13\1\uffff\1\12\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\23\uffff\3\11\1\25\1\11\1\24\1\11",
-            "\1\26\1\13\1\uffff\1\12\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\23\uffff\3\11\1\25\1\11\1\24\1\11",
+            "\1\13\1\15\1\uffff\1\14\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\23\uffff\3\11\1\12\1\11\1\26\1\11",
+            "\1\13\1\15\1\uffff\1\14\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\23\uffff\3\11\1\12\1\11\1\26\1\11",
+            "\1\13\1\15\1\uffff\1\14\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\23\uffff\3\11\1\12\1\11\1\26\1\11",
+            "\1\13\1\15\1\uffff\1\14\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\23\uffff\3\11\1\12\1\11\1\26\1\11",
+            "\1\13\1\15\1\uffff\1\14\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\23\uffff\3\11\1\12\1\11\1\26\1\11",
+            "\1\13\1\15\1\uffff\1\14\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\23\uffff\3\11\1\12\1\11\1\26\1\11",
+            "\1\13\1\15\1\uffff\1\14\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\23\uffff\3\11\1\12\1\11\1\26\1\11",
+            "\1\13\1\15\1\uffff\1\14\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\23\uffff\3\11\1\12\1\11\1\26\1\11",
             "",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
             "",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "\1\30\1\32\1\uffff\1\31\1\33\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\22\uffff\3\11\1\27\1\11\1\uffff\1\11",
+            "",
             "\2\11\1\uffff\12\11\22\uffff\1\57\4\11\1\uffff\1\11\7\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "\1\31\1\33\1\uffff\1\32\1\34\1\35\1\36\1\37\1\40\1\41\1\42\1\43\1\44\22\uffff\3\11\1\30\1\11\1\24\1\27",
-            "",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
-            "\1\31\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\44\22\uffff\3\11\1\30\1\11\1\uffff\1\11",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
+            "\1\30\1\46\1\uffff\1\45\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56\1\43\22\uffff\3\11\1\27\1\11\1\26\1\44",
             "\2\11\1\uffff\12\11\22\uffff\1\60\4\11\1\uffff\1\11\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
-            "\1\63\1\65\1\uffff\1\64\1\66\1\67\1\70\1\71\1\72\1\73\1\74\1\75\1\11\22\uffff\1\76\1\77\1\101\1\61\1\62\1\uffff\1\100\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
-            "\1\uffff"
+            "\1\uffff",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11",
+            "\1\67\1\71\1\uffff\1\70\1\72\1\73\1\74\1\75\1\76\1\77\1\100\1\101\1\11\22\uffff\1\61\1\62\1\64\1\65\1\66\1\uffff\1\63\7\uffff\1\11"
     };
 
     static final short[] dfa_8 = DFA.unpackEncodedString(dfa_8s);
@@ -16363,63 +16468,63 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA5_63 = input.LA(1);
+                        int LA5_51 = input.LA(1);
 
                          
-                        int index5_63 = input.index();
+                        int index5_51 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred5_InternalSemver()) ) {s = 20;}
+                        if ( (synpred5_InternalSemver()) ) {s = 22;}
 
                         else if ( (synpred6_InternalSemver()) ) {s = 9;}
 
                          
-                        input.seek(index5_63);
+                        input.seek(index5_51);
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
-                        int LA5_64 = input.LA(1);
+                        int LA5_52 = input.LA(1);
 
                          
-                        int index5_64 = input.index();
+                        int index5_52 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred5_InternalSemver()) ) {s = 20;}
+                        if ( (synpred5_InternalSemver()) ) {s = 22;}
 
                         else if ( (synpred6_InternalSemver()) ) {s = 9;}
 
                          
-                        input.seek(index5_64);
+                        input.seek(index5_52);
                         if ( s>=0 ) return s;
                         break;
                     case 2 : 
-                        int LA5_65 = input.LA(1);
+                        int LA5_49 = input.LA(1);
 
                          
-                        int index5_65 = input.index();
+                        int index5_49 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred5_InternalSemver()) ) {s = 20;}
+                        if ( (synpred5_InternalSemver()) ) {s = 22;}
 
                         else if ( (synpred6_InternalSemver()) ) {s = 9;}
 
                          
-                        input.seek(index5_65);
+                        input.seek(index5_49);
                         if ( s>=0 ) return s;
                         break;
                     case 3 : 
-                        int LA5_62 = input.LA(1);
+                        int LA5_50 = input.LA(1);
 
                          
-                        int index5_62 = input.index();
+                        int index5_50 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred5_InternalSemver()) ) {s = 20;}
+                        if ( (synpred5_InternalSemver()) ) {s = 22;}
 
                         else if ( (synpred6_InternalSemver()) ) {s = 9;}
 
                          
-                        input.seek(index5_62);
+                        input.seek(index5_50);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -16435,12 +16540,12 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
     static final String dfa_17s = "\2\4\1\uffff\1\4\1\0\1\4\1\uffff\1\4\2\0\1\uffff\4\4";
     static final String dfa_18s = "\1\60\1\46\1\uffff\1\46\1\0\1\46\1\uffff\1\46\2\0\1\uffff\3\46\1\51";
     static final String dfa_19s = "\2\uffff\1\1\3\uffff\1\3\3\uffff\1\2\4\uffff";
-    static final String dfa_20s = "\4\uffff\1\3\1\2\2\uffff\1\1\1\0\5\uffff}>";
+    static final String dfa_20s = "\4\uffff\1\2\1\0\2\uffff\1\3\1\1\5\uffff}>";
     static final String[] dfa_21s = {
             "\1\5\1\4\1\2\1\3\1\1\7\6\26\uffff\1\6\3\uffff\7\2",
             "\2\6\1\uffff\7\6\1\7\2\6\25\uffff\1\6",
             "",
-            "\1\10\1\11\1\2\12\6\25\uffff\1\6",
+            "\1\11\1\10\1\2\12\6\25\uffff\1\6",
             "\1\uffff",
             "\2\12\1\uffff\11\12\26\uffff\1\12",
             "",
@@ -16483,36 +16588,6 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA6_9 = input.LA(1);
-
-                         
-                        int index6_9 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred7_InternalSemver()) ) {s = 2;}
-
-                        else if ( (true) ) {s = 6;}
-
-                         
-                        input.seek(index6_9);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA6_8 = input.LA(1);
-
-                         
-                        int index6_8 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred7_InternalSemver()) ) {s = 2;}
-
-                        else if ( (true) ) {s = 6;}
-
-                         
-                        input.seek(index6_8);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
                         int LA6_5 = input.LA(1);
 
                          
@@ -16529,7 +16604,22 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
                         input.seek(index6_5);
                         if ( s>=0 ) return s;
                         break;
-                    case 3 : 
+                    case 1 : 
+                        int LA6_9 = input.LA(1);
+
+                         
+                        int index6_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred7_InternalSemver()) ) {s = 2;}
+
+                        else if ( (true) ) {s = 6;}
+
+                         
+                        input.seek(index6_9);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
                         int LA6_4 = input.LA(1);
 
                          
@@ -16544,6 +16634,21 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
                         input.seek(index6_4);
                         if ( s>=0 ) return s;
                         break;
+                    case 3 : 
+                        int LA6_8 = input.LA(1);
+
+                         
+                        int index6_8 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred7_InternalSemver()) ) {s = 2;}
+
+                        else if ( (true) ) {s = 6;}
+
+                         
+                        input.seek(index6_8);
+                        if ( s>=0 ) return s;
+                        break;
             }
             if (state.backtracking>0) {state.failed=true; return -1;}
             NoViableAltException nvae =
@@ -16553,7 +16658,7 @@ public class InternalSemverParser extends AbstractInternalContentAssistParser {
         }
     }
     static final String dfa_22s = "\u00a9\uffff";
-    static final String dfa_23s = "\2\uffff\3\1\4\uffff\33\1\2\uffff\14\1\2\uffff\14\1\1\uffff\47\1\1\uffff\30\1\1\uffff\47\1";
+    static final String dfa_23s = "\2\uffff\3\1\3\uffff\34\1\2\uffff\14\1\2\uffff\14\1\1\uffff\47\1\1\uffff\30\1\1\uffff\47\1";
     static final String dfa_24s = "\1\4\1\uffff\3\20\4\4\3\20\30\4\1\uffff\34\4\3\20\112\4\3\20\30\4";
     static final String dfa_25s = "\1\60\1\uffff\3\62\1\6\2\46\34\62\1\uffff\1\6\14\62\2\46\14\62\1\46\47\62\1\6\30\62\1\46\47\62";
     static final String dfa_26s = "\1\uffff\1\1\42\uffff\1\2\u0084\uffff";
