@@ -33,21 +33,22 @@
    *   NumberFour AG - Initial API and implementation
    *\/
   import "D";
-| import {[I|Z]} from "[Exporter2|Exporter1]";
-| import {[Z|I]} from "[Exporter1|Exporter2]";
-  import {J} from "Exporter2";
-  import "C";
-| import {[Y|X]} from "Exporter1";
-| import {[C|Y]} from "[Exporter3|Exporter1]";
-| import {[X|C]} from "[Exporter1|Exporter3]";
-  import "B";
-| import {[B|H]} from "[Exporter3|Exporter2]";
+| import [{I} from|] "[Exporter2|C]";
+| import [{Z} from|] "[Exporter1|B]";
+| import [|"A";]
+| [|import] {[J|X]} from "[Exporter2|Exporter1]";
+| import ["C";|]
+| [import|] {Y} from "Exporter1";
+| import {[C|Z]} from "[Exporter3|Exporter1]";
+| import {[X|H]} from "[Exporter1|Exporter2]";
+| import [|{I} from] "[B|Exporter2]";
+| import {[B|J]} from "[Exporter3|Exporter2]";
 | import {[H|A]} from "[Exporter2|Exporter3]";
 | import {[A|B]} from "Exporter3";
-  import "A";
+| import [|{C} from] "[A|Exporter3]";
   A,B,C;
   H,I,J;
-(...)
+  X,Y,Z;
 --- */
 
 import "D";

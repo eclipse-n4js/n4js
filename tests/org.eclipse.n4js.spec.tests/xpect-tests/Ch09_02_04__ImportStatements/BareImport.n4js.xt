@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
 
- 	ResourceSet {
+	ResourceSet {
 		ThisFile {}
 		File "ExporterWithSideEffect.n4js" {}
 	}

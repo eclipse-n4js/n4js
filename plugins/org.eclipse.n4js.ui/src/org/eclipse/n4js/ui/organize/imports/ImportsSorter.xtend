@@ -27,42 +27,27 @@ class ImportsSorter {
 	/**
 	 * Sorting a List of import declarations (mixed content Named / Namespace)
 	 * Order is: First all Named imports, then all Namespace imports.
-	 * Exception: bare imports must not change their order among themselves or relative to
-	 * any other kind of import.
+	 * Exception: bare imports will be moved to the front and will keep their order relative to themselves.
 	 */
 	final static def sortByImport(List<ImportDeclaration> declarations) {
-		// Group given declarations into "bare import groups" of which each such
-		// group contains 0 or 1 bare import together with all non-bare imports
-		// that precede this bare import up to the previous bare import.
-		// E.g.
-		// I1, I2, B1, I3, I4, B2, I5, I6
-		// will lead to groups:
-		// #0: I1, I2, B1
-		// #1: I3, I4, B2
-		// #2: I5, I6
-		val decl2BareImportGroup = newHashMap;
-		var bareImportCounter = 0;
-		for (decl : declarations) {
-			decl2BareImportGroup.put(decl, bareImportCounter);
-			if (decl.bare) {
-				bareImportCounter++;
-			}
-		}
+		// remember original index of all bare imports in 'declarations'
+		val bareImport2OriginalIndex = newHashMap;
+		declarations.filter[bare].forEach[decl, idx | bareImport2OriginalIndex.put(decl, idx)];
 
 		// perform actual sorting
 		declarations.sort(new Comparator<ImportDeclaration>() {
 			override compare(ImportDeclaration o1, ImportDeclaration o2) {
-				// 1) sort by bare import group
-				val cmpBareImportGroup = Integer.compare(decl2BareImportGroup.get(o1), decl2BareImportGroup.get(o2));
-				if (cmpBareImportGroup !== 0) {
-					return cmpBareImportGroup;
-				}
-				// within each bare import group:
-				// 2) sort by "bareness" (i.e. within each bare import group, the single bare import should always come last)
-				val cmpBareness = Boolean.compare(o1.bare, o2.bare);
+				// 1) sort by "bareness" (i.e. move bare imports to the front)
+				val cmpBareness = Boolean.compare(o1.bare, o2.bare) * -1;
 				if (cmpBareness !== 0) {
 					return cmpBareness;
 				}
+				// 2) sort bare imports by their original index (i.e. keep their order relative to themselves)
+				if (o1.bare) {
+					// both are bare imports:
+					return Integer.compare(bareImport2OriginalIndex.get(o1), bareImport2OriginalIndex.get(o2));
+				}
+				// both are non-bare imports:
 				// 3) sort by names ...
 				switch ( o1.importSpecifiers.get(0) ) {
 					NamespaceImportSpecifier: {

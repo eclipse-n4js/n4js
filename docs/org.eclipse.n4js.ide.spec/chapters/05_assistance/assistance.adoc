@@ -567,9 +567,10 @@ For a valid file without errors, this will result in the following actions:
 * Bare imports will never be removed.
 * In each import statement the imported elements will be lexicographically sorted depending on the imported element’s name.
 * All import statements will be lexicographically sorted depending on the module specifier as major and the element name as minor key.
-  However, the order of bare imports relative to each other as well as to other imports will never be changed.
-  More precisely, given a bare import IB and another import I (which may be a bare import, too), the order of
-  IB and I will not be changed by organize imports.
+  However, bare imports will always be moved to the front and their order relative to each other will never be changed.
++
+NOTE: Since N4JS imports are currently transpiled to ES6 imports and the order of imports in ES6 is significant at runtime,
+the above sorting can in certain corner cases change the behavior of the code.
 * All import statements will be moved to the top of the file.
 
 For a file with error-conditions of unresolved references, this will result in the automatic actions:

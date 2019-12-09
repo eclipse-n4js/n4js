@@ -33,17 +33,18 @@
    * Contributors:
    *   NumberFour AG - Initial API and implementation
    *\/
-| import {[I|Z]} from "[Exporter2|Exporter1]";
-| import {[Z|I]} from "[Exporter1|Exporter2]";
-  import {J} from "Exporter2";
-  import "B";
-| import {[Y|X]} from "Exporter1";
-| import {[C|Y]} from "[Exporter3|Exporter1]";
-| import {[X|C]} from "[Exporter1|Exporter3]";
-  import "A";
-| import {[B|H]} from "[Exporter3|Exporter2]";
-| import {[H|A]} from "[Exporter2|Exporter3]";
-| import {[A|B]} from "Exporter3";
+| import [{I} from|] "[Exporter2|B]";
+| import [|"A";]
+| [|import] {[Z|X]} from "Exporter1";
+| import {[J|Y]} from "[Exporter2|Exporter1]";
+| import ["B";|]
+| [import|] {[Y|Z]} from "Exporter1";
+| import {[C|H]} from "[Exporter3|Exporter2]";
+| import {[X|I]} from "[Exporter1|Exporter2]";
+| import [|{J} from] "[A|Exporter2]";
+| import {[B|A]} from "Exporter3";
+| import {[H|B]} from "[Exporter2|Exporter3]";
+| import {[A|C]} from "Exporter3";
   A,B,C;
   H,I,J;
   X,Y,Z;
