@@ -173,7 +173,7 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 				return original;
 			}
 			if (resource == null) {
-				resource = resourceSet.createResource(resourceURI);
+				resource = canLoadFromDescriptionHelper.createResource(resourceSet, resourceURI);
 			}
 			if (resource instanceof N4JSResource) {
 				if (resource.getContents().isEmpty()) {

@@ -48,10 +48,14 @@ import com.google.inject.Inject;
  */
 public abstract class AbstractTranspiler {
 
-	private static final boolean DEBUG_DUMP_STATE = false;
-	private static final boolean DEBUG_DRAW_STATE = false;
-	private static final boolean DEBUG_PERFORM_ASSERTIONS = true;
-	private static final boolean DEBUG_PERFORM_VALIDATIONS = true;
+	/** */
+	public static final boolean DEBUG_DUMP_STATE = false;
+	/** */
+	public static final boolean DEBUG_DRAW_STATE = false;
+	/** */
+	public static final boolean DEBUG_PERFORM_ASSERTIONS = false;
+	/** */
+	public static final boolean DEBUG_PERFORM_VALIDATIONS = false;
 
 	@Inject
 	private PreparationStep preparationStep;

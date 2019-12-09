@@ -12,8 +12,6 @@ package org.eclipse.n4js.ts.types.util;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -21,6 +19,8 @@ import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TObjectPrototype;
+
+import com.google.common.collect.Lists;
 
 /**
  */

@@ -21,6 +21,7 @@ import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -48,9 +49,10 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	private IN4JSCore n4jsCore;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
+	@Inject
+	private N4JSCache n4jsCache;
 
-	@Override
-	public List<Issue> validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
+	private List<Issue> doValidate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
 		// QUICK EXIT #1: in case of invalid file type (e.g. js file in a project with project type definition)
 		final IN4JSProject project = n4jsCore.findProject(resource.getURI()).orNull();
 		if (project != null && !isValidFileTypeForProjectType(resource, project)) {
@@ -100,6 +102,11 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 			}
 		}
 		return super.validate(resource, mode, cancelIndicator);
+	}
+
+	@Override
+	public List<Issue> validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
+		return n4jsCache.getOrElseUpdateIssues(this::doValidate, resource, mode, cancelIndicator);
 	}
 
 	/**

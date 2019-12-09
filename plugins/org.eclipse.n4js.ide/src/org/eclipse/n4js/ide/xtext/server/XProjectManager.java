@@ -9,10 +9,12 @@ package org.eclipse.n4js.ide.xtext.server;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -84,6 +86,16 @@ public class XProjectManager {
 	@Inject
 	protected OperationCanceledManager operationCanceledManager;
 
+	/**
+	 * The map for this project's resource set.
+	 */
+	@Inject
+	protected ProjectUriResourceMap uriResourceMap;
+
+	/** The workspace manager */
+	@Inject
+	protected XWorkspaceManager workspaceManager;
+
 	private URI baseDir;
 
 	private Provider<Map<String, ResourceDescriptionsData>> indexProvider;
@@ -95,6 +107,8 @@ public class XProjectManager {
 	private ProjectDescription projectDescription;
 
 	private IProjectConfig projectConfig;
+
+	private boolean persistedProjectStateOutdated = false;
 
 	/** Initialize this project. */
 	@SuppressWarnings("hiding")
@@ -112,26 +126,52 @@ public class XProjectManager {
 
 	/** Initial build reads the project state and resolves changes. */
 	public XBuildResult doInitialBuild(CancelIndicator cancelIndicator) {
-		Set<URI> changedSources = projectStateHolder.readProjectState(projectConfig);
+		ResourceChangeSet changeSet = projectStateHolder.readProjectState(projectConfig);
+		XBuildResult result = doIncrementalBuild(
+				changeSet.getModified(), changeSet.getDeleted(), Collections.emptyList(), cancelIndicator,
+				buildRequest -> {
+					// during initial build, we do not want to notify about any issues sind it is
+					// done at the end of the project for the deserialized issues and the new issues
+					// altogether.
+					buildRequest.setAfterValidateListener(null);
+					return buildRequest;
+				});
 
-		XBuildResult result = doIncrementalBuild(changedSources, Collections.emptySet(),
-				Collections.emptyList(), cancelIndicator);
-
-		if (!changedSources.isEmpty()) {
-			projectStateHolder.writeProjectState(projectConfig);
+		Map<URI, Collection<Issue>> validationIssues = projectStateHolder.getValidationIssues();
+		for (Map.Entry<URI, Collection<Issue>> locationToIssues : validationIssues.entrySet()) {
+			URI location = locationToIssues.getKey();
+			Collection<Issue> issues = locationToIssues.getValue();
+			issueAcceptor.publishDiagnostics(location, issues);
 		}
+
+		// clear the resource set to release memory
+		boolean wasDeliver = resourceSet.eDeliver();
+		try {
+			resourceSet.eSetDeliver(false);
+			resourceSet.getResources().clear();
+		} finally {
+			resourceSet.eSetDeliver(wasDeliver);
+		}
+
+		persistProjectState();
 		return result;
 	}
 
 	/** Build this project. */
 	public XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
+		return doIncrementalBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator, Function.identity());
+	}
 
-		URI persistanceFile = projectStateHolder.getPersistenceFile(projectConfig);
-		dirtyFiles.remove(persistanceFile);
-		deletedFiles.remove(persistanceFile);
+	private XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
+			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator,
+			Function<? super XBuildRequest, ? extends XBuildRequest> buildRequestModification) {
+		URI persistenceFile = projectStateHolder.getPersistenceFile(projectConfig);
+		dirtyFiles.remove(persistenceFile);
+		deletedFiles.remove(persistenceFile);
 
 		XBuildRequest request = newBuildRequest(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator);
+		request = buildRequestModification.apply(request);
 		resourceSet = request.getResourceSet(); // resourceSet is already used during the build via #getResource(URI)
 
 		XBuildResult result = incrementalBuilder.build(request);
@@ -143,7 +183,7 @@ public class XProjectManager {
 		synchronized (map.keySet()) { // GH-1552: synchronized
 			map.put(projectDescription.getName(), resourceDescriptions);
 		}
-
+		persistedProjectStateOutdated |= !result.getAffectedResources().isEmpty();
 		return result;
 	}
 
@@ -215,7 +255,10 @@ public class XProjectManager {
 
 	/** Writes the current index, file hashes and validation issues to disk */
 	public void persistProjectState() {
-		projectStateHolder.writeProjectState(projectConfig);
+		if (persistedProjectStateOutdated) {
+			projectStateHolder.writeProjectState(projectConfig);
+			persistedProjectStateOutdated = false;
+		}
 	}
 
 	/** Creates a new build request for this project. */
@@ -262,8 +305,10 @@ public class XProjectManager {
 	/** Create and configure a new resource set for this project. */
 	protected XtextResourceSet createNewResourceSet(ResourceDescriptionsData newIndex) {
 		XtextResourceSet result = resourceSetProvider.get();
+		result.setURIResourceMap(uriResourceMap);
 		projectDescription.attachToEmfObject(result);
 		ProjectConfigAdapter.install(result, projectConfig);
+		attachWorkspaceResourceLocator(result);
 
 		Map<String, ResourceDescriptionsData> map = indexProvider.get();
 		synchronized (map.keySet()) { // GH-1552: synchronized
@@ -272,6 +317,10 @@ public class XProjectManager {
 		}
 		externalContentSupport.configureResourceSet(result, openedDocumentsContentProvider);
 		return result;
+	}
+
+	private WorkspaceAwareResourceLocator attachWorkspaceResourceLocator(XtextResourceSet result) {
+		return new WorkspaceAwareResourceLocator(result, workspaceManager);
 	}
 
 	/** Get the resource with the given URI. */

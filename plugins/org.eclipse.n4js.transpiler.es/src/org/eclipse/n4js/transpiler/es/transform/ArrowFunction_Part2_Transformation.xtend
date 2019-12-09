@@ -18,6 +18,7 @@ import org.eclipse.n4js.transpiler.TransformationDependency.Requires
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.transpiler.AbstractTranspiler
 
 /**
  * Part 2 of {@link ArrowFunction_Part1_Transformation}.
@@ -36,7 +37,9 @@ class ArrowFunction_Part2_Transformation extends Transformation {
 	}
 
 	override assertPostConditions() {
-		"No arrow-function left in IM".assertTrue( collectNodes(state.im, ArrowFunction, true).isEmpty );
+		if (AbstractTranspiler.DEBUG_PERFORM_ASSERTIONS) {
+			"No arrow-function left in IM".assertTrue( collectNodes(state.im, ArrowFunction, true).isEmpty );
+		}
 	}
 
 	override transform() {

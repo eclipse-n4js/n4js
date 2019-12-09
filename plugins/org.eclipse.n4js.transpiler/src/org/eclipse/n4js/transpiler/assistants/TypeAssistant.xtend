@@ -34,6 +34,7 @@ import java.util.List
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.transpiler.AbstractTranspiler
 
 /**
  */
@@ -46,21 +47,24 @@ class TypeAssistant extends TransformationAssistant {
 	 * therefore factored out into this helper method.
 	 */
 	def public void assertClassifierPreConditions() {
-		val allClassifierDecls = collectNodes(state.im, N4ClassifierDeclaration, false);
-		assertTrue("all classifier declarations must have an original defined type",
-			allClassifierDecls.forall[state.info.getOriginalDefinedType(it)!==null]);
-		assertTrue("all class declarations must have a superClassRef pointing to a STE with an original target (if non-null)",
-			allClassifierDecls.filter(N4ClassDeclaration).map[superClassRef].filterNull.filter(ParameterizedTypeRef_IM)
-			.forall[
-				val originalDeclType = originalTargetOfRewiredTarget;
-				return originalDeclType instanceof TClass || originalDeclType instanceof TObjectPrototype;
-			]);
-		assertTrue("all classifier declarations must have all implementedOrExtendedInterfaceRefs pointing to a STE with an original target",
-			allClassifierDecls.map[implementedOrExtendedInterfaceRefs].flatten.filter(ParameterizedTypeRef_IM)
-			.forall[
-				val originalDeclType = originalTargetOfRewiredTarget;
-				return originalDeclType instanceof TInterface;
-			]);
+		if (AbstractTranspiler.DEBUG_PERFORM_ASSERTIONS) {
+			val allClassifierDecls = collectNodes(state.im, N4ClassifierDeclaration, false);
+			assertTrue("all classifier declarations must have an original defined type",
+				allClassifierDecls.forall[state.info.getOriginalDefinedType(it)!==null]);
+			assertTrue("all class declarations must have a superClassRef pointing to a STE with an original target (if non-null)",
+				allClassifierDecls.filter(N4ClassDeclaration).map[superClassRef].filterNull.filter(ParameterizedTypeRef_IM)
+				.forall[
+					val originalDeclType = originalTargetOfRewiredTarget;
+					return originalDeclType instanceof TClass || originalDeclType instanceof TObjectPrototype;
+				]);
+			assertTrue("all classifier declarations must have all implementedOrExtendedInterfaceRefs pointing to a STE with an original target",
+				allClassifierDecls.map[implementedOrExtendedInterfaceRefs].flatten.filter(ParameterizedTypeRef_IM)
+				.forall[
+					val originalDeclType = originalTargetOfRewiredTarget;
+					return originalDeclType instanceof TInterface;
+				]);
+			
+		}
 	}
 
 	/**
