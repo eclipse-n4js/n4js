@@ -75,7 +75,7 @@ public class FindReferencesXpectMethod {
 		if (argEObj instanceof ParameterizedTypeRef)
 			eObj = ((ParameterizedTypeRef) argEObj).getDeclaredType();
 
-		List<EObject> refs = findReferenceHelper.findReferences(eObj);
+		List<EObject> refs = findReferenceHelper.findReferences(eObj, context.eResource().getResourceSet());
 		ArrayList<String> result = Lists.newArrayList();
 		for (EObject ref : refs) {
 			if (ref instanceof PropertyNameOwner)

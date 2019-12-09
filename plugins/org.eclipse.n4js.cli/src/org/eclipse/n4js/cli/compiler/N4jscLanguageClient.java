@@ -116,4 +116,12 @@ public class N4jscLanguageClient implements LanguageClient, AfterGenerateListene
 		return trnspCount;
 	}
 
+	/** Resets counters of transpiled and deleted files, and errors and warnings */
+	public void resetCounters() {
+		trnspCount = 0;
+		delCount = 0;
+		errCount = 0;
+		wrnCount = 0;
+	}
+
 }

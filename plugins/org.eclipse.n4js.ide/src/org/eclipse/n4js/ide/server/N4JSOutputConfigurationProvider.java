@@ -25,14 +25,28 @@ import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
  */
+@Singleton
 public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider {
 
 	@Inject
 	private IN4JSCore n4jsCore;
+
+	@Override
+	public Set<OutputConfiguration> getOutputConfigurations() {
+		Set<OutputConfiguration> outputConfs = new HashSet<>();
+
+		for (IN4JSProject prj : n4jsCore.findAllProjects()) {
+			OutputConfiguration outputConfiguration = getOutputConfiguration(prj);
+			outputConfs.add(outputConfiguration);
+		}
+
+		return outputConfs;
+	}
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(ResourceSet context) {
@@ -40,7 +54,7 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 		if (resources.isEmpty()) {
 			ProjectDescription description = ProjectDescription.findInEmfObject(context);
 			IN4JSProject project = n4jsCore.findProject(new N4JSProjectName(description.getName())).orNull();
-			return getOutputConfigurations(project);
+			return getOutputConfigurationSet(project);
 		}
 		return getOutputConfigurations(resources.get(0));
 	}
@@ -48,10 +62,16 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(Resource context) {
 		IN4JSProject project = n4jsCore.findProject(context.getURI()).orNull();
-		return getOutputConfigurations(project);
+		return getOutputConfigurationSet(project);
 	}
 
-	private Set<OutputConfiguration> getOutputConfigurations(IN4JSProject project) {
+	private Set<OutputConfiguration> getOutputConfigurationSet(IN4JSProject project) {
+		Set<OutputConfiguration> outputConfs = new HashSet<>();
+		outputConfs.add(getOutputConfiguration(project));
+		return outputConfs;
+	}
+
+	private OutputConfiguration getOutputConfiguration(IN4JSProject project) {
 		String outputPath = null;
 		if (project != null) {
 			outputPath = project.getOutputPath();
@@ -61,8 +81,6 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 		if (outputPath != null) {
 			defaultOutputConfig.setOutputDirectory(outputPath);
 		}
-		Set<OutputConfiguration> outputConfs = new HashSet<>();
-		outputConfs.add(defaultOutputConfig);
-		return outputConfs;
+		return defaultOutputConfig;
 	}
 }

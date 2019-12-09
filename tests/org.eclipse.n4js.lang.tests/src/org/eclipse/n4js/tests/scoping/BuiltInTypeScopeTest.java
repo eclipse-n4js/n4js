@@ -18,13 +18,17 @@ import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
+import org.eclipse.n4js.scoping.builtin.GlobalObjectScope;
+import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -37,6 +41,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 
 /**
@@ -82,14 +88,33 @@ public class BuiltInTypeScopeTest {
 	@Test
 	public void testResolveAllBuiltInTypes() {
 		BuiltInTypeScope scope = BuiltInTypeScope.get(resourceSet);
-		scope.getSingleElement(QualifiedName.create("any")); // trigger loading
-		Assert.assertEquals(6, resourceSet.getResources().size());
-		EcoreUtil.resolveAll(resourceSet);
-		Assert.assertEquals(6, resourceSet.getResources().size());
+		IEObjectDescription description = scope.getSingleElement(QualifiedName.create("any")); // trigger loading
+		// assert that the built in resources are loaded into a delegate resource set
+		Assert.assertEquals(0, resourceSet.getResources().size());
 
+		EObject objectOrProxy = description.getEObjectOrProxy();
+		Assert.assertFalse(objectOrProxy.eIsProxy());
+
+		ResourceSet builtInResourceSet = objectOrProxy.eResource().getResourceSet();
+		Assert.assertNotSame(resourceSet, builtInResourceSet);
+
+		// trigger more loading
+		GlobalObjectScope.get(resourceSet).getAllElements();
+		VirtualBaseTypeScope.get(resourceSet).getAllElements();
+
+		Assert.assertEquals(FluentIterable.from(builtInResourceSet.getResources()).transform(Resource::getURI)
+				.join(Joiner.on('\n')), 7, builtInResourceSet.getResources().size());
+
+		EcoreUtil.resolveAll(builtInResourceSet);
 		Map<EObject, Collection<Setting>> unresolvedProxies = EcoreUtil.UnresolvedProxyCrossReferencer
-				.find(resourceSet);
+				.find(builtInResourceSet);
 		Assert.assertTrue(unresolvedProxies.toString(), unresolvedProxies.isEmpty());
+
+		Assert.assertTrue(N4Scheme.isFromResourceWithN4Scheme(objectOrProxy));
+
+		EObject loadedViaPrimary = resourceSet.getEObject(description.getEObjectURI(), false);
+		Assert.assertSame(objectOrProxy, loadedViaPrimary);
+
 	}
 
 	@SuppressWarnings("javadoc")

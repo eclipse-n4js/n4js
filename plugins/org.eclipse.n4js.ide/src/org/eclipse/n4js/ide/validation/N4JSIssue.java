@@ -19,13 +19,14 @@ import java.util.Objects;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.validation.CheckType;
+import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.validation.Issue.IssueImpl;
 
 /**
  * GH-1537
  */
 public class N4JSIssue extends IssueImpl implements Externalizable {
-	private static final String NULL = "NULL";
+	private static final String NULL = "";
 	private int lineNumberEnd;
 	private int columnEnd;
 
@@ -42,6 +43,33 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		this.setUriToProblem(null);
 		this.setSeverity(Severity.IGNORE);
 		this.setType(CheckType.FAST);
+	}
+
+	/**
+	 * Copy constructor
+	 */
+	public N4JSIssue(Issue copyFrom) {
+		this();
+		if (copyFrom.getOffset() != null)
+			this.setOffset(copyFrom.getOffset());
+		if (copyFrom.getLength() != null)
+			this.setLength(copyFrom.getLength());
+		if (copyFrom.getColumn() != null)
+			this.setColumn(copyFrom.getColumn());
+		if (copyFrom.getLineNumber() != null)
+			this.setLineNumber(copyFrom.getLineNumber());
+		if (copyFrom.getCode() != null)
+			this.setCode(copyFrom.getCode());
+		if (copyFrom.getMessage() != null)
+			this.setMessage(copyFrom.getMessage());
+		if (copyFrom.getUriToProblem() != null)
+			this.setUriToProblem(copyFrom.getUriToProblem());
+		if (copyFrom.getSeverity() != null)
+			this.setSeverity(copyFrom.getSeverity());
+		if (copyFrom.getType() != null)
+			this.setType(copyFrom.getType());
+		if (copyFrom.getData() != null)
+			this.setData(copyFrom.getData());
 	}
 
 	/** @return line of end of issue */
@@ -80,12 +108,22 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		out.writeUTF(uriToProblemStr);
 
 		Severity severity = this.getSeverity();
-		String severityStr = uriToProblem == null ? NULL : severity.name();
-		out.writeUTF(severityStr);
+		int severityKey = severity == null ? 0 : severity.ordinal() + 1;
+		out.writeInt(severityKey);
 
 		CheckType checkType = this.getType();
-		String checkTypeStr = checkType == null ? NULL : checkType.name();
-		out.writeUTF(checkTypeStr);
+		int checkTypeKey = checkType == null ? 0 : checkType.ordinal() + 1;
+		out.writeInt(checkTypeKey);
+
+		String[] data = getData();
+		if (data == null) {
+			out.writeInt(0);
+		} else {
+			out.writeInt(data.length);
+			for (String s : data) {
+				out.writeUTF(s);
+			}
+		}
 	}
 
 	@Override
@@ -103,13 +141,44 @@ public class N4JSIssue extends IssueImpl implements Externalizable {
 		URI uriToProblem = NULL.equals(uriToProblemStr) ? null : URI.createURI(uriToProblemStr);
 		this.setUriToProblem(uriToProblem);
 
-		String severityStr = in.readUTF();
-		Severity severity = NULL.equals(severityStr) ? null : Severity.valueOf(severityStr);
+		int severityKey = in.readInt();
+		Severity severity = severityFromKey(severityKey);
 		this.setSeverity(severity);
 
-		String checkTypeStr = in.readUTF();
-		CheckType checkType = NULL.equals(checkTypeStr) ? null : CheckType.valueOf(checkTypeStr);
+		int checkTypeKey = in.readInt();
+		CheckType checkType = checkTypeFromKey(checkTypeKey);
 		this.setType(checkType);
+
+		int dataLength = in.readInt();
+		if (dataLength > 0) {
+			String[] data = new String[dataLength];
+			for (int i = 0; i < dataLength; i++) {
+				data[i] = in.readUTF();
+			}
+			this.setData(data);
+		}
+	}
+
+	private static final Severity[] severities = Severity.values();
+
+	private static Severity severityFromKey(int severityKey) {
+		switch (severityKey) {
+		case 0:
+			return null;
+		default:
+			return severities[severityKey - 1];
+		}
+	}
+
+	private static final CheckType[] checkTypes = CheckType.values();
+
+	private static CheckType checkTypeFromKey(int checkTypeKey) {
+		switch (checkTypeKey) {
+		case 0:
+			return null;
+		default:
+			return checkTypes[checkTypeKey - 1];
+		}
 	}
 
 	@Override

@@ -38,6 +38,7 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionManager;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
+import org.eclipse.n4js.ts.scoping.builtin.BasicResourceSetProvider;
 import org.eclipse.n4js.ts.ui.navigation.URIBasedStorageEditorInputFactory;
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
@@ -493,6 +494,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 */
 	public Class<? extends XtextResourceSet> bindXtextResourceSet() {
 		return SynchronizedXtextResourceSet.class;
+	}
+
+	/**
+	 * Bind a resource set that knows about the builtin scheme.
+	 */
+	public Class<? extends Provider<? extends SynchronizedXtextResourceSet>> provideXtextResourceSet() {
+		return BasicResourceSetProvider.class;
 	}
 
 	/**

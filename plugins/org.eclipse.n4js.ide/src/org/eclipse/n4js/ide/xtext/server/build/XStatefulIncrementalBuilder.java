@@ -23,6 +23,7 @@ import java.util.concurrent.CancellationException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.generator.GeneratorContext;
@@ -50,6 +51,7 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 /** Builder instance that is bound to a single running build. */
@@ -98,29 +100,7 @@ public class XStatefulIncrementalBuilder {
 
 			for (URI source : request.getDeletedFiles()) {
 				request.setResultIssues(source, Collections.emptyList());
-
-				Map<URI, String> outputConfigMap = newSource2GeneratedMapping
-						.deleteSourceAndGetOutputConfigs(source);
-				IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(source);
-				IContextualOutputConfigurationProvider2 outputConfigurationProvider = serviceProvider
-						.get(IContextualOutputConfigurationProvider2.class);
-				XtextResourceSet resourceSet = request.getResourceSet();
-				Set<OutputConfiguration> outputConfigs = outputConfigurationProvider
-						.getOutputConfigurations(resourceSet);
-
-				for (URI generated : outputConfigMap.keySet()) {
-					String configName = outputConfigMap.get(generated);
-					OutputConfiguration config = FluentIterable.from(outputConfigs)
-							.firstMatch(oc -> oc.getName().equals(configName)).orNull();
-					if (config != null && config.isCleanUpDerivedResources()) {
-						try {
-							resourceSet.getURIConverter().delete(generated, CollectionLiterals.emptyMap());
-							request.setResultDeleteFile(generated);
-						} catch (IOException e) {
-							Exceptions.sneakyThrow(e);
-						}
-					}
-				}
+				removeGeneratedFiles(source, newSource2GeneratedMapping);
 			}
 
 			XIndexer.XIndexResult result = indexer.computeAndIndexAffected(request, context);
@@ -153,6 +133,29 @@ public class XStatefulIncrementalBuilder {
 		return new XBuildResult(this.request.getState(), resolvedDeltas);
 	}
 
+	private void removeGeneratedFiles(URI source, XSource2GeneratedMapping source2GeneratedMapping) {
+		Map<URI, String> outputConfigMap = source2GeneratedMapping.deleteSourceAndGetOutputConfigs(source);
+		IResourceServiceProvider serviceProvider = context.getResourceServiceProvider(source);
+		IContextualOutputConfigurationProvider2 outputConfigurationProvider = serviceProvider
+				.get(IContextualOutputConfigurationProvider2.class);
+		XtextResourceSet resourceSet = request.getResourceSet();
+		Set<OutputConfiguration> outputConfigs = outputConfigurationProvider.getOutputConfigurations(resourceSet);
+		Map<String, OutputConfiguration> outputConfigsMap = Maps.uniqueIndex(outputConfigs,
+				OutputConfiguration::getName);
+		URIConverter uriConverter = resourceSet.getURIConverter();
+		for (URI generated : outputConfigMap.keySet()) {
+			OutputConfiguration config = outputConfigsMap.get(outputConfigMap.get(generated));
+			if (config != null && config.isCleanUpDerivedResources()) {
+				try {
+					uriConverter.delete(generated, CollectionLiterals.emptyMap());
+					request.setResultDeleteFile(generated);
+				} catch (IOException e) {
+					Exceptions.sneakyThrow(e);
+				}
+			}
+		}
+	}
+
 	private Delta buildClustured(Resource resource,
 			XSource2GeneratedMapping newSource2GeneratedMapping,
 			XIndexer.XIndexResult result) {
@@ -168,7 +171,7 @@ public class XStatefulIncrementalBuilder {
 		URI source = resource.getURI();
 		IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
 		IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
-		IResourceValidator resourceValidator = getResourceServiceProvider(resource).getResourceValidator();
+		IResourceValidator resourceValidator = serviceProvider.getResourceValidator();
 
 		IResourceDescription description = manager.getResourceDescription(resource);
 		SerializableResourceDescription copiedDescription = SerializableResourceDescription.createCopy(description);
@@ -182,7 +185,9 @@ public class XStatefulIncrementalBuilder {
 
 			if (proceedGenerate) {
 				operationCanceledManager.checkCanceled(cancelIndicator);
-				generate(resource, newSource2GeneratedMapping);
+				generate(resource, newSource2GeneratedMapping, serviceProvider);
+			} else {
+				removeGeneratedFiles(resource.getURI(), newSource2GeneratedMapping);
 			}
 		}
 
@@ -198,14 +203,14 @@ public class XStatefulIncrementalBuilder {
 	}
 
 	/** Generate code for the given resource */
-	protected void generate(Resource resource, XSource2GeneratedMapping newMappings) {
-		IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
+	protected void generate(Resource resource, XSource2GeneratedMapping newMappings,
+			IResourceServiceProvider serviceProvider) {
 		GeneratorDelegate generator = serviceProvider.get(GeneratorDelegate.class);
 		if (generator == null) {
 			return;
 		}
 
-		if (isResourceInOutputDirectory(resource)) {
+		if (isResourceInOutputDirectory(resource, serviceProvider)) {
 			return;
 		}
 
@@ -245,14 +250,12 @@ public class XStatefulIncrementalBuilder {
 		}
 	}
 
-	private boolean isResourceInOutputDirectory(Resource resource) {
-		IResourceServiceProvider serviceProvider = getResourceServiceProvider(resource);
+	private boolean isResourceInOutputDirectory(Resource resource, IResourceServiceProvider serviceProvider) {
 		XWorkspaceManager workspaceManager = serviceProvider.get(XWorkspaceManager.class);
-		OutputConfigurationProvider outputConfProvider = serviceProvider.get(OutputConfigurationProvider.class);
 		if (workspaceManager == null) {
 			return false;
 		}
-
+		OutputConfigurationProvider outputConfProvider = serviceProvider.get(OutputConfigurationProvider.class);
 		URI resourceUri = resource.getURI();
 		IProjectConfig projectConfig = workspaceManager.getProjectConfig(resourceUri);
 		Set<OutputConfiguration> outputConfigurations = outputConfProvider.getOutputConfigurations(resource);
