@@ -481,18 +481,6 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="N4JS Tools">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
-        <operand
-            xsi:type="predicates:LocationPredicate"
-            pattern=".*/tools/.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="N4JS Docs">
       <predicate
           xsi:type="predicates:AndPredicate">

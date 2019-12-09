@@ -7,7 +7,6 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.ide,
- org.eclipse.n4js.hlc.base,
  org.eclipse.n4js.ts,
  org.eclipse.n4js.generator.headless,
  org.eclipse.n4js.transpiler.es,

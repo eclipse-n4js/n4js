@@ -33,10 +33,6 @@ testhelpers/org.eclipse.n4js.ui.tests.helper/src/org/eclipse/n4js/tests/builder/
 testhelpers/org.eclipse.n4js.ui.tests.helper/src/org/eclipse/n4js/tests/builder/DelegatingBuilderParticipant.java
 
 
-## taken from Eclipse code: org.eclipse.emf.ecore_2.10.1.v20140901-1043.jar
-## EPL 1.0
-tools/org.eclipse.n4js.hlc/src/main/resources/org/eclipse/emf/ecore/plugin/plugin.properties
-
 
 ## contains text in API documentation that was copied from ECMAScript Language Specification
 plugins/org.eclipse.n4js.environments/src-env/env/builtin_js.n4ts
@@ -44,9 +40,6 @@ plugins/org.eclipse.n4js.environments/src-env/env/builtin_js.n4ts
 tests/org.eclipse.n4js.tests.ecmatestsuite/res/test262_5.0_LICENSE.txt
 tests/org.eclipse.n4js.tests.ecmatestsuite/res/test262_6.0_LICENSE.txt
 
-
-## Jakub copied from JDT:
-tools/org.eclipse.n4js.hlc/src/org/eclipse/jdt/internal/jarinjarloader/**
 
 
 ############################################################
