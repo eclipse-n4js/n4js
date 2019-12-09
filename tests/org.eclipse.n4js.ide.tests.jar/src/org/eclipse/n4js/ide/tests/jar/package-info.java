@@ -15,4 +15,4 @@
  * which directly and programmatically invoke method {@link org.eclipse.n4js.cli.N4jscMain#main(String...)} in order to
  * test N4jsc functionality.
  */
-package org.eclipse.n4js.ide.jartests;
+package org.eclipse.n4js.ide.tests.jar;

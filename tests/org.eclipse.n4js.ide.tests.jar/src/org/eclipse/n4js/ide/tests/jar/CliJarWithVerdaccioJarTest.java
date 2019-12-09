@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.jartests;
+package org.eclipse.n4js.ide.tests.jar;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
