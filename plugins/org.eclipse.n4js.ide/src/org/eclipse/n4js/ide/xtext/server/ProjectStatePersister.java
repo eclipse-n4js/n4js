@@ -20,6 +20,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -227,25 +228,11 @@ public class ProjectStatePersister {
 	}
 
 	private void writeUserDataValue(String value, ObjectOutputStream output) throws IOException {
-		int length = value.length();
-		output.writeInt(length);
-		if (buffer == null || buffer.length < length) {
-			buffer = new char[length];
-		}
-		value.getChars(0, length, buffer, 0);
-		LOOP: for (int i = 0; i < length; ++i) {
-			char character = buffer[i];
-			if (character == 0 || character > 0xFF) {
-				output.writeByte((byte) 0);
-				output.writeChar(character);
-				while (++i < length) {
-					output.writeChar(buffer[i]);
-				}
-				break LOOP;
-			} else {
-				output.writeByte((byte) character);
-			}
-		}
+		// User data tends to be very long but the value in output.writeUTF is written as a short
+		// therefore we need to do it manually for this string
+		byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
+		output.writeInt(bytes.length);
+		output.write(bytes);
 	}
 
 	private void writeQualifiedName(QualifiedName qualifiedName, ObjectOutputStream output) throws IOException {
@@ -441,29 +428,10 @@ public class ProjectStatePersister {
 		return description;
 	}
 
-	char[] buffer = null;
-
 	private String readUserDataValue(ObjectInputStream input) throws IOException {
-		int length = input.readInt();
-		if (length == -1) {
-			return null;
-		} else {
-			if (buffer == null || buffer.length < length) {
-				buffer = new char[length];
-			}
-			LOOP: for (int i = 0; i < length; ++i) {
-				byte value = input.readByte();
-				if (value == 0) {
-					do {
-						buffer[i] = input.readChar();
-					} while (++i < length);
-					break LOOP;
-				} else {
-					buffer[i] = (char) (value & 0xFF);
-				}
-			}
-			return new String(buffer, 0, length);
-		}
+		byte[] value = new byte[input.readInt()];
+		input.readFully(value);
+		return new String(value, StandardCharsets.UTF_8);
 	}
 
 	private QualifiedName readQualifiedName(ObjectInputStream input) throws IOException {

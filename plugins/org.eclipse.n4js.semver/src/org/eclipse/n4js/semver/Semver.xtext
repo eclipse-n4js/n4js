@@ -23,7 +23,7 @@ import 'http://www.eclipse.org/emf/2002/Ecore' as ecore
 
 
 NPMVersionRequirement:
-	WS*
+	WS?
 	VersionRangeSetRequirement
 	| (
 		(
@@ -33,8 +33,8 @@ NPMVersionRequirement:
 				| TagVersionRequirement
 			)
 		)
-		WS*
 	)
+	WS?
 ;
 
 LocalPathVersionRequirement:
@@ -70,9 +70,8 @@ GitHubVersionRequirement:
 	githubUrl=URL_NO_VX ('#' commitISH=ALPHA_NUMERIC_CHARS)?
 ;
 
-
 VersionRangeSetRequirement:
-	{VersionRangeSetRequirement} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
+	{VersionRangeSetRequirement} (ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)*)?
 ;
 
 VersionRange:
@@ -80,15 +79,15 @@ VersionRange:
 ;
 
 HyphenVersionRange returns VersionRange:
-	{HyphenVersionRange} from=VersionNumber WS+ '-' WS+  to=VersionNumber
+	{HyphenVersionRange} from=VersionNumber WS '-' WS  to=VersionNumber
 ;
 
 VersionRangeContraint returns VersionRange:
-	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS+ versionConstraints+=SimpleVersion)*
+	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS versionConstraints+=SimpleVersion)*
 ;
 
 SimpleVersion:
-	(comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber
+	(comparators+=VersionComparator WS?)* withLetterV?=LETTER_V? number=VersionNumber
 ;
 
 VersionNumber:
@@ -106,9 +105,8 @@ VersionPart:
 ;
 
 Qualifier:
-		('-' preRelease=QualifierTag)
+		('-' preRelease=QualifierTag ('+' buildMetadata=QualifierTag)?)
 	|	('+' buildMetadata=QualifierTag)
-	|	('-' preRelease=QualifierTag '+' buildMetadata=QualifierTag)
 ;
 
 QualifierTag:

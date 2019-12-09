@@ -86,8 +86,8 @@ public class SemverParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVersionNumberAccess().getGroup_1_2(), "rule__VersionNumber__Group_1_2__0");
 			builder.put(grammarAccess.getVersionNumberAccess().getGroup_1_2_2(), "rule__VersionNumber__Group_1_2_2__0");
 			builder.put(grammarAccess.getQualifierAccess().getGroup_0(), "rule__Qualifier__Group_0__0");
+			builder.put(grammarAccess.getQualifierAccess().getGroup_0_2(), "rule__Qualifier__Group_0_2__0");
 			builder.put(grammarAccess.getQualifierAccess().getGroup_1(), "rule__Qualifier__Group_1__0");
-			builder.put(grammarAccess.getQualifierAccess().getGroup_2(), "rule__Qualifier__Group_2__0");
 			builder.put(grammarAccess.getQualifierTagAccess().getGroup(), "rule__QualifierTag__Group__0");
 			builder.put(grammarAccess.getQualifierTagAccess().getGroup_1(), "rule__QualifierTag__Group_1__0");
 			builder.put(grammarAccess.getFILE_TAGAccess().getGroup(), "rule__FILE_TAG__Group__0");
@@ -125,9 +125,8 @@ public class SemverParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVersionPartAccess().getWildcardAssignment_0(), "rule__VersionPart__WildcardAssignment_0");
 			builder.put(grammarAccess.getVersionPartAccess().getNumberRawAssignment_1(), "rule__VersionPart__NumberRawAssignment_1");
 			builder.put(grammarAccess.getQualifierAccess().getPreReleaseAssignment_0_1(), "rule__Qualifier__PreReleaseAssignment_0_1");
+			builder.put(grammarAccess.getQualifierAccess().getBuildMetadataAssignment_0_2_1(), "rule__Qualifier__BuildMetadataAssignment_0_2_1");
 			builder.put(grammarAccess.getQualifierAccess().getBuildMetadataAssignment_1_1(), "rule__Qualifier__BuildMetadataAssignment_1_1");
-			builder.put(grammarAccess.getQualifierAccess().getPreReleaseAssignment_2_1(), "rule__Qualifier__PreReleaseAssignment_2_1");
-			builder.put(grammarAccess.getQualifierAccess().getBuildMetadataAssignment_2_3(), "rule__Qualifier__BuildMetadataAssignment_2_3");
 			builder.put(grammarAccess.getQualifierTagAccess().getPartsAssignment_0(), "rule__QualifierTag__PartsAssignment_0");
 			builder.put(grammarAccess.getQualifierTagAccess().getPartsAssignment_1_1(), "rule__QualifierTag__PartsAssignment_1_1");
 		}

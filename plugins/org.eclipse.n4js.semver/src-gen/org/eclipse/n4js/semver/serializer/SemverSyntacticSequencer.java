@@ -27,28 +27,20 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected SemverGrammarAccess grammarAccess;
-	protected AbstractElementAlias match_HyphenVersionRange_WSTerminalRuleCall_2_p;
-	protected AbstractElementAlias match_HyphenVersionRange_WSTerminalRuleCall_4_p;
-	protected AbstractElementAlias match_NPMVersionRequirement_WSTerminalRuleCall_0_0_a;
-	protected AbstractElementAlias match_NPMVersionRequirement_WSTerminalRuleCall_1_1_a;
-	protected AbstractElementAlias match_SimpleVersion_WSTerminalRuleCall_0_1_a;
-	protected AbstractElementAlias match_VersionRangeContraint_WSTerminalRuleCall_2_0_p;
-	protected AbstractElementAlias match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_a;
-	protected AbstractElementAlias match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_a;
-	protected AbstractElementAlias match_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_a;
+	protected AbstractElementAlias match_NPMVersionRequirement_WSTerminalRuleCall_0_0_q;
+	protected AbstractElementAlias match_NPMVersionRequirement_WSTerminalRuleCall_1_1_q;
+	protected AbstractElementAlias match_SimpleVersion_WSTerminalRuleCall_0_1_q;
+	protected AbstractElementAlias match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_q;
+	protected AbstractElementAlias match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (SemverGrammarAccess) access;
-		match_HyphenVersionRange_WSTerminalRuleCall_2_p = new TokenAlias(true, false, grammarAccess.getHyphenVersionRangeAccess().getWSTerminalRuleCall_2());
-		match_HyphenVersionRange_WSTerminalRuleCall_4_p = new TokenAlias(true, false, grammarAccess.getHyphenVersionRangeAccess().getWSTerminalRuleCall_4());
-		match_NPMVersionRequirement_WSTerminalRuleCall_0_0_a = new TokenAlias(true, true, grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_0_0());
-		match_NPMVersionRequirement_WSTerminalRuleCall_1_1_a = new TokenAlias(true, true, grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_1_1());
-		match_SimpleVersion_WSTerminalRuleCall_0_1_a = new TokenAlias(true, true, grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_0_1());
-		match_VersionRangeContraint_WSTerminalRuleCall_2_0_p = new TokenAlias(true, false, grammarAccess.getVersionRangeContraintAccess().getWSTerminalRuleCall_2_0());
-		match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_a = new TokenAlias(true, true, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_0());
-		match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_a = new TokenAlias(true, true, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_2());
-		match_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_a = new TokenAlias(true, true, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2());
+		match_NPMVersionRequirement_WSTerminalRuleCall_0_0_q = new TokenAlias(false, true, grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_0_0());
+		match_NPMVersionRequirement_WSTerminalRuleCall_1_1_q = new TokenAlias(false, true, grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_1_1());
+		match_SimpleVersion_WSTerminalRuleCall_0_1_q = new TokenAlias(false, true, grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_0_1());
+		match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_q = new TokenAlias(false, true, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_0());
+		match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q = new TokenAlias(false, true, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_2());
 	}
 	
 	@Override
@@ -74,7 +66,7 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected String getFILE_TAGToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if (node != null)
 			return getTokenText(node);
-		return "file:";
+		return "f i l e :";
 	}
 	
 	/**
@@ -96,7 +88,7 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected String getSEMVER_TAGToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if (node != null)
 			return getTokenText(node);
-		return "semvr:";
+		return "s e m v r :";
 	}
 	
 	/**
@@ -126,65 +118,35 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if (match_HyphenVersionRange_WSTerminalRuleCall_2_p.equals(syntax))
-				emit_HyphenVersionRange_WSTerminalRuleCall_2_p(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_HyphenVersionRange_WSTerminalRuleCall_4_p.equals(syntax))
-				emit_HyphenVersionRange_WSTerminalRuleCall_4_p(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_NPMVersionRequirement_WSTerminalRuleCall_0_0_a.equals(syntax))
-				emit_NPMVersionRequirement_WSTerminalRuleCall_0_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_NPMVersionRequirement_WSTerminalRuleCall_1_1_a.equals(syntax))
-				emit_NPMVersionRequirement_WSTerminalRuleCall_1_1_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_SimpleVersion_WSTerminalRuleCall_0_1_a.equals(syntax))
-				emit_SimpleVersion_WSTerminalRuleCall_0_1_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_VersionRangeContraint_WSTerminalRuleCall_2_0_p.equals(syntax))
-				emit_VersionRangeContraint_WSTerminalRuleCall_2_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_a.equals(syntax))
-				emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_a.equals(syntax))
-				emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_a.equals(syntax))
-				emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_a(semanticObject, getLastNavigableState(), syntaxNodes);
+			if (match_NPMVersionRequirement_WSTerminalRuleCall_0_0_q.equals(syntax))
+				emit_NPMVersionRequirement_WSTerminalRuleCall_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_NPMVersionRequirement_WSTerminalRuleCall_1_1_q.equals(syntax))
+				emit_NPMVersionRequirement_WSTerminalRuleCall_1_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_SimpleVersion_WSTerminalRuleCall_0_1_q.equals(syntax))
+				emit_SimpleVersion_WSTerminalRuleCall_0_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_q.equals(syntax))
+				emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q.equals(syntax))
+				emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
 
 	/**
 	 * Ambiguous syntax:
-	 *     WS+
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     from=VersionNumber (ambiguity) '-' WS+ to=VersionNumber
-	 */
-	protected void emit_HyphenVersionRange_WSTerminalRuleCall_2_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     WS+
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     from=VersionNumber WS+ '-' (ambiguity) to=VersionNumber
-	 */
-	protected void emit_HyphenVersionRange_WSTerminalRuleCall_4_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     WS*
+	 *     WS?
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) (rule start)
 	 *     (rule start) (ambiguity) ranges+=VersionRange
 	 */
-	protected void emit_NPMVersionRequirement_WSTerminalRuleCall_0_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_NPMVersionRequirement_WSTerminalRuleCall_0_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
 	 * Ambiguous syntax:
-	 *     WS*
+	 *     WS?
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     commitISH=ALPHA_NUMERIC_CHARS (ambiguity) (rule end)
@@ -194,64 +156,42 @@ public class SemverSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     url=URL (ambiguity) (rule end)
 	 *     versionSpecifier=URLVersionSpecifier (ambiguity) (rule end)
 	 */
-	protected void emit_NPMVersionRequirement_WSTerminalRuleCall_1_1_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_NPMVersionRequirement_WSTerminalRuleCall_1_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
 	 * Ambiguous syntax:
-	 *     WS*
+	 *     WS?
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     comparators+=VersionComparator (ambiguity) comparators+=VersionComparator
 	 *     comparators+=VersionComparator (ambiguity) number=VersionNumber
 	 *     comparators+=VersionComparator (ambiguity) withLetterV?=LETTER_V
 	 */
-	protected void emit_SimpleVersion_WSTerminalRuleCall_0_1_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_SimpleVersion_WSTerminalRuleCall_0_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
 	 * Ambiguous syntax:
-	 *     WS+
+	 *     WS?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     versionConstraints+=SimpleVersion (ambiguity) versionConstraints+=SimpleVersion
+	 *     ranges+=VersionRange (ambiguity) '||' WS? ranges+=VersionRange
 	 */
-	protected void emit_VersionRangeContraint_WSTerminalRuleCall_2_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
 	 * Ambiguous syntax:
-	 *     WS*
+	 *     WS?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     ranges+=VersionRange (ambiguity) '||' WS* ranges+=VersionRange
+	 *     ranges+=VersionRange WS? '||' (ambiguity) ranges+=VersionRange
 	 */
-	protected void emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     WS*
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     ranges+=VersionRange WS* '||' (ambiguity) ranges+=VersionRange
-	 */
-	protected void emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     WS*
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     ranges+=VersionRange (ambiguity) (rule end)
-	 */
-	protected void emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_2_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_VersionRangeSetRequirement_WSTerminalRuleCall_1_1_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

@@ -90,7 +90,7 @@ ruleNPMVersionRequirement returns [EObject current=null]
 				{
 					newLeafNode(this_WS_0, grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_0_0());
 				}
-			)*
+			)?
 			{
 				newCompositeNode(grammarAccess.getNPMVersionRequirementAccess().getVersionRangeSetRequirementParserRuleCall_0_1());
 			}
@@ -152,7 +152,7 @@ ruleNPMVersionRequirement returns [EObject current=null]
 				{
 					newLeafNode(this_WS_6, grammarAccess.getNPMVersionRequirementAccess().getWSTerminalRuleCall_1_1());
 				}
-			)*
+			)?
 		)
 	)
 ;
@@ -599,7 +599,7 @@ ruleVersionRangeSetRequirement returns [EObject current=null]
 					{
 						newLeafNode(this_WS_2, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_0());
 					}
-				)*
+				)?
 				otherlv_3='||'
 				{
 					newLeafNode(otherlv_3, grammarAccess.getVersionRangeSetRequirementAccess().getVerticalLineVerticalLineKeyword_1_1_1());
@@ -609,7 +609,7 @@ ruleVersionRangeSetRequirement returns [EObject current=null]
 					{
 						newLeafNode(this_WS_4, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_1_2());
 					}
-				)*
+				)?
 				(
 					(
 						{
@@ -629,12 +629,6 @@ ruleVersionRangeSetRequirement returns [EObject current=null]
 						}
 					)
 				)
-			)*
-			(
-				this_WS_6=RULE_WS
-				{
-					newLeafNode(this_WS_6, grammarAccess.getVersionRangeSetRequirementAccess().getWSTerminalRuleCall_1_2());
-				}
 			)*
 		)?
 	)
@@ -718,22 +712,18 @@ ruleHyphenVersionRange returns [EObject current=null]
 				}
 			)
 		)
-		(
-			this_WS_2=RULE_WS
-			{
-				newLeafNode(this_WS_2, grammarAccess.getHyphenVersionRangeAccess().getWSTerminalRuleCall_2());
-			}
-		)+
+		this_WS_2=RULE_WS
+		{
+			newLeafNode(this_WS_2, grammarAccess.getHyphenVersionRangeAccess().getWSTerminalRuleCall_2());
+		}
 		otherlv_3='-'
 		{
 			newLeafNode(otherlv_3, grammarAccess.getHyphenVersionRangeAccess().getHyphenMinusKeyword_3());
 		}
-		(
-			this_WS_4=RULE_WS
-			{
-				newLeafNode(this_WS_4, grammarAccess.getHyphenVersionRangeAccess().getWSTerminalRuleCall_4());
-			}
-		)+
+		this_WS_4=RULE_WS
+		{
+			newLeafNode(this_WS_4, grammarAccess.getHyphenVersionRangeAccess().getWSTerminalRuleCall_4());
+		}
 		(
 			(
 				{
@@ -799,12 +789,10 @@ ruleVersionRangeContraint returns [EObject current=null]
 			)
 		)
 		(
-			(
-				this_WS_2=RULE_WS
-				{
-					newLeafNode(this_WS_2, grammarAccess.getVersionRangeContraintAccess().getWSTerminalRuleCall_2_0());
-				}
-			)+
+			this_WS_2=RULE_WS
+			{
+				newLeafNode(this_WS_2, grammarAccess.getVersionRangeContraintAccess().getWSTerminalRuleCall_2_0());
+			}
 			(
 				(
 					{
@@ -869,7 +857,7 @@ ruleSimpleVersion returns [EObject current=null]
 				{
 					newLeafNode(this_WS_1, grammarAccess.getSimpleVersionAccess().getWSTerminalRuleCall_0_1());
 				}
-			)*
+			)?
 		)*
 		(
 			(
@@ -1140,19 +1128,44 @@ ruleQualifier returns [EObject current=null]
 					}
 				)
 			)
+			(
+				otherlv_2='+'
+				{
+					newLeafNode(otherlv_2, grammarAccess.getQualifierAccess().getPlusSignKeyword_0_2_0());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getQualifierAccess().getBuildMetadataQualifierTagParserRuleCall_0_2_1_0());
+						}
+						lv_buildMetadata_3_0=ruleQualifierTag
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getQualifierRule());
+							}
+							set(
+								$current,
+								"buildMetadata",
+								lv_buildMetadata_3_0,
+								"org.eclipse.n4js.semver.Semver.QualifierTag");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)?
 		)
 		    |
 		(
-			otherlv_2='+'
+			otherlv_4='+'
 			{
-				newLeafNode(otherlv_2, grammarAccess.getQualifierAccess().getPlusSignKeyword_1_0());
+				newLeafNode(otherlv_4, grammarAccess.getQualifierAccess().getPlusSignKeyword_1_0());
 			}
 			(
 				(
 					{
 						newCompositeNode(grammarAccess.getQualifierAccess().getBuildMetadataQualifierTagParserRuleCall_1_1_0());
 					}
-					lv_buildMetadata_3_0=ruleQualifierTag
+					lv_buildMetadata_5_0=ruleQualifierTag
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getQualifierRule());
@@ -1160,56 +1173,7 @@ ruleQualifier returns [EObject current=null]
 						set(
 							$current,
 							"buildMetadata",
-							lv_buildMetadata_3_0,
-							"org.eclipse.n4js.semver.Semver.QualifierTag");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)
-		    |
-		(
-			otherlv_4='-'
-			{
-				newLeafNode(otherlv_4, grammarAccess.getQualifierAccess().getHyphenMinusKeyword_2_0());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getQualifierAccess().getPreReleaseQualifierTagParserRuleCall_2_1_0());
-					}
-					lv_preRelease_5_0=ruleQualifierTag
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getQualifierRule());
-						}
-						set(
-							$current,
-							"preRelease",
-							lv_preRelease_5_0,
-							"org.eclipse.n4js.semver.Semver.QualifierTag");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			otherlv_6='+'
-			{
-				newLeafNode(otherlv_6, grammarAccess.getQualifierAccess().getPlusSignKeyword_2_2());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getQualifierAccess().getBuildMetadataQualifierTagParserRuleCall_2_3_0());
-					}
-					lv_buildMetadata_7_0=ruleQualifierTag
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getQualifierRule());
-						}
-						set(
-							$current,
-							"buildMetadata",
-							lv_buildMetadata_7_0,
+							lv_buildMetadata_5_0,
 							"org.eclipse.n4js.semver.Semver.QualifierTag");
 						afterParserOrEnumRuleCall();
 					}

@@ -145,7 +145,7 @@ public class N4jscCompiler {
 	}
 
 	private void verbosePrintAllProjects() {
-		if (LOG.isInfoEnabled()) {
+		if (options.isVerbose()) {
 			Set<? extends IProjectConfig> projects = workspaceManager.getWorkspaceConfig().getProjects();
 			int maxPrjNameLength = projects.stream()
 					.filter(p -> p.getName() != null)
