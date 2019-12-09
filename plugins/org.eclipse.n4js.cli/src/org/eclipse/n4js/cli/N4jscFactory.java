@@ -15,7 +15,6 @@ import org.eclipse.n4js.ide.N4JSIdeSetup;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.ide.xtext.server.XWorkspaceManager;
 
-import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
 
 /**
@@ -63,9 +62,7 @@ public class N4jscFactory {
 
 	Injector internalGetOrCreateInjector() {
 		if (injector == null) {
-			Stopwatch sw = Stopwatch.createStarted();
 			injector = new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
-			System.out.println("createInjectorAndDoEMFRegistration " + sw);
 		}
 		return injector;
 	}

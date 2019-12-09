@@ -82,9 +82,7 @@ public class N4jscCompiler {
 		}
 
 		params.setRootUri(baseDir.toURI().toString());
-		Stopwatch sw = Stopwatch.createStarted();
 		languageServer.initialize(params).get();
-		System.out.println("initialize " + sw);
 		warnIfNoProjectsFound();
 		verbosePrintAllProjects();
 

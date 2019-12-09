@@ -27,7 +27,6 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
-import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -62,7 +61,6 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 			// TODO is this correct if we have multiple workspace URIs?
 			workspace.clear();
 
-			Stopwatch sw = Stopwatch.createStarted();
 			File workspaceRoot = new File(workspaceBaseURI.toFileString());
 
 			Set<Path> allProjectLocations = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot.toPath());
@@ -72,13 +70,7 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 				allProjectURIs.add(new FileURI(path.toFile()));
 			}
 
-			System.err.println("collectAllProjectDirs " + sw);
-
-			sw = Stopwatch.createStarted();
-
 			headlessHelper.registerProjectsToFileBasedWorkspace(allProjectURIs, workspace);
-
-			System.err.println("registerProjectsToFileBasedWorkspace " + sw);
 
 			return new N4JSWorkspaceConfig(n4jsCore);
 
