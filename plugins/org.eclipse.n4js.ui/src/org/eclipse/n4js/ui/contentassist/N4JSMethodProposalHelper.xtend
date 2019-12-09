@@ -36,6 +36,8 @@ import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.xtext.ui.editor.contentassist.AbstractCompletionProposalFactory
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeArgument
 
 /**
  * A helper class that proposes methods to be overwritten based on the prefix typed so far
@@ -44,12 +46,14 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
  * Otherwise, you can choose from a proposal list and confirm your choice with Enter.
  */
 class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
+	//TODO: Add some more tests for more complicated method return types:
+	// "org.eclipse.n4js.xpect.ui.tests/testdata_nonvalidating/proposal/contentassist/ContentAssist_overriding_methods_apply.n4js.xt"
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
 
 	static final String OVERRIDE_ANNOTATION = AnnotationDefinition.OVERRIDE.name;
-	
+
 	static final String INTERNAL_ANNOTATION = AnnotationDefinition.INTERNAL.name;
 
 	static final String EMPTY_METHOD_BODY = " {\n\n\t}";
@@ -97,45 +101,71 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 			if (!methodAlreadyImplemented(implementedMembers, methodMember)) {
 				if (!methodMember.declaredFinal && !methodMember.name.equals("constructor")) {
 					val annotations = methodMember.annotations;
-					buildMethodCompletionProposal(context, acceptor, node, annotations,
-						methodMember);
+					buildMethodCompletionProposal(context, acceptor, node, annotations, methodMember);
 				}
 			}
 		}
 	}
 
-	//FIXME: If an UnionTypeExpression/IntersectionExpression/IterableTypeExpression 
-	//is a type argument of a ParameterizedTypeRef it won't be recognized
 	def private String getReturnTypeAsString(TMethod methodMember) {
 
-		val StringBuilder strb = new StringBuilder();
-		if (methodMember.returnTypeRef !== null) {
-			var returnTypeRef = methodMember.returnTypeRef;
-			if (methodMember.declaredAsync || methodMember.declaredGenerator) {
+		var topLevel = true;
+		var boolean asyncOrGenerator = methodMember.declaredAsync || methodMember.declaredGenerator;
+//		if (methodMember.returnTypeRef !== null) {
+		var returnTypeRef = methodMember.returnTypeRef;
+
+		resolveReturnTypeTopLevel(returnTypeRef, topLevel, asyncOrGenerator);
+	}
+
+	def private String resolveReturnTypeTopLevel(TypeArgument returnTypeRef, boolean topLevel,
+		boolean asyncOrGenerator) {
+		if (topLevel && asyncOrGenerator) {
+			if (returnTypeRef instanceof TypeRef) {
 				val returnTypeName = returnTypeRef.typeArgs.get(0).declaredType.name;
 				if (returnTypeName.equalsIgnoreCase("undefined")) {
-					strb.append(": ").append("void");
-				} else {
-					strb.append(": ").append(returnTypeName);
+					return ": void";
 				}
-			} else if (returnTypeRef instanceof UnionTypeExpression) {
-				var typeRefs = returnTypeRef.typeRefs;
-				strb.append(": ").append(typeRefs.map[declaredType.name].join(" | "));
-			} else if (returnTypeRef instanceof IntersectionTypeExpression) {
-				var typeRefs = returnTypeRef.typeRefs;
-				strb.append(": ").append(typeRefs.map[declaredType.name].join(" & "));
-			} else if (returnTypeRef instanceof ParameterizedTypeRef) {
-				if(returnTypeRef.isIterableTypeExpression) {
-					var typeArgs = returnTypeRef.typeArgs;
-					strb.append(": [").append(typeArgs.map[declaredType.name].join(", ")).append("]");
-				} else {
-					strb.append(": ").append(returnTypeRef.typeRefAsString);
-				}
-			} else {
-				strb.append(": ").append(returnTypeRef.typeRefAsString);
 			}
 		}
-		return strb.toString;
+		return ": " + resolveReturnType(returnTypeRef, topLevel);
+	}
+
+	def private String resolveReturnType(TypeArgument returnTypeRef, boolean topLevel) {
+		var StringBuilder strb = new StringBuilder();
+		val notTopLevel = false;
+		var declaredType = returnTypeRef.declaredType;
+		if (returnTypeRef instanceof ParameterizedTypeRef) {
+			if (returnTypeRef.isIterableTypeExpression) {
+				var typeArgs = returnTypeRef.typeArgs;
+				strb.append("[").append(typeArgs.map[resolveReturnType(it, notTopLevel)].join(", ")).append("]");
+			} else if (returnTypeRef.isArrayLike && returnTypeRef.typeArgs.size > 0) {
+				strb.append("Array<").append(resolveReturnType(returnTypeRef.typeArgs.get(0), notTopLevel)).append(">");
+			} else if (declaredType.name.equalsIgnoreCase("Generator")) {
+				//TODO: Simplified notation, if only the generator's first parameter is defined
+				var typeArgs = returnTypeRef.typeArgs;
+				strb.append("Generator<").append(typeArgs.map[resolveReturnType(it, notTopLevel)].join(", ")).
+					append(">");
+			} else if (declaredType.name.equalsIgnoreCase("Promise")) {
+				//TODO: Simplified notation, if only the promise's first parameter is defined
+				var typeArgs = returnTypeRef.typeArgs;
+				strb.append("Promise<").append(typeArgs.map[resolveReturnType(it, notTopLevel)].join(", ")).append(">");
+			} else {
+				strb.append(declaredType.name);
+			}
+		} else if (returnTypeRef instanceof IntersectionTypeExpression) {
+			var typeRefs = returnTypeRef.typeRefs;
+			if (!topLevel) strb.append("(");
+			strb.append(typeRefs.map[resolveReturnType(it, notTopLevel)].join(" & "));
+			if (!topLevel) strb.append(")");
+		} else if (returnTypeRef instanceof UnionTypeExpression) {
+			var typeRefs = returnTypeRef.typeRefs;
+			if (!topLevel) strb.append("(");
+			strb.append(typeRefs.map[resolveReturnType(it, notTopLevel)].join(" | "));
+			if (!topLevel) strb.append(")");
+		} else {
+			strb.append(declaredType.name);
+		}
+		return strb.toString();
 	}
 
 	def private buildMethodCompletionProposal(ContentAssistContext context, ICompletionProposalAcceptor acceptor,
@@ -156,8 +186,9 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 				if (!methodMember.fpars.isNullOrEmpty &&
 					!methodMember.fpars.get(methodMember.fpars.length - 1).variadic) {
 					methodReturnBody = "return super." + methodMember.name + "(" + strb.toString() + ");\n\t}";
-				} else if (!methodMember.fpars.isNullOrEmpty &&
-					methodMember.fpars.get(methodMember.fpars.length - 1).variadic) {
+				} else if ((methodMember.declaredAsync || methodMember.declaredGenerator) ||
+					(!methodMember.fpars.isNullOrEmpty &&
+						methodMember.fpars.get(methodMember.fpars.length - 1).variadic)) {
 					methodReturnBody = "return null;\n\t}";
 				} else {
 					methodReturnBody = "return super." + methodMember.name + "();\n\t}";
@@ -193,24 +224,24 @@ class N4JSMethodProposalHelper extends AbstractCompletionProposalFactory {
 
 	def private boolean isAccessInternal(TMethod methodMember) {
 		var String accessModifier = methodMember.memberAccessModifier.toString;
-		return (accessModifier.length >= 8) && accessModifier.substring(accessModifier.length - 8, accessModifier.length).equals("Internal");
+		return (accessModifier.length >= 8) &&
+			accessModifier.substring(accessModifier.length - 8, accessModifier.length).equals("Internal");
 	}
-	
+
 	def private String getAccessModifier(TMethod methodMember) {
 		var String accessModifier = methodMember.memberAccessModifier.toString;
-		if(isAccessInternal(methodMember)) {
-			//remove appended "Internal" keyword, which is appended to the access modifier
+		if (isAccessInternal(methodMember)) {
+			// remove appended "Internal" keyword, which is appended to the access modifier
 			return methodMember.memberAccessModifier.toString().substring(0, accessModifier.length - 8);
 		} else {
 			return methodMember.memberAccessModifier.toString();
 		}
 	}
 
-	def private getProposalString(TMethod methodMember, String annotString,
-		String methodBody) {
+	def private getProposalString(TMethod methodMember, String annotString, String methodBody) {
 		val StringBuilder strb = new StringBuilder();
 		var annotationString = annotString;
-		if(isAccessInternal(methodMember)) annotationString = "@" + INTERNAL_ANNOTATION + "\n\t" + annotationString;
+		if (isAccessInternal(methodMember)) annotationString = "@" + INTERNAL_ANNOTATION + "\n\t" + annotationString;
 		strb.append(annotationString);
 		if (showAccessModifier(methodMember)) strb.append(getAccessModifier(methodMember) + " ");
 		if (methodMember.declaredStatic) strb.append("static ");
