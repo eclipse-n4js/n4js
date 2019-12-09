@@ -502,6 +502,11 @@ SYN_MODIFIER_BAD_ORDER::
 [[sec:Type_Issues]]
 ====  Type Issues
 
+TYS_INVALID_TYPE_SYNTAX::
+  ``Wrong type syntax: Use 'foo:Type' rather than 'Type foo'.``
+  
+  1.  Converts type annotation to colon style.
+
 [[sec:Expression_Issues]]
 ====  Expression Issues
 

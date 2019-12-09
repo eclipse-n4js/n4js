@@ -1332,7 +1332,7 @@ Definition::
 ~Failure given by line-syntax starting with two characters:~
 + additional line
 | line with inplace[removed part|added part]
-+ removed line
+- removed line
   unchanged line
 --- */
 // XPECT warnings --> "The import of A is unused." at "A"
