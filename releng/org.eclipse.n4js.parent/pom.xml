@@ -82,7 +82,7 @@ Contributors:
 		<!-- Flags for the java compiler, e.g. -g For debug-information (see http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html) -->
 		<java-compiler-arguments></java-compiler-arguments>
 
-		<!-- headless compiler options, used in tools/org.eclipse.n4js.hlc -->
+		<!-- headless compiler options, used in plugins/org.eclipse.n4js.cli -->
 		<hlc.name>n4jsc</hlc.name>
 		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
 		<cli.fat.jar.classifier>jar-with-dependencies</cli.fat.jar.classifier>

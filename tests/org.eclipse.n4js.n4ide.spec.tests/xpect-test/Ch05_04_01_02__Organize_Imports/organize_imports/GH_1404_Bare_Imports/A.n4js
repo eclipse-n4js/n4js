@@ -1,0 +1,7 @@
+
+
+export public class SomeClass1 {}
+export public class SomeClass2 {}
+export public class SomeClass3 {}
+
+export public function someFoo() {}

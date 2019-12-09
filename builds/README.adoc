@@ -16,10 +16,6 @@ Contributors:
 `org.eclipse.n4js.product.build`::
 is the product definition for the N4JS-IDE, which is materialized when using the Profile *buildProduct*
 
-`org.eclipse.n4js.product.headless.build`::
-is the product definition used in the headless compiler.
-This one is not materialized, but repository for its plugins is always created.
-
 `org.eclipse.n4js.jre.linux.gtk.x86_64`::
 is the platform specific bundle that contains the JRE for the Linux IDE
 

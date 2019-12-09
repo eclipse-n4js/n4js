@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowComponent;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.cli.helper.ProcessResult;
-import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
@@ -129,7 +129,7 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 	/**
 	 * Don't use a log4j logger here, because:
 	 * <ol>
-	 * <li>the call to {@link N4jscBase#doMain(String...)} will alter the dependency injection and logger configuration,
+	 * <li>the call to {@link N4jscMain#main(String...)} will alter the dependency injection and logger configuration,
 	 * <li>we want to make sure the messages printed via this method always show up.
 	 * </ol>
 	 */

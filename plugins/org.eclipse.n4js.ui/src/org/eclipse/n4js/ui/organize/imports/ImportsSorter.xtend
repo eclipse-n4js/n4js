@@ -10,14 +10,14 @@
  */
 package org.eclipse.n4js.ui.organize.imports
 
-import org.eclipse.n4js.n4JS.ImportDeclaration
-import org.eclipse.n4js.n4JS.ImportSpecifier
-import org.eclipse.n4js.n4JS.NamedImportSpecifier
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import java.util.Collections
 import java.util.Comparator
 import java.util.List
 import org.eclipse.emf.common.util.EList
+import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.NamedImportSpecifier
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 
 /**
  * Provides methods for import declarations sorting.
@@ -27,10 +27,28 @@ class ImportsSorter {
 	/**
 	 * Sorting a List of import declarations (mixed content Named / Namespace)
 	 * Order is: First all Named imports, then all Namespace imports.
+	 * Exception: bare imports will be moved to the front and will keep their order relative to themselves.
 	 */
 	final static def sortByImport(List<ImportDeclaration> declarations) {
+		// remember original index of all bare imports in 'declarations'
+		val bareImport2OriginalIndex = newHashMap;
+		declarations.filter[bare].forEach[decl, idx | bareImport2OriginalIndex.put(decl, idx)];
+
+		// perform actual sorting
 		declarations.sort(new Comparator<ImportDeclaration>() {
 			override compare(ImportDeclaration o1, ImportDeclaration o2) {
+				// 1) sort by "bareness" (i.e. move bare imports to the front)
+				val cmpBareness = Boolean.compare(o1.bare, o2.bare) * -1;
+				if (cmpBareness !== 0) {
+					return cmpBareness;
+				}
+				// 2) sort bare imports by their original index (i.e. keep their order relative to themselves)
+				if (o1.bare) {
+					// both are bare imports:
+					return Integer.compare(bareImport2OriginalIndex.get(o1), bareImport2OriginalIndex.get(o2));
+				}
+				// both are non-bare imports:
+				// 3) sort by names ...
 				switch ( o1.importSpecifiers.get(0) ) {
 					NamespaceImportSpecifier: {
 						if (o2.importSpecifiers.get(0) instanceof NamespaceImportSpecifier) {

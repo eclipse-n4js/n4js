@@ -16,9 +16,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.xtext.ui.editor.XtextEditor;
-
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
+import org.eclipse.xtext.ui.editor.XtextEditor;
 
 /**
  * Service for organizing imports in files and editors. Since process of organizing imports is contextual to the

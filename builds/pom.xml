@@ -25,7 +25,6 @@ Contributors:
 
 	<modules>
 		<module>org.eclipse.n4js.product.build</module>
-		<module>org.eclipse.n4js.headless.product.build</module>
 		<!-- Optional and platform specific bundles that provide the JRE -->
 		<module>org.eclipse.n4js.jre.linux.gtk.x86_64</module>
 		<module>org.eclipse.n4js.jre.macosx.cocoa.x86_64</module>

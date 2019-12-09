@@ -14,7 +14,7 @@ import java.util.Properties;
 
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSHeadlessStandaloneSetup;
-import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
+import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 
 import com.google.inject.Injector;
 
