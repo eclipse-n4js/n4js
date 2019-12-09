@@ -50,14 +50,16 @@ public class N4JSProject implements IN4JSProject {
 		this.external = isInNodeModulesFolderOrDefault(location, external);
 	}
 
-	private boolean isInNodeModulesFolderOrDefault(SafeURI<?> pLocation, boolean pExternal) {
-		if (pLocation instanceof FileURI) {
-			URI parent = pLocation.getParent().toURI();
-			if (parent.lastSegment().isBlank()) {
-				parent = parent.trimSegments(1);
-			}
+	private boolean isInNodeModulesFolderOrDefault(@SuppressWarnings("hiding") SafeURI<?> location,
+			boolean defaultResult) {
+		if (!defaultResult && location instanceof FileURI) {
+			URI parent = location.getParent().toURI();
 			String lastSegment = parent.lastSegment();
-			if (lastSegment.startsWith("@")) {
+			if (parent.lastSegment() != null && parent.lastSegment().isBlank()) {
+				parent = parent.trimSegments(1);
+				lastSegment = parent.lastSegment();
+			}
+			if (lastSegment != null && lastSegment.startsWith("@")) {
 				parent = parent.trimSegments(1);
 				lastSegment = parent.lastSegment();
 			}
@@ -66,7 +68,7 @@ public class N4JSProject implements IN4JSProject {
 			}
 		}
 
-		return pExternal;
+		return defaultResult;
 	}
 
 	@Override
