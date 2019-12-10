@@ -39,6 +39,7 @@ pipeline {
         timestamps()
     }
 
+	// For how to request updates of below tools on Eclipse infrastructure, see file 'eclipse-nightly.jenkinsfile'.
     environment {
         NODEJS_PATH= '/shared/common/node-v10.15.3-linux-x64/bin'
         YARN_PATH  = '/shared/common/yarn/1.15.2/bin'

@@ -25,6 +25,10 @@ pipeline {
         timestamps()
     }
 
+	// To request an update of the below tools on Eclipse JIPP, create a ticket on Bugzilla via this link:
+	// https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Community&component=CI-Jenkins
+	// For example:
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=558060
     environment {
         NODEJS_PATH= '/shared/common/node-v10.15.3-linux-x64/bin'
         YARN_PATH  = '/shared/common/yarn/1.15.2/bin'
