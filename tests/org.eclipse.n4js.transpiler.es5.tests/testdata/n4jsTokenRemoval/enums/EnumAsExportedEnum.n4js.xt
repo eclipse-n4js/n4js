@@ -15,12 +15,14 @@
 /* XPECT output ~~~
 <==
 stdout:
-{ [Function: ProjEnum]
+[Function: ProjEnum] {
   v: ProjEnum { name: 'v', value: 'v' },
-  s: ProjEnum { name: 's', value: 'string' } }
-{ [Function: PubEnumE]
+  s: ProjEnum { name: 's', value: 'string' }
+}
+[Function: PubEnumE] {
   v: PubEnumE { name: 'v', value: 'v' },
-  s: PubEnumE { name: 's', value: 'string' } }
+  s: PubEnumE { name: 's', value: 'string' }
+}
 stderr:
 ==>
 ~~~ */

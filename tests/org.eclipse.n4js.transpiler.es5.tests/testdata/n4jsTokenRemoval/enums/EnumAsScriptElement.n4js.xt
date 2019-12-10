@@ -15,9 +15,10 @@
 /* XPECT output ~~~
 <==
 stdout:
-{ [Function: Enum]
+[Function: Enum] {
   v: Enum { name: 'v', value: 'v' },
-  s: Enum { name: 's', value: 'string' } }
+  s: Enum { name: 's', value: 'string' }
+}
 stderr:
 ==>
 ~~~ */

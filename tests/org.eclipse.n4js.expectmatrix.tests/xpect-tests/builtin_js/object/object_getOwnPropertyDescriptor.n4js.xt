@@ -30,18 +30,19 @@ console.log(d);
 /* XPECT output ---
 <==
 stdout:
-{ get: [Function: get foo],
+{
+  get: [Function: get foo],
   set: undefined,
   enumerable: true,
-  configurable: true }
-{ value: 42,
-  writable: true,
-  enumerable: true,
-  configurable: true }
-{ value: 8675309,
+  configurable: true
+}
+{ value: 42, writable: true, enumerable: true, configurable: true }
+{
+  value: 8675309,
   writable: false,
   enumerable: false,
-  configurable: false }
+  configurable: false
+}
 stderr:
 ==>
 --- */

@@ -19,14 +19,15 @@ N4Interface {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'I5',
-  fqn:
-   'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I5',
+  fqn: 'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I5',
   n4superType: undefined,
-  allImplementedInterfaces:
-   [ 'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I1',
-     'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I0' ],
+  allImplementedInterfaces: [
+    'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I1',
+    'n4jsTokenRemoval/interfaces/N4IntDeclAsAnnotatedExportableElement/I0'
+  ],
   ownedMembers: [],
-  consumedMembers: [] }
+  consumedMembers: []
+}
 stderr:
 ==>
 ~~~ */

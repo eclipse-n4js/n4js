@@ -24,16 +24,22 @@
 stdout:
 X { name: 'X1', value: 'x one' }
 X { name: 'X2', value: 'X2' }
-[ X { name: 'X1', value: 'x one' },
+[
+  X { name: 'X1', value: 'x one' },
   X { name: 'X2', value: 'X2' },
-  X { name: 'X3', value: 'x three' } ]
-[ X { name: 'X1', value: 'x one' },
+  X { name: 'X3', value: 'x three' }
+]
+[
+  X { name: 'X1', value: 'x one' },
   X { name: 'X2', value: 'X2' },
-  X { name: 'X3', value: 'x three' } ]
+  X { name: 'X3', value: 'x three' }
+]
 X { name: 'X3', value: 'x three' }
-[ X { name: 'X1', value: 'x one' },
+[
+  X { name: 'X1', value: 'x one' },
   X { name: 'X2', value: 'X2' },
-  X { name: 'X3', value: 'x three' } ]
+  X { name: 'X3', value: 'x three' }
+]
 stderr:
 ==>
 --- */

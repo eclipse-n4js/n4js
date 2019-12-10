@@ -22,9 +22,10 @@
 /* XPECT output ---
 <==
 stdout:
-{ [Function: E1]
+[Function: E1] {
   A: E1 { name: 'A', value: 'aa' },
-  B: E1 { name: 'B', value: 'bb' } }
+  B: E1 { name: 'B', value: 'bb' }
+}
 stderr:
 ==>
 --- */
