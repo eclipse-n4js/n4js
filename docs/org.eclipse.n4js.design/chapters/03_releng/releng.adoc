@@ -234,6 +234,20 @@ Figure <<img:eclipse-help-doc-process>> shows the generation process for N4JSSpe
 
 == Updating frameworks and dependencies
 
+=== Targetplatform
+
+All required plugins for the N4JS IDE are to be defined in the targetplatform.
+The targetplatform file is automatically generated via Oomph (aka "Help / Perform Setup Tasks"). This relies on the definitions found in N4JS.setup.
+Both the targetplatform file (`org.eclipse.n4js.targetplatform.target`) and the set up file(`N4JS.setup`) are found in bundle `org.eclipse.n4js.targetplatform`) in the releng working set.
+
+In order to add a new dependency (i.e. a new plugin required in any bundle),
+ 
+1. Add the URI of the P2 update site to the N4JS.setup and add the plugins as requirements to the N4JS.setup (use existing entries as template)
+2. Add the dependency to the manifest whereever needed. This will first create an error, since the targetplatform does not contain the dependency yet.
+3. Run Help / Perform Setup Tasks -- this will re-generate the targetplatform adding the dependency there as well.
+
+You may need to reload the targetplatform in "Preferences / Plug-in Development / Target Platform" (we use the "Modular Target" platform, do not change that setting).
+
 === Update of Eclipse, EMF, Xtext, etc.
 
 For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow these steps:

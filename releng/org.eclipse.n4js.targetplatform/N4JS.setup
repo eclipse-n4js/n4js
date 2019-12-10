@@ -171,10 +171,10 @@
       xsi:type="setup:VariableTask"
       name="n4js.target.platform"
       defaultValue="N4JS_2019_09"
-      storageURI="scope://Workspace">    <!-- label! -->
+      storageURI="scope://Workspace">
     <choice
         value="N4JS_2019_09"
-        label="N4JS_2019_09"/>    <!-- label! -->
+        label="N4JS_2019_09"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -305,6 +305,14 @@
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
+      label="LSP4E">
+    <requirement
+        name="org.eclipse.lsp4e.debug"/>
+    <repository
+        url="https://download.eclipse.org/lsp4e/releases/0.12.0/"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup.p2:P2Task"
       label="LSP4J">
     <requirement
         name="org.eclipse.lsp4j.sdk.feature.group"/>
@@ -353,7 +361,7 @@
         </detail>
         <detail
             key="extraUnits">
-          <value>org.eclipse.equinox.executable.feature.group,javax.xml.stream</value>  <!-- Oomph would not add javax.xml.stream, but it's required by rest-assured-2.4.0.jar in tester.tests.helper (July 2019) -->
+          <value>org.eclipse.equinox.executable.feature.group,javax.xml.stream</value>
         </detail>
         <detail
             key="singleLocation">
@@ -392,7 +400,7 @@
         </predicate>
       </sourceLocator>
       <repositoryList
-          name="N4JS_2019_09">    <!-- label! -->
+          name="N4JS_2019_09">
         <repository
             url="http://download.eclipse.org/eclipse/updates/4.13"/>
         <repository
@@ -427,6 +435,8 @@
             url="http://download.eclipse.org/usssdk/drops/release/1.2.0"/>
         <repository
             url="http://download.eclipse.org/lsp4j/updates/releases/0.8.0"/>
+        <repository
+            url="https://download.eclipse.org/lsp4e/releases/0.12.0/"/>
       </repositoryList>
     </targlet>
   </setupTask>
@@ -537,7 +547,7 @@
     <description>Launch that creates a config.ini</description>
   </setupTask>
   <stream name="master"
-      label="master (2019_09)"/>    <!-- label! -->
+      label="master (2019_09)"/>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>

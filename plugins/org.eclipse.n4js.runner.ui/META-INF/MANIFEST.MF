@@ -14,6 +14,7 @@ Require-Bundle: org.eclipse.n4js.runner,
  org.eclipse.debug.ui,
  org.eclipse.core.expressions,
  org.eclipse.n4js.utils,
- org.eclipse.n4js.ts.model
+ org.eclipse.n4js.ts.model,
+ org.eclipse.lsp4e.debug
 Export-Package: org.eclipse.n4js.runner.ui
 Automatic-Module-Name: org.eclipse.n4js.runner.ui
