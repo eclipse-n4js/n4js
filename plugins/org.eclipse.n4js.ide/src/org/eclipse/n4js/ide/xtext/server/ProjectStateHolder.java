@@ -27,9 +27,11 @@ import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest;
 import org.eclipse.n4js.ide.xtext.server.build.XBuildResult;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
 import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
@@ -77,8 +79,30 @@ public class ProjectStateHolder {
 	private final Multimap<URI, Issue> validationIssues = TreeMultimap.create(Comparator.comparing(URI::toString),
 			issueComparator);
 
-	private static final Comparator<Issue> issueComparator = Comparator.comparing(Issue::getOffset)
-			.thenComparing(Issue::getSeverity).thenComparing(Issue::getMessage).thenComparing(Issue::hashCode);
+	private static final Comparator<Issue> issueComparator = Comparator.comparing(ProjectStateHolder::getOffset)
+			.thenComparing(ProjectStateHolder::getSeverity).thenComparing(ProjectStateHolder::getMessage)
+			.thenComparing(Issue::hashCode);
+
+	private static int getOffset(Issue issue) {
+		Integer result = issue.getOffset();
+		if (result == null) {
+			return -1;
+		}
+		return result;
+	}
+
+	private static Severity getSeverity(Issue issue) {
+		Severity result = issue.getSeverity();
+		if (result == null) {
+			return Severity.ERROR;
+		}
+		return result;
+	}
+
+	private static String getMessage(Issue issue) {
+		String result = issue.getMessage();
+		return Strings.emptyIfNull(result);
+	}
 
 	/** Clears type index of this project. */
 	public void doClear() {

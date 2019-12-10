@@ -24,19 +24,22 @@ public class N4JSRequestManager extends RequestManager {
 	@Override
 	protected <V> CompletableFuture<V> submit(AbstractRequest<V> request) {
 		CompletableFuture<V> future = super.submit(request);
-		future.exceptionally((throwable) -> {
-			if (!(throwable instanceof CancellationException)) {
+		future.whenComplete((result, throwable) -> {
+			if (!isCancelException(throwable)) {
 				throwable.printStackTrace();
 			} else {
 				StackTraceElement[] stackTrace = throwable.getStackTrace();
 				if (stackTrace.length > 6) {
 					System.out.println("Cancel: " + stackTrace[6].toString());
+					System.out.println(request);
 				}
 			}
-			return null;
 		});
-
 		return future;
 	}
 
+	@Override
+	protected boolean isCancelException(Throwable t) {
+		return t instanceof CancellationException || super.isCancelException(t);
+	}
 }
