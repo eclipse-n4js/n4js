@@ -25,13 +25,15 @@ public class N4JSRequestManager extends RequestManager {
 	protected <V> CompletableFuture<V> submit(AbstractRequest<V> request) {
 		CompletableFuture<V> future = super.submit(request);
 		future.whenComplete((result, throwable) -> {
-			if (!isCancelException(throwable)) {
-				throwable.printStackTrace();
-			} else {
-				StackTraceElement[] stackTrace = throwable.getStackTrace();
-				if (stackTrace.length > 6) {
-					System.out.println("Cancel: " + stackTrace[6].toString());
-					System.out.println(request);
+			if (throwable != null) {
+				if (!isCancelException(throwable)) {
+					throwable.printStackTrace();
+				} else {
+					StackTraceElement[] stackTrace = throwable.getStackTrace();
+					if (stackTrace.length > 6) {
+						System.out.println("Cancel: " + stackTrace[6].toString());
+						System.out.println(request);
+					}
 				}
 			}
 		});
