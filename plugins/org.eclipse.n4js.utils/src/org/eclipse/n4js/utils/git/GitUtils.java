@@ -53,7 +53,15 @@ import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.SubmoduleInitCommand;
 import org.eclipse.jgit.api.SubmoduleUpdateCommand;
 import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidConfigurationException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.api.errors.RefNotAdvertisedException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
+import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Ref;
@@ -139,7 +147,7 @@ public abstract class GitUtils {
 			if (!currentBranch.equals(branch)) {
 				LOGGER.info("Current branch is: '" + currentBranch + "'.");
 				LOGGER.info("Switching to desired '" + branch + "' branch...");
-				git.pull().setProgressMonitor(createMonitor()).call();
+				pull(git);
 
 				final boolean createLocalBranch = !hasLocalBranch(git, branch);
 				LOGGER.info("Creating local branch '" + branch + "'? --> " + (createLocalBranch ? "yes" : "no"));
@@ -149,7 +157,7 @@ public abstract class GitUtils {
 				checkState(git.getRepository().getBranch().equals(branch),
 						"Error when checking out '" + branch + "' branch.");
 				LOGGER.info("Switched to '" + branch + "' branch.");
-				git.pull().setProgressMonitor(createMonitor()).call();
+				pull(git);
 			}
 
 			LOGGER.info("Hard resetting local repository HEAD of the '" + branch + "' in '" + remoteUri + "'...");
@@ -213,6 +221,9 @@ public abstract class GitUtils {
 			final int pathIndex = i++;
 			new Thread(() -> {
 				try {
+					// checkout master first
+					hardReset(remoteUri, paths[pathIndex], "master", cloneIfMissing, clean);
+					// now switch to requested branch
 					hardReset(remoteUri, paths[pathIndex], branch, cloneIfMissing, clean);
 				} catch (final Exception e) {
 					if (null == resetExc.get()) {
@@ -255,12 +266,8 @@ public abstract class GitUtils {
 			return;
 		}
 
-		@SuppressWarnings("restriction")
-		final ProgressMonitor gitMonitor = null == monitor ? createMonitor()
-				: new org.eclipse.egit.core.EclipseGitProgressTransformer(monitor);
-
 		try (final Git git = open(localClonePath.toFile())) {
-			git.pull().setProgressMonitor(gitMonitor).setTransportConfigCallback(TRANSPORT_CALLBACK).call();
+			pull(git, monitor);
 
 		} catch (final GitAPIException e) {
 			LOGGER.error("Error when trying to pull on repository  '" + localClonePath + ".");
@@ -449,7 +456,9 @@ public abstract class GitUtils {
 					if (!currentBranch.equals(branch)) {
 						LOGGER.info("Desired branch differs from the current one. Desired: '" + branch + "' current: '"
 								+ currentBranch + "'.");
-						git.pull().setProgressMonitor(createMonitor()).call();
+
+						pull(git);
+
 						// check if the remote desired branch exists or not.
 						final Ref remoteBranchRef = from(git.branchList().setListMode(REMOTE).call())
 								.firstMatch(ref -> ref.getName().equals(R_REMOTES + ORIGIN + "/" + branch)).orNull();
@@ -461,7 +470,7 @@ public abstract class GitUtils {
 							deleteRecursively(destinationFolder);
 							clone(remoteUri, localClonePath, currentBranch);
 						} else {
-							git.pull().setProgressMonitor(createMonitor()).call();
+							pull(git);
 							LOGGER.info("Pulled from upstream.");
 						}
 					}
@@ -495,6 +504,32 @@ public abstract class GitUtils {
 			LOGGER.info("Inconsistent checkout directory was successfully cleaned up.");
 			throw new RuntimeException(message, e);
 		}
+	}
+
+	private static void pull(final Git git, IProgressMonitor monitor)
+			throws GitAPIException, WrongRepositoryStateException,
+			InvalidConfigurationException, InvalidRemoteException, CanceledException, RefNotFoundException,
+			RefNotAdvertisedException, NoHeadException, TransportException {
+
+		@SuppressWarnings("restriction")
+		ProgressMonitor gitMonitor = (null == monitor) ? createMonitor()
+				: new org.eclipse.egit.core.EclipseGitProgressTransformer(monitor);
+		pull(git, gitMonitor);
+	}
+
+	private static void pull(final Git git) throws GitAPIException, WrongRepositoryStateException,
+			InvalidConfigurationException, InvalidRemoteException, CanceledException, RefNotFoundException,
+			RefNotAdvertisedException, NoHeadException, TransportException {
+
+		pull(git, (ProgressMonitor) null);
+	}
+
+	private static void pull(final Git git, ProgressMonitor monitor)
+			throws GitAPIException, WrongRepositoryStateException,
+			InvalidConfigurationException, InvalidRemoteException, CanceledException, RefNotFoundException,
+			RefNotAdvertisedException, NoHeadException, TransportException {
+
+		git.pull().setTransportConfigCallback(TRANSPORT_CALLBACK).setProgressMonitor(monitor).call();
 	}
 
 	private static boolean hasLocalBranch(Git git, final String branchName) throws GitAPIException {
