@@ -136,7 +136,7 @@ public class XBuildManager {
 	 *
 	 * @return the delta.
 	 */
-	public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
+	public List<IResourceDescription.Delta> doInitialBuild2(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
 		List<ProjectDescription> sortedDescriptions = sortByDependencies(projects);
@@ -158,7 +158,7 @@ public class XBuildManager {
 	 * @return the delta.
 	 */
 	@Deprecated // GH-1552: Experimental parallelization
-	public List<IResourceDescription.Delta> doInitialBuild2(List<ProjectDescription> projects,
+	public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
 		class BuildInitialProjectJob extends ParallelJob<String> {
