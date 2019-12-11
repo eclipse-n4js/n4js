@@ -10,26 +10,11 @@
  */
 
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
-import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
-import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util/npm";
 import * as lib_nomnom+ from "nomnom-patched";
 import * as lib_path from "path";
 
 const cwd = process.cwd();
 const resolvePath = (p: string): string => lib_path.resolve(cwd, p);
-
-const resolveProject = (p: string): string => {
-    const dir = lib_path.resolve(cwd, p);
-    if (fsSafeAccessSync(lib_path.join(dir, PACKAGE_JSON))) {
-        return dir;
-    } else { // try to resolve NPM id
-        try {
-            const res = require.resolve(`${p}/${PACKAGE_JSON}`);
-            return lib_path.dirname(res);
-        } catch (exc) {}
-    }
-    throw new Error(`Cannot resolve project directory or NPM id: ${p}`);
-};
 
 const nomnomOptions: Object = {
     compile: {
