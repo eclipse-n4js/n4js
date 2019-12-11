@@ -10,36 +10,23 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.RecursiveTask;
 
 /**
  * GH-1552: Experimental parallelization
  */
-public class ParallelBuildManager {
-	private final ExecutorService pool = Executors.newFixedThreadPool(3);
-	private final Collection<? extends ParallelJob<?>> jobs;
-	private final Map<Object, ParallelJob<?>> jobMap = new HashMap<>();
-	private final Map<Object, Set<Object>> dependencyMap = new HashMap<>();
-	private final Map<Object, Set<Object>> waitingProjectsMap = new HashMap<>();
-	private final Set<ParallelJob<?>> startJobs = new HashSet<>();
-	private final Set<Object> currentJobs = new HashSet<>();
+public class ParallelBuildManager<ID> {
 
-	static abstract class ParallelJob<T> implements Runnable {
-		protected ParallelBuildManager pbm;
+	private final ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
 
-		@Override
-		public void run() {
-			runJob();
-			pbm.scheduleNext(this);
-		}
+	private final Collection<? extends ParallelJob<ID>> jobs;
+
+	static abstract class ParallelJob<T> {
 
 		abstract public void runJob();
 
@@ -53,89 +40,49 @@ public class ParallelBuildManager {
 		}
 	}
 
-	ParallelBuildManager(Collection<? extends ParallelJob<?>> jobs) {
+	ParallelBuildManager(Collection<? extends ParallelJob<ID>> jobs) {
 		this.jobs = jobs;
-	}
-
-	private void init() {
-		for (ParallelJob<?> job : jobs) {
-			job.pbm = this;
-			Object jobID = job.getID();
-			jobMap.put(jobID, job);
-		}
-		for (ParallelJob<?> job : jobs) {
-			Object jobID = job.getID();
-
-			Collection<Object> dependencies = new ArrayList<>(job.getDependencyIDs());
-			dependencies.retainAll(jobMap.keySet()); // remove unavailable dependencies
-
-			if (dependencies.isEmpty()) {
-				startJobs.add(job);
-
-			} else {
-				dependencyMap.put(jobID, new HashSet<>(dependencies));
-
-				for (Object dependency : dependencies) {
-					waitingProjectsMap.computeIfAbsent(dependency, (ign) -> new HashSet<>()).add(jobID);
-				}
-			}
-		}
-	}
-
-	private synchronized Set<Object> setFinishedGetNexts(Object jobID) {
-		Set<Object> newReadyJobIDs = new HashSet<>();
-		if (waitingProjectsMap.containsKey(jobID)) {
-			Set<Object> waitingJobIDs = waitingProjectsMap.get(jobID);
-			for (Object waitingJobID : waitingJobIDs) {
-				if (dependencyMap.containsKey(waitingJobID)) {
-					Set<Object> dependenciesOfJobID = dependencyMap.get(waitingJobID);
-					dependenciesOfJobID.remove(jobID);
-
-					if (dependenciesOfJobID.isEmpty()) {
-						newReadyJobIDs.add(waitingJobID);
-						dependencyMap.remove(waitingJobID);
-					}
-				}
-			}
-		}
-
-		return newReadyJobIDs;
 	}
 
 	/** Builds the given set of jobs in parallel */
 	public void run() {
-		init();
+		Map<ID, ForkJoinTask<Void>> allTasks = new ConcurrentHashMap<>();
+		class Impl extends RecursiveTask<Void> {
 
-		currentJobs.addAll(startJobs);
-		for (ParallelJob<?> startJob : startJobs) {
-			pool.execute(startJob);
+			private final ParallelJob<ID> src;
+
+			Impl(ParallelJob<ID> src) {
+				this.src = src;
+			}
+
+			@Override
+			protected Void compute() {
+				Collection<ID> dependencyIDs = src.getDependencyIDs();
+				for (ID dependency : dependencyIDs) {
+					ForkJoinTask<Void> predecessor = allTasks.get(dependency);
+					if (predecessor != null) {
+						predecessor.join();
+					}
+				}
+				src.runJob();
+				return null;
+			}
 		}
 
-		try {
-			pool.awaitTermination(1, TimeUnit.DAYS);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private synchronized void scheduleNext(ParallelJob<?> job) {
-		Object jobID = job.getID();
-		currentJobs.remove(job);
-
-		Set<Object> newReadyJobIDs = setFinishedGetNexts(jobID);
-		if (currentJobs.isEmpty() && newReadyJobIDs.isEmpty() && !dependencyMap.isEmpty()) {
-			pool.shutdown();
-			System.err.println("Did not finish all jobs");
-			return;
-		}
-		for (Object newReadyJobID : newReadyJobIDs) {
-			ParallelJob<?> readyJob = jobMap.get(newReadyJobID);
-			currentJobs.add(readyJob);
-			pool.execute(readyJob);
-		}
-		if (dependencyMap.isEmpty()) {
-			pool.shutdown();
-		}
+		forkJoinPool.invoke(new RecursiveTask<Void>() {
+			@Override
+			protected Void compute() {
+				for (ParallelJob<ID> job : jobs) {
+					Impl buildTask = new Impl(job);
+					allTasks.put(job.getID(), buildTask);
+					buildTask.fork();
+				}
+				for (ForkJoinTask<Void> buildTask : allTasks.values()) {
+					buildTask.join();
+				}
+				return null;
+			}
+		});
 	}
 
 }

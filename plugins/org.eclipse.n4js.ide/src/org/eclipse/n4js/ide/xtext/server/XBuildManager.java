@@ -191,16 +191,17 @@ public class XBuildManager {
 		}
 
 		List<IResourceDescription.Delta> result = Collections.synchronizedList(new ArrayList<>());
+		List<ProjectDescription> sortedDescriptions = sortByDependencies(projects);
 		List<BuildInitialProjectJob> jobs = new ArrayList<>();
 
-		for (ProjectDescription description : projects) {
+		for (ProjectDescription description : sortedDescriptions) {
 			String projectName = description.getName();
 			XProjectManager projectManager = workspaceManager.getProjectManager(projectName);
 			BuildInitialProjectJob bpj = new BuildInitialProjectJob(projectManager, result);
 			jobs.add(bpj);
 		}
 
-		ParallelBuildManager parallelBuildManager = new ParallelBuildManager(jobs);
+		ParallelBuildManager<String> parallelBuildManager = new ParallelBuildManager<>(jobs);
 		parallelBuildManager.run();
 
 		return result;
