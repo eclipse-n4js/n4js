@@ -314,6 +314,12 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		String name = null;
 		if (projectConfig != null) {
 			name = projectConfig.getName();
+		} else if (N4Scheme.isN4Scheme(uri)) {
+			Collection<XProjectManager> allProjectManagers = getProjectManagers();
+			if (!allProjectManagers.isEmpty()) {
+				XProjectManager anyProjectManager = allProjectManagers.iterator().next();
+				return anyProjectManager;
+			}
 		}
 		return getProjectManager(name);
 	}
@@ -448,13 +454,6 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	@Override
 	public XtextResource getResource(URI uri) {
 		URI resourceURI = uri.trimFragment();
-		if (N4Scheme.isN4Scheme(resourceURI)) {
-			Collection<XProjectManager> allProjectManagers = getProjectManagers();
-			if (!allProjectManagers.isEmpty()) {
-				XProjectManager anyProjectManager = allProjectManagers.iterator().next();
-				return (XtextResource) anyProjectManager.getResource(uri);
-			}
-		}
 		XProjectManager projectMnr = getProjectManager(resourceURI);
 		if (projectMnr != null) {
 			XtextResource resource = (XtextResource) projectMnr.getResource(resourceURI);

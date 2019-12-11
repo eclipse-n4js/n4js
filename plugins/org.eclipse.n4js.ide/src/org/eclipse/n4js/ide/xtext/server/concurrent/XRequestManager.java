@@ -16,11 +16,13 @@ import org.eclipse.xtext.xbase.lib.Functions.Function2;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author kosyakov - Initial contribution and API
  * @since 2.11
  */
+@Singleton
 public class XRequestManager {
 	@Inject
 	private ExecutorService parallel;
