@@ -60,7 +60,6 @@ import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
 import org.eclipse.n4js.ui.editor.N4JSHover;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkHelper;
-import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
 import org.eclipse.n4js.ui.editor.N4JSReconciler;
 import org.eclipse.n4js.ui.editor.PrevStateAwareDocumentBasedDirtyResource;
 import org.eclipse.n4js.ui.editor.autoedit.AutoEditStrategyProvider;
@@ -137,7 +136,6 @@ import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.IContentAssistParser;
-import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
@@ -457,13 +455,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 */
 	public Class<? extends DirtyStateEditorSupport> bindDirtyStateEditorSupport() {
 		return N4JSDirtyStateEditorSupport.class;
-	}
-
-	/**
-	 * Bind the {@link ILocationInFileProvider} that is aware of derived elements.
-	 */
-	public Class<? extends ILocationInFileProvider> bindILocationInFileProvider() {
-		return N4JSLocationInFileProvider.class;
 	}
 
 	/**

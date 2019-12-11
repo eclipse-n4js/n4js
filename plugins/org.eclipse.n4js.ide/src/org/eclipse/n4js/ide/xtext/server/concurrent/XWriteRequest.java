@@ -22,7 +22,6 @@ public class XWriteRequest<U, V> extends XAbstractRequest<V> {
 	public XWriteRequest(Function0<? extends U> nonCancellable,
 			Function2<? super CancelIndicator, ? super U, ? extends V> cancellable,
 			CompletableFuture<Void> previous) {
-		super();
 		this.nonCancellable = nonCancellable;
 		this.cancellable = cancellable;
 		this.previous = previous;

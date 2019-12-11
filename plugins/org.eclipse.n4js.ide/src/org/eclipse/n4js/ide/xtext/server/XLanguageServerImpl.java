@@ -604,7 +604,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			TextDocumentPositionParams params) {
 		URI uri = getURI(params);
 		DocumentSymbolService documentSymbolService = getService(uri, DocumentSymbolService.class);
-		if ((documentSymbolService == null)) {
+		if (documentSymbolService == null) {
 			return Collections.emptyList();
 		}
 		XtextResource res = workspaceManager.getResource(uri);

@@ -26,6 +26,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.resource.IExternalContentSupport;
@@ -447,6 +448,13 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	@Override
 	public XtextResource getResource(URI uri) {
 		URI resourceURI = uri.trimFragment();
+		if (N4Scheme.isN4Scheme(resourceURI)) {
+			Collection<XProjectManager> allProjectManagers = getProjectManagers();
+			if (!allProjectManagers.isEmpty()) {
+				XProjectManager anyProjectManager = allProjectManagers.iterator().next();
+				return (XtextResource) anyProjectManager.getResource(uri);
+			}
+		}
 		XProjectManager projectMnr = getProjectManager(resourceURI);
 		if (projectMnr != null) {
 			XtextResource resource = (XtextResource) projectMnr.getResource(resourceURI);

@@ -43,6 +43,7 @@ import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSDerivedStateComputer;
 import org.eclipse.n4js.resource.N4JSDescriptionUtils;
 import org.eclipse.n4js.resource.N4JSLinker;
+import org.eclipse.n4js.resource.N4JSLocationInFileProvider;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.N4JSResourceDescription;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager;
@@ -91,6 +92,7 @@ import org.eclipse.xtext.parsetree.reconstr.IHiddenTokenHelper;
 import org.eclipse.xtext.preferences.IPreferenceValuesProvider;
 import org.eclipse.xtext.resource.DescriptionUtils;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
+import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResource;
@@ -202,6 +204,14 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	@Override
 	public Class<? extends ILinkingService> bindILinkingService() {
 		return ErrorAwareLinkingService.class;
+	}
+
+	/**
+	 * Bind the {@link ILocationInFileProvider} that is aware of derived elements.
+	 */
+	@Override
+	public Class<? extends ILocationInFileProvider> bindILocationInFileProvider() {
+		return N4JSLocationInFileProvider.class;
 	}
 
 	/**
