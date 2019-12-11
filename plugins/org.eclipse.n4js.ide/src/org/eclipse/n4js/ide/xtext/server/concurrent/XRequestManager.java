@@ -2,6 +2,7 @@ package org.eclipse.n4js.ide.xtext.server.concurrent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
@@ -63,7 +64,13 @@ public class XRequestManager {
 	protected <V> CompletableFuture<V> submit(XAbstractRequest<V> request) {
 		requests.add(request);
 		queue.submit(request);
-		return request.get();
+		CompletableFuture<V> result = request.get();
+		result.whenComplete((irrelevant, throwable) -> {
+			if (throwable != null && !isCancelException(throwable)) {
+				throwable.printStackTrace();
+			}
+		});
+		return result;
 	}
 
 	/**
@@ -91,6 +98,9 @@ public class XRequestManager {
 		Throwable cause = t;
 		if (t instanceof CompletionException) {
 			cause = ((CompletionException) t).getCause();
+		}
+		if (cause instanceof CancellationException) {
+			return true;
 		}
 		return operationCanceledManager.isOperationCanceledException(cause);
 	}
