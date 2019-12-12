@@ -32,11 +32,8 @@ import com.google.common.base.Joiner;
 import com.google.inject.Inject;
 
 /**
- * Provides execution output xpect test methods. Provided resource compiled on the fly and executed, captured output is
- * compared against provided expectations.
- *
- * <p>
- * NOTE: this method is also used in non UI context - i.e. where Eclipse platform is not running.
+ * Provides execution output test methods for Xpect. The provided source code is compiled on the fly and executed,
+ * captured output is compared against the provided expectations.
  */
 @SuppressWarnings("restriction")
 public class OutputXpectMethod {
@@ -56,6 +53,11 @@ public class OutputXpectMethod {
 	/**
 	 * Compile provided then execute and compare execution output to provided expectation. During compilation
 	 * dependencies are gathered and also compiled.
+	 * <p>
+	 * White space is ignored.
+	 * <p>
+	 * The code is compiled and executed twice, once for each of the two default sets of transpiler options:
+	 * {@link GeneratorOption#ES5plus} and {@link GeneratorOption#NodeCurrent}.
 	 *
 	 * @param expectation
 	 *            the expected output after compiling n4js and executing the compiled js code
@@ -101,6 +103,9 @@ public class OutputXpectMethod {
 	 * Similar as {@link OutputXpectMethod#output} but instead of doing plain string comparison, uses regular expression
 	 * matching. Assumes that provided expectation is a regex expression that will be used to check if execution output
 	 * matches against it.
+	 * <p>
+	 * This method is white space sensitive. If white space is to be ignored, the regular expression has to be defined
+	 * accordingly.
 	 *
 	 * @param expectation
 	 *            regex expression that will be used as compiled output matcher
@@ -137,6 +142,8 @@ public class OutputXpectMethod {
 	/**
 	 * Transpiles provided resource and asserts that the target code is <b>equal</> to the provided expectation. Code is
 	 * not executed!
+	 * <p>
+	 * This method is white space sensitive.
 	 *
 	 * @deprecated don't use compiled code string comparison, use to output execution test
 	 */
@@ -152,6 +159,8 @@ public class OutputXpectMethod {
 	 * Transpiles provided resource and asserts that the target code <b>contains</b> the provided expectation string. In
 	 * addition, white-space is normalized, i.e. any non-empty sequence of white-space characters is normalized into a
 	 * single " " (space) on both sides before comparison (also within string literals!). Code is not executed.
+	 * <p>
+	 * This method is white space sensitive.
 	 */
 	@Xpect
 	public void compileResultContains(
