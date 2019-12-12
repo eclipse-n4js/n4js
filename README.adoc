@@ -62,7 +62,7 @@ Ensure you have
 
 - Java 11
 - Maven 3.2.x and
-- Node.js >=8
+- Node.js 12.3.x (recommended).
 
 installed on your system.
 
