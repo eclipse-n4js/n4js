@@ -15,10 +15,8 @@
 /* XPECT output ~~~
 <==
 stdout:
-[Function: PubEnumEA] {
-  v: PubEnumEA { name: 'v', value: 'v' },
-  s: PubEnumEA { name: 's', value: 'string' }
-}
+PubEnumEA { name: 'v', value: 'v' }
+PubEnumEA { name: 's', value: 'string' }
 annotations : 
  -  N4Annotation { name: 'Observable', details: [] }
 stderr:
@@ -26,9 +24,10 @@ stderr:
 ~~~ */
 
 
+@Observable export @Internal public enum PubEnumEA { v, s: 'string' }
 
-@Observable export @Internal public enum PubEnumEA{v, s:'string'} 
-console.log(PubEnumEA)
+console.log(PubEnumEA.v)
+console.log(PubEnumEA.s)
 console.log("annotations : ")
 PubEnumEA.n4type.annotations.forEach(function(a){
 	console.log(" - ", a)

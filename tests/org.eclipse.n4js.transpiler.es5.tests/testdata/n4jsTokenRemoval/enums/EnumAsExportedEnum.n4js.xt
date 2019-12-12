@@ -15,21 +15,19 @@
 /* XPECT output ~~~
 <==
 stdout:
-[Function: ProjEnum] {
-  v: ProjEnum { name: 'v', value: 'v' },
-  s: ProjEnum { name: 's', value: 'string' }
-}
-[Function: PubEnumE] {
-  v: PubEnumE { name: 'v', value: 'v' },
-  s: PubEnumE { name: 's', value: 'string' }
-}
+ProjEnum { name: 'v', value: 'v' }
+ProjEnum { name: 's', value: 'string' }
+PubEnumE { name: 'v', value: 'v' }
+PubEnumE { name: 's', value: 'string' }
 stderr:
 ==>
 ~~~ */
 
 
+export project enum ProjEnum { v, s: 'string' }
+console.log(ProjEnum.v)
+console.log(ProjEnum.s)
 
-export project enum ProjEnum{v, s:'string'}
-console.log(ProjEnum)
-export @Internal public enum PubEnumE{v, s:'string'}
-console.log(PubEnumE)
+export @Internal public enum PubEnumE { v, s: 'string' }
+console.log(PubEnumE.v)
+console.log(PubEnumE.s)
