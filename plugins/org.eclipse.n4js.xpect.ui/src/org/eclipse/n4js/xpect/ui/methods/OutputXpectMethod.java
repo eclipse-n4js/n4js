@@ -69,7 +69,7 @@ public class OutputXpectMethod {
 	 *            configuration entry)
 	 */
 	@Xpect
-	public void output(@StringExpectation(whitespaceSensitive = true) IStringExpectation expectation, // arg0
+	public void output(@StringExpectation(whitespaceSensitive = false) IStringExpectation expectation, // arg0
 			@ThisResource XtextResource resource, // arg1
 			org.eclipse.xpect.setup.ISetupInitializer<Object> init, // arg2
 			FileSetupContext fileSetupContext // arg3
