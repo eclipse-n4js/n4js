@@ -236,16 +236,18 @@ public class XStatefulIncrementalBuilder {
 				resourceStorageFacade.saveResource((StorageAwareResource) resource, fileSystemAccess);
 			}
 		}
-		GeneratorContext generatorContext = new GeneratorContext();
-		generatorContext.setCancelIndicator(request.getCancelIndicator());
-		generator.generate(resource, fileSystemAccess, generatorContext);
-		XtextResourceSet resourceSet = request.getResourceSet();
-		for (URI noLongerCreated : previous) {
-			try {
-				resourceSet.getURIConverter().delete(noLongerCreated, CollectionLiterals.emptyMap());
-				request.setResultDeleteFile(noLongerCreated);
-			} catch (IOException e) {
-				Exceptions.sneakyThrow(e);
+		if (request.isGeneratorEnabled()) {
+			GeneratorContext generatorContext = new GeneratorContext();
+			generatorContext.setCancelIndicator(request.getCancelIndicator());
+			generator.generate(resource, fileSystemAccess, generatorContext);
+			XtextResourceSet resourceSet = request.getResourceSet();
+			for (URI noLongerCreated : previous) {
+				try {
+					resourceSet.getURIConverter().delete(noLongerCreated, CollectionLiterals.emptyMap());
+					request.setResultDeleteFile(noLongerCreated);
+				} catch (IOException e) {
+					Exceptions.sneakyThrow(e);
+				}
 			}
 		}
 	}

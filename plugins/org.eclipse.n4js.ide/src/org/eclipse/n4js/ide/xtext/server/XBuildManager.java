@@ -39,6 +39,7 @@ import com.google.inject.Inject;
  * @author Jan Koehnlein - Initial contribution and API
  * @since 2.11
  */
+@SuppressWarnings("hiding")
 public class XBuildManager {
 
 	/**
@@ -157,7 +158,6 @@ public class XBuildManager {
 	 *
 	 * @return the delta.
 	 */
-	@Deprecated // GH-1552: Experimental parallelization
 	public List<IResourceDescription.Delta> doInitialBuild(List<ProjectDescription> projects,
 			CancelIndicator indicator) {
 
@@ -211,11 +211,10 @@ public class XBuildManager {
 	 *
 	 * @return a buildable.
 	 */
-	@SuppressWarnings("hiding")
-	public XBuildable doIncrementalBuild(List<URI> dirtyFiles, List<URI> deletedFiles) {
+	public XBuildable doIncrementalBuild(List<URI> dirtyFiles, List<URI> deletedFiles, boolean doGenerate) {
 		queue(this.dirtyFiles, deletedFiles, dirtyFiles);
 		queue(this.deletedFiles, dirtyFiles, deletedFiles);
-		return this::internalIncrementalBuild;
+		return (cancelIndicator) -> internalIncrementalBuild(cancelIndicator, doGenerate);
 	}
 
 	/** Performs a clean operation in all projects */
@@ -232,7 +231,8 @@ public class XBuildManager {
 	}
 
 	/** Run the build on the workspace */
-	protected List<IResourceDescription.Delta> internalIncrementalBuild(CancelIndicator cancelIndicator) {
+	protected List<IResourceDescription.Delta> internalIncrementalBuild(CancelIndicator cancelIndicator,
+			boolean doGenerate) {
 		try {
 			Map<ProjectDescription, Set<URI>> project2dirty = computeProjectToUriMap(dirtyFiles);
 			Map<ProjectDescription, Set<URI>> project2deleted = computeProjectToUriMap(deletedFiles);
@@ -245,7 +245,7 @@ public class XBuildManager {
 				Set<URI> projectDirty = project2dirty.getOrDefault(descr, Collections.emptySet());
 				Set<URI> projectDeleted = project2deleted.getOrDefault(descr, Collections.emptySet());
 				XBuildResult partialResult = projectManager.doIncrementalBuild(projectDirty, projectDeleted,
-						unreportedDeltas, cancelIndicator);
+						unreportedDeltas, doGenerate, cancelIndicator);
 
 				dirtyFiles.removeAll(projectDirty);
 				deletedFiles.removeAll(projectDeleted);

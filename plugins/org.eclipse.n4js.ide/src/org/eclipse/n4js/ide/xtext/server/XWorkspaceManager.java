@@ -239,8 +239,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 *            the deleted files
 	 * @return a build command that can be triggered
 	 */
-	public XBuildable didChangeFiles(List<URI> dirtyFiles, List<URI> deletedFiles) {
-		XBuildManager.XBuildable buildable = buildManager.doIncrementalBuild(dirtyFiles, deletedFiles);
+	public XBuildable didChangeFiles(List<URI> dirtyFiles, List<URI> deletedFiles, boolean doGenerate) {
+		XBuildManager.XBuildable buildable = buildManager.doIncrementalBuild(dirtyFiles, deletedFiles, doGenerate);
 		return (cancelIndicator) -> {
 			List<IResourceDescription.Delta> deltas = buildable.build(cancelIndicator);
 			afterBuild(deltas);
@@ -282,7 +282,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 */
 	public List<IResourceDescription.Delta> doBuild(List<URI> dirtyFiles, List<URI> deletedFiles,
 			CancelIndicator cancelIndicator) {
-		return didChangeFiles(dirtyFiles, deletedFiles).build(cancelIndicator);
+		return didChangeFiles(dirtyFiles, deletedFiles, true).build(cancelIndicator);
 	}
 
 	/**
@@ -354,8 +354,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 */
 	@Deprecated
 	public List<IResourceDescription.Delta> didChange(URI uri, Integer version,
-			Iterable<TextEdit> changes, CancelIndicator cancelIndicator) {
-		return didChange(uri, version, changes).build(cancelIndicator);
+			Iterable<TextEdit> changes, boolean doGenerate, CancelIndicator cancelIndicator) {
+		return didChange(uri, version, changes, doGenerate).build(cancelIndicator);
 	}
 
 	/**
@@ -365,14 +365,15 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 *             {@link #didChangeTextDocumentContent(URI, Integer, Iterable)} instead.
 	 */
 	@Deprecated
-	public XBuildManager.XBuildable didChange(URI uri, Integer version, Iterable<TextEdit> changes) {
+	public XBuildManager.XBuildable didChange(URI uri, Integer version, Iterable<TextEdit> changes,
+			boolean doGenerate) {
 		Document contents = openDocuments.get(uri);
 		if (contents == null) {
 			XWorkspaceManager.LOG.error("The document " + uri + " has not been opened.");
 			return XBuildable.NO_BUILD;
 		}
 		openDocuments.put(uri, contents.applyChanges(changes));
-		return didChangeFiles(ImmutableList.of(uri), Collections.emptyList());
+		return didChangeFiles(ImmutableList.of(uri), Collections.emptyList(), doGenerate);
 	}
 
 	/**
@@ -396,7 +397,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 			return XBuildable.NO_BUILD;
 		}
 		openDocuments.put(uri, contents.applyTextDocumentChanges(changes));
-		return didChangeFiles(ImmutableList.of(uri), Collections.emptyList());
+		return didChangeFiles(ImmutableList.of(uri), Collections.emptyList(), false);
 	}
 
 	/**
@@ -412,7 +413,7 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	 */
 	public XBuildManager.XBuildable didOpen(URI uri, Integer version, String contents) {
 		openDocuments.put(uri, new Document(version, contents));
-		return didChangeFiles(ImmutableList.of(uri), Collections.emptyList());
+		return didChangeFiles(ImmutableList.of(uri), Collections.emptyList(), false);
 	}
 
 	/**
@@ -424,14 +425,46 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 	}
 
 	/**
-	 * Mark the given document as cloded.
+	 * Mark the given document as closed.
+	 *
+	 * When we close a document, being it a saved document or a dirty document, we need to run a build to make sure that
+	 * the generated code is consistent.
+	 *
+	 * Reason:<br>
+	 * Two files are open, dirty and refer to each other. One file is saved and code is generated. This generation is
+	 * done against the dirty (!) state of the other open document in LSP. When the other file is closed, the generator
+	 * needs to run again.
+	 */
+	public XBuildManager.XBuildable closeAll() {
+		ImmutableList<URI> closed = ImmutableList.copyOf(openDocuments.keySet());
+		openDocuments.clear();
+		return didChangeFiles(closed, Collections.emptyList(), true);
+	}
+
+	/**
+	 * Mark the given document as closed.
+	 *
+	 * When we close a document, being it a saved document or a dirty document, we need to run a build to make sure that
+	 * the generated code is consistent.
+	 *
+	 * Reason:<br>
+	 * Two files are open, dirty and refer to each other. One file is saved and code is generated. This generation is
+	 * done against the dirty (!) state of the other open document in LSP. When the other file is closed, the generator
+	 * needs to run again.
 	 */
 	public XBuildManager.XBuildable didClose(URI uri) {
 		openDocuments.remove(uri);
 		if (exists(uri)) {
-			return didChangeFiles(ImmutableList.of(uri), Collections.emptyList());
+			return didChangeFiles(ImmutableList.of(uri), Collections.emptyList(), true);
 		}
-		return didChangeFiles(Collections.emptyList(), ImmutableList.of(uri));
+		return didChangeFiles(Collections.emptyList(), ImmutableList.of(uri), true);
+	}
+
+	/**
+	 * Mark the given document as saved.
+	 */
+	public XBuildManager.XBuildable didSave(URI uri) {
+		return didChangeFiles(ImmutableList.of(uri), Collections.emptyList(), true);
 	}
 
 	/**

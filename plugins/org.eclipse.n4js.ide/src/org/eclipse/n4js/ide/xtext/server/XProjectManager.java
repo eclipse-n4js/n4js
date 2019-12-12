@@ -159,8 +159,12 @@ public class XProjectManager {
 
 	/** Build this project. */
 	public XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas, CancelIndicator cancelIndicator) {
-		return doIncrementalBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator, Function.identity());
+			List<IResourceDescription.Delta> externalDeltas, boolean doGenerate, CancelIndicator cancelIndicator) {
+		return doIncrementalBuild(dirtyFiles, deletedFiles, externalDeltas, cancelIndicator,
+				buildRequest -> {
+					buildRequest.setGeneratorEnabled(doGenerate);
+					return buildRequest;
+				});
 	}
 
 	private XBuildResult doIncrementalBuild(Set<URI> dirtyFiles, Set<URI> deletedFiles,

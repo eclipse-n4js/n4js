@@ -37,6 +37,8 @@ public class XBuildRequest {
 
 	private XIndexState state = new XIndexState();
 
+	private boolean doGenerate = true;
+
 	private boolean writeStorageResources = false;
 
 	private boolean indexOnly = false;
@@ -233,6 +235,20 @@ public class XBuildRequest {
 	 */
 	public void setState(XIndexState state) {
 		this.state = state;
+	}
+
+	/**
+	 * Getter.
+	 */
+	public boolean isGeneratorEnabled() {
+		return this.doGenerate;
+	}
+
+	/**
+	 * Setter.
+	 */
+	public void setGeneratorEnabled(boolean doGenerate) {
+		this.doGenerate = doGenerate;
 	}
 
 	/**

@@ -124,6 +124,7 @@ import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.IDocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -134,6 +135,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -243,8 +245,12 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 		access.addBuildListener(this);
 
+		System.out.println("About to initialize the server with workspace " + baseDir);
+
 		workspaceManager.initialize(baseDir);
 		workspaceManager.refreshWorkspaceConfig();
+
+		System.out.println("Done initializing the server at " + baseDir);
 
 		initializeResult = new InitializeResult();
 		initializeResult.setCapabilities(createServerCapabilities(params));
@@ -348,8 +354,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		requestManager.runWrite(
 				() -> {
 					try {
+						Stopwatch sw = Stopwatch.createStarted();
+						System.out.println("About to trigger initial build");
 						workspaceManager.doInitialBuild(CancelIndicator.NullImpl);
 						initBuildFinished.complete(null);
+						System.out.println("Initial build done after " + sw);
 					} catch (Throwable t) {
 						t.printStackTrace();
 						initBuildFinished.completeExceptionally(t);
@@ -386,18 +395,41 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		issueAcceptor.connect(client);
 	}
 
+	/**
+	 * Discard all references to the language client.
+	 */
+	public void disconnect() {
+		issueAcceptor.disconnect();
+		this.client = null;
+	}
+
 	@Override
 	public void exit() {
+		System.out.println("Exit notification received");
+		// wait for all jobs to finish
+		runBuildable(() -> {
+			return (cancelIndicator) -> Collections.emptyList();
+		});
 		shutdownAndExitHandler.exit();
 	}
 
 	@Override
 	public CompletableFuture<Object> shutdown() {
-		clientInitialized.complete(null);
-		initBuildFinished.complete(null);
-		shutdownAndExitHandler.shutdown();
-		workspaceManager.persistProjectState(CancelIndicator.NullImpl);
-		return CompletableFuture.completedFuture(new Object());
+		System.out.println("About to shutdown");
+		disconnect();
+		runBuildable(() -> {
+			XBuildable buildable = workspaceManager.closeAll();
+			return (cancelIndicator) -> {
+				List<Delta> result = buildable.build(cancelIndicator);
+				workspaceManager.persistProjectState(CancelIndicator.NullImpl);
+				clientInitialized.complete(null);
+				initBuildFinished.complete(null);
+				shutdownAndExitHandler.shutdown();
+				System.out.println("Shutdown done");
+				return result;
+			};
+		});
+		return CompletableFuture.completedFuture(null);
 	}
 
 	@Override
@@ -472,7 +504,14 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public void didSave(DidSaveTextDocumentParams params) {
-		// nothing to do
+		runBuildable(() -> toBuildable(params));
+	}
+
+	/**
+	 * Evaluate the params and deduce the respective build command.
+	 */
+	protected XBuildable toBuildable(DidSaveTextDocumentParams params) {
+		return workspaceManager.didSave(getURI(params.getTextDocument()));
 	}
 
 	@Override
@@ -497,7 +536,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			}
 		}
 		if (!dirtyFiles.isEmpty() || !deletedFiles.isEmpty()) {
-			runBuildable(() -> workspaceManager.didChangeFiles(dirtyFiles, deletedFiles));
+			runBuildable(() -> workspaceManager.didChangeFiles(dirtyFiles, deletedFiles, true));
 		}
 	}
 
@@ -522,9 +561,11 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	 *
 	 * @param newBuildable
 	 *            the factory for the buildable.
+	 * @return the result.
 	 */
-	protected void runBuildable(Supplier<? extends XBuildable> newBuildable) {
-		requestManager.runWrite(newBuildable::get, (cancelIndicator, buildable) -> buildable.build(cancelIndicator));
+	protected CompletableFuture<List<Delta>> runBuildable(Supplier<? extends XBuildable> newBuildable) {
+		return requestManager.runWrite(newBuildable::get,
+				(cancelIndicator, buildable) -> buildable.build(cancelIndicator));
 	}
 
 	@Override
