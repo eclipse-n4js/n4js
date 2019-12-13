@@ -19,10 +19,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -121,19 +121,15 @@ public class ProjectStatePersister {
 	 */
 	public void writeProjectState(IProjectConfig project, XIndexState state,
 			Collection<? extends HashedFileContent> files, Map<URI, ? extends Collection<Issue>> validationIssues) {
-		try {
-			File file = getDataFile(project);
-			try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
-				writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state, files, validationIssues);
+		File file = getDataFile(project);
+		try (OutputStream nativeOut = Files.asByteSink(file).openBufferedStream()) {
+			writeProjectState(nativeOut, N4JSLanguageUtils.getLanguageVersion(), state, files, validationIssues);
 
-			} catch (IOException e) {
-				e.printStackTrace();
-				if (file.isFile()) {
-					file.delete();
-				}
-			}
-		} catch (URISyntaxException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
+			if (file.isFile()) {
+				file.delete();
+			}
 		}
 	}
 
@@ -187,42 +183,51 @@ public class ProjectStatePersister {
 		// relies on writeObject which is very slow
 
 		output.writeUTF(description.getURI().toString());
-		{
-			List<SerializableEObjectDescription> objects = description.getDescriptions();
-			output.writeInt(objects.size());
-			for (SerializableEObjectDescription object : objects) {
-				output.writeUTF(object.getEObjectURI().toString());
-				output.writeUTF(EcoreUtil.getURI(object.getEClass()).toString());
-				QualifiedName qn = object.getQualifiedName();
-				writeQualifiedName(qn, output);
-				Map<String, String> userData = object.getUserData();
-				if (userData != null) {
-					output.writeInt(userData.size());
-					for (Map.Entry<String, String> entry : userData.entrySet()) {
-						output.writeUTF(entry.getKey());
-						writeUserDataValue(entry.getValue(), output);
-					}
-				} else {
-					output.writeInt(0);
+		writeEObjectDescriptions(description, output);
+		writeReferenceDescriptions(description, output);
+		writeImportedNames(description, output);
+	}
+
+	private void writeImportedNames(SerializableResourceDescription resourceDescription, ObjectOutputStream output)
+			throws IOException {
+		List<QualifiedName> importedNames = IterableExtensions.toList(resourceDescription.getImportedNames());
+		output.writeInt(importedNames.size());
+		for (QualifiedName importedName : importedNames) {
+			writeQualifiedName(importedName, output);
+		}
+	}
+
+	private void writeReferenceDescriptions(SerializableResourceDescription resourceDescription,
+			ObjectOutputStream output) throws IOException {
+		List<SerializableReferenceDescription> references = resourceDescription.getReferences();
+		output.writeInt(references.size());
+		for (SerializableReferenceDescription reference : references) {
+			output.writeUTF(reference.getSourceEObjectUri().toString());
+			output.writeUTF(reference.getTargetEObjectUri().toString());
+			output.writeUTF(reference.getContainerEObjectURI().toString());
+			output.writeUTF(EcoreUtil.getURI(reference.getEReference()).toString());
+			output.writeInt(reference.getIndexInList());
+		}
+	}
+
+	private void writeEObjectDescriptions(SerializableResourceDescription resourceDescription,
+			ObjectOutputStream output) throws IOException {
+		List<SerializableEObjectDescription> objects = resourceDescription.getDescriptions();
+		output.writeInt(objects.size());
+		for (SerializableEObjectDescription object : objects) {
+			output.writeUTF(object.getEObjectURI().toString());
+			output.writeUTF(EcoreUtil.getURI(object.getEClass()).toString());
+			QualifiedName qn = object.getQualifiedName();
+			writeQualifiedName(qn, output);
+			Map<String, String> userData = object.getUserData();
+			if (userData != null) {
+				output.writeInt(userData.size());
+				for (Map.Entry<String, String> entry : userData.entrySet()) {
+					output.writeUTF(entry.getKey());
+					writeUserDataValue(entry.getValue(), output);
 				}
-			}
-		}
-		{
-			List<SerializableReferenceDescription> references = description.getReferences();
-			output.writeInt(references.size());
-			for (SerializableReferenceDescription reference : references) {
-				output.writeUTF(reference.getSourceEObjectUri().toString());
-				output.writeUTF(reference.getTargetEObjectUri().toString());
-				output.writeUTF(reference.getContainerEObjectURI().toString());
-				output.writeUTF(EcoreUtil.getURI(reference.getEReference()).toString());
-				output.writeInt(reference.getIndexInList());
-			}
-		}
-		{
-			List<QualifiedName> importedNames = IterableExtensions.toList(description.getImportedNames());
-			output.writeInt(importedNames.size());
-			for (QualifiedName importedName : importedNames) {
-				writeQualifiedName(importedName, output);
+			} else {
+				output.writeInt(0);
 			}
 		}
 	}
@@ -290,23 +295,22 @@ public class ProjectStatePersister {
 	 *            the project
 	 */
 	public PersistedState readProjectState(IProjectConfig project) {
-		File file;
+		File file = getDataFile(project);
 		try {
-			file = getDataFile(project);
-			try {
-				if (file.isFile()) {
-					try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
-						return readProjectState(nativeIn, N4JSLanguageUtils.getLanguageVersion());
+			if (file.isFile()) {
+				try (InputStream nativeIn = Files.asByteSource(file).openBufferedStream()) {
+					PersistedState result = readProjectState(nativeIn, N4JSLanguageUtils.getLanguageVersion());
+					if (result == null && file.isFile()) {
+						file.delete();
 					}
-				}
-			} catch (IOException | ClassNotFoundException e) {
-				e.printStackTrace();
-				if (file.isFile()) {
-					file.delete();
+					return result;
 				}
 			}
-		} catch (URISyntaxException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
+			if (file.isFile()) {
+				file.delete();
+			}
 		}
 		return null;
 	}
@@ -336,7 +340,6 @@ public class ProjectStatePersister {
 			if (!expectedLanguageVersion.equals(languageVersion)) {
 				return null;
 			}
-
 			ResourceDescriptionsData resourceDescriptionsData = readResourceDescriptions(input);
 
 			XSource2GeneratedMapping fileMappings = readFileMappings(input);
@@ -352,16 +355,13 @@ public class ProjectStatePersister {
 
 	private ResourceDescriptionsData readResourceDescriptions(ObjectInputStream input)
 			throws IOException {
-
 		List<IResourceDescription> descriptions = new ArrayList<>();
 		int size = input.readInt();
 		while (size > 0) {
 			size--;
 			descriptions.add(readResourceDescription(input));
 		}
-
-		ResourceDescriptionsData resourceDescriptionsData = new ResourceDescriptionsData(descriptions);
-		return resourceDescriptionsData;
+		return new ResourceDescriptionsData(descriptions);
 	}
 
 	private ENamedElement readEcoreElement(ObjectInputStream input) throws IOException {
@@ -376,56 +376,70 @@ public class ProjectStatePersister {
 
 	private SerializableResourceDescription readResourceDescription(ObjectInputStream input)
 			throws IOException {
-		SerializableResourceDescription description = new SerializableResourceDescription();
+		SerializableResourceDescription result = new SerializableResourceDescription();
+		result.setURI(URI.createURI(input.readUTF()));
+		result.setDescriptions(readEObjectDescriptions(input));
+		result.setReferences(readReferenceDescriptions(input));
+		result.setImportedNames(readImportedNames(input));
+		return result;
+	}
 
-		description.setURI(URI.createURI(input.readUTF()));
-		{
-			List<SerializableEObjectDescription> objects = new ArrayList<>();
-			int size = input.readInt();
-			while (size > 0) {
-				size--;
-				SerializableEObjectDescription object = new SerializableEObjectDescription();
-				object.setEObjectURI(URI.createURI(input.readUTF()));
-				object.setEClass((EClass) readEcoreElement(input));
-				object.setQualifiedName(readQualifiedName(input));
-				int userDataSize = input.readInt();
-				HashMap<String, String> userData = new HashMap<>();
-				while (userDataSize > 0) {
-					userDataSize--;
-					String key = input.readUTF();
-					userData.put(key, readUserDataValue(input));
-				}
-				object.setUserData(userData);
-				objects.add(object);
-			}
-			description.setDescriptions(objects);
+	private List<QualifiedName> readImportedNames(ObjectInputStream input) throws IOException {
+		int size = input.readInt();
+		if (size == 0) {
+			return Collections.emptyList();
 		}
-		{
-			List<SerializableReferenceDescription> references = new ArrayList<>();
-			int size = input.readInt();
-			while (size > 0) {
-				size--;
-				SerializableReferenceDescription reference = new SerializableReferenceDescription();
-				reference.setSourceEObjectUri(URI.createURI(input.readUTF()));
-				reference.setTargetEObjectUri(URI.createURI(input.readUTF()));
-				reference.setContainerEObjectURI(URI.createURI(input.readUTF()));
-				reference.setEReference((EReference) readEcoreElement(input));
-				reference.setIndexInList(input.readInt() - 1);
-				references.add(reference);
-			}
-			description.setReferences(references);
+		List<QualifiedName> result = new ArrayList<>(size);
+		while (size > 0) {
+			size--;
+			result.add(readQualifiedName(input));
 		}
-		{
-			List<QualifiedName> importedNames = new ArrayList<>();
-			int size = input.readInt();
-			while (size > 0) {
-				size--;
-				importedNames.add(readQualifiedName(input));
-			}
-			description.setImportedNames(importedNames);
-		}
+		return result;
+	}
 
-		return description;
+	private List<SerializableReferenceDescription> readReferenceDescriptions(ObjectInputStream input)
+			throws IOException {
+		int size = input.readInt();
+		if (size == 0) {
+			return Collections.emptyList();
+		}
+		List<SerializableReferenceDescription> result = new ArrayList<>(size);
+		while (size > 0) {
+			size--;
+			SerializableReferenceDescription reference = new SerializableReferenceDescription();
+			reference.setSourceEObjectUri(URI.createURI(input.readUTF()));
+			reference.setTargetEObjectUri(URI.createURI(input.readUTF()));
+			reference.setContainerEObjectURI(URI.createURI(input.readUTF()));
+			reference.setEReference((EReference) readEcoreElement(input));
+			reference.setIndexInList(input.readInt() - 1);
+			result.add(reference);
+		}
+		return result;
+	}
+
+	private List<SerializableEObjectDescription> readEObjectDescriptions(ObjectInputStream input) throws IOException {
+		int size = input.readInt();
+		if (size == 0) {
+			return Collections.emptyList();
+		}
+		List<SerializableEObjectDescription> result = new ArrayList<>(size);
+		while (size > 0) {
+			size--;
+			SerializableEObjectDescription object = new SerializableEObjectDescription();
+			object.setEObjectURI(URI.createURI(input.readUTF()));
+			object.setEClass((EClass) readEcoreElement(input));
+			object.setQualifiedName(readQualifiedName(input));
+			int userDataSize = input.readInt();
+			HashMap<String, String> userData = new HashMap<>();
+			while (userDataSize > 0) {
+				userDataSize--;
+				String key = input.readUTF();
+				userData.put(key, readUserDataValue(input));
+			}
+			object.setUserData(userData);
+			result.add(object);
+		}
+		return result;
 	}
 
 	private String readUserDataValue(ObjectInputStream input) throws IOException {
@@ -446,15 +460,14 @@ public class ProjectStatePersister {
 
 	private XSource2GeneratedMapping readFileMappings(ObjectInputStream input)
 			throws IOException, ClassNotFoundException {
-
 		XSource2GeneratedMapping fileMappings = new XSource2GeneratedMapping();
 		fileMappings.readExternal(input);
 		return fileMappings;
 	}
 
 	private Map<URI, HashedFileContent> readFingerprints(ObjectInputStream input) throws IOException {
-		Map<URI, HashedFileContent> fingerprints = new HashMap<>();
 		int size = input.readInt();
+		Map<URI, HashedFileContent> fingerprints = new HashMap<>(size);
 		while (size > 0) {
 			size--;
 			HashedFileContent hashFileContent = new HashedFileContent(input);
@@ -466,16 +479,13 @@ public class ProjectStatePersister {
 	private Map<URI, Collection<Issue>> readValidationIssues(ObjectInputStream input)
 			throws IOException, ClassNotFoundException {
 
-		Map<URI, Collection<Issue>> validationIssues = new LinkedHashMap<>();
-
 		int numberOfSources = input.readInt();
+		Map<URI, Collection<Issue>> validationIssues = new LinkedHashMap<>(numberOfSources);
 		while (numberOfSources > 0) {
 			numberOfSources--;
-
 			URI source = URI.createURI(input.readUTF());
-			validationIssues.put(source, new ArrayList<>());
-
 			int numberOfIssues = input.readInt();
+			validationIssues.put(source, new ArrayList<>(numberOfIssues));
 			while (numberOfIssues > 0) {
 				numberOfIssues--;
 				N4JSIssue issue = new N4JSIssue();
@@ -483,13 +493,12 @@ public class ProjectStatePersister {
 				validationIssues.get(source).add(issue);
 			}
 		}
-
 		return validationIssues;
 	}
 
-	private File getDataFile(IProjectConfig project) throws URISyntaxException {
+	private File getDataFile(IProjectConfig project) {
 		URI fileName = getFileName(project);
-		File file = new File(new java.net.URI(fileName.toString()));
+		File file = new File(fileName.toFileString());
 		return file;
 	}
 
