@@ -24,6 +24,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class XRequestManager {
+
 	@Inject
 	private ExecutorService parallel;
 
@@ -48,7 +49,7 @@ public class XRequestManager {
 	 * Run the given cancellable logic as a read request.
 	 */
 	public <V> CompletableFuture<V> runRead(Function1<? super CancelIndicator, ? extends V> cancellable) {
-		return submit(new XReadRequest<>(cancellable, parallel));
+		return submit(new XReadRequest<>(this, cancellable, parallel));
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class XRequestManager {
 	public <U, V> CompletableFuture<V> runWrite(
 			Function0<? extends U> nonCancellable,
 			Function2<? super CancelIndicator, ? super U, ? extends V> cancellable) {
-		return submit(new XWriteRequest<>(nonCancellable, cancellable, cancel()));
+		return submit(new XWriteRequest<>(this, nonCancellable, cancellable, cancel()));
 	}
 
 	/**
@@ -66,13 +67,7 @@ public class XRequestManager {
 	protected <V> CompletableFuture<V> submit(XAbstractRequest<V> request) {
 		requests.add(request);
 		queue.submit(request);
-		CompletableFuture<V> result = request.get();
-		result.whenComplete((irrelevant, throwable) -> {
-			if (throwable != null && !isCancelException(throwable)) {
-				throwable.printStackTrace();
-			}
-		});
-		return result;
+		return request.get();
 	}
 
 	/**

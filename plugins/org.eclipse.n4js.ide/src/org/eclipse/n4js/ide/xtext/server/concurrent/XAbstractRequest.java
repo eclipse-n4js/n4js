@@ -9,12 +9,26 @@ public abstract class XAbstractRequest<V> implements Runnable, XCancellable {
 	/**
 	 * The underyling future.
 	 */
-	protected final CompletableFuture<V> result = new CompletableFuture<>();
+	protected final CompletableFuture<V> result;
 
 	/**
 	 * The current cancel indicator.
 	 */
-	protected final XRequestCancelIndicator cancelIndicator = new XRequestCancelIndicator(this.result);
+	protected final XRequestCancelIndicator cancelIndicator;
+
+	/**
+	 * The request manager that is handling this request.
+	 */
+	protected final XRequestManager requestManager;
+
+	/**
+	 * Standard constructor.
+	 */
+	protected XAbstractRequest(XRequestManager requestManager) {
+		this.requestManager = requestManager;
+		this.result = new CompletableFuture<>();
+		this.cancelIndicator = new XRequestCancelIndicator(this.result);
+	}
 
 	@Override
 	public void cancel() {
