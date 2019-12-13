@@ -55,6 +55,11 @@ public class NodeModulesDiscoveryHelper {
 	/** @return the node_modules folder of the given project including a flag if this is a yarn workspace. */
 	public NodeModulesFolder getNodeModulesFolder(Path projectLocation) {
 		Map<File, List<String>> workspacesCache = new HashMap<>();
+		return getNodeModulesFolder(projectLocation, workspacesCache);
+	}
+
+	/** @return the node_modules folder of the given project including a flag if this is a yarn workspace. */
+	public NodeModulesFolder getNodeModulesFolder(Path projectLocation, Map<File, List<String>> workspacesCache) {
 		File projectLocationAsFile = projectLocation.toFile();
 
 		if (isYarnWorkspaceRoot(projectLocationAsFile, Optional.absent(), workspacesCache)) {
@@ -163,23 +168,15 @@ public class NodeModulesDiscoveryHelper {
 		if (!folder.isDirectory()) {
 			return false;
 		}
+
 		// obtain value of property "workspaces" in package.json located in folder 'candidate'
-		final List<String> workspaces;
-		final List<String> workspacesFromCache = workspacesCache.get(folder);
-		if (workspacesFromCache != null) {
-			// use the value from the cache
-			workspaces = workspacesFromCache;
-		} else {
-			// load value from package.json
-			workspaces = projectDescriptionLoader
-					.loadWorkspacesFromProjectDescriptionAtLocation(new FileURI(folder));
-			if (workspaces != null) {
-				workspacesCache.put(folder, workspaces);
-			}
-		}
+		final List<String> workspaces = workspacesCache.computeIfAbsent(folder,
+				// load value from package.json
+				f -> projectDescriptionLoader.loadWorkspacesFromProjectDescriptionAtLocation(new FileURI(folder)));
 		if (workspaces == null) {
 			return false;
 		}
+
 		// check if one of the values in property "workspaces" points to 'projectFolder'
 		if (projectFolder.isPresent()) {
 			for (String relativePath : workspaces) {

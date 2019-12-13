@@ -28,7 +28,6 @@ import static org.eclipse.n4js.packagejson.PackageJsonUtils.asSourceContainerDes
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.parseProjectType;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,8 +43,6 @@ import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.semver.SemverHelper;
-import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.inject.Inject;
@@ -78,7 +75,7 @@ public class PackageJsonHelper {
 			String defaultProjectName) {
 		JSONValue rootValue = packageJSON.getContent();
 		if (rootValue instanceof JSONObject) {
-			ProjectDescription result = ProjectDescriptionFactory.eINSTANCE.createProjectDescription();
+			LazyParsingProjectDescriptionImpl result = new LazyParsingProjectDescriptionImpl();
 			List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
 			convertRootPairs(result, rootPairs);
 
@@ -90,7 +87,7 @@ public class PackageJsonHelper {
 		return null;
 	}
 
-	private void convertRootPairs(ProjectDescription target, List<NameValuePair> rootPairs) {
+	private void convertRootPairs(LazyParsingProjectDescriptionImpl target, List<NameValuePair> rootPairs) {
 		for (NameValuePair pair : rootPairs) {
 			String name = pair.getName();
 			PackageJsonProperties property = PackageJsonProperties.valueOfNameOrNull(name);
@@ -104,7 +101,7 @@ public class PackageJsonHelper {
 				target.setProjectName(asNonEmptyStringOrNull(value));
 				break;
 			case VERSION:
-				target.setProjectVersion(parseVersion(asNonEmptyStringOrNull(value)));
+				target.setLazyProjectVersion(semverHelper, asNonEmptyStringOrNull(value));
 				break;
 			case DEPENDENCIES:
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.RUNTIME);
@@ -212,21 +209,19 @@ public class PackageJsonHelper {
 			if (addProjectDependency) {
 				JSONValue value = pair.getValue();
 				String valueStr = asStringOrNull(value);
-				ProjectDependency dep = ProjectDescriptionFactory.eINSTANCE.createProjectDependency();
+				LazyParsingProjectDependencyImpl dep = new LazyParsingProjectDependencyImpl();
 				dep.setProjectName(projectName);
-				dep.setVersionRequirementString(valueStr);
+				dep.setLazyVersionRequirement(semverHelper, valueStr);
 				dep.setType(type);
 
-				NPMVersionRequirement vreq = parseVersionRequirement(valueStr);
-				dep.setVersionRequirement(vreq);
 				target.getProjectDependencies().add(dep);
 			}
 		}
 	}
 
-	private void adjustProjectDescriptionAfterConversion(ProjectDescription target, boolean applyDefaultValues,
+	private void adjustProjectDescriptionAfterConversion(LazyParsingProjectDescriptionImpl target,
+			boolean applyDefaultValues,
 			String defaultProjectName, String valueOfTopLevelPropertyMain) {
-
 		// store whether target has a declared mainModule *before* applying the default values
 		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;
 
@@ -254,27 +249,36 @@ public class PackageJsonHelper {
 		// (this is a work-around for supporting the API/Impl concept with npm/yarn: in a client project, both the API
 		// and implementation projects will be specified as dependency in the package.json and the following code will
 		// filter out implementation projects to not confuse API/Impl logic in other places)
-		Set<String> projectNamesToRemove = target.getProjectDependencies().stream()
-				.map(pd -> pd.getProjectName())
-				.filter(id -> id.endsWith(".api"))
-				.map(id -> id.substring(0, id.length() - 4))
-				.collect(Collectors.toSet());
-		target.getProjectDependencies().removeIf(pd -> projectNamesToRemove.contains(pd.getProjectName()));
+		Set<String> projectNamesToRemove = new HashSet<>();
+		List<ProjectDependency> projectDependencies = target.getProjectDependencies();
+		for (ProjectDependency dep : projectDependencies) {
+			String otherProject = dep.getProjectName();
+			if (otherProject.endsWith(".api")) {
+				projectNamesToRemove.add(otherProject.substring(0, otherProject.length() - ".api".length()));
+			}
+		}
+		if (!projectNamesToRemove.isEmpty()) {
+			for (int i = projectDependencies.size() - 1; i >= 0; i--) {
+				if (projectNamesToRemove.contains(projectDependencies.get(i).getProjectName())) {
+					projectDependencies.remove(i);
+				}
+			}
+		}
 	}
 
 	/**
 	 * Apply default values to the given project description. This should be performed right after loading and
 	 * converting the project description from JSON.
 	 */
-	private void applyDefaults(ProjectDescription target, String defaultProjectName) {
+	private void applyDefaults(LazyParsingProjectDescriptionImpl target, String defaultProjectName) {
 		if (!target.isHasN4JSNature()) {
 			target.setProjectType(parseProjectType(PROJECT_TYPE.defaultValue));
 		}
 		if (target.getProjectName() == null) {
 			target.setProjectName(defaultProjectName);
 		}
-		if (target.getProjectVersion() == null) {
-			target.setProjectVersion(parseVersion(VERSION.defaultValue));
+		if (target.getLazyProjectVersion() == null) {
+			target.setLazyProjectVersion(semverHelper, VERSION.defaultValue);
 		}
 		if (target.getVendorId() == null) {
 			target.setVendorId(VENDOR_ID.defaultValue);
@@ -285,40 +289,31 @@ public class PackageJsonHelper {
 		if (target.getOutputPath() == null) {
 			target.setOutputPath(OUTPUT.defaultValue);
 		}
+
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
 		// EXCEPT target represents a yarn workspace root
-		Iterator<String> sourceContainerPaths = target.getSourceContainers().stream()
-				.flatMap(sc -> sc.getPaths().stream()).iterator();
-		if (!sourceContainerPaths.hasNext() && !target.isYarnWorkspaceRoot()) {
-			SourceContainerDescription scd = target.getSourceContainers().stream()
-					.filter(sc -> sc.getSourceContainerType() == SourceContainerType.SOURCE)
-					.findFirst().orElse(null);
-			if (scd == null) {
-				SourceContainerDescription scdNew = ProjectDescriptionFactory.eINSTANCE
-						.createSourceContainerDescription();
-				scdNew.setSourceContainerType(SourceContainerType.SOURCE);
-				scdNew.getPaths().add(OUTPUT.defaultValue);
-				target.getSourceContainers().add(scdNew);
-			} else if (scd.getPaths().isEmpty()) {
-				scd.getPaths().add(OUTPUT.defaultValue);
+
+		if (target.isYarnWorkspaceRoot()) {
+			return;
+		}
+		List<SourceContainerDescription> sourceContainers = target.getSourceContainers();
+		SourceContainerDescription sourceContainerTypeSource = null;
+		for (SourceContainerDescription sourceContainer : sourceContainers) {
+			if (!sourceContainer.getPaths().isEmpty()) {
+				return;
+			}
+			if (sourceContainerTypeSource == null
+					&& sourceContainer.getSourceContainerType() == SourceContainerType.SOURCE) {
+				sourceContainerTypeSource = sourceContainer;
 			}
 		}
+		if (sourceContainerTypeSource == null) {
+			sourceContainerTypeSource = ProjectDescriptionFactory.eINSTANCE.createSourceContainerDescription();
+			sourceContainerTypeSource.setSourceContainerType(SourceContainerType.SOURCE);
+			sourceContainers.add(sourceContainerTypeSource);
+		}
+		sourceContainerTypeSource.getPaths().add(OUTPUT.defaultValue);
 	}
 
-	private VersionNumber parseVersion(String versionStr) {
-		if (versionStr == null) {
-			return null;
-		}
-		VersionNumber result = semverHelper.parseVersionNumber(versionStr);
-		return result;
-	}
-
-	private NPMVersionRequirement parseVersionRequirement(String versionRequirementStr) {
-		if (versionRequirementStr == null) {
-			return null;
-		}
-		NPMVersionRequirement result = semverHelper.parse(versionRequirementStr);
-		return result;
-	}
 }

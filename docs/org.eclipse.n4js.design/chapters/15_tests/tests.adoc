@@ -243,17 +243,6 @@ It is important to note that some of the tests are positive and some are negativ
 
 To exclude validation tests or run-time related test, implementation is blacklist approach to exclude some of the ECMA test262 tests from execution.
 
-[[sec:Integration_Tests]]
-[.language-n4js]
-==   Integration Tests
-
-Integration tests based on the stdlib and online-presence code bases can be found in bundle `org.eclipse.n4js.hlc.tests`
-in package `org.eclipse.n4js.hlc.tests.integration` (headless case) and in bundle `org.eclipse.n4js.ui.tests` in
-package `org.eclipse.n4js.ui.tests.integration` (plugin-UI tests running inside Eclipse). The headless
-tests also execute mangelhaft tests, the UI tests only perform compilation of the test code.
-
-More information can be found in the API documentation of classes `AbstractIntegrationTest` and `AbstractIntegrationPluginUITest`.
-
 
 [[sec:Test_Helpers]]
 [.language-n4js]
@@ -864,6 +853,7 @@ Multi line:
 Provided by:: -
 Description::
   The most important test for compiler/transpiler, but also for ensuring that N4JS internal validations and assumptions are true at runtime.
+  Unlike the other output-related Xpect test methods (e.g. outputRegEx) this method ignores white space.
 
 [[sec:XPECT_outputRegEx]]
 ====   outputRegEx

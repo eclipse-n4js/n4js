@@ -25,7 +25,7 @@ import com.google.common.base.Predicates;
 
 /**
  * IMPORTANT: All the tests in the classes inheriting from this class require that <code>n4jsc.jar</code> exists in
- * folder <code>.../n4js/tests/org.eclipse.n4js.hlc.tests/target/</code>. Before executing this test, in the console,
+ * folder <code>.../n4js/tests/org.eclipse.n4js.ide.tests/target/</code>. Before executing this test, in the console,
  * get an up-to-date <code>n4jsc.jar</code> from somewhere (e.g. download from Jenkins) and manually place it in the
  * folder mentioned above.
  */

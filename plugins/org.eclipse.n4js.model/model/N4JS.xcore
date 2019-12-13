@@ -178,6 +178,16 @@ class ImportDeclaration extends AnnotableScriptElement {
 	refers TModule module
 	transient String moduleSpecifierAsText
 	transient ModuleSpecifierForm moduleSpecifierForm
+
+	/*
+	 * Tells if this import is a so-called "bare import" of the form:
+	 * <pre>
+	 * import "path/to/SomeModule"
+	 * </pre>
+	 */
+	op boolean isBare() {
+		return importSpecifiers.empty;
+	}
 }
 
 enum ModuleSpecifierForm {

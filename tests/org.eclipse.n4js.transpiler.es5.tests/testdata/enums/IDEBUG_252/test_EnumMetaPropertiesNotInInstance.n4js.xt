@@ -22,12 +22,14 @@
 /* XPECT output ---
 <==
 stdout:
-{ [Function: E1]
-  A: E1 { name: 'A', value: 'aa' },
-  B: E1 { name: 'B', value: 'bb' } }
+E1 { name: 'A', value: 'aa' }
+E1 { name: 'B', value: 'bb' }
 stderr:
 ==>
 --- */
 
-enum E1{ A: "aa", B: "bb" }
-console.log(E1)
+
+enum E1 { A: "aa", B: "bb" }
+
+console.log(E1.A)
+console.log(E1.B)

@@ -714,6 +714,13 @@ For choosing the element to import, there are the exact same options as in ECMAS
     var c: N.default = new N.default();
 
 ----
+* bare imports are used to load a module only for its side effect, without importing anything from that module:
++
+[source,n4js]
+----
+    import "M"
+----
+
 .Imports
 [req,id=IDE-135,version=1]
 --

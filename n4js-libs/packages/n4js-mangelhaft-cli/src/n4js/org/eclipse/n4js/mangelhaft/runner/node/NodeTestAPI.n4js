@@ -10,6 +10,7 @@
  */
 
 import debug from "debug";
+import glob from "glob";
 import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
 import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
@@ -27,6 +28,11 @@ import * as lib_path from "path";
 const log = debug("n4js-mangelhaft:api");
 const rlog = debug("n4js-mangelhaft:test-run");
 
+function readPackageJson(prjPath: string): Object+ {
+    const packageJsonPath = lib_path.join(prjPath, PACKAGE_JSON);
+    return fsSafeAccessSync(packageJsonPath) ? readJsonFile(packageJsonPath) : null;
+}
+
 export default public class NodeTestAPI {
     /**
      * Executes a test run (might include compilation) with the given set of test options.
@@ -34,36 +40,41 @@ export default public class NodeTestAPI {
     public static async exec(options: NodeTestOptions): void {
         log("options: %O", options);
 
-        let baseDir = options.compile;
+        const baseDir = options.compile;
         if (baseDir) { // call n4jsc
-            
+            log("compiling:", baseDir);
             const n4jscTempDir = await createTempDir();
 
-            if (isHTTP_re.test(options.testCatalog)) { // use temp file
+            if (isHTTP_re.test(options.testCatalog)) { // when compiling, use temp file if `testCatalog` is URL
                 options.testCatalog = lib_path.join(n4jscTempDir, "test-catalog.json");
             } else {
                 options.testCatalog = lib_path.resolve(process.cwd(), options.testCatalog);
             }
 
-            log("compiling", options.testCatalog);
+            log("test catalog written to:", options.testCatalog);
             await n4js_cli.n4jsc(n4js_cli.Goal.compile, baseDir, options);
 
-            log("generated test catalog:", options.testCatalog);
-
             const testCatalog: TestInfos = options.emitProjectTestCatalogs ? JSON.parse(String(lib_fs.readFileSync(options.testCatalog, { encoding: "UTF-8" }))) as TestInfos : null;
-            const pathToPackageJson = new Map<string, Object+>();
-            for (const p of await lib_fs.readdir(baseDir)) {
-                const prj = lib_path.join(baseDir, p);
 
-                const packageJsonPath = lib_path.join(prj, PACKAGE_JSON);
-                if (fsSafeAccessSync(packageJsonPath)) {
-                    const packageJson = readJsonFile(packageJsonPath);
-                    if (packageJson && packageJson[PACKAGE_JSON_N4JS_SECTION_KEY]) { // only add if package.json has an "n4js" section
-                        pathToPackageJson.set(prj, packageJson);
+            const pathToPackageJson = new Map<string, Object+>();
+
+            // scan all projects to be able to write test catalog files to test projects directories:
+            const basePackageJson = readPackageJson(baseDir);
+            if (basePackageJson && basePackageJson.workspaces) { // evaluate workspace
+                for (const globEntry of basePackageJson.workspaces as string[]) {
+                    for (const dir of await glob(globEntry, { cwd: baseDir, absolute: true })) {
+                        const packageJson = readPackageJson(dir);
+                        if (packageJson && packageJson[PACKAGE_JSON_N4JS_SECTION_KEY]) { // only add if package.json has an "n4js" section
+                            log("n4js project:", dir);
+                            pathToPackageJson.set(dir, packageJson);
+                        }
                     }
                 }
+            } else if (basePackageJson && basePackageJson[PACKAGE_JSON_N4JS_SECTION_KEY]) { // only add if package.json has an "n4js" section
+                log("n4js project:", baseDir);
+                pathToPackageJson.set(baseDir, basePackageJson);
             }
-            
+
             for (const [dir, packageJson] of pathToPackageJson) {
                 if (testCatalog && options.emitProjectTestCatalogs) {
                     const tests = testCatalog.testDescriptors.filter(test => test.origin === packageJson["name"] as string);

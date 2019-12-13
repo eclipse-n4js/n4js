@@ -39,7 +39,6 @@ Contributors:
 		<module>testhelpers</module>
 		<module>features</module>
 		<module>docs</module>
-		<module>tools</module>
 		<module>builds</module>
 	</modules>
 

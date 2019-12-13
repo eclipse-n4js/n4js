@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.server;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -49,25 +49,36 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 	@Inject
 	private ProjectDiscoveryHelper projectDiscoveryHelper;
 
+	private URI knownWorkspaceBaseURI = null;
+
 	@Override
 	public IWorkspaceConfig getWorkspaceConfig(URI workspaceBaseURI) {
 		try {
+			if (workspaceBaseURI.equals(knownWorkspaceBaseURI)) {
+				return new N4JSWorkspaceConfig(n4jsCore);
+			}
+
 			// TODO is this correct if we have multiple workspace URIs?
 			workspace.clear();
 
 			File workspaceRoot = new File(workspaceBaseURI.toFileString());
+
 			Set<Path> allProjectLocations = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot.toPath());
-			List<FileURI> allProjectURIs = new LinkedList<>();
+
+			List<FileURI> allProjectURIs = new ArrayList<>();
 			for (Path path : allProjectLocations) {
 				allProjectURIs.add(new FileURI(path.toFile()));
 			}
 
 			headlessHelper.registerProjectsToFileBasedWorkspace(allProjectURIs, workspace);
+
 			return new N4JSWorkspaceConfig(n4jsCore);
 
 		} catch (N4JSCompileException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
+		} finally {
+			this.knownWorkspaceBaseURI = workspaceBaseURI;
 		}
 	}
 

@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,6 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import org.eclipse.emf.ecore.xml.type.XMLTypeFactory;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
@@ -160,7 +160,7 @@ public final class UserdataMapper {
 
 		resourceForUserData.save(baos, getOptions(resourceURI, BINARY));
 
-		String serializedScript = BINARY ? XMLTypeFactory.eINSTANCE.convertBase64Binary(baos.toByteArray())
+		String serializedScript = BINARY ? Base64.getEncoder().encodeToString(baos.toByteArray())
 				: baos.toString(TRANSFORMATION_CHARSET_NAME);
 
 		final HashMap<String, String> ret = new HashMap<>();
@@ -236,7 +236,7 @@ public final class UserdataMapper {
 		try {
 			final boolean binary = !serializedData.startsWith("<");
 			final ByteArrayInputStream bais = new ByteArrayInputStream(
-					binary ? XMLTypeFactory.eINSTANCE.createBase64Binary(serializedData)
+					binary ? Base64.getDecoder().decode(serializedData)
 							: serializedData.getBytes(TRANSFORMATION_CHARSET_NAME));
 			xres.load(bais, getOptions(uri, binary));
 		} catch (Exception e) {

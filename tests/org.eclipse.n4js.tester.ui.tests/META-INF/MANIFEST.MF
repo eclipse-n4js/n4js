@@ -9,7 +9,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.n4js.tester.tests.helper,
  org.eclipse.xtend.lib,
  org.junit,
- org.eclipse.n4js.hlc.base,
  org.eclipse.xtext.ui.testing,
  org.eclipse.n4js.ui.tests.helper
 Automatic-Module-Name: org.eclipse.n4js.tester.tests

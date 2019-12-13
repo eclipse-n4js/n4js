@@ -712,13 +712,22 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_DECLARATION___GET_ANNOTATIONS = ANNOTABLE_SCRIPT_ELEMENT___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is Bare</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_DECLARATION___IS_BARE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>Import Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+	int IMPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl <em>Import Specifier</em>}' class.
@@ -16461,6 +16470,16 @@ public interface N4JSPackage extends EPackage {
 	EAttribute getImportDeclaration_ModuleSpecifierForm();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ImportDeclaration#isBare() <em>Is Bare</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Bare</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ImportDeclaration#isBare()
+	 * @generated
+	 */
+	EOperation getImportDeclaration__IsBare();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ImportSpecifier <em>Import Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -22345,6 +22364,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IMPORT_DECLARATION__MODULE_SPECIFIER_FORM = eINSTANCE.getImportDeclaration_ModuleSpecifierForm();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Bare</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation IMPORT_DECLARATION___IS_BARE = eINSTANCE.getImportDeclaration__IsBare();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl <em>Import Specifier</em>}' class.

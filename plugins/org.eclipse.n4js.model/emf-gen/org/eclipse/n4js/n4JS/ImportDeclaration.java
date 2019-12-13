@@ -138,4 +138,18 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	 */
 	void setModuleSpecifierForm(ModuleSpecifierForm value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Tells if this import is a so-called "bare import" of the form:
+	 * <pre>
+	 * import "path/to/SomeModule"
+	 * </pre>
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isBare();
+
 } // ImportDeclaration
