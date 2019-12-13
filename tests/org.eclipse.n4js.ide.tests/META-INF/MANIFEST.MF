@@ -16,6 +16,7 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.xtext.testing,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.json,
- org.eclipse.n4js.cli.tests.helper
+ org.eclipse.n4js.cli.tests.helper,
+ org.eclipse.n4js.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.ide.tests

@@ -24,6 +24,8 @@ import org.eclipse.xtext.validation.Issue.IssueImpl;
 
 /**
  * GH-1537
+ *
+ * All line and column numbers are one-based. Offset is zero-based.
  */
 public class N4JSIssue extends IssueImpl implements Externalizable {
 	private static final String NULL = "";
