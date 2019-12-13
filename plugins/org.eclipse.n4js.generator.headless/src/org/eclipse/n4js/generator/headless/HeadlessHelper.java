@@ -130,7 +130,7 @@ public class HeadlessHelper {
 				if (logger != null && logger.isCreateDebugOutput()) {
 					logger.debug("Registering project '" + projectURI + "'");
 				}
-				workspace.registerProject(projectURI);
+				workspace.registerProject(projectURI, projectDescription);
 				registeredProjects.put(projectName, projectURI);
 			} catch (N4JSBrokenProjectException e) {
 				throw new N4JSCompileException("Unable to register project '" + projectURI + "'", e);

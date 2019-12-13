@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,13 +64,21 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 	public List<URI> getAllResources(IFileSystemScanner scanner) {
 		List<URI> uris = new ArrayList<>();
 		URI projectBase = getPath();
-		scanner.scan(projectBase, (uri) -> {
-			URI relativeUri = uri.deresolve(projectBase);
-			if (relativeUri.segmentCount() > 0 && !relativeUri.segment(0).equals(N4JSGlobals.NODE_MODULES)) {
+		scanner.scan(projectBase, new FileVisitingAcceptor() {
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
+					return FileVisitResult.SKIP_SUBTREE;
+				}
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public void accept(URI uri) {
 				uris.add(uri);
 			}
-		});
 
+		});
 		return uris;
 	}
 

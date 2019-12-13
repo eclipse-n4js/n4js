@@ -10,13 +10,14 @@
  */
 package org.eclipse.n4js.json.model.utils;
 
+import static org.eclipse.xtext.util.Strings.split;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -221,14 +222,14 @@ public class JSONModelUtils {
 	 * Sets the string {@code value} for the given property (dot-delimited) {@code path} starting from {@code objec†}.
 	 */
 	public static JSONStringLiteral setPath(JSONObject object, String path, String value) {
-		return setPath(object, Arrays.asList(path.split("\\.")), createStringLiteral(value));
+		return setPath(object, split(path, '.'), createStringLiteral(value));
 	}
 
 	/**
 	 * Sets the {@code value} for the given property (dot-delimited) {@code path} starting from {@code objec†}.
 	 */
 	public static <V extends JSONValue> V setPath(JSONObject object, String path, V value) {
-		return setPath(object, Arrays.asList(path.split("\\.")), value);
+		return setPath(object, split(path, '.'), value);
 	}
 
 	/**
@@ -259,8 +260,7 @@ public class JSONModelUtils {
 		}
 
 		// obtain NameValuePair that matches the first segment in propertyPath
-		final Optional<NameValuePair> pair = object.getNameValuePairs().stream()
-				.filter(p -> p.getName().equals(currentProperty)).findAny();
+		final Optional<NameValuePair> pair = getNameValuePair(object, currentProperty);
 
 		// if pair already exists
 		if (pair.isPresent()) {
@@ -309,10 +309,19 @@ public class JSONModelUtils {
 	 * for the given {@code property}.
 	 */
 	public static Optional<JSONValue> getProperty(JSONObject object, String property) {
-		return object.getNameValuePairs().stream()
-				.filter(pair -> pair.getName().equals(property))
-				.findFirst()
-				.map(pair -> pair.getValue());
+		return getNameValuePair(object, property).map(NameValuePair::getValue);
+	}
+
+	/**
+	 * Returns the name-value-pair of the given {@code property} of {@code object}, or an absent if none.
+	 */
+	public static Optional<NameValuePair> getNameValuePair(JSONObject object, String property) {
+		for (NameValuePair candidate : object.getNameValuePairs()) {
+			if (property.equals(candidate.getName())) {
+				return Optional.of(candidate);
+			}
+		}
+		return Optional.empty();
 	}
 
 	/**
@@ -344,9 +353,7 @@ public class JSONModelUtils {
 	 */
 	public static <V extends JSONValue> V setProperty(JSONObject object, String name, V value) {
 		// find existing pair
-		final Optional<NameValuePair> existingPair = object.getNameValuePairs().stream()
-				.filter(pair -> pair.getName().equals(name))
-				.findAny();
+		final Optional<NameValuePair> existingPair = getNameValuePair(object, name);
 
 		if (existingPair.isPresent()) {
 			// change existing pair value

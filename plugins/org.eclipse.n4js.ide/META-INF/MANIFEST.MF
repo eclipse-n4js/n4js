@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.n4js,
  com.google.inject,
  com.google.gson,
  org.eclipse.n4js.ts.ide,
- org.eclipse.n4js.tester
+ org.eclipse.n4js.tester,
+ org.eclipse.emf.ecore
 Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.contentassist.antlr,
  org.eclipse.n4js.ide.contentassist.antlr.internal,

@@ -11,6 +11,8 @@
 package org.eclipse.n4js.semver;
 
 import org.eclipse.n4js.semver.model.SemverSerializer;
+import org.eclipse.n4js.semver.serializer.CustomSemverSyntacticSequencer;
+import org.eclipse.n4js.semver.serializer.SemverSyntacticSequencer;
 import org.eclipse.n4js.semver.validation.SemverIssueCodes;
 import org.eclipse.n4js.semver.validation.SemverIssueSeveritiesProvider;
 import org.eclipse.n4js.xtext.serializer.SerializerPatchModule;
@@ -40,5 +42,10 @@ public class SemverRuntimeModule extends AbstractSemverRuntimeModule {
 	/** Avoid races in internal serializer caches */
 	public void configureSerializerPatches(Binder binder) {
 		new SerializerPatchModule().configure(binder);
+	}
+
+	/** Fix serialization of data type values */
+	public Class<? extends SemverSyntacticSequencer> bindSemverSyntacticSequencer() {
+		return CustomSemverSyntacticSequencer.class;
 	}
 }

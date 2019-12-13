@@ -13,15 +13,18 @@ package org.eclipse.n4js.utils;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.WORKSPACES;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.URI;
@@ -32,19 +35,32 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
+import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
 import org.eclipse.n4js.json.JSON.JSONDocument;
+import org.eclipse.n4js.json.JSON.JSONFactory;
+import org.eclipse.n4js.json.JSON.JSONNumericLiteral;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
+import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.util.LazyStringInputStream;
 import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.RuntimeIOException;
+import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.util.Tuples;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -128,6 +144,8 @@ public class ProjectDescriptionLoader {
 		return null;
 	}
 
+	private static final Pattern windowsPattern = Pattern.compile("[\\/]");
+
 	/**
 	 * Adjust the path value of the "main" property of the given package.json document as follows (in-place change of
 	 * the given JSON document):
@@ -142,27 +160,33 @@ public class ProjectDescriptionLoader {
 		if (!(content instanceof JSONObject))
 			return;
 		JSONObject contentCasted = (JSONObject) content;
-		String main = asNonEmptyStringOrNull(JSONModelUtils.getProperty(contentCasted, MAIN.name).orElse(null));
+		NameValuePair mainProperty = JSONModelUtils.getNameValuePair(contentCasted, MAIN.name).orElse(null);
+		if (mainProperty == null) {
+			return;
+		}
+		String main = asNonEmptyStringOrNull(mainProperty.getValue());
 		if (main == null) {
 			return;
 		}
-		String pattern = File.separatorChar != '/'
-				? Pattern.quote(File.separator) + "|" + Pattern.quote("/")
-				: Pattern.quote("/");
-		String[] mainSegments = main.split(pattern, -1);
+		String[] mainSegments;
+		if (File.separatorChar == '/') {
+			List<String> splitted = Strings.split(main, '/');
+			mainSegments = splitted.toArray(String[]::new);
+		} else {
+			mainSegments = windowsPattern.split(main);
+		}
+
 		URI locationWithMain = location.appendSegments(mainSegments);
 
-		final ResourceSet resourceSet = resourceSetProvider.get();
-
-		if (!main.endsWith(".js") && isFile(resourceSet, locationWithMain.appendFileExtension("js"))) {
+		if (!main.endsWith(".js") && isFile(URIConverter.INSTANCE, locationWithMain.appendFileExtension("js"))) {
 			main += ".js";
-			JSONModelUtils.setProperty(contentCasted, MAIN.name, main);
-		} else if (isDirectory(resourceSet, locationWithMain)) {
+			mainProperty.setValue(JSONModelUtils.createStringLiteral(main));
+		} else if (isDirectory(URIConverter.INSTANCE, locationWithMain)) {
 			if (!(main.endsWith("/") || main.endsWith(File.separator))) {
 				main += "/";
 			}
 			main += "index.js";
-			JSONModelUtils.setProperty(contentCasted, MAIN.name, main);
+			mainProperty.setValue(JSONModelUtils.createStringLiteral(main));
 		}
 	}
 
@@ -171,89 +195,143 @@ public class ProjectDescriptionLoader {
 	 * <code>package.json</code> file in the given JSON document.
 	 */
 	private void setInformationFromFileSystem(URI location, ProjectDescription target) {
-		final ResourceSet resourceSet = resourceSetProvider.get();
-		final boolean hasNestedNodeModulesFolder = exists(resourceSet,
+		boolean hasNestedNodeModulesFolder = exists(URIConverter.INSTANCE,
 				location.appendSegment(N4JSGlobals.NODE_MODULES));
 		target.setHasNestedNodeModulesFolder(hasNestedNodeModulesFolder);
 	}
 
 	private JSONDocument loadPackageJSONAtLocation(SafeURI<?> location) {
-		JSONDocument packageJSON = loadXtextFileAtLocation(location, IN4JSProject.PACKAGE_JSON, JSONDocument.class);
-
-		if (packageJSON == null) {
-			packageJSON = loadXtextFileAtLocation(location,
-					IN4JSProject.PACKAGE_JSON + OUTPUT.defaultValue + N4JSGlobals.XT_FILE_EXTENSION,
-					JSONDocument.class);
+		Path path = location.appendSegment(IN4JSProject.PACKAGE_JSON).toFileSystemPath();
+		if (!Files.isReadable(path)) {
+			path = location.appendSegment(IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION)
+					.toFileSystemPath();
+			if (!Files.isReadable(path)) {
+				return null;
+			}
 		}
-
-		return packageJSON;
+		try {
+			String jsonString = Files.readString(path, StandardCharsets.UTF_8);
+			try {
+				JSONDocument doc = JSONFactory.eINSTANCE.createJSONDocument();
+				JsonElement jsonElement = new JsonParser().parse(jsonString);
+				doc.setContent(copy(jsonElement));
+				return doc;
+			} catch (JsonParseException e) {
+				JSONDocument packageJSON = loadXtextFileAtLocation(location, IN4JSProject.PACKAGE_JSON, jsonString,
+						JSONDocument.class);
+				return packageJSON;
+			}
+		} catch (IOException e) {
+			throw new RuntimeIOException(e);
+		}
 	}
 
-	private <T extends EObject> T loadXtextFileAtLocation(SafeURI<?> location, String name,
+	private <T extends EObject> T loadXtextFileAtLocation(SafeURI<?> location, String name, String content,
 			Class<T> expectedTypeOfRoot) {
-		final T result;
-		if (location.exists()) {
-			result = loadXtextFile(location.appendSegment(name), expectedTypeOfRoot);
-		} else {
-			// we only handle workspace and file-based cases
-			return null;
-		}
-		return result;
-	}
-
-	private <T extends EObject> T loadXtextFile(SafeURI<?> location, Class<T> expectedTypeOfRoot) {
+		SafeURI<?> fullLocation = location.appendSegment(name);
 		try {
 			// check whether a file exists at the given URI
-			if (!location.exists()) {
+			if (!fullLocation.exists()) {
 				return null;
 			}
 			ResourceSet resourceSet = resourceSetProvider.get();
-			Resource resource = resourceSet.getResource(location.toURI(), true);
+			Resource resource = resourceSet.createResource(fullLocation.toURI());
 			if (resource != null) {
-				List<EObject> contents = resource.getContents();
+				try (LazyStringInputStream contentAsStream = new LazyStringInputStream(content,
+						StandardCharsets.UTF_8)) {
+					resource.load(contentAsStream, resourceSet.getLoadOptions());
 
-				if (!contents.isEmpty()) {
-					EObject root = contents.get(0);
-					if (expectedTypeOfRoot.isInstance(root)) {
-						final T rootCasted = expectedTypeOfRoot.cast(root);
-						contents.clear();
-						return rootCasted;
+					List<EObject> contents = resource.getContents();
+
+					if (!contents.isEmpty()) {
+						EObject root = contents.get(0);
+						if (expectedTypeOfRoot.isInstance(root)) {
+							final T rootCasted = expectedTypeOfRoot.cast(root);
+							contents.clear();
+							return rootCasted;
+						}
 					}
 				}
 			}
 			return null;
 		} catch (Exception e) {
-			throw new WrappedException("failed to load Xtext file at " + location, e);
+			throw new WrappedException("failed to load Xtext file at " + fullLocation, e);
 		}
+	}
+
+	private JSONValue copy(JsonElement jsonElement) {
+		if (jsonElement.isJsonNull()) {
+			return JSONFactory.eINSTANCE.createJSONNullLiteral();
+		}
+		if (jsonElement.isJsonPrimitive()) {
+			JsonPrimitive primitive = jsonElement.getAsJsonPrimitive();
+			if (primitive.isBoolean()) {
+				JSONBooleanLiteral result = JSONFactory.eINSTANCE.createJSONBooleanLiteral();
+				result.setBooleanValue(primitive.getAsBoolean());
+				return result;
+			}
+			if (primitive.isNumber()) {
+				JSONNumericLiteral result = JSONFactory.eINSTANCE.createJSONNumericLiteral();
+				result.setValue(primitive.getAsBigDecimal());
+				return result;
+			}
+			if (primitive.isString()) {
+				JSONStringLiteral result = JSONFactory.eINSTANCE.createJSONStringLiteral();
+				result.setValue(primitive.getAsString());
+				return result;
+			}
+			throw new IllegalArgumentException(jsonElement.toString());
+		}
+		if (jsonElement.isJsonObject()) {
+			JsonObject object = jsonElement.getAsJsonObject();
+			JSONObject result = JSONFactory.eINSTANCE.createJSONObject();
+			for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+				NameValuePair pair = JSONFactory.eINSTANCE.createNameValuePair();
+				pair.setName(entry.getKey());
+				pair.setValue(copy(entry.getValue()));
+				result.getNameValuePairs().add(pair);
+			}
+			return result;
+		}
+		if (jsonElement.isJsonArray()) {
+			JsonArray array = jsonElement.getAsJsonArray();
+			JSONArray result = JSONFactory.eINSTANCE.createJSONArray();
+			for (JsonElement arrayElement : array) {
+				result.getElements().add(copy(arrayElement));
+			}
+			return result;
+		}
+		throw new IllegalArgumentException(jsonElement.toString());
 	}
 
 	/**
 	 * Checks whether {@code uri} points to a resource that actually exists on the file system.
 	 *
-	 * @param resourceSet
-	 *            The resource set to use for the file system access.
+	 * @param uriConverter
+	 *            The uri converter to use
 	 * @param uri
 	 *            The uri to check.
 	 */
-	private boolean exists(ResourceSet resourceSet, URI uri) {
-		return resourceSet.getURIConverter().exists(uri, null);
+	private boolean exists(URIConverter uriConverter, URI uri) {
+		return uriConverter.exists(uri, null);
 	}
 
 	/**
 	 * Checks whether {@code uri} points to a directory on the file system.
 	 *
-	 * @param resourceSet
-	 *            The resource set to use for the file system access.
+	 * @param uriConverter
+	 *            The uri converter to use
 	 * @param uri
 	 *            The uri to check.
 	 */
-	private boolean isDirectory(ResourceSet resourceSet, URI uri) {
-		final Map<String, ?> attributes = resourceSet.getURIConverter().getAttributes(uri, null);
-		final boolean isDirectory = Objects.equals(attributes.get(URIConverter.ATTRIBUTE_DIRECTORY), Boolean.TRUE);
+	private boolean isDirectory(URIConverter uriConverter, URI uri) {
+		final Map<String, ?> attributes = uriConverter.getAttributes(uri, Collections.singletonMap(
+				URIConverter.OPTION_REQUESTED_ATTRIBUTES, Collections.singleton(URIConverter.ATTRIBUTE_DIRECTORY)));
+		final boolean isDirectory = Boolean.TRUE.equals(attributes.get(URIConverter.ATTRIBUTE_DIRECTORY));
 		return isDirectory;
 	}
 
-	private boolean isFile(ResourceSet resourceSet, URI uri) {
-		return exists(resourceSet, uri) && !isDirectory(resourceSet, uri);
+	private boolean isFile(URIConverter uriConverter, URI uri) {
+		return exists(uriConverter, uri) && !isDirectory(uriConverter, uri);
 	}
 }

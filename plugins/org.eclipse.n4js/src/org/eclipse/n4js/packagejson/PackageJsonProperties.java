@@ -142,7 +142,7 @@ public enum PackageJsonProperties {
 
 	/** @return the result of {@link Enum#valueOf(Class, String)} or null. Does not throw an {@link Exception}. */
 	static public PackageJsonProperties valueOfNameOrNull(String name) {
-		return nameToEnum.getOrDefault(name, null);
+		return nameToEnum.get(name);
 	}
 
 	/**

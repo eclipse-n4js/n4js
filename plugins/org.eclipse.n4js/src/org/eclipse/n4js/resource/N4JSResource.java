@@ -471,6 +471,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		return basicGetParseResult();
 	}
 
+	@Override
+	protected List<EObject> getUnloadingContents() {
+		aboutToBeUnloaded = true;
+		return super.getUnloadingContents();
+	}
+
 	/**
 	 * Plain access to the parse result without lazy loading.
 	 */
