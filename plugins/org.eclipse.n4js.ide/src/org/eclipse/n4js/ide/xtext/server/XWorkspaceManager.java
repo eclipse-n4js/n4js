@@ -25,10 +25,9 @@ import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
-import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
+import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IExternalContentSupport;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -67,6 +66,9 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	@Inject
 	private IssueAcceptor issueAcceptor;
+
+	@Inject
+	private UriExtensions uriExtensions;
 
 	private XBuildManager buildManager;
 
@@ -314,12 +316,6 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 		String name = null;
 		if (projectConfig != null) {
 			name = projectConfig.getName();
-		} else if (N4Scheme.isN4Scheme(uri)) {
-			Collection<XProjectManager> allProjectManagers = getProjectManagers();
-			if (!allProjectManagers.isEmpty()) {
-				XProjectManager anyProjectManager = allProjectManagers.iterator().next();
-				return anyProjectManager;
-			}
 		}
 		return getProjectManager(name);
 	}
@@ -501,8 +497,8 @@ public class XWorkspaceManager implements DocumentResourceProvider {
 
 	/** @return a workspace relative URI for a given URI */
 	public URI makeWorkspaceRelative(URI uri) {
-		FileURI fileUri = new FileURI(uri);
-		URI relativeUri = fileUri.toURI().deresolve(getBaseDir());
+		URI withEmptyAuthority = uriExtensions.withEmptyAuthority(uri);
+		URI relativeUri = withEmptyAuthority.deresolve(getBaseDir());
 		return relativeUri;
 	}
 
