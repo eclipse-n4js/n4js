@@ -221,9 +221,6 @@ public abstract class GitUtils {
 			final int pathIndex = i++;
 			new Thread(() -> {
 				try {
-					// checkout master first
-					hardReset(remoteUri, paths[pathIndex], "master", cloneIfMissing, clean);
-					// now switch to requested branch
 					hardReset(remoteUri, paths[pathIndex], branch, cloneIfMissing, clean);
 				} catch (final Exception e) {
 					if (null == resetExc.get()) {
