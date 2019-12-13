@@ -46,6 +46,11 @@ public class ParallelBuildManager {
 		abstract public T getID();
 
 		abstract public Collection<T> getDependencyIDs();
+
+		@Override
+		public String toString() {
+			return String.valueOf(getID());
+		}
 	}
 
 	ParallelBuildManager(Collection<? extends ParallelJob<?>> jobs) {
@@ -113,7 +118,7 @@ public class ParallelBuildManager {
 		}
 	}
 
-	private void scheduleNext(ParallelJob<?> job) {
+	private synchronized void scheduleNext(ParallelJob<?> job) {
 		Object jobID = job.getID();
 		currentJobs.remove(job);
 
@@ -121,19 +126,16 @@ public class ParallelBuildManager {
 		if (currentJobs.isEmpty() && newReadyJobIDs.isEmpty() && !dependencyMap.isEmpty()) {
 			pool.shutdown();
 			System.err.println("Did not finish all jobs");
+			return;
 		}
 		for (Object newReadyJobID : newReadyJobIDs) {
 			ParallelJob<?> readyJob = jobMap.get(newReadyJobID);
 			currentJobs.add(readyJob);
 			pool.execute(readyJob);
 		}
-		synchronized (pool) {
-			pool.notifyAll();
-			if (dependencyMap.isEmpty()) {
-				pool.shutdown();
-			}
+		if (dependencyMap.isEmpty()) {
+			pool.shutdown();
 		}
-
 	}
 
 }

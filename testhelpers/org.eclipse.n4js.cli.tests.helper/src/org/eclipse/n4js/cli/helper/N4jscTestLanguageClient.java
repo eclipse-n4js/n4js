@@ -41,10 +41,10 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 	@Inject
 	XWorkspaceManager workspaceManager;
 
-	Multimap<String, String> errors = Multimaps.synchronizedMultimap(HashMultimap.create());
-	Multimap<String, String> warnings = Multimaps.synchronizedMultimap(HashMultimap.create());
-	NavigableMap<Path, Set<File>> transpiledFiles = Collections.synchronizedNavigableMap(new TreeMap<>());
-	Set<URI> deletedFiles = Collections.synchronizedSet(new HashSet<>());
+	final Multimap<String, String> errors = Multimaps.synchronizedMultimap(HashMultimap.create());
+	final Multimap<String, String> warnings = Multimaps.synchronizedMultimap(HashMultimap.create());
+	final NavigableMap<Path, Set<File>> transpiledFiles = Collections.synchronizedNavigableMap(new TreeMap<>());
+	final Set<URI> deletedFiles = Collections.synchronizedSet(new HashSet<>());
 
 	@Override
 	public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
