@@ -173,7 +173,9 @@ public class XBuildManager {
 			@Override
 			public void runJob() {
 				XBuildResult partialresult = projectManager.doInitialBuild(indicator);
-				result.addAll(partialresult.getAffectedResources());
+				synchronized (result) {
+					result.addAll(partialresult.getAffectedResources());
+				}
 			}
 
 			@SuppressWarnings("restriction")

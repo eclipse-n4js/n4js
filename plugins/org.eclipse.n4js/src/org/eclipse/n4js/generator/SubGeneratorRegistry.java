@@ -51,7 +51,7 @@ public class SubGeneratorRegistry {
 	private static final String ATT_FILE_EXTENSIONS = "fileExtensions";
 	private static final String ATT_SUB_GENERATOR_CLASS = "class";
 
-	private boolean isInitialized = false;
+	private volatile boolean isInitialized = false;
 	private final Map<String, List<ISubGenerator>> generators = new HashMap<>();
 
 	/**
@@ -97,37 +97,39 @@ public class SubGeneratorRegistry {
 	/**
 	 * Read information from extensions defined in plugin.xml files
 	 */
-	private void initialize() {
+	private synchronized void initialize() {
 		if (isInitialized) {
-			throw new IllegalStateException("may invoke method initialize() only once");
+			return;
 		}
-		isInitialized = true;
+		try {
+			final IExtensionRegistry registry = RegistryFactory.getRegistry();
+			if (registry != null) {
+				final IExtension[] extensions = registry.getExtensionPoint(SUBGENERATORS_EXTENSIONS_POINT_ID)
+						.getExtensions();
+				for (IExtension extension : extensions) {
+					final IConfigurationElement[] configElems = extension.getConfigurationElements();
+					for (IConfigurationElement elem : configElems) {
+						try {
+							String fileExtensions = elem.getAttribute(ATT_FILE_EXTENSIONS);
+							List<String> fileExtensionList = Splitter.on(',').trimResults().omitEmptyStrings()
+									.splitToList(fileExtensions);
+							ISubGenerator generator = (ISubGenerator) elem
+									.createExecutableExtension(ATT_SUB_GENERATOR_CLASS);
+							for (String fileExtension : fileExtensionList) {
+								register(generator, fileExtension);
+							}
 
-		final IExtensionRegistry registry = RegistryFactory.getRegistry();
-		if (registry != null) {
-			final IExtension[] extensions = registry.getExtensionPoint(SUBGENERATORS_EXTENSIONS_POINT_ID)
-					.getExtensions();
-			for (IExtension extension : extensions) {
-				final IConfigurationElement[] configElems = extension.getConfigurationElements();
-				for (IConfigurationElement elem : configElems) {
-					try {
-						String fileExtensions = elem.getAttribute(ATT_FILE_EXTENSIONS);
-						List<String> fileExtensionList = Splitter.on(',').trimResults().omitEmptyStrings()
-								.splitToList(fileExtensions);
-						ISubGenerator generator = (ISubGenerator) elem
-								.createExecutableExtension(ATT_SUB_GENERATOR_CLASS);
-						for (String fileExtension : fileExtensionList) {
-							register(generator, fileExtension);
+						} catch (Exception ex) {
+							LOGGER.error(
+									"Error while reading extensions for extension point "
+											+ SUBGENERATORS_EXTENSIONS_POINT_ID,
+									ex);
 						}
-
-					} catch (Exception ex) {
-						LOGGER.error(
-								"Error while reading extensions for extension point "
-										+ SUBGENERATORS_EXTENSIONS_POINT_ID,
-								ex);
 					}
 				}
 			}
+		} finally {
+			isInitialized = true;
 		}
 	}
 
