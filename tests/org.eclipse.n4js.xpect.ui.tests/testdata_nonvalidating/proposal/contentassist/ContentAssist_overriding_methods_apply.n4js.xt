@@ -65,6 +65,18 @@ class A {
 	public fooVariadic(...p: string): string {
         return null;
     }
+    public fooWildcard(p: string): Array<?> {
+		return null;
+	}
+	public fooNestedTypes1(): Array<Array<([string, int] & number)>> {
+		return null;
+	}
+	public fooNestedTypes2(): Generator<Generator<(int | int), int, int>, int, int> {
+		return null;
+	}
+	public fooNestedTypes3(): (string & string) | int {
+		return null;
+	}
 }
 
 abstract class A1 {
@@ -320,4 +332,64 @@ class B16 extends A {
 <...>
 --- */
 f
+}
+
+class B17 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'fooWildcard(p: string): Array<?>' ---
+<...>
+@Override
+<...>
+	public fooWildcard(p: string): Array<?> {
+		// TODO Auto-generated method stub
+		return super.fooWildcard(p);
+	}  
+<...>
+--- */
+f 
+}
+
+class B18 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'fooNestedTypes1(): Array<Array<([string, int] & number)>>' ---
+<...>
+@Override
+<...>
+	public fooNestedTypes1(): Array<Array<([string, int] & number)>> {
+		// TODO Auto-generated method stub
+		return super.fooNestedTypes1();
+	}  
+<...>
+--- */
+f 
+}
+
+class B19 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'fooNestedTypes2(): Generator<Generator<(int | int), int, int>, int, int>' ---
+<...>
+@Override
+<...>
+	public fooNestedTypes2(): Generator<Generator<(int | int), int, int>, int, int> {
+		// TODO Auto-generated method stub
+		return super.fooNestedTypes2();
+	}  
+<...>
+--- */
+f 
+}
+
+class B20 extends A { 
+@Override
+/* XPECT contentAssist at 'f<|>' apply 'fooNestedTypes3(): (string & string) | int' ---
+<...>
+@Override
+<...>
+	public fooNestedTypes3(): (string & string) | int {
+		// TODO Auto-generated method stub
+		return super.fooNestedTypes3();
+	}  
+<...>
+--- */
+f 
 }
