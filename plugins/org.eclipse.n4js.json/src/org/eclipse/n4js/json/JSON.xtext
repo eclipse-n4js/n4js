@@ -21,8 +21,7 @@ JSONDocument: {JSONDocument}
 ;
 
 JSONObject:
-	'{' nameValuePairs+=NameValuePair (',' nameValuePairs+=NameValuePair)* '}'
-	| {JSONObject} '{' '}'
+	{JSONObject} '{' (nameValuePairs+=NameValuePair (',' nameValuePairs+=NameValuePair)*)? '}'
 ;
 
 NameValuePair:
@@ -32,8 +31,7 @@ NameValuePair:
 ;
 
 JSONArray:
-	'[' elements+=JSONValue (',' elements+=JSONValue)* ']'
-	| {JSONArray} '[' ']'
+	{JSONArray} '[' (elements+=JSONValue (',' elements+=JSONValue)*)? ']'
 ;
 
 JSONValue:
@@ -62,7 +60,7 @@ JSONNullLiteral:
 ;
 
 terminal NUMBER returns ecore::EBigDecimal:
-	DOUBLE | INT
+	'-'? (DOUBLE | INT)
 ;
 
 terminal STRING:
@@ -86,11 +84,11 @@ terminal fragment LINE_TERMINATOR_SEQUENCE_FRAGMENT:
 	'\u000A' | '\u000D' '\u000A'?
 ;
 terminal DOUBLE returns ecore::EBigDecimal:
-	'-'? DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?
+	DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?
 ;
 
 terminal INT returns ecore::EBigDecimal:
-	'-'? DECIMAL_INTEGER_LITERAL_FRAGMENT EXPONENT_PART?;
+	DECIMAL_INTEGER_LITERAL_FRAGMENT EXPONENT_PART?;
 
 terminal fragment EXPONENT_PART:
 	('e' | 'E') SIGNED_INT

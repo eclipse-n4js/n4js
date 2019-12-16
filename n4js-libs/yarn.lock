@@ -682,6 +682,13 @@
   resolved "https://registry.npmjs.org/@n4jsd/debug/-/debug-4.1.0.tgz#ac34f6d4171b9adfeb8b301b66f8cb86205b48b7"
   integrity sha512-SwRCSvLLYMNd2r35uU/lXuu4B58k341lTs+cas6/XeTfVTCwrvMFIvTCNJ28JxqbNUevCZFtwiXnJHgzEYPK4Q==
 
+"@n4jsd/glob@<=7.1.*":
+  version "7.1.2"
+  resolved "http://nexus3-aws.corp.numberfour.eu/repository/npm-public/@n4jsd/glob/-/glob-7.1.2.tgz#9529257fc9d6169a3994cccdac86c7918d2b98e7"
+  integrity sha512-IuPvFlEhdU6jXcW/dUGwiBF8aoqhAk0GhsAl9ZZq5J4xgpfPjJBcGPBrdzDqiWexTP2/jarCo5Gpn6EmkuLLMQ==
+  dependencies:
+    n4js-runtime-node ""
+
 "@nodelib/fs.stat@^1.1.2":
   version "1.1.3"
   resolved "https://registry.npmjs.org/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"

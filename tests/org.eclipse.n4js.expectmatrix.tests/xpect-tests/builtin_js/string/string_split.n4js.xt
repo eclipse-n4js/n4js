@@ -47,16 +47,13 @@ console.log(splits);
 /* XPECT output ---
 <==
 stdout:
-[ 'Oh',
-  'brave',
-  'new',
-  'world',
-  'that',
-  'has',
-  'such',
-  'people',
-  'in',
-  'it.' ]
+[
+  'Oh',   'brave',
+  'new',  'world',
+  'that', 'has',
+  'such', 'people',
+  'in',   'it.'
+]
 [ 'Oh', 'brave', 'new', 'world' ]
 The original string is: "Oh brave new world that has such people in it."
 The separator is: " "

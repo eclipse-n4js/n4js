@@ -29,6 +29,7 @@ import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.inject.Inject;
@@ -75,6 +76,9 @@ public class IssueAcceptor {
 				return Collections.emptyList();
 			}
 		}
+		if (IterableExtensions.isEmpty(issues)) {
+			return Collections.emptyList();
+		}
 
 		List<Diagnostic> sortedDiags = new ArrayList<>();
 		for (Issue issue : issues) {
@@ -109,11 +113,11 @@ public class IssueAcceptor {
 		result.setMessage(issue.getMessage());
 		result.setSeverity(toDiagnosticSeverity(issue.getSeverity()));
 
-		Position start = new Position(toInt(issue.getLineNumber()), toInt(issue.getColumn()));
+		Position start = new Position(toZeroBasedInt(issue.getLineNumber()), toZeroBasedInt(issue.getColumn()));
 		Position end = null;
 		if (issue instanceof N4JSIssue) {
 			N4JSIssue n4jsIssue = (N4JSIssue) issue;
-			end = new Position(n4jsIssue.getLineNumberEnd(), n4jsIssue.getColumnEnd());
+			end = new Position(n4jsIssue.getLineNumberEnd() - 1, n4jsIssue.getColumnEnd() - 1);
 		} else {
 			URI uri = issue.getUriToProblem();
 			Document doc = null;
@@ -134,8 +138,8 @@ public class IssueAcceptor {
 
 	// TODO: Remove this function when org.eclipse.xtext.validation.Issue.IssueImpl#lineNumber and #column are
 	// initialized with '0'
-	static private int toInt(Integer integer) {
-		return integer == null ? 0 : (int) integer;
+	static private int toZeroBasedInt(Integer oneBasedInteger) {
+		return oneBasedInteger == null ? 0 : (oneBasedInteger - 1);
 	}
 
 	/**

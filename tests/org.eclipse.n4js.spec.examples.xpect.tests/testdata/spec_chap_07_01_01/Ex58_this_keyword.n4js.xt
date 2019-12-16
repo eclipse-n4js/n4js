@@ -17,8 +17,10 @@ stdout:
 global a
 this.name isnt visible in strict mode
 f(): this.name isnt visible in strict mode
-{ name: 'John',
-  greeting: 'Hello ol1.greeting: this.name isnt visible in strict mode' }
+{
+  name: 'John',
+  greeting: 'Hello ol1.greeting: this.name isnt visible in strict mode'
+}
 { name: 'John', f: [Function: f] }
 ol2.f.g: this.name isnt visible in strict mode
 stderr:

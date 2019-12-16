@@ -63,17 +63,23 @@ console.log('====================================');
 <==
 stdout:
 ====================================
-{ type: undefined,
+{
+  type: undefined,
   props: null,
-  children: [ { type: 'div', props: null, children: [] } ] }
+  children: [ { type: 'div', props: null, children: [] } ]
+}
 ====================================
-{ type: 'div',
+{
+  type: 'div',
   props: null,
-  children: [ { type: undefined, props: null, children: [] } ] }
+  children: [ { type: undefined, props: null, children: [] } ]
+}
 ====================================
-{ type: 'div',
+{
+  type: 'div',
   props: null,
-  children: [ { type: undefined, props: null, children: [Array] } ] }
+  children: [ { type: undefined, props: null, children: [Array] } ]
+}
 [ { type: 'div', props: null, children: [] } ]
 ====================================
 stderr:

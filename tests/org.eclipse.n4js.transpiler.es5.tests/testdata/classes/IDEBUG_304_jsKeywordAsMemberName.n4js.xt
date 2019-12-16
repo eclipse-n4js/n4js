@@ -14,14 +14,22 @@
 /* XPECT output ---
 <==
 stdout:
-[Function: delete] 'instance method renamed'
-[Function: delete_] 'instance method not renamed'
-[Function: delete] 'static method renamed'
-[Function: delete_] 'static method not renamed'
-[Function: delete] 'default instance method renamed'
-[Function: delete___n4] 'default static method renamed'
-[Function: delete] 'super instance method renamed'
-[Function: delete] 'super static method renamed'
+instance method renamed
+[Function: delete]
+instance method not renamed
+[Function: delete_]
+static method renamed
+[Function: delete]
+static method not renamed
+[Function: delete_]
+default instance method renamed
+[Function: delete]
+default static method renamed
+[Function: delete___n4]
+super instance method renamed
+[Function: delete]
+super static method renamed
+[Function: delete]
 logging setter-getter 1
 logging setter-getter 2
 stderr:
@@ -31,10 +39,12 @@ stderr:
 //instance
 class A{
     public delete (t) : void{
-        console.log(t, 'instance method renamed');
+        console.log('instance method renamed');
+        console.log(t);
     }
     public delete_ (t) : void{
-        console.log(t, 'instance method not renamed');
+        console.log('instance method not renamed');
+        console.log(t);
     }
 }
 var a = new A();
@@ -46,10 +56,12 @@ a.delete_(a.delete_);
 //static
 class B{
     public static delete (t) : void{
-        console.log(t, 'static method renamed');
+        console.log('static method renamed');
+        console.log(t);
     }
     public static delete_ (t) : void{
-        console.log(t, 'static method not renamed');
+        console.log('static method not renamed');
+        console.log(t);
     }
 }
 // XPECT warnings --> "A reference to method delete is created detached from a (correct) this-instance." at "delete"
@@ -60,10 +72,12 @@ B.delete_(B.delete_);
 //default
 interface I {
     public delete(t) : void{
-        console.log(t, 'default instance method renamed');
+        console.log('default instance method renamed');
+        console.log(t);
     };
         public static delete (t) : void{
-        console.log(t, 'default static method renamed');
+        console.log('default static method renamed');
+        console.log(t);
     }
 }
 
@@ -77,10 +91,12 @@ I.delete(I.delete)
 //super
 class S{
     public delete(t) : void{
-        console.log(t, "super instance method renamed");
+        console.log('super instance method renamed');
+        console.log(t);
     }
     public static delete (t) : void{
-        console.log(t, 'super static method renamed');
+        console.log('super static method renamed');
+        console.log(t);
     }
 }
 

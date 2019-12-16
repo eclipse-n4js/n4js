@@ -30,13 +30,19 @@ console.log(matches_array);
 /* XPECT output ---
 <==
 stdout:
-[ 'Chapter 3.4.5.1',
+[
+  'Chapter 3.4.5.1',
   'Chapter 3.4.5.1',
   '.1',
   index: 26,
   input: 'For more information, see Chapter 3.4.5.1',
-  groups: undefined ]
-[ 'A', 'B', 'C', 'D', 'E', 'a', 'b', 'c', 'd', 'e' ]
+  groups: undefined
+]
+[
+  'A', 'B', 'C', 'D',
+  'E', 'a', 'b', 'c',
+  'd', 'e'
+]
 stderr:
 ==>
 --- */

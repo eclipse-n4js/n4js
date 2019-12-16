@@ -51,31 +51,30 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//// This grammar of SemVer 2.0.0 is an adapted version of the BNF found at:
 		////  https://docs.npmjs.com/misc/semver
 		//NPMVersionRequirement:
-		//	WS*
-		//	VersionRangeSetRequirement
+		//	WS? VersionRangeSetRequirement
 		//	| (=> LocalPathVersionRequirement
 		//	| (=> URLVersionRequirement
 		//	| GitHubVersionRequirement
-		//	| TagVersionRequirement)) WS*;
+		//	| TagVersionRequirement)) WS?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//WS* VersionRangeSetRequirement | (=> LocalPathVersionRequirement | (=> URLVersionRequirement | GitHubVersionRequirement
-		//| TagVersionRequirement)) WS*
+		//WS? VersionRangeSetRequirement | (=> LocalPathVersionRequirement | (=> URLVersionRequirement | GitHubVersionRequirement
+		//| TagVersionRequirement)) WS?
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//WS* VersionRangeSetRequirement
+		//WS? VersionRangeSetRequirement
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//WS*
+		//WS?
 		public RuleCall getWSTerminalRuleCall_0_0() { return cWSTerminalRuleCall_0_0; }
 		
 		//VersionRangeSetRequirement
 		public RuleCall getVersionRangeSetRequirementParserRuleCall_0_1() { return cVersionRangeSetRequirementParserRuleCall_0_1; }
 		
-		//(=> LocalPathVersionRequirement | (=> URLVersionRequirement | GitHubVersionRequirement | TagVersionRequirement)) WS*
+		//(=> LocalPathVersionRequirement | (=> URLVersionRequirement | GitHubVersionRequirement | TagVersionRequirement)) WS?
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//=> LocalPathVersionRequirement | (=> URLVersionRequirement | GitHubVersionRequirement | TagVersionRequirement)
+		//(=> LocalPathVersionRequirement | (=> URLVersionRequirement | GitHubVersionRequirement | TagVersionRequirement))
 		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
 		
 		//=> LocalPathVersionRequirement
@@ -93,7 +92,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//TagVersionRequirement
 		public RuleCall getTagVersionRequirementParserRuleCall_1_0_1_2() { return cTagVersionRequirementParserRuleCall_1_0_1_2; }
 		
-		//WS*
+		//WS?
 		public RuleCall getWSTerminalRuleCall_1_1() { return cWSTerminalRuleCall_1_1; }
 	}
 	public class LocalPathVersionRequirementElements extends AbstractParserRuleElementFinder {
@@ -148,7 +147,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//URL_PROTOCOL
 		public RuleCall getProtocolURL_PROTOCOLParserRuleCall_0_0() { return cProtocolURL_PROTOCOLParserRuleCall_0_0; }
 		
-		//':' '/' '/'
+		//(':' '/' '/')
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//':'
@@ -332,16 +331,16 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cWSTerminalRuleCall_1_2 = (RuleCall)cGroup_1.eContents().get(2);
 		
 		//VersionRangeSetRequirement:
-		//	{VersionRangeSetRequirement} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?;
+		//	{VersionRangeSetRequirement} (ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)* WS?)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{VersionRangeSetRequirement} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
+		//{VersionRangeSetRequirement} (ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)* WS?)?
 		public Group getGroup() { return cGroup; }
 		
 		//{VersionRangeSetRequirement}
 		public Action getVersionRangeSetRequirementAction_0() { return cVersionRangeSetRequirementAction_0; }
 		
-		//(ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?
+		//(ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)* WS?)?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//ranges+=VersionRange
@@ -350,16 +349,16 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//VersionRange
 		public RuleCall getRangesVersionRangeParserRuleCall_1_0_0() { return cRangesVersionRangeParserRuleCall_1_0_0; }
 		
-		//(WS* '||' WS* ranges+=VersionRange)*
+		//(WS? '||' WS? ranges+=VersionRange)*
 		public Group getGroup_1_1() { return cGroup_1_1; }
 		
-		//WS*
+		//WS?
 		public RuleCall getWSTerminalRuleCall_1_1_0() { return cWSTerminalRuleCall_1_1_0; }
 		
 		//'||'
 		public Keyword getVerticalLineVerticalLineKeyword_1_1_1() { return cVerticalLineVerticalLineKeyword_1_1_1; }
 		
-		//WS*
+		//WS?
 		public RuleCall getWSTerminalRuleCall_1_1_2() { return cWSTerminalRuleCall_1_1_2; }
 		
 		//ranges+=VersionRange
@@ -368,7 +367,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//VersionRange
 		public RuleCall getRangesVersionRangeParserRuleCall_1_1_3_0() { return cRangesVersionRangeParserRuleCall_1_1_3_0; }
 		
-		//WS*
+		//WS?
 		public RuleCall getWSTerminalRuleCall_1_2() { return cWSTerminalRuleCall_1_2; }
 	}
 	public class VersionRangeElements extends AbstractParserRuleElementFinder {
@@ -403,10 +402,10 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cToVersionNumberParserRuleCall_5_0 = (RuleCall)cToAssignment_5.eContents().get(0);
 		
 		//HyphenVersionRange VersionRange:
-		//	{HyphenVersionRange} from=VersionNumber WS+ '-' WS+ to=VersionNumber;
+		//	{HyphenVersionRange} from=VersionNumber WS '-' WS to=VersionNumber;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{HyphenVersionRange} from=VersionNumber WS+ '-' WS+ to=VersionNumber
+		//{HyphenVersionRange} from=VersionNumber WS '-' WS to=VersionNumber
 		public Group getGroup() { return cGroup; }
 		
 		//{HyphenVersionRange}
@@ -418,13 +417,13 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//VersionNumber
 		public RuleCall getFromVersionNumberParserRuleCall_1_0() { return cFromVersionNumberParserRuleCall_1_0; }
 		
-		//WS+
+		//WS
 		public RuleCall getWSTerminalRuleCall_2() { return cWSTerminalRuleCall_2; }
 		
 		//'-'
 		public Keyword getHyphenMinusKeyword_3() { return cHyphenMinusKeyword_3; }
 		
-		//WS+
+		//WS
 		public RuleCall getWSTerminalRuleCall_4() { return cWSTerminalRuleCall_4; }
 		
 		//to=VersionNumber
@@ -445,10 +444,10 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cVersionConstraintsSimpleVersionParserRuleCall_2_1_0 = (RuleCall)cVersionConstraintsAssignment_2_1.eContents().get(0);
 		
 		//VersionRangeContraint VersionRange:
-		//	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS+ versionConstraints+=SimpleVersion)*;
+		//	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS versionConstraints+=SimpleVersion)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS+ versionConstraints+=SimpleVersion)*
+		//{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS versionConstraints+=SimpleVersion)*
 		public Group getGroup() { return cGroup; }
 		
 		//{VersionRangeConstraint}
@@ -460,10 +459,10 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//SimpleVersion
 		public RuleCall getVersionConstraintsSimpleVersionParserRuleCall_1_0() { return cVersionConstraintsSimpleVersionParserRuleCall_1_0; }
 		
-		//(WS+ versionConstraints+=SimpleVersion)*
+		//(WS versionConstraints+=SimpleVersion)*
 		public Group getGroup_2() { return cGroup_2; }
 		
-		//WS+
+		//WS
 		public RuleCall getWSTerminalRuleCall_2_0() { return cWSTerminalRuleCall_2_0; }
 		
 		//versionConstraints+=SimpleVersion
@@ -485,13 +484,13 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNumberVersionNumberParserRuleCall_2_0 = (RuleCall)cNumberAssignment_2.eContents().get(0);
 		
 		//SimpleVersion:
-		//	(comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber;
+		//	(comparators+=VersionComparator WS?)* withLetterV?=LETTER_V? number=VersionNumber;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//(comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber
+		//(comparators+=VersionComparator WS?)* withLetterV?=LETTER_V? number=VersionNumber
 		public Group getGroup() { return cGroup; }
 		
-		//(comparators+=VersionComparator WS*)*
+		//(comparators+=VersionComparator WS?)*
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//comparators+=VersionComparator
@@ -500,7 +499,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//VersionComparator
 		public RuleCall getComparatorsVersionComparatorEnumRuleCall_0_0_0() { return cComparatorsVersionComparatorEnumRuleCall_0_0_0; }
 		
-		//WS*
+		//WS?
 		public RuleCall getWSTerminalRuleCall_0_1() { return cWSTerminalRuleCall_0_1; }
 		
 		//withLetterV?=LETTER_V?
@@ -625,28 +624,23 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cHyphenMinusKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
 		private final Assignment cPreReleaseAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
 		private final RuleCall cPreReleaseQualifierTagParserRuleCall_0_1_0 = (RuleCall)cPreReleaseAssignment_0_1.eContents().get(0);
+		private final Group cGroup_0_2 = (Group)cGroup_0.eContents().get(2);
+		private final Keyword cPlusSignKeyword_0_2_0 = (Keyword)cGroup_0_2.eContents().get(0);
+		private final Assignment cBuildMetadataAssignment_0_2_1 = (Assignment)cGroup_0_2.eContents().get(1);
+		private final RuleCall cBuildMetadataQualifierTagParserRuleCall_0_2_1_0 = (RuleCall)cBuildMetadataAssignment_0_2_1.eContents().get(0);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Keyword cPlusSignKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
 		private final Assignment cBuildMetadataAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cBuildMetadataQualifierTagParserRuleCall_1_1_0 = (RuleCall)cBuildMetadataAssignment_1_1.eContents().get(0);
-		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
-		private final Keyword cHyphenMinusKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
-		private final Assignment cPreReleaseAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
-		private final RuleCall cPreReleaseQualifierTagParserRuleCall_2_1_0 = (RuleCall)cPreReleaseAssignment_2_1.eContents().get(0);
-		private final Keyword cPlusSignKeyword_2_2 = (Keyword)cGroup_2.eContents().get(2);
-		private final Assignment cBuildMetadataAssignment_2_3 = (Assignment)cGroup_2.eContents().get(3);
-		private final RuleCall cBuildMetadataQualifierTagParserRuleCall_2_3_0 = (RuleCall)cBuildMetadataAssignment_2_3.eContents().get(0);
 		
 		//Qualifier:
-		//	'-' preRelease=QualifierTag | '+' buildMetadata=QualifierTag | '-' preRelease=QualifierTag '+'
-		//	buildMetadata=QualifierTag;
+		//	'-' preRelease=QualifierTag ('+' buildMetadata=QualifierTag)? | '+' buildMetadata=QualifierTag;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'-' preRelease=QualifierTag | '+' buildMetadata=QualifierTag | '-' preRelease=QualifierTag '+'
-		//buildMetadata=QualifierTag
+		//'-' preRelease=QualifierTag ('+' buildMetadata=QualifierTag)? | '+' buildMetadata=QualifierTag
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//'-' preRelease=QualifierTag
+		//'-' preRelease=QualifierTag ('+' buildMetadata=QualifierTag)?
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//'-'
@@ -657,6 +651,18 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//QualifierTag
 		public RuleCall getPreReleaseQualifierTagParserRuleCall_0_1_0() { return cPreReleaseQualifierTagParserRuleCall_0_1_0; }
+		
+		//('+' buildMetadata=QualifierTag)?
+		public Group getGroup_0_2() { return cGroup_0_2; }
+		
+		//'+'
+		public Keyword getPlusSignKeyword_0_2_0() { return cPlusSignKeyword_0_2_0; }
+		
+		//buildMetadata=QualifierTag
+		public Assignment getBuildMetadataAssignment_0_2_1() { return cBuildMetadataAssignment_0_2_1; }
+		
+		//QualifierTag
+		public RuleCall getBuildMetadataQualifierTagParserRuleCall_0_2_1_0() { return cBuildMetadataQualifierTagParserRuleCall_0_2_1_0; }
 		
 		//'+' buildMetadata=QualifierTag
 		public Group getGroup_1() { return cGroup_1; }
@@ -669,27 +675,6 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//QualifierTag
 		public RuleCall getBuildMetadataQualifierTagParserRuleCall_1_1_0() { return cBuildMetadataQualifierTagParserRuleCall_1_1_0; }
-		
-		//'-' preRelease=QualifierTag '+' buildMetadata=QualifierTag
-		public Group getGroup_2() { return cGroup_2; }
-		
-		//'-'
-		public Keyword getHyphenMinusKeyword_2_0() { return cHyphenMinusKeyword_2_0; }
-		
-		//preRelease=QualifierTag
-		public Assignment getPreReleaseAssignment_2_1() { return cPreReleaseAssignment_2_1; }
-		
-		//QualifierTag
-		public RuleCall getPreReleaseQualifierTagParserRuleCall_2_1_0() { return cPreReleaseQualifierTagParserRuleCall_2_1_0; }
-		
-		//'+'
-		public Keyword getPlusSignKeyword_2_2() { return cPlusSignKeyword_2_2; }
-		
-		//buildMetadata=QualifierTag
-		public Assignment getBuildMetadataAssignment_2_3() { return cBuildMetadataAssignment_2_3; }
-		
-		//QualifierTag
-		public RuleCall getBuildMetadataQualifierTagParserRuleCall_2_3_0() { return cBuildMetadataQualifierTagParserRuleCall_2_3_0; }
 	}
 	public class QualifierTagElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.semver.Semver.QualifierTag");
@@ -907,7 +892,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//LETTER
 		public RuleCall getLETTERParserRuleCall_0_3() { return cLETTERParserRuleCall_0_3; }
 		
-		//'/' | '.' | ':' | '@'
+		//('/' | '.' | ':' | '@')
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//'/'
@@ -985,7 +970,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//DIGITS | LETTER)*
 		public Group getGroup() { return cGroup; }
 		
-		//'-' | '_' | LETTER_NO_VX
+		//('-' | '_' | LETTER_NO_VX)
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
 		//'-'
@@ -1012,7 +997,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 		//LETTER
 		public RuleCall getLETTERParserRuleCall_1_3() { return cLETTERParserRuleCall_1_3; }
 		
-		//'/' | '.' | ':' | '@'
+		//('/' | '.' | ':' | '@')
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 		
 		//'/'
@@ -1436,12 +1421,11 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	//// This grammar of SemVer 2.0.0 is an adapted version of the BNF found at:
 	////  https://docs.npmjs.com/misc/semver
 	//NPMVersionRequirement:
-	//	WS*
-	//	VersionRangeSetRequirement
+	//	WS? VersionRangeSetRequirement
 	//	| (=> LocalPathVersionRequirement
 	//	| (=> URLVersionRequirement
 	//	| GitHubVersionRequirement
-	//	| TagVersionRequirement)) WS*;
+	//	| TagVersionRequirement)) WS?;
 	public NPMVersionRequirementElements getNPMVersionRequirementAccess() {
 		return pNPMVersionRequirement;
 	}
@@ -1516,7 +1500,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//VersionRangeSetRequirement:
-	//	{VersionRangeSetRequirement} (ranges+=VersionRange (WS* '||' WS* ranges+=VersionRange)* WS*)?;
+	//	{VersionRangeSetRequirement} (ranges+=VersionRange (WS? '||' WS? ranges+=VersionRange)* WS?)?;
 	public VersionRangeSetRequirementElements getVersionRangeSetRequirementAccess() {
 		return pVersionRangeSetRequirement;
 	}
@@ -1536,7 +1520,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//HyphenVersionRange VersionRange:
-	//	{HyphenVersionRange} from=VersionNumber WS+ '-' WS+ to=VersionNumber;
+	//	{HyphenVersionRange} from=VersionNumber WS '-' WS to=VersionNumber;
 	public HyphenVersionRangeElements getHyphenVersionRangeAccess() {
 		return pHyphenVersionRange;
 	}
@@ -1546,7 +1530,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//VersionRangeContraint VersionRange:
-	//	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS+ versionConstraints+=SimpleVersion)*;
+	//	{VersionRangeConstraint} versionConstraints+=SimpleVersion (WS versionConstraints+=SimpleVersion)*;
 	public VersionRangeContraintElements getVersionRangeContraintAccess() {
 		return pVersionRangeContraint;
 	}
@@ -1556,7 +1540,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//SimpleVersion:
-	//	(comparators+=VersionComparator WS*)* withLetterV?=LETTER_V? number=VersionNumber;
+	//	(comparators+=VersionComparator WS?)* withLetterV?=LETTER_V? number=VersionNumber;
 	public SimpleVersionElements getSimpleVersionAccess() {
 		return pSimpleVersion;
 	}
@@ -1587,8 +1571,7 @@ public class SemverGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Qualifier:
-	//	'-' preRelease=QualifierTag | '+' buildMetadata=QualifierTag | '-' preRelease=QualifierTag '+'
-	//	buildMetadata=QualifierTag;
+	//	'-' preRelease=QualifierTag ('+' buildMetadata=QualifierTag)? | '+' buildMetadata=QualifierTag;
 	public QualifierElements getQualifierAccess() {
 		return pQualifier;
 	}

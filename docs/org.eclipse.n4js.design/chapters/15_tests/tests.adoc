@@ -853,6 +853,7 @@ Multi line:
 Provided by:: -
 Description::
   The most important test for compiler/transpiler, but also for ensuring that N4JS internal validations and assumptions are true at runtime.
+  Unlike the other output-related Xpect test methods (e.g. outputRegEx) this method ignores white space.
 
 [[sec:XPECT_outputRegEx]]
 ====   outputRegEx

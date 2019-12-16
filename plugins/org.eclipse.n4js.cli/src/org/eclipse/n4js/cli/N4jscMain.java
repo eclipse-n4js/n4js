@@ -53,9 +53,7 @@ public class N4jscMain {
 
 		try {
 			try (Measurement m = N4JSDataCollectors.dcCli.getMeasurement(N4JSDataCollectors.N4JS_CLI_COLLECTOR_NAME)) {
-
 				performGoal(options);
-
 			} catch (N4jscException e) {
 				throw e;
 			} catch (Exception e) {

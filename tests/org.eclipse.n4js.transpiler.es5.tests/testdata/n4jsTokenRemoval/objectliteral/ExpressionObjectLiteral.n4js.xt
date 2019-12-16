@@ -15,12 +15,14 @@
 /* XPECT output ~~~
 <==
 stdout:
-{ foo: 'foo',
+{
+  foo: 'foo',
   bar: 3,
   fn: [Function: someInitExpr],
   fn2: [Function: sd],
   fng: [Getter],
-  fns: [Setter] }
+  fns: [Setter]
+}
 stderr:
 ==>
 ~~~ */

@@ -17,5 +17,4 @@ cd `dirname $0`/TestPrj
     --xunitReportFile ./build/report.xml \
     --xunitReportName test-report \
     --xunitReportPackage TestPrj \
-    . \
     $@

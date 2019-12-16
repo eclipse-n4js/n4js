@@ -94,6 +94,7 @@ import org.eclipse.lsp4j.services.WorkspaceService;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.xtext.server.XBuildManager.XBuildable;
 import org.eclipse.n4js.ide.xtext.server.build.XIndexState;
+import org.eclipse.n4js.ide.xtext.server.concurrent.XRequestManager;
 import org.eclipse.n4js.ide.xtext.server.findReferences.XWorkspaceResourceAccess;
 import org.eclipse.n4js.ide.xtext.server.rename.XIRenameService;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
@@ -110,7 +111,6 @@ import org.eclipse.xtext.ide.server.codelens.ICodeLensResolver;
 import org.eclipse.xtext.ide.server.codelens.ICodeLensService;
 import org.eclipse.xtext.ide.server.coloring.IColoringService;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
-import org.eclipse.xtext.ide.server.concurrent.RequestManager;
 import org.eclipse.xtext.ide.server.contentassist.ContentAssistService;
 import org.eclipse.xtext.ide.server.formatting.FormattingService;
 import org.eclipse.xtext.ide.server.hover.IHoverService;
@@ -154,7 +154,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
 	@Inject
-	private RequestManager requestManager;
+	private XRequestManager requestManager;
 
 	@Inject
 	private WorkspaceSymbolService workspaceSymbolService;
@@ -599,7 +599,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			TextDocumentPositionParams params) {
 		URI uri = getURI(params);
 		DocumentSymbolService documentSymbolService = getService(uri, DocumentSymbolService.class);
-		if ((documentSymbolService == null)) {
+		if (documentSymbolService == null) {
 			return Collections.emptyList();
 		}
 		XtextResource res = workspaceManager.getResource(uri);
@@ -1242,7 +1242,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	/**
 	 * Getter
 	 */
-	public RequestManager getRequestManager() {
+	public XRequestManager getRequestManager() {
 		return requestManager;
 
 	}

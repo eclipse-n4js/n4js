@@ -129,16 +129,23 @@ ruleJSONObject returns [EObject current=null]
 }:
 	(
 		(
-			otherlv_0='{'
 			{
-				newLeafNode(otherlv_0, grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_0_0());
+				$current = forceCreateModelElement(
+					grammarAccess.getJSONObjectAccess().getJSONObjectAction_0(),
+					$current);
 			}
+		)
+		otherlv_1='{'
+		{
+			newLeafNode(otherlv_1, grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_1());
+		}
+		(
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_0_1_0());
+						newCompositeNode(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_2_0_0());
 					}
-					lv_nameValuePairs_1_0=ruleNameValuePair
+					lv_nameValuePairs_2_0=ruleNameValuePair
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getJSONObjectRule());
@@ -146,23 +153,23 @@ ruleJSONObject returns [EObject current=null]
 						add(
 							$current,
 							"nameValuePairs",
-							lv_nameValuePairs_1_0,
+							lv_nameValuePairs_2_0,
 							"org.eclipse.n4js.json.JSON.NameValuePair");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 			(
-				otherlv_2=','
+				otherlv_3=','
 				{
-					newLeafNode(otherlv_2, grammarAccess.getJSONObjectAccess().getCommaKeyword_0_2_0());
+					newLeafNode(otherlv_3, grammarAccess.getJSONObjectAccess().getCommaKeyword_2_1_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_0_2_1_0());
+							newCompositeNode(grammarAccess.getJSONObjectAccess().getNameValuePairsNameValuePairParserRuleCall_2_1_1_0());
 						}
-						lv_nameValuePairs_3_0=ruleNameValuePair
+						lv_nameValuePairs_4_0=ruleNameValuePair
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getJSONObjectRule());
@@ -170,36 +177,18 @@ ruleJSONObject returns [EObject current=null]
 							add(
 								$current,
 								"nameValuePairs",
-								lv_nameValuePairs_3_0,
+								lv_nameValuePairs_4_0,
 								"org.eclipse.n4js.json.JSON.NameValuePair");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
 			)*
-			otherlv_4='}'
-			{
-				newLeafNode(otherlv_4, grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_0_3());
-			}
-		)
-		    |
-		(
-			(
-				{
-					$current = forceCreateModelElement(
-						grammarAccess.getJSONObjectAccess().getJSONObjectAction_1_0(),
-						$current);
-				}
-			)
-			otherlv_6='{'
-			{
-				newLeafNode(otherlv_6, grammarAccess.getJSONObjectAccess().getLeftCurlyBracketKeyword_1_1());
-			}
-			otherlv_7='}'
-			{
-				newLeafNode(otherlv_7, grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_1_2());
-			}
-		)
+		)?
+		otherlv_5='}'
+		{
+			newLeafNode(otherlv_5, grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_3());
+		}
 	)
 ;
 
@@ -280,16 +269,23 @@ ruleJSONArray returns [EObject current=null]
 }:
 	(
 		(
-			otherlv_0='['
 			{
-				newLeafNode(otherlv_0, grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_0_0());
+				$current = forceCreateModelElement(
+					grammarAccess.getJSONArrayAccess().getJSONArrayAction_0(),
+					$current);
 			}
+		)
+		otherlv_1='['
+		{
+			newLeafNode(otherlv_1, grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_1());
+		}
+		(
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getJSONArrayAccess().getElementsJSONValueParserRuleCall_0_1_0());
+						newCompositeNode(grammarAccess.getJSONArrayAccess().getElementsJSONValueParserRuleCall_2_0_0());
 					}
-					lv_elements_1_0=ruleJSONValue
+					lv_elements_2_0=ruleJSONValue
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getJSONArrayRule());
@@ -297,23 +293,23 @@ ruleJSONArray returns [EObject current=null]
 						add(
 							$current,
 							"elements",
-							lv_elements_1_0,
+							lv_elements_2_0,
 							"org.eclipse.n4js.json.JSON.JSONValue");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 			(
-				otherlv_2=','
+				otherlv_3=','
 				{
-					newLeafNode(otherlv_2, grammarAccess.getJSONArrayAccess().getCommaKeyword_0_2_0());
+					newLeafNode(otherlv_3, grammarAccess.getJSONArrayAccess().getCommaKeyword_2_1_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getJSONArrayAccess().getElementsJSONValueParserRuleCall_0_2_1_0());
+							newCompositeNode(grammarAccess.getJSONArrayAccess().getElementsJSONValueParserRuleCall_2_1_1_0());
 						}
-						lv_elements_3_0=ruleJSONValue
+						lv_elements_4_0=ruleJSONValue
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getJSONArrayRule());
@@ -321,36 +317,18 @@ ruleJSONArray returns [EObject current=null]
 							add(
 								$current,
 								"elements",
-								lv_elements_3_0,
+								lv_elements_4_0,
 								"org.eclipse.n4js.json.JSON.JSONValue");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
 			)*
-			otherlv_4=']'
-			{
-				newLeafNode(otherlv_4, grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_0_3());
-			}
-		)
-		    |
-		(
-			(
-				{
-					$current = forceCreateModelElement(
-						grammarAccess.getJSONArrayAccess().getJSONArrayAction_1_0(),
-						$current);
-				}
-			)
-			otherlv_6='['
-			{
-				newLeafNode(otherlv_6, grammarAccess.getJSONArrayAccess().getLeftSquareBracketKeyword_1_1());
-			}
-			otherlv_7=']'
-			{
-				newLeafNode(otherlv_7, grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_1_2());
-			}
-		)
+		)?
+		otherlv_5=']'
+		{
+			newLeafNode(otherlv_5, grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_3());
+		}
 	)
 ;
 
@@ -573,7 +551,7 @@ ruleJSONNullLiteral returns [EObject current=null]
 	)
 ;
 
-RULE_NUMBER : (RULE_DOUBLE|RULE_INT);
+RULE_NUMBER : '-'? (RULE_DOUBLE|RULE_INT);
 
 RULE_STRING : '"' RULE_DOUBLE_STRING_CHAR* '"';
 
@@ -583,9 +561,9 @@ fragment RULE_LINE_TERMINATOR_FRAGMENT : ('\n'|'\r');
 
 fragment RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT : ('\n'|'\r' '\n'?);
 
-fragment RULE_DOUBLE : '-'? RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT RULE_DECIMAL_DIGIT_FRAGMENT* RULE_EXPONENT_PART?;
+fragment RULE_DOUBLE : RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT RULE_DECIMAL_DIGIT_FRAGMENT* RULE_EXPONENT_PART?;
 
-fragment RULE_INT : '-'? RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT RULE_EXPONENT_PART?;
+fragment RULE_INT : RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT RULE_EXPONENT_PART?;
 
 fragment RULE_EXPONENT_PART : ('e'|'E') RULE_SIGNED_INT;
 

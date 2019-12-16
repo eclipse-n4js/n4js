@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.n4js,
  com.google.inject,
  com.google.gson,
  org.eclipse.n4js.ts.ide,
- org.eclipse.n4js.tester
+ org.eclipse.n4js.tester,
+ org.eclipse.emf.ecore
 Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.contentassist.antlr,
  org.eclipse.n4js.ide.contentassist.antlr.internal,
@@ -25,6 +26,7 @@ Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.server,
  org.eclipse.n4js.ide.server.hover,
  org.eclipse.n4js.ide.xtext.server,
- org.eclipse.n4js.ide.xtext.server.build
+ org.eclipse.n4js.ide.xtext.server.build,
+ org.eclipse.n4js.ide.xtext.server.concurrent
 Automatic-Module-Name: org.eclipse.n4js.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-11

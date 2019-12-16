@@ -170,7 +170,7 @@ public class SemverSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     Qualifier returns Qualifier
 	 *
 	 * Constraint:
-	 *     (preRelease=QualifierTag | buildMetadata=QualifierTag | (preRelease=QualifierTag buildMetadata=QualifierTag))
+	 *     ((preRelease=QualifierTag buildMetadata=QualifierTag?) | buildMetadata=QualifierTag)
 	 */
 	protected void sequence_Qualifier(ISerializationContext context, Qualifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

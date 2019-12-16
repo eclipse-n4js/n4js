@@ -214,6 +214,13 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 					"Unexpected location of external project " + project.getProjectName() + " at " + location);
 		}
 		if (project.isExternal()) {
+			Loc specificLocation = workspace.fromURI(location.toURI());
+			if (specificLocation != null) {
+				ProjectDescription potentialResult = workspace.getProjectDescription(specificLocation);
+				if (potentialResult != null) {
+					return potentialResult;
+				}
+			}
 			return externalLibraryWorkspace.getProjectDescription((FileURI) location);
 		}
 		@SuppressWarnings("unchecked")

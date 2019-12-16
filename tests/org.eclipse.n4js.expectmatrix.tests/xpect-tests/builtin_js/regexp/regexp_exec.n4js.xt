@@ -35,11 +35,13 @@ console.log(matches);
 stdout:
 Found abb.  Next match starts at 3
 Found ab.  Next match starts at 9
-[ 'hello world!',
+[
+  'hello world!',
   'hello world!',
   index: 10,
   input: 'This is a hello world!',
-  groups: undefined ]
+  groups: undefined
+]
 stderr:
 ==>
 --- */

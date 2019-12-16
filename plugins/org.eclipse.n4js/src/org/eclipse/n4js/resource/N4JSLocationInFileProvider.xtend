@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ui.editor
+package org.eclipse.n4js.resource
 
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
@@ -26,6 +26,8 @@ import org.eclipse.xtext.resource.DefaultLocationInFileProvider
 import org.eclipse.xtext.resource.ILocationInFileProviderExtension
 
 /**
+ * A location in file provider that is aware of inferred types. The location
+ * of the referenced AST element is used instead.
  */
 class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 

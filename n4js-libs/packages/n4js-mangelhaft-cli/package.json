@@ -19,9 +19,11 @@
   },
   "dependencies": {
     "@n4jsd/debug": "<=4.1.*",
+    "@n4jsd/glob": "<=7.1.*",
     "debug": "~4.1.1",
     "cli-color": "~1.2.0",
     "esm": "3.2.25",
+    "glob": "^7.1.2",
     "n4js-cli": "^0.1.0",
     "n4js-runtime": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0",

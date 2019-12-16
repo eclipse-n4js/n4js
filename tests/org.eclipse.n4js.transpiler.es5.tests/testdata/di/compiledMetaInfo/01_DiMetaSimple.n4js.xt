@@ -28,19 +28,20 @@ fTypeVal N4Class {
   annotations: [],
   name: 'Foo',
   fqn: 'di/compiledMetaInfo/01_DiMetaSimple/Foo',
-  n4superType:
-   N4Class {
-     origin: 'n4js-runtime',
-     annotations: [],
-     name: 'N4Object',
-     fqn: 'N4BuiltInClasses/N4Object',
-     n4superType: undefined,
-     allImplementedInterfaces: [],
-     ownedMembers: [],
-     consumedMembers: [] },
+  n4superType: N4Class {
+    origin: 'n4js-runtime',
+    annotations: [],
+    name: 'N4Object',
+    fqn: 'N4BuiltInClasses/N4Object',
+    n4superType: undefined,
+    allImplementedInterfaces: [],
+    ownedMembers: [],
+    consumedMembers: []
+  },
   allImplementedInterfaces: [],
   ownedMembers: [],
-  consumedMembers: [] }
+  consumedMembers: []
+}
 stderr:
 ==>
 --- */
