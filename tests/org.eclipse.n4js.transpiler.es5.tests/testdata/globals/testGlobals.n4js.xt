@@ -27,7 +27,7 @@
 <==
 stdout:
 globalExportedVar_VAL
-true
+[Function: Map]
 stderr:
 ==>
 --- */
@@ -36,4 +36,4 @@ stderr:
 console.log(globalExportedVar);
 //console.log(globalVar);//err
 
-console.log($makeClass instanceof Function);
+console.log(Map);

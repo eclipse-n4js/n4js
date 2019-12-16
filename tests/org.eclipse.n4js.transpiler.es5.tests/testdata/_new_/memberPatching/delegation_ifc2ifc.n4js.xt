@@ -50,14 +50,14 @@ console.log('========================================');
 
 // assert that a delegate to I#m() was added to J
 var j : any+ = J;
-j.$methods.m.value();
-j.$methods.g.get();
-j.$methods.s.set('hello setter!');
+Object.getOwnPropertyDescriptor(j.$members as Object, 'm')['value']();
+Object.getOwnPropertyDescriptor(j.$members as Object, 'g')['get']();
+Object.getOwnPropertyDescriptor(j.$members as Object, 's')['set']('hello setter!');
 
 // assert that a delegate to I#m() was added to K
 var k : any+ = K;
-k.$methods.m.value();
-k.$methods.g.get();
-k.$methods.s.set('hello setter!');
+Object.getOwnPropertyDescriptor(k.$members as Object, 'm')['value']();
+Object.getOwnPropertyDescriptor(k.$members as Object, 'g')['get']();
+Object.getOwnPropertyDescriptor(k.$members as Object, 's')['set']('hello setter!');
 
 console.log('========================================');

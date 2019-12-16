@@ -25,7 +25,7 @@ static method not renamed
 default instance method renamed
 [Function: delete]
 default static method renamed
-[Function: delete___n4]
+[Function: delete]
 super instance method renamed
 [Function: delete]
 super static method renamed
