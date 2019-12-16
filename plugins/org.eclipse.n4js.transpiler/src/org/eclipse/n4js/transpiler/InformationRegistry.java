@@ -60,6 +60,9 @@ public class InformationRegistry {
 
 		/** Tag for members which were filled in by way of static polyfills. */
 		staticlyPolyfilled,
+
+		/** Tag for members which are to be hidden from reflection. */
+		hiddenFromReflection
 	}
 
 	/** Tells if the given call expression has been derived from an explicit super call within a constructor. */
@@ -90,6 +93,16 @@ public class InformationRegistry {
 	/** Marks given member as statically polyfilled. */
 	public void markAsStaticlyPolyfilled(N4MemberDeclaration element) {
 		tag(Tag.staticlyPolyfilled, element);
+	}
+
+	/** Tells whether the given member was marked as to be hidden from reflection. */
+	public boolean isHiddenFromReflection(N4MemberDeclaration element) {
+		return isTaggedAs(Tag.hiddenFromReflection, element);
+	}
+
+	/** Marks given member as to be hidden from reflection. */
+	public void markAsHiddenFromReflection(N4MemberDeclaration element) {
+		tag(Tag.hiddenFromReflection, element);
 	}
 
 	private boolean isTaggedAs(Tag tag, EObject element) {

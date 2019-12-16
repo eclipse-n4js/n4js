@@ -430,12 +430,20 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryInternal("$makeClass", true);
 	}
 
+	//// $fieldDefaults
+
+	/** "$fieldDefaults" - retrieve the internal symbol table entry for the symbol "$fieldDefaults" */
+	public SymbolTableEntryInternal steFor_$fieldDefaults() {
+
+		return getSymbolTableEntryInternal("$fieldDefaults", true);
+	}
+
 	//// $methods
 
 	/** "$methods" - retrieve the internal symbol table entry for the symbol "$methods" */
-	public SymbolTableEntryInternal steFor_$methods() {
+	public SymbolTableEntryInternal steFor_$members() {
 
-		return getSymbolTableEntryInternal("$methods", true);
+		return getSymbolTableEntryInternal("$members", true);
 	}
 
 	//// $makeInterface
@@ -526,14 +534,6 @@ public abstract class TranspilerComponent {
 	public SymbolTableEntryInternal steFor_$initFieldsFromInterfaces() {
 
 		return getSymbolTableEntryInternal("$initFieldsFromInterfaces", true);
-	}
-
-	//// $fieldDefaults
-
-	/** "$fieldDefaults" - retrieve the internal symbol table entry for the symbol "$fieldDefaults" */
-	public SymbolTableEntryInternal steFor_$fieldDefaults() {
-
-		return getSymbolTableEntryInternal("$fieldDefaults", true);
 	}
 
 	//// __proto__

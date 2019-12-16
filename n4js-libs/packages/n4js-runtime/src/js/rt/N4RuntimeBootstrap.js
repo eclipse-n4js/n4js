@@ -13,8 +13,7 @@
 (function (global) {
     "use strict";
 
-    var symHasInstance = Symbol.hasInstance,
-        ArraySlice = Array.prototype.slice,
+    var ArraySlice = Array.prototype.slice,
         noop = function() {};
 
     function defineN4TypeGetter(instance, factoryFn) {
@@ -23,67 +22,6 @@
             configurable: true, // for hot reloading/patching
             get: function() {
                 return n4type || (n4type = factoryFn());
-            }
-        });
-    }
-
-    /**
-     * Setup a constructor function to work as a class.
-     *
-     * @param ctor - The constructor function
-     * @param superCtor - The constructor function of the super class
-     * @param implementedInterfaces - Array of directly implemented interfaces, excluding built-in types and
-     *                                interfaces defined in definition files without annotation @N4JS.
-     * @param instanceMethods - An object holding the methods for the class instance and mixed in methods
-     * @param staticMethods - An object holding the descriptors for the class static methods
-     * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
-     */
-    function $makeClass(ctor, superCtor, implementedInterfaces, instanceMethods, staticMethods, n4typeFn) {
-        if (typeof superCtor === "function") {
-            Object.setPrototypeOf(ctor, superCtor);
-        }
-        Object.defineProperties(ctor, staticMethods);
-
-        var proto = Object.create(superCtor.prototype, instanceMethods);
-        Object.defineProperty(proto, "constructor", {
-            value: ctor
-        });
-
-        if (n4typeFn) {
-            defineN4TypeGetter(ctor, n4typeFn.bind(null, proto, ctor));
-        }
-
-        ctor.prototype = proto;
-    }
-
-    /**
-     * Setup a interface. Methods and field initializers are already merged into the interface object.
-     *
-     * @param tinterface - The interface object.
-     * @param extendedInterfacesFn - Optional function returning an array of interfaces extended by 'tinterface'.
-     *                               May be 'undefined' in case no interfaces are extended.
-     * @param n4typeFn - Optional factory function to create the meta type (currently mandatory though, will be optional with GH-574).
-     */
-    function $makeInterface(tinterface, extendedInterfacesFn, n4typeFn) {
-        tinterface.$extends = extendedInterfacesFn || (()=>[]);
-
-        if (n4typeFn) {
-            defineN4TypeGetter(tinterface, n4typeFn.bind(null, tinterface.$methods, tinterface));
-        }
-
-        Object.defineProperty(tinterface, symHasInstance, {
-            /**
-             * Check whether a value is instance of a class implementing an interface.
-             *
-             * @param instance - The instance which type is to be checked whether it implements the interface
-             * @return boolean
-             */
-            value: function(instance) {
-                if (!instance || !instance.constructor || !instance.constructor.n4type || !instance.constructor.n4type.allImplementedInterfaces) {
-                    return false;
-                }
-                const implementedInterface = tinterface.n4type.fqn;
-                return instance.constructor.n4type.allImplementedInterfaces.indexOf(implementedInterface) !== -1;
             }
         });
     }
@@ -119,7 +57,10 @@
                 }
                 target[fieldName] = value;
             }
-            $initFieldsFromInterfaces(target, ifc.$extends(), spec, mixinExclusion);
+            const extendsFn = ifc.$extends;
+            if(extendsFn) {
+                $initFieldsFromInterfaces(target, extendsFn(), spec, mixinExclusion);
+            }
         }
     }
 
@@ -252,8 +193,6 @@
     }
 
     //expose in global scope
-    global.$makeClass = $makeClass;
-    global.$makeInterface = $makeInterface;
     global.$initFieldsFromInterfaces = $initFieldsFromInterfaces;
     global.$makeEnum = $makeEnum;
 

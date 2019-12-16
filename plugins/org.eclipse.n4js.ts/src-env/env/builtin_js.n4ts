@@ -996,9 +996,18 @@ public providedByRuntime final object Symbol extends Object @Global {
 	(description: string = undefined): symbol
 
 	/**
-	 * TODO doc
+	 * This "well-known" symbol may be used to define the default iterator of an object.
+	 *
+	 * @see ES6, 19.4.2.4
 	 */
 	public const iterator: symbol
+
+	/**
+	 * This "well-known" symbol may be used to customize the behavior of the 'instanceof' operator.
+	 *
+	 * @see ES6, 19.4.2.2
+	 */
+	public const hasInstance: symbol
 
 	/**
 	 * Returns the shared symbol with the given key from the Javascript engine's shared symbol registry.

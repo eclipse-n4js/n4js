@@ -136,7 +136,7 @@ class BootstrapCallAssistant extends TransformationAssistant {
 		val result = <Statement>newArrayList
 
 		val ifcSTE = findSymbolTableEntryForElement(ifcDecl, true);
-		val $methodsSTE = steFor_$methods;
+		val $methodsSTE = steFor_$members;
 		val objectSTE = getSymbolTableEntryOriginal(state.G.objectType, true);
 		val definePropertiesSTE = getSymbolTableEntryForMember(state.G.objectType, "defineProperties", false, true, true);
 
@@ -433,10 +433,17 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 				)
 			),
 			// return this[$sym] = new N4Class() { ...
-			_VariableStatement(VariableStatementKeyword.CONST,
-				_VariableDeclaration("instanceProto", _Snippet("this.prototype")), // FIXME remove!
-				_VariableDeclaration("staticProto", _ThisLiteral) // FIXME remove!
-			),
+			if (typeDecl instanceof N4ClassDeclaration) {
+				_VariableStatement(VariableStatementKeyword.CONST,
+					_VariableDeclaration("instanceProto", _Snippet("this.prototype")), // FIXME remove!
+					_VariableDeclaration("staticProto", _ThisLiteral) // FIXME remove!
+				)
+			} else if (typeDecl instanceof N4InterfaceDeclaration) {
+				_VariableStatement(VariableStatementKeyword.CONST,
+					_VariableDeclaration("instanceProto", _Snippet("this.$members")), // FIXME remove!
+					_VariableDeclaration("staticProto", _ThisLiteral) // FIXME remove!
+				)
+			},
 			_ReturnStmnt(
 				_AssignmentExpr(
 					_IndexAccessExpr(_ThisLiteral, _IdentRef($symSTE)),
@@ -474,19 +481,18 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 			emptyList()
 		};
 
-		// prepare ownedMembers
-		val Iterable<N4MemberDeclaration> ownedMembers = if(typeDecl instanceof N4ClassifierDeclaration) {
-			typeDecl.ownedMembers.filter[ ! state.info.isConsumedFromInterface(it)]
+		// choose members to include in reflection
+		val membersForReflection = if(typeDecl instanceof N4ClassifierDeclaration) {
+			typeDecl.ownedMembers.filter[!state.info.isHiddenFromReflection(it)];
 		} else {
 			#[]
 		};
 
-		// prepare consumedMembers
-		val Iterable<N4MemberDeclaration> consumedMembers = if(typeDecl instanceof N4ClassifierDeclaration) {
-			typeDecl.ownedMembers.filter[ state.info.isConsumedFromInterface(it)]
-		} else {
-			#[]
-		};
+		// prepare owned members
+		val ownedMembers = membersForReflection.filter[!state.info.isConsumedFromInterface(it)];
+
+		// prepare consumed members
+		val consumedMembers = membersForReflection.filter[ state.info.isConsumedFromInterface(it)];
 
 		// put everything together
 		val metaClassSTE = switch(typeDecl) {
@@ -520,7 +526,7 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 		];
 	}
 
-	def private ArrayLiteral createDirectlyImplementedOrExtendedInterfacesArgument(N4ClassifierDeclaration typeDecl) {
+	def public ArrayLiteral createDirectlyImplementedOrExtendedInterfacesArgument(N4ClassifierDeclaration typeDecl) {
 		val interfaces = typeAssistant.getSuperInterfacesSTEs(typeDecl);
 
 		// the return value of this method is intended for default method patching; for this purpose, we have to
@@ -556,7 +562,7 @@ def public N4GetterDeclaration createN4TypeGetter(N4TypeDeclaration typeDecl, Sy
 				"getter" -> _BooleanLiteral(memberDecl instanceof GetterDeclaration)
 			},
 			"isStatic" -> _BooleanLiteral(memberDecl.static),
-			if(memberDecl instanceof N4MethodDeclaration) {
+			if(memberDecl instanceof N4MethodDeclaration && !(memberDecl as N4MethodDeclaration).abstract) {
 				val memberName = memberDecl.name;
 				val memberIsSymbol = memberName!==null && memberName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
 				val memberExpr = if(!memberIsSymbol) {

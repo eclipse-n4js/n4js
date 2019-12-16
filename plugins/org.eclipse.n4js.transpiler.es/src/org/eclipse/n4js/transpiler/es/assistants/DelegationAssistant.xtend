@@ -129,7 +129,7 @@ class DelegationAssistant extends TransformationAssistant {
 	def public N4MemberDeclaration createOrdinaryMemberForDelegatingMember(DelegatingMember delegator) {
 		val targetNameStr = delegator.delegationTarget.name;
 		val targetName = if (targetNameStr!==null && targetNameStr.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX)) {
-			_LiteralOrComputedPropertyName(typeAssistant.getMemberNameAsSymbol(targetNameStr))
+			_LiteralOrComputedPropertyName(typeAssistant.getMemberNameAsSymbol(targetNameStr), targetNameStr)
 		} else {
 			_LiteralOrComputedPropertyName(targetNameStr)
 		};
@@ -151,44 +151,37 @@ class DelegationAssistant extends TransformationAssistant {
 		val baseIsInterface = baseSTE?.originalTarget instanceof TInterface;
 
 		val targetAccess = if(baseIsInterface) {
-			val targetName = delegator.delegationTarget.name;
 			val targetIsStatic = delegator.static;
-			val targetIsSymbol = targetName!==null && targetName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
-			val targetSTE = delegator.delegationTarget;
-			
-			val $methodsSTE =  steFor_$methods;
-			val valueSTE = getPropertyDescriptorValueProperty(delegator);
-			if(!targetIsSymbol) {
-				// non-static:
-				//     I.$methods.target.value
-				// static:
-				//     I.target
-				__NSSafe_PropertyAccessExpr(
-					baseSTE,
-					#[
-						if (!targetIsStatic) $methodsSTE,
-						targetSTE,
-						if (!targetIsStatic) valueSTE
-					].filterNull
-				)
-			} else {
-				// non-static:
-				//     I.$methods[Symbol.iterator].value
-				// static:
-				//     I[Symbol.iterator]
-				val indexAccess = _IndexAccessExpr(
-					if (targetIsStatic) __NSSafe_IdentRef(baseSTE) else __NSSafe_PropertyAccessExpr(baseSTE, $methodsSTE),
-					typeAssistant.getMemberNameAsSymbol(targetName) // something like: Symbol.iterator
-				);
-				if (!targetIsStatic) {
-					_PropertyAccessExpr(
-						indexAccess,
-						valueSTE
-					)
-				} else {
-					indexAccess
-				}
-			}
+			val objOfInterfaceOfTargetExpr = createAccessToInterfaceObject(baseSTE, targetIsStatic);
+			createAccessToMemberFunction(objOfInterfaceOfTargetExpr, !targetIsStatic, delegator);
+//			val targetName = delegator.delegationTarget.name;
+//			val targetIsStatic = delegator.static;
+//			val targetIsSymbol = targetName!==null && targetName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
+//			val targetSTE = delegator.delegationTarget;
+//			
+//			val $membersSTE =  steFor_$members;
+//			if(!targetIsSymbol) {
+//				// non-static:
+//				//     I.$members.target
+//				// static:
+//				//     I.target
+//				__NSSafe_PropertyAccessExpr(
+//					baseSTE,
+//					#[
+//						if (!targetIsStatic) $membersSTE,
+//						targetSTE
+//					].filterNull
+//				)
+//			} else {
+//				// non-static:
+//				//     I.$members[Symbol.iterator]
+//				// static:
+//				//     I[Symbol.iterator]
+//				_IndexAccessExpr(
+//					if (targetIsStatic) __NSSafe_IdentRef(baseSTE) else __NSSafe_PropertyAccessExpr(baseSTE, $membersSTE),
+//					typeAssistant.getMemberNameAsSymbol(targetName) // something like: Symbol.iterator
+//				);
+//			}
 		} else {
 			val ctorOfClassOfTarget = createAccessToClassConstructor(baseSTE, delegator.delegationSuperClassSteps);
 
@@ -237,7 +230,7 @@ class DelegationAssistant extends TransformationAssistant {
 			val targetSTE = delegator.delegationTarget;
 
 			return if(!delegator.static) {
-				val $methodsSTE =  steFor_$methods;
+				val $methodsSTE =  steFor_$members;
 				val valueSTE = getPropertyDescriptorValueProperty(delegator);
 // ---------
 // original code:
@@ -351,7 +344,7 @@ class DelegationAssistant extends TransformationAssistant {
 	 * <tr><td><code>Object.getPrototypeOf(Object.getPrototypeOf(C))</code></td><td>for <code>superClassSteps</code> == 2</td></tr>
 	 * </table>
 	 */
-	def public Expression createAccessToClassConstructor(SymbolTableEntry classSTE, int superClassSteps) {
+	def private Expression createAccessToClassConstructor(SymbolTableEntry classSTE, int superClassSteps) {
 		val objectType = state.G.objectType;
 		val objectSTE = getSymbolTableEntryOriginal(objectType, true);
 		var Expression result = __NSSafe_IdentRef(classSTE); // this is the "C" in the above examples
@@ -368,14 +361,23 @@ class DelegationAssistant extends TransformationAssistant {
 		return result;
 	}
 
+	def private Expression createAccessToInterfaceObject(SymbolTableEntry ifcSTE, boolean targetIsStatic) {
+		var Expression result = __NSSafe_IdentRef(ifcSTE);
+		if (!targetIsStatic) {
+			val $membersSTE =  steFor_$members;
+			result = _PropertyAccessExpr(result, $membersSTE);
+		}
+		return result;
+	}
+
 	/**
-	 * Same as {@link #createAccessToMemberDefinition(Expression, boolean, N4MemberDeclaration) createAccessToMemberDefinition()},
+	 * Same as {@link #createAccessToMemberDefinition(Expression, boolean, N4MemberDeclaration)},
 	 * but will add a property access to the Javascript function representing the member, which is stored in the member
 	 * definition (by appending ".get", ".set", or ".value" depending on the type of member).
 	 * <p>
 	 * Since fields do not have such a function this will throw an exception if given member is a field.
 	 */
-	def public Expression createAccessToMemberFunction(Expression protoOrCtorExpr, boolean exprIsProto, N4MemberDeclaration member) {
+	def private Expression createAccessToMemberFunction(Expression protoOrCtorExpr, boolean exprIsProto, N4MemberDeclaration member) {
 		if(member instanceof N4FieldDeclaration) {
 			throw new IllegalArgumentException("no member function available for fields");
 		}
@@ -397,7 +399,7 @@ class DelegationAssistant extends TransformationAssistant {
 	 * @param member
 	 *         the member.
 	 */
-	def public Expression createAccessToMemberDefinition(Expression protoOrCtorExpr, boolean exprIsProto, N4MemberDeclaration member) {
+	def private Expression createAccessToMemberDefinition(Expression protoOrCtorExpr, boolean exprIsProto, N4MemberDeclaration member) {
 		val memberName = member.name;
 		val memberIsSymbol = memberName!==null && memberName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX);
 		val memberSTE = findSymbolTableEntryForElement(member, true);

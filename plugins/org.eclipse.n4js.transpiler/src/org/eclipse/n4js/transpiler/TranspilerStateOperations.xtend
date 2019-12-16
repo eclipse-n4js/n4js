@@ -325,7 +325,7 @@ class TranspilerStateOperations {
 	 */
 	def public static void replace(TranspilerState state, N4InterfaceDeclaration ifcDecl, VariableDeclaration varDecl) {
 		val isExported = ifcDecl.eContainer instanceof ExportDeclaration;
-		val varStmnt = _VariableStatement(isExported, varDecl);
+		val varStmnt = _VariableStatement(isExported, VariableStatementKeyword.CONST, varDecl);
 		state.replaceWithoutRewire(ifcDecl, varStmnt);
 		state.rewireSymbolTable(ifcDecl, varDecl);
 	}

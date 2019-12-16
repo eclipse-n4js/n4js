@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.n4JS.AdditiveExpression
@@ -20,15 +21,25 @@ import org.eclipse.n4js.n4JS.BooleanLiteral
 import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.CommaExpression
 import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
+import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
+import org.eclipse.n4js.n4JS.N4JSFactory
+import org.eclipse.n4js.n4JS.N4MemberDeclaration
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NullLiteral
 import org.eclipse.n4js.n4JS.NumericLiteral
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
+import org.eclipse.n4js.n4JS.PropertyAssignment
+import org.eclipse.n4js.n4JS.PropertyNameOwner
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
+import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.UnaryExpression
@@ -37,19 +48,24 @@ import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.BootstrapCallAssistant
+import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
+import org.eclipse.n4js.transpiler.im.DelegatingMember
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.ResourceNameComputer
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  */
 class InterfaceDeclarationTransformation extends Transformation {
 
-	@Inject BootstrapCallAssistant bootstrapCallAssistant;
-	@Inject TypeAssistant typeAssistant;
+	@Inject private BootstrapCallAssistant bootstrapCallAssistant;
+	@Inject private DelegationAssistant delegationAssistant;
+	@Inject private TypeAssistant typeAssistant;
+	@Inject private ResourceNameComputer resourceNameComputer;
 
 
 	override assertPreConditions() {
@@ -71,62 +87,170 @@ class InterfaceDeclarationTransformation extends Transformation {
 	def private void transformInterfaceDecl(N4InterfaceDeclaration ifcDecl) {
 		val ifcSTE = findSymbolTableEntryForElement(ifcDecl, true);
 
-		val varDecl = createVarDecl(ifcDecl);
-		val fieldDefaults = createInstanceFieldDefaultsObject(ifcDecl, ifcSTE);
-		val staticFieldInits = createStaticFieldInitializations(ifcSTE, ifcDecl);
-		val memberDefs = bootstrapCallAssistant.createInterfaceMemberDefinitionSection(ifcDecl);
-		val makeIfcCall = bootstrapCallAssistant.createMakeInterfaceCall(ifcDecl);
+ifcDecl.ownedMembersRaw += createHasInstanceMethod(ifcDecl, ifcSTE);
+// add 'n4type' getter for reflection
+ifcDecl.ownedMembersRaw += bootstrapCallAssistant.createN4TypeGetter(ifcDecl, null);
 
-		state.tracer.copyTrace(ifcDecl, fieldDefaults);
-		state.tracer.copyTrace(ifcDecl, staticFieldInits);
-		state.tracer.copyTrace(ifcDecl, memberDefs);
-		state.tracer.copyTrace(ifcDecl, makeIfcCall);
+		// remove abstract members (they do not have a representation in the output code)
+		ifcDecl.ownedMembersRaw.removeIf[
+			it instanceof FunctionOrFieldAccessor && (it as FunctionOrFieldAccessor).body === null
+		];
+
+		// replace delegation members with actual members
+		for(currMember : Lists.newArrayList(ifcDecl.ownedMembersRaw)) {
+			if(currMember instanceof DelegatingMember) {
+				val resolvedDelegatingMember = delegationAssistant.createOrdinaryMemberForDelegatingMember(currMember);
+				replace(currMember, resolvedDelegatingMember);
+			}
+		}
+
+		val props = <PropertyAssignment>newArrayList;
+
+		val extendedInterfaces = bootstrapCallAssistant.createDirectlyImplementedOrExtendedInterfacesArgument(ifcDecl);
+		if (!extendedInterfaces.elements.empty) {
+			props += _PropertyNameValuePair("$extends", _ArrowFunc(false, #[], extendedInterfaces));
+		}
+
+		props += createInstanceFieldDefaultsProperty(ifcDecl, ifcSTE);
+
+		props += createInstanceMemberProperty(ifcDecl, ifcSTE);
+
+		props += createStaticMemberProperties(ifcDecl, ifcSTE);
+
+		val varDecl = createVarDecl(ifcDecl.name, props);
+//		val fieldDefaults = createInstanceFieldDefaultsObject(ifcDecl, ifcSTE);
+//		val staticFieldInits = createStaticFieldInitializations(ifcSTE, ifcDecl);
+//		val memberDefs = bootstrapCallAssistant.createInterfaceMemberDefinitionSection(ifcDecl);
+//		val makeIfcCall = bootstrapCallAssistant.createMakeInterfaceCall(ifcDecl);
+//
+//		state.tracer.copyTrace(ifcDecl, fieldDefaults);
+//		state.tracer.copyTrace(ifcDecl, staticFieldInits);
+//		state.tracer.copyTrace(ifcDecl, memberDefs);
+//		state.tracer.copyTrace(ifcDecl, makeIfcCall);
 
 		replace(ifcDecl, varDecl);
-		val root = varDecl.eContainer.orContainingExportDeclaration;
-		insertAfter(root, fieldDefaults + staticFieldInits + memberDefs + #[makeIfcCall]);
+//		val root = varDecl.eContainer.orContainingExportDeclaration;
+//		insertAfter(root, fieldDefaults + staticFieldInits + memberDefs + #[makeIfcCall]);
 	}
 
 	/**
 	 * Creates declaration of the variable that will represent the interface.
 	 */
-	def private VariableDeclaration createVarDecl(N4InterfaceDeclaration ifcDecl) {
-		return _VariableDeclaration(ifcDecl.name)=>[
-			expression = _ObjLit();
+	def private VariableDeclaration createVarDecl(String name, Iterable<? extends PropertyAssignment> properties) {
+		return _VariableDeclaration(name)=>[
+			expression = _ObjLit(properties);
 		];
 	}
 
-	def private Statement[] createInstanceFieldDefaultsObject(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
-		// I.$fieldDefaults = {
+	def private PropertyNameValuePair[] createInstanceFieldDefaultsProperty(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
+		// $fieldDefaults: {
 		//     fieldName1: undefined,
 		//     fieldName2: () => <INIT_EXPRESSION>,
 		//     ...
-		// };
-		val $fieldDefaultsSTE = steFor_$fieldDefaults;
-		val fields = ifcDecl.ownedFields.filter[!static].toList;
-		if (fields.empty) {
+		// }
+		val instanceFields = ifcDecl.ownedFields
+			.filter[!static && !name.isNullOrEmpty]
+			.toList;
+		if (instanceFields.empty) {
 			return #[];
 		}
 		return #[
-			_ExprStmnt(
-				_AssignmentExpr(
-					_PropertyAccessExpr(ifcSTE, $fieldDefaultsSTE),
-					_ObjLit(
-						fields.filter[!name.isNullOrEmpty].map[field|
-							field.name -> if (field.hasNonTrivialInitExpression) {
-								if (canSkipFunctionWrapping(field.expression)) {
-									field.expression
-								} else {
-									_ArrowFunc(false, #[], field.expression.wrapInParenthesesIfNeeded)
-								}
+			_PropertyNameValuePair(
+				steFor_$fieldDefaults.name,
+				_ObjLit(
+					instanceFields.map[field|
+						field.name -> if (field.hasNonTrivialInitExpression) {
+							if (canSkipFunctionWrapping(field.expression)) {
+								field.expression
 							} else {
-								undefinedRef()
+								_ArrowFunc(false, #[], field.expression.wrapInParenthesesIfNeeded)
 							}
-						]
-					)
+						} else {
+							undefinedRef()
+						}
+					]
 				)
 			)
 		];
+	}
+
+	def private PropertyNameValuePair[] createInstanceMemberProperty(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
+		// $members: {
+		//     get getter() {
+		//     },
+		//     set setter(value) {
+		//     },
+		//     method() {
+		//     },
+		//     ...
+		// }
+
+		val instanceMembersExceptFields = ifcDecl.ownedMembers
+			.filter[!static && !name.isNullOrEmpty]
+			.filter[!(it instanceof N4FieldDeclaration)]
+			.toList;
+		if (instanceMembersExceptFields.empty) {
+			return #[];
+		}
+		return #[
+			_PropertyNameValuePair(
+				steFor_$members.name,
+				_ObjLit(
+					instanceMembersExceptFields.map[convertMemberToProperty]
+				)
+			)
+		];
+	}
+
+	def private PropertyAssignment[] createStaticMemberProperties(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
+		// get staticGetter() {
+		// },
+		// set staticSetter(value) {
+		// },
+		// staticMethod() {
+		// },
+		// ...
+
+		val staticMembers = ifcDecl.ownedMembers
+			.filter[static && !name.isNullOrEmpty] // FIXME reconsider removal of those with empty name (i.e. computed prop names)
+			.toList;
+		if (staticMembers.empty) {
+			return #[];
+		}
+		return staticMembers.map[convertMemberToProperty];
+	}
+
+	/**
+	 * Converts getter, setter, and method declarations to the corresponding declarations in object literals.
+	 * Does not support conversion of field declarations!
+	 */
+	def private PropertyAssignment convertMemberToProperty(N4MemberDeclaration memberDecl) {
+		// fields:
+		if (memberDecl instanceof N4FieldDeclaration) {
+			return _PropertyNameValuePair(
+				memberDecl.declaredName, // reuse existing name
+				memberDecl.expression ?: undefinedRef); // reuse existing initializer expression (if any)
+		}
+		// getters, setters, and methods:
+		val result = switch(memberDecl) {
+			GetterDeclaration: N4JSFactory.eINSTANCE.createPropertyGetterDeclaration
+			SetterDeclaration: N4JSFactory.eINSTANCE.createPropertySetterDeclaration => [
+				it.fpar = memberDecl.fpar; // reuse existing fpar
+			]
+			FunctionDefinition: N4JSFactory.eINSTANCE.createPropertyMethodDeclaration => [
+				it.fpars += memberDecl.fpars; // reuse existing fpars
+				it.generator = memberDecl.generator;
+			]
+			default:
+				throw new IllegalArgumentException("not a getter, setter, or method declaration")
+		};
+		result.declaredName = (memberDecl as PropertyNameOwner).declaredName; // reuse existing name
+		result._lok = (memberDecl as FunctionOrFieldAccessor)._lok; // reuse existing LocalArgumentsVariable (if existent)
+		result.body = (memberDecl as FunctionOrFieldAccessor).body; // reuse existing body
+		if (!memberDecl.annotations.isEmpty) {
+			result.annotationList = _PropAssAnnoList( memberDecl.annotations ) // reuse existing annotations
+		}
+		return result;
 	}
 
 	def private Expression wrapInParenthesesIfNeeded(Expression expr) {
@@ -225,5 +349,28 @@ class InterfaceDeclarationTransformation extends Transformation {
 				rhs = fieldDecl.expression;
 			]);
 		].toList;
+	}
+
+	def private N4MethodDeclaration createHasInstanceMethod(N4InterfaceDeclaration ifcDecl, SymbolTableEntry ifcSTE) {
+		val symbolObjectType = state.G.symbolObjectType;
+		val symbolSTE = getSymbolTableEntryOriginal(symbolObjectType, true);
+		val hasInstanceSTE = getSymbolTableEntryForMember(symbolObjectType, "hasInstance", false, true, true);
+		val hasInstanceExpr = _PropertyAccessExpr(symbolSTE, hasInstanceSTE);
+		val declaredName = _LiteralOrComputedPropertyName(hasInstanceExpr, N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX + "hasInstance");
+
+		val ifcType = state.info.getOriginalDefinedType(ifcDecl); // FIXME avoid duplication with BootstrapCallAssistant
+		val fqn = resourceNameComputer.getFullyQualifiedTypeName(ifcType);
+
+		val result = _N4MethodDecl(true, declaredName, #[ _Fpar("instance") ], _Block(
+			_ReturnStmnt(
+				_Snippet("instance && instance.constructor && instance.constructor.n4type "
+					+ "&& instance.constructor.n4type.allImplementedInterfaces.indexOf('" + fqn + "') !== -1"
+				)
+			)
+		));
+
+		state.info.markAsHiddenFromReflection(result);
+
+		return result;
 	}
 }
